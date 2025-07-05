@@ -10,11 +10,16 @@ public class TestPanel : PanelBase
     [SerializeField]
     private Button exitButton;
 
+    public override void SetStartButton(GameObject button)
+    {
+        return;
+    }
+
     protected override void Init()
     {
         startButton.onClick.AddListener(() =>
         {
-            Debug.Log("ÓÎÏ·¿ªÊ¼");
+            Debug.Log("ï¿½ï¿½Ï·ï¿½ï¿½Ê¼");
         });
         exitButton.onClick.AddListener(() =>
         {

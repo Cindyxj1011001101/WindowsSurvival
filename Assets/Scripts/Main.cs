@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
-        UIManager.Instance.ShowPanel<TestPanel>(PanelBase.ShowMode.Animator, onFinished: () =>
+        UIManager.Instance.ShowPanel<StatePanel>(PanelBase.ShowMode.Fade, onFinished: () =>
         {
-            Debug.Log("显示动画播放完毕");
+            Debug.Log("鏄剧ず闈㈡澘鍔ㄧ敾瀹屾垚");
         });
     }
 }

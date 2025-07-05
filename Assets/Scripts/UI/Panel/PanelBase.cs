@@ -5,111 +5,128 @@ using UnityEngine.Events;
 public abstract class PanelBase : MonoBehaviour
 {
     /// <summary>
-    /// ÏÔÊ¾·½Ê½
+    /// é¢æ¿æ˜¾ç¤ºæ–¹å¼ï¼šæ·¡å…¥æˆ–åŠ¨ç”»å™¨æ§åˆ¶
     /// </summary>
     public enum ShowMode
     {
-        Fade, // µ­Èëµ­³ö
-        Animator // ¶¯»­¿ØÖÆ
+        Fade,      // æ·¡å…¥æ•ˆæœ
+        Animator   // ä½¿ç”¨Animatoræ§åˆ¶
     }
 
     /// <summary>
-    /// ¿ØÖÆËùÓĞ¿Ø¼şµÄÍ¸Ã÷¶È£¬µ­Èëµ­³öÊ±ÓÃµ½
+    /// æ§åˆ¶é¢æ¿é€æ˜åº¦çš„CanvasGroupç»„ä»¶
     /// </summary>
     private CanvasGroup canvasGroup;
 
     /// <summary>
-    /// µ­Èëµ­³öĞ§¹ûµÄ³ÖĞøÊ±¼ä
+    /// æ·¡å…¥/æ·¡å‡ºæ—¶é—´
     /// </summary>
     private float fadeTime = 0.1f;
 
     private Animator animator;
 
     /// <summary>
-    /// Ãæ°åÍêÈ«ÏÔÊ¾ºóÖ´ĞĞ
+    /// å½“é¢æ¿æ˜¾ç¤ºå®Œæˆæ—¶è§¦å‘çš„äº‹ä»¶
     /// </summary>
     public UnityEvent onShown { get; private set; } = new UnityEvent();
+
     /// <summary>
-    /// Ãæ°åÍêÈ«Òş²ØºóÖ´ĞĞ
+    /// å½“é¢æ¿éšè—å®Œæˆæ—¶è§¦å‘çš„äº‹ä»¶
     /// </summary>
     public UnityEvent onHidden { get; private set; } = new UnityEvent();
 
     protected virtual void Awake()
     {
-        // »ñÈ¡±Ø±¸×é¼ş
+        // è·å–CanvasGroupç»„ä»¶
         canvasGroup = GetComponent<CanvasGroup>();
         if (canvasGroup == null)
         {
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
             canvasGroup.alpha = 0;
         }
+
         animator = GetComponent<Animator>();
     }
 
-    // Start is called before the first frame update
     protected virtual void Start()
     {
         Init();
     }
 
-    /// <summary>
-    /// ³õÊ¼»¯·½·¨£¬Ò»°ãÔÚÀïÃæÊéĞ´¿Ø¼ş½»»¥ÊÂ¼şµÄ×¢²á
-    /// </summary>
+    public abstract void SetStartButton(GameObject button);
+
     protected abstract void Init();
 
     /// <summary>
-    /// ÏÔÊ¾Ãæ°å
+    /// æ˜¾ç¤ºé¢æ¿
     /// </summary>
-    /// <param name="onFinished">Ãæ°åÍêÈ«ÏÔÊ¾ÒÔºóÖ´ĞĞµÄÂß¼­</param>
+    /// <param name="showMode">æ˜¾ç¤ºæ–¹å¼</param>
+    /// <param name="onFinished">æ˜¾ç¤ºå®Œæˆåå›è°ƒ</param>
     public virtual void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
     {
+        // æ³¨å†Œå®Œæˆå›è°ƒ
         if (onFinished != null)
             onShown.AddListener(onFinished);
-        // ÒÔµ­Èëµ­³ö·½Ê½»ò¶¯»­·½Ê½ÏÔÊ¾Ãæ°å
+
+        // ç¡®ä¿canvasGroupå­˜åœ¨
+        if (canvasGroup == null)
+        {
+            canvasGroup = GetComponent<CanvasGroup>();
+            if (canvasGroup == null)
+            {
+                canvasGroup = gameObject.AddComponent<CanvasGroup>();
+                canvasGroup.alpha = 0;
+            }
+        }
+
+        // æ ¹æ®æ¨¡å¼å¯åŠ¨åç¨‹
         switch (showMode)
         {
             case ShowMode.Fade:
-                // PublicMonobBehaviourÊÇÒ»¸ö¼Ì³ĞMonoBehaviourµÄ½Å±¾
-                // ¹ÒÔØËüµÄÎïÌåÔÚ³¡¾°ÖĞÓÀÔ¶´æÔÚ
-                // Ê¹ÓÃËüÀ´Ö´ĞĞĞ­³ÌÊÇÎªÁË±£Ö¤Ğ­³ÌµÄÖ´ĞĞ²»»áÒòÎªÎïÌåµÄÏú»Ù¶øÍ£Ö¹
-                PublicMonobBehaviour.Instance.StartCoroutine(FadeIn());
+                PublicMonoBehaviour.Instance.StartCoroutine(FadeIn());
                 break;
             case ShowMode.Animator:
-                PublicMonobBehaviour.Instance.StartCoroutine(PlayAnimatorShow());
+                PublicMonoBehaviour.Instance.StartCoroutine(PlayAnimatorShow());
                 break;
         }
     }
 
     /// <summary>
-    /// Òş²ØÃæ°å
+    /// éšè—é¢æ¿
     /// </summary>
-    /// <param name="onFinished">Ãæ°åÍêÈ«Òş²ØÒÔºóÖ´ĞĞµÄÂß¼­</param>
+    /// <param name="showMode">éšè—æ–¹å¼</param>
+    /// <param name="onFinished">éšè—å®Œæˆåå›è°ƒ</param>
     public virtual void Hide(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
     {
         if (onFinished != null)
             onHidden.AddListener(onFinished);
-        // ÒÔµ­Èëµ­³ö·½Ê½»ò¶¯»­·½Ê½Òş²ØÃæ°å
+
         switch (showMode)
         {
             case ShowMode.Fade:
-                PublicMonobBehaviour.Instance.StartCoroutine(FadeOut());
+                PublicMonoBehaviour.Instance.StartCoroutine(FadeOut());
                 break;
             case ShowMode.Animator:
-                PublicMonobBehaviour.Instance.StartCoroutine(PlayAnimatorHide());
+                PublicMonoBehaviour.Instance.StartCoroutine(PlayAnimatorHide());
                 break;
         }
     }
 
     /// <summary>
-    /// Ãæ°åµ­Èë
+    /// æ·¡å…¥åŠ¨ç”»åç¨‹
     /// </summary>
     private IEnumerator FadeIn()
     {
-        // ½«Ãæ°åÍ¸Ã÷¶ÈÉèÖÃÎª0
-        canvasGroup.alpha = 0;
+        // å®‰å…¨æ£€æŸ¥
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            canvasGroup.alpha = 0;
+        }
 
-        // ¾­¹ıfadeTimeÊ±¼ä£¬Ãæ°åµÄÍ¸Ã÷¶ÈÔö³¤Îª1
+        canvasGroup.alpha = 0;
         float fadeSpeed = 1f / fadeTime;
+
         while (canvasGroup.alpha < 1)
         {
             canvasGroup.alpha += fadeSpeed * Time.deltaTime;
@@ -118,72 +135,76 @@ public abstract class PanelBase : MonoBehaviour
 
         canvasGroup.alpha = 1;
 
-        // µ÷ÓÃÃæ°åÍêÈ«ÏÔÊ¾ºóµÄ»Øµ÷
         onShown?.Invoke();
         onShown.RemoveAllListeners();
     }
 
     /// <summary>
-    /// Ãæ°åµ­³ö
+    /// æ·¡å‡ºåŠ¨ç”»åç¨‹
     /// </summary>
     private IEnumerator FadeOut()
     {
-        // ½«Ãæ°åÍ¸Ã÷¶ÈÉèÖÃÎª1
-        canvasGroup.alpha = 1;
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            canvasGroup.alpha = 1;
+        }
 
-        // ¾­¹ıfadeTimeÊ±¼ä£¬Ãæ°åµÄÍ¸Ã÷¶È¼õÉÙÎª0
+        canvasGroup.alpha = 1;
         float fadeSpeed = 1f / fadeTime;
+
         while (canvasGroup.alpha > 0)
         {
             canvasGroup.alpha -= fadeSpeed * Time.deltaTime;
             yield return null;
         }
 
-        // µ÷ÓÃÃæ°åÍêÈ«Òş²ØºóµÄ»Øµ÷
         onHidden?.Invoke();
         onHidden.RemoveAllListeners();
     }
 
     /// <summary>
-    /// ¶¯»­¿ØÖÆÃæ°åÏÔÊ¾
+    /// ä½¿ç”¨Animatoræ’­æ”¾æ˜¾ç¤ºåŠ¨ç”»
     /// </summary>
     private IEnumerator PlayAnimatorShow()
     {
-        // ±£Ö¤Ãæ°åµÄÍ¸Ã÷¶ÈÊÇ1
-        canvasGroup.alpha = 1;
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            canvasGroup.alpha = 1;
+        }
+        else
+        {
+            canvasGroup.alpha = 1;
+        }
 
-        // µÈ´ı¶¯»­²¥·ÅÍê±Ï
         if (animator != null)
         {
-            // ÕâÀïĞèÒª±£Ö¤¸ÃÃæ°å¹ÒÔØÁËAnimator½Å±¾
-            // ²¢ÇÒÓÉShowÀ´´¥·¢Ãæ°åÏÔÊ¾µÄ¶¯»­
-            // ÓÉHideÀ´´¥·¢Ãæ°åÒş²ØµÄ¶¯»­
             animator.ResetTrigger("Hide");
             animator.SetTrigger("Show");
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
         }
-        yield return null; // ÔÙµÈ´ıÒ»Ö¡£¬±£Ö¤ÎÈ¶¨
 
-        // µ÷ÓÃÃæ°åÍêÈ«ÏÔÊ¾ºóµÄ»Øµ÷
+        yield return null;
+
         onShown?.Invoke();
         onShown.RemoveAllListeners();
     }
 
     /// <summary>
-    /// ¶¯»­¿ØÖÆÃæ°åÒş²Ø
+    /// ä½¿ç”¨Animatoræ’­æ”¾éšè—åŠ¨ç”»
     /// </summary>
     private IEnumerator PlayAnimatorHide()
     {
-        // µÈ´ı¶¯»­²¥·ÅÍê±Ï
         if (animator != null)
         {
             animator.ResetTrigger("Show");
             animator.SetTrigger("Hide");
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
         }
-        yield return null; // ÔÙµÈ´ıÒ»Ö¡£¬±£Ö¤ÎÈ¶¨
 
-        // µ÷ÓÃÃæ°åÍêÈ«Òş²ØºóµÄ»Øµ÷
+        yield return null;
+
         onHidden?.Invoke();
         onHidden.RemoveAllListeners();
     }

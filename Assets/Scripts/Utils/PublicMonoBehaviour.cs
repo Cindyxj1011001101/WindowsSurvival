@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-public class PublicMonobBehaviour : MonoBehaviour
+public class PublicMonoBehaviour : MonoBehaviour
 {
-    private static PublicMonobBehaviour instance;
-    public static PublicMonobBehaviour Instance => instance;
+    private static PublicMonoBehaviour instance;
+    public static PublicMonoBehaviour Instance => instance;
 
     private void Awake()
     {
