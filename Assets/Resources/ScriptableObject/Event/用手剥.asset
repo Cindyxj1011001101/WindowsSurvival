@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a4ab9f4013c41aca283d184eac954dc, type: 3}
+  m_Name: "\u7528\u624B\u5265"
+  m_EditorClassIdentifier: 
+  EventName: "\u7528\u624B\u5265"
+  EventDesc: "\u7528\u624B\u5265"
+  Time: 45
+  eventList:
+  - {fileID: 11400000, guid: 71574ab2f1454c64e9460786873996bf, type: 2}
+  - {fileID: 11400000, guid: 36161a1e11832594b8120d6773143691, type: 2}
+  - {fileID: 11400000, guid: 9172d86092b9e2d468744b1b9386cee7, type: 2}
