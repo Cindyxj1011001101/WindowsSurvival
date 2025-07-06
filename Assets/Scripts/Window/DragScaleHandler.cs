@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DragScaleHandler : MonoBehaviour,
@@ -14,17 +15,22 @@ public class DragScaleHandler : MonoBehaviour,
     public RectTransform targetRect;
     public RectTransform canvasRect;
 
-    public float minWidth = 240f;
-    public float minHeight = 300f;
-    public float maxWidth = 1200f;
-    public float maxHeight = 700f;
+    public float minWidth = 300f;
+    public float minHeight = 200f;
+    public float maxWidth = 800f;
+    public float maxHeight = 420f;
 
     private Vector2 startMouseLocalToParent;
     private Vector2 startOffsetMin;
     private Vector2 startOffsetMax;
 
     private bool isDragging = false;
-    
+
+
+    public void Awake()
+    {
+        canvasRect=FindObjectOfType<Canvas>().GetComponent<RectTransform>();
+    }
 
     public void OnPointerDown(PointerEventData eventData)
     {
