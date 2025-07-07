@@ -1,29 +1,23 @@
 using UnityEngine.EventSystems;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class DragMoveHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
     [Header("移动目标")]
     public RectTransform targetToMove;
 
-    private IPointerDownHandler targetPointerDown;
-
     //[Header("下方收缩距离")] public float Distance;
-
     
     private Vector2 offset;
 
-    private void Start()
-    {
-        targetPointerDown = targetToMove.GetComponent<IPointerDownHandler>();
-    }
-
+    public UnityEvent onPointerDown = new UnityEvent();
 
     public void OnPointerDown(PointerEventData eventData)
     {
         if (targetToMove == null) return;
 
-        targetPointerDown.OnPointerDown(eventData);
+        onPointerDown?.Invoke();
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             targetToMove.parent as RectTransform,
@@ -36,7 +30,8 @@ public class DragMoveHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
     }
 
     public void OnDrag(PointerEventData eventData)
-    { if (targetToMove == null) return;
+    {
+        if (targetToMove == null) return;
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             targetToMove.parent as RectTransform,
