@@ -7,8 +7,6 @@ using UnityEngine.UI;
 /// </summary>
 public class DesktopShortcut : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private Desktop desktop;
-
     [SerializeField]
     private Image appIconImage;
     [SerializeField]
@@ -19,21 +17,19 @@ public class DesktopShortcut : MonoBehaviour, IPointerEnterHandler, IPointerExit
     private string appName;
     public string AppName => appName;
 
-    // 双击检测相关变量
-    private float doubleClickTimeThreshold = 0.3f; // 双击时间间隔阈值
-    private int clickCount = 0;
-    private float lastClickTime = 0;
-
     private Animator animator;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        DoubleClickHandler doubleClickHandler = GetComponent<DoubleClickHandler>();
+        if (doubleClickHandler == null )
+            doubleClickHandler = gameObject.AddComponent<DoubleClickHandler>();
+        doubleClickHandler.onDoubleClick.AddListener(HandleDoubleClick);
     }
 
-    public void Init(App app, Desktop desktop)
+    public void Init(App app)
     {
-        this.desktop = desktop;
         appName = app.name;
         appIconImage.sprite = app.icon;
         appDisplayText.text = app.displayText;
@@ -42,26 +38,7 @@ public class DesktopShortcut : MonoBehaviour, IPointerEnterHandler, IPointerExit
     public void OnPointerClick(PointerEventData eventData)
     {
         // 选中被点击的快捷方式
-        desktop.SelectAppShortcut(appName);
-
-        // 检测双击
-        if (Time.time - lastClickTime < doubleClickTimeThreshold)
-        {
-            clickCount++;
-
-            // 如果是第二次点击且在时间阈值内，则视为双击
-            if (clickCount >= 2)
-            {
-                HandleDoubleClick();
-                clickCount = 0;
-            }
-        }
-        else
-        {
-            clickCount = 1;
-        }
-
-        lastClickTime = Time.time;
+        WindowsManager.Instance.Desktop.SelectAppShortcut(appName);
     }
 
     private void HandleDoubleClick()
