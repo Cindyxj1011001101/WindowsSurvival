@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
+using DG.Tweening;
 public enum WindowState
 {
     Normal = 0,
@@ -24,17 +24,34 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     private Vector2 lastPosition;
     private Vector2 lastScale;
+    private Vector2 lastSizeDelta;
 
     private bool focused = false;
 
+    private Transform topBar;
+
     protected override void Start()
     {
+        // 添加拖拽支持
+        topBar = transform.Find("TopBar");
+        DragMoveHandler dragMoveHandler = topBar.GetComponent<DragMoveHandler>();
+        if (dragMoveHandler == null)
+            dragMoveHandler = topBar.gameObject.AddComponent<DragMoveHandler>();
+        dragMoveHandler.targetToMove = transform as RectTransform;
+        dragMoveHandler.onPointerDown.AddListener(Focus);
+
+        // 添加双击支持
+        DoubleClickHandler doubleClickHandler = topBar.GetComponent<DoubleClickHandler>();
+        if (doubleClickHandler == null)
+            doubleClickHandler = topBar.gameObject.AddComponent<DoubleClickHandler>();
+        doubleClickHandler.onDoubleClick.AddListener(MaximizeOrRestore);
+
         closeButton = transform.Find("TopBar/CloseButton").GetComponent<Button>();
         maximizeButton = transform.Find("TopBar/MaximizeButton").GetComponent<Button>();
         minimizeButton = transform.Find("TopBar/MinimizeButton").GetComponent<Button>();
 
         closeButton.onClick.AddListener(() => WindowsManager.Instance.CloseWindow(AppName));
-        maximizeButton.onClick.AddListener(() => WindowsManager.Instance.MaximizeWindow(AppName));
+        maximizeButton.onClick.AddListener(MaximizeOrRestore);
         minimizeButton.onClick.AddListener(() => WindowsManager.Instance.MinimizeWindow(AppName));
 
         lastPosition = transform.position;
@@ -42,52 +59,140 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         base.Start();
     }
 
+    private void SetState(WindowState state)
+    {
+        lastState = this.state;
+        this.state = state;
+    }
+
     public void Open()
     {
-        // 根据当前是否最小化采用不同的显示方式
-        if (state == WindowState.Normal || state == WindowState.Maximized) return;
+        gameObject.SetActive(true);
 
-        if (state == WindowState.Closed)
+        switch (state)
         {
-            Show();
-            lastState = state;
-            state = WindowState.Normal;
+            case WindowState.Normal:
+            case WindowState.Maximized:
+                return;
+
+            case WindowState.Minimized:
+                Restore();
+                break;
+            case WindowState.Closed:
+                Create();
+                break;
         }
-        else
+    }
+
+    public void Create()
+    {
+        SetState(WindowState.Normal);
+        Show();
+    }
+
+    public void Restore()
+    {
+        if (state == WindowState.Normal) return;
+
+        if (lastState == WindowState.Maximized)
         {
-            if (lastState == WindowState.Normal)
-            {
-
-            }
-            else if (lastState == WindowState.Maximized)
-            {
-
-            }
+            Maximize();
+            return;
         }
+
+        SetState(WindowState.Normal);
+
+        Sequence restoreSequence = DOTween.Sequence();
+
+        restoreSequence.Join(transform.DOMove(lastPosition, .2f));
+        restoreSequence.Join(transform.DOScale(lastScale, .2f));
+        restoreSequence.Join(GetComponent<RectTransform>().DOSizeDelta(lastSizeDelta, 0.3f));
+
+        restoreSequence.Play();
     }
 
     public void Close()
     {
-        state = lastState = WindowState.Closed;
+        if (state == WindowState.Closed) return;
+
+        SetState(WindowState.Closed);
         Hide(onFinished: () => Destroy(gameObject));
     }
 
-    public void Minimize()
+    public void Minimize(Transform shortcut)
     {
-        lastState = state;
-        state = WindowState.Minimized;
+        if (state == WindowState.Minimized) return;
+
+        // 保存当前状态以便恢复
+        // 保存当前状态的代码一定要卸载SetState之前
+        RecordLastTransformInfo();
+
+        SetState(WindowState.Minimized);
+
+        // 使用DOTween创建动画序列
+        Sequence minimizeSequence = DOTween.Sequence();
+
+        // 同时执行缩小和移动动画
+        minimizeSequence.Join(transform.DOScale(Vector3.zero, 0.2f));
+        minimizeSequence.Join(transform.DOMove(shortcut.position, 0.2f));
+
+        // 动画完成后隐藏窗口（但不销毁）
+        minimizeSequence.OnComplete(() => gameObject.SetActive(false));
+
+        // 播放动画
+        minimizeSequence.Play();
     }
 
     public void Maximize()
     {
-        lastState = state;
-        state = WindowState.Maximized;
+        if (state == WindowState.Maximized) return;
+
+        // 保存当前状态以便恢复
+        RecordLastTransformInfo();
+
+        SetState(WindowState.Maximized);
+
+        // 获取Canvas的RectTransform作为最大化的参考尺寸
+        RectTransform canvasRect = WindowsManager.Instance.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+
+        // 使用DOTween创建动画序列
+        Sequence maximizeSequence = DOTween.Sequence();
+
+        // 同时执行移动和缩放动画
+        maximizeSequence.Join(transform.DOMove(canvasRect.position, 0.2f));
+        maximizeSequence.Join(transform.DOScale(Vector3.one, 0.2f));
+        maximizeSequence.Join(GetComponent<RectTransform>().DOSizeDelta(canvasRect.sizeDelta, 0.2f));
+
+        // 播放动画
+        maximizeSequence.Play();
+    }
+
+    private void MaximizeOrRestore()
+    {
+        if (state == WindowState.Maximized)
+            Restore();
+        else if (state == WindowState.Normal)
+            Maximize();
+    }
+
+    private void RecordLastTransformInfo()
+    {
+        // 只保存Normal状态下窗口的信息
+        if (state != WindowState.Normal) return;
+        
+        lastPosition = transform.position;
+        lastScale = transform.localScale;
+        lastSizeDelta = (transform as RectTransform).sizeDelta;
+    }
+
+    private void Focus()
+    {
+        WindowsManager.Instance.FocusWindow(this);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        WindowsManager.Instance.FocusWindow(this);
-        Debug.Log("down");
+        Focus();
     }
 
     // 不要由自己调用
