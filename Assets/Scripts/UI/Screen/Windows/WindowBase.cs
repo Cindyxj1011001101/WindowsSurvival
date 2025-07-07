@@ -50,13 +50,29 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         maximizeButton = transform.Find("TopBar/MaximizeButton").GetComponent<Button>();
         minimizeButton = transform.Find("TopBar/MinimizeButton").GetComponent<Button>();
 
-        closeButton.onClick.AddListener(() => WindowsManager.Instance.CloseWindow(AppName));
-        maximizeButton.onClick.AddListener(MaximizeOrRestore);
-        minimizeButton.onClick.AddListener(() => WindowsManager.Instance.MinimizeWindow(AppName));
+        closeButton.onClick.AddListener(OnCloseButtonClicked);
+        maximizeButton.onClick.AddListener(OnMaximizeButtonClicked);
+        minimizeButton.onClick.AddListener(OnMinimizeButtonClicked);
 
-        lastPosition = transform.position;
-        lastScale = transform.localScale;
         base.Start();
+    }
+
+    private void OnCloseButtonClicked()
+    {
+        Focus();
+        WindowsManager.Instance.CloseWindow(AppName);
+    }
+
+    private void OnMaximizeButtonClicked()
+    {
+        Focus();
+        MaximizeOrRestore();
+    }
+
+    private void OnMinimizeButtonClicked()
+    {
+        Focus();
+        WindowsManager.Instance.MinimizeWindow(AppName);
     }
 
     private void SetState(WindowState state)
@@ -153,15 +169,18 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         SetState(WindowState.Maximized);
 
         // 获取Canvas的RectTransform作为最大化的参考尺寸
-        RectTransform canvasRect = WindowsManager.Instance.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+        RectTransform targetRect = WindowsManager.Instance.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
+
+        //// 获取桌面的RectTransform作为最大化的参考尺寸
+        //RectTransform targetRect = WindowsManager.Instance.Desktop.transform as RectTransform;
 
         // 使用DOTween创建动画序列
         Sequence maximizeSequence = DOTween.Sequence();
 
         // 同时执行移动和缩放动画
-        maximizeSequence.Join(transform.DOMove(canvasRect.position, 0.2f));
+        maximizeSequence.Join(transform.DOMove(targetRect.position, 0.2f));
         maximizeSequence.Join(transform.DOScale(Vector3.one, 0.2f));
-        maximizeSequence.Join(GetComponent<RectTransform>().DOSizeDelta(canvasRect.sizeDelta, 0.2f));
+        maximizeSequence.Join(GetComponent<RectTransform>().DOSizeDelta(targetRect.sizeDelta, 0.2f));
 
         // 播放动画
         maximizeSequence.Play();
