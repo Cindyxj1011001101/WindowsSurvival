@@ -9,11 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a4ab9f4013c41aca283d184eac954dc, type: 3}
-  m_Name: "\u7528\u5200\u5207\u5272"
+  m_Script: {fileID: 11500000, guid: b28c2bc2b8e24c66ad090b60ac195e89, type: 3}
+  m_Name: "\u8150\u70C2\u7269"
   m_EditorClassIdentifier: 
-  EventName: "\u7528\u5200\u5207\u5272"
-  EventDesc: "\u7528\u5200\u5207\u5272"
-  Time: 15
-  eventList:
-  - {fileID: 11400000, guid: 46eb34f614662e74bb68275672098576, type: 2}
+  cardName: "\u8150\u70C2\u7269"
+  cardImage: {fileID: 0}
+  cardType: 0
+  cardDesc: "\u8150\u70C2\u7269"
+  MaxStackNum: 10
+  cardEventList:
+  - {fileID: 0}
+  Weight: 0.3
+  MaxFresh: -1

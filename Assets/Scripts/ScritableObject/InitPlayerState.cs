@@ -12,4 +12,4 @@ namespace ScritableObject
         public int Tired;
         public int San;
     }
-}
+}   
