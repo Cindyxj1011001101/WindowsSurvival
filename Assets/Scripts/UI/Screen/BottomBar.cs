@@ -28,7 +28,7 @@ public class BottomBar : MonoBehaviour
 
         GameObject shortcutPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/BottomBarShortcut");
         BottomBarShortcut shortcut = Instantiate(shortcutPrefab, layoutTransform).GetComponent<BottomBarShortcut>();
-        shortcut.Init(app, this);
+        shortcut.Init(app);
         shortcuts.Add(app.name, shortcut);
     }
 
@@ -54,6 +54,15 @@ public class BottomBar : MonoBehaviour
             // 其他没有被选中的对象都是false
             else
                 shortcut.SetSelected(false);
+        }
+    }
+
+
+    public void ClearSelection()
+    {
+        foreach (var shortcut in shortcuts.Values)
+        {
+            shortcut.SetSelected(false);
         }
     }
 }
