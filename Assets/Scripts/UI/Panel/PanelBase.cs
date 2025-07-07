@@ -53,7 +53,7 @@ public abstract class PanelBase : MonoBehaviour
         Init();
     }
 
-    public abstract void SetStartButton(GameObject button);
+    public virtual void SetStartButton(GameObject button) { }
 
     protected abstract void Init();
 
