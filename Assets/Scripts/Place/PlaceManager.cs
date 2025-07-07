@@ -6,3 +6,8 @@
     LifeSupport
 
 }
+
+public class PlaceManager
+{
+    
+}

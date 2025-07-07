@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74cb9682239b44978ece1421b6f1693c, type: 3}
   m_Name: InitPlayerStateData
   m_EditorClassIdentifier: 
-  Oxygen: 100
   Health: 100
   Fullness: 100
   Thirst: 100
   Tired: 100
   San: 100
+  BasicHealthChange: 0.1
+  BasicFullnessChange: -1.2
+  BasicThirstChange: -1.5
+  BasicTiredChange: 1.1
+  BasicSanChange: 0.1

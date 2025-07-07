@@ -18,4 +18,12 @@ public class Drop
 public class DropEvent:EventTrigger
 {
         public List<Drop> dropList;
+        public override void EventResolve()
+        {
+        }
+
+        public override void Init()
+        {
+            return;
+        }
 }

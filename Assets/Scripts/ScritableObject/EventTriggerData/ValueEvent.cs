@@ -6,12 +6,17 @@ public class ValueEvent:EventTrigger
         public StateEnum State;
         public int Value;
 
-        public void ChangeValue()
+        public override void EventResolve()
         {
                 EventManager.Instance.TriggerEvent<ChangeStateArgs>(EventType.ChangeState, new ChangeStateArgs()
                 {
                         state = State,
                         value = Value
                 });
+        }
+
+        public override void Init()
+        {
+                return;
         }
 }
