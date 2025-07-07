@@ -27,7 +27,7 @@ public class Desktop : MonoBehaviour
 
         GameObject shortcutPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/DesktopShortcut");
         DesktopShortcut shortcut = Instantiate(shortcutPrefab, layoutTransform).GetComponent<DesktopShortcut>();
-        shortcut.Init(app, this);
+        shortcut.Init(app);
         shortcuts.Add(app.name, shortcut);
     }
 
