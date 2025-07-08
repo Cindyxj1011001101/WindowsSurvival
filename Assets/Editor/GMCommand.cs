@@ -8,10 +8,12 @@ public class GMCommand
         string dataPath = "ScriptableObject/Card/" + cardName;
         CardData defaultData = Resources.Load<CardData>(dataPath);
         var card = CardFactory.CreateCardIntance(defaultData);
-        Debug.Log(card);
-        var bag = WindowsManager.Instance.GetCurrentFocusedWindow().GetComponentInChildren<BagBase>();
+        var window = WindowsManager.Instance.GetCurrentFocusedWindow();
+        if (window != null) return;
+        var bag = window.GetComponentInChildren<BagBase>();
         if (bag == null) return;
         bag.AddCard(card);
+        Debug.Log(card);
     }
 
     [MenuItem("Command/添加压缩饼干")]
