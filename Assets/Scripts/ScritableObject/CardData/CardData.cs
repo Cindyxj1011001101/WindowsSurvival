@@ -9,10 +9,15 @@ public class CardData:ScriptableObject
     public Sprite cardImage;
     public CardType cardType;
     public string cardDesc;
-    public int MaxStackNum;
+    public int maxStackNum;
     public List<CardEvent> cardEventList;
     public virtual void Init()
     {
             
+    }
+
+    public override string ToString()
+    {
+        return $"cardName: {cardName}, cardType: {cardType}, cardDesc: {cardDesc}, maxStackNum: {maxStackNum}, cardEventList: {cardEventList}";
     }
 }
