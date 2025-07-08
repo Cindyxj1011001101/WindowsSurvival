@@ -16,9 +16,9 @@ MonoBehaviour:
   cardImage: {fileID: 0}
   cardType: 0
   cardDesc: "\u74F6\u88C5\u6C34"
-  MaxStackNum: 4
+  weight: 1
+  maxStackNum: 4
   cardEventList:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: 56e46f4ba6be6cb428a107dad8788805, type: 2}
   CardTagList: 
-  Weight: 1
   MaxFresh: -1
