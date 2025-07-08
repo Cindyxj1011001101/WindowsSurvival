@@ -47,6 +47,14 @@
         }
     }
 
+    public override CardInstance RemoveCard(CardSlot targetSlot)
+    {
+        var toRemove = base.RemoveCard(targetSlot);
+        if (toRemove != null)
+            AddLoad(-toRemove.CardData.weight);
+        return toRemove;
+    }
+
     ChangeLoadArgs args = new ChangeLoadArgs();
     private void AddLoad(float weight)
     {

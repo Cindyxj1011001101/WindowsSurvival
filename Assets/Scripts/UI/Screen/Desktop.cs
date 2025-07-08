@@ -17,7 +17,8 @@ public class Desktop : MonoBehaviour
     {
         foreach (var app in appsData)
         {
-            AddShortcut(app);
+            if (app.displayOnDesktop)
+                AddShortcut(app);
         }
     }
 

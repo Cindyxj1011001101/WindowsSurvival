@@ -1,17 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class BagBase : MonoBehaviour
 {
-    protected GameObject slotPrefab;
-    protected Transform slotContainer;
-    [Header("��ʼ��������")]
+    private GameObject slotPrefab;
+    private RectTransform slotContainer;
+    private GridLayoutGroup gridLayout;
+    [Header("初始格子数量")]
     [SerializeField]
     protected int initSlotCount = 9;
 
     protected List<CardSlot> slots = new();
 
-    protected int UsedSlotsCount // ��ʹ�õĸ��ӵ�����
+    protected int UsedSlotsCount // 放有卡牌的格子的数量
     {
         get
         {
@@ -23,20 +25,20 @@ public abstract class BagBase : MonoBehaviour
             return count;
         }
     }
-    protected int SlotsCount => slots.Count; // ���и��ӵ�����
-    protected bool IsBagFull => UsedSlotsCount == SlotsCount; // �����Ƿ�����
+    protected int SlotsCount => slots.Count; // 格子总数
+    protected bool IsBagFull => UsedSlotsCount == SlotsCount; // 背包是否已满
 
     protected virtual void Start()
     {
         slotPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot");
-        slotContainer = transform.Find("Viewport/Container");
+        slotContainer = transform.Find("Viewport/Container") as RectTransform;
+        gridLayout = slotContainer.GetComponent<GridLayoutGroup>();
         InitBag();
     }
 
     protected void InitBag()
     {
         slots = new();
-        // ���Ӹ���
         AddSlot(initSlotCount);
     }
 
@@ -46,17 +48,44 @@ public abstract class BagBase : MonoBehaviour
         {
             GameObject slotObj = Instantiate(slotPrefab, slotContainer);
             CardSlot slot = slotObj.GetComponent<CardSlot>();
+            slot.Init();
             slots.Add(slot);
         }
+
+        // 添加格子后更新容器高度
+        UpdateContainerHeight();
+    }
+
+    /// <summary>
+    /// 更新容器高度
+    /// </summary>
+    private void UpdateContainerHeight()
+    {
+        float containerWidth = slotContainer.rect.width;
+        // 计算一行可以放几个格子
+        int i = 1;
+        while (gridLayout.cellSize.x * i + gridLayout.spacing.x * (i - 1) + gridLayout.padding.left + gridLayout.padding.right <= containerWidth)
+        {
+            i++;
+        }
+        int columns = Mathf.Max(1, i - 1);
+        int totalRows = Mathf.CeilToInt((float)slots.Count / columns);
+        Debug.Log(columns);
+        Debug.Log(totalRows);
+
+        // 计算容器高度
+        float containerHeight = totalRows * gridLayout.cellSize.y + (totalRows - 1) * gridLayout.spacing.y + gridLayout.padding.top + gridLayout.padding.bottom;
+    
+        slotContainer.sizeDelta = new Vector2(slotContainer.sizeDelta.x, containerHeight);
     }
 
     public virtual bool CanAddCard(CardInstance card)
     {
-        // �����п�λ��һ�������ӿ���
+        // 如果背包未满，则可以添加
         if (!IsBagFull) return true;
 
-        // ����û�п�λ
-        // �ܷ�����ȡ���ڱ����е�ͬ�࿨���Ƿ�ﵽ�ѵ�����
+        // 背包已满
+        // 则能否添加取决于背包中是否有同类卡牌并且没有达到堆叠上限
         string cardName = card.CardData.cardName;
         var slots = GetSlotsContainingSimilarCard(cardName);
         foreach (CardSlot slot in slots)
@@ -68,10 +97,10 @@ public abstract class BagBase : MonoBehaviour
     }
 
     /// <summary>
-    /// ��ȡ���з���ͬ�࿨�Ƶĸ���
+    /// 获取放有同类卡牌的slot
     /// </summary>
-    /// <param name="cardName">��������</param>
-    /// <param name="ascending">true: ���նѵ�������������false: ��������</param>
+    /// <param name="cardName">卡牌名称</param>
+    /// <param name="ascending">true: 按照堆叠数量升序，false: 按照堆叠数量降序</param>
     /// <returns></returns>
     protected List<CardSlot> GetSlotsContainingSimilarCard(string cardName, bool ascending = true)
     {
@@ -91,7 +120,7 @@ public abstract class BagBase : MonoBehaviour
 
         string cardName = card.CardData.cardName;
 
-        // ���ȳ��Զѵ������п���
+        // 尝试堆叠同类卡牌
         foreach (var slot in GetSlotsContainingSimilarCard(cardName))
         {
             if (slot.CanStack())
@@ -101,7 +130,7 @@ public abstract class BagBase : MonoBehaviour
             }
         }
 
-        // ����ŵ��µĿ�λ
+        // 无法堆叠则放在新的slot中
         foreach (var slot in slots)
         {
             if (slot.IsEmpty)
@@ -112,16 +141,27 @@ public abstract class BagBase : MonoBehaviour
         }
     }
 
-    public virtual void RemoveCard(CardInstance card)
+    /// <summary>
+    /// 移除卡牌
+    /// </summary>
+    /// <param name="sourceSlot">从哪个格子里移除</param>
+    public virtual CardInstance RemoveCard(CardSlot sourceSlot)
+    {
+        if (sourceSlot.StackCount == 0) return null;
+
+        return sourceSlot.RemoveCard();
+    }
+
+    public CardInstance RemoveCard(CardInstance card)
     {
         string cardName = card.CardData.cardName;
 
         var slots = GetSlotsContainingSimilarCard(cardName, false);
 
-        if (slots.Count == 0) return;
+        if (slots.Count > 0)
+            return RemoveCard(slots[0]);
 
-        // �ܵõ����slot˵������������һ���ƣ����Կ���ֱ�Ӵ������Ƴ�����
-        slots[0].RemoveCard();
+        return null;
     }
 
     public virtual void Clear()
@@ -133,14 +173,14 @@ public abstract class BagBase : MonoBehaviour
     }
 
     /// <summary>
-    /// �������п��ƣ���ÿ�����ƾ�������ǰ�ƶ�
+    /// 使卡牌紧凑排列
     /// </summary>
     public void CompactCards()
     {
-        // ��¼��Ҫ�ƶ��Ŀ��ƺ����ǵ�ԭʼλ��
+        // 记录需要移动的卡牌和它们的原始位置
         List<(CardSlot slot, int index)> nonEmptySlots = new List<(CardSlot, int)>();
 
-        // ��һ�α������ռ����зǿղ�λ��Ϣ
+        // 第一次遍历：收集所有非空槽位信息
         for (int i = 0; i < slots.Count; i++)
         {
             if (!slots[i].IsEmpty)
@@ -149,46 +189,46 @@ public abstract class BagBase : MonoBehaviour
             }
         }
 
-        // �ڶ��α�������ǰ��������λ
+        // 第二次遍历：从前往后填充空位
         int currentPosition = 0;
         foreach (var (slot, index) in nonEmptySlots)
         {
-            // �����ǰ�����Ѿ�����ȷλ�ã�����
+            // 如果当前卡牌已经在正确位置，跳过
             if (currentPosition == index)
             {
                 currentPosition++;
                 continue;
             }
 
-            // �ƶ����Ƶ���ǰλ��
+            // 移动卡牌到当前位置
             MoveCardToPosition(slot, currentPosition);
             currentPosition++;
         }
     }
 
     /// <summary>
-    /// �����ƴ�һ����λ�ƶ�����һ����λ
+    /// 将卡牌从一个槽位移动到另一个槽位
     /// </summary>
     private void MoveCardToPosition(CardSlot sourceSlot, int targetIndex)
     {
-        // ���Ŀ��λ�þ��ǵ�ǰλ�ã������κβ���
+        // 如果目标位置就是当前位置，不做任何操作
         int sourceIndex = slots.IndexOf(sourceSlot);
         if (sourceIndex == targetIndex) return;
 
         CardSlot targetSlot = slots[targetIndex];
 
-        // ���Ŀ���λΪ�գ�ֱ���ƶ������ѵ�
+        // 如果目标槽位为空，直接移动整个堆叠
         if (targetSlot.IsEmpty)
         {
-            while (sourceSlot.StackCount > 0)
+            while (!sourceSlot.IsEmpty)
             {
                 targetSlot.AddCard(sourceSlot.RemoveCard());
             }
         }
-        // ���Ŀ���λ����ͬ�����ҿ��Զѵ�
+        // 如果目标槽位有相同卡牌且可以堆叠
         else if (targetSlot.ContainsSimilarCard(sourceSlot.Card.cardName) && targetSlot.CanStack())
         {
-            // �����ܶ���ƶ����Ƶ�Ŀ���λ
+            // 尽可能多地移动卡牌到目标槽位
             while (sourceSlot.StackCount > 0 && targetSlot.CanStack())
             {
                 targetSlot.AddCard(sourceSlot.RemoveCard());

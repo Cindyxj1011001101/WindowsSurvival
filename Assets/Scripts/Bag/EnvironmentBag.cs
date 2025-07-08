@@ -12,9 +12,9 @@ public class EnvironmentBag : BagBase
         if (!CanAddCard(card))
         {
             // 暂定每次新增3个格子
-            AddSlot(5);
-            base.AddCard(card);
+            AddSlot(3);
         }
+        base.AddCard(card);
     }
     
     

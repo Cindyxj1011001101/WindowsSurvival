@@ -61,7 +61,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 跨背包放置
             else
             {
-                cardMoved = TryPlaceCardInDifferentBag(targetBag);
+                cardMoved = TryPlaceCardInDifferentBag(originalBag, targetBag);
             }
         }
 
@@ -105,12 +105,12 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         return false;
     }
 
-    private bool TryPlaceCardInDifferentBag(BagBase targetBag)
+    private bool TryPlaceCardInDifferentBag(BagBase originalBag, BagBase targetBag)
     {
         bool movedAny = false;
         while (originalSlot.StackCount > 0 && targetBag.CanAddCard(originalSlot.PeekCard()))
         {
-            targetBag.AddCard(originalSlot.RemoveCard());
+            targetBag.AddCard(originalBag.RemoveCard(originalSlot));
             movedAny = true;
         }
         return movedAny;
