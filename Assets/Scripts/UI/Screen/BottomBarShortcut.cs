@@ -7,8 +7,6 @@ using UnityEngine.UI;
 /// </summary>
 public class BottomBarShortcut : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    private BottomBar bottomBar;
-
     [SerializeField]
     private Image appIconImage;
 
@@ -29,9 +27,8 @@ public class BottomBarShortcut : MonoBehaviour, IPointerEnterHandler, IPointerEx
         Appear();
     }
 
-    public void Init(App app, BottomBar bottomBar)
+    public void Init(App app)
     {
-        this.bottomBar = bottomBar;
         appName = app.name;
         appIconImage.sprite = app.icon;
     }
@@ -41,7 +38,7 @@ public class BottomBarShortcut : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (selected)
             WindowsManager.Instance.MinimizeWindow(appName);
         else
-            WindowsManager.Instance.FocusWindow(appName);
+            WindowsManager.Instance.OpenWindow(appName);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

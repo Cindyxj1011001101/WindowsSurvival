@@ -4,40 +4,21 @@ using UnityEngine;
 
 public class GMCommand
 {
-    [MenuItem("Command/´ò¿ªµ×±ßÀ¸")]
-    public static void ShowBottomBarPanel()
+    [MenuItem("Command/æ·»åŠ ä¸€å—å‹ç¼©é¥¼å¹²")]
+    public static void A()
     {
-        UIManager.Instance.ShowPanel<BottomBarPanel>();
+        var card = CardFactory.CreateCardInstance<FoodCardInstance>("å‹ç¼©é¥¼å¹²");
+        Debug.Log(card);
+        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
+        playerBag.AddCard(card);
     }
 
-    [MenuItem("Command/¼ÓÔØ×ÀÃæ¿ì½İ·½Ê½")]
-    public static void LoadDesktopShortcuts()
+    [MenuItem("Command/æ·»åŠ ä¸€å—åºŸé‡‘å±")]
+    public static void B()
     {
-        // ¼ÓÔØÊı¾İ
-        List<App> appsData = Resources.Load<AppsData>("SO/TestAppsData").appsData;
-        foreach (App app in appsData)
-        {
-            Debug.Log(app);
-        }
-    }
-
-    [MenuItem("Command/ÏÔÊ¾×ÀÃæ¿ì½İ·½Ê½")]
-    public static void ShowDesktopShortcuts()
-    {
-        // ¼ÓÔØÊı¾İ
-        List<App> appsData = Resources.Load<AppsData>("SO/TestAppsData").appsData;
-        Object.FindObjectOfType<Desktop>().Init(appsData);
-    }
-
-    [MenuItem("Command/´ò¿ª±³°ü´°¿Ú")]
-    public static void OpenBackpackWindow()
-    {
-        WindowsManager.Instance.OpenWindow("Backpack");
-    }
-
-    [MenuItem("Command/¹Ø±Õ±³°ü´°¿Ú")]
-    public static void CloseBackpackWindow()
-    {
-        WindowsManager.Instance.CloseWindow("Backpack");
+        var card = CardFactory.CreateCardInstance<ResourceCardInstance>("åºŸé‡‘å±");
+        Debug.Log(card);
+        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
+        playerBag.AddCard(card);
     }
 }

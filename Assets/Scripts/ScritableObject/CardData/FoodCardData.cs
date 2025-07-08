@@ -5,9 +5,4 @@ using UnityEngine;
 public class FoodCardData:CardData
 {
     public int MaxFresh;
-
-    public override void Init()
-    { 
-        cardType=CardType.Food;
-    }
 }

@@ -15,17 +15,20 @@ public class WindowGroup : MonoBehaviour
 
     public void FocusWindow(WindowBase window)
     {
+        if (window == null) return;
         window.transform.SetParent(opened);
         window.transform.SetAsLastSibling();
     }
 
     public void CloseWindow(WindowBase window)
     {
+        if (window == null) return;
         window.transform.SetParent(closed);
     }
 
     public void MinimizeWindow(WindowBase window)
     {
+        if (window == null) return;
         window.transform.SetParent(minimized);
     }
 
