@@ -3,102 +3,80 @@ using UnityEngine;
 
 public class GMCommand
 {
+    private static void AddCard(string cardName)
+    {
+        string dataPath = "ScriptableObject/Card/" + cardName;
+        CardData defaultData = Resources.Load<CardData>(dataPath);
+        var card = CardFactory.CreateCardIntance(defaultData);
+        Debug.Log(card);
+        var bag = WindowsManager.Instance.GetCurrentFocusedWindow().GetComponentInChildren<BagBase>();
+        if (bag == null) return;
+        bag.AddCard(card);
+    }
+
     [MenuItem("Command/添加压缩饼干")]
     public static void A()
     {
-        var card = CardFactory.CreateCardInstance<FoodCardInstance>("压缩饼干");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("压缩饼干");
     }
 
     [MenuItem("Command/添加废金属")]
     public static void B()
     {
-        var card = CardFactory.CreateCardInstance<ResourceCardInstance>("废金属");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("废金属");
     }
 
     [MenuItem("Command/添加瓶装水")]
     public static void C()
     {
-        var card = CardFactory.CreateCardInstance<FoodCardInstance>("瓶装水");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("瓶装水");
     }
 
     [MenuItem("Command/添加通往驾驶室的门")]
     public static void D()
     {
-        var card = CardFactory.CreateCardInstance<PlaceCardInstance>("通往驾驶室的门");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("通往驾驶室的门");
     }
 
     [MenuItem("Command/添加通往动力舱的门")]
     public static void E()
     {
-        var card = CardFactory.CreateCardInstance<PlaceCardInstance>("通往动力舱的门");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("通往动力舱的门");
     }
 
     [MenuItem("Command/添加被安全泡沫覆盖的废料堆")]
     public static void F()
     {
-        var card = CardFactory.CreateCardInstance<ResourcePointCardInstance>("被安全泡沫覆盖的废料堆");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("被安全泡沫覆盖的废料堆");
     }
 
     [MenuItem("Command/添加硬质纤维")]
     public static void G()
     {
-        var card = CardFactory.CreateCardInstance<ResourceCardInstance>("硬质纤维");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("硬质纤维");
     }
 
     [MenuItem("Command/添加老鼠尸体")]
     public static void H()
     {
-        var card = CardFactory.CreateCardInstance<FoodCardInstance>("老鼠尸体");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("老鼠尸体");
     }
 
     [MenuItem("Command/添加小块肉")]
     public static void I()
     {
-        var card = CardFactory.CreateCardInstance<FoodCardInstance>("小块肉");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("小块肉");
     }
 
     [MenuItem("Command/添加废铁刀")]
     public static void J()
     {
-        var card = CardFactory.CreateCardInstance<ToolCardInstance>("废铁刀");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("废铁刀");
     }
 
     [MenuItem("Command/添加腐烂物")]
     public static void K()
     {
-        var card = CardFactory.CreateCardInstance<FoodCardInstance>("腐烂物");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
+        AddCard("腐烂物");
     }
 }
