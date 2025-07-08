@@ -11,10 +11,6 @@ public class CardData:ScriptableObject
     public string cardDesc;
     public int maxStackNum;
     public List<CardEvent> cardEventList;
-    public virtual void Init()
-    {
-            
-    }
 
     public override string ToString()
     {

@@ -4,8 +4,4 @@ using UnityEngine;
 public class ResourceCardData:CardData
 {
     public float Weight;
-    public override void Init()
-    { 
-        cardType=CardType.Resource;
-    }
 }
