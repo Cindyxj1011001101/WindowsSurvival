@@ -3,7 +3,8 @@
     private float maxLoad = 15;
 
     private float currentLoad;
-
+     public PlayerBagData playerBagData;//初始背包数据
+     public int curStack;//当前卡牌堆数量
     public float MaxLoad => maxLoad;
     public float CurrentLoad => currentLoad;
 
@@ -44,4 +45,44 @@
 
         }
     }
+    // public void AddCard(CardData cardData)
+    //  {
+//         //记录当前是否有相同卡牌
+//             bool hasSame = false;
+//             //在当前卡牌库中寻找该卡牌
+//             foreach (var card in cardList)
+//             {
+//                 //卡牌数据相同且未到达堆叠上限时找到相同可堆叠卡牌
+//                 if (card.cardData == cardData&&card.cardNum<cardData.maxStackNum)
+//                 {
+//                     //堆叠该卡牌
+//                     card.cardNum++;
+//                     curHeavy+=cardData.weight;
+//                     hasSame = true;
+//                     return;
+//                 }
+//             }
+//             //没有相同卡牌则按照类型创建
+//             if (hasSame== false)
+//             {
+//                 curStack++;
+//                 //卡牌数据不同或者已到达堆叠上限
+//                 //根据卡牌类型创建该卡牌
+//                 if (cardData.GetType() == typeof(ResourcePointCardData))
+//                 {
+//                     ResourcePointCardData resourcePointCard = (ResourcePointCardData)cardData;
+//                     cardList.Add(new ResourcePointCard(cardData,1,resourcePointCard.maxEndurance));
+//                 }
+//                 else if (cardData.GetType() == typeof(ToolCardData))
+//                 {
+//                     ToolCardData resourcePointCard = (ToolCardData)cardData;
+//                     cardList.Add(new ToolCard(cardData,1,resourcePointCard.maxEndurance));
+//                 }
+//                 else
+//                 {
+//                     cardList.Add(new Card(cardData,1));
+//                 }
+//                 
+//             }
+     // }
 }
