@@ -26,7 +26,7 @@ public class CardSlot : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void Init()
     {
         iconImage = transform.Find("Card/Icon").GetComponent<Image>();
         fillImage = transform.Find("Card/Fill").GetComponent<Image>();
@@ -41,14 +41,14 @@ public class CardSlot : MonoBehaviour
 
     private void OnCardPropertyChanged()
     {
-        iconImage.gameObject.SetActive(currentCard is FoodCardData);
+        fillImage.gameObject.SetActive(currentCard is FoodCardData);
         propertyText.text = "";
         switch (currentCard)
         {
             case FoodCardData cardData:
                 // 保质期无限
                 if (cardData.MaxFresh == -1)
-                    iconImage.gameObject.SetActive(false);
+                    fillImage.gameObject.SetActive(false);
                 // 有保质期
                 else
                     fillImage.fillAmount = (float)(cardInstanceQueue.Peek() as FoodCardInstance).CurrentFresh / cardData.MaxFresh;
