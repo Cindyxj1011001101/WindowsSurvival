@@ -2,13 +2,13 @@
 using UnityEngine;
 
 [Serializable]
-public class PlayerBag : Bag
+public class PlayerBagCard : Bag
 {
     public PlayerBagData playerBagData;
     public float curHeavy;
     public int curStack;
 
-    public PlayerBag()
+    public PlayerBagCard()
     {
         curHeavy = 0;
         curStack = 0;
@@ -37,7 +37,7 @@ public class PlayerBag : Bag
             foreach (var card in cardList)
             {
                 //卡牌数据相同且未到达堆叠上限时找到相同可堆叠卡牌
-                if (card.cardData == cardData&&card.cardNum<cardData.MaxStackNum)
+                if (card.cardData == cardData&&card.cardNum<cardData.maxStackNum)
                 {
                     //堆叠该卡牌
                     card.cardNum++;

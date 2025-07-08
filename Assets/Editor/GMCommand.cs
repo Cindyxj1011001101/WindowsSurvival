@@ -1,36 +1,36 @@
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-
-public class GMCommand
-{
-    [MenuItem("Command/Ìí¼ÓÒ»¸öÑ¹Ëõ±ý¸Éµ½±³°ü")]
-    public static void Ìí¼ÓÒ»¸öÑ¹Ëõ±ý¸Éµ½±³°ü()
-    {
-        var card = CardFactory.CreateCardInstance<FoodCardInstance>("Ñ¹Ëõ±ý¸É");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
-    }
-
-    [MenuItem("Command/Ìí¼ÓÒ»¿é·Ï½ðÊôµ½±³°ü")]
-    public static void Ìí¼ÓÒ»¿é·Ï½ðÊôµ½±³°ü()
-    {
-        var card = CardFactory.CreateCardInstance<ResourceCardInstance>("·Ï½ðÊô");
-        Debug.Log(card);
-        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
-        playerBag.AddCard(card);
-    }
-
-    [MenuItem("Command/Ìí¼ÓÒ»¸öÓ²ÖÊÏËÎ¬µ½±³°ü")]
-    public static void Ìí¼ÓÒ»¸öÓ²ÖÊÏËÎ¬µ½±³°ü()
-    {
-
-    }
-
-    [MenuItem("Command/Ìí¼ÓÒ»¸öÀÏÊóÊ¬Ìåµ½±³°ü")]
-    public static void Ìí¼ÓÒ»¸öÀÏÊóÊ¬Ìåµ½±³°ü()
-    {
-
-    }
-}
+// using System.Collections.Generic;
+// using UnityEditor;
+// using UnityEngine;
+//
+// public class GMCommand
+// {
+//     [MenuItem("Command/ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½ï¿½ï¿½")]
+//     public static void ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½Éµï¿½ï¿½ï¿½ï¿½ï¿½()
+//     {
+//         var card = CardFactory.CreateCardInstance<FoodCardInstance>("Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+//         Debug.Log(card);
+//         PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
+//         playerBag.AddCard(card);
+//     }
+//
+//     [MenuItem("Command/ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
+//     public static void ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½()
+//     {
+//         var card = CardFactory.CreateCardInstance<ResourceCardInstance>("ï¿½Ï½ï¿½ï¿½ï¿½");
+//         Debug.Log(card);
+//         PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
+//         playerBag.AddCard(card);
+//     }
+//
+//     [MenuItem("Command/ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ó²ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
+//     public static void ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ó²ï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½()
+//     {
+//
+//     }
+//
+//     [MenuItem("Command/ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¬ï¿½åµ½ï¿½ï¿½ï¿½ï¿½")]
+//     public static void ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¬ï¿½åµ½ï¿½ï¿½ï¿½ï¿½()
+//     {
+//
+//     }
+// }

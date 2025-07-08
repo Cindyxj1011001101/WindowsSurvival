@@ -1,6 +1,8 @@
 ﻿public enum EventType
 {
     ChangeState,
+    IntervalSettle,
+    AddDropCard,
     ChangeLoad, // 背包载重变化
 }
 

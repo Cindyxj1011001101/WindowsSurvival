@@ -5,7 +5,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 [Serializable]
-public class EnvironmentBag : Bag
+public class EnvironmentBagCard : Bag
 {
     public CardEvent CardEvent;
     public float curDescoveryDegree;

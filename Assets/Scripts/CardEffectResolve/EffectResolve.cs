@@ -5,11 +5,11 @@ public class EffectResolve : MonoBehaviour
     private static EffectResolve instance;
     public static EffectResolve Instance => instance;
     [Header("玩家背包")]
-    public PlayerBag PlayerBag;
+    public PlayerBagCard PlayerBag;
     [Header("环境背包列表")]
-    public EnvironmentBag[] EnvironmentBag;
+    public EnvironmentBagCard[] EnvironmentBag;
     [Header("当前环境背包")]
-    public EnvironmentBag CurEnvironmentBag;
+    public EnvironmentBagCard CurEnvironmentBag;
 
     public void Awake()
     {
