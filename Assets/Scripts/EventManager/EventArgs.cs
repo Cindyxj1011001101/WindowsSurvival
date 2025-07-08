@@ -4,7 +4,8 @@
     IntervalSettle,
     AddDropCard,
     ChangeLoad, // 背包载重变化
-    RefreshCard//时间间隔结算（卡牌新鲜度刷新）
+    RefreshCard,//时间间隔结算（卡牌新鲜度刷新）
+    Move
 }
 
 public class ChangeStateArgs

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 public enum PlaceEnum
 {
     //动力舱、驾驶室、维生舱
@@ -62,23 +63,24 @@ public class EffectResolve : MonoBehaviour
     //掉落卡牌加入背包
     public void AddDropCard(Drop drop,bool ToPlayerBag)
     {
+        Type droptype = drop.cardData.GetType();
         if (ToPlayerBag)
         {
             //判断背包格子数量是否已满
             if (PlayerBag.slots.Count == InitPlayerStateData.Instance.maxPlayerGrid)
             {
-                CurEnvironmentBag.AddCard(drop.cardData);
+                //CurEnvironmentBag.AddCard(drop.cardData);
             }
             //判断背包重量是否会超过到达指定倍数
             else if (PlayerBag.CurrentLoad + drop.cardData.weight == InitPlayerStateData.Instance.maxWeightFactor *
                      InitPlayerStateData.Instance.maxPlayerWeight)
             {
-                CurEnvironmentBag.AddCard(drop.cardData);
+                //CurEnvironmentBag.AddCard(drop.cardData);
             }
         }
         else
         {
-            PlayerBag.AddCard(drop.cardData);
+            //PlayerBag.AddCard(drop.cardData);
         }
     }
     
@@ -90,7 +92,20 @@ public class EffectResolve : MonoBehaviour
             if (environmentBag.place == aimPlace)
             {
                 CurEnvironmentBag = environmentBag;
-                //TODO：重载场景背包事件
+                EventManager.Instance.TriggerEvent(EventType.Move,CurEnvironmentBag);
+            }
+        }
+    }
+    
+    //初始化SO数据
+    public void Init()
+    {
+        EventTrigger[] eventTriggers = Resources.LoadAll<EventTrigger>("ScriptableObject/EventTrigger");
+        if (eventTriggers != null && eventTriggers.Length > 0)
+        {
+            foreach (var trigger in eventTriggers)
+            {
+                trigger.Init();
             }
         }
     }
