@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 public abstract class Bag
 {
@@ -37,22 +38,7 @@ public class PlayerBag : Bag
                 {
                     //堆叠该卡牌
                     card.cardNum++;
-                    //食物，资源和工具卡牌增加重量
-                    if (cardData.GetType() == typeof(FoodCardData))
-                    {
-                        FoodCardData FoodCard = (FoodCardData)cardData;
-                        curHeavy+=FoodCard.Weight;
-                    }
-                    else if (cardData.GetType() == typeof(ToolCardData))
-                    {
-                        ToolCardData ToolCard = (ToolCardData)cardData;
-                        curHeavy+=ToolCard.Weight;
-                    }
-                    else if (cardData.GetType() == typeof(ResourceCardData))
-                    {
-                        ResourceCardData ResourceCard = (ResourceCardData)cardData;
-                        curHeavy+=ResourceCard.Weight;
-                    }
+                    curHeavy+=cardData.Weight;
                     hasSame = true;
                     return;
                 }
@@ -77,25 +63,25 @@ public class PlayerBag : Bag
             }
     }
 
-    //TODO：移除单张卡牌，处理移除一堆卡牌中的一张
+
     public override void RemoveCard(Card card)
     {
-        if (card.cardData.GetType() == typeof(FoodCardData))
+        curHeavy-=card.cardData.Weight;
+        if (cardList.Contains(card))
         {
-            FoodCardData FoodCard = (FoodCardData)card.cardData;
-            curHeavy-=FoodCard.Weight;
+            if (card.cardNum > 1)
+            {
+                card.cardNum--;
+                return;
+            }
+            else
+            {
+                cardList.Remove(card);
+                curStack--;
+            }
         }
-        else if (card.cardData.GetType() == typeof(ToolCardData))
-        {
-            ToolCardData ToolCard = (ToolCardData)card.cardData;
-            curHeavy-=ToolCard.Weight;
-        }
-        else if (card.cardData.GetType() == typeof(ResourceCardData))
-        {
-            ResourceCardData ResourceCard = (ResourceCardData)card.cardData;
-            curHeavy-=ResourceCard.Weight;
-        }
-        cardList.Remove(card);
+        
+        
     }
 }
 public class EnvironmentBag : Bag
@@ -106,8 +92,12 @@ public class EnvironmentBag : Bag
     public List<Drop> curOnceList;
     public override void Init()
     {
+        //探索度归零
         curDescoveryDegree = 0;
+        //获得地点掉落事件
         PlaceDropEvent placeDropEvent=CardEvent.eventList[0] as PlaceDropEvent;
+        //重置单次掉落事件
+        curOnceList = placeDropEvent.OnceDropList;
         //遍历需要增加的卡牌数据
         foreach (var cardDrop in placeDropEvent.DefaultList)
         {
@@ -149,7 +139,25 @@ public class EnvironmentBag : Bag
     //单次掉落逻辑
     public void ExploreEnv()
     {
-        
+        if (curOnceList.Count != 0)
+        {
+            int sumProb=0;
+            foreach (var drop in curOnceList)
+            {
+                sumProb += drop.DropProb;
+            }
+            int rand = Random.Range(0, sumProb);
+            foreach (var drop in curOnceList)
+            {
+                if (rand < drop.DropProb)
+                {
+                    EventManager.Instance.TriggerEvent(EventType.AddDropCard, drop);
+                    curOnceList.Remove(drop);
+                    return;
+                }
+                rand -= drop.DropProb;
+            }
+        }
     }
 
     public override void AddCard(CardData cardData)
@@ -186,9 +194,18 @@ public class EnvironmentBag : Bag
                 
         }
     }
-
     public override void RemoveCard(Card card)
     {
-        cardList.Remove(card);
+        if (cardList.Contains(card))
+        {
+            if (card.cardNum > 1)
+            {
+                card.cardNum--;
+            }
+            else
+            {
+                cardList.Remove(card);
+            }
+        }
     }
 }

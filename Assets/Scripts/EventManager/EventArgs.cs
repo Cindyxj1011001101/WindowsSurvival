@@ -1,7 +1,8 @@
 ﻿public enum EventType
 {
     ChangeState,
-    IntervalSettle
+    IntervalSettle,
+    AddDropCard
 }
 
 public class ChangeStateArgs

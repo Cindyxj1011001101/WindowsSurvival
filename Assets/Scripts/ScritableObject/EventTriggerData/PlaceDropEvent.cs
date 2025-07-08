@@ -12,15 +12,16 @@ public class PlaceDropEvent:EventTrigger
     //重复掉落逻辑
     public override void EventResolve()
     {
+        //TODO:处理没有可重复掉落卡牌的情况
         int random = Random.Range(1,AllRepeatDrop);
-        foreach (var VARIABLE in RepeatDropList)
+        foreach (var drop in RepeatDropList)
         {
-            if (random<VARIABLE.DropProb)
+            if (random<drop.DropProb)
             {
-                //TODO:掉落单张卡牌
+                EventManager.Instance.TriggerEvent(EventType.AddDropCard, drop);
                 return;
             }
-            random-=VARIABLE.DropProb;
+            random-=drop.DropProb;
         }
     }
 
