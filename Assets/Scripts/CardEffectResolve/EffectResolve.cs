@@ -63,24 +63,22 @@ public class EffectResolve : MonoBehaviour
     //掉落卡牌加入背包
     public void AddDropCard(Drop drop,bool ToPlayerBag)
     {
-        Type droptype = drop.cardData.GetType();
+        CardInstance cardInstance = CardFactory.CreateCardIntance(drop.cardData);
         if (ToPlayerBag)
         {
             //判断背包格子数量是否已满
-            if (PlayerBag.slots.Count == InitPlayerStateData.Instance.maxPlayerGrid)
+            if (PlayerBag.CanAddCard(cardInstance))
             {
-                //CurEnvironmentBag.AddCard(drop.cardData);
+                CurEnvironmentBag.AddCard(cardInstance);
             }
-            //判断背包重量是否会超过到达指定倍数
-            else if (PlayerBag.CurrentLoad + drop.cardData.weight == InitPlayerStateData.Instance.maxWeightFactor *
-                     InitPlayerStateData.Instance.maxPlayerWeight)
+            else
             {
-                //CurEnvironmentBag.AddCard(drop.cardData);
+                PlayerBag.AddCard(cardInstance);
             }
         }
         else
         {
-            //PlayerBag.AddCard(drop.cardData);
+            CurEnvironmentBag.AddCard(cardInstance);
         }
     }
     

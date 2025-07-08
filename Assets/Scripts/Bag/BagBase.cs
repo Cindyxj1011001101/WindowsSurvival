@@ -5,13 +5,13 @@ public abstract class BagBase : MonoBehaviour
 {
     protected GameObject slotPrefab;
     protected Transform slotContainer;
-    [Header("³õÊ¼¸ñ×ÓÊýÁ¿")]
+    [Header("ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField]
     protected int initSlotCount = 9;
 
     protected List<CardSlot> slots = new();
 
-    protected int UsedSlotsCount // ÒÑÊ¹ÓÃµÄ¸ñ×ÓµÄÊýÁ¿
+    protected int UsedSlotsCount // ï¿½ï¿½Ê¹ï¿½ÃµÄ¸ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½
     {
         get
         {
@@ -23,8 +23,8 @@ public abstract class BagBase : MonoBehaviour
             return count;
         }
     }
-    protected int SlotsCount => slots.Count; // ËùÓÐ¸ñ×ÓµÄÊýÁ¿
-    protected bool IsBagFull => UsedSlotsCount == SlotsCount; // ±³°üÊÇ·ñÒÑÂú
+    protected int SlotsCount => slots.Count; // ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½
+    protected bool IsBagFull => UsedSlotsCount == SlotsCount; // ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½
 
     protected virtual void Start()
     {
@@ -36,7 +36,7 @@ public abstract class BagBase : MonoBehaviour
     protected void InitBag()
     {
         slots = new();
-        // Ìí¼Ó¸ñ×Ó
+        // ï¿½ï¿½ï¿½Ó¸ï¿½ï¿½ï¿½
         AddSlot(initSlotCount);
     }
 
@@ -52,11 +52,11 @@ public abstract class BagBase : MonoBehaviour
 
     public virtual bool CanAddCard(CardInstance card)
     {
-        // ±³°üÓÐ¿ÕÎ»£¬Ò»¶¨ÄÜÌí¼Ó¿¨ÅÆ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½Î»ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿ï¿½ï¿½ï¿½
         if (!IsBagFull) return true;
 
-        // ±³°üÃ»ÓÐ¿ÕÎ»
-        // ÄÜ·ñÌí¼ÓÈ¡¾öÓÚ±³°üÖÐµÄÍ¬Àà¿¨ÅÆÊÇ·ñ´ïµ½¶ÑµþÉÏÏÞ
+        // ï¿½ï¿½ï¿½ï¿½Ã»ï¿½Ð¿ï¿½Î»
+        // ï¿½Ü·ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ú±ï¿½ï¿½ï¿½ï¿½Ðµï¿½Í¬ï¿½à¿¨ï¿½ï¿½ï¿½Ç·ï¿½ïµ½ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½
         string cardName = card.CardData.cardName;
         var slots = GetSlotsContainingSimilarCard(cardName);
         foreach (CardSlot slot in slots)
@@ -68,10 +68,10 @@ public abstract class BagBase : MonoBehaviour
     }
 
     /// <summary>
-    /// »ñÈ¡ËùÓÐ·ÅÓÐÍ¬Àà¿¨ÅÆµÄ¸ñ×Ó
+    /// ï¿½ï¿½È¡ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½Í¬ï¿½à¿¨ï¿½ÆµÄ¸ï¿½ï¿½ï¿½
     /// </summary>
-    /// <param name="cardName">¿¨ÅÆÃû³Æ</param>
-    /// <param name="ascending">true: °´ÕÕ¶ÑµþÊýÁ¿ÉýÐòÅÅÐò£¬false: ½µÐòÅÅÐò</param>
+    /// <param name="cardName">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="ascending">true: ï¿½ï¿½ï¿½Õ¶Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½false: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
     /// <returns></returns>
     protected List<CardSlot> GetSlotsContainingSimilarCard(string cardName, bool ascending = true)
     {
@@ -91,7 +91,7 @@ public abstract class BagBase : MonoBehaviour
 
         string cardName = card.CardData.cardName;
 
-        // Ê×ÏÈ³¢ÊÔ¶Ñµþµ½ÒÑÓÐ¿¨ÅÆ
+        // ï¿½ï¿½ï¿½È³ï¿½ï¿½Ô¶Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½
         foreach (var slot in GetSlotsContainingSimilarCard(cardName))
         {
             if (slot.CanStack())
@@ -101,7 +101,7 @@ public abstract class BagBase : MonoBehaviour
             }
         }
 
-        // ·ñÔò·Åµ½ÐÂµÄ¿ÕÎ»
+        // ï¿½ï¿½ï¿½ï¿½Åµï¿½ï¿½ÂµÄ¿ï¿½Î»
         foreach (var slot in slots)
         {
             if (slot.IsEmpty)
@@ -120,7 +120,7 @@ public abstract class BagBase : MonoBehaviour
 
         if (slots.Count == 0) return;
 
-        // ÄÜµÃµ½Õâ¸öslotËµÃ÷ÀïÃæÖÁÉÙÓÐÒ»ÕÅÅÆ£¬ËùÒÔ¿ÉÒÔÖ±½Ó´ÓÀïÃæÒÆ³ý¿¨ÅÆ
+        // ï¿½ÜµÃµï¿½ï¿½ï¿½ï¿½slotËµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½Ö±ï¿½Ó´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½
         slots[0].RemoveCard();
     }
 
@@ -133,14 +133,14 @@ public abstract class BagBase : MonoBehaviour
     }
 
     /// <summary>
-    /// ½ô´ÕÅÅÁÐ¿¨ÅÆ£¬ÈÃÃ¿¸ö¿¨ÅÆ¾¡¿ÉÄÜÏòÇ°ÒÆ¶¯
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½Æ£ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½Æ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½Æ¶ï¿½
     /// </summary>
     public void CompactCards()
     {
-        // ¼ÇÂ¼ÐèÒªÒÆ¶¯µÄ¿¨ÅÆºÍËüÃÇµÄÔ­Ê¼Î»ÖÃ
+        // ï¿½ï¿½Â¼ï¿½ï¿½Òªï¿½Æ¶ï¿½ï¿½Ä¿ï¿½ï¿½Æºï¿½ï¿½ï¿½ï¿½Çµï¿½Ô­Ê¼Î»ï¿½ï¿½
         List<(CardSlot slot, int index)> nonEmptySlots = new List<(CardSlot, int)>();
 
-        // µÚÒ»´Î±éÀú£ºÊÕ¼¯ËùÓÐ·Ç¿Õ²ÛÎ»ÐÅÏ¢
+        // ï¿½ï¿½Ò»ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½Ð·Ç¿Õ²ï¿½Î»ï¿½ï¿½Ï¢
         for (int i = 0; i < slots.Count; i++)
         {
             if (!slots[i].IsEmpty)
@@ -149,35 +149,35 @@ public abstract class BagBase : MonoBehaviour
             }
         }
 
-        // µÚ¶þ´Î±éÀú£º´ÓÇ°ÍùºóÌî³ä¿ÕÎ»
+        // ï¿½Ú¶ï¿½ï¿½Î±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»
         int currentPosition = 0;
         foreach (var (slot, index) in nonEmptySlots)
         {
-            // Èç¹ûµ±Ç°¿¨ÅÆÒÑ¾­ÔÚÕýÈ·Î»ÖÃ£¬Ìø¹ý
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½È·Î»ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½
             if (currentPosition == index)
             {
                 currentPosition++;
                 continue;
             }
 
-            // ÒÆ¶¯¿¨ÅÆµ½µ±Ç°Î»ÖÃ
+            // ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½Ç°Î»ï¿½ï¿½
             MoveCardToPosition(slot, currentPosition);
             currentPosition++;
         }
     }
 
     /// <summary>
-    /// ½«¿¨ÅÆ´ÓÒ»¸ö²ÛÎ»ÒÆ¶¯µ½ÁíÒ»¸ö²ÛÎ»
+    /// ï¿½ï¿½ï¿½ï¿½ï¿½Æ´ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Î»ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Î»
     /// </summary>
     private void MoveCardToPosition(CardSlot sourceSlot, int targetIndex)
     {
-        // Èç¹ûÄ¿±êÎ»ÖÃ¾ÍÊÇµ±Ç°Î»ÖÃ£¬²»×öÈÎºÎ²Ù×÷
+        // ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Î»ï¿½Ã¾ï¿½ï¿½Çµï¿½Ç°Î»ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎºÎ²ï¿½ï¿½ï¿½
         int sourceIndex = slots.IndexOf(sourceSlot);
         if (sourceIndex == targetIndex) return;
 
         CardSlot targetSlot = slots[targetIndex];
 
-        // Èç¹ûÄ¿±ê²ÛÎ»Îª¿Õ£¬Ö±½ÓÒÆ¶¯Õû¸ö¶Ñµþ
+        // ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½Î»Îªï¿½Õ£ï¿½Ö±ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñµï¿½
         if (targetSlot.IsEmpty)
         {
             while (sourceSlot.StackCount > 0)
@@ -185,10 +185,10 @@ public abstract class BagBase : MonoBehaviour
                 targetSlot.AddCard(sourceSlot.RemoveCard());
             }
         }
-        // Èç¹ûÄ¿±ê²ÛÎ»ÓÐÏàÍ¬¿¨ÅÆÇÒ¿ÉÒÔ¶Ñµþ
+        // ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½ï¿½Ò¿ï¿½ï¿½Ô¶Ñµï¿½
         else if (targetSlot.ContainsSimilarCard(sourceSlot.Card.cardName) && targetSlot.CanStack())
         {
-            // ¾¡¿ÉÄÜ¶àµØÒÆ¶¯¿¨ÅÆµ½Ä¿±ê²ÛÎ»
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Ü¶ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½Æµï¿½Ä¿ï¿½ï¿½ï¿½Î»
             while (sourceSlot.StackCount > 0 && targetSlot.CanStack())
             {
                 targetSlot.AddCard(sourceSlot.RemoveCard());
