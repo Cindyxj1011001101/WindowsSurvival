@@ -8,16 +8,19 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
     private static WindowsManager instance;
     public static WindowsManager Instance => instance;
 
-    [SerializeField] private Desktop desktop; // 桌面布局
-    [SerializeField] private BottomBar bottomBar; // 底边栏布局
-    [SerializeField] private Button settingsButton; // 设置按钮(Windows键)
+    private Desktop desktop; // 桌面布局
+    private BottomBar bottomBar; // 底边栏布局
+    private Button settingsButton; // 设置按钮(Windows键)
 
-    private Dictionary<string, WindowBase> openedWindows = new(); // 当前所有打开的窗口
+    private Dictionary<string, WindowBase> openedWindows = new(); // 当前所有打开的窗口，最小化的窗口也算打开的
     private WindowBase currentFocusedWindow; // 当前持有焦点的窗口，可能是openWindows[0]，可能是null
 
     private WindowGroup windowGroup; // 所有窗口作为其子物体，由该脚本控制窗口的渲染顺序
 
     private List<App> appsData;
+
+    public Desktop Desktop => desktop;
+    public BottomBar BottomBar => bottomBar;
 
     private void Awake()
     {
@@ -26,6 +29,8 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
 
     private void Start()
     {
+        desktop = transform.Find("Desktop").GetComponent<Desktop>();
+        bottomBar = transform.Find("BottomBar").GetComponent<BottomBar>();  
         windowGroup = transform.Find("Desktop/WindowGroup").GetComponent<WindowGroup>();
 
         currentFocusedWindow = null;
@@ -65,11 +70,15 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
 
     public void CloseWindow(string appName)
     {
+        // 窗口必须已经打开
         if (!IsWindowOpen(appName)) return;
 
         WindowBase window = openedWindows[appName];
         openedWindows.Remove(appName);
         window.Close();
+
+        // 将窗口从渲染层级中移除
+        windowGroup.CloseWindow(window);
 
         // 将底边栏的快捷方式移除
         bottomBar.RemoveShortcut(appName);
@@ -79,14 +88,32 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         FocusWindow(windowGroup.GetTheFrontWindow());
     }
 
-    public void MaximizeWindow(string appName)
-    {
+    //public void MaximizeWindow(string appName)
+    //{
+    //    if (!IsWindowOpen(appName)) return;
 
-    }
+    //    WindowBase window = openedWindows[appName];
+    //    // 最大化窗口
+    //    window.Maximize();
+
+    //    // 让窗口获得焦点
+    //    FocusWindow(window);
+    //}
 
     public void MinimizeWindow(string appName)
     {
+        if (!IsWindowOpen(appName)) return;
 
+        WindowBase window = openedWindows[appName];
+        // 最小化窗口
+        window.Minimize(bottomBar[appName].transform);
+
+        // 将window暂停渲染
+        windowGroup.MinimizeWindow(window);
+
+        // 设置获得焦点的窗口是渲染层级最靠前的窗口
+        // 或者是null
+        FocusWindow(windowGroup.GetTheFrontWindow());
     }
 
     public void FocusWindow(WindowBase window)
@@ -101,16 +128,14 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
             win.SetFocused(win == window);
         }
 
-        // 如果窗口为null，则直接返回
-        if (window == null) return;
-
         // 调整window的渲染顺序为最高
         windowGroup.FocusWindow(currentFocusedWindow);
 
-        // 清除桌面上的选择
-        desktop.ClearSelection();
-        // 选中底边栏中的快捷方式
-        bottomBar.SelectAppShortcut(window.AppName);
+        if (window != null)
+            // 选中底边栏中的快捷方式
+            bottomBar.SelectAppShortcut(window.AppName);
+        else
+            bottomBar.ClearSelection();
     }
 
     public void FocusWindow(string appName)

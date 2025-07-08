@@ -4,40 +4,33 @@ using UnityEngine;
 
 public class GMCommand
 {
-    [MenuItem("Command/打开底边栏")]
-    public static void ShowBottomBarPanel()
+    [MenuItem("Command/添加一个压缩饼干到背包")]
+    public static void 添加一个压缩饼干到背包()
     {
-        UIManager.Instance.ShowPanel<BottomBarPanel>();
+        var card = CardFactory.CreateCardInstance<FoodCardInstance>("压缩饼干");
+        Debug.Log(card);
+        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
+        playerBag.AddCard(card);
     }
 
-    [MenuItem("Command/加载桌面快捷方式")]
-    public static void LoadDesktopShortcuts()
+    [MenuItem("Command/添加一块废金属到背包")]
+    public static void 添加一块废金属到背包()
     {
-        // 加载数据
-        List<App> appsData = Resources.Load<AppsData>("SO/TestAppsData").appsData;
-        foreach (App app in appsData)
-        {
-            Debug.Log(app);
-        }
+        var card = CardFactory.CreateCardInstance<ResourceCardInstance>("废金属");
+        Debug.Log(card);
+        PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
+        playerBag.AddCard(card);
     }
 
-    [MenuItem("Command/显示桌面快捷方式")]
-    public static void ShowDesktopShortcuts()
+    [MenuItem("Command/添加一个硬质纤维到背包")]
+    public static void 添加一个硬质纤维到背包()
     {
-        // 加载数据
-        List<App> appsData = Resources.Load<AppsData>("SO/TestAppsData").appsData;
-        Object.FindObjectOfType<Desktop>().Init(appsData);
+
     }
 
-    [MenuItem("Command/打开背包窗口")]
-    public static void OpenBackpackWindow()
+    [MenuItem("Command/添加一个老鼠尸体到背包")]
+    public static void 添加一个老鼠尸体到背包()
     {
-        WindowsManager.Instance.OpenWindow("Backpack");
-    }
 
-    [MenuItem("Command/关闭背包窗口")]
-    public static void CloseBackpackWindow()
-    {
-        WindowsManager.Instance.CloseWindow("Backpack");
     }
 }
