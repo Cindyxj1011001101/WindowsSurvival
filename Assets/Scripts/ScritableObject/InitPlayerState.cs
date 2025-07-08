@@ -16,4 +16,5 @@ public class InitPlayerStateData:SingleScriptableObject<InitPlayerStateData>
     public int maxPlayerGrid;
     public float maxPlayerWeight;
     public float maxWeightFactor;
+    public EnvironmentBagData EnvBag;
 }

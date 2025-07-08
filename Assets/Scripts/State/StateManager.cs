@@ -4,7 +4,6 @@ using UnityEngine;
 public enum StateEnum
 {
     //氧气、健康值、饱食、水分、困倦度、san值
-    Oxygen,
     Health,
     Fullness,
     Thirst,
