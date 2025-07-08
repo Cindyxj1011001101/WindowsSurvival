@@ -7,6 +7,6 @@
 
     public override void InitFromCardData(CardData cardData)
     {
-        throw new System.NotImplementedException();
+        
     }
 }

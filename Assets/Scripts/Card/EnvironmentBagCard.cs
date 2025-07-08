@@ -30,7 +30,7 @@ public class EnvironmentBagCard : Bag
             foreach (var card in cardList)
             {
                 //卡牌数据相同且未到达堆叠上限时找到相同可堆叠卡牌
-                if (card.cardData == cardDrop.cardData&&card.cardNum<cardDrop.cardData.MaxStackNum)
+                if (card.cardData == cardDrop.cardData&&card.cardNum<cardDrop.cardData.maxStackNum)
                 {
                     //堆叠该卡牌
                     card.cardNum++;
@@ -91,7 +91,7 @@ public class EnvironmentBagCard : Bag
         foreach (var card in cardList)
         {
             //卡牌数据相同且未到达堆叠上限时找到相同可堆叠卡牌
-            if (card.cardData == cardData&&card.cardNum<cardData.MaxStackNum)
+            if (card.cardData == cardData&&card.cardNum<cardData.maxStackNum)
             {
                 //堆叠该卡牌
                 card.cardNum++;

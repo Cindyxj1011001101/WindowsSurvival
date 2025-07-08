@@ -19,7 +19,7 @@
             if (!slot.IsEmpty)
                 // 因为同样的卡牌重量都是一样的，所以可以这样算
                 //currentLoad += GetCardWeight(slot.CardInstanceList[0]) * slot.StackCount;
-                currentLoad += GetCardWeight(slot.PeekCard()) * slot.StackCount;
+                currentLoad += slot.PeekCard().CardData.weight * slot.StackCount;
         }
 
         // 注册载重变化的事件
@@ -29,7 +29,7 @@
     public override bool CanAddCard(CardInstance card)
     {
         // 载重不足，无法添加卡牌
-        if (CurrentLoad + GetCardWeight(card) > maxLoad) return false;
+        if (CurrentLoad + card.CardData.weight > maxLoad) return false;
 
         // 载重足够则按照父类的判断标准进行判断
         return base.CanAddCard(card);
@@ -43,17 +43,5 @@
             // 触发载重变化的事件
 
         }
-    }
-
-    private float GetCardWeight(CardInstance card)
-    {
-        CardData cardData = card.CardData;
-        return cardData switch
-        {
-            FoodCardData => (cardData as FoodCardData).Weight,
-            ToolCardData => (cardData as ToolCardData).Weight,
-            ResourceCardData => (cardData as ResourceCardData).Weight,
-            _ => 0,
-        };
     }
 }

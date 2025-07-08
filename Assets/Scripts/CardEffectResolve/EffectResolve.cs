@@ -106,7 +106,7 @@ public class EffectResolve : MonoBehaviour
             CurEnvironmentBag.AddCard(drop.cardData);
         }
         //判断背包重量是否会超过到达指定倍数
-        else if (PlayerBag.curHeavy + drop.cardData.Weight == InitPlayerStateData.Instance.maxWeightFactor *
+        else if (PlayerBag.curHeavy + drop.cardData.weight == InitPlayerStateData.Instance.maxWeightFactor *
                  InitPlayerStateData.Instance.maxPlayerWeight)
         {
             CurEnvironmentBag.AddCard(drop.cardData);

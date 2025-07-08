@@ -41,7 +41,7 @@ public class PlayerBagCard : Bag
                 {
                     //堆叠该卡牌
                     card.cardNum++;
-                    curHeavy+=cardData.Weight;
+                    curHeavy+=cardData.weight;
                     hasSame = true;
                     return;
                 }
@@ -73,7 +73,7 @@ public class PlayerBagCard : Bag
 
     public override void RemoveCard(Card card)
     {
-        curHeavy-=card.cardData.Weight;
+        curHeavy-=card.cardData.weight;
         if (cardList.Contains(card))
         {
             if (card.cardNum > 1)
