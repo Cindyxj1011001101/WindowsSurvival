@@ -4,8 +4,4 @@ using UnityEngine;
 public class ResourcePointCardData:CardData
 {
     public int maxEndurance;
-    public override void Init()
-    { 
-        cardType=CardType.ResourcePoint;
-    }
 }
