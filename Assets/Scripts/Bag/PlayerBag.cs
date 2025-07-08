@@ -9,6 +9,11 @@
 
     protected override void Start()
     {
+        // 加载PlayerBagData里面的数据，静态数据(初始时的数据)
+
+        // 加载运行时的数据
+
+
         base.Start();
         // 添加基础卡牌
 
@@ -18,12 +23,10 @@
         {
             if (!slot.IsEmpty)
                 // 因为同样的卡牌重量都是一样的，所以可以这样算
-                //currentLoad += GetCardWeight(slot.CardInstanceList[0]) * slot.StackCount;
-                currentLoad += slot.PeekCard().CardData.weight * slot.StackCount;
+                AddLoad(slot.PeekCard().CardData.weight * slot.StackCount);
         }
 
-        // 注册载重变化的事件
-
+        TriggerChangeLoadEvent();
     }
 
     public override bool CanAddCard(CardInstance card)
@@ -40,8 +43,22 @@
         if (CanAddCard(card))
         {
             base.AddCard(card);
-            // 触发载重变化的事件
-
+            AddLoad(card.CardData.weight);
         }
+    }
+
+    ChangeLoadArgs args = new ChangeLoadArgs();
+    private void AddLoad(float weight)
+    {
+        currentLoad += weight;
+        TriggerChangeLoadEvent();
+    }
+
+    private void TriggerChangeLoadEvent()
+    {
+        // 触发载重变化的事件
+        args.currentLoad = currentLoad;
+        args.maxLoad = maxLoad;
+        EventManager.Instance.TriggerEvent(EventType.ChangeLoad, args);
     }
 }

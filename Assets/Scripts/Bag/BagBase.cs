@@ -87,7 +87,7 @@ public abstract class BagBase : MonoBehaviour
 
     public virtual void AddCard(CardInstance card)
     {
-        if (!CanAddCard(card)) return;
+        //if (!CanAddCard(card)) return;
 
         string cardName = card.CardData.cardName;
 
@@ -112,15 +112,17 @@ public abstract class BagBase : MonoBehaviour
         }
     }
 
-    //public virtual void RemoveCard(CardInstance card)
-    //{
-    //    string cardName = card.CardData.cardName;
+    public virtual void RemoveCard(CardInstance card)
+    {
+        string cardName = card.CardData.cardName;
 
-    //    var slot = GetSlotsContainingSimilarCard(cardName, false)[0];
+        var slots = GetSlotsContainingSimilarCard(cardName, false);
 
-    //    // 能得到这个slot说明里面至少有一张牌，所以可以直接从里面移除卡牌
-    //    slot.RemoveCard();
-    //}
+        if (slots.Count == 0) return;
+
+        // 能得到这个slot说明里面至少有一张牌，所以可以直接从里面移除卡牌
+        slots[0].RemoveCard();
+    }
 
     public virtual void Clear()
     {
@@ -149,17 +151,17 @@ public abstract class BagBase : MonoBehaviour
 
         // 第二次遍历：从前往后填充空位
         int currentPosition = 0;
-        foreach (var item in nonEmptySlots)
+        foreach (var (slot, index) in nonEmptySlots)
         {
             // 如果当前卡牌已经在正确位置，跳过
-            if (currentPosition == item.index)
+            if (currentPosition == index)
             {
                 currentPosition++;
                 continue;
             }
 
             // 移动卡牌到当前位置
-            MoveCardToPosition(item.slot, currentPosition);
+            MoveCardToPosition(slot, currentPosition);
             currentPosition++;
         }
     }

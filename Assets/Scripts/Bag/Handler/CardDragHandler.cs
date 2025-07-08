@@ -19,6 +19,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (!originalSlot.CanDrag) return;
+
         originalParent = transform.parent;
         transform.SetParent(canvas.transform);
         canvasGroup.blocksRaycasts = false;
@@ -26,17 +28,21 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!originalSlot.CanDrag) return;
+
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!originalSlot.CanDrag) return;
+
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
 
-        BagBase targetBag = currentObject?.GetComponentInParent<BagBase>();
+        BagBase targetBag = currentObject.GetComponentInParent<BagBase>();
         BagBase originalBag = originalSlot.GetComponentInParent<BagBase>();
 
         bool cardMoved = false;
@@ -46,7 +52,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 同背包放置
             if (targetBag == originalBag)
             {
-                CardSlot targetSlot = currentObject?.GetComponentInParent<CardSlot>();
+                CardSlot targetSlot = currentObject.GetComponentInParent<CardSlot>();
                 if (targetSlot != null && targetSlot != originalSlot)
                 {
                     cardMoved = TryPlaceCardInSameBag(targetSlot);
@@ -60,14 +66,14 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         // 如果卡牌移动了，执行紧凑排列
-        if (cardMoved)
-        {
-            originalBag.CompactCards();
-            if (targetBag != originalBag)
-            {
-                targetBag.CompactCards();
-            }
-        }
+        //if (cardMoved)
+        //{
+        //    originalBag.CompactCards();
+        //    if (targetBag != originalBag)
+        //    {
+        //        targetBag.CompactCards();
+        //    }
+        //}
 
         Home();
     }

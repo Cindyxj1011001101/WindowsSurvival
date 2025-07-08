@@ -18,8 +18,4 @@ public class CardData:ScriptableObject
     public int maxStackNum;
     public List<CardEvent> cardEventList;
     public List<CardTag> CardTagList;
-    public virtual void Init()
-    {
-            
-    }
 }

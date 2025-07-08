@@ -4,6 +4,7 @@
     IntervalSettle,
     AddDropCard,
     ChangeLoad, // 背包载重变化
+    ChangeCardProperty, // 卡牌属性变化
 }
 
 public class ChangeStateArgs
@@ -15,4 +16,5 @@ public class ChangeStateArgs
 public class ChangeLoadArgs
 {
     public float currentLoad;
+    public float maxLoad;
 }

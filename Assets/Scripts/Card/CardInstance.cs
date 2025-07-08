@@ -7,7 +7,10 @@ public abstract class CardInstance : IComparable<CardInstance>
 
     public CardData CardData => Resources.Load<CardData>(dataPath);
 
-    public abstract int CompareTo(CardInstance other);
+    public virtual int CompareTo(CardInstance other)
+    {
+        return 0;
+    }
 
     public abstract void InitFromCardData(CardData cardData);
 

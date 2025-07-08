@@ -23,4 +23,25 @@ public static class CardFactory
 
         return instance;
     }
+
+    public static CardInstance CreateCardIntance(CardData cardData)
+    {
+        string cardName = cardData.cardName;
+        switch (cardData)
+        {
+            case FoodCardData:
+                return CreateCardInstance<FoodCardInstance>(cardName);
+            case PlaceCardData:
+                return CreateCardInstance<PlaceCardInstance>(cardName);
+            case ResourceCardData:
+                return CreateCardInstance<ResourceCardInstance>(cardName);
+            case ResourcePointCardData:
+                return CreateCardInstance<ResourcePointCardInstance>(cardName);
+            case ToolCardData:
+                return CreateCardInstance<ToolCardInstance>(cardName);
+            default:
+                break;
+        }
+        return null;
+    }
 }
