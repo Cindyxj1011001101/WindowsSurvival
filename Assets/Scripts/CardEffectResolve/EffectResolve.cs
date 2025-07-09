@@ -26,11 +26,13 @@ public class EffectResolve : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(gameObject);
+        Init();
     }
 
     private void Start()
     {
         playerBag = GameObject.FindObjectOfType<PlayerBagWindow>(true);
+        curEnvironmentBag = GameObject.FindObjectOfType<EnvironmentBagWindow>(true);
     }
     //探索方法
     public void ResolveExplore()
@@ -97,11 +99,11 @@ public class EffectResolve : MonoBehaviour
             //判断背包格子数量是否已满
             if (playerBag.CanAddCard(cardInstance))
             {
-                curEnvironmentBag.AddCard(cardInstance);
+                playerBag.AddCard(cardInstance);
             }
             else
             {
-                playerBag.AddCard(cardInstance);
+                curEnvironmentBag.AddCard(cardInstance);
             }
         }
         else
