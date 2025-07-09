@@ -25,10 +25,32 @@ public class StateManager:MonoBehaviour
 {
     public Dictionary<StateEnum, State>StateDict=new Dictionary<StateEnum, State>();
     private static StateManager instance;
-    public static StateManager Instance => instance;
-    
-    public void Awake()
+    public static StateManager Instance
+    { get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<StateManager>();
+                if (instance == null)
+                {
+                    GameObject managerObj = new GameObject("StateManager");
+                    instance = managerObj.AddComponent<StateManager>();
+                    DontDestroyOnLoad(managerObj); // 跨场景保持实例
+                }
+            }
+            return instance;
+        }
+    }
+
+    private void Awake()
     {
+        // 确保只有一个实例
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
         instance = this;
         DontDestroyOnLoad(gameObject);
         Init();

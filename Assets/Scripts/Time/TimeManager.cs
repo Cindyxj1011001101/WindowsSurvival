@@ -3,15 +3,38 @@ using UnityEngine;
 
 public class TimeManager:MonoBehaviour
 {
+
         public DateTime curTime;
         public int SettleInterval;
         public int curInterval;
 
         private static TimeManager instance;
-        public static TimeManager Instance => instance;
+        public static TimeManager Instance
+        { get
+                {
+                        if (instance == null)
+                        {
+                                instance = FindObjectOfType<TimeManager>();
+                                if (instance == null)
+                                {
+                                        GameObject managerObj = new GameObject("TimeManager");
+                                        instance = managerObj.AddComponent<TimeManager>();
+                                        DontDestroyOnLoad(managerObj); // 跨场景保持实例
+                                }
+                        }
+                        return instance;
+                }
+        }
 
         private void Awake()
         {
+                // 确保只有一个实例
+                if (instance != null && instance != this)
+                {
+                        Destroy(gameObject);
+                        return;
+                }
+        
                 instance = this;
                 DontDestroyOnLoad(gameObject);
                 Init();
@@ -33,7 +56,6 @@ public class TimeManager:MonoBehaviour
                         {
                                 time -= curInterval;
                                 curInterval=SettleInterval;
-                                Debug.Log("Interval");
                                 EventManager.Instance.TriggerEvent(EventType.IntervalSettle);//处理时间状态结算
                                 EventManager.Instance.TriggerEvent(EventType.RefreshCard);//卡牌耐久度刷新
                         }
