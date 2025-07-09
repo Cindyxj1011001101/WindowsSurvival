@@ -18,7 +18,7 @@ public class BottomBar : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
         layoutTransform = GetComponentInChildren<GridLayoutGroup>().transform;
     }

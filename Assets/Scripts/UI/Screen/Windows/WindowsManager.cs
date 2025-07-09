@@ -25,24 +25,23 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
     private void Awake()
     {
         instance = this;
+        desktop = transform.Find("Desktop").GetComponent<Desktop>();
+        bottomBar = transform.Find("BottomBar").GetComponent<BottomBar>();
+        windowGroup = transform.Find("Desktop/WindowGroup").GetComponent<WindowGroup>();
     }
 
     private void Start()
     {
-        desktop = transform.Find("Desktop").GetComponent<Desktop>();
-        bottomBar = transform.Find("BottomBar").GetComponent<BottomBar>();  
-        windowGroup = transform.Find("Desktop/WindowGroup").GetComponent<WindowGroup>();
-
         currentFocusedWindow = null;
 
         // 加载桌面图标数据
-        appsData = Resources.Load<AppsData>("SO/TestAppsData").appsData;
+        appsData = Resources.Load<AppsData>("ScriptableObject/App/TestAppsData").appsData;
         desktop.Init(appsData);
 
         // 添加settingsButton点击的回调
     }
 
-    public void OpenWindow(string appName)
+    public WindowBase OpenWindow(string appName)
     {
         WindowBase window;
         // 实例化或者直接得到已经打开过的窗口
@@ -66,6 +65,7 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         window.Open();
         // 让窗口获得焦点
         FocusWindow(window);
+        return window;
     }
 
     public void CloseWindow(string appName)

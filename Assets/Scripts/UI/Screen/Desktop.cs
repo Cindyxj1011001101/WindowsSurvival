@@ -8,7 +8,7 @@ public class Desktop : MonoBehaviour
 
     private Dictionary<string, DesktopShortcut> shortcuts = new();
 
-    private void Start()
+    private void Awake()
     {
         layoutTransform = GetComponentInChildren<GridLayoutGroup>().transform;
     }

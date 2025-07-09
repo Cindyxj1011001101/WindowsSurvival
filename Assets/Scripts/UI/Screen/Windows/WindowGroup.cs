@@ -6,7 +6,7 @@ public class WindowGroup : MonoBehaviour
     private Transform minimized;
     private Transform opened;
 
-    private void Start()
+    private void Awake()
     {
         closed = transform.Find("Closed");
         minimized = transform.Find("Minimized");
