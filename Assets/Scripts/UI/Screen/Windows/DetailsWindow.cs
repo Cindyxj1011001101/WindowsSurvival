@@ -57,8 +57,8 @@ public class DetailsWindow : WindowBase
             GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Button");
             Button button = Instantiate(buttonPrefab, buttonLayout).GetComponent<Button>();
 
-            // 这里以后要改成判断CardEvent是否满足
-            if (true)
+            // 检查cardEvent是否满足触发条件
+            if (EffectResolve.Instance.ConditionEventJudge(cardEvent))
             {
                 button.GetComponentInChildren<Text>().text = cardEvent.EventName;
                 button.onClick.AddListener(() =>
@@ -68,7 +68,7 @@ public class DetailsWindow : WindowBase
             }
             else
             {
-                button.enabled = false;
+                button.interactable = false;
             }
         }
     }

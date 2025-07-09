@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class StateWindow : WindowBase
@@ -19,8 +18,8 @@ public class StateWindow : WindowBase
 
     protected override void Start()
     {
-        EventManager.Instance.AddListener<StateEnum>(EventType.RefreshState, RefreshState);
         base.Start();
+        EventManager.Instance.AddListener<StateEnum>(EventType.RefreshState, RefreshState);
     }
 
     public void OnDestroy()

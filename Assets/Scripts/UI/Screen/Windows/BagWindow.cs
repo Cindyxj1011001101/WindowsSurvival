@@ -148,6 +148,62 @@ public abstract class BagWindow : WindowBase
         }
     }
 
+
+    /// <summary>
+    /// 尝试从背包中取出一张牌
+    /// </summary>
+    /// <param name="condition"></param>
+    /// <returns></returns>
+    public CardSlot TryGetCardByCondition(ConditionData condition)
+    {
+        switch (condition)
+        {
+            case ToolTagCondition toolTagCondition:
+                foreach (var slot in slots)
+                {
+                    if (slot.CardData.GetType() == typeof(ToolCardData))
+                    {
+                        ToolCardData toolCardData = slot.CardData as ToolCardData;
+                        if (toolCardData.tag == toolTagCondition.ConditionToolTag)
+                        {
+                            return slot;
+                        }
+                    }
+                }
+                return null;
+            case TagCondition tagCondition:
+                foreach (var slot in slots)
+                {
+                    if (slot.CardData.CardTagList.Contains(tagCondition.ConditionTag))
+                    {
+                        return slot;
+                    }
+                }
+                return null;
+            case TypeCondition typeCondition:
+                foreach (var slot in slots)
+                {
+                    if (slot.CardData.cardType == typeCondition.ConditonCardType)
+                    {
+                        return slot;
+                    }
+                }
+                return null;
+            case CardCondition cardCondition:
+                foreach (var slot in slots)
+                {
+                    if (slot.CardData == cardCondition.ConditionCard)
+                    {
+                        return slot;
+                    }
+                }
+                return null;
+            default:
+                return null;
+
+        }
+    }
+
     /// <summary>
     /// 移除卡牌
     /// </summary>
