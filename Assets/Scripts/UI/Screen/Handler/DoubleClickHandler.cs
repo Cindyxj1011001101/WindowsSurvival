@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(UnityEngine.UI.Graphic))]
+//[RequireComponent(typeof(UnityEngine.UI.Graphic))]
 public class DoubleClickHandler : MonoBehaviour, IPointerClickHandler
 {
     [Tooltip("Ë«»÷Ê±¼ä¼ä¸ô£¨Ãë£©")]

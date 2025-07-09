@@ -30,7 +30,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     private Transform topBar;
 
-    protected override void Start()
+    protected override void Awake()
     {
         // 添加拖拽支持
         topBar = transform.Find("TopBar");
@@ -53,8 +53,6 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         closeButton.onClick.AddListener(OnCloseButtonClicked);
         maximizeButton.onClick.AddListener(OnMaximizeButtonClicked);
         minimizeButton.onClick.AddListener(OnMinimizeButtonClicked);
-
-        base.Start();
     }
 
     private void OnCloseButtonClicked()

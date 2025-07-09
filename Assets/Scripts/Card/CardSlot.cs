@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,11 +13,15 @@ public class CardSlot : MonoBehaviour
 
     private CardData currentCard;
 
-    private PriorityQueue<CardInstance> cardInstanceQueue = new();
+    //private PriorityQueue<CardInstance> cardInstanceQueue = new();
+    private List<CardInstance> cards = new();
 
     public bool IsEmpty => currentCard == null;
-    public CardData Card => currentCard;
-    public int StackCount => cardInstanceQueue.Count;
+    public CardData CardData => currentCard;
+    //public int StackCount => cardInstanceQueue.Count;
+    public int StackCount => cards.Count;
+
+    public List<CardInstance> Cards => cards;
 
     public bool CanDrag
     {
@@ -26,7 +32,7 @@ public class CardSlot : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Awake()
     {
         iconImage = transform.Find("Card/Icon").GetComponent<Image>();
         fillImage = transform.Find("Card/Fill").GetComponent<Image>();
@@ -34,32 +40,50 @@ public class CardSlot : MonoBehaviour
         nameText = transform.Find("Card/Name").GetComponent<Text>();
         cardTransform = transform.Find("Card");
 
-        ClearSlot();
+        cardTransform.GetComponent<DoubleClickHandler>().onDoubleClick.AddListener(() =>
+        {
+            (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).SetupSourceSlot(this);
+        });
 
+        //ClearSlot();
+    }
+
+    private void Start()
+    {
         EventManager.Instance.AddListener(EventType.ChangeCardProperty, OnCardPropertyChanged);
+    }
+
+    public void InitFromRuntimeData(CardSlotRuntimeData cardSlotRuntimeData)
+    {
+        foreach (var card in cardSlotRuntimeData.cardInstanceList)
+        {
+            AddCard(card);
+        }
     }
 
     private void OnCardPropertyChanged()
     {
-        iconImage.gameObject.SetActive(currentCard is FoodCardData);
+        if (IsEmpty) return;
+
+        fillImage.gameObject.SetActive(currentCard is FoodCardData);
         propertyText.text = "";
         switch (currentCard)
         {
             case FoodCardData cardData:
                 // 保质期无限
                 if (cardData.MaxFresh == -1)
-                    iconImage.gameObject.SetActive(false);
+                    fillImage.gameObject.SetActive(false);
                 // 有保质期
                 else
-                    fillImage.fillAmount = (float)(cardInstanceQueue.Peek() as FoodCardInstance).CurrentFresh / cardData.MaxFresh;
+                    fillImage.fillAmount = (float)(PeekCard() as FoodCardInstance).currentFresh / cardData.MaxFresh;
 
-                if (currentCard.maxStackNum > 1)
+                if (StackCount > 1)
                     propertyText.text = $"x{StackCount}";
 
                 break;
 
             case ResourceCardData:
-                if (currentCard.maxStackNum > 1)
+                if (StackCount > 1)
                     propertyText.text = $"x{StackCount}";
                 break;
 
@@ -67,11 +91,11 @@ public class CardSlot : MonoBehaviour
                 break;
 
             case ResourcePointCardData cardData:
-                propertyText.text = $"{(cardInstanceQueue.Peek() as ResourcePointCardInstance).CurrentEndurance} / {cardData.maxEndurance}";
+                propertyText.text = $"{(PeekCard() as ResourcePointCardInstance).currentEndurance} / {cardData.maxEndurance}";
                 break;
 
             case ToolCardData cardData:
-                propertyText.text = $"{(cardInstanceQueue.Peek() as ToolCardInstance).CurrentEndurance} / {cardData.maxEndurance}";
+                propertyText.text = $"{(PeekCard() as ToolCardInstance).currentEndurance} / {cardData.maxEndurance}";
                 break;
 
             default:
@@ -92,19 +116,23 @@ public class CardSlot : MonoBehaviour
         if (IsEmpty)
         {
             cardTransform.gameObject.SetActive(true);
-            currentCard = card.CardData;
+            currentCard = card.GetCardData();
             iconImage.sprite = currentCard.cardImage;
             nameText.text = currentCard.cardName;
         }
 
-        cardInstanceQueue.Enqueue(card);
+        //cardInstanceQueue.Enqueue(card);
+        cards.Add(card);
+        cards.Sort((a, b) => a.CompareTo(b));
 
         OnCardPropertyChanged();
     }
 
     public CardInstance RemoveCard()
     {
-        var cardToRemove = cardInstanceQueue.Dequeue();
+        //var cardToRemove = cardInstanceQueue.Dequeue();
+        var cardToRemove = cards[0];
+        cards.RemoveAt(0);
 
         if (StackCount == 0)
             ClearSlot();
@@ -114,15 +142,14 @@ public class CardSlot : MonoBehaviour
         return cardToRemove;
     }
 
-    public CardInstance PeekCard()
-    {
-        return cardInstanceQueue.Peek();
-    }
+    //public CardInstance PeekCard() => cardInstanceQueue.Peek();
+    public CardInstance PeekCard() => cards[0];
 
     public void ClearSlot()
     {
         currentCard = null;
-        cardInstanceQueue.Clear();
+        //cardInstanceQueue.Clear();
+        cards.Clear();
         iconImage.sprite = null;
         nameText.text = "";
         propertyText.text = "";

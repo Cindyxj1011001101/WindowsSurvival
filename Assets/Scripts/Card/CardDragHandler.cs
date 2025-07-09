@@ -3,8 +3,8 @@ using UnityEngine.EventSystems;
 
 public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    private Transform originalParent;
-    private CardSlot originalSlot;
+    private Transform sourceParent;
+    private CardSlot sourceSlot;
     private Canvas canvas;
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
@@ -13,47 +13,49 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-        originalSlot = GetComponentInParent<CardSlot>();
+        sourceSlot = GetComponentInParent<CardSlot>();
         canvas = GetComponentInParent<Canvas>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!originalSlot.CanDrag) return;
+        if (!sourceSlot.CanDrag) return;
 
-        originalParent = transform.parent;
+        sourceParent = transform.parent;
         transform.SetParent(canvas.transform);
         canvasGroup.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!originalSlot.CanDrag) return;
+        if (!sourceSlot.CanDrag) return;
 
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!originalSlot.CanDrag) return;
+        if (!sourceSlot.CanDrag) return;
 
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
 
-        BagBase targetBag = currentObject.GetComponentInParent<BagBase>();
-        BagBase originalBag = originalSlot.GetComponentInParent<BagBase>();
+        //BagBase targetBag = currentObject.GetComponentInParent<BagBase>();
+        //BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
+        BagWindow targetBag = currentObject.GetComponentInParent<BagWindow>();
+        BagWindow sourceBag = sourceSlot.GetComponentInParent<BagWindow>();
 
         bool cardMoved = false;
 
         if (targetBag != null)
         {
             // 同背包放置
-            if (targetBag == originalBag)
+            if (targetBag == sourceBag)
             {
                 CardSlot targetSlot = currentObject.GetComponentInParent<CardSlot>();
-                if (targetSlot != null && targetSlot != originalSlot)
+                if (targetSlot != null && targetSlot != sourceSlot)
                 {
                     cardMoved = TryPlaceCardInSameBag(targetSlot);
                 }
@@ -61,15 +63,15 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 跨背包放置
             else
             {
-                cardMoved = TryPlaceCardInDifferentBag(targetBag);
+                cardMoved = TryPlaceCardInDifferentBag(sourceBag, targetBag);
             }
         }
 
         // 如果卡牌移动了，执行紧凑排列
         //if (cardMoved)
         //{
-        //    originalBag.CompactCards();
-        //    if (targetBag != originalBag)
+        //    sourceBag.CompactCards();
+        //    if (targetBag != sourceBag)
         //    {
         //        targetBag.CompactCards();
         //    }
@@ -84,20 +86,20 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (targetSlot.IsEmpty)
         {
             // 直接全部放到目标格子中
-            while (originalSlot.StackCount > 0)
+            while (sourceSlot.StackCount > 0)
             {
-                targetSlot.AddCard(originalSlot.RemoveCard());
+                targetSlot.AddCard(sourceSlot.RemoveCard());
             }
             return true;
         }
         // 如果目标格子有相同卡牌
-        else if (targetSlot.ContainsSimilarCard(originalSlot.Card.cardName))
+        else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData.cardName))
         {
             // 往目标格子里尽可能放更多
             bool movedAny = false;
-            while (originalSlot.StackCount > 0 && targetSlot.CanStack())
+            while (sourceSlot.StackCount > 0 && targetSlot.CanStack())
             {
-                targetSlot.AddCard(originalSlot.RemoveCard());
+                targetSlot.AddCard(sourceSlot.RemoveCard());
                 movedAny = true;
             }
             return movedAny;
@@ -105,12 +107,13 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         return false;
     }
 
-    private bool TryPlaceCardInDifferentBag(BagBase targetBag)
+    //private bool TryPlaceCardInDifferentBag(BagBase sourceBag, BagBase targetBag)
+    private bool TryPlaceCardInDifferentBag(BagWindow sourceBag, BagWindow targetBag)
     {
         bool movedAny = false;
-        while (originalSlot.StackCount > 0 && targetBag.CanAddCard(originalSlot.PeekCard()))
+        while (sourceSlot.StackCount > 0 && targetBag.CanAddCard(sourceSlot.PeekCard()))
         {
-            targetBag.AddCard(originalSlot.RemoveCard());
+            targetBag.AddCard(sourceBag.RemoveCard(sourceSlot));
             movedAny = true;
         }
         return movedAny;
@@ -121,7 +124,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// </summary>
     private void Home()
     {
-        transform.SetParent(originalParent);
+        transform.SetParent(sourceParent);
         rectTransform.anchoredPosition = Vector2.zero;
     }
 }

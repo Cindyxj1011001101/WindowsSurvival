@@ -13,11 +13,14 @@ public class EffectResolve : MonoBehaviour
     private static EffectResolve instance;
     public static EffectResolve Instance => instance;
     [Header("玩家背包")]
-    public PlayerBag PlayerBag;
+    //public PlayerBag PlayerBag;
+    public PlayerBagWindow playerBag;
     [Header("环境背包列表")]
-    public EnvironmentBag[] EnvironmentBag;
+    //public EnvironmentBag[] EnvironmentBag;
+    public EnvironmentBagWindow[] environmentBags;
     [Header("当前环境背包")]
-    public EnvironmentBag CurEnvironmentBag;
+    //public EnvironmentBag CurEnvironmentBag;
+    public EnvironmentBagWindow curEnvironmentBag;
 
     public void Awake()
     {
@@ -27,7 +30,7 @@ public class EffectResolve : MonoBehaviour
     //探索方法
     public void ResolveExplore()
     {
-        CardEvent cardEvent = CurEnvironmentBag.CardEvent;
+        CardEvent cardEvent = curEnvironmentBag.CardEvent;
         foreach (var EventTrigger in cardEvent.eventList)
         {
             //如果是探索事件进行特殊处理
@@ -64,57 +67,57 @@ public class EffectResolve : MonoBehaviour
         //状态结算
         foreach (var EventTrigger in cardEvent.eventList)
         {
-            if(EventTrigger.GetType() == typeof(ValueEvent)) EventTrigger.EventResolve();
+            if (EventTrigger.GetType() == typeof(ValueEvent)) EventTrigger.EventResolve();
         }
         //场景切换
         foreach (var EventTrigger in cardEvent.eventList)
         {
-            if(EventTrigger.GetType() == typeof(MoveEvent)) EventTrigger.EventResolve();
+            if (EventTrigger.GetType() == typeof(MoveEvent)) EventTrigger.EventResolve();
         }
         //时间流逝
         TimeManager.Instance.AddTime(cardEvent.Time);
         //掉落卡片
         foreach (var EventTrigger in cardEvent.eventList)
         {
-            if(EventTrigger.GetType() == typeof(DropEvent)) EventTrigger.EventResolve();
+            if (EventTrigger.GetType() == typeof(DropEvent)) EventTrigger.EventResolve();
         }
     }
 
     //掉落卡牌加入背包
-    public void AddDropCard(Drop drop,bool ToPlayerBag)
+    public void AddDropCard(Drop drop, bool ToPlayerBag)
     {
         CardInstance cardInstance = CardFactory.CreateCardIntance(drop.cardData);
         if (ToPlayerBag)
         {
             //判断背包格子数量是否已满
-            if (PlayerBag.CanAddCard(cardInstance))
+            if (playerBag.CanAddCard(cardInstance))
             {
-                CurEnvironmentBag.AddCard(cardInstance);
+                curEnvironmentBag.AddCard(cardInstance);
             }
             else
             {
-                PlayerBag.AddCard(cardInstance);
+                playerBag.AddCard(cardInstance);
             }
         }
         else
         {
-            CurEnvironmentBag.AddCard(cardInstance);
+            curEnvironmentBag.AddCard(cardInstance);
         }
     }
-    
+
     //场景移动
     public void Move(PlaceEnum aimPlace)
     {
-        foreach (var environmentBag in EnvironmentBag)
+        foreach (var environmentBag in environmentBags)
         {
             if (environmentBag.place == aimPlace)
             {
-                CurEnvironmentBag = environmentBag;
-                EventManager.Instance.TriggerEvent(EventType.Move,CurEnvironmentBag);
+                curEnvironmentBag = environmentBag;
+                EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
             }
         }
     }
-    
+
     //初始化SO数据
     public void Init()
     {

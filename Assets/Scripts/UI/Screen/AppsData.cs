@@ -11,6 +11,7 @@ public class App
     public string name; // 应用名称(英文)，并且是唯一的
     public string displayText; // 在桌面上显示的文本，中英文皆可
     public Sprite icon; // 应用图标
+    public bool displayOnDesktop; // 是否显示在桌面上
 
     public override string ToString()
     {

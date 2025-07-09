@@ -13,18 +13,27 @@ MonoBehaviour:
   m_Name: TestAppsData
   m_EditorClassIdentifier: 
   appsData:
-  - name: Backpack
+  - name: PlayerBag
     displayText: "\u80CC\u5305"
     icon: {fileID: 390320601, guid: 29c05f6b54ac4894e98ea75d36f3449c, type: 3}
-  - name: Explore
+    displayOnDesktop: 1
+  - name: EnvironmentBag
     displayText: "\u63A2\u7D22"
     icon: {fileID: -1901224814, guid: 29c05f6b54ac4894e98ea75d36f3449c, type: 3}
+    displayOnDesktop: 1
   - name: Technology
     displayText: "\u79D1\u6280"
     icon: {fileID: -286372654, guid: 29c05f6b54ac4894e98ea75d36f3449c, type: 3}
+    displayOnDesktop: 1
   - name: Camera
     displayText: "\u6444\u50CF\u5934"
     icon: {fileID: 841079877, guid: 29c05f6b54ac4894e98ea75d36f3449c, type: 3}
+    displayOnDesktop: 1
   - name: State
     displayText: "\u72B6\u6001"
     icon: {fileID: -816323781, guid: 29c05f6b54ac4894e98ea75d36f3449c, type: 3}
+    displayOnDesktop: 1
+  - name: Details
+    displayText: "\u8BE6\u60C5"
+    icon: {fileID: 1220015498, guid: 29c05f6b54ac4894e98ea75d36f3449c, type: 3}
+    displayOnDesktop: 0

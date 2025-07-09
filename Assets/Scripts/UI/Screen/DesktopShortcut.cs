@@ -19,7 +19,7 @@ public class DesktopShortcut : MonoBehaviour, IPointerEnterHandler, IPointerExit
 
     private Animator animator;
 
-    private void Start()
+    private void Awake()
     {
         animator = GetComponent<Animator>();
         DoubleClickHandler doubleClickHandler = GetComponent<DoubleClickHandler>();
