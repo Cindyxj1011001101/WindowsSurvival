@@ -1,4 +1,4 @@
-﻿public class EnvironmentBagData : BagData
-{
-    public int DescoveryDegree;
-}
+﻿//public class EnvironmentBagData : BagData
+//{
+//    public int DescoveryDegree;
+//}
