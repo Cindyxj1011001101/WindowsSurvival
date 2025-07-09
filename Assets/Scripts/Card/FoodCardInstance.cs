@@ -1,8 +1,6 @@
 ﻿public class FoodCardInstance : CardInstance
 {
-    private int currentFresh;
-
-    public int CurrentFresh => currentFresh;
+    public int currentFresh;
 
     public override int CompareTo(CardInstance other)
     {
