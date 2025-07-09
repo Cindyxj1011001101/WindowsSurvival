@@ -53,6 +53,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         closeButton.onClick.AddListener(OnCloseButtonClicked);
         maximizeButton.onClick.AddListener(OnMaximizeButtonClicked);
         minimizeButton.onClick.AddListener(OnMinimizeButtonClicked);
+
+        gameObject.SetActive(false);
     }
 
     private void OnCloseButtonClicked()
@@ -130,7 +132,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         if (state == WindowState.Closed) return;
 
         SetState(WindowState.Closed);
-        Hide(onFinished: () => Destroy(gameObject));
+        //Hide(onFinished: () => Destroy(gameObject));
+        Hide(onFinished: () => gameObject.SetActive(false));
     }
 
     public void Minimize(Transform shortcut)

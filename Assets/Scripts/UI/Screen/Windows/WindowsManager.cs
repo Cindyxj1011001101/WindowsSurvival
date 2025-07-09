@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -39,20 +40,24 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         desktop.Init(appsData);
 
         // 添加settingsButton点击的回调
+
     }
 
     public WindowBase OpenWindow(string appName)
     {
         WindowBase window;
-        // 实例化或者直接得到已经打开过的窗口
+        // 窗口没有打开
         if (!IsWindowOpen(appName))
         {
-            // 实例化窗口对象
-            GameObject windowPrefab = Resources.Load<GameObject>($"Prefabs/UI/Windows/{appName}Window");
-            window = Instantiate(windowPrefab, windowGroup.transform).GetComponent<WindowBase>();
+            // 如果窗口不在closedGroup里，则创建实例
+            if (!windowGroup.TeyGetWindowInClosedGroup(appName, out window))
+            {
+                // 实例化窗口对象
+                GameObject windowPrefab = Resources.Load<GameObject>($"Prefabs/UI/Windows/{appName}Window");
+                window = Instantiate(windowPrefab, windowGroup.Closed).GetComponent<WindowBase>();
+            }
             // 添加到已打开窗口中
             openedWindows.Add(appName, window);
-
             // 将快捷方式添加到底部栏
             bottomBar.AddShortcut(appsData.Find(app => app.name == appName));
         }
