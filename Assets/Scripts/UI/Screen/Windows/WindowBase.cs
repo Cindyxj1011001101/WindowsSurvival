@@ -54,7 +54,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         maximizeButton.onClick.AddListener(OnMaximizeButtonClicked);
         minimizeButton.onClick.AddListener(OnMinimizeButtonClicked);
 
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
     }
 
     private void OnCloseButtonClicked()
