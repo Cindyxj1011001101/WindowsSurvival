@@ -91,4 +91,9 @@ public class GMCommand
         string json = JsonConvert.SerializeObject(card);
         Debug.Log(json);
     }
+    [MenuItem("Command/健康+10")]
+    public static void L()
+    {
+       TimeManager.Instance.AddTime(50);
+    }
 }

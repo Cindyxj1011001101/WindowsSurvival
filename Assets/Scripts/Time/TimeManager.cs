@@ -14,6 +14,7 @@ public class TimeManager:MonoBehaviour
         {
                 instance = this;
                 DontDestroyOnLoad(gameObject);
+                Init();
         }
         public void Init()
         {
@@ -32,6 +33,7 @@ public class TimeManager:MonoBehaviour
                         {
                                 time -= curInterval;
                                 curInterval=SettleInterval;
+                                Debug.Log("Interval");
                                 EventManager.Instance.TriggerEvent(EventType.IntervalSettle);//处理时间状态结算
                                 EventManager.Instance.TriggerEvent(EventType.RefreshCard);//卡牌耐久度刷新
                         }

@@ -110,4 +110,54 @@ public class PlayerBagWindow : BagWindow
         base.OnDestroy();
         EventManager.Instance.RemoveListener<ChangeLoadArgs>(EventType.ChangeLoad, OnLoadChanged);
     }
+    
+    public CardSlot JudgeCondition(ConditionData conditionData)
+    {
+        switch (conditionData)
+        {
+            case ToolTagCondition toolTagCondition:
+                foreach (var slot in slots)
+                {
+                    if (slot.CardData.GetType() == typeof(ToolCardData))
+                    {
+                        ToolCardData toolCardData = slot.CardData as ToolCardData;
+                        if (toolCardData.tag== toolTagCondition.ConditionToolTag)
+                        {
+                            return slot;
+                        }
+                    }
+                }
+                return null;
+            case TagCondition tagCondition:
+                foreach (var slot in slots)
+                {
+                    if (slot.CardData.CardTagList.Contains(tagCondition.ConditionTag))
+                    {
+                        return slot;
+                    }
+                }
+                return null;
+            case TypeCondition typeCondition:
+                foreach (var slot in slots)
+                {
+                    if (slot.CardData.cardType==typeCondition.ConditonCardType)
+                    {
+                        return slot;
+                    }
+                }
+                return null;
+            case CardCondition cardCondition:
+                foreach (var slot in slots)
+                {
+                    if (slot.CardData==cardCondition.ConditionCard)
+                    {
+                        return slot;
+                    }
+                }
+                return null;
+            default:
+                return null;
+                
+        }
+    }
 }

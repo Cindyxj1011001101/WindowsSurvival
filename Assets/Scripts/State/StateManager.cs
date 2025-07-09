@@ -7,7 +7,6 @@ public enum StateEnum
     Health,
     Fullness,
     Thirst,
-    Tired,
     San
 }
 public class State
@@ -49,7 +48,6 @@ public void OnDestroy()
         StateDict.Add(StateEnum.Health, new State(InitPlayerStateData.Instance.Health,100,StateEnum.Health));
         StateDict.Add(StateEnum.Fullness, new State(InitPlayerStateData.Instance.Fullness,100,StateEnum.Fullness));
         StateDict.Add(StateEnum.Thirst, new State(InitPlayerStateData.Instance.Thirst,100,StateEnum.Thirst));
-        StateDict.Add(StateEnum.Tired, new State(InitPlayerStateData.Instance.Tired,100,StateEnum.Tired));
         StateDict.Add(StateEnum.San, new State(InitPlayerStateData.Instance.San,100,StateEnum.San));
     }
     
@@ -58,17 +56,18 @@ public void OnDestroy()
         if (StateDict.ContainsKey(args.state))
         {
             StateDict[args.state].curValue += args.value;
-            StateDict[args.state].curValue=StateDict[args.state].curValue>=StateDict[args.state].MaxValue?StateDict[args.state].MaxValue:StateDict[args.state].curValue;
-            StateDict[args.state].curValue=StateDict[args.state].curValue<=0?0:StateDict[args.state].curValue;
+            if (StateDict[args.state].curValue >= 100)StateDict[args.state].curValue = 100;
+            if(StateDict[args.state].curValue<=0)StateDict[args.state].curValue = 0;
         }
+
+        EventManager.Instance.TriggerEvent(EventType.RefreshState,args.state);
     }
 
     public void IntervalSettle()
     {
-        StateDict[StateEnum.Fullness].curValue += InitPlayerStateData.Instance.BasicFullnessChange;
-        StateDict[StateEnum.Thirst].curValue += InitPlayerStateData.Instance.BasicThirstChange;
-        StateDict[StateEnum.Health].curValue +=  InitPlayerStateData.Instance.BasicHealthChange;
-        StateDict[StateEnum.Tired].curValue += InitPlayerStateData.Instance.BasicTiredChange;
-        StateDict[StateEnum.San].curValue +=  InitPlayerStateData.Instance.BasicSanChange;
+        OnChangeState(new ChangeStateArgs(StateEnum.Fullness, InitPlayerStateData.Instance.BasicFullnessChange));
+        OnChangeState(new ChangeStateArgs(StateEnum.Health, InitPlayerStateData.Instance.BasicHealthChange));
+        OnChangeState(new ChangeStateArgs(StateEnum.Thirst, InitPlayerStateData.Instance.BasicThirstChange));
+        OnChangeState(new ChangeStateArgs(StateEnum.San, InitPlayerStateData.Instance.BasicSanChange));
     }
 }
