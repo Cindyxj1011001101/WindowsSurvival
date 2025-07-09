@@ -37,10 +37,30 @@ public class EffectResolve : MonoBehaviour
             }
         }
     }
+    
+    //判断是否满足事件触发条件
+    public bool ConditionEventJudge(CardEvent cardEvent)
+    {
+        if (cardEvent.GetType() == typeof(ConditionCardEvent))
+        {
+            ConditionCardEvent conditionCardEvent = cardEvent as ConditionCardEvent;
+            foreach (var conditionData in conditionCardEvent.ConditionCardList)
+            {
+                CardSlot slot = PlayerBag.JudgeCondition(conditionData);
+                if(slot==null)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     //点击卡牌事件触发方法
     public void Resolve(CardEvent cardEvent)
     {
+
+        if(!ConditionEventJudge(cardEvent))return;
         //状态结算
         foreach (var EventTrigger in cardEvent.eventList)
         {

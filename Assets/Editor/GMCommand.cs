@@ -101,4 +101,9 @@ public class GMCommand
         PlayerBag playerBag = Object.FindObjectOfType<PlayerBag>();
         playerBag.AddCard(card);
     }
+    [MenuItem("Command/健康+10")]
+    public static void L()
+    {
+       TimeManager.Instance.AddTime(50);
+    }
 }

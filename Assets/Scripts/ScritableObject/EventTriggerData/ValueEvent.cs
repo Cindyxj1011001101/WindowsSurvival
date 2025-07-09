@@ -8,11 +8,8 @@ public class ValueEvent:EventTrigger
 
         public override void EventResolve()
         {
-                EventManager.Instance.TriggerEvent<ChangeStateArgs>(EventType.ChangeState, new ChangeStateArgs()
-                {
-                        state = State,
-                        value = Value
-                });
+                EventManager.Instance.TriggerEvent<ChangeStateArgs>(EventType.ChangeState,
+                        new ChangeStateArgs(State, Value));
         }
 
         public override void Init()

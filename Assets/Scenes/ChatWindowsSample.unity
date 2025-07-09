@@ -383,6 +383,7 @@ GameObject:
   - component: {fileID: 2124539848}
   - component: {fileID: 2124539849}
   - component: {fileID: 2124539850}
+  - component: {fileID: 2124539851}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -443,21 +444,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec8cb994fbff4159815014037f19552b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerBag:
-    playerBagData: {fileID: 11400000, guid: 2bec832e872585f4da7fb2383af7de55, type: 2}
-    curHeavy: 0
-    curStack: 0
+  PlayerBag: {fileID: 0}
   EnvironmentBag:
-  - CardEvent: {fileID: 11400000, guid: a4e90b48a58c17a42ba2acf6ff3edfc5, type: 2}
-    curDescoveryDegree: 0
-    curOnceList: []
-  - CardEvent: {fileID: 11400000, guid: fa1f20d8be16eed4dac70f9005fd8102, type: 2}
-    curDescoveryDegree: 0
-    curOnceList: []
-  CurEnvironmentBag:
-    CardEvent: {fileID: 11400000, guid: a4e90b48a58c17a42ba2acf6ff3edfc5, type: 2}
-    curDescoveryDegree: 0
-    curOnceList: []
+  - {fileID: 0}
+  - {fileID: 0}
+  CurEnvironmentBag: {fileID: 0}
+--- !u!114 &2124539851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124539846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 831dc290bcd0403bb674287221911306, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
