@@ -23,7 +23,10 @@ public class CardSlot : MonoBehaviour
 
     public List<CardInstance> Cards => cards;
 
-    public bool CanDrag
+    /// <summary>
+    /// ÄÜ·ñ¿ç±³°üÒÆ¶¯
+    /// </summary>
+    public bool CanDragOverBag
     {
         get
         {

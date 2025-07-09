@@ -56,11 +56,20 @@ public class DetailsWindow : WindowBase
         {
             GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Button");
             Button button = Instantiate(buttonPrefab, buttonLayout).GetComponent<Button>();
-            button.GetComponentInChildren<Text>().text = cardEvent.EventName;
-            button.onClick.AddListener(() =>
+
+            // 这里以后要改成判断CardEvent是否满足
+            if (true)
             {
-                EffectResolve.Instance.Resolve(cardEvent);
-            });
+                button.GetComponentInChildren<Text>().text = cardEvent.EventName;
+                button.onClick.AddListener(() =>
+                {
+                    EffectResolve.Instance.Resolve(cardEvent);
+                });
+            }
+            else
+            {
+                button.enabled = false;
+            }
         }
     }
 

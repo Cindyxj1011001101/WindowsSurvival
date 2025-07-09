@@ -19,7 +19,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!sourceSlot.CanDrag) return;
+        //if (!sourceSlot.CanDrag) return;
 
         sourceParent = transform.parent;
         transform.SetParent(canvas.transform);
@@ -28,14 +28,14 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!sourceSlot.CanDrag) return;
+        //if (!sourceSlot.CanDrag) return;
 
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (!sourceSlot.CanDrag) return;
+        //if (!sourceSlot.CanDrag) return;
 
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
@@ -61,7 +61,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 }
             }
             // 跨背包放置
-            else
+            else if (sourceSlot.CanDragOverBag)
             {
                 cardMoved = TryPlaceCardInDifferentBag(sourceBag, targetBag);
             }
