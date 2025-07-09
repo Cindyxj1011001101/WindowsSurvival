@@ -1,3 +1,5 @@
+using System;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,10 +11,8 @@ public class GMCommand
         CardData defaultData = Resources.Load<CardData>(dataPath);
         var card = CardFactory.CreateCardIntance(defaultData);
         var window = WindowsManager.Instance.GetCurrentFocusedWindow();
-        if (window != null) return;
-        var bag = window.GetComponentInChildren<BagBase>();
-        if (bag == null) return;
-        bag.AddCard(card);
+        if (window == null || window is not BagWindow) return;
+        (window as BagWindow).AddCard(card);
         Debug.Log(card);
     }
 
@@ -80,5 +80,15 @@ public class GMCommand
     public static void K()
     {
         AddCard("腐烂物");
+    }
+
+    [MenuItem("Command/保存玩家背包")]
+    public static void SavePlayerBag()
+    {
+        string dataPath = "ScriptableObject/Card/腐烂物";
+        CardData defaultData = Resources.Load<CardData>(dataPath);
+        var card = CardFactory.CreateCardIntance(defaultData);
+        string json = JsonConvert.SerializeObject(card);
+        Debug.Log(json);
     }
 }
