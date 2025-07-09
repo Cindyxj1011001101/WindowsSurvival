@@ -32,7 +32,6 @@ public class StateWindow : WindowBase
     public void RefreshState(StateEnum stateEnum)
     {
         State state = StateManager.Instance.StateDict[stateEnum];
-        Debug.Log("当前状态:"+stateEnum+" 当前值:"+state.curValue);
         Sliders[(int)stateEnum].value = state.curValue / state.MaxValue;
     }
 

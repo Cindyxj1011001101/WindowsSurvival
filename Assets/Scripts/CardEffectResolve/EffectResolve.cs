@@ -49,7 +49,7 @@ public class EffectResolve : MonoBehaviour
             ConditionCardEvent conditionCardEvent = cardEvent as ConditionCardEvent;
             foreach (var conditionData in conditionCardEvent.ConditionCardList)
             {
-                CardSlot slot = PlayerBag.JudgeCondition(conditionData);
+                CardSlot slot = playerBag.JudgeCondition(conditionData);
                 if(slot==null)
                 {
                     return false;
