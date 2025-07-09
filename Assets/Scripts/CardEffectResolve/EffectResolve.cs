@@ -27,6 +27,11 @@ public class EffectResolve : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
+
+    private void Start()
+    {
+        playerBag = GameObject.FindObjectOfType<PlayerBagWindow>(true);
+    }
     //探索方法
     public void ResolveExplore()
     {
