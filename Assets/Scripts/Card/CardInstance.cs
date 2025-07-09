@@ -5,7 +5,7 @@ public abstract class CardInstance : IComparable<CardInstance>
 {
     public string dataPath;
 
-    public CardData CardData => Resources.Load<CardData>(dataPath);
+    public CardData GetCardData() => Resources.Load<CardData>(dataPath);
 
     public virtual int CompareTo(CardInstance other)
     {
@@ -16,6 +16,6 @@ public abstract class CardInstance : IComparable<CardInstance>
 
     public override string ToString()
     {
-        return CardData.ToString();
+        return GetCardData().ToString();
     }
 }
