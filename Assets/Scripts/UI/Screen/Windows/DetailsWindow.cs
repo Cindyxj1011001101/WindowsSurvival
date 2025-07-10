@@ -33,12 +33,14 @@ public class DetailsWindow : WindowBase
         // 清理原有数据
         Clear();
 
+        if (sourceSlot.StackCount <= 0) return;
+
         // 记录sourceSlot和当前显示的卡牌
         this.sourceSlot = sourceSlot;
         currentDisplayedCard = sourceSlot.PeekCard();
 
         // 显示卡牌
-        slot.AddCard(currentDisplayedCard);
+        slot.DisplayCard(currentDisplayedCard);
 
         // 显示卡牌标签
         CardData cardData = currentDisplayedCard.GetCardData();
@@ -64,7 +66,9 @@ public class DetailsWindow : WindowBase
             {
                 button.onClick.AddListener(() =>
                 {
+                    currentDisplayedCard.Use();
                     EffectResolve.Instance.Resolve(cardEvent);
+                    Refresh(sourceSlot);
                 });
                 button.interactable = true;
             }
