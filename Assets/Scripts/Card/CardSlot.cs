@@ -45,7 +45,7 @@ public class CardSlot : MonoBehaviour
 
         cardTransform.GetComponent<DoubleClickHandler>().onDoubleClick.AddListener(() =>
         {
-            (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).SetupSourceSlot(this);
+            (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Refresh(this);
         });
 
         //ClearSlot();

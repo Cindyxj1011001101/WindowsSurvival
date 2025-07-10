@@ -28,7 +28,7 @@ public class DetailsWindow : WindowBase
     {
     }
 
-    public void SetupSourceSlot(CardSlot sourceSlot)
+    public void Refresh(CardSlot sourceSlot)
     {
         // 清理原有数据
         Clear();

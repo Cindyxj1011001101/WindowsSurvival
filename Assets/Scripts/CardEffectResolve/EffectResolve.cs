@@ -1,37 +1,49 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using UnityEngine;
 public enum PlaceEnum
 {
-    //动力舱、驾驶室、维生舱
-    EngineCompartment,
-    Cab,
-    LifeSupport
+    /// <summary>
+    /// 动力舱
+    /// </summary>
+    PowerCabin,
+    /// <summary>
+    /// 驾驶室
+    /// </summary>
+    Cockpit,
+    /// <summary>
+    /// 维生舱
+    /// </summary>
+    LifeSupportCabin
 
 }
 public class EffectResolve : MonoBehaviour
 {
     private static EffectResolve instance;
     public static EffectResolve Instance => instance;
-    [Header("玩家背包")]
-    //public PlayerBag PlayerBag;
-    public PlayerBagWindow playerBag;
-    [Header("环境背包列表")]
-    //public EnvironmentBag[] EnvironmentBag;
-    public EnvironmentBagWindow[] environmentBags;
-    [Header("当前环境背包")]
-    //public EnvironmentBag CurEnvironmentBag;
-    public EnvironmentBagWindow curEnvironmentBag;
+
+    private PlayerBag playerBag;
+    private Dictionary<PlaceEnum, EnvironmentBag> environmentBags = new();
+    private EnvironmentBag curEnvironmentBag;
+
+    public PlayerBag PlayerBag => playerBag;
+    public Dictionary<PlaceEnum, EnvironmentBag> EnvironmentBags => environmentBags;
+    public EnvironmentBag CurEnvironmentBag => curEnvironmentBag;
 
     public void Awake()
     {
         instance = this;
         DontDestroyOnLoad(gameObject);
+        // 记录玩家背包
+        playerBag = FindObjectOfType<PlayerBag>(true);
+        // 记录所有环境背包
+        foreach (var bag in FindObjectsOfType<EnvironmentBag>(true))
+        {
+            environmentBags.Add(bag.PlaceData.placeType, bag);
+        }
+        // 当前环境背包
+        curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
     }
 
-    private void Start()
-    {
-        playerBag = GameObject.FindObjectOfType<PlayerBagWindow>(true);
-    }
     //探索方法
     public void ResolveExplore()
     {
@@ -111,16 +123,14 @@ public class EffectResolve : MonoBehaviour
     }
 
     //场景移动
-    public void Move(PlaceEnum aimPlace)
+    public void Move(PlaceEnum targetPlace)
     {
-        foreach (var environmentBag in environmentBags)
+        foreach (var (place, bag) in environmentBags)
         {
-            if (environmentBag.place == aimPlace)
-            {
-                curEnvironmentBag = environmentBag;
-                EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
-            }
+            bag.gameObject.SetActive(place == targetPlace);
         }
+        curEnvironmentBag = environmentBags[targetPlace];
+        EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
     }
 
     //初始化SO数据

@@ -1,41 +1,67 @@
+using UnityEngine.UI;
+
 public class EnvironmentBagWindow : BagWindow
 {
-    public CardEvent CardEvent;
-    public PlaceEnum place;
-    public float discoveryDegree;
+    private Text discoveryDegreeText; // 探索度显示
+    private Text placeNameText; // 地点名称
+    private Text placeDetailsText; // 地点详情
+    private Button discoverButton; // 探索按钮
+
+    //private PlaceEnum currentPlace;
+
+    //private Dictionary<PlaceEnum, BagBase> environmentBags = new();
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        discoveryDegreeText = transform.Find("LeftBar/DiscoveryDegree").GetComponent<Text>();
+        placeNameText = transform.Find("TopBar/Name").GetComponent<Text>();
+        placeDetailsText = transform.Find("LeftBar/Details/Text").GetComponent<Text>();
+        discoverButton = transform.Find("LeftBar/DiscoverButton").GetComponent<Button>();
+
+        discoverButton.onClick.AddListener(() =>
+        {
+            EffectResolve.Instance.ResolveExplore();
+        });
+
+        // 注册探索度变化事件
+        EventManager.Instance.AddListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDicoveryDegreeChanged);
+        // 注册地点移动事件
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
+    }
+
+    private void OnEnable()
+    {
+        // 窗口激活时，显示当前地点
+        EffectResolve.Instance.Move(EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType);
+    }
 
     protected override void Init()
     {
-        InitBag(GameDataManager.Instance.EnvironmentBagRuntimeData);
     }
 
-    protected override void InitBag(BagRuntimeData runtimeData)
+    /// <summary>
+    /// 移动到指定地点
+    /// </summary>
+    private void OnMove(EnvironmentBag curEnvironmentBag)
     {
-        base.InitBag(runtimeData);
-        discoveryDegree = (runtimeData as EnvironmentBagRuntimeData).discoveryDegree;
+        // 更新地点信息
+        discoveryDegreeText.text = $"{curEnvironmentBag.DiscoveryDegree} %";
+        placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
+        placeDetailsText.text = $"{curEnvironmentBag.PlaceData.placeDesc}";
     }
 
-    public override void AddCard(CardInstance card)
+    private void OnDicoveryDegreeChanged(ChangeDiscoveryDegreeArgs args)
     {
-        // 如果放不下，就新增格子
-        if (!CanAddCard(card))
-        {
-            // 暂定每次新增3个格子
-            AddSlot(3);
-        }
-        base.AddCard(card);
+        if (args.place == EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType)
+            discoveryDegreeText.text = $"{args.discoveryDegree} %";
     }
 
-    protected override void RecordRuntimeData()
+    private void OnDestroy()
     {
-        EnvironmentBagRuntimeData runtimeData = new();
-        runtimeData.discoveryDegree = discoveryDegree;
-        runtimeData.cardSlotsRuntimeData = new();
-        foreach (var slot in slots)
-        {
-            runtimeData.cardSlotsRuntimeData.Add(new() { cardInstanceList = slot.Cards });
-        }
-
-        GameDataManager.Instance.RecordEnvironmentBagRuntimeData(runtimeData);
+        // 移除注册事件
+        EventManager.Instance.RemoveListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDicoveryDegreeChanged);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
     }
 }

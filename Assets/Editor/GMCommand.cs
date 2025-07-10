@@ -1,5 +1,3 @@
-using System;
-using Unity.Plastic.Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,10 +8,27 @@ public class GMCommand
         string dataPath = "ScriptableObject/Card/" + cardName;
         CardData defaultData = Resources.Load<CardData>(dataPath);
         var card = CardFactory.CreateCardIntance(defaultData);
+
+        var bag = GetFocusedBag();
+        if (bag != null) bag.AddCard(card);
+
+        Debug.Log(card + "添加到" + bag.gameObject.name);
+    }
+
+    [MenuItem("Command/添加一个格子")]
+    public static void AddSlot()
+    {
+        var bag = GetFocusedBag();
+        if (bag != null) bag.AddSlot();
+    }
+
+    private static BagBase GetFocusedBag()
+    {
         var window = WindowsManager.Instance.GetCurrentFocusedWindow();
-        if (window == null || window is not BagWindow) return;
-        (window as BagWindow).AddCard(card);
-        Debug.Log(card);
+        if (window == null) return null;
+        BagBase bag = window.GetComponentInChildren<BagBase>(false);
+        if (bag == null) return null;
+        return bag;
     }
 
     [MenuItem("Command/添加压缩饼干")]
@@ -85,12 +100,9 @@ public class GMCommand
     [MenuItem("Command/保存玩家背包")]
     public static void SavePlayerBag()
     {
-        string dataPath = "ScriptableObject/Card/腐烂物";
-        CardData defaultData = Resources.Load<CardData>(dataPath);
-        var card = CardFactory.CreateCardIntance(defaultData);
-        string json = JsonConvert.SerializeObject(card);
-        Debug.Log(json);
+        GameDataManager.Instance.SavePlayerBagRuntimeData();
     }
+
     [MenuItem("Command/健康+10")]
     public static void L()
     {

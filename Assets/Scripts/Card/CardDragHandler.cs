@@ -42,10 +42,10 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
 
-        //BagBase targetBag = currentObject.GetComponentInParent<BagBase>();
-        //BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
-        BagWindow targetBag = currentObject.GetComponentInParent<BagWindow>();
-        BagWindow sourceBag = sourceSlot.GetComponentInParent<BagWindow>();
+        BagBase targetBag = currentObject.GetComponentInParent<BagBase>();
+        BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
+        //BagWindo targetBag = currentObject.GetComponentInParent<BagWindow>();
+        //BagWindow sourceBag = sourceSlot.GetComponentInParent<BagWindow>();
 
         bool cardMoved = false;
 
@@ -108,7 +108,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     }
 
     //private bool TryPlaceCardInDifferentBag(BagBase sourceBag, BagBase targetBag)
-    private bool TryPlaceCardInDifferentBag(BagWindow sourceBag, BagWindow targetBag)
+    private bool TryPlaceCardInDifferentBag(BagBase sourceBag, BagBase targetBag)
     {
         bool movedAny = false;
         while (sourceSlot.StackCount > 0 && targetBag.CanAddCard(sourceSlot.PeekCard()))

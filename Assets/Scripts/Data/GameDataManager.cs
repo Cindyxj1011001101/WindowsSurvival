@@ -1,26 +1,82 @@
-﻿public class GameDataManager
+﻿using System.Collections.Generic;
+
+public class GameDataManager
 {
     private static GameDataManager instance = new();
     public static GameDataManager Instance => instance;
 
-    public PlayerBagRuntimeData PlayerBagRuntimeData { get; private set; }
-
     public GameDataManager()
     {
-        PlayerBagRuntimeData = new();
-        EnvironmentBagRuntimeData = new();
+        lastPlace = JsonManager.LoadData<PlaceEnum>("LastPlace");
+
+        playerBagData = JsonManager.LoadData<PlayerBagRuntimeData>("PlayerBag");
+
+        poweCabinBagData = JsonManager.LoadData<EnvironmentBagRuntimeData>("PowerCabinBag");
+        environmentBagDataDict.Add(PlaceEnum.PowerCabin, poweCabinBagData);
+
+        cockpitBagData = JsonManager.LoadData<EnvironmentBagRuntimeData>("CockpitBag");
+        environmentBagDataDict.Add(PlaceEnum.Cockpit, cockpitBagData);
     }
 
-    public void RecordPlayerBagRuntimeData(PlayerBagRuntimeData runtimeData)
+    #region 玩家背包
+    private PlayerBagRuntimeData playerBagData;
+
+    public PlayerBagRuntimeData PlayerBagData => playerBagData;
+
+    public void SavePlayerBagRuntimeData()
     {
-        this.PlayerBagRuntimeData = runtimeData;
+        PlayerBag bag = EffectResolve.Instance.PlayerBag;
+        playerBagData = new();
+        playerBagData.maxLoad = bag.MaxLoad;
+        playerBagData.cardSlotsRuntimeData = new();
+        foreach (var slot in bag.Slots)
+        {
+            playerBagData.cardSlotsRuntimeData.Add(new() { cardInstanceList = slot.Cards });
+        }
+        JsonManager.SaveData(playerBagData, "PlayerBag");
     }
+    #endregion
 
+    #region 环境背包
+    // 最后一次玩家出现时的地点
+    private PlaceEnum lastPlace;
 
-    public EnvironmentBagRuntimeData EnvironmentBagRuntimeData { get; private set; }
+    public PlaceEnum LastPlace => lastPlace;
 
-    public void RecordEnvironmentBagRuntimeData(EnvironmentBagRuntimeData runtimeData)
+    public Dictionary<PlaceEnum, EnvironmentBagRuntimeData> environmentBagDataDict = new();
+
+    public EnvironmentBagRuntimeData GetEnvironmentBagDataByPlace(PlaceEnum place) => environmentBagDataDict[place];
+
+    /// <summary>
+    /// 保存所有环境背包的数据
+    /// </summary>
+    public void SaveEnvironmentayerBagRuntimeData()
     {
-        this.EnvironmentBagRuntimeData = runtimeData;
+        foreach (var (place, bag) in EffectResolve.Instance.EnvironmentBags)
+        {
+            EnvironmentBagRuntimeData data = new();
+            //data.place = bag.Place;
+            data.discoveryDegree = bag.DiscoveryDegree;
+            data.cardSlotsRuntimeData = new();
+            foreach (var slot in bag.Slots)
+            {
+                data.cardSlotsRuntimeData.Add(new() { cardInstanceList = slot.Cards });
+            }
+            JsonManager.SaveData(data, place.ToString() + "Bag");
+        }
     }
+
+    public void SaveLastPlace()
+    {
+        JsonManager.SaveData(EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType, "LastPlace");
+    }
+
+    // 动力舱的背包数据
+    private EnvironmentBagRuntimeData poweCabinBagData;
+    public EnvironmentBagRuntimeData PoweCabinBagData => poweCabinBagData;
+
+    // 驾驶室的背包数据
+    private EnvironmentBagRuntimeData cockpitBagData;
+    public EnvironmentBagRuntimeData CockpitBagData => cockpitBagData;
+    #endregion
 }
