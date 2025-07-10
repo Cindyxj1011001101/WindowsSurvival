@@ -1,9 +1,9 @@
-ï»¿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum StateEnum
 {
-    //æ°§æ°”ã€å¥åº·å€¼ã€é¥±é£Ÿã€æ°´åˆ†ã€å›°å€¦åº¦ã€sanå€¼
+    //ÑõÆø¡¢½¡¿µÖµ¡¢±¥Ê³¡¢Ë®·Ö¡¢À§¾ë¶È¡¢sanÖµ
     Health,
     Fullness,
     Thirst,
@@ -14,19 +14,20 @@ public class State
     public float curValue;
     public float MaxValue;
     public StateEnum stateEnum;
-    public State(float value,float maxValue,StateEnum state)
+    public State(float value, float maxValue, StateEnum state)
     {
-        curValue=value;
-        MaxValue=maxValue;
+        curValue = value;
+        MaxValue = maxValue;
         stateEnum = state;
     }
 }
-public class StateManager:MonoBehaviour
+public class StateManager : MonoBehaviour
 {
-    public Dictionary<StateEnum, State>StateDict=new Dictionary<StateEnum, State>();
+    public Dictionary<StateEnum, State> StateDict = new Dictionary<StateEnum, State>();
     private static StateManager instance;
     public static StateManager Instance
-    { get
+    {
+        get
         {
             if (instance == null)
             {
@@ -35,7 +36,7 @@ public class StateManager:MonoBehaviour
                 {
                     GameObject managerObj = new GameObject("StateManager");
                     instance = managerObj.AddComponent<StateManager>();
-                    DontDestroyOnLoad(managerObj); // è·¨åœºæ™¯ä¿æŒå®ä¾‹
+                    DontDestroyOnLoad(managerObj); // ¿ç³¡¾°±£³ÖÊµÀı
                 }
             }
             return instance;
@@ -44,45 +45,45 @@ public class StateManager:MonoBehaviour
 
     private void Awake()
     {
-        // ç¡®ä¿åªæœ‰ä¸€ä¸ªå®ä¾‹
+        // È·±£Ö»ÓĞÒ»¸öÊµÀı
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        
+
         instance = this;
         DontDestroyOnLoad(gameObject);
         Init();
     }
     public void Start()
-{
-    EventManager.Instance.AddListener<ChangeStateArgs>(EventType.ChangeState, OnChangeState);
-    EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
-}
-public void OnDestroy()
-{
-    EventManager.Instance.RemoveListener<ChangeStateArgs>(EventType.ChangeState, OnChangeState);
-    EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
-}
+    {
+        EventManager.Instance.AddListener<ChangeStateArgs>(EventType.ChangeState, OnChangeState);
+        EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
+    }
+    public void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<ChangeStateArgs>(EventType.ChangeState, OnChangeState);
+        EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
+    }
     public void Init()
     {
-        StateDict.Add(StateEnum.Health, new State(InitPlayerStateData.Instance.Health,100,StateEnum.Health));
-        StateDict.Add(StateEnum.Fullness, new State(InitPlayerStateData.Instance.Fullness,100,StateEnum.Fullness));
-        StateDict.Add(StateEnum.Thirst, new State(InitPlayerStateData.Instance.Thirst,100,StateEnum.Thirst));
-        StateDict.Add(StateEnum.San, new State(InitPlayerStateData.Instance.San,100,StateEnum.San));
+        StateDict.Add(StateEnum.Health, new State(InitPlayerStateData.Instance.Health, 100, StateEnum.Health));
+        StateDict.Add(StateEnum.Fullness, new State(InitPlayerStateData.Instance.Fullness, 100, StateEnum.Fullness));
+        StateDict.Add(StateEnum.Thirst, new State(InitPlayerStateData.Instance.Thirst, 100, StateEnum.Thirst));
+        StateDict.Add(StateEnum.San, new State(InitPlayerStateData.Instance.San, 100, StateEnum.San));
     }
-    
+
     public void OnChangeState(ChangeStateArgs args)
     {
         if (StateDict.ContainsKey(args.state))
         {
             StateDict[args.state].curValue += args.value;
-            if (StateDict[args.state].curValue >= 100)StateDict[args.state].curValue = 100;
-            if(StateDict[args.state].curValue<=0)StateDict[args.state].curValue = 0;
+            if (StateDict[args.state].curValue >= 100) StateDict[args.state].curValue = 100;
+            if (StateDict[args.state].curValue <= 0) StateDict[args.state].curValue = 0;
         }
 
-        EventManager.Instance.TriggerEvent(EventType.RefreshState,args.state);
+        EventManager.Instance.TriggerEvent(EventType.RefreshState, args.state);
     }
 
     public void IntervalSettle()

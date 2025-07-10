@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using UnityEngine;
 
 public class TimeManager : MonoBehaviour
@@ -20,7 +20,7 @@ public class TimeManager : MonoBehaviour
                 {
                     GameObject managerObj = new GameObject("TimeManager");
                     instance = managerObj.AddComponent<TimeManager>();
-                    DontDestroyOnLoad(managerObj); // è·¨åœºæ™¯ä¿æŒå®ä¾‹
+                    DontDestroyOnLoad(managerObj); // ¿ç³¡¾°±£³ÖÊµÀı
                 }
             }
             return instance;
@@ -29,7 +29,7 @@ public class TimeManager : MonoBehaviour
 
     private void Awake()
     {
-        // ç¡®ä¿åªæœ‰ä¸€ä¸ªå®ä¾‹
+        // È·±£Ö»ÓĞÒ»¸öÊµÀı
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
@@ -46,7 +46,7 @@ public class TimeManager : MonoBehaviour
         curInterval = SettleInterval;
     }
 
-    //å¢åŠ æ—¶é—´ç»“ç®—
+    //Ôö¼ÓÊ±¼ä½áËã
     public void AddTime(int minute)
     {
         int time = minute;
@@ -57,8 +57,8 @@ public class TimeManager : MonoBehaviour
             {
                 time -= curInterval;
                 curInterval = SettleInterval;
-                EventManager.Instance.TriggerEvent(EventType.IntervalSettle);//å¤„ç†æ—¶é—´çŠ¶æ€ç»“ç®—
-                EventManager.Instance.TriggerEvent(EventType.RefreshCard);//å¡ç‰Œè€ä¹…åº¦åˆ·æ–°
+                EventManager.Instance.TriggerEvent(EventType.IntervalSettle);//´¦ÀíÊ±¼ä×´Ì¬½áËã
+                EventManager.Instance.TriggerEvent(EventType.RefreshCard);//¿¨ÅÆÄÍ¾Ã¶ÈË¢ĞÂ
             }
             else
             {

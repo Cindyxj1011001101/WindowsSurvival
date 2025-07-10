@@ -22,4 +22,6 @@ MonoBehaviour:
   cardEventList:
   - {fileID: 11400000, guid: 67393d41152422b45b6e542fe326f3ff, type: 2}
   CardTagList: 
+  onUsedUp: {fileID: 0}
   MaxFresh: 2880
+  onRotton: {fileID: 11400000, guid: 7295e148013c52941a91f18301f6587d, type: 2}

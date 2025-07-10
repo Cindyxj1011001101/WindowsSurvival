@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class CardSlot : MonoBehaviour
 {
-    private Image iconImage;
-    private Image fillImage; // 用于显示新鲜度等
-    private Text propertyText; // 用于显示数量和耐久等
-    private Text nameText;
-    private Transform cardTransform;
+    [SerializeField] private Image iconImage;
+    [SerializeField] private Image fillImage; // 用于显示新鲜度等
+    [SerializeField] private Text propertyText; // 用于显示数量和耐久等
+    [SerializeField] private Text nameText;
+    [SerializeField] private Transform cardTransform;
 
     private CardData currentCard;
 
@@ -19,6 +19,9 @@ public class CardSlot : MonoBehaviour
     public int StackCount => cards.Count;
 
     public List<CardInstance> Cards => cards;
+
+    private BagBase bag;
+    public BagBase Bag => bag;
 
     /// <summary>
     /// 能否跨背包移动
@@ -51,6 +54,11 @@ public class CardSlot : MonoBehaviour
     private void Start()
     {
         EventManager.Instance.AddListener(EventType.ChangeCardProperty, OnCardPropertyChanged);
+    }
+
+    public void SetBag(BagBase bag)
+    {
+        this.bag = bag;
     }
 
     public void InitFromRuntimeData(CardSlotRuntimeData cardSlotRuntimeData)

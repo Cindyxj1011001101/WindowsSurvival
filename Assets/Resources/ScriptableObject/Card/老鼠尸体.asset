@@ -24,4 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0a87e1c95c6395d4f83050395f75227d, type: 2}
   - {fileID: 11400000, guid: 3b957283f45ec3243a46174a47f39330, type: 2}
   CardTagList: 
+  onUsedUp: {fileID: 0}
   MaxFresh: 2880
+  onRotton: {fileID: 11400000, guid: 7295e148013c52941a91f18301f6587d, type: 2}
