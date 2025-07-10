@@ -13,16 +13,25 @@
     {
         base.InitFromCardData(cardData);
         currentFresh = (cardData as FoodCardData).MaxFresh;
-        EventManager.Instance.AddListener(EventType.RefreshCard, UpdateFresh);
+        EventManager.Instance.AddListener(EventType.IntervalSettle, UpdateFresh);
     }
 
     private void UpdateFresh()
     {
+        if ((GetCardData() as FoodCardData).MaxFresh == -1) return;
+
         currentFresh -= TimeManager.Instance.SettleInterval;
         if (currentFresh < 0)
         {
             DestroyThisCard();
             EffectResolve.Instance.Resolve((GetCardData() as FoodCardData).onRotton);
         }
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
+    }
+
+    protected override void DestroyThisCard()
+    {
+        base.DestroyThisCard();
+        EventManager.Instance.RemoveListener(EventType.IntervalSettle, UpdateFresh);
     }
 }
