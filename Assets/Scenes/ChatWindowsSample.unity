@@ -381,7 +381,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2124539847}
   - component: {fileID: 2124539848}
-  - component: {fileID: 2124539849}
   - component: {fileID: 2124539850}
   - component: {fileID: 2124539851}
   m_Layer: 0
@@ -418,20 +417,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88ae83240bb480741a6066413f2ec292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2124539849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2124539846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7683737e972d40b8b80982604711adb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SettleInterval: 15
-  curInterval: 0
 --- !u!114 &2124539850
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -444,11 +429,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec8cb994fbff4159815014037f19552b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerBag: {fileID: 0}
-  EnvironmentBag:
-  - {fileID: 0}
-  - {fileID: 0}
-  CurEnvironmentBag: {fileID: 0}
+  playerBag: {fileID: 0}
+  environmentBags: []
+  curEnvironmentBag: {fileID: 0}
 --- !u!114 &2124539851
 MonoBehaviour:
   m_ObjectHideFlags: 0

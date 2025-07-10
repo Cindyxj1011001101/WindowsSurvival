@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: DropLittleMeat
   m_EditorClassIdentifier: 
   dropList:
-  - DropProb: 0
-    cardData: {fileID: 0}
-    DropNum: 0
+  - DropProb: 1
+    cardData: {fileID: 11400000, guid: 9bf18df4f0a014841800024659dc6bc8, type: 2}
+    DropNum: 1
     DropDesc: 
+  curDropList: []
