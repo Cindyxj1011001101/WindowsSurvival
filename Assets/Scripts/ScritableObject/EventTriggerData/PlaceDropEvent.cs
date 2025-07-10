@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlaceDropEvent:EventTrigger
 {
     public PlaceEnum Place;
-    public List<Drop> DefaultList;
     public List<Drop> OnceDropList;
     public List<Drop> RepeatDropList;
     public List<Drop> curOnceDropList;

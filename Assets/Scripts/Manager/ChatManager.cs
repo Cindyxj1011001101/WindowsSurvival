@@ -32,4 +32,11 @@ public class ChatManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
     }
+
+    //进入游戏-加载保存当前进度的对话-是否段落结束/等待选择判断，未结束继续运行弹出对话-段落结束
+    //1.加载保存当前进度的对话
+    //2.判断是否需要继续加载对话（对话中，开始运行时）
+    //3.运行对话到某句
+
+
 }

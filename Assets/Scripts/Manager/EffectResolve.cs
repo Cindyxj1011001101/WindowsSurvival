@@ -118,7 +118,9 @@ public class EffectResolve : MonoBehaviour
     //���俨�Ƽ��뱳��
     public void AddDropCard(Drop drop, bool ToPlayerBag)
     {
-        CardInstance cardInstance = CardFactory.CreateCardIntance(drop.cardData);
+        for(int i=0;i<drop.DropNum;i++)
+        {
+            CardInstance cardInstance = CardFactory.CreateCardIntance(drop.cardData);
         if (ToPlayerBag)
         {
             //�жϱ������������Ƿ�����
@@ -135,6 +137,8 @@ public class EffectResolve : MonoBehaviour
         {
             curEnvironmentBag.AddCard(cardInstance);
         }
+        }
+        
     }
 
     //�����ƶ�
