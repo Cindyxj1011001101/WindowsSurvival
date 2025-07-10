@@ -2,10 +2,10 @@ using UnityEngine.UI;
 
 public class EnvironmentBagWindow : BagWindow
 {
-    private Text discoveryDegreeText; // Ì½Ë÷¶ÈÏÔÊ¾
-    private Text placeNameText; // µØµãÃû³Æ
-    private Text placeDetailsText; // µØµãÏêÇé
-    private Button discoverButton; // Ì½Ë÷°´Å¥
+    private Text discoveryDegreeText; // å‘ç°åº¦æ˜¾ç¤º
+    private Text placeNameText; // ç¯å¢ƒè¢‹åç§°
+    private Text placeDetailsText; // ç¯å¢ƒè¢‹è¯¦æƒ…
+    private Button discoverButton; // å‘ç°æŒ‰é’®
 
     //private PlaceEnum currentPlace;
 
@@ -25,15 +25,15 @@ public class EnvironmentBagWindow : BagWindow
             EffectResolve.Instance.ResolveExplore();
         });
 
-        // ×¢²áÌ½Ë÷¶È±ä»¯ÊÂ¼ş
+        // æ³¨å†Œå‘ç°åº¦å˜åŒ–äº‹ä»¶
         EventManager.Instance.AddListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDicoveryDegreeChanged);
-        // ×¢²áµØµãÒÆ¶¯ÊÂ¼ş
+        // æ³¨å†Œç¯å¢ƒè¢‹ç§»åŠ¨äº‹ä»¶
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
     }
 
     private void OnEnable()
     {
-        // ´°¿Ú¼¤»îÊ±£¬ÏÔÊ¾µ±Ç°µØµã
+        // å½“å‰æ˜¾ç¤ºå½“å‰ç¯å¢ƒè¢‹
         EffectResolve.Instance.Move(EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType);
     }
 
@@ -42,11 +42,11 @@ public class EnvironmentBagWindow : BagWindow
     }
 
     /// <summary>
-    /// ÒÆ¶¯µ½Ö¸¶¨µØµã
+    /// ç§»åŠ¨åˆ°æŒ‡å®šç¯å¢ƒè¢‹
     /// </summary>
     private void OnMove(EnvironmentBag curEnvironmentBag)
     {
-        // ¸üĞÂµØµãĞÅÏ¢
+        // æ–°çš„ç¯å¢ƒè¢‹ä¿¡æ¯
         discoveryDegreeText.text = $"{curEnvironmentBag.DiscoveryDegree} %";
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
         placeDetailsText.text = $"{curEnvironmentBag.PlaceData.placeDesc}";
@@ -60,7 +60,7 @@ public class EnvironmentBagWindow : BagWindow
 
     private void OnDestroy()
     {
-        // ÒÆ³ı×¢²áÊÂ¼ş
+        // ç§»é™¤äº‹ä»¶
         EventManager.Instance.RemoveListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDicoveryDegreeChanged);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
     }

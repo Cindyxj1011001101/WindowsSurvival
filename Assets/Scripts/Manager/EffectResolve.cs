@@ -42,6 +42,20 @@ public class EffectResolve : MonoBehaviour
         }
         // 当前环境背包
         curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
+        Init();
+    }
+
+        //初始化SO数据
+    public void Init()
+    {
+        EventTrigger[] eventTriggers = Resources.LoadAll<EventTrigger>("ScriptableObject/EventTrigger");
+        if (eventTriggers != null && eventTriggers.Length > 0)
+        {
+            foreach (var trigger in eventTriggers)
+            {
+                trigger.Init();
+            }
+        }
     }
 
     //探索方法
@@ -135,16 +149,5 @@ public class EffectResolve : MonoBehaviour
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
     }
 
-    //初始化SO数据
-    public void Init()
-    {
-        EventTrigger[] eventTriggers = Resources.LoadAll<EventTrigger>("ScriptableObject/EventTrigger");
-        if (eventTriggers != null && eventTriggers.Length > 0)
-        {
-            foreach (var trigger in eventTriggers)
-            {
-                trigger.Init();
-            }
-        }
-    }
+
 }

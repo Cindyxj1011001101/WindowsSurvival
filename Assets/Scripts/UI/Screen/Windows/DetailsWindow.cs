@@ -18,9 +18,9 @@ public class DetailsWindow : WindowBase
         detailsText = transform.Find("Content/Details").GetComponent<Text>();
         buttonLayout = transform.Find("Content/ButtonLayout");
         tagLayout = transform.Find("Content/TagLayout");
-        // ½ûÖ¹ÍÏ¶¯¿¨ÅÆ
+        // ç¦æ­¢æ‹–æ‹½
         slot.GetComponentInChildren<CardDragHandler>().enabled = false;
-        // ½ûÖ¹Ë«»÷ÊÂ¼ş
+        // ç¦æ­¢åŒå‡»
         slot.GetComponentInChildren<DoubleClickHandler>().enabled = false;
     }
 
@@ -30,19 +30,19 @@ public class DetailsWindow : WindowBase
 
     public void Refresh(CardSlot sourceSlot)
     {
-        // ÇåÀíÔ­ÓĞÊı¾İ
+        // æ¸…é™¤åŸæ•°æ®
         Clear();
 
         if (sourceSlot.StackCount <= 0) return;
 
-        // ¼ÇÂ¼sourceSlotºÍµ±Ç°ÏÔÊ¾µÄ¿¨ÅÆ
+        // è®°å½•sourceSlotå’Œå½“å‰æ˜¾ç¤ºçš„å¡ç‰Œ
         this.sourceSlot = sourceSlot;
         currentDisplayedCard = sourceSlot.PeekCard();
 
-        // ÏÔÊ¾¿¨ÅÆ
+        // æ˜¾ç¤ºå¡ç‰Œ
         slot.DisplayCard(currentDisplayedCard);
 
-        // ÏÔÊ¾¿¨ÅÆ±êÇ©
+        // æ˜¾ç¤ºå¡ç‰Œæ ‡ç­¾
         CardData cardData = currentDisplayedCard.GetCardData();
         foreach (var tag in cardData.CardTagList)
         {
@@ -50,10 +50,10 @@ public class DetailsWindow : WindowBase
             Instantiate(tagPrefab, tagLayout);
         }
 
-        // ÏÔÊ¾¿¨ÅÆÏêÏ¸ĞÅÏ¢
+        // æ˜¾ç¤ºå¡ç‰Œè¯¦ç»†ä¿¡æ¯
         detailsText.text = cardData.cardDesc;
 
-        // ÏÔÊ¾¿É½»»¥Ñ¡Ïî
+        // æ˜¾ç¤ºå¯é€‰æ‹©æŒ‰é’®
         foreach (var cardEvent in cardData.cardEventList)
         {
             GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Button");
@@ -61,7 +61,7 @@ public class DetailsWindow : WindowBase
             button.interactable = false;
             button.GetComponentInChildren<Text>().text = cardEvent.EventName;
 
-            // ¼ì²écardEventÊÇ·ñÂú×ã´¥·¢Ìõ¼ş
+            // åˆ¤æ–­cardEventæ˜¯å¦æ»¡è¶³æ¡ä»¶
             if (EffectResolve.Instance.ConditionEventJudge(cardEvent))
             {
                 button.onClick.AddListener(() =>

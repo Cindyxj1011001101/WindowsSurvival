@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlaceDropEvent", menuName = "ScritableObject/PlaceDropEvent")]
 public class PlaceDropEvent:EventTrigger
 {
-    public PlaceEnum PlaceManager;
+    public PlaceEnum Place;
     public List<Drop> DefaultList;
     public List<Drop> OnceDropList;
     public List<Drop> RepeatDropList;
@@ -27,8 +27,11 @@ public class PlaceDropEvent:EventTrigger
                 {
                     EffectResolve.Instance.AddDropCard(drop,false);
                     curOnceDropList.Remove(drop);
+                    //处理探索度变化
+                    float explore =(1- (float)curOnceDropList.Count / OnceDropList.Count)*100;
+                    EventManager.Instance.TriggerEvent<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree,new ChangeDiscoveryDegreeArgs(Place,explore));
                     return;
-                }
+                }   
                 rand -= drop.DropProb;
             }
         }

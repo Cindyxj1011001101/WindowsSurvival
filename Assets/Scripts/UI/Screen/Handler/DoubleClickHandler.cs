@@ -5,7 +5,7 @@ using UnityEngine.Events;
 //[RequireComponent(typeof(UnityEngine.UI.Graphic))]
 public class DoubleClickHandler : MonoBehaviour, IPointerClickHandler
 {
-    [Tooltip("Ë«»÷Ê±¼ä¼ä¸ô£¨Ãë£©")]
+    [Tooltip("åŒå‡»é—´éš”")]
     public float doubleClickInterval = 0.3f;
 
     [Space]
@@ -15,17 +15,17 @@ public class DoubleClickHandler : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        // ¼ì²éÊÇ·ñÊÇ×ó¼üµã»÷
+        // åˆ¤æ–­æ˜¯å¦æ˜¯å·¦é”®ç‚¹å‡»
         if (eventData.button != PointerEventData.InputButton.Left)
             return;
 
-        // ¼ÆËãÓëÉÏ´Îµã»÷µÄÊ±¼ä¼ä¸ô
+        // è®¡ç®—ä¸Šæ¬¡ç‚¹å‡»çš„æ—¶é—´
         float timeSinceLastClick = Time.unscaledTime - lastClickTime;
 
-        // ¸üĞÂÉÏ´Îµã»÷Ê±¼ä
+        // è®°å½•å½“å‰ç‚¹å‡»çš„æ—¶é—´
         lastClickTime = Time.unscaledTime;
 
-        // Èç¹ûÊ±¼ä¼ä¸ôĞ¡ÓÚÉè¶¨µÄË«»÷¼ä¸ô£¬Ôò´¥·¢Ë«»÷ÊÂ¼ş
+        // å¦‚æœæ—¶é—´é—´éš”å°äºè®¾ç½®çš„ç‚¹å‡»é—´éš”ï¼Œåˆ™è§¦å‘åŒå‡»äº‹ä»¶
         if (timeSinceLastClick <= doubleClickInterval)
         {
             onDoubleClick.Invoke();

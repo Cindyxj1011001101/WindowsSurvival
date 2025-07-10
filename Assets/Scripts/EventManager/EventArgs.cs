@@ -44,5 +44,11 @@ public class AddDropCardArgs
 public class ChangeDiscoveryDegreeArgs
 {
     public PlaceEnum place;
-    public int discoveryDegree;
+    public float discoveryDegree;
+
+    public ChangeDiscoveryDegreeArgs(PlaceEnum p, float d)
+    {
+        place = p;
+        discoveryDegree = d;
+    }
 }
