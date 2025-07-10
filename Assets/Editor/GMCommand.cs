@@ -116,7 +116,7 @@ public class GMCommand
     }
 
 
-    [MenuItem("Command/健康+10")]
+    [MenuItem("Command/时间+50min")]
     public static void L()
     {
        TimeManager.Instance.AddTime(50);

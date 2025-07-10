@@ -12,7 +12,11 @@ public enum Character
     NPC,
 }
 
-public class ChatData
+public class CSVData
+{
+}
+
+public class ChatData:CSVData
 {
     public int SentenceId;
     public int ParagraphId;
@@ -67,18 +71,24 @@ public class CSVReader
     /// <param name="csvEnum">CSV枚举</param>
     /// <param name="fileName">文件名</param>
     /// <returns>CSV文件内容</returns>
-    // public static List<T> ReadCSVByEnum(CSVEnum csvEnum, string fileName)
-    // {
-    //     List<string[]> lines = ReadCSVByFileName(fileName);
-    //     switch (csvEnum)
-    //     {
-    //         case CSVEnum.Chat:
-    //             return CharCSVResolve(lines);
-    //         default:
-    //             return null;
-    //     }
-    // }
+    public static List<T> ReadCSVByEnum<T>(CSVEnum csvEnum, string fileName) where T : CSVData, new()
+    {
+        List<string[]> lines = ReadCSVByFileName(fileName);
+        switch (csvEnum)
+        {
+            case CSVEnum.Chat:
+                List<ChatData> chatData = CharCSVResolve(lines);
+                return chatData as List<T>; // 类型转换？
+            default:
+                return null;
+        }
+    }
 
+    /// <summary>
+    /// 解析成ChatData格式数据
+    /// </summary>
+    /// <param name="lines">CSV文件内容</param>
+    /// <returns>解析后的数据</returns>
     private static List<ChatData> CharCSVResolve(List<string[]> lines)
     {
         List<ChatData> result = new List<ChatData>();
