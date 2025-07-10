@@ -131,6 +131,7 @@ public class EffectResolve : MonoBehaviour
             bag.gameObject.SetActive(place == targetPlace);
         }
         curEnvironmentBag = environmentBags[targetPlace];
+
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
     }
 
