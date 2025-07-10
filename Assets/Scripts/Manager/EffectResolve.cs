@@ -1,17 +1,17 @@
-ï»¿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 public enum PlaceEnum
 {
     /// <summary>
-    /// åŠ¨åŠ›èˆ±
+    /// ¶¯Á¦²Õ
     /// </summary>
     PowerCabin,
     /// <summary>
-    /// é©¾é©¶å®¤
+    /// ¼İÊ»ÊÒ
     /// </summary>
     Cockpit,
     /// <summary>
-    /// ç»´ç”Ÿèˆ±
+    /// Î¬Éú²Õ
     /// </summary>
     LifeSupportCabin
 
@@ -33,24 +33,24 @@ public class EffectResolve : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(gameObject);
-        // è®°å½•ç©å®¶èƒŒåŒ…
+        // ¼ÇÂ¼Íæ¼Ò±³°ü
         playerBag = FindObjectOfType<PlayerBag>(true);
-        // è®°å½•æ‰€æœ‰ç¯å¢ƒèƒŒåŒ…
+        // ¼ÇÂ¼ËùÓĞ»·¾³±³°ü
         foreach (var bag in FindObjectsOfType<EnvironmentBag>(true))
         {
             environmentBags.Add(bag.PlaceData.placeType, bag);
         }
-        // å½“å‰ç¯å¢ƒèƒŒåŒ…
+        // µ±Ç°»·¾³±³°ü
         curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
     }
 
-    //æ¢ç´¢æ–¹æ³•
+    //Ì½Ë÷·½·¨
     public void ResolveExplore()
     {
         CardEvent cardEvent = curEnvironmentBag.CardEvent;
         foreach (var EventTrigger in cardEvent.eventList)
         {
-            //å¦‚æœæ˜¯æ¢ç´¢äº‹ä»¶è¿›è¡Œç‰¹æ®Šå¤„ç†
+            //Èç¹ûÊÇÌ½Ë÷ÊÂ¼ş½øĞĞÌØÊâ´¦Àí
             if (EventTrigger.GetType() == typeof(PlaceDropEvent))
             {
                 EventTrigger.EventResolve();
@@ -58,7 +58,7 @@ public class EffectResolve : MonoBehaviour
         }
     }
 
-    //åˆ¤æ–­æ˜¯å¦æ»¡è¶³äº‹ä»¶è§¦å‘æ¡ä»¶
+    //ÅĞ¶ÏÊÇ·ñÂú×ãÊÂ¼ş´¥·¢Ìõ¼ş
     public bool ConditionEventJudge(CardEvent cardEvent)
     {
         if (cardEvent.GetType() == typeof(ConditionalCardEvent))
@@ -76,45 +76,45 @@ public class EffectResolve : MonoBehaviour
         return true;
     }
 
-    //ç‚¹å‡»å¡ç‰Œäº‹ä»¶è§¦å‘æ–¹æ³•
+    //µã»÷¿¨ÅÆÊÂ¼ş´¥·¢·½·¨
     public void Resolve(CardEvent cardEvent)
     {
         if (cardEvent == null) return;
 
         if (!ConditionEventJudge(cardEvent)) return;
-        //çŠ¶æ€ç»“ç®—
+        //×´Ì¬½áËã
         foreach (var EventTrigger in cardEvent.eventList)
         {
             if (EventTrigger.GetType() == typeof(ValueEvent)) EventTrigger.EventResolve();
         }
-        //åœºæ™¯åˆ‡æ¢
+        //³¡¾°ÇĞ»»
         foreach (var EventTrigger in cardEvent.eventList)
         {
             if (EventTrigger.GetType() == typeof(MoveEvent)) EventTrigger.EventResolve();
         }
-        //æ—¶é—´æµé€
+        //Ê±¼äÁ÷ÊÅ
         TimeManager.Instance.AddTime(cardEvent.Time);
-        //æ‰è½å¡ç‰‡
+        //µôÂä¿¨Æ¬
         foreach (var EventTrigger in cardEvent.eventList)
         {
             if (EventTrigger.GetType() == typeof(DropEvent)) EventTrigger.EventResolve();
         }
     }
 
-    //æ‰è½å¡ç‰ŒåŠ å…¥èƒŒåŒ…
+    //µôÂä¿¨ÅÆ¼ÓÈë±³°ü
     public void AddDropCard(Drop drop, bool ToPlayerBag)
     {
         CardInstance cardInstance = CardFactory.CreateCardIntance(drop.cardData);
         if (ToPlayerBag)
         {
-            //åˆ¤æ–­èƒŒåŒ…æ ¼å­æ•°é‡æ˜¯å¦å·²æ»¡
+            //ÅĞ¶Ï±³°ü¸ñ×ÓÊıÁ¿ÊÇ·ñÒÑÂú
             if (playerBag.CanAddCard(cardInstance))
             {
-                curEnvironmentBag.AddCard(cardInstance);
+                playerBag.AddCard(cardInstance);
             }
             else
             {
-                playerBag.AddCard(cardInstance);
+                curEnvironmentBag.AddCard(cardInstance);
             }
         }
         else
@@ -123,7 +123,7 @@ public class EffectResolve : MonoBehaviour
         }
     }
 
-    //åœºæ™¯ç§»åŠ¨
+    //³¡¾°ÒÆ¶¯
     public void Move(PlaceEnum targetPlace)
     {
         foreach (var (place, bag) in environmentBags)
@@ -135,7 +135,7 @@ public class EffectResolve : MonoBehaviour
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
     }
 
-    //åˆå§‹åŒ–SOæ•°æ®
+    //³õÊ¼»¯SOÊı¾İ
     public void Init()
     {
         EventTrigger[] eventTriggers = Resources.LoadAll<EventTrigger>("ScriptableObject/EventTrigger");

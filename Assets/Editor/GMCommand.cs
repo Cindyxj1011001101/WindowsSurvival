@@ -12,7 +12,7 @@ public class GMCommand
         var bag = GetFocusedBag();
         if (bag != null) bag.AddCard(card);
 
-        Debug.Log(card + "添加到" + bag.gameObject.name);
+        //Debug.Log(card + "添加到" + bag.gameObject.name);
     }
 
     [MenuItem("Command/添加一个格子")]

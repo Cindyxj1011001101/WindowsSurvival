@@ -148,7 +148,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 119314352}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 831dc290bcd0403bb674287221911306, type: 3}
+  m_Script: {fileID: 11500000, guid: 332ec90db1e253e409fffba912d7becc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &119314354
@@ -421,7 +421,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1835077847}
-  - component: {fileID: 1835077846}
+  - component: {fileID: 1835077848}
   m_Layer: 0
   m_Name: TimeManager
   m_TagString: Untagged
@@ -429,20 +429,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1835077846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1835077845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01245e922dc42a9489e5685f39f603b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SettleInterval: 15
-  curInterval: 0
 --- !u!4 &1835077847
 Transform:
   m_ObjectHideFlags: 0
@@ -458,6 +444,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1835077848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835077845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20e960548da0fd44597775af9d3a1c82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SettleInterval: 15
+  curInterval: 0
 --- !u!1 &1967760143
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,7 +484,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1967760143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01cf15f6dc86a5e44ac5d3ec16d43a65, type: 3}
+  m_Script: {fileID: 11500000, guid: a62fb6384254e504d9bd1fec5fef242e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1967760145

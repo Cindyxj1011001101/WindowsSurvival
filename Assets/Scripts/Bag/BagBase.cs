@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public abstract class BagBase : MonoBehaviour
 {
-    private GameObject slotPrefab; // 格子预制体
-    private RectTransform slotContainer; // 格子存放位置
-    private GridLayoutGroup gridLayout; // 格子布局
+    [SerializeField] private GameObject slotPrefab; // 格子预制体
+    [SerializeField] private RectTransform slotContainer; // 格子存放位置
+    [SerializeField] private GridLayoutGroup gridLayout; // 格子布局
 
     protected List<CardSlot> slots = new();
 
@@ -26,13 +26,6 @@ public abstract class BagBase : MonoBehaviour
     }
     protected int SlotsCount => slots.Count; // 格子总数
     protected bool IsBagFull => UsedSlotsCount == SlotsCount; // 背包是否已满
-
-    protected virtual void Awake()
-    {
-        slotPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot");
-        slotContainer = transform.Find("Viewport/Container") as RectTransform;
-        gridLayout = slotContainer.GetComponent<GridLayoutGroup>();
-    }
 
     protected virtual void Start()
     {
@@ -163,7 +156,9 @@ public abstract class BagBase : MonoBehaviour
             case ToolTagCondition toolTagCondition:
                 foreach (var slot in slots)
                 {
-                    if (slot.CardData.GetType() == typeof(ToolCardData))
+                    if (slot.IsEmpty) continue;
+
+                    if ( slot.CardData.GetType() == typeof(ToolCardData))
                     {
                         ToolCardData toolCardData = slot.CardData as ToolCardData;
                         if (toolCardData.tag == toolTagCondition.ConditionToolTag)
@@ -176,6 +171,7 @@ public abstract class BagBase : MonoBehaviour
             case TagCondition tagCondition:
                 foreach (var slot in slots)
                 {
+                    if (slot.IsEmpty) continue;
                     if (slot.CardData.CardTagList.Contains(tagCondition.ConditionTag))
                     {
                         return slot;
@@ -185,6 +181,7 @@ public abstract class BagBase : MonoBehaviour
             case TypeCondition typeCondition:
                 foreach (var slot in slots)
                 {
+                    if (slot.IsEmpty) continue;
                     if (slot.CardData.cardType == typeCondition.ConditonCardType)
                     {
                         return slot;
@@ -194,6 +191,7 @@ public abstract class BagBase : MonoBehaviour
             case CardCondition cardCondition:
                 foreach (var slot in slots)
                 {
+                    if (slot.IsEmpty) continue;
                     if (slot.CardData == cardCondition.ConditionCard)
                     {
                         return slot;
