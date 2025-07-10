@@ -10,7 +10,7 @@ public class PlaceDropEvent:EventTrigger
     public List<Drop> RepeatDropList;
     public List<Drop> curOnceDropList;
     public int AllRepeatDrop;
-    //环境卡牌重复/单次掉落逻辑
+    //掉落-场景掉落（掉一次后不掉/重复掉）
     public override void EventResolve()
     {
         if (curOnceDropList.Count != 0)
