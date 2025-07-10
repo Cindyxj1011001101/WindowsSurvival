@@ -44,6 +44,8 @@ public abstract class CardInstance : IComparable<CardInstance>
             // 触发卡牌耐久归零事件
             EffectResolve.Instance.Resolve(GetCardData().onUsedUp);
         }
+        // 刷新前端显示的卡牌数据
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
     }
 
     protected virtual void DestroyThisCard()
