@@ -16,6 +16,7 @@ public class CardData:ScriptableObject
     public string cardDesc;
     public float weight;
     public int maxStackNum;
+    public int maxEndurance;
     public List<CardEvent> cardEventList;
     public List<CardTag> CardTagList;
 }

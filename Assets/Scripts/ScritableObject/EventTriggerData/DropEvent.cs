@@ -1,57 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Random = UnityEngine.Random;
+﻿    using System;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using Random = UnityEngine.Random;
 
-[Serializable]
-public class Drop
-{
-    //掉落概率
-    public int DropProb;
-
-    //掉落物体及其数量
-    public CardData cardData;
-
-    public int DropNum;
-
-    //掉落描述
-    public string DropDesc;
-}
-
-[CreateAssetMenu(fileName = "DropEvent", menuName = "ScritableObject/DropEvent")]
-public class DropEvent : EventTrigger
-{
-    public List<Drop> dropList;
-    public List<Drop> curDropList;
-
-    public override void EventResolve()
+    [Serializable]
+    public class Drop
     {
-        if (curDropList.Count != 0)
+        //掉落概率
+        public int DropProb;
+
+        //掉落物体及其数量
+        public CardData cardData;
+
+        public int DropNum;
+
+        //掉落描述
+        public string DropDesc;
+    }
+
+    [CreateAssetMenu(fileName = "DropEvent", menuName = "ScritableObject/DropEvent")]
+    public class DropEvent : EventTrigger
+    {
+        public List<Drop> dropList;
+        private int sumProb;
+
+        public override void EventResolve()
         {
-            int sumProb = 0;
-            foreach (var drop in curDropList)
+            if (dropList!=null)
+            {
+                int rand = Random.Range(0, sumProb);
+                foreach (var drop in dropList)
+                {
+                    if (rand < drop.DropProb)
+                    {
+                        EffectResolve.Instance.AddDropCard(drop, true);
+                        return;
+                    }
+
+                    rand -= drop.DropProb;
+                }
+            }
+        }
+
+        public override void Init()
+        {
+            sumProb = 0;
+            foreach (var drop in dropList)
             {
                 sumProb += drop.DropProb;
             }
-
-            int rand = Random.Range(0, sumProb);
-            foreach (var drop in curDropList)
-            {
-                if (rand < drop.DropProb)
-                {
-                    EffectResolve.Instance.AddDropCard(drop, true);
-                    curDropList.Remove(drop);
-                    return;
-                }
-
-                rand -= drop.DropProb;
-            }
+            return;
         }
     }
-
-    public override void Init()
-    {
-        curDropList = new List<Drop>(dropList);
-        return;
-    }
-}
