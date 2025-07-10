@@ -76,6 +76,15 @@ public class DetailsWindow : WindowBase
                 button.onClick.AddListener(() =>
                 {
                     currentDisplayedCard.Use();
+                    if (cardEvent is ConditionalCardEvent)
+                    {
+                        foreach (var condition in (cardEvent as ConditionalCardEvent).ConditionCardList)
+                        {
+                            var slot = sourceSlot.Bag.TryGetCardByCondition(condition);
+                            slot.PeekCard().Use();
+                            break;
+                        }
+                    }
                     // 先刷新
                     Refresh(sourceSlot);
                     // 再触发效果

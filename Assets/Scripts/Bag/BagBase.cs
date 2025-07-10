@@ -159,7 +159,7 @@ public abstract class BagBase : MonoBehaviour
                 {
                     if (slot.IsEmpty) continue;
 
-                    if ( slot.CardData.GetType() == typeof(ToolCardData))
+                    if (slot.CardData.GetType() == typeof(ToolCardData))
                     {
                         ToolCardData toolCardData = slot.CardData as ToolCardData;
                         if (toolCardData.tag == toolTagCondition.ConditionToolTag)
