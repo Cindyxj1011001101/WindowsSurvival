@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,12 +12,10 @@ public class CardSlot : MonoBehaviour
 
     private CardData currentCard;
 
-    //private PriorityQueue<CardInstance> cardInstanceQueue = new();
     private List<CardInstance> cards = new();
 
     public bool IsEmpty => currentCard == null;
     public CardData CardData => currentCard;
-    //public int StackCount => cardInstanceQueue.Count;
     public int StackCount => cards.Count;
 
     public List<CardInstance> Cards => cards;
@@ -68,9 +65,18 @@ public class CardSlot : MonoBehaviour
     {
         if (IsEmpty) return;
 
-        fillImage.gameObject.SetActive(currentCard is FoodCardData);
+        DisplayCard(PeekCard());
+    }
+
+    public void DisplayCard(CardInstance card)
+    {
+        cardTransform.gameObject.SetActive(true);
+        var data = card.GetCardData();
+        iconImage.sprite = data.cardImage;
+        nameText.text = data.cardName;
+        fillImage.gameObject.SetActive(data is FoodCardData);
         propertyText.text = "";
-        switch (currentCard)
+        switch (data)
         {
             case FoodCardData cardData:
                 // 保质期无限
@@ -78,7 +84,7 @@ public class CardSlot : MonoBehaviour
                     fillImage.gameObject.SetActive(false);
                 // 有保质期
                 else
-                    fillImage.fillAmount = (float)(PeekCard() as FoodCardInstance).currentFresh / cardData.MaxFresh;
+                    fillImage.fillAmount = (float)(card as FoodCardInstance).currentFresh / cardData.MaxFresh;
 
                 if (StackCount > 1)
                     propertyText.text = $"x{StackCount}";
@@ -94,11 +100,11 @@ public class CardSlot : MonoBehaviour
                 break;
 
             case ResourcePointCardData cardData:
-                propertyText.text = $"{(PeekCard() as ResourcePointCardInstance).currentEndurance} / {cardData.maxEndurance}";
+                propertyText.text = $"{(card as ResourcePointCardInstance).currentEndurance} / {cardData.maxEndurance}";
                 break;
 
             case ToolCardData cardData:
-                propertyText.text = $"{(PeekCard() as ToolCardInstance).currentEndurance} / {cardData.maxEndurance}";
+                propertyText.text = $"{(card as ToolCardInstance).currentEndurance} / {cardData.maxEndurance}";
                 break;
 
             default:
@@ -116,42 +122,46 @@ public class CardSlot : MonoBehaviour
 
     public void AddCard(CardInstance card)
     {
-        if (IsEmpty)
-        {
-            cardTransform.gameObject.SetActive(true);
-            currentCard = card.GetCardData();
-            iconImage.sprite = currentCard.cardImage;
-            nameText.text = currentCard.cardName;
-        }
+        currentCard = card.GetCardData();
 
-        //cardInstanceQueue.Enqueue(card);
         cards.Add(card);
+        card.SetCardSlot(this);
         cards.Sort((a, b) => a.CompareTo(b));
 
         OnCardPropertyChanged();
     }
 
-    public CardInstance RemoveCard()
+    public void RemoveCard(CardInstance card)
     {
-        //var cardToRemove = cardInstanceQueue.Dequeue();
-        var cardToRemove = cards[0];
-        cards.RemoveAt(0);
+        if (!cards.Contains(card)) return;
+
+        cards.Remove(card);
+        card.SetCardSlot(null);
 
         if (StackCount == 0)
             ClearSlot();
         else
             OnCardPropertyChanged();
+    }
+
+    public CardInstance RemoveCard()
+    {
+        var cardToRemove = cards[0];
+
+        RemoveCard(cardToRemove);
 
         return cardToRemove;
     }
 
-    //public CardInstance PeekCard() => cardInstanceQueue.Peek();
     public CardInstance PeekCard() => cards[0];
 
     public void ClearSlot()
     {
         currentCard = null;
-        //cardInstanceQueue.Clear();
+        while (StackCount > 0)
+        {
+            RemoveCard();
+        }
         cards.Clear();
         iconImage.sprite = null;
         nameText.text = "";

@@ -103,6 +103,19 @@ public class GMCommand
         GameDataManager.Instance.SavePlayerBagRuntimeData();
     }
 
+    [MenuItem("Command/保存环境背包")]
+    public static void SaveEnvironmentBag()
+    {
+        GameDataManager.Instance.SaveEnvironmentBagRuntimeData();
+    }
+
+    [MenuItem("Command/保存当前地点")]
+    public static void SaveLastPlace()
+    {
+        GameDataManager.Instance.SaveLastPlace();
+    }
+
+
     [MenuItem("Command/健康+10")]
     public static void L()
     {

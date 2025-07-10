@@ -50,7 +50,7 @@ public class GameDataManager
     /// <summary>
     /// 保存所有环境背包的数据
     /// </summary>
-    public void SaveEnvironmentayerBagRuntimeData()
+    public void SaveEnvironmentBagRuntimeData()
     {
         foreach (var (place, bag) in EffectResolve.Instance.EnvironmentBags)
         {

@@ -79,6 +79,7 @@ public class EffectResolve : MonoBehaviour
     //点击卡牌事件触发方法
     public void Resolve(CardEvent cardEvent)
     {
+        if (cardEvent == null) return;
 
         if (!ConditionEventJudge(cardEvent)) return;
         //状态结算

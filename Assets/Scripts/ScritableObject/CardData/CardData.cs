@@ -19,4 +19,5 @@ public class CardData:ScriptableObject
     public int maxEndurance;
     public List<CardEvent> cardEventList;
     public List<CardTag> CardTagList;
+    public CardEvent onUsedUp; // 耐久归零触发
 }

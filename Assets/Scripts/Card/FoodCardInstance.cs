@@ -11,6 +11,18 @@
 
     public override void InitFromCardData(CardData cardData)
     {
+        base.InitFromCardData(cardData);
         currentFresh = (cardData as FoodCardData).MaxFresh;
+        EventManager.Instance.AddListener(EventType.RefreshCard, UpdateFresh);
+    }
+
+    private void UpdateFresh()
+    {
+        currentFresh -= TimeManager.Instance.SettleInterval;
+        if (currentFresh < 0)
+        {
+            DestroyThisCard();
+            EffectResolve.Instance.Resolve((GetCardData() as FoodCardData).onRotton);
+        }
     }
 }
