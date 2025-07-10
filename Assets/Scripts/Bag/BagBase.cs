@@ -52,6 +52,7 @@ public abstract class BagBase : MonoBehaviour
         {
             GameObject slotObj = Instantiate(slotPrefab, slotContainer);
             CardSlot slot = slotObj.GetComponent<CardSlot>();
+            slot.SetBag(this);
             slot.ClearSlot();
             slots.Add(slot);
         }

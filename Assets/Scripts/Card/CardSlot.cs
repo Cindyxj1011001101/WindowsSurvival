@@ -20,6 +20,9 @@ public class CardSlot : MonoBehaviour
 
     public List<CardInstance> Cards => cards;
 
+    private BagBase bag;
+    public BagBase Bag => bag;
+
     /// <summary>
     /// ÄÜ·ñ¿ç±³°üÒÆ¶¯
     /// </summary>
@@ -51,6 +54,11 @@ public class CardSlot : MonoBehaviour
     private void Start()
     {
         EventManager.Instance.AddListener(EventType.ChangeCardProperty, OnCardPropertyChanged);
+    }
+
+    public void SetBag(BagBase bag)
+    {
+        this.bag = bag;
     }
 
     public void InitFromRuntimeData(CardSlotRuntimeData cardSlotRuntimeData)
