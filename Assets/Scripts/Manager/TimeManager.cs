@@ -58,7 +58,7 @@ public class TimeManager : MonoBehaviour
                 time -= curInterval;
                 curInterval = SettleInterval;
                 EventManager.Instance.TriggerEvent(EventType.IntervalSettle);//处理时间状态结算
-                EventManager.Instance.TriggerEvent(EventType.RefreshCard);//卡牌耐久度刷新
+                //EventManager.Instance.TriggerEvent(EventType.RefreshCard);//卡牌耐久度刷新
             }
             else
             {
