@@ -1,4 +1,5 @@
-﻿using UnityEngine.UI;
+﻿using System;
+using UnityEngine.UI;
 
 public class PlayerBagWindow : BagWindow
 {
@@ -22,7 +23,7 @@ public class PlayerBagWindow : BagWindow
 
     private void DisplayBagLoad(float currentLoad, float maxLoad)
     {
-        loadText.text = $"载重: {currentLoad:0.0} / {maxLoad:0.0}";
+        loadText.text = $"载重: {Math.Round(currentLoad, 1)} / {Math.Round(maxLoad, 1)}";
     }
     private void OnDestroy()
     {

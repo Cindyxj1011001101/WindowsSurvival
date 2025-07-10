@@ -22,10 +22,19 @@ public class DetailsWindow : WindowBase
         slot.GetComponentInChildren<CardDragHandler>().enabled = false;
         // 禁止双击
         slot.GetComponentInChildren<DoubleClickHandler>().enabled = false;
+
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
     }
 
     protected override void Init()
     {
+    }
+
+    private void OnMove(EnvironmentBag curEnvironmentBag)
+    {
+        // 切地点时，如果窗口中不是正在显示玩家背包中的物品，则清除显示
+        if (sourceSlot.Bag is not PlayerBag)
+            Clear();
     }
 
     public void Refresh(CardSlot sourceSlot)
@@ -67,8 +76,10 @@ public class DetailsWindow : WindowBase
                 button.onClick.AddListener(() =>
                 {
                     currentDisplayedCard.Use();
-                    EffectResolve.Instance.Resolve(cardEvent);
+                    // 先刷新
                     Refresh(sourceSlot);
+                    // 再触发效果
+                    EffectResolve.Instance.Resolve(cardEvent);
                 });
                 button.interactable = true;
             }

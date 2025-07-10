@@ -1,3 +1,4 @@
+using System;
 using UnityEngine.UI;
 
 public class EnvironmentBagWindow : BagWindow
@@ -46,8 +47,8 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void OnMove(EnvironmentBag curEnvironmentBag)
     {
-        // 新的环境袋信息
-        discoveryDegreeText.text = $"{curEnvironmentBag.DiscoveryDegree} %";
+        // 新的环境信息
+        discoveryDegreeText.text = $"{Math.Round(curEnvironmentBag.DiscoveryDegree, 1)} %";
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
         placeDetailsText.text = $"{curEnvironmentBag.PlaceData.placeDesc}";
     }
@@ -55,7 +56,7 @@ public class EnvironmentBagWindow : BagWindow
     private void OnDicoveryDegreeChanged(ChangeDiscoveryDegreeArgs args)
     {
         if (args.place == EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType)
-            discoveryDegreeText.text = $"{args.discoveryDegree} %";
+            discoveryDegreeText.text = $"{Math.Round(args.discoveryDegree, 1)} %";
     }
 
     private void OnDestroy()
