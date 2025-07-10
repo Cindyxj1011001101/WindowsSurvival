@@ -45,7 +45,7 @@ public class EffectResolve : MonoBehaviour
         Init();
     }
 
-        //初始化SO数据
+    //初始化SO数据
     public void Init()
     {
         EventTrigger[] eventTriggers = Resources.LoadAll<EventTrigger>("ScriptableObject/EventTrigger");
@@ -118,27 +118,29 @@ public class EffectResolve : MonoBehaviour
     //���俨�Ƽ��뱳��
     public void AddDropCard(Drop drop, bool ToPlayerBag)
     {
-        for(int i=0;i<drop.DropNum;i++)
+        for (int i = 0; i < drop.DropNum; i++)
         {
+            if (drop.cardData == null) continue;
+
             CardInstance cardInstance = CardFactory.CreateCardIntance(drop.cardData);
-        if (ToPlayerBag)
-        {
-            //�жϱ������������Ƿ�����
-            if (playerBag.CanAddCard(cardInstance))
+            if (ToPlayerBag)
             {
-                playerBag.AddCard(cardInstance);
+                //�жϱ������������Ƿ�����
+                if (playerBag.CanAddCard(cardInstance))
+                {
+                    playerBag.AddCard(cardInstance);
+                }
+                else
+                {
+                    curEnvironmentBag.AddCard(cardInstance);
+                }
             }
             else
             {
                 curEnvironmentBag.AddCard(cardInstance);
             }
         }
-        else
-        {
-            curEnvironmentBag.AddCard(cardInstance);
-        }
-        }
-        
+
     }
 
     //�����ƶ�
