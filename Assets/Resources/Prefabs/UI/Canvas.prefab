@@ -207,7 +207,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5332384259147480647}
-  - component: {fileID: 2858010728388015898}
   m_Layer: 5
   m_Name: Minimized
   m_TagString: Untagged
@@ -234,18 +233,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &2858010728388015898
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3273627593977921904}
-  m_Enabled: 0
-  m_Alpha: 0
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!1 &4357323558773626712
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6997552551865690292
 RectTransform:
   m_ObjectHideFlags: 0
@@ -563,7 +550,6 @@ GameObject:
   - component: {fileID: 7298348844706192500}
   - component: {fileID: 8693595682899232972}
   - component: {fileID: 2770547187691845306}
-  - component: {fileID: 6635151364227143936}
   m_Layer: 5
   m_Name: Desktop
   m_TagString: Untagged
@@ -642,18 +628,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b12285fe38a69f747be71b169dbe2325, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!210 &6635151364227143936
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8434096279309808605}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_SortAtRoot: 0
 --- !u!1 &9014377049365812388
 GameObject:
   m_ObjectHideFlags: 0
@@ -792,6 +766,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3194457448123792911, guid: 35a1e69da327ef34b9028ab27b444d65, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.000019073486
+      objectReference: {fileID: 0}
     - target: {fileID: 5405482666372354192, guid: 35a1e69da327ef34b9028ab27b444d65, type: 3}
       propertyPath: m_Name
       value: PlayerBagWindow
@@ -814,6 +792,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6997552551865690292}
     m_Modifications:
+    - target: {fileID: 1943555056238577955, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.00008225441
+      objectReference: {fileID: 0}
     - target: {fileID: 1952681652152776669, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -897,6 +879,10 @@ PrefabInstance:
     - target: {fileID: 5405482666372354192, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_Name
       value: EnvironmentBagWindow
+      objectReference: {fileID: 0}
+    - target: {fileID: 7699487881245093870, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.00008225441
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
