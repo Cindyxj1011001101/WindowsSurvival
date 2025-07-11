@@ -50,6 +50,7 @@ public abstract class CardInstance : IComparable<CardInstance>
 
     protected virtual void DestroyThisCard()
     {
-        slot.Bag.RemoveCard(slot);
+        //slot.Bag.RemoveCard(slot);
+        slot.RemoveCard(this);
     }
 }

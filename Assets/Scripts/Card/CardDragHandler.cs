@@ -19,8 +19,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //if (!sourceSlot.CanDrag) return;
-
         sourceParent = transform.parent;
         transform.SetParent(canvas.transform);
         canvasGroup.blocksRaycasts = false;
@@ -28,15 +26,11 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnDrag(PointerEventData eventData)
     {
-        //if (!sourceSlot.CanDrag) return;
-
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        //if (!sourceSlot.CanDrag) return;
-
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
 
@@ -44,8 +38,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         BagBase targetBag = currentObject.GetComponentInParent<BagBase>();
         BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
-        //BagWindo targetBag = currentObject.GetComponentInParent<BagWindow>();
-        //BagWindow sourceBag = sourceSlot.GetComponentInParent<BagWindow>();
 
         bool cardMoved = false;
 
@@ -63,7 +55,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 跨背包放置
             else if (sourceSlot.CanDragOverBag)
             {
-                cardMoved = TryPlaceCardInDifferentBag(sourceBag, targetBag);
+                cardMoved = TryPlaceCardInDifferentBag(targetBag);
             }
         }
 
@@ -107,13 +99,12 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         return false;
     }
 
-    //private bool TryPlaceCardInDifferentBag(BagBase sourceBag, BagBase targetBag)
-    private bool TryPlaceCardInDifferentBag(BagBase sourceBag, BagBase targetBag)
+    private bool TryPlaceCardInDifferentBag(BagBase targetBag)
     {
         bool movedAny = false;
-        while (sourceSlot.StackCount > 0 && targetBag.CanAddCard(sourceSlot.PeekCard()))
+        while (sourceSlot.StackCount > 0 && (targetBag is EnvironmentBag || targetBag.CanAddCard(sourceSlot.PeekCard())))
         {
-            targetBag.AddCard(sourceBag.RemoveCard(sourceSlot));
+            targetBag.AddCard(sourceSlot.RemoveCard());
             movedAny = true;
         }
         return movedAny;

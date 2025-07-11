@@ -137,8 +137,13 @@ public class CardSlot : MonoBehaviour
         cards.Sort((a, b) => a.CompareTo(b));
 
         OnCardPropertyChanged();
+        bag?.OnCardAdded(card);
     }
 
+    /// <summary>
+    /// 移除指定的一张卡牌
+    /// </summary>
+    /// <param name="card"></param>
     public void RemoveCard(CardInstance card)
     {
         if (!cards.Contains(card)) return;
@@ -150,8 +155,14 @@ public class CardSlot : MonoBehaviour
             ClearSlot();
         else
             OnCardPropertyChanged();
+
+        bag?.OnCardRemoved(card);
     }
 
+    /// <summary>
+    /// 移除最优先显示的卡牌
+    /// </summary>
+    /// <returns></returns>
     public CardInstance RemoveCard()
     {
         var cardToRemove = cards[0];
@@ -161,21 +172,36 @@ public class CardSlot : MonoBehaviour
         return cardToRemove;
     }
 
+    public void RemoveCards(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+            RemoveCard();
+    }
+
+    /// <summary>
+    /// 移除所有卡牌
+    /// </summary>
+    public void RemoveAllCards()
+    {
+        while (StackCount > 0)
+        {
+            RemoveCard();
+        }
+    }
+
     public CardInstance PeekCard() => cards[0];
 
     public void ClearSlot()
     {
         currentCard = null;
-        while (StackCount > 0)
-        {
-            RemoveCard();
-        }
+        RemoveAllCards();
         cards.Clear();
         iconImage.sprite = null;
         nameText.text = "";
         propertyText.text = "";
         cardTransform.gameObject.SetActive(false);
     }
+
 
     private void OnDestroy()
     {
