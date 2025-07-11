@@ -42,7 +42,7 @@ public class EffectResolve : MonoBehaviour
         }
         // 当前环境背包
         curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
-        Init();
+        //Init();
     }
 
     //初始化SO数据
@@ -133,7 +133,7 @@ public class EffectResolve : MonoBehaviour
                 continue;
             }
 
-            CardInstance cardInstance = CardFactory.CreateCardIntance(drop.cardData);
+            CardInstance cardInstance = CardFactory.CreateCardIntance(drop.GetCardData());
             if (ToPlayerBag)
             {
                 // 

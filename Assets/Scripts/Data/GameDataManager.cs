@@ -60,8 +60,12 @@ public class GameDataManager
         foreach (var (place, bag) in EffectResolve.Instance.EnvironmentBags)
         {
             EnvironmentBagRuntimeData data = new();
-            //data.place = bag.Place;
+            // 保存探索度
             data.discoveryDegree = bag.DiscoveryDegree;
+            // 保存一次性掉落列表
+            var e = bag.CardEvent.eventList.Find(c => c is PlaceDropEvent);
+            data.disposableDropList = (e as PlaceDropEvent).curOnceDropList;
+            // 保存背包中的卡牌
             data.cardSlotsRuntimeData = new();
             foreach (var slot in bag.Slots)
             {

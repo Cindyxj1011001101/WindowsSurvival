@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class EnvironmentBag : BagBase
 {
@@ -25,9 +26,13 @@ public class EnvironmentBag : BagBase
 
     protected override void InitBag(BagRuntimeData runtimeData)
     {
+        // 初始化背包中的物品
         base.InitBag(runtimeData);
         var data = (runtimeData as EnvironmentBagRuntimeData);
         discoveryDegree = data.discoveryDegree;
+        // 初始化一次性掉落列表
+        var e = CardEvent.eventList.Find(c => c is PlaceDropEvent);
+        (e as PlaceDropEvent).curOnceDropList = data.disposableDropList;
     }
 
     public override void AddCard(CardInstance card)
