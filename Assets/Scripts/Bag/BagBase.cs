@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public abstract class BagBase : MonoBehaviour
     [SerializeField] private GameObject slotPrefab; // 格子预制体
     [SerializeField] private RectTransform slotContainer; // 格子存放位置
     [SerializeField] private GridLayoutGroup gridLayout; // 格子布局
+    [SerializeField] private Button organizeButton; // 整理背包按钮
 
     protected List<CardSlot> slots = new();
 
@@ -27,6 +29,16 @@ public abstract class BagBase : MonoBehaviour
     protected int SlotsCount => slots.Count; // 格子总数
     protected bool IsBagFull => UsedSlotsCount == SlotsCount; // 背包是否已满
 
+    private void OnEnable()
+    {
+        organizeButton.onClick.AddListener(CompactCards);
+    }
+
+    private void OnDisable()
+    {
+        organizeButton.onClick.RemoveListener(CompactCards);
+    }
+
     protected virtual void Start()
     {
         Init();
@@ -46,6 +58,10 @@ public abstract class BagBase : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 添加指定数量的格子
+    /// </summary>
+    /// <param name="amount"></param>
     public void AddSlot(int amount = 1)
     {
         for (int i = 0; i < amount; i++)
@@ -82,6 +98,11 @@ public abstract class BagBase : MonoBehaviour
         slotContainer.sizeDelta = new Vector2(slotContainer.sizeDelta.x, containerHeight);
     }
 
+    /// <summary>
+    /// 能否添加新的卡牌
+    /// </summary>
+    /// <param name="card"></param>
+    /// <returns></returns>
     public virtual bool CanAddCard(CardInstance card)
     {
         // 如果背包未满，则可以添加
@@ -117,9 +138,17 @@ public abstract class BagBase : MonoBehaviour
         return result;
     }
 
+    public virtual void OnCardAdded(CardInstance card) { }
+
+    public virtual void OnCardRemoved(CardInstance card) { }
+
+    /// <summary>
+    /// 添加一张卡牌
+    /// </summary>
+    /// <param name="card"></param>
     public virtual void AddCard(CardInstance card)
     {
-        //if (!CanAddCard(card)) return;
+        if (!CanAddCard(card)) return;
 
         string cardName = card.GetCardData().cardName;
 
@@ -142,6 +171,8 @@ public abstract class BagBase : MonoBehaviour
                 return;
             }
         }
+
+        OnCardAdded(card);
     }
 
 
@@ -206,28 +237,72 @@ public abstract class BagBase : MonoBehaviour
     }
 
     /// <summary>
-    /// 移除卡牌
+    /// 移除指定类型的指定数量的卡牌
     /// </summary>
-    /// <param name="sourceSlot">从哪个格子里移除</param>
-    public virtual CardInstance RemoveCard(CardSlot sourceSlot)
+    /// <param name="cardData">卡牌基础数据</param>
+    /// <param name="amount">要移除的数量 (必须是正整数)</param>
+    /// <param name="dontRemoveAnyIfNotAdequate">当背包的卡牌不够移除时，true: 什么也不移除，false: 尽可能多地移除卡牌</param>
+    /// <returns>成功移除的卡牌的数量</returns>
+    /// <exception cref="ArgumentException">amount必须是正整数</exception>
+    public int RemoveCards(CardData cardData, int amount, bool dontRemoveAnyIfNotAdequate = true)
     {
-        if (sourceSlot.StackCount == 0) return null;
+        if (amount <= 0) throw new ArgumentException("要移除的卡牌数量必须是正整数。");
 
-        return sourceSlot.RemoveCard();
-    }
+        string cardName = cardData.cardName;
 
-    public CardInstance RemoveCard(CardInstance card)
-    {
-        string cardName = card.GetCardData().cardName;
-
+        // 找到所有同类型的卡牌slot
+        // 并且将这些slot按照stackCount从大到小排序
         var slots = GetSlotsContainingSimilarCard(cardName, false);
+        // 统计总数
+        int totalCount = 0;
+        foreach (var slot in slots)
+        {
+            totalCount += slot.StackCount;
+        }
 
-        if (slots.Count > 0)
-            return RemoveCard(slots[0]);
+        // 如果总数小于需要移除的数量
+        if (totalCount < amount)
+        {
+            // 如果当总数不足时不要移除
+            // 则直接返回，并且移除数量为0
+            if (dontRemoveAnyIfNotAdequate) return 0;
 
-        return null;
+            // 否则将剩余卡牌全部移除
+            foreach (var slot in slots)
+            {
+                slot.RemoveAllCards();
+            }
+            return totalCount;
+        }
+
+        // 如果总数不少于需要移除的数量
+        // 则全部移除
+        int leftAmount = amount; // 剩余要移除的数量
+        foreach (var slot in slots)
+        {
+            // 剩余要移除的数量大于当前slot的总数
+            // 全部从slot中移除
+            if (leftAmount > slot.StackCount)
+            {
+                slot.RemoveAllCards();
+                leftAmount -= slot.StackCount;
+            }
+            // 剩余要移除的数量小于等于当前slot的总数
+            // 则将这些卡牌移除，退出循环
+            else
+            {
+                slot.RemoveCards(leftAmount);
+                leftAmount = 0;
+                break;
+            }
+        }
+
+        return amount;
     }
 
+    /// <summary>
+    /// 清空所有卡牌格
+    /// </summary>
     public virtual void Clear()
     {
         foreach (var slot in slots)
