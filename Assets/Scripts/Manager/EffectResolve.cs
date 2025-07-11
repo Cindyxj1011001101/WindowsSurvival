@@ -64,13 +64,15 @@ public class EffectResolve : MonoBehaviour
         CardEvent cardEvent = curEnvironmentBag.CardEvent;
         foreach (var EventTrigger in cardEvent.eventList)
         {
-            //�����̽���¼��������⴦��
             if (EventTrigger.GetType() == typeof(PlaceDropEvent))
             {
                 EventTrigger.EventResolve();
             }
         }
     }
+
+
+
 
     // 判断事件执行条件
     public bool ConditionEventJudge(CardEvent cardEvent)
@@ -155,6 +157,9 @@ public class EffectResolve : MonoBehaviour
     // 移动到目标场景
     public void Move(PlaceEnum targetPlace)
     {
+        //拿到原先场景是哪个
+        PlaceEnum lastPlace = curEnvironmentBag.PlaceData.placeType;
+
         foreach (var (place, bag) in environmentBags)
         {
             bag.gameObject.SetActive(place == targetPlace);
@@ -162,5 +167,16 @@ public class EffectResolve : MonoBehaviour
         curEnvironmentBag = environmentBags[targetPlace];
 
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
+
+        //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
+        foreach (var EventTrigger in curEnvironmentBag.CardEvent.eventList)
+        {
+            if (EventTrigger is PlaceDropEvent placeDropEvent)
+            {
+                placeDropEvent.DropCertainPlaceCard(lastPlace);
+            }
+        }
+
+        
     }
 }

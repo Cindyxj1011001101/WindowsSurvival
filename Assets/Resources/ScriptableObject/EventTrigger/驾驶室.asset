@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: "\u9A7E\u9A76\u5BA4"
   m_EditorClassIdentifier: 
   Place: 1
-  DefaultList: []
   OnceDropList:
   - DropProb: 2
     cardData: {fileID: 11400000, guid: 12ab164b1d5dd044598655b2204f518c, type: 2}
@@ -51,6 +50,10 @@ MonoBehaviour:
     cardData: {fileID: 11400000, guid: 88cf0eb36c4c6de4198ae1632d233f7d, type: 2}
     DropNum: 1
     DropDesc: "\u6EE1\u65B0\u9C9C\u5EA6\u7684\u8001\u9F20\u5C38\u4F53*1\u6982\u7387\u5360\u6BD42"
+  - DropProb: 1
+    cardData: {fileID: 11400000, guid: 75e4d86c530814a42bfc5d8f4b96d68d, type: 2}
+    DropNum: 1
+    DropDesc: "\u901A\u5F80\u52A8\u529B\u8231\u7684\u95E8*1\u6982\u7387\u5360\u6BD41"
   RepeatDropList: []
   curOnceDropList:
   - DropProb: 2
@@ -73,6 +76,10 @@ MonoBehaviour:
     cardData: {fileID: 11400000, guid: 54b10652a8acc154990cb6e90cee1853, type: 2}
     DropNum: 1
     DropDesc: "\u786C\u8D28\u7EA4\u7EF4*1\u6982\u7387\u5360\u6BD43"
+  - DropProb: 2
+    cardData: {fileID: 11400000, guid: 28ff34f83f0946f40bb6be4dd178cc13, type: 2}
+    DropNum: 1
+    DropDesc: "\u5E9F\u91D1\u5C5E*1\u6982\u7387\u5360\u6BD42"
   - DropProb: 2
     cardData: {fileID: 11400000, guid: 28ff34f83f0946f40bb6be4dd178cc13, type: 2}
     DropNum: 1

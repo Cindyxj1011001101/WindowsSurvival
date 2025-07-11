@@ -134,9 +134,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1246044688314860786, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1246044688314860786, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1721470176454977988, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
       propertyPath: m_UiScaleMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2199859155920342394, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2199859155920342394, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2212161186239711277, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 3324107525654131996, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
       propertyPath: m_Camera
@@ -230,12 +250,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5117338803141912924, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5117338803141912924, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6437550590448786607, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3313011226022822033, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+    - {fileID: 6770178475164254684, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
@@ -434,7 +464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20e960548da0fd44597775af9d3a1c82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SettleInterval: 0
+  SettleInterval: 15
   curInterval: 0
 --- !u!114 &2124539851
 MonoBehaviour:

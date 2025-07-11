@@ -53,6 +53,24 @@ public class PlaceDropEvent:EventTrigger
         
     }
 
+    public void DropCertainPlaceCard(PlaceEnum place)
+    {
+        foreach (var drop in curOnceDropList)
+        {
+            if (drop.cardData is PlaceCardData placeCardData && placeCardData.place == place)
+            {
+                EffectResolve.Instance.AddDropCard(drop,false);
+                curOnceDropList.Remove(drop);
+                //处理探索度变化
+                float explore =(1- (float)curOnceDropList.Count / OnceDropList.Count)*100;
+                EventManager.Instance.TriggerEvent<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree,new ChangeDiscoveryDegreeArgs(Place,explore));
+                return;
+            }
+        }
+    }
+
+
+
     public override void Init()
     {
         AllRepeatDrop = 0;
