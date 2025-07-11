@@ -9,11 +9,11 @@ public class PlayerBagWindow : BagWindow
     {
         base.Awake();
         loadText = transform.Find("TopBar/CurrentLoad").GetComponent<Text>();
+        EventManager.Instance.AddListener<ChangeLoadArgs>(EventType.ChangeLoad, OnLoadChanged);
     }
 
     protected override void Init()
     {
-        EventManager.Instance.AddListener<ChangeLoadArgs>(EventType.ChangeLoad, OnLoadChanged);
     }
 
     private void OnLoadChanged(ChangeLoadArgs args)

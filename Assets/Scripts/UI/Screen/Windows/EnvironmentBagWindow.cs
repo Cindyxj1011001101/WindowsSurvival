@@ -28,14 +28,9 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
     }
 
-    private void OnEnable()
-    {
-        // 当前显示当前环境袋
-        EffectResolve.Instance.Move(EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType);
-    }
-
     protected override void Init()
     {
+        EffectResolve.Instance.Move(EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType);
     }
 
     /// <summary>
