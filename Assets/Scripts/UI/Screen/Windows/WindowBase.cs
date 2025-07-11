@@ -32,6 +32,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     protected override void Awake()
     {
+        base.Awake();
+
         // 添加拖拽支持
         topBar = transform.Find("TopBar");
         DragMoveHandler dragMoveHandler = topBar.GetComponent<DragMoveHandler>();
@@ -83,7 +85,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     public void Open()
     {
-        gameObject.SetActive(true);
+        //gameObject.SetActive(true);
 
         switch (state)
         {
@@ -133,7 +135,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
         SetState(WindowState.Closed);
         //Hide(onFinished: () => Destroy(gameObject));
-        Hide(onFinished: () => gameObject.SetActive(false));
+        Hide();
     }
 
     public void Minimize(Transform shortcut)
@@ -153,8 +155,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         minimizeSequence.Join(transform.DOScale(Vector3.zero, 0.2f));
         minimizeSequence.Join(transform.DOMove(shortcut.position, 0.2f));
 
-        // 动画完成后隐藏窗口（但不销毁）
-        minimizeSequence.OnComplete(() => gameObject.SetActive(false));
+        //// 动画完成后隐藏窗口（但不销毁）
+        //minimizeSequence.OnComplete(() => gameObject.SetActive(false));
 
         // 播放动画
         minimizeSequence.Play();

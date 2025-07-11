@@ -43,6 +43,8 @@ public abstract class PanelBase : MonoBehaviour
         {
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
             canvasGroup.alpha = 0;
+            canvasGroup.interactable = false;
+            canvasGroup.blocksRaycasts = false;
         }
 
         animator = GetComponent<Animator>();
@@ -68,16 +70,14 @@ public abstract class PanelBase : MonoBehaviour
         if (onFinished != null)
             onShown.AddListener(onFinished);
 
-        // 确保canvasGroup存在
-        if (canvasGroup == null)
+        //canvasGroup.alpha = 0;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = true;
+
+        onShown.AddListener(() =>
         {
-            canvasGroup = GetComponent<CanvasGroup>();
-            if (canvasGroup == null)
-            {
-                canvasGroup = gameObject.AddComponent<CanvasGroup>();
-                canvasGroup.alpha = 0;
-            }
-        }
+            canvasGroup.interactable = true;
+        });
 
         // 根据模式启动协程
         switch (showMode)
@@ -101,6 +101,14 @@ public abstract class PanelBase : MonoBehaviour
         if (onFinished != null)
             onHidden.AddListener(onFinished);
 
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = true;
+
+        onHidden.AddListener(() =>
+        {
+            canvasGroup.blocksRaycasts = false;
+        });
+
         switch (showMode)
         {
             case ShowMode.Fade:
@@ -117,13 +125,6 @@ public abstract class PanelBase : MonoBehaviour
     /// </summary>
     private IEnumerator FadeIn()
     {
-        // 安全检查
-        if (canvasGroup == null)
-        {
-            canvasGroup = gameObject.AddComponent<CanvasGroup>();
-            canvasGroup.alpha = 0;
-        }
-
         canvasGroup.alpha = 0;
         float fadeSpeed = 1f / fadeTime;
 
@@ -144,12 +145,6 @@ public abstract class PanelBase : MonoBehaviour
     /// </summary>
     private IEnumerator FadeOut()
     {
-        if (canvasGroup == null)
-        {
-            canvasGroup = gameObject.AddComponent<CanvasGroup>();
-            canvasGroup.alpha = 1;
-        }
-
         canvasGroup.alpha = 1;
         float fadeSpeed = 1f / fadeTime;
 
@@ -168,15 +163,7 @@ public abstract class PanelBase : MonoBehaviour
     /// </summary>
     private IEnumerator PlayAnimatorShow()
     {
-        if (canvasGroup == null)
-        {
-            canvasGroup = gameObject.AddComponent<CanvasGroup>();
-            canvasGroup.alpha = 1;
-        }
-        else
-        {
-            canvasGroup.alpha = 1;
-        }
+        canvasGroup.alpha = 1;
 
         if (animator != null)
         {
@@ -196,6 +183,8 @@ public abstract class PanelBase : MonoBehaviour
     /// </summary>
     private IEnumerator PlayAnimatorHide()
     {
+        canvasGroup.alpha = 1;
+
         if (animator != null)
         {
             animator.ResetTrigger("Show");
