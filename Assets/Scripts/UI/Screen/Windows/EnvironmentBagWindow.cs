@@ -3,14 +3,10 @@ using UnityEngine.UI;
 
 public class EnvironmentBagWindow : BagWindow
 {
-    private Text discoveryDegreeText; // 发现度显示
-    private Text placeNameText; // 环境袋名称
-    private Text placeDetailsText; // 环境袋详情
-    private Button discoverButton; // 发现按钮
-
-    //private PlaceEnum currentPlace;
-
-    //private Dictionary<PlaceEnum, BagBase> environmentBags = new();
+    private Text discoveryDegreeText; // 探索度显示
+    private Text placeNameText; // 环境名称
+    private Text placeDetailsText; // 环境详情
+    private Button discoverButton; // 探索按钮
 
     protected override void Awake()
     {
