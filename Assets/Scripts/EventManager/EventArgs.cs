@@ -1,4 +1,6 @@
-﻿public enum EventType
+﻿using System;
+
+public enum EventType
 {
     ChangeState,
     IntervalSettle,
@@ -6,9 +8,9 @@
     ChangeLoad, // 背包载重变化
     ChangeCardProperty, // 卡牌属性变化
     Move,//场景移动界面刷新
-    //RefreshCard,//结算卡牌数值刷新
     RefreshState,//更新状态数据
     ChangeDiscoveryDegree, // 探索度变化
+    ChangeTime, // 时间变化
 }
 
 public class ChangeStateArgs
@@ -51,4 +53,10 @@ public class ChangeDiscoveryDegreeArgs
         place = p;
         discoveryDegree = d;
     }
+}
+
+public class ChangeTimeArgs
+{
+    public DateTime currentTime;
+    public int timeDelta;
 }
