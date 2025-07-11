@@ -49,6 +49,7 @@ public class TimeManager : MonoBehaviour
     //增加时间结算
     public void AddTime(int minute)
     {
+        EventManager.Instance.TriggerEvent(EventType.ChangeTime, new ChangeTimeArgs() { timeDelta = minute, currentTime = curTime});
         int time = minute;
         curTime.AddMinutes(minute);
         while (time != 0)
