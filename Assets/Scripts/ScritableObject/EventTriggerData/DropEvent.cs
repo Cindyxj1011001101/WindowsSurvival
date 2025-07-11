@@ -1,54 +1,57 @@
-﻿    using System;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using Random = UnityEngine.Random;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
-    [Serializable]
-    public class Drop
+[Serializable]
+public class Drop
+{
+    //掉落概率
+    public int DropProb;
+
+    //掉落物体及其数量
+    public CardData cardData;
+
+    public int DropNum;
+
+    //掉落描述
+    public string DropDesc;
+
+    public bool IsEmpty => cardData == null;
+
+}
+
+[CreateAssetMenu(fileName = "DropEvent", menuName = "ScritableObject/DropEvent")]
+public class DropEvent : EventTrigger
+{
+    public List<Drop> dropList;
+    private int sumProb;
+
+    public override void EventResolve()
     {
-        //掉落概率
-        public int DropProb;
-
-        //掉落物体及其数量
-        public CardData cardData;
-
-        public int DropNum;
-
-        //掉落描述
-        public string DropDesc;
-    }
-
-    [CreateAssetMenu(fileName = "DropEvent", menuName = "ScritableObject/DropEvent")]
-    public class DropEvent : EventTrigger
-    {
-        public List<Drop> dropList;
-        private int sumProb;
-
-        public override void EventResolve()
+        if (dropList != null)
         {
-            if (dropList!=null)
-            {
-                int rand = Random.Range(0, sumProb);
-                foreach (var drop in dropList)
-                {
-                    if (rand < drop.DropProb)
-                    {
-                        EffectResolve.Instance.AddDropCard(drop, true);
-                        return;
-                    }
-
-                    rand -= drop.DropProb;
-                }
-            }
-        }
-
-        public override void Init()
-        {
-            sumProb = 0;
+            int rand = Random.Range(0, sumProb);
             foreach (var drop in dropList)
             {
-                sumProb += drop.DropProb;
+                if (rand < drop.DropProb)
+                {
+                    EffectResolve.Instance.AddDropCard(drop, true);
+                    return;
+                }
+
+                rand -= drop.DropProb;
             }
-            return;
         }
     }
+
+    public override void Init()
+    {
+        sumProb = 0;
+        foreach (var drop in dropList)
+        {
+            sumProb += drop.DropProb;
+        }
+        return;
+    }
+}

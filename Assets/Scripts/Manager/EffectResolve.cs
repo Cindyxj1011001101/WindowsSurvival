@@ -3,15 +3,15 @@ using UnityEngine;
 public enum PlaceEnum
 {
     /// <summary>
-    /// ������
+    /// 动力舱
     /// </summary>
     PowerCabin,
     /// <summary>
-    /// ��ʻ��
+    /// 驾驶室
     /// </summary>
     Cockpit,
     /// <summary>
-    /// ά����
+    /// 维生舱
     /// </summary>
     LifeSupportCabin
 
@@ -33,14 +33,14 @@ public class EffectResolve : MonoBehaviour
     {
         instance = this;
         DontDestroyOnLoad(gameObject);
-        // ��¼��ұ���
+        // 玩家背包
         playerBag = FindObjectOfType<PlayerBag>(true);
-        // ��¼���л�������
+        // 所有环境背包
         foreach (var bag in FindObjectsOfType<EnvironmentBag>(true))
         {
             environmentBags.Add(bag.PlaceData.placeType, bag);
         }
-        // ��ǰ��������
+        // 当前环境背包
         curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
         Init();
     }
@@ -58,7 +58,7 @@ public class EffectResolve : MonoBehaviour
         }
     }
 
-    //̽������
+    // 处理场景探索
     public void ResolveExplore()
     {
         CardEvent cardEvent = curEnvironmentBag.CardEvent;
@@ -72,7 +72,7 @@ public class EffectResolve : MonoBehaviour
         }
     }
 
-    //�ж��Ƿ������¼���������
+    // 判断事件执行条件
     public bool ConditionEventJudge(CardEvent cardEvent)
     {
         if (cardEvent.GetType() == typeof(ConditionalCardEvent))
@@ -90,42 +90,51 @@ public class EffectResolve : MonoBehaviour
         return true;
     }
 
-    //��������¼���������
+    // 处理卡牌事件
     public void Resolve(CardEvent cardEvent)
     {
         if (cardEvent == null) return;
 
         if (!ConditionEventJudge(cardEvent)) return;
-        //״̬����
+        // 1. 处理玩家状态的数值变化
         foreach (var EventTrigger in cardEvent.eventList)
         {
             if (EventTrigger.GetType() == typeof(ValueEvent)) EventTrigger.EventResolve();
         }
-        //�����л�
+        // 2. 处理场景移动
         foreach (var EventTrigger in cardEvent.eventList)
         {
             if (EventTrigger.GetType() == typeof(MoveEvent)) EventTrigger.EventResolve();
         }
-        //ʱ������
+        // 3. 处理时间变化
         TimeManager.Instance.AddTime(cardEvent.Time);
-        //���俨Ƭ
+        // 4. 处理卡牌掉落
         foreach (var EventTrigger in cardEvent.eventList)
         {
             if (EventTrigger.GetType() == typeof(DropEvent)) EventTrigger.EventResolve();
         }
     }
 
-    //���俨�Ƽ��뱳��
+    /// <summary>
+    /// 掉落一张卡牌
+    /// </summary>
+    /// <param name="drop">掉落物的配置</param>
+    /// <param name="ToPlayerBag">是否优先掉落到玩家背包</param>
     public void AddDropCard(Drop drop, bool ToPlayerBag)
     {
         for (int i = 0; i < drop.DropNum; i++)
         {
-            if (drop.cardData == null) continue;
+            // 处理空掉落
+            if (drop.IsEmpty)
+            {
+                Debug.Log("什么也没有掉落");
+                continue;
+            }
 
             CardInstance cardInstance = CardFactory.CreateCardIntance(drop.cardData);
             if (ToPlayerBag)
             {
-                //�жϱ������������Ƿ�����
+                // 
                 if (playerBag.CanAddCard(cardInstance))
                 {
                     playerBag.AddCard(cardInstance);
@@ -143,7 +152,7 @@ public class EffectResolve : MonoBehaviour
 
     }
 
-    //�����ƶ�
+    // 移动到目标场景
     public void Move(PlaceEnum targetPlace)
     {
         foreach (var (place, bag) in environmentBags)
