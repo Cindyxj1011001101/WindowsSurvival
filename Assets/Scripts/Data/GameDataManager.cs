@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 
 public class GameDataManager
 {
@@ -16,6 +19,8 @@ public class GameDataManager
 
         cockpitBagData = JsonManager.LoadData<EnvironmentBagRuntimeData>("CockpitBag");
         environmentBagDataDict.Add(PlaceEnum.Cockpit, cockpitBagData);
+
+        audioData = JsonManager.LoadData<AudioData>("Audio");
     }
 
     #region 玩家背包
@@ -78,5 +83,33 @@ public class GameDataManager
     // 驾驶室的背包数据
     private EnvironmentBagRuntimeData cockpitBagData;
     public EnvironmentBagRuntimeData CockpitBagData => cockpitBagData;
+    #endregion
+
+    #region 音频
+    private AudioData audioData;
+    public AudioData AudioData => audioData;
+
+    public UnityEvent onBGMVolumeChanged = new();
+
+    public void SetMasterVolume(float volume)
+    {
+        audioData.masterVolume = Mathf.Clamp01(volume);
+        onBGMVolumeChanged?.Invoke();
+    }
+    public void SetBGMVolume(float volume)
+    {
+        audioData.bgmVolume = Mathf.Clamp01(volume);
+        onBGMVolumeChanged?.Invoke();
+    }
+    public void SetSFXVolume(float volume)
+    {
+        audioData.sfxVolume = Mathf.Clamp01(volume);
+    }
+
+    public void SaveAudioData()
+    {
+        JsonManager.SaveData(audioData, "Audio");
+    }
+
     #endregion
 }

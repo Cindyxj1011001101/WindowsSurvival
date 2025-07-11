@@ -115,6 +115,12 @@ public class GMCommand
         GameDataManager.Instance.SaveLastPlace();
     }
 
+    [MenuItem("Command/保存当前音频数据")]
+    public static void SaveAudioData()
+    {
+        GameDataManager.Instance.SaveAudioData();
+    }
+
 
     [MenuItem("Command/时间+50min")]
     public static void L()
