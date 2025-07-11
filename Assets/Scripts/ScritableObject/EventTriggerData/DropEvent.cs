@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,14 +11,20 @@ public class Drop
     public int DropProb;
 
     //掉落物体及其数量
-    public CardData cardData;
+    //public CardData cardData;
 
     public int DropNum;
 
     //掉落描述
     public string DropDesc;
 
-    public bool IsEmpty => cardData == null;
+
+    public string cardName;
+
+    public CardData GetCardData() => Resources.Load<CardData>("ScriptableObject/Card/" + cardName);
+
+    [JsonIgnore]
+    public bool IsEmpty => DropNum == 0;
 
 }
 

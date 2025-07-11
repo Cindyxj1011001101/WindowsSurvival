@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5ab57b6ecf6145bbae4b8fb8a31f6b4a, type: 3}
-  m_Name: "\u88AB\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
+  m_Name: "\u88AB\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u7269\u5806"
   m_EditorClassIdentifier: 
-  cardName: "\u88AB\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
+  cardName: "\u88AB\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u7269\u5806"
   cardImage: {fileID: 21300000, guid: 2cc34455489917e4a803c6b3b4b354fe, type: 3}
   cardType: 4
-  cardDesc: "\u88AB\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
+  cardDesc: "\u88AB\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u7269\u5806"
   weight: 0
   maxStackNum: 1
+  maxEndurance: 5
   cardEventList:
   - {fileID: 11400000, guid: 7a7921e866340974ca2f2968973ae208, type: 2}
   CardTagList: 
-  maxEndurance: 5
+  onUsedUp: {fileID: 0}

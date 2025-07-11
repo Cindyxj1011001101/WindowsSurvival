@@ -57,7 +57,7 @@ public class PlaceDropEvent:EventTrigger
     {
         foreach (var drop in curOnceDropList)
         {
-            if (drop.cardData is PlaceCardData placeCardData && placeCardData.place == place)
+            if (drop.GetCardData() is PlaceCardData placeCardData && placeCardData.place == place)
             {
                 EffectResolve.Instance.AddDropCard(drop,false);
                 curOnceDropList.Remove(drop);

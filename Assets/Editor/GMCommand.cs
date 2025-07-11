@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class GMCommand
 {
+    [MenuItem("Command/初始化游戏数据")]
+    public static void Init()
+    {
+        EffectResolve.Instance.Init();
+    }
+
     private static void AddCard(string cardName)
     {
         string dataPath = "ScriptableObject/Card/" + cardName;
