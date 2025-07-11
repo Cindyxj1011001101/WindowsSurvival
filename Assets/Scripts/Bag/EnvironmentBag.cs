@@ -4,11 +4,6 @@ public class EnvironmentBag : BagBase
 {
     public CardEvent CardEvent;
 
-    //[SerializeField] private PlaceEnum place;
-    //public PlaceEnum Place => place;
-    //[SerializeField] private string details;
-    //public string Details => details;
-
     [SerializeField] private PlaceData placeData;
 
     public PlaceData PlaceData => placeData;
@@ -19,13 +14,19 @@ public class EnvironmentBag : BagBase
     protected override void Init()
     {
         InitBag(GameDataManager.Instance.GetEnvironmentBagDataByPlace(placeData.placeType));
+        EventManager.Instance.AddListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDiscoveryDegreeChanged);
+    }
+
+    private void OnDiscoveryDegreeChanged(ChangeDiscoveryDegreeArgs args)
+    {
+        if (args.place == placeData.placeType)
+            discoveryDegree = args.discoveryDegree;
     }
 
     protected override void InitBag(BagRuntimeData runtimeData)
     {
         base.InitBag(runtimeData);
         var data = (runtimeData as EnvironmentBagRuntimeData);
-        //place = data.place;
         discoveryDegree = data.discoveryDegree;
     }
 
@@ -38,5 +39,10 @@ public class EnvironmentBag : BagBase
             AddSlot(3);
         }
         base.AddCard(card);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDiscoveryDegreeChanged);
     }
 }
