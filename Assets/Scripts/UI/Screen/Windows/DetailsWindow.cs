@@ -76,12 +76,16 @@ public class DetailsWindow : WindowBase
                 button.onClick.AddListener(() =>
                 {
                     currentDisplayedCard.Use();
+                    // 如果该卡牌事件是需要其他卡牌配合触发的，如使用工具
                     if (cardEvent is ConditionalCardEvent)
                     {
+                        // 遍历需要使用到的工具
                         foreach (var condition in (cardEvent as ConditionalCardEvent).ConditionCardList)
                         {
-                            var slot = sourceSlot.Bag.TryGetCardByCondition(condition);
+                            // 尝试从玩家背包中取得所需工具
+                            var slot = EffectResolve.Instance.PlayerBag.TryGetCardByCondition(condition);
                             slot.PeekCard().Use();
+                            // 只需要使用一次工具，所以这里break
                             break;
                         }
                     }
