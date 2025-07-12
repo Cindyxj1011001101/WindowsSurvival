@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+
 public enum PlaceEnum
 {
     /// <summary>
@@ -14,12 +15,12 @@ public enum PlaceEnum
     /// 维生舱
     /// </summary>
     LifeSupportCabin
-
 }
-public class EffectResolve : MonoBehaviour
+
+public class GameManager : MonoBehaviour
 {
-    private static EffectResolve instance;
-    public static EffectResolve Instance => instance;
+    private static GameManager instance;
+    public static GameManager Instance => instance;
 
     private PlayerBag playerBag;
     private Dictionary<PlaceEnum, EnvironmentBag> environmentBags = new();
@@ -59,7 +60,7 @@ public class EffectResolve : MonoBehaviour
     }
 
     // 处理场景探索
-    public void ResolveExplore()
+    public void HandleExplore()
     {
         CardEvent cardEvent = curEnvironmentBag.CardEvent;
         foreach (var EventTrigger in cardEvent.eventList)
@@ -71,11 +72,8 @@ public class EffectResolve : MonoBehaviour
         }
     }
 
-
-
-
     // 判断事件执行条件
-    public bool ConditionEventJudge(CardEvent cardEvent)
+    public bool CanCardEventInvoke(CardEvent cardEvent)
     {
         if (cardEvent.GetType() == typeof(ConditionalCardEvent))
         {
@@ -93,11 +91,11 @@ public class EffectResolve : MonoBehaviour
     }
 
     // 处理卡牌事件
-    public void Resolve(CardEvent cardEvent)
+    public void HandleCardEvent(CardEvent cardEvent)
     {
         if (cardEvent == null) return;
 
-        if (!ConditionEventJudge(cardEvent)) return;
+        if (!CanCardEventInvoke(cardEvent)) return;
         // 1. 处理玩家状态的数值变化
         foreach (var EventTrigger in cardEvent.eventList)
         {
@@ -121,8 +119,8 @@ public class EffectResolve : MonoBehaviour
     /// 掉落一张卡牌
     /// </summary>
     /// <param name="drop">掉落物的配置</param>
-    /// <param name="ToPlayerBag">是否优先掉落到玩家背包</param>
-    public void AddDropCard(Drop drop, bool ToPlayerBag)
+    /// <param name="toPlayerBag">是否优先掉落到玩家背包</param>
+    public void AddDropCard(Drop drop, bool toPlayerBag)
     {
         for (int i = 0; i < drop.DropNum; i++)
         {
@@ -133,25 +131,24 @@ public class EffectResolve : MonoBehaviour
                 continue;
             }
 
-            CardInstance cardInstance = CardFactory.CreateCardIntance(drop.GetCardData());
-            if (ToPlayerBag)
-            {
-                // 
-                if (playerBag.CanAddCard(cardInstance))
-                {
-                    playerBag.AddCard(cardInstance);
-                }
-                else
-                {
-                    curEnvironmentBag.AddCard(cardInstance);
-                }
-            }
-            else
-            {
-                curEnvironmentBag.AddCard(cardInstance);
-            }
+            AddCard(drop.GetCardData(), toPlayerBag);
         }
+    }
 
+    public void AddCard(CardData cardData, bool toPlayerBag)
+    {
+        CardInstance cardInstance = CardFactory.CreateCardIntance(cardData);
+        if (toPlayerBag)
+        {
+            if (playerBag.CanAddCard(cardInstance))
+                playerBag.AddCard(cardInstance);
+            else
+                curEnvironmentBag.AddCard(cardInstance);
+        }
+        else
+        {
+            curEnvironmentBag.AddCard(cardInstance);
+        }
     }
 
     // 移动到目标场景
@@ -176,7 +173,5 @@ public class EffectResolve : MonoBehaviour
                 placeDropEvent.DropCertainPlaceCard(lastPlace);
             }
         }
-
-        
     }
 }

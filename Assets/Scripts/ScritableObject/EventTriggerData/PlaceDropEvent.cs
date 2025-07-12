@@ -24,7 +24,7 @@ public class PlaceDropEvent:EventTrigger
             {
                 if (rand < drop.DropProb)
                 {
-                    EffectResolve.Instance.AddDropCard(drop,false);
+                    GameManager.Instance.AddDropCard(drop,false);
                     curOnceDropList.Remove(drop);
                     //处理探索度变化
                     float explore =(1- (float)curOnceDropList.Count / OnceDropList.Count)*100;
@@ -59,7 +59,7 @@ public class PlaceDropEvent:EventTrigger
         {
             if (drop.GetCardData() is PlaceCardData placeCardData && placeCardData.place == place)
             {
-                EffectResolve.Instance.AddDropCard(drop,false);
+                GameManager.Instance.AddDropCard(drop,false);
                 curOnceDropList.Remove(drop);
                 //处理探索度变化
                 float explore =(1- (float)curOnceDropList.Count / OnceDropList.Count)*100;

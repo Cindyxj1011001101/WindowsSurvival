@@ -65,13 +65,13 @@ public class DetailsWindow : WindowBase
         // 显示可选择按钮
         foreach (var cardEvent in cardData.cardEventList)
         {
-            GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Button");
+            GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/CardEventButton");
             Button button = Instantiate(buttonPrefab, buttonLayout).GetComponent<Button>();
             button.interactable = false;
             button.GetComponentInChildren<Text>().text = cardEvent.EventName;
 
             // 判断cardEvent是否满足条件
-            if (EffectResolve.Instance.ConditionEventJudge(cardEvent))
+            if (GameManager.Instance.CanCardEventInvoke(cardEvent))
             {
                 button.onClick.AddListener(() =>
                 {
@@ -83,7 +83,7 @@ public class DetailsWindow : WindowBase
                         foreach (var condition in (cardEvent as ConditionalCardEvent).ConditionCardList)
                         {
                             // 尝试从玩家背包中取得所需工具
-                            var slot = EffectResolve.Instance.PlayerBag.TryGetCardByCondition(condition);
+                            var slot = GameManager.Instance.PlayerBag.TryGetCardByCondition(condition);
                             slot.PeekCard().Use();
                             // 只需要使用一次工具，所以这里break
                             break;
@@ -92,7 +92,7 @@ public class DetailsWindow : WindowBase
                     // 先刷新
                     Refresh(sourceSlot);
                     // 再触发效果
-                    EffectResolve.Instance.Resolve(cardEvent);
+                    GameManager.Instance.HandleCardEvent(cardEvent);
                 });
                 button.interactable = true;
             }

@@ -19,7 +19,7 @@ public class EnvironmentBagWindow : BagWindow
 
         discoverButton.onClick.AddListener(() =>
         {
-            EffectResolve.Instance.ResolveExplore();
+            GameManager.Instance.HandleExplore();
         });
 
         // 注册发现度变化事件
@@ -30,7 +30,7 @@ public class EnvironmentBagWindow : BagWindow
 
     protected override void Init()
     {
-        EffectResolve.Instance.Move(EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType);
+        GameManager.Instance.Move(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType);
     }
 
     /// <summary>
@@ -46,7 +46,7 @@ public class EnvironmentBagWindow : BagWindow
 
     private void OnDicoveryDegreeChanged(ChangeDiscoveryDegreeArgs args)
     {
-        if (args.place == EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType)
+        if (args.place == GameManager.Instance.CurEnvironmentBag.PlaceData.placeType)
             discoveryDegreeText.text = $"{Math.Round(args.discoveryDegree, 1)} %";
     }
 

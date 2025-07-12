@@ -9,7 +9,7 @@ public class MoveEvent:EventTrigger
     public override void EventResolve()
     {
         
-        EffectResolve.Instance.Move(AimPlace);//TODO：移动至另一地区
+        GameManager.Instance.Move(AimPlace);//TODO：移动至另一地区
     }
 
     public override void Init()

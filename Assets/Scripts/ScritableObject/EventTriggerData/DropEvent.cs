@@ -43,7 +43,7 @@ public class DropEvent : EventTrigger
             {
                 if (rand < drop.DropProb)
                 {
-                    EffectResolve.Instance.AddDropCard(drop, true);
+                    GameManager.Instance.AddDropCard(drop, true);
                     return;
                 }
 
