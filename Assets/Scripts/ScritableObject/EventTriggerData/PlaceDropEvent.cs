@@ -8,7 +8,7 @@ public class PlaceDropEvent:EventTrigger
     public List<Drop> OnceDropList;
     public List<Drop> RepeatDropList;
     public List<Drop> curOnceDropList;
-    public int AllRepeatDrop;
+    public int SumRepeatProb;
     //掉落-场景掉落（掉一次后不掉/重复掉）
     public override void EventResolve()
     {
@@ -38,7 +38,7 @@ public class PlaceDropEvent:EventTrigger
         {
             if (RepeatDropList != null)
             {
-                int random = Random.Range(1,AllRepeatDrop);
+                int random = Random.Range(1,SumRepeatProb);
                 foreach (var drop in RepeatDropList)
                 {
                     if (random<drop.DropProb)
@@ -73,11 +73,11 @@ public class PlaceDropEvent:EventTrigger
 
     public override void Init()
     {
-        AllRepeatDrop = 0;
+        SumRepeatProb = 0;
         curOnceDropList = new List<Drop>(OnceDropList);
-        foreach (var VARIABLE in RepeatDropList)
+        foreach (var drop in RepeatDropList)
         {
-            AllRepeatDrop+=VARIABLE.DropProb;
+            SumRepeatProb+=drop.DropProb;
         }
         return;
     }

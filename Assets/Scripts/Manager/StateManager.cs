@@ -3,7 +3,6 @@ using UnityEngine;
 
 public enum StateEnum
 {
-    //氧气、健康值、饱食、水分、困倦度、san值
     Health,
     Fullness,
     Thirst,
@@ -36,7 +35,7 @@ public class StateManager : MonoBehaviour
                 {
                     GameObject managerObj = new GameObject("StateManager");
                     instance = managerObj.AddComponent<StateManager>();
-                    DontDestroyOnLoad(managerObj); // 跨场景保持实例
+                    DontDestroyOnLoad(managerObj);
                 }
             }
             return instance;
@@ -45,7 +44,6 @@ public class StateManager : MonoBehaviour
 
     private void Awake()
     {
-        // 确保只有一个实例
         if (instance != null && instance != this)
         {
             Destroy(gameObject);

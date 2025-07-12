@@ -9,6 +9,7 @@ public class EnvironmentBag : BagBase
 
     public PlaceData PlaceData => placeData;
 
+
     private float discoveryDegree;
     public float DiscoveryDegree => discoveryDegree;
 
