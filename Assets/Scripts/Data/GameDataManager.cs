@@ -21,6 +21,8 @@ public class GameDataManager
         environmentBagDataDict.Add(PlaceEnum.Cockpit, cockpitBagData);
 
         audioData = JsonManager.LoadData<AudioData>("Audio");
+
+        unlockedRecipes = JsonManager.LoadData<List<string>>("UnlockedRecipes");
     }
 
     #region 玩家背包
@@ -30,7 +32,7 @@ public class GameDataManager
 
     public void SavePlayerBagRuntimeData()
     {
-        PlayerBag bag = EffectResolve.Instance.PlayerBag;
+        PlayerBag bag = GameManager.Instance.PlayerBag;
         playerBagData = new();
         playerBagData.maxLoad = bag.MaxLoad;
         playerBagData.cardSlotsRuntimeData = new();
@@ -57,7 +59,7 @@ public class GameDataManager
     /// </summary>
     public void SaveEnvironmentBagRuntimeData()
     {
-        foreach (var (place, bag) in EffectResolve.Instance.EnvironmentBags)
+        foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
         {
             EnvironmentBagRuntimeData data = new();
             // 保存探索度
@@ -77,7 +79,7 @@ public class GameDataManager
 
     public void SaveLastPlace()
     {
-        JsonManager.SaveData(EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType, "LastPlace");
+        JsonManager.SaveData(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, "LastPlace");
     }
 
     // 动力舱的背包数据
@@ -115,5 +117,16 @@ public class GameDataManager
         JsonManager.SaveData(audioData, "Audio");
     }
 
+    #endregion
+
+    #region 配方
+    private List<string> unlockedRecipes = new List<string>();
+
+    public List<string> UnlockedRecipes => unlockedRecipes;
+
+    public void SaveUnlockedRecipes()
+    {
+        JsonManager.SaveData(unlockedRecipes, "UnlockedRecipes");
+    }
     #endregion
 }
