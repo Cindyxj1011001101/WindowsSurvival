@@ -10,7 +10,7 @@ public class PlaceDropEvent:EventTrigger
     public List<Drop> curOnceDropList;
     public int SumRepeatProb;
     //掉落-场景掉落（掉一次后不掉/重复掉）
-    public override void EventResolve()
+    public override void Invoke()
     {
         if (curOnceDropList.Count != 0)
         {

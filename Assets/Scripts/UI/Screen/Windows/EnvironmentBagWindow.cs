@@ -19,7 +19,8 @@ public class EnvironmentBagWindow : BagWindow
 
         discoverButton.onClick.AddListener(() =>
         {
-            GameManager.Instance.HandleExplore();
+            //GameManager.Instance.HandleExplore();
+            GameManager.Instance.HandleCardEvent(GameManager.Instance.CurEnvironmentBag.ExploreEvent);
         });
 
         // 注册发现度变化事件

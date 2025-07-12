@@ -34,7 +34,7 @@ public class DropEvent : EventTrigger
     public List<Drop> dropList;
     private int sumProb;
 
-    public override void EventResolve()
+    public override void Invoke()
     {
         if (dropList != null)
         {

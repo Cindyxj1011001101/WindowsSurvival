@@ -6,7 +6,7 @@ public class MoveEvent:EventTrigger
 {
     public PlaceEnum AimPlace;
     
-    public override void EventResolve()
+    public override void Invoke()
     {
         
         GameManager.Instance.Move(AimPlace);//TODO：移动至另一地区

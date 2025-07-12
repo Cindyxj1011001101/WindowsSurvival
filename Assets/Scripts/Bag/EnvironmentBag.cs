@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnvironmentBag : BagBase
 {
-    public CardEvent CardEvent;
+    [Header("探索事件")]
+    [SerializeField] private CardEvent exploreEvent;
 
+    public CardEvent ExploreEvent => exploreEvent;
+
+    [Header("地点数据")]
     [SerializeField] private PlaceData placeData;
 
     public PlaceData PlaceData => placeData;
@@ -32,7 +35,7 @@ public class EnvironmentBag : BagBase
         var data = (runtimeData as EnvironmentBagRuntimeData);
         discoveryDegree = data.discoveryDegree;
         // 初始化一次性掉落列表
-        var e = CardEvent.eventList.Find(c => c is PlaceDropEvent);
+        var e = exploreEvent.eventList.Find(c => c is PlaceDropEvent);
         (e as PlaceDropEvent).curOnceDropList = data.disposableDropList;
     }
 
