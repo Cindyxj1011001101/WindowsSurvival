@@ -10,14 +10,10 @@ public class UIRecipeButton : MonoBehaviour
     public void DisplayRecipe(Sprite icon, bool locked, bool canCraft)
     {
         this.icon.sprite = icon;
-        if (!canCraft)
-        {
+        this.isLocked.gameObject.SetActive(locked);
+        if (locked)
             this.canCraft.gameObject.SetActive(false);
-            this.isLocked.gameObject.SetActive(false);
-        }
         else
-        {
-            isLocked.gameObject.SetActive(locked);
-        }
+            this.canCraft.gameObject.SetActive(!canCraft);
     }
 }
