@@ -110,8 +110,7 @@ public abstract class BagBase : MonoBehaviour
 
         // 背包已满
         // 则能否添加取决于背包中是否有同类卡牌并且没有达到堆叠上限
-        string cardName = card.GetCardData().cardName;
-        var slots = GetSlotsContainingSimilarCard(cardName);
+        var slots = GetSlotsContainingSimilarCard(card.GetCardData());
         foreach (CardSlot slot in slots)
         {
             if (slot.CanStack()) return true;
@@ -126,12 +125,12 @@ public abstract class BagBase : MonoBehaviour
     /// <param name="cardName">卡牌名称</param>
     /// <param name="ascending">true: 按照堆叠数量升序，false: 按照堆叠数量降序</param>
     /// <returns></returns>
-    protected List<CardSlot> GetSlotsContainingSimilarCard(string cardName, bool ascending = true)
+    protected List<CardSlot> GetSlotsContainingSimilarCard(CardData cardData, bool ascending = true)
     {
         List<CardSlot> result = new();
         foreach (CardSlot slot in slots)
         {
-            if (slot.ContainsSimilarCard(cardName))
+            if (slot.ContainsSimilarCard(cardData))
                 result.Add(slot);
         }
         result.Sort((a, b) => ascending ? a.StackCount - b.StackCount : b.StackCount - a.StackCount);
@@ -150,10 +149,8 @@ public abstract class BagBase : MonoBehaviour
     {
         if (!CanAddCard(card)) return;
 
-        string cardName = card.GetCardData().cardName;
-
         // 尝试堆叠同类卡牌
-        foreach (var slot in GetSlotsContainingSimilarCard(cardName))
+        foreach (var slot in GetSlotsContainingSimilarCard(card.GetCardData()))
         {
             if (slot.CanStack())
             {
@@ -248,11 +245,9 @@ public abstract class BagBase : MonoBehaviour
     {
         if (amount <= 0) throw new ArgumentException("要移除的卡牌数量必须是正整数。");
 
-        string cardName = cardData.cardName;
-
         // 找到所有同类型的卡牌slot
         // 并且将这些slot按照stackCount从大到小排序
-        var slots = GetSlotsContainingSimilarCard(cardName, false);
+        var slots = GetSlotsContainingSimilarCard(cardData, false);
         // 统计总数
         int totalCount = 0;
         foreach (var slot in slots)
@@ -298,6 +293,23 @@ public abstract class BagBase : MonoBehaviour
         }
 
         return amount;
+    }
+
+    /// <summary>
+    /// 得到背包中指定卡牌的数量
+    /// </summary>
+    /// <param name="cardData"></param>
+    /// <returns></returns>
+    public int GetTotalCountOfSpecificCard(CardData cardData)
+    {
+        int totalCount = 0;
+        foreach (var slot in slots)
+        {
+            if (slot.ContainsSimilarCard(cardData))
+                totalCount += slot.StackCount;
+        }
+
+        return totalCount;
     }
 
     /// <summary>
@@ -365,7 +377,7 @@ public abstract class BagBase : MonoBehaviour
             }
         }
         // 如果目标槽位有相同卡牌且可以堆叠
-        else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData.cardName) && targetSlot.CanStack())
+        else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData) && targetSlot.CanStack())
         {
             // 尽可能多地移动卡牌到目标槽位
             while (sourceSlot.StackCount > 0 && targetSlot.CanStack())

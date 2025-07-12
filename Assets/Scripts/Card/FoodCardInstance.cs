@@ -24,7 +24,7 @@
         if (currentFresh <= 0)
         {
             DestroyThisCard();
-            EffectResolve.Instance.Resolve((GetCardData() as FoodCardData).onRotton);
+            GameManager.Instance.HandleCardEvent((GetCardData() as FoodCardData).onRotton);
         }
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
     }

@@ -37,15 +37,6 @@
         return base.CanAddCard(card);
     }
 
-    //public override void AddCard(CardInstance card)
-    //{
-    //    if (CanAddCard(card))
-    //    {
-    //        base.AddCard(card);
-    //        AddLoad(card.GetCardData().weight);
-    //    }
-    //}
-
     public override void OnCardAdded(CardInstance card)
     {
         base.OnCardAdded(card);
@@ -57,14 +48,6 @@
         base.OnCardRemoved(card);
         AddLoad(-card.GetCardData().weight);
     }
-
-    //public override CardInstance RemoveCard(CardSlot targetSlot)
-    //{
-    //    var toRemove = base.RemoveCard(targetSlot);
-    //    if (toRemove != null)
-    //        AddLoad(-toRemove.GetCardData().weight);
-    //    return toRemove;
-    //}
 
     ChangeLoadArgs args = new ChangeLoadArgs();
     private void AddLoad(float weight)

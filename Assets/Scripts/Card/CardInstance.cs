@@ -42,7 +42,7 @@ public abstract class CardInstance : IComparable<CardInstance>
             // 销毁这张卡牌
             DestroyThisCard();
             // 触发卡牌耐久归零事件
-            EffectResolve.Instance.Resolve(GetCardData().onUsedUp);
+            GameManager.Instance.HandleCardEvent(GetCardData().onUsedUp);
         }
         // 刷新前端显示的卡牌数据
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);

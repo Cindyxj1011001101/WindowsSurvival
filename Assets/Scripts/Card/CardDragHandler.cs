@@ -85,7 +85,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             return true;
         }
         // 如果目标格子有相同卡牌
-        else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData.cardName))
+        else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData))
         {
             // 往目标格子里尽可能放更多
             bool movedAny = false;

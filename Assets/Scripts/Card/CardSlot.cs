@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class CardSlot : MonoBehaviour
 {
-    [SerializeField] private Image iconImage;
-    [SerializeField] private Image fillImage; // 用于显示新鲜度等
-    [SerializeField] private Text propertyText; // 用于显示数量和耐久等
-    [SerializeField] private Text nameText;
-    [SerializeField] private Transform cardTransform;
+    private Image iconImage;
+    private Image fillImage; // 用于显示新鲜度等
+    private Text propertyText; // 用于显示数量和耐久等
+    private Text nameText;
+    private Transform cardTransform;
 
     private CardData currentCard;
 
@@ -120,7 +120,7 @@ public class CardSlot : MonoBehaviour
         }
     }
 
-    public bool ContainsSimilarCard(string cardName) => !IsEmpty && currentCard.cardName == cardName;
+    public bool ContainsSimilarCard(CardData cardData) => !IsEmpty && currentCard.Equals(cardData);
     
     /// <summary>
     /// 能否堆叠，在使用该方法前请务必确认要堆叠的卡牌和这个slot放有的卡牌是同类的
