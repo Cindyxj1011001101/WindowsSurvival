@@ -30,14 +30,7 @@ public class EquipmentManager : MonoBehaviour
     }
     private void Start()
     {
-        EventManager.Instance.AddListener<EquipCardArgs>(EventType.EquipCard, EquipCard);
-        EventManager.Instance.AddListener<EquipmentType>(EventType.UnequipCard, UnequipCard);
         Init();
-    }
-    private void OnDestroy()
-    {
-        EventManager.Instance.RemoveListener<EquipCardArgs>(EventType.EquipCard, EquipCard);
-        EventManager.Instance.RemoveListener<EquipmentType>(EventType.UnequipCard, UnequipCard);
     }
     public void Init()
     {
@@ -48,13 +41,34 @@ public class EquipmentManager : MonoBehaviour
     }
     #endregion
 
+    #region 判断是否可以装备
+    /// <summary>
+    /// 判断是否可以装备
+    /// 卡牌tag中需包含对应装备位置的tag
+    /// </summary>
+    /// <param name="args">装备卡牌参数(卡牌，装备位置)</param>
+    /// <returns>是否可以装备</returns>
+    public bool CanEquipCard(EquipCardArgs args)
+    {
+        if (args.card.CardData.cardType != CardType.Equipment)
+        {
+            return false;
+        }
+        EquipmentCardData equipmentCardData = args.card.CardData as EquipmentCardData;
+        if (equipmentCardData.equipmentType == args.type)
+        {
+            return true;
+        }
+        return false;
+    }
+    #endregion
+
     #region 装备卡牌
     /// <summary>
     /// 装备卡牌
     /// </summary>
     /// <param name="type">装备的位置</param>
     /// <param name="card">装备的卡牌</param>
-    /// 是否需要判断能否装备对应卡牌到对应为止？-卡牌标签中增加对应可装备位置的标签
     public void EquipCard(EquipCardArgs args)
     {
         switch (args.type)  
