@@ -13,14 +13,28 @@
     {
         base.InitFromCardData(cardData);
         currentFresh = (cardData as FoodCardData).MaxFresh;
-        EventManager.Instance.AddListener<ChangeTimeArgs>(EventType.ChangeTime, UpdateFresh);
+        //EventManager.Instance.AddListener<ChangeTimeArgs>(EventType.ChangeTime, UpdateFresh);
+        EventManager.Instance.AddListener(EventType.IntervalSettle, UpdateFresh);
     }
 
-    private void UpdateFresh(ChangeTimeArgs args)
+    //private void UpdateFresh(ChangeTimeArgs args)
+    //{
+    //    if ((CardData as FoodCardData).MaxFresh == -1) return;
+
+    //    currentFresh -= args.timeDelta;
+    //    if (currentFresh <= 0)
+    //    {
+    //        DestroyThisCard();
+    //        GameManager.Instance.HandleCardEvent((CardData as FoodCardData).onRotton);
+    //    }
+    //    EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
+    //}
+
+    private void UpdateFresh()
     {
         if ((CardData as FoodCardData).MaxFresh == -1) return;
 
-        currentFresh -= args.timeDelta;
+        currentFresh -= TimeManager.Instance.SettleInterval;
         if (currentFresh <= 0)
         {
             DestroyThisCard();
@@ -32,6 +46,7 @@
     protected override void DestroyThisCard()
     {
         base.DestroyThisCard();
-        EventManager.Instance.RemoveListener<ChangeTimeArgs>(EventType.ChangeTime, UpdateFresh);
+        //EventManager.Instance.RemoveListener<ChangeTimeArgs>(EventType.ChangeTime, UpdateFresh);
+        EventManager.Instance.RemoveListener(EventType.IntervalSettle, UpdateFresh);
     }
 }

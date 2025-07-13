@@ -69,7 +69,7 @@ public class TimeManager : MonoBehaviour
     
     public void AddTime(int minute)
     {
-        EventManager.Instance.TriggerEvent(EventType.ChangeTime, new ChangeTimeArgs() { timeDelta = minute, currentTime = curTime});
+        //EventManager.Instance.TriggerEvent(EventType.ChangeTime, new ChangeTimeArgs() { timeDelta = minute, currentTime = curTime});
         int time = minute;
         curTime = curTime.AddMinutes(minute);
         dateText.text = CalculateDate();
@@ -81,7 +81,7 @@ public class TimeManager : MonoBehaviour
                 time -= curInterval;
                 curInterval = SettleInterval;
                 EventManager.Instance.TriggerEvent(EventType.IntervalSettle);
-                EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
+                //EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
             }
             else
             {

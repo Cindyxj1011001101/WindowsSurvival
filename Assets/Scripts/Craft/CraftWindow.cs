@@ -116,6 +116,8 @@ public class CraftWindow : WindowBase
                 button.isOn = true;
         }
 
+        UpdateContainerHeight(recipieLayout.GetComponent<GridLayoutGroup>(), recipes.Count);
+
         //// 尝试重新选择之前选中的配方
         //bool foundPreviousSelection = false;
         //if (isRefresh && currentSelectedRecipe != null)
@@ -197,5 +199,27 @@ public class CraftWindow : WindowBase
         {
             Destroy(parent.GetChild(i).gameObject);
         }
+    }
+    /// <summary>
+    /// 更新容器高度
+    /// </summary>
+    private void UpdateContainerHeight(GridLayoutGroup layout, int elementCount)
+    {
+        RectTransform layoutTransform = layout.transform as RectTransform;
+
+        float containerWidth = layoutTransform.rect.width;
+        // 计算一行可以放几个格子
+        int i = 1;
+        while (layout.cellSize.x * i + layout.spacing.x * (i - 1) + layout.padding.left + layout.padding.right <= containerWidth)
+        {
+            i++;
+        }
+        int columns = Mathf.Max(1, i - 1);
+        int totalRows = Mathf.CeilToInt((float)elementCount / columns);
+
+        // 计算容器高度
+        float containerHeight = totalRows * layout.cellSize.y + (totalRows - 1) * layout.spacing.y + layout.padding.top + layout.padding.bottom;
+
+        layoutTransform.sizeDelta = new Vector2(layoutTransform.sizeDelta.x, containerHeight);
     }
 }
