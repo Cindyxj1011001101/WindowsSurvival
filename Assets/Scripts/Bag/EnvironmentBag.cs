@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class EnvironmentBag : BagBase
 {
@@ -12,9 +13,12 @@ public class EnvironmentBag : BagBase
 
     public PlaceData PlaceData => placeData;
 
-
+    [Header("探索度")]
     private float discoveryDegree;
     public float DiscoveryDegree => discoveryDegree;
+
+    [Header("当前地点环境状态")]
+    public Dictionary<EnvironmentStateEnum, EnvironmentState> EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>();
 
     protected override void Init()
     {

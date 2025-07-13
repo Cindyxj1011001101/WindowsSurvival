@@ -176,21 +176,6 @@ public abstract class BagBase : MonoBehaviour
     {
         switch (condition)
         {
-            case ToolTagCondition toolTagCondition:
-                foreach (var slot in slots)
-                {
-                    if (slot.IsEmpty) continue;
-
-                    if (slot.CardData.GetType() == typeof(ToolCardData))
-                    {
-                        ToolCardData toolCardData = slot.CardData as ToolCardData;
-                        if (toolCardData.tag == toolTagCondition.ConditionToolTag)
-                        {
-                            return slot;
-                        }
-                    }
-                }
-                return null;
             case TagCondition tagCondition:
                 foreach (var slot in slots)
                 {

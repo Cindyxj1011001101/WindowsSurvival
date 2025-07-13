@@ -5,6 +5,7 @@ using UnityEngine;
 public enum CardTag
 {
     Rubbish,
+    Cut,
 }
 
 [Serializable]

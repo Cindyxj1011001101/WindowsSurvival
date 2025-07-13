@@ -12,6 +12,9 @@ public enum EventType
     ChangeDiscoveryDegree, // 探索度变化
     ChangeTime, // 时间变化
     ChangePlayerBagCards, // 玩家背包卡牌变化
+    GameOver, // 游戏结束
+    EquipCard, // 装备卡牌
+    UnequipCard, // 卸下卡牌
 }
 
 public class ChangeStateArgs
@@ -67,3 +70,17 @@ public class ChangePlayerBagCardsArgs
     public CardInstance card;
     public int add;
 }
+
+#region 装备卡牌
+public class EquipCardArgs
+{
+    public EquipmentType type;
+    public CardInstance card;
+
+    public EquipCardArgs(EquipmentType t, CardInstance c)
+    {
+        type = t;
+        card = c;
+    }
+}
+#endregion
