@@ -39,9 +39,8 @@ public class DetailsWindow : WindowBase
 
     private void OnMove(EnvironmentBag curEnvironmentBag)
     {
-        // 切地点时，如果窗口中不是正在显示玩家背包中的物品，则清除显示
-        //if (sourceSlot.Bag is not PlayerBag)
-            Clear();
+        // 切地点时清除显示
+        Clear();
     }
 
     private void OnPlayerBagCardsChanged(ChangePlayerBagCardsArgs args)
