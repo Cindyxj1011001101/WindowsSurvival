@@ -21,7 +21,8 @@ public class Drop
 
     public string cardName;
 
-    public CardData GetCardData() => Resources.Load<CardData>("ScriptableObject/Card/" + cardName);
+    [JsonIgnore]
+    public CardData CardData => Resources.Load<CardData>("ScriptableObject/Card/" + cardName);
 
     [JsonIgnore]
     public bool IsEmpty => DropNum == 0;

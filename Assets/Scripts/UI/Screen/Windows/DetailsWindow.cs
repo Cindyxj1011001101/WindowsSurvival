@@ -52,7 +52,7 @@ public class DetailsWindow : WindowBase
         slot.DisplayCard(currentDisplayedCard);
 
         // 显示卡牌标签
-        CardData cardData = currentDisplayedCard.GetCardData();
+        CardData cardData = currentDisplayedCard.CardData;
         foreach (var tag in cardData.CardTagList)
         {
             GameObject tagPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tags/" + tag.ToString());

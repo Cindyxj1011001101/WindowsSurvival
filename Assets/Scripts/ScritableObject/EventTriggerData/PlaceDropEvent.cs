@@ -57,7 +57,7 @@ public class PlaceDropEvent:EventTrigger
     {
         foreach (var drop in curOnceDropList)
         {
-            if (drop.GetCardData() is PlaceCardData placeCardData && placeCardData.place == place)
+            if (drop.CardData is PlaceCardData placeCardData && placeCardData.place == place)
             {
                 GameManager.Instance.AddDropCard(drop,false);
                 curOnceDropList.Remove(drop);
@@ -68,8 +68,6 @@ public class PlaceDropEvent:EventTrigger
             }
         }
     }
-
-
 
     public override void Init()
     {

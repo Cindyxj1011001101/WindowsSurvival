@@ -18,13 +18,13 @@
 
     private void UpdateFresh(ChangeTimeArgs args)
     {
-        if ((GetCardData() as FoodCardData).MaxFresh == -1) return;
+        if ((CardData as FoodCardData).MaxFresh == -1) return;
 
         currentFresh -= args.timeDelta;
         if (currentFresh <= 0)
         {
             DestroyThisCard();
-            GameManager.Instance.HandleCardEvent((GetCardData() as FoodCardData).onRotton);
+            GameManager.Instance.HandleCardEvent((CardData as FoodCardData).onRotton);
         }
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
     }
