@@ -7,7 +7,7 @@ public class DetailsWindow : WindowBase
     [SerializeField] private Transform buttonLayout;
     [SerializeField] private Transform tagLayout;
     [SerializeField] private CardSlot slot;
-    private CardSlot sourceSlot;
+    //private CardSlot sourceSlot;
     private CardInstance currentDisplayedCard;
 
     protected override void Awake()
@@ -24,11 +24,13 @@ public class DetailsWindow : WindowBase
         //slot.GetComponentInChildren<DoubleClickHandler>().enabled = false;
 
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerBagCardsChanged);
     }
 
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerBagCardsChanged);
     }
 
     protected override void Init()
@@ -42,15 +44,21 @@ public class DetailsWindow : WindowBase
             Clear();
     }
 
+    private void OnPlayerBagCardsChanged(ChangePlayerBagCardsArgs args)
+    {
+        if (currentDisplayedCard != null)
+            Refresh(currentDisplayedCard.Slot);
+    }
+
     public void Refresh(CardSlot sourceSlot)
     {
         // 清除原数据
         Clear();
 
-        if (sourceSlot.StackCount <= 0) return;
+        if (sourceSlot == null || sourceSlot.StackCount <= 0) return;
 
         // 记录sourceSlot和当前显示的卡牌
-        this.sourceSlot = sourceSlot;
+        //this.sourceSlot = sourceSlot;
         currentDisplayedCard = sourceSlot.PeekCard();
 
         // 显示卡牌
@@ -80,6 +88,9 @@ public class DetailsWindow : WindowBase
             {
                 button.onClick.AddListener(() =>
                 {
+                    var sourceSlot = currentDisplayedCard.Slot;
+
+                    // 先使用
                     currentDisplayedCard.Use();
                     // 如果该卡牌事件是需要其他卡牌配合触发的，如使用工具
                     if (cardEvent is ConditionalCardEvent)
@@ -94,9 +105,9 @@ public class DetailsWindow : WindowBase
                             break;
                         }
                     }
-                    // 先刷新
+                    // 再刷新
                     Refresh(sourceSlot);
-                    // 再触发效果
+                    // 最后触发效果
                     GameManager.Instance.HandleCardEvent(cardEvent);
                 });
                 button.interactable = true;
@@ -107,7 +118,7 @@ public class DetailsWindow : WindowBase
     private void Clear()
     {
         slot.ClearSlot();
-        sourceSlot = null;
+        //sourceSlot = null;
         currentDisplayedCard = null;
         detailsText.text = "";
         for (int i = 0; i < buttonLayout.childCount; i++)
