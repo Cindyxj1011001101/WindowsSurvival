@@ -4,11 +4,11 @@ using UnityEngine.UI;
 
 public class CardSlot : MonoBehaviour
 {
-    private Image iconImage;
-    private Image fillImage; // 用于显示新鲜度等
-    private Text propertyText; // 用于显示数量和耐久等
-    private Text nameText;
-    private Transform cardTransform;
+    [SerializeField] private Image iconImage;
+    [SerializeField] private Image fillImage; // 用于显示新鲜度等
+    [SerializeField] private Text propertyText; // 用于显示数量和耐久等
+    [SerializeField] private Text nameText;
+    [SerializeField] private Transform cardTransform;
 
     private CardData currentCard;
 
@@ -37,16 +37,18 @@ public class CardSlot : MonoBehaviour
 
     private void Awake()
     {
-        iconImage = transform.Find("Card/Icon").GetComponent<Image>();
-        fillImage = transform.Find("Card/Fill").GetComponent<Image>();
-        propertyText = transform.Find("Card/Property").GetComponent<Text>();
-        nameText = transform.Find("Card/Name").GetComponent<Text>();
-        cardTransform = transform.Find("Card");
-
-        cardTransform.GetComponent<DoubleClickHandler>().onDoubleClick.AddListener(() =>
+        //iconImage = transform.Find("Card/Icon").GetComponent<Image>();
+        //fillImage = transform.Find("Card/Fill").GetComponent<Image>();
+        //propertyText = transform.Find("Card/Property").GetComponent<Text>();
+        //nameText = transform.Find("Card/Name").GetComponent<Text>();
+        //cardTransform = transform.Find("Card");
+        if (cardTransform.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
         {
-            (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Refresh(this);
-        });
+            doubleClickHandler.onDoubleClick.AddListener(() =>
+            {
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Refresh(this);
+            });
+        }
 
         EventManager.Instance.AddListener(EventType.ChangeCardProperty, OnCardPropertyChanged);
     }

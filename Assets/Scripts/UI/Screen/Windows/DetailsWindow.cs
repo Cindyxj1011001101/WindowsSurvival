@@ -3,10 +3,10 @@ using UnityEngine.UI;
 
 public class DetailsWindow : WindowBase
 {
-    private Text detailsText;
-    private Transform buttonLayout;
-    private Transform tagLayout;
-    private CardSlot slot;
+    [SerializeField] private Text detailsText;
+    [SerializeField] private Transform buttonLayout;
+    [SerializeField] private Transform tagLayout;
+    [SerializeField] private CardSlot slot;
     private CardSlot sourceSlot;
     private CardInstance currentDisplayedCard;
 
@@ -14,14 +14,14 @@ public class DetailsWindow : WindowBase
     {
         base.Awake();
 
-        slot = transform.Find("Content/CardSlot").GetComponent<CardSlot>();
-        detailsText = transform.Find("Content/Details").GetComponent<Text>();
-        buttonLayout = transform.Find("Content/ButtonLayout");
-        tagLayout = transform.Find("Content/TagLayout");
-        // 禁止拖拽
-        slot.GetComponentInChildren<CardDragHandler>().enabled = false;
-        // 禁止双击
-        slot.GetComponentInChildren<DoubleClickHandler>().enabled = false;
+        //slot = transform.Find("Content/CardSlot").GetComponent<CardSlot>();
+        //detailsText = transform.Find("Content/Details").GetComponent<Text>();
+        //buttonLayout = transform.Find("Content/ButtonLayout");
+        //tagLayout = transform.Find("Content/TagLayout");
+        //// 禁止拖拽
+        //slot.GetComponentInChildren<CardDragHandler>().enabled = false;
+        //// 禁止双击
+        //slot.GetComponentInChildren<DoubleClickHandler>().enabled = false;
 
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
     }
