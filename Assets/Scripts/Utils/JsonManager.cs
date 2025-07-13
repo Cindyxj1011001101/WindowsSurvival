@@ -2,14 +2,12 @@ using Newtonsoft.Json;
 using System.IO;
 using UnityEngine;
 
-public class JsonManager
+public static class JsonManager
 {
     static JsonSerializerSettings settings = new JsonSerializerSettings
     {
         TypeNameHandling = TypeNameHandling.Auto // 存储类型信息
     };
-
-    static JsonManager() { }
 
     /// <summary>
     /// 保存数据到 Application.persistentDataPath
