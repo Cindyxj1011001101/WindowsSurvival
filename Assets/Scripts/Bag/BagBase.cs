@@ -110,7 +110,7 @@ public abstract class BagBase : MonoBehaviour
 
         // 背包已满
         // 则能否添加取决于背包中是否有同类卡牌并且没有达到堆叠上限
-        var slots = GetSlotsContainingSimilarCard(card.GetCardData());
+        var slots = GetSlotsContainingSimilarCard(card.CardData);
         foreach (CardSlot slot in slots)
         {
             if (slot.CanStack()) return true;
@@ -137,10 +137,6 @@ public abstract class BagBase : MonoBehaviour
         return result;
     }
 
-    public virtual void OnCardAdded(CardInstance card) { }
-
-    public virtual void OnCardRemoved(CardInstance card) { }
-
     /// <summary>
     /// 添加一张卡牌
     /// </summary>
@@ -150,7 +146,7 @@ public abstract class BagBase : MonoBehaviour
         if (!CanAddCard(card)) return;
 
         // 尝试堆叠同类卡牌
-        foreach (var slot in GetSlotsContainingSimilarCard(card.GetCardData()))
+        foreach (var slot in GetSlotsContainingSimilarCard(card.CardData))
         {
             if (slot.CanStack())
             {
@@ -168,8 +164,6 @@ public abstract class BagBase : MonoBehaviour
                 return;
             }
         }
-
-        OnCardAdded(card);
     }
 
 

@@ -48,11 +48,6 @@ public class CardSlot : MonoBehaviour
             (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Refresh(this);
         });
 
-        //ClearSlot();
-    }
-
-    private void Start()
-    {
         EventManager.Instance.AddListener(EventType.ChangeCardProperty, OnCardPropertyChanged);
     }
 
@@ -79,7 +74,7 @@ public class CardSlot : MonoBehaviour
     public void DisplayCard(CardInstance card)
     {
         cardTransform.gameObject.SetActive(true);
-        var data = card.GetCardData();
+        var data = card.CardData;
         iconImage.sprite = data.cardImage;
         nameText.text = data.cardName;
         fillImage.gameObject.SetActive(data is FoodCardData);
@@ -130,14 +125,19 @@ public class CardSlot : MonoBehaviour
 
     public void AddCard(CardInstance card)
     {
-        currentCard = card.GetCardData();
+        currentCard = card.CardData;
 
         cards.Add(card);
-        card.SetCardSlot(this);
         cards.Sort((a, b) => a.CompareTo(b));
 
         OnCardPropertyChanged();
-        bag?.OnCardAdded(card);
+
+        if (bag is PlayerBag && (card.Slot == null || card.Slot.bag is not PlayerBag))
+            //bag.OnCardAdded(card);
+            EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
+                new ChangePlayerBagCardsArgs { card = card, add = 1 });
+
+        card.SetCardSlot(this);
     }
 
     /// <summary>
@@ -156,7 +156,11 @@ public class CardSlot : MonoBehaviour
         else
             OnCardPropertyChanged();
 
-        bag?.OnCardRemoved(card);
+
+        if (bag is PlayerBag && (card.Slot == null || card.Slot.bag is not PlayerBag))
+            //bag.OnCardAdded(card);
+            EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
+                new ChangePlayerBagCardsArgs { card = card, add = -1 });
     }
 
     /// <summary>

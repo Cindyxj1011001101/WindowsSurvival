@@ -7,6 +7,21 @@
     public float MaxLoad => maxLoad;
     public float CurrentLoad => currentLoad;
 
+    private void Awake()
+    {
+        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnCardsChanged);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnCardsChanged);
+    }
+
+    public void OnCardsChanged(ChangePlayerBagCardsArgs args)
+    {
+        AddLoad(args.card.CardData.weight * args.add);
+    }
+
     protected override void Init()
     {
         InitBag(GameDataManager.Instance.PlayerBagData);
@@ -22,31 +37,20 @@
         {
             if (!slot.IsEmpty)
                 // 因为同样的卡牌重量都是一样的，所以可以这样算
-                AddLoad(slot.PeekCard().GetCardData().weight * slot.StackCount);
+                AddLoad(slot.PeekCard().CardData.weight * slot.StackCount);
         }
         maxLoad = (runtimeData as PlayerBagRuntimeData).maxLoad;
 
         TriggerChangeLoadEvent();
     }
+
     public override bool CanAddCard(CardInstance card)
     {
         // 载重不足，无法添加卡牌
-        if (CurrentLoad + card.GetCardData().weight > maxLoad) return false;
+        if (CurrentLoad + card.CardData.weight > maxLoad) return false;
 
         // 载重足够则按照父类的判断标准进行判断
         return base.CanAddCard(card);
-    }
-
-    public override void OnCardAdded(CardInstance card)
-    {
-        base.OnCardAdded(card);
-        AddLoad(card.GetCardData().weight);
-    }
-
-    public override void OnCardRemoved(CardInstance card)
-    {
-        base.OnCardRemoved(card);
-        AddLoad(-card.GetCardData().weight);
     }
 
     ChangeLoadArgs args = new ChangeLoadArgs();
