@@ -26,6 +26,11 @@ public class DetailsWindow : WindowBase
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
     }
 
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
+    }
+
     protected override void Init()
     {
     }
