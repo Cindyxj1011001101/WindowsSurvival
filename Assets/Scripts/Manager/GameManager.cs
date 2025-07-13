@@ -60,19 +60,19 @@ public class GameManager : MonoBehaviour
     }
 
     // 处理场景探索
-    //public void HandleExplore()
-    //{
-    //    CardEvent cardEvent = curEnvironmentBag.exploreEvent;
-    //    foreach (var EventTrigger in cardEvent.eventList)
-    //    {
-    //        if (EventTrigger.GetType() == typeof(PlaceDropEvent))
-    //        {
-    //            EventTrigger.Invoke();
-    //        }
-    //    }
-    //    // 3. 处理时间变化
-    //    TimeManager.Instance.AddTime(cardEvent.Time);
-    //}
+    public void HandleExplore()
+    {
+        CardEvent cardEvent = curEnvironmentBag.ExploreEvent;
+        foreach (var EventTrigger in cardEvent.eventList)
+        {
+            if (EventTrigger.GetType() == typeof(PlaceDropEvent))
+            {
+                EventTrigger.Invoke();
+            }
+        }
+        // 3. 处理时间变化
+        TimeManager.Instance.AddTime(cardEvent.Time);
+    }
 
     // 判断事件执行条件
     public bool CanCardEventInvoke(CardEvent cardEvent)
@@ -115,10 +115,6 @@ public class GameManager : MonoBehaviour
         {
             if (EventTrigger.GetType() == typeof(DropEvent)) EventTrigger.Invoke();
         }
-        foreach (var EventTrigger in cardEvent.eventList)
-        {
-            if (EventTrigger.GetType() == typeof(PlaceDropEvent)) EventTrigger.Invoke();
-        }
     }
 
     /// <summary>
@@ -137,7 +133,7 @@ public class GameManager : MonoBehaviour
                 continue;
             }
 
-            AddCard(drop.GetCardData(), toPlayerBag);
+            AddCard(drop.CardData, toPlayerBag);
         }
     }
 
