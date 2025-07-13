@@ -13,6 +13,8 @@ public enum WindowState
 
 public abstract class WindowBase : PanelBase, IPointerDownHandler
 {
+    [SerializeField] private bool destroyAfterClosed = false;
+
     public string AppName => GetType().Name.Replace("Window", "");
 
     private Button closeButton;
@@ -120,11 +122,19 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
         SetState(WindowState.Normal);
 
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = true;
+
         Sequence restoreSequence = DOTween.Sequence();
 
         restoreSequence.Join(transform.DOMove(lastPosition, .2f));
         restoreSequence.Join(transform.DOScale(lastScale, .2f));
         restoreSequence.Join(GetComponent<RectTransform>().DOSizeDelta(lastSizeDelta, 0.3f));
+
+        restoreSequence.OnComplete(() =>
+        {
+            canvasGroup.interactable = true;
+        });
 
         restoreSequence.Play();
     }
@@ -134,8 +144,11 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         if (state == WindowState.Closed) return;
 
         SetState(WindowState.Closed);
-        //Hide(onFinished: () => Destroy(gameObject));
-        Hide();
+
+        if (destroyAfterClosed)
+            Hide(onFinished: () => Destroy(gameObject));
+        else
+            Hide();
     }
 
     public void Minimize(Transform shortcut)
@@ -148,6 +161,9 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
         SetState(WindowState.Minimized);
 
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = true;
+
         // 使用DOTween创建动画序列
         Sequence minimizeSequence = DOTween.Sequence();
 
@@ -155,8 +171,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         minimizeSequence.Join(transform.DOScale(Vector3.zero, 0.2f));
         minimizeSequence.Join(transform.DOMove(shortcut.position, 0.2f));
 
-        //// 动画完成后隐藏窗口（但不销毁）
-        //minimizeSequence.OnComplete(() => gameObject.SetActive(false));
+        minimizeSequence.OnComplete(() => { canvasGroup.blocksRaycasts = false; });
 
         // 播放动画
         minimizeSequence.Play();
