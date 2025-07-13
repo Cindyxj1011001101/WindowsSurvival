@@ -1,28 +1,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum StateEnum
+//玩家状态
+public enum PlayerStateEnum
 {
     Health,
     Fullness,
     Thirst,
-    San
+    San,
+    Oxygen,
+    Tired,
 }
-public class State
+
+//环境状态
+public enum EnvironmentStateEnum
+{
+    Oxygen,
+    Electricity,
+    Temperature,
+    Height,
+    hasCable,
+    isIndoor,
+    isInWater,
+}
+
+//玩家状态类
+public class PlayerState
 {
     public float curValue;
     public float MaxValue;
-    public StateEnum stateEnum;
-    public State(float value, float maxValue, StateEnum state)
+    public PlayerStateEnum stateEnum;
+    public PlayerState(float value, float maxValue, PlayerStateEnum state)
     {
         curValue = value;
         MaxValue = maxValue;
         stateEnum = state;
     }
 }
+
+//环境状态类
+public class EnvironmentState
+{
+    public float curValue;
+    public float MaxValue;
+}
 public class StateManager : MonoBehaviour
 {
-    public Dictionary<StateEnum, State> StateDict = new Dictionary<StateEnum, State>();
+    public Dictionary<PlayerStateEnum, PlayerState> PlayerStateDict = new Dictionary<PlayerStateEnum, PlayerState>();
     private static StateManager instance;
     public static StateManager Instance
     {
@@ -66,19 +90,19 @@ public class StateManager : MonoBehaviour
     }
     public void Init()
     {
-        StateDict.Add(StateEnum.Health, new State(InitPlayerStateData.Instance.Health, 100, StateEnum.Health));
-        StateDict.Add(StateEnum.Fullness, new State(InitPlayerStateData.Instance.Fullness, 100, StateEnum.Fullness));
-        StateDict.Add(StateEnum.Thirst, new State(InitPlayerStateData.Instance.Thirst, 100, StateEnum.Thirst));
-        StateDict.Add(StateEnum.San, new State(InitPlayerStateData.Instance.San, 100, StateEnum.San));
+        PlayerStateDict.Add(PlayerStateEnum.Health, new PlayerState(InitPlayerStateData.Instance.Health, 100, PlayerStateEnum.Health));
+        PlayerStateDict.Add(PlayerStateEnum.Fullness, new PlayerState(InitPlayerStateData.Instance.Fullness, 100, PlayerStateEnum.Fullness));
+        PlayerStateDict.Add(PlayerStateEnum.Thirst, new PlayerState(InitPlayerStateData.Instance.Thirst, 100, PlayerStateEnum.Thirst));
+        PlayerStateDict.Add(PlayerStateEnum.San, new PlayerState(InitPlayerStateData.Instance.San, 100, PlayerStateEnum.San));
     }
 
     public void OnChangeState(ChangeStateArgs args)
     {
-        if (StateDict.ContainsKey(args.state))
+        if (PlayerStateDict.ContainsKey(args.state))
         {
-            StateDict[args.state].curValue += args.value;
-            if (StateDict[args.state].curValue >= 100) StateDict[args.state].curValue = 100;
-            if (StateDict[args.state].curValue <= 0) StateDict[args.state].curValue = 0;
+            PlayerStateDict[args.state].curValue += args.value;
+            if (PlayerStateDict[args.state].curValue >= 100) PlayerStateDict[args.state].curValue = 100;
+            if (PlayerStateDict[args.state].curValue <= 0) PlayerStateDict[args.state].curValue = 0;
         }
 
         EventManager.Instance.TriggerEvent(EventType.RefreshState, args.state);
@@ -86,9 +110,9 @@ public class StateManager : MonoBehaviour
 
     public void IntervalSettle()
     {
-        OnChangeState(new ChangeStateArgs(StateEnum.Fullness, InitPlayerStateData.Instance.BasicFullnessChange));
-        OnChangeState(new ChangeStateArgs(StateEnum.Health, InitPlayerStateData.Instance.BasicHealthChange));
-        OnChangeState(new ChangeStateArgs(StateEnum.Thirst, InitPlayerStateData.Instance.BasicThirstChange));
-        OnChangeState(new ChangeStateArgs(StateEnum.San, InitPlayerStateData.Instance.BasicSanChange));
+        OnChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, InitPlayerStateData.Instance.BasicFullnessChange));
+        OnChangeState(new ChangeStateArgs(PlayerStateEnum.Health, InitPlayerStateData.Instance.BasicHealthChange));
+        OnChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, InitPlayerStateData.Instance.BasicThirstChange));
+        OnChangeState(new ChangeStateArgs(PlayerStateEnum.San, InitPlayerStateData.Instance.BasicSanChange));
     }
 }

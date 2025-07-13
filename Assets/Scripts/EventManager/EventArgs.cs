@@ -16,10 +16,10 @@ public enum EventType
 
 public class ChangeStateArgs
 {
-    public StateEnum state;
+    public PlayerStateEnum state;
     public float value;
 
-    public ChangeStateArgs(StateEnum s, float i)
+    public ChangeStateArgs(PlayerStateEnum s, float i)
     {
         state = s;
         value = i;
