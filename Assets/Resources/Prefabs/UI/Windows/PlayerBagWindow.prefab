@@ -335,7 +335,7 @@ GameObject:
   - component: {fileID: 3194457448123792911}
   - component: {fileID: 6364568650492142480}
   m_Layer: 5
-  m_Name: Container
+  m_Name: Layout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -914,7 +914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.8901961, b: 0.6, a: 0.392}
+  m_Color: {r: 1, g: 0.8901961, b: 0.6, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -943,6 +943,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacff1ada28627f44a194c5c30a1c1c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyAfterClosed: 0
 --- !u!1 &5544643423047237326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,8 +1066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 3431425685511914232, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
-  slotContainer: {fileID: 3194457448123792911}
-  gridLayout: {fileID: 6364568650492142480}
+  slotLayout: {fileID: 6364568650492142480}
   organizeButton: {fileID: 6064801166506142049}
 --- !u!1 &6105848409402197434
 GameObject:

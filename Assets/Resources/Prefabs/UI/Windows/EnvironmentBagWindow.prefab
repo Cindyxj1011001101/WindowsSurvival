@@ -403,8 +403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 3431425685511914232, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
-  slotContainer: {fileID: 7699487881245093870}
-  gridLayout: {fileID: 1243185034929769997}
+  slotLayout: {fileID: 1243185034929769997}
   organizeButton: {fileID: 5542767981334835326}
   exploreEvent: {fileID: 11400000, guid: fa1f20d8be16eed4dac70f9005fd8102, type: 2}
   placeData: {fileID: 11400000, guid: b416e26146f51dc4082c8a8ffbcef356, type: 2}
@@ -648,7 +647,7 @@ GameObject:
   - component: {fileID: 7699487881245093870}
   - component: {fileID: 1243185034929769997}
   m_Layer: 5
-  m_Name: Container
+  m_Name: Layout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1669,6 +1668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a29f47d2b9b8b74e8f54b4ebe935171, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  destroyAfterClosed: 0
 --- !u!1 &5508433198418593722
 GameObject:
   m_ObjectHideFlags: 0
@@ -2043,7 +2043,7 @@ GameObject:
   - component: {fileID: 1943555056238577955}
   - component: {fileID: 8694479340009125335}
   m_Layer: 5
-  m_Name: Container
+  m_Name: Layout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2573,8 +2573,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 3431425685511914232, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
-  slotContainer: {fileID: 1943555056238577955}
-  gridLayout: {fileID: 8694479340009125335}
+  slotLayout: {fileID: 8694479340009125335}
   organizeButton: {fileID: 5542767981334835326}
   exploreEvent: {fileID: 11400000, guid: a4e90b48a58c17a42ba2acf6ff3edfc5, type: 2}
   placeData: {fileID: 11400000, guid: 0477a3ea042b4c0488260a06bebc0f9b, type: 2}
