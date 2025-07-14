@@ -93,13 +93,27 @@ public class EquipCardArgs
 #region 环境状态变化
 public class ChangeEnvironmentStateArgs
 {
+    public PlaceEnum place;
     public EnvironmentStateEnum state;
     public float value;
 
     public ChangeEnvironmentStateArgs(EnvironmentStateEnum s, float i)
     {
+        place = GameManager.Instance.CurEnvironmentBag.PlaceData.placeType;
         state = s;
         value = i;
     }
 }
 #endregion
+
+public class RefreshEnvironmentStateArgs
+{
+    public PlaceEnum place;
+    public EnvironmentStateEnum state;
+
+    public RefreshEnvironmentStateArgs(PlaceEnum p, EnvironmentStateEnum s)
+    {
+        place = p;
+        state = s;
+    }
+}

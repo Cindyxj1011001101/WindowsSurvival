@@ -12,10 +12,11 @@ public class StateWindow : WindowBase
         base.Awake();
         GameObject Container = GetComponentInChildren<GridLayoutGroup>().gameObject;
         Sliders = new Slider[Container.transform.childCount];
+        StateNumTexts = new TMP_Text[Container.transform.childCount];
         for (int i = 0; i < Container.transform.childCount; i++)
         {
             Sliders[i] = Container.transform.GetChild(i).gameObject.GetComponentInChildren<Slider>();
-            StateNumTexts[i] = Container.transform.Find("StateNum").GetComponent<TMP_Text>();
+            StateNumTexts[i] = Container.transform.GetChild(i).gameObject.transform.Find("StateNum").GetComponent<TMP_Text>();
         }
     }
 
@@ -45,5 +46,7 @@ public class StateWindow : WindowBase
         RefreshState(PlayerStateEnum.Health);
         RefreshState(PlayerStateEnum.Thirst);
         RefreshState(PlayerStateEnum.San);
+        RefreshState(PlayerStateEnum.Oxygen);
+        RefreshState(PlayerStateEnum.Tired);
     }
 }

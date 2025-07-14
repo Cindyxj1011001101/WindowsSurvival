@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class EnvironmentBagWindow : BagWindow
@@ -7,6 +9,7 @@ public class EnvironmentBagWindow : BagWindow
     private Text placeNameText; // 环境名称
     private Text placeDetailsText; // 环境详情
     private Button discoverButton; // 探索按钮
+    private Dictionary<EnvironmentStateEnum, GameObject> EnvironmentStateSliders = new Dictionary<EnvironmentStateEnum, GameObject>(); // 环境状态显示
 
     protected override void Awake()
     {
@@ -16,7 +19,10 @@ public class EnvironmentBagWindow : BagWindow
         placeNameText = transform.Find("TopBar/Name").GetComponent<Text>();
         placeDetailsText = transform.Find("LeftBar/Details/Text").GetComponent<Text>();
         discoverButton = transform.Find("LeftBar/DiscoverButton").GetComponent<Button>();
-
+        EnvironmentStateSliders.Add(EnvironmentStateEnum.Electricity, transform.Find("LeftBar/EnvironmentState/BagScrollView/Viewport/Container/Electricity").gameObject);
+        EnvironmentStateSliders.Add(EnvironmentStateEnum.Oxygen, transform.Find("LeftBar/EnvironmentState/BagScrollView/Viewport/Container/Oxygen").gameObject);
+        EnvironmentStateSliders.Add(EnvironmentStateEnum.Pressure, transform.Find("LeftBar/EnvironmentState/BagScrollView/Viewport/Container/Pressure").gameObject);
+        EnvironmentStateSliders.Add(EnvironmentStateEnum.Height, transform.Find("LeftBar/EnvironmentState/BagScrollView/Viewport/Container/Height").gameObject);
         discoverButton.onClick.AddListener(() =>
         {
             GameManager.Instance.HandleExplore();
@@ -28,7 +34,7 @@ public class EnvironmentBagWindow : BagWindow
         // 注册环境袋移动事件
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         // 注册环境状态变化事件
-        EventManager.Instance.AddListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentChangeState);
     }
 
     protected override void Init()
@@ -42,15 +48,49 @@ public class EnvironmentBagWindow : BagWindow
     private void OnMove(EnvironmentBag curEnvironmentBag)
     {
         // 新的环境信息
-        // TODO：所有环境状态变化UI刷新
+        // TODO：所有环境状态变化UI刷新,当前环境中不包含的UI关闭
+        foreach (var state in EnvironmentStateSliders)
+        {
+            //室内显示氧气
+            if(curEnvironmentBag.PlaceData.isIndoor)
+            {
+               EnvironmentStateSliders[EnvironmentStateEnum.Oxygen].SetActive(true);
+            }
+            else
+            {
+                EnvironmentStateSliders[EnvironmentStateEnum.Oxygen].SetActive(false);
+            }
+            //飞船中显示水平面高度
+            if(curEnvironmentBag.PlaceData.isInSpacecraft)
+            {
+                EnvironmentStateSliders[EnvironmentStateEnum.Height].SetActive(true);
+            }
+            else
+            {
+                EnvironmentStateSliders[EnvironmentStateEnum.Height].SetActive(false);
+            }
+        }
         discoveryDegreeText.text = $"{Math.Round(curEnvironmentBag.DiscoveryDegree, 1)} %";
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
         placeDetailsText.text = $"{curEnvironmentBag.PlaceData.placeDesc}";
     }
-
-    private void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
+    /// <summary>
+    /// 单个环境状态变化UI刷新
+    /// </summary>
+    private void OnEnvironmentChangeState(RefreshEnvironmentStateArgs args)
     {
-        //TODO:单个环境状态变化UI刷新逻辑
+        if (args.place == GameManager.Instance.CurEnvironmentBag.PlaceData.placeType)
+        {
+            if(EnvironmentStateSliders.ContainsKey(args.state))
+            {
+                float resultValue=GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue 
+                / GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue;
+                EnvironmentStateSliders[args.state].GetComponent<Slider>().value = resultValue;
+                EnvironmentStateSliders[args.state].transform.Find("Text").GetComponent<Text>().text=
+                GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue.ToString()+"/"
+                +GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue.ToString();
+            }
+        }
     }
 
     private void OnDicoveryDegreeChanged(ChangeDiscoveryDegreeArgs args)
@@ -64,6 +104,6 @@ public class EnvironmentBagWindow : BagWindow
         // 移除事件
         EventManager.Instance.RemoveListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDicoveryDegreeChanged);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
-        EventManager.Instance.RemoveListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentChangeState);
     }
 }
