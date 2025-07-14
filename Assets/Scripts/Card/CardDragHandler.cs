@@ -74,6 +74,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private bool TryPlaceCardInSameBag(CardSlot targetSlot)
     {
+        
         // 如果目标格子为空
         if (targetSlot.IsEmpty)
         {
@@ -102,9 +103,11 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private bool TryPlaceCardInDifferentBag(BagBase targetBag)
     {
         bool movedAny = false;
+        
         // targetBag is EnvironmentBag 表示如果目标背包是环境背包则一定能放入卡牌
         while (sourceSlot.StackCount > 0 && (targetBag is EnvironmentBag || targetBag.CanAddCard(sourceSlot.PeekCard())))
         {
+
             targetBag.AddCard(sourceSlot.RemoveCard());
             movedAny = true;
         }
@@ -116,6 +119,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// </summary>
     private void Home()
     {
+        if(SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("放置卡牌");
         transform.SetParent(sourceParent);
         rectTransform.anchoredPosition = Vector2.zero;
     }
