@@ -19,12 +19,12 @@ public class StateWindow : WindowBase
     protected override void Start()
     {
         base.Start();
-        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshState, RefreshState);
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshState);
     }
 
     public void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshState, RefreshState);
+        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshState);
     }
 
     //更新显示数据

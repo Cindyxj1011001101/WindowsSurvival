@@ -27,6 +27,8 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.AddListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDicoveryDegreeChanged);
         // 注册环境袋移动事件
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
+        // 注册环境状态变化事件
+        EventManager.Instance.AddListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
     }
 
     protected override void Init()
@@ -40,9 +42,15 @@ public class EnvironmentBagWindow : BagWindow
     private void OnMove(EnvironmentBag curEnvironmentBag)
     {
         // 新的环境信息
+        // TODO：所有环境状态变化UI刷新
         discoveryDegreeText.text = $"{Math.Round(curEnvironmentBag.DiscoveryDegree, 1)} %";
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
         placeDetailsText.text = $"{curEnvironmentBag.PlaceData.placeDesc}";
+    }
+
+    private void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
+    {
+        //TODO:单个环境状态变化UI刷新逻辑
     }
 
     private void OnDicoveryDegreeChanged(ChangeDiscoveryDegreeArgs args)
@@ -56,5 +64,6 @@ public class EnvironmentBagWindow : BagWindow
         // 移除事件
         EventManager.Instance.RemoveListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDicoveryDegreeChanged);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.RemoveListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
     }
 }

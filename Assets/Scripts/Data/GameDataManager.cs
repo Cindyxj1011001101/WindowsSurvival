@@ -153,4 +153,21 @@ public class GameDataManager
         JsonManager.SaveData(unlockedRecipes, "UnlockedRecipes");
     }
     #endregion
+
+    #region 游戏运行时数据
+    private GameRuntimeData gameRuntimeData;
+    public GameRuntimeData GameRuntimeData
+    {
+        get
+        {
+            gameRuntimeData ??= JsonManager.LoadData<GameRuntimeData>("GameRuntimeData");
+            return gameRuntimeData;
+        }
+    }
+
+    public void SaveGameRuntimeData()
+    {
+        JsonManager.SaveData(GameRuntimeData, "GameRuntimeData");
+    }
+    #endregion
 }

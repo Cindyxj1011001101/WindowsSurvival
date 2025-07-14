@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// 玩家状态
@@ -20,14 +21,11 @@ public enum PlayerStateEnum
 /// </summary>
 public enum EnvironmentStateEnum
 {
-    Oxygen,
     Electricity,
+    Oxygen,
     Temperature,
     Height,
     hasCable,
-    isIndoor,
-    isInWater,
-    isInSpacecraft,
 }
 
 /// <summary>
@@ -65,10 +63,8 @@ public class StateManager : MonoBehaviour
 {
     [Header("玩家状态")]
     public Dictionary<PlayerStateEnum, PlayerState> PlayerStateDict = new Dictionary<PlayerStateEnum, PlayerState>();
-
-    [Header("当前地点环境状态")]
-    public Dictionary<EnvironmentStateEnum, EnvironmentState> CurEnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>();
-
+    [Header("电力")]
+    public float Electricity;
     #region 单例
     private static StateManager instance;
     public static StateManager Instance
@@ -105,12 +101,12 @@ public class StateManager : MonoBehaviour
     }
     public void Start()
     {
-        EventManager.Instance.AddListener<ChangeStateArgs>(EventType.ChangeState, OnChangeState);
+        EventManager.Instance.AddListener<ChangeStateArgs>(EventType.ChangeState, OnPlayerChangeState);
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
     }
     public void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<ChangeStateArgs>(EventType.ChangeState, OnChangeState);
+        EventManager.Instance.RemoveListener<ChangeStateArgs>(EventType.ChangeState, OnPlayerChangeState);
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
     }
     public void Init()
@@ -124,12 +120,37 @@ public class StateManager : MonoBehaviour
     }
     #endregion
 
+    /// <summary>
+    /// 开局初始化环境状态
+    /// </summary>
+    public Dictionary<EnvironmentStateEnum, EnvironmentState> InitEnvironmentStateDict()
+    {
+        Electricity=Random.Range(30, 45);
+        Dictionary<EnvironmentStateEnum, EnvironmentState> environmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>();
+        if(GameManager.Instance.CurEnvironmentBag.PlaceData.isIndoor)
+        {
+            environmentStateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
+        }
+        environmentStateDict.Add(EnvironmentStateEnum.Temperature, new EnvironmentState(2, 4, EnvironmentStateEnum.Temperature));
+        environmentStateDict.Add(EnvironmentStateEnum.Height, new EnvironmentState(0, 100, EnvironmentStateEnum.Height));
+        if(GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
+        {
+            environmentStateDict.Add(EnvironmentStateEnum.hasCable, new EnvironmentState(1, 1, EnvironmentStateEnum.hasCable));
+        }
+        else
+        {
+            environmentStateDict.Add(EnvironmentStateEnum.hasCable, new EnvironmentState(0, 1, EnvironmentStateEnum.hasCable));
+        }
+
+        return environmentStateDict;
+    }
+
     #region 状态变化相关
     /// <summary>
     /// 玩家状态变化
     /// 修改某一玩家状态值，保证在最大最小之间，触发刷新UI事件
     /// </summary>
-    public void OnChangeState(ChangeStateArgs args)
+    public void OnPlayerChangeState(ChangeStateArgs args)
     {
         if (PlayerStateDict.ContainsKey(args.state))
         {
@@ -144,7 +165,32 @@ public class StateManager : MonoBehaviour
             }
         }
 
-        EventManager.Instance.TriggerEvent(EventType.RefreshState, args.state);
+        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, args.state);
+    }
+
+    /// <summary>
+    /// 环境状态变化
+    /// 修改某一环境状态值，保证在最大最小之间，触发刷新UI事件
+    /// </summary>
+    public void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
+    {
+        if(args.state==EnvironmentStateEnum.Electricity)
+        {
+            Electricity += args.value;
+            if(Electricity>=50)
+            {
+                Electricity=50;
+            }
+            if(Electricity<=0)
+            {
+                Electricity=0;
+            }
+            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, EnvironmentStateEnum.Electricity);
+        }
+        else
+        {
+            EventManager.Instance.TriggerEvent(EventType.CurEnvironmentChangeState, args);
+        }
     }
     #endregion
 
@@ -155,21 +201,38 @@ public class StateManager : MonoBehaviour
     /// </summary>
     public void IntervalSettle()
     {
-        OnChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, InitPlayerStateData.Instance.BasicFullnessChange));
-        OnChangeState(new ChangeStateArgs(PlayerStateEnum.Health, InitPlayerStateData.Instance.BasicHealthChange));
-        OnChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, InitPlayerStateData.Instance.BasicThirstChange));
-        OnChangeState(new ChangeStateArgs(PlayerStateEnum.San, InitPlayerStateData.Instance.BasicSanChange));
-        OnChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, InitPlayerStateData.Instance.BasicOxygenChange));
-        OnChangeState(new ChangeStateArgs(PlayerStateEnum.Tired, InitPlayerStateData.Instance.BasicTiredChange));
-        ExtraIntervalSettle();
+        PlayerIntervalSettle();
+        ExtraPlayerIntervalSettle();
+        EnvironmentIntervalSettle();
+        ExtraEnvironmentIntervalSettle();
+    }
+
+    public void EnvironmentIntervalSettle()
+    {
+        OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Electricity, -0.2f));
+    }
+
+    public void ExtraEnvironmentIntervalSettle()
+    {
+
+    }
+
+    public void PlayerIntervalSettle()
+    {
+        OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, InitPlayerStateData.Instance.BasicFullnessChange));
+        OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, InitPlayerStateData.Instance.BasicHealthChange));
+        OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, InitPlayerStateData.Instance.BasicThirstChange));
+        OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, InitPlayerStateData.Instance.BasicSanChange));
+        OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, InitPlayerStateData.Instance.BasicOxygenChange));
+        OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Tired, InitPlayerStateData.Instance.BasicTiredChange));
     }
 
     /// <summary>
     /// 定时结算状态异常导致的额外变化
     /// </summary>
-    public void ExtraIntervalSettle()
+    public void ExtraPlayerIntervalSettle()
     {
-        ExtraFullnesssChange();
+        ExtraFullnessChange();
         ExtraHealthChange();
         ExtraThirstChange();
         ExtraSanChange();
@@ -183,20 +246,20 @@ public class StateManager : MonoBehaviour
     /// 饱食低于10，每回合-0.7精神
     /// 饱食为0时，每回合-1精神，-8 健康
     /// </summary>
-    private void ExtraFullnesssChange()
+    private void ExtraFullnessChange()
     {
         if (PlayerStateDict[PlayerStateEnum.Fullness].curValue <= 20)
         {
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.3f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.3f));
         }
         else if (PlayerStateDict[PlayerStateEnum.Fullness].curValue <= 10)
         {
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.7f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.7f));
         }
         else if (PlayerStateDict[PlayerStateEnum.Fullness].curValue <= 0)
         {
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1f));
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -8f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -8f));
         }
     }
 
@@ -218,16 +281,16 @@ public class StateManager : MonoBehaviour
     {
         if (PlayerStateDict[PlayerStateEnum.Thirst].curValue <= 20)
         {
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.3f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.3f));
         }
         else if (PlayerStateDict[PlayerStateEnum.Thirst].curValue <= 10)
         {
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.7f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.7f));
         }
         else if (PlayerStateDict[PlayerStateEnum.Thirst].curValue <= 0)
         {
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1f));
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -8f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -8f));
         }
     }
 
@@ -260,12 +323,12 @@ public class StateManager : MonoBehaviour
     {
         if (PlayerStateDict[PlayerStateEnum.Tired].curValue >=70)
         {
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.3f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.3f));
         }
         else if (PlayerStateDict[PlayerStateEnum.Tired].curValue >= 90)
         {
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1.5f));
-            OnChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -2f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1.5f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -2f));
         }
     }
 
