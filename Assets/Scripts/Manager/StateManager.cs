@@ -25,7 +25,7 @@ public enum EnvironmentStateEnum
     Oxygen,
     Temperature,
     Height,
-    hasCable,
+    HasCable,
 }
 
 /// <summary>
@@ -135,11 +135,11 @@ public class StateManager : MonoBehaviour
         environmentStateDict.Add(EnvironmentStateEnum.Height, new EnvironmentState(0, 100, EnvironmentStateEnum.Height));
         if(GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
         {
-            environmentStateDict.Add(EnvironmentStateEnum.hasCable, new EnvironmentState(1, 1, EnvironmentStateEnum.hasCable));
+            environmentStateDict.Add(EnvironmentStateEnum.HasCable, new EnvironmentState(1, 1, EnvironmentStateEnum.HasCable));
         }
         else
         {
-            environmentStateDict.Add(EnvironmentStateEnum.hasCable, new EnvironmentState(0, 1, EnvironmentStateEnum.hasCable));
+            environmentStateDict.Add(EnvironmentStateEnum.HasCable, new EnvironmentState(0, 1, EnvironmentStateEnum.HasCable));
         }
 
         return environmentStateDict;
@@ -332,5 +332,19 @@ public class StateManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region 载重
+
+    [Header("最大负重")]
+    public float maxLoad = 15;
+    [Header("当前负重")]
+    public float curLoad = 0;
+
+    public void AddLoad(float weight)
+    {
+        curLoad += weight;
+        EventManager.Instance.TriggerEvent(EventType.ChangeLoad/*, new ChangeLoadArgs { currentLoad = curLoad, maxLoad = maxLoad}*/);
+    }
     #endregion
 }
