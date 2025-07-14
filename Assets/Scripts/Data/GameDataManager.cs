@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -136,7 +134,7 @@ public class GameDataManager
 
     #endregion
 
-    #region 配方
+    #region 合成
     private List<string> unlockedRecipes;
 
     public List<string> UnlockedRecipes
@@ -151,6 +149,24 @@ public class GameDataManager
     public void SaveUnlockedRecipes()
     {
         JsonManager.SaveData(unlockedRecipes, "UnlockedRecipes");
+    }
+    #endregion
+
+    #region 科技
+    private TechnologyData technologyData;
+
+    public TechnologyData TechnologyData
+    {
+        get
+        {
+            technologyData ??= JsonManager.LoadData<TechnologyData>("Technology");
+            return technologyData;
+        }
+    }
+
+    public void SaveTechnologyData()
+    {
+        JsonManager.SaveData(technologyData, "Technology");
     }
     #endregion
 }

@@ -131,6 +131,11 @@ public class GMCommand
         GameDataManager.Instance.SaveUnlockedRecipes();
     }
 
+    [MenuItem("Command/保存科技进度")]
+    public static void SaveTechnologyData()
+    {
+        GameDataManager.Instance.SaveTechnologyData();
+    }
 
     [MenuItem("Command/时间+50min")]
     public static void L()
