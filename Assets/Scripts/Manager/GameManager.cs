@@ -30,10 +30,12 @@ public class GameManager : MonoBehaviour
     private PlayerBag playerBag;
     private Dictionary<PlaceEnum, EnvironmentBag> environmentBags = new();
     private EnvironmentBag curEnvironmentBag;
+    private EquipmentBag equipmentBag;
 
     public PlayerBag PlayerBag => playerBag;
     public Dictionary<PlaceEnum, EnvironmentBag> EnvironmentBags => environmentBags;
     public EnvironmentBag CurEnvironmentBag => curEnvironmentBag;
+    public EquipmentBag EquipmentBag => equipmentBag;
 
     public void Awake()
     {
@@ -48,7 +50,7 @@ public class GameManager : MonoBehaviour
         }
         // 当前环境背包
         curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
-        //Init();
+        equipmentBag = FindObjectOfType<EquipmentBag>(true);
     }
 
     //初始化SO数据
