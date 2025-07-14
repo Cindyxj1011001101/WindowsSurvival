@@ -7,22 +7,11 @@ public class DetailsWindow : WindowBase
     [SerializeField] private Transform buttonLayout;
     [SerializeField] private Transform tagLayout;
     [SerializeField] private CardSlot slot;
-    //private CardSlot sourceSlot;
     private CardInstance currentDisplayedCard;
 
     protected override void Awake()
     {
         base.Awake();
-
-        //slot = transform.Find("Content/CardSlot").GetComponent<CardSlot>();
-        //detailsText = transform.Find("Content/Details").GetComponent<Text>();
-        //buttonLayout = transform.Find("Content/ButtonLayout");
-        //tagLayout = transform.Find("Content/TagLayout");
-        //// 禁止拖拽
-        //slot.GetComponentInChildren<CardDragHandler>().enabled = false;
-        //// 禁止双击
-        //slot.GetComponentInChildren<DoubleClickHandler>().enabled = false;
-
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerBagCardsChanged);
     }
@@ -56,8 +45,7 @@ public class DetailsWindow : WindowBase
 
         if (sourceSlot == null || sourceSlot.StackCount <= 0) return;
 
-        // 记录sourceSlot和当前显示的卡牌
-        //this.sourceSlot = sourceSlot;
+        // 记录当前显示的卡牌
         currentDisplayedCard = sourceSlot.PeekCard();
 
         // 显示卡牌
@@ -117,16 +105,9 @@ public class DetailsWindow : WindowBase
     private void Clear()
     {
         slot.ClearSlot();
-        //sourceSlot = null;
         currentDisplayedCard = null;
         detailsText.text = "";
-        for (int i = 0; i < buttonLayout.childCount; i++)
-        {
-            Destroy(buttonLayout.GetChild(i).gameObject);
-        }
-        for (int i = 0; i < tagLayout.childCount; i++)
-        {
-            Destroy(tagLayout.GetChild(i).gameObject);
-        }
+        MonoUtility.DestroyAllChildren(buttonLayout);
+        MonoUtility.DestroyAllChildren(tagLayout);
     }
 }

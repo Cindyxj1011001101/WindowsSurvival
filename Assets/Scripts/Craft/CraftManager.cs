@@ -33,7 +33,10 @@ public class CraftManager
 
     public void UnlockRecipe(ScriptableRecipe recipe)
     {
+        if (unlockedRecipes.Contains(recipe.cardData.cardName)) return;
+
         unlockedRecipes.Add(recipe.cardData.cardName);
+        EventManager.Instance.TriggerEvent(EventType.UnlockRecipe);
     }
 
     /// <summary>

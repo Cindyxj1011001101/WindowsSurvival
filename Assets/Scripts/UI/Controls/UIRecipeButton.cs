@@ -4,16 +4,16 @@ using UnityEngine.UI;
 public class UIRecipeButton : MonoBehaviour
 {
     [SerializeField] Image icon;
-    [SerializeField] Image canCraft;
-    [SerializeField] Image isLocked;
+    [SerializeField] Image canCraftImage;
+    [SerializeField] Image lockImage;
 
     public void DisplayRecipe(Sprite icon, bool locked, bool canCraft)
     {
         this.icon.sprite = icon;
-        this.isLocked.gameObject.SetActive(locked);
+        lockImage.gameObject.SetActive(locked);
         if (locked)
-            this.canCraft.gameObject.SetActive(false);
+            canCraftImage.gameObject.SetActive(false);
         else
-            this.canCraft.gameObject.SetActive(!canCraft);
+            canCraftImage.gameObject.SetActive(!canCraft);
     }
 }

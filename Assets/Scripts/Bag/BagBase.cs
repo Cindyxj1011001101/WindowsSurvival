@@ -6,8 +6,7 @@ using UnityEngine.UI;
 public abstract class BagBase : MonoBehaviour
 {
     [SerializeField] private GameObject slotPrefab; // 格子预制体
-    [SerializeField] private RectTransform slotContainer; // 格子存放位置
-    [SerializeField] private GridLayoutGroup gridLayout; // 格子布局
+    [SerializeField] private GridLayoutGroup slotLayout; // 格子布局
     [SerializeField] private Button organizeButton; // 整理背包按钮
 
     protected List<CardSlot> slots = new();
@@ -66,7 +65,7 @@ public abstract class BagBase : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            GameObject slotObj = Instantiate(slotPrefab, slotContainer);
+            GameObject slotObj = Instantiate(slotPrefab, slotLayout.transform);
             CardSlot slot = slotObj.GetComponent<CardSlot>();
             slot.SetBag(this);
             slot.ClearSlot();
@@ -74,28 +73,7 @@ public abstract class BagBase : MonoBehaviour
         }
 
         // 添加格子后更新容器高度
-        UpdateContainerHeight();
-    }
-
-    /// <summary>
-    /// 更新容器高度
-    /// </summary>
-    private void UpdateContainerHeight()
-    {
-        float containerWidth = slotContainer.rect.width;
-        // 计算一行可以放几个格子
-        int i = 1;
-        while (gridLayout.cellSize.x * i + gridLayout.spacing.x * (i - 1) + gridLayout.padding.left + gridLayout.padding.right <= containerWidth)
-        {
-            i++;
-        }
-        int columns = Mathf.Max(1, i - 1);
-        int totalRows = Mathf.CeilToInt((float)slots.Count / columns);
-
-        // 计算容器高度
-        float containerHeight = totalRows * gridLayout.cellSize.y + (totalRows - 1) * gridLayout.spacing.y + gridLayout.padding.top + gridLayout.padding.bottom;
-
-        slotContainer.sizeDelta = new Vector2(slotContainer.sizeDelta.x, containerHeight);
+        MonoUtility.UpdateContainerHeight(slotLayout, slots.Count);
     }
 
     /// <summary>

@@ -23,6 +23,7 @@ public class CraftWindow : WindowBase
 
         // 注册背包变化事件
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshCurrentDisplay);
+        EventManager.Instance.AddListener(EventType.UnlockRecipe, RefreshCurrentDisplay);
     }
 
     protected override void Init()
@@ -33,21 +34,23 @@ public class CraftWindow : WindowBase
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshCurrentDisplay);
+        EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshCurrentDisplay);
     }
 
     private void RefreshCurrentDisplay(ChangePlayerBagCardsArgs args)
     {
-        if (recipieLayout.childCount > 0)
-        {
-            DisplayRecipesByType(currentRecipeType, true); // 传递true表示是刷新操作
-        }
+        RefreshCurrentDisplay();
+    }
+    private void RefreshCurrentDisplay()
+    {
+        DisplayRecipesByType(currentRecipeType, true); // 传递true表示是刷新操作
     }
 
     private void DisplayRecipeTypes()
     {
         var recipeTypeButtonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeTypeButton");
 
-        DestroyAllChildren(leftBar);
+        MonoUtility.DestroyAllChildren(leftBar);
 
         var group = leftBar.GetComponent<ToggleGroup>();
 
@@ -71,7 +74,7 @@ public class CraftWindow : WindowBase
     {
         var recipeButtonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeButton");
 
-        DestroyAllChildren(recipieLayout);
+        MonoUtility.DestroyAllChildren(recipieLayout);
 
         var group = recipieLayout.GetComponent<ToggleGroup>();
 
@@ -102,9 +105,11 @@ public class CraftWindow : WindowBase
             var button = recipeButtonObj.GetComponent<CustomButton>();
             button.group = group;
             var recipeButton = recipeButtonObj.GetComponent<UIRecipeButton>();
-            recipeButton.DisplayRecipe(recipe.cardData.cardImage,
-                                    CraftManager.Instance.IsRecipeLocked(recipe),
-                                    CraftManager.Instance.CanCrfat(recipe));
+            recipeButton.DisplayRecipe(
+                recipe.cardData.cardImage,
+                CraftManager.Instance.IsRecipeLocked(recipe),
+                CraftManager.Instance.CanCrfat(recipe)
+                );
             button.onSelect.AddListener(() =>
             {
                 currentSelectedRecipe = recipe; // 记录选中的配方
@@ -116,43 +121,14 @@ public class CraftWindow : WindowBase
                 button.isOn = true;
         }
 
-        UpdateContainerHeight(recipieLayout.GetComponent<GridLayoutGroup>(), recipes.Count);
-
-        //// 尝试重新选择之前选中的配方
-        //bool foundPreviousSelection = false;
-        //if (isRefresh && currentSelectedRecipe != null)
-        //{
-        //    for (int i = 0; i < recipieLayout.childCount; i++)
-        //    {
-        //        var button = recipieLayout.GetChild(i).GetComponent<CustomButton>();
-        //        var recipeButton = button.GetComponent<UIRecipeButton>();
-
-        //        // 这里需要根据你的实际实现来判断是否是同一个配方
-        //        // 假设UIRecipeButton有一个GetRecipe方法或者我们可以通过其他方式比较
-        //        if (IsSameRecipe(recipeButton, currentSelectedRecipe))
-        //        {
-        //            button.isOn = true;
-        //            button.onSelect.Invoke();
-        //            foundPreviousSelection = true;
-        //            break;
-        //        }
-        //    }
-        //}
-
-        //// 如果没有找到之前选中的配方，选择第一个
-        //if (!foundPreviousSelection && recipieLayout.childCount > 0)
-        //{
-        //    var firstButton = recipieLayout.GetChild(0).GetComponent<CustomButton>();
-        //    firstButton.isOn = true;
-        //    firstButton.onSelect.Invoke();
-        //}
+        MonoUtility.UpdateContainerHeight(recipieLayout.GetComponent<GridLayoutGroup>(), recipes.Count);
     }
 
     private void DisplayRecipeDetails(ScriptableRecipe recipe)
     {
         var recipeMaterialPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeMaterial");
 
-        DestroyAllChildren(materialLayout);
+        MonoUtility.DestroyAllChildren(materialLayout);
         // 显示卡牌图标
         cardIcon.sprite = recipe.cardData.cardImage;
 
@@ -166,7 +142,11 @@ public class CraftWindow : WindowBase
         foreach (var material in recipe.materials)
         {
             var recipeMaterial = Instantiate(recipeMaterialPrefab, materialLayout).GetComponent<UIRecipeMaterial>();
-            recipeMaterial.DisplayMaterial(material.cardData.cardImage, material.requiredAmount, GameManager.Instance.PlayerBag.GetTotalCountOfSpecificCard(material.cardData));
+            recipeMaterial.DisplayMaterial(
+                material.cardData.cardImage,
+                material.requiredAmount,
+                GameManager.Instance.PlayerBag.GetTotalCountOfSpecificCard(material.cardData)
+                );
         }
 
         // 显示制作时间
@@ -187,39 +167,7 @@ public class CraftWindow : WindowBase
             // 合成卡牌
             CraftManager.Instance.Craft(recipe);
             // 刷新显示
-            DisplayRecipeDetails(recipe);
-            // 刷新配方列表
-            DisplayRecipesByType(currentRecipeType, true);
+            RefreshCurrentDisplay();
         });
-    }
-
-    private void DestroyAllChildren(Transform parent)
-    {
-        for (int i = 0; i < parent.childCount; i++)
-        {
-            Destroy(parent.GetChild(i).gameObject);
-        }
-    }
-    /// <summary>
-    /// 更新容器高度
-    /// </summary>
-    private void UpdateContainerHeight(GridLayoutGroup layout, int elementCount)
-    {
-        RectTransform layoutTransform = layout.transform as RectTransform;
-
-        float containerWidth = layoutTransform.rect.width;
-        // 计算一行可以放几个格子
-        int i = 1;
-        while (layout.cellSize.x * i + layout.spacing.x * (i - 1) + layout.padding.left + layout.padding.right <= containerWidth)
-        {
-            i++;
-        }
-        int columns = Mathf.Max(1, i - 1);
-        int totalRows = Mathf.CeilToInt((float)elementCount / columns);
-
-        // 计算容器高度
-        float containerHeight = totalRows * layout.cellSize.y + (totalRows - 1) * layout.spacing.y + layout.padding.top + layout.padding.bottom;
-
-        layoutTransform.sizeDelta = new Vector2(layoutTransform.sizeDelta.x, containerHeight);
     }
 }

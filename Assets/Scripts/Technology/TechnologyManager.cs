@@ -1,20 +1,29 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
-public class TechnologyManager : MonoBehaviour
+public class TechnologyManager
 {
-    private TechnologyManager instance = new();
-    public TechnologyManager Instance => instance;
+    private static TechnologyManager instance = new();
+    public static TechnologyManager Instance => instance;
 
-    private float basicStudyRate = 2.0f; // 基础研究速率，即每15分钟增长多少科技点
+    //private float basicStudyRate = 2.0f; // 基础研究速率，即每15分钟增长多少科技点
 
-    private List<ScriptableTechnologyNode> studiedTechNodes = new(); // 学习过的科技节点
+    //private List<string> studiedTechNodes = new(); // 学习过的科技节点
 
-    private ScriptableTechnologyNode curStudiedTechNode; // 当前正在学习的科技节点
-    private float curProgress; // 当前学习进度
+    //private string curStudiedTechNodeName; // 当前正在学习的科技节点
+    //private float curProgress; // 当前学习进度
+    //private float curStudyRate; // 当前学习速度
 
-    private TechnologyManager() { }
+    private TechnologyData techData;
+
+    public ScriptableTechnologyNode CurStudiedTechNode => Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techData.curStudiedTechNodeName);
+    public float CurProgress => techData.curProgress;
+    public float CurStudyRate => techData.curStudyRate;
+
+    private TechnologyManager()
+    {
+        techData = GameDataManager.Instance.TechnologyData;
+    }
 
     /// <summary>
     /// 研究一个科技节点
@@ -22,8 +31,9 @@ public class TechnologyManager : MonoBehaviour
     /// <param name="techNode"></param>
     public void Study(ScriptableTechnologyNode techNode)
     {
-        curStudiedTechNode = techNode;
-        curProgress = 0;
+        techData.curStudiedTechNodeName = techNode.techName;
+        techData.curProgress = 0;
+        techData.curStudyRate = CalcStudyRate();
         // 添加监听，每回合结算研究进度
         EventManager.Instance.AddListener(EventType.IntervalSettle, OnStudy);
     }
@@ -31,21 +41,22 @@ public class TechnologyManager : MonoBehaviour
     private void OnStudy()
     {
         // 计算研究速率
-        float studyRate = CalcStudyRate();
+        techData.curStudyRate = CalcStudyRate();
         // 进度增长
-        curProgress += studyRate;
+        techData.curProgress += techData.curStudyRate;
         // 研究完成
-        if (curProgress >= curStudiedTechNode.cost)
+        if (techData.curProgress >= CurStudiedTechNode.cost)
         {
-            // 设置正在研究的科技节点为空
-            curStudiedTechNode = null;
-            // 设置研究进度为0
-            curProgress = 0;
             // 解锁该科技
-            UnlockTechNode(curStudiedTechNode);
+            UnlockTechNode(CurStudiedTechNode);
+            // 设置正在研究的科技节点为空
+            techData.curStudiedTechNodeName = null;
+            // 设置研究进度为0
+            techData.curProgress = 0;
             // 移除监听
             EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnStudy);
         }
+        EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
     }
 
     private float CalcStudyRate()
@@ -56,7 +67,7 @@ public class TechnologyManager : MonoBehaviour
 
 
 
-        return basicStudyRate;
+        return techData.basicStudyRate;
     }
 
     /// <summary>
@@ -65,10 +76,10 @@ public class TechnologyManager : MonoBehaviour
     private void UnlockTechNode(ScriptableTechnologyNode techNode)
     {
         // 不要重复解锁
-        if (studiedTechNodes.Contains(techNode)) return;
+        if (techData.studiedTechNodes.Contains(techNode.techName)) return;
 
         // 将科技节点添加到已解锁列表中
-        studiedTechNodes.Add(techNode);
+        techData.studiedTechNodes.Add(techNode.techName);
 
         // 解锁相应配方
         foreach (var recipe in techNode.recipes)
@@ -76,7 +87,7 @@ public class TechnologyManager : MonoBehaviour
             CraftManager.Instance.UnlockRecipe(recipe);
         }
     }
-    
+
     /// <summary>
     /// 判断一个科技节点是否锁定
     /// </summary>
@@ -85,22 +96,35 @@ public class TechnologyManager : MonoBehaviour
     public bool IsTechNodeLocked(ScriptableTechnologyNode techNode)
     {
         // 前置条件都满足，则该科技解锁
-        //return techNode.prerequisites.Count == 0 || techNode.prerequisites.All(studiedTechNodes.Contains);
-
-        return false;
+        return !(techNode.prerequisites.Count == 0 || techNode.prerequisites.All(t => techData.studiedTechNodes.Contains(t.techName)));
     }
 
     /// <summary>
-    /// 判断一个科技节点能否研究
+    /// 判断一个科技节点是否研究完成
     /// </summary>
     /// <param name="techNode"></param>
     /// <returns></returns>
-    public bool CanStudy(ScriptableTechnologyNode techNode)
+    public bool IsTechNodeStudied(ScriptableTechnologyNode techNode)
     {
-        // 如果科技未解锁，无法研究
-        if (!IsTechNodeLocked(techNode)) return false;
+        return techData.studiedTechNodes.Contains(techNode.techName);
+    }
 
-        // 如果当前正在研究一个科技，无法研究
-        return curStudiedTechNode == null;
+    /// <summary>
+    /// 判断是否有科技节点正在被研究
+    /// </summary>
+    /// <returns></returns>
+    public bool IsAnyTechNodeBeingStudied()
+    {
+        return techData.curStudiedTechNodeName != null && techData.curStudiedTechNodeName != "";
+    }
+
+    /// <summary>
+    /// 判断一个科技节点是否正在被研究
+    /// </summary>
+    /// <param name="techNode"></param>
+    /// <returns></returns>
+    public bool IsTechNodeBeingStudied(ScriptableTechnologyNode techNode)
+    {
+        return techData.curStudiedTechNodeName == techNode.techName;
     }
 }

@@ -9,4 +9,9 @@ public class ScriptableTechnologyNode : ScriptableObject
     public List<ScriptableRecipe> recipes; // 解锁的配方
     public List<ScriptableTechnologyNode> prerequisites; // 前置科技条件
     public int cost; // 需要消耗的科技点
+
+    private void OnValidate()
+    {
+        techName = name;
+    }
 }

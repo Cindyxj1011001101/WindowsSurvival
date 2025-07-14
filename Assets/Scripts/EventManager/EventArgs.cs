@@ -12,6 +12,8 @@ public enum EventType
     ChangeDiscoveryDegree, // 探索度变化
     //ChangeTime, // 时间变化
     ChangePlayerBagCards, // 玩家背包卡牌变化
+    ChangeStudyProgress, // 研究进度变化
+    UnlockRecipe,
 }
 
 public class ChangeStateArgs
