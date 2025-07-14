@@ -44,7 +44,7 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
     }
 
     public WindowBase OpenWindow(string appName)
-    {
+    {    
         WindowBase window;
         // 窗口没有打开
         if (!IsWindowOpen(appName))
@@ -65,6 +65,8 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         {
             window = openedWindows[appName];
         }
+        if(SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("万能泡泡音");
 
         // 打开窗口
         window.Open();

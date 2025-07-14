@@ -34,4 +34,23 @@
         base.DestroyThisCard();
         EventManager.Instance.RemoveListener<ChangeTimeArgs>(EventType.ChangeTime, UpdateFresh);
     }
+    public override void Use()
+    {
+        // maxEndurance <= 0表示无限耐久
+        if (CardData.maxEndurance <= 0) return;
+
+        currentEndurance--;
+        if(SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01");
+        if (currentEndurance <= 0)
+        {
+
+            // 销毁这张卡牌
+            DestroyThisCard();
+            // 触发卡牌耐久归零事件
+            GameManager.Instance.HandleCardEvent(CardData.onUsedUp);
+        }
+        // 刷新前端显示的卡牌数据
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
+    }
 }
