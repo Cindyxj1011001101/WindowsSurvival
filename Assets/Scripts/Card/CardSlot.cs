@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -105,11 +106,11 @@ public class CardSlot : MonoBehaviour
                 break;
 
             case ResourcePointCardData cardData:
-                propertyText.text = $"{(card as ResourcePointCardInstance).currentEndurance} / {cardData.maxEndurance}";
+                propertyText.text = $"{Math.Round((float)(card as ResourcePointCardInstance).currentEndurance / cardData.maxEndurance, 1)} %";
                 break;
 
             case ToolCardData cardData:
-                propertyText.text = $"{(card as ToolCardInstance).currentEndurance} / {cardData.maxEndurance}";
+                propertyText.text = $"{Math.Round((float)(card as ToolCardInstance).currentEndurance / cardData.maxEndurance, 1)} %";
                 break;
 
             default:
