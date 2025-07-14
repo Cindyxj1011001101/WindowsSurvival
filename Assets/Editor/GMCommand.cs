@@ -65,7 +65,7 @@ public class GMCommand
         AddCard("通往动力舱的门");
     }
 
-    [MenuItem("Command/添加被安全泡沫覆盖的废料堆")]
+    [MenuItem("Command/添加被安全泡沫覆盖的废物堆")]
     public static void F()
     {
         AddCard("被安全泡沫覆盖的废料堆");

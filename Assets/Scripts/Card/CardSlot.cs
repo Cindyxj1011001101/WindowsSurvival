@@ -101,11 +101,11 @@ public class CardSlot : MonoBehaviour
                 break;
 
             case ResourcePointCardData cardData:
-                propertyText.text = $"{Math.Round((float)(card as ResourcePointCardInstance).currentEndurance / cardData.maxEndurance, 1)} %";
+                propertyText.text = $"{Math.Round((float)(card as ResourcePointCardInstance).currentEndurance / cardData.maxEndurance, 1) * 100} %";
                 break;
 
             case ToolCardData cardData:
-                propertyText.text = $"{Math.Round((float)(card as ToolCardInstance).currentEndurance / cardData.maxEndurance, 1)} %";
+                propertyText.text = $"{Math.Round((float)(card as ToolCardInstance).currentEndurance / cardData.maxEndurance, 1) * 100} %";
                 break;
 
             default:
