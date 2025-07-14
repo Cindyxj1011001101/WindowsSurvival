@@ -16,7 +16,7 @@ public class GMCommand
         var card = CardFactory.CreateCardIntance(defaultData);
 
         var bag = GetFocusedBag();
-        if (bag != null) bag.AddCard(card);
+        if (bag != null && bag.CanAddCard(card)) bag.AddCard(card);
     }
 
     [MenuItem("Command/添加一个格子")]
