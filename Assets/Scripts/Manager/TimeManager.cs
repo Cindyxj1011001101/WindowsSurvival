@@ -55,7 +55,7 @@ public class TimeManager : MonoBehaviour
     {
         DateTime startDate = new DateTime(2020, 1, 1);
         TimeSpan timeSpan = curTime - startDate;
-        int days = timeSpan.Days;
+        int days = timeSpan.Days+1;
         return $"{days}Days";
     }
 

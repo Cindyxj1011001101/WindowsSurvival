@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,9 +11,9 @@ public enum CardTag
 public class CardData:ScriptableObject
 {
     public string cardName;
-    public Sprite cardImage;
-    public CardType cardType;
+    public Sprite cardImage;    
     public string cardDesc;
+    public CardType cardType;
     public float weight;
     public int maxStackNum;
     public int maxEndurance;
