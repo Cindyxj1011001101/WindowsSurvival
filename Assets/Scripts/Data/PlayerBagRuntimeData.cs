@@ -1,4 +1,4 @@
-﻿public class PlayerBagRuntimeData : BagRuntimeData
-{
-    public float maxLoad = 15;
-}
+﻿//public class PlayerBagRuntimeData : BagRuntimeData
+//{
+//    public float maxLoad = 15;
+//}

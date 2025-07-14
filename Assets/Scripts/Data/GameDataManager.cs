@@ -10,13 +10,13 @@ public class GameDataManager
     private GameDataManager() { }
 
     #region 玩家背包
-    private PlayerBagRuntimeData playerBagData;
+    private BagRuntimeData playerBagData;
 
-    public PlayerBagRuntimeData PlayerBagData
+    public BagRuntimeData PlayerBagData
     {
         get
         {
-            playerBagData ??= JsonManager.LoadData<PlayerBagRuntimeData>("PlayerBag");
+            playerBagData ??= JsonManager.LoadData<BagRuntimeData>("PlayerBag");
             return playerBagData;
         }
     }
@@ -25,7 +25,7 @@ public class GameDataManager
     {
         PlayerBag bag = GameManager.Instance.PlayerBag;
         playerBagData = new();
-        playerBagData.maxLoad = bag.MaxLoad;
+        //playerBagData.maxLoad = bag.MaxLoad;
         playerBagData.cardSlotsRuntimeData = new();
         foreach (var slot in bag.Slots)
         {
@@ -167,6 +167,30 @@ public class GameDataManager
     public void SaveTechnologyData()
     {
         JsonManager.SaveData(technologyData, "Technology");
+    }
+    #endregion
+
+    #region 装备
+    private BagRuntimeData equipmentData;
+    public BagRuntimeData EquipmentData
+    {
+        get
+        {
+            equipmentData ??= JsonManager.LoadData<BagRuntimeData>("Equipment");
+            return equipmentData;
+        }
+    }
+
+    public void SaveEquipmentData()
+    {
+        EquipmentBag bag = GameManager.Instance.EquipmentBag;
+        equipmentData = new();
+        equipmentData.cardSlotsRuntimeData = new();
+        foreach (var slot in bag.Slots)
+        {
+            equipmentData.cardSlotsRuntimeData.Add(new() { cardInstanceList = slot.Cards });
+        }
+        JsonManager.SaveData(equipmentData, "Equipment");
     }
     #endregion
 
