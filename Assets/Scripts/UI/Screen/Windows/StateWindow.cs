@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class StateWindow : WindowBase
 {
     //订阅状态变化监听
     public Slider[] Sliders;
+    public TMP_Text[] StateNumTexts;
     protected override void Awake()
     {
         base.Awake();
@@ -13,6 +15,7 @@ public class StateWindow : WindowBase
         for (int i = 0; i < Container.transform.childCount; i++)
         {
             Sliders[i] = Container.transform.GetChild(i).gameObject.GetComponentInChildren<Slider>();
+            StateNumTexts[i] = Container.transform.Find("StateNum").GetComponent<TMP_Text>();
         }
     }
 
@@ -32,6 +35,7 @@ public class StateWindow : WindowBase
     {
         State state = StateManager.Instance.StateDict[stateEnum];
         Sliders[(int)stateEnum].value = state.curValue / state.MaxValue;
+        StateNumTexts[(int)stateEnum].text = state.curValue.ToString() + "/" + state.MaxValue.ToString();
     }
 
     //初始化显示数据

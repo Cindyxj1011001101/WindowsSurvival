@@ -36,7 +36,7 @@ public abstract class CardInstance : IComparable<CardInstance>
         return CardData.ToString();
     }
 
-    public void Use()
+    public virtual void Use()
     {
         // maxEndurance <= 0表示无限耐久
         if (CardData.maxEndurance <= 0) return;
