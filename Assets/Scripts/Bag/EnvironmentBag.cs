@@ -69,6 +69,11 @@ public class EnvironmentBag : BagBase
         {
             EnvironmentStateDict = StateManager.Instance.InitEnvironmentStateDict();
         }
+        foreach (var state in EnvironmentStateDict)
+        {
+            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, state.Key));
+        }
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, EnvironmentStateEnum.Electricity));
         // 初始化一次性掉落列表
         var e = exploreEvent.eventList.Find(c => c is PlaceDropEvent);
         (e as PlaceDropEvent).curOnceDropList = data.disposableDropList;

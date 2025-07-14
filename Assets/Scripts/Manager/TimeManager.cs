@@ -81,7 +81,7 @@ public class TimeManager : MonoBehaviour
                 time -= curInterval;
                 curInterval = SettleInterval;
                 EventManager.Instance.TriggerEvent(EventType.IntervalSettle);
-                //EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
+                EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
             }
             else
             {

@@ -141,7 +141,7 @@ public class StateManager : MonoBehaviour
         {
             environmentStateDict.Add(EnvironmentStateEnum.hasCable, new EnvironmentState(0, 1, EnvironmentStateEnum.hasCable));
         }
-
+        environmentStateDict.Add(EnvironmentStateEnum.Electricity, new EnvironmentState(Electricity, 50, EnvironmentStateEnum.Electricity));
         return environmentStateDict;
     }
     #endregion
@@ -189,7 +189,7 @@ public class StateManager : MonoBehaviour
                 Electricity=0;
             }
             //前端UI刷新
-            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, EnvironmentStateEnum.Electricity);
+            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Electricity));
         }
         else
         {
@@ -214,6 +214,7 @@ public class StateManager : MonoBehaviour
 
     public void EnvironmentIntervalSettle()
     {
+        Debug.Log("-0.2电力");
         OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Electricity, -0.2f));
     }
 

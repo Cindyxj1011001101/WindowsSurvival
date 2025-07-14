@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -52,16 +53,16 @@ public class EnvironmentBagWindow : BagWindow
         foreach (var state in EnvironmentStateSliders)
         {
             //室内显示氧气
-            if(curEnvironmentBag.PlaceData.isIndoor)
+            if (curEnvironmentBag.PlaceData.isIndoor)
             {
-               EnvironmentStateSliders[EnvironmentStateEnum.Oxygen].SetActive(true);
+                EnvironmentStateSliders[EnvironmentStateEnum.Oxygen].SetActive(true);
             }
             else
             {
                 EnvironmentStateSliders[EnvironmentStateEnum.Oxygen].SetActive(false);
             }
             //飞船中显示水平面高度
-            if(curEnvironmentBag.PlaceData.isInSpacecraft)
+            if (curEnvironmentBag.PlaceData.isInSpacecraft)
             {
                 EnvironmentStateSliders[EnvironmentStateEnum.Height].SetActive(true);
             }
@@ -81,14 +82,29 @@ public class EnvironmentBagWindow : BagWindow
     {
         if (args.place == GameManager.Instance.CurEnvironmentBag.PlaceData.placeType)
         {
-            if(EnvironmentStateSliders.ContainsKey(args.state))
+            if (EnvironmentStateSliders.ContainsKey(args.state) && GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict.ContainsKey(args.state))
             {
-                float resultValue=GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue 
-                / GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue;
-                EnvironmentStateSliders[args.state].GetComponent<Slider>().value = resultValue;
-                EnvironmentStateSliders[args.state].transform.Find("Text").GetComponent<Text>().text=
-                GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue.ToString()+"/"
-                +GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue.ToString();
+                float resultValue = 0;
+                //TODO：压强显示为文字
+                if (args.state == EnvironmentStateEnum.Electricity)
+                {
+                    Debug.Log(StateManager.Instance.Electricity);
+                    resultValue = StateManager.Instance.Electricity / GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue;
+                    EnvironmentStateSliders[args.state].GetComponentInChildren<Slider>().value = resultValue;
+                    EnvironmentStateSliders[args.state].transform.Find("StateNum").GetComponent<TMP_Text>().text =
+                    StateManager.Instance.Electricity.ToString("f1") + "/"
+                    + GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue.ToString();
+                }
+                else
+                {
+                    resultValue = GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue
+                    / GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue;
+                    EnvironmentStateSliders[args.state].GetComponentInChildren<Slider>().value = resultValue;
+                    EnvironmentStateSliders[args.state].transform.Find("StateNum").GetComponent<TMP_Text>().text =
+                    GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue.ToString() + "/"
+                    + GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue.ToString();
+                }
+
             }
         }
     }

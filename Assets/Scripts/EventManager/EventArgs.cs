@@ -16,8 +16,6 @@ public enum EventType
     ChangeStudyProgress, // 研究进度变化
     UnlockRecipe,
     GameOver, // 游戏结束
-    EquipCard, // 装备卡牌
-    UnequipCard, // 卸下卡牌
     CurEnvironmentChangeState, // 当前环境状态变化
 
 }
