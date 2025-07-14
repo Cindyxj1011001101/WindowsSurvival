@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 652377b71f7eb0b4b81f661c252dacc6, type: 3}
+  m_Name: "\u5E9F\u94C1\u5200"
+  m_EditorClassIdentifier: 
+  cardData: {fileID: 11400000, guid: 923d24980ff07e54f90274ff53a27eef, type: 2}
+  materials:
+  - cardData: {fileID: 11400000, guid: 28ff34f83f0946f40bb6be4dd178cc13, type: 2}
+    requiredAmount: 2
+  - cardData: {fileID: 11400000, guid: 54b10652a8acc154990cb6e90cee1853, type: 2}
+    requiredAmount: 1
+  craftType: 3
+  craftTime: 60

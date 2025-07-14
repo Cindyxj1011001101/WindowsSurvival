@@ -37,22 +37,19 @@ public class CardSlot : MonoBehaviour
 
     private void Awake()
     {
-        iconImage = transform.Find("Card/Icon").GetComponent<Image>();
-        fillImage = transform.Find("Card/Fill").GetComponent<Image>();
-        propertyText = transform.Find("Card/Property").GetComponent<Text>();
-        nameText = transform.Find("Card/Name").GetComponent<Text>();
-        cardTransform = transform.Find("Card");
-
-        cardTransform.GetComponent<DoubleClickHandler>().onDoubleClick.AddListener(() =>
+        //iconImage = transform.Find("Card/Icon").GetComponent<Image>();
+        //fillImage = transform.Find("Card/Fill").GetComponent<Image>();
+        //propertyText = transform.Find("Card/Property").GetComponent<Text>();
+        //nameText = transform.Find("Card/Name").GetComponent<Text>();
+        //cardTransform = transform.Find("Card");
+        if (cardTransform.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
         {
-            (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Refresh(this);
-        });
+            doubleClickHandler.onDoubleClick.AddListener(() =>
+            {
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Refresh(this);
+            });
+        }
 
-        //ClearSlot();
-    }
-
-    private void Start()
-    {
         EventManager.Instance.AddListener(EventType.ChangeCardProperty, OnCardPropertyChanged);
     }
 
@@ -79,7 +76,7 @@ public class CardSlot : MonoBehaviour
     public void DisplayCard(CardInstance card)
     {
         cardTransform.gameObject.SetActive(true);
-        var data = card.GetCardData();
+        var data = card.CardData;
         iconImage.sprite = data.cardImage;
         nameText.text = data.cardName;
         fillImage.gameObject.SetActive(data is FoodCardData);
@@ -120,7 +117,7 @@ public class CardSlot : MonoBehaviour
         }
     }
 
-    public bool ContainsSimilarCard(string cardName) => !IsEmpty && currentCard.cardName == cardName;
+    public bool ContainsSimilarCard(CardData cardData) => !IsEmpty && currentCard.Equals(cardData);
     
     /// <summary>
     /// 能否堆叠，在使用该方法前请务必确认要堆叠的卡牌和这个slot放有的卡牌是同类的
@@ -130,14 +127,19 @@ public class CardSlot : MonoBehaviour
 
     public void AddCard(CardInstance card)
     {
-        currentCard = card.GetCardData();
+        currentCard = card.CardData;
 
         cards.Add(card);
-        card.SetCardSlot(this);
         cards.Sort((a, b) => a.CompareTo(b));
 
         OnCardPropertyChanged();
-        bag?.OnCardAdded(card);
+
+        if (bag is PlayerBag && (card.Slot == null || card.Slot.bag is not PlayerBag))
+            //bag.OnCardAdded(card);
+            EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
+                new ChangePlayerBagCardsArgs { card = card, add = 1 });
+
+        card.SetCardSlot(this);
     }
 
     /// <summary>
@@ -156,7 +158,11 @@ public class CardSlot : MonoBehaviour
         else
             OnCardPropertyChanged();
 
-        bag?.OnCardRemoved(card);
+
+        if (bag is PlayerBag && (card.Slot == null || card.Slot.bag is not PlayerBag))
+            //bag.OnCardAdded(card);
+            EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
+                new ChangePlayerBagCardsArgs { card = card, add = -1 });
     }
 
     /// <summary>

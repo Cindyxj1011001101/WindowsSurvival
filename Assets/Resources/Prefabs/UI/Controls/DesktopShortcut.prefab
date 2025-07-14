@@ -86,8 +86,8 @@ GameObject:
   - component: {fileID: 3956304919557727899}
   - component: {fileID: 5610451059828993074}
   - component: {fileID: 8668665443730162278}
-  - component: {fileID: 4366125896251675416}
   - component: {fileID: 7304694612757208774}
+  - component: {fileID: 3818169631332777813}
   m_Layer: 5
   m_Name: DesktopShortcut
   m_TagString: Untagged
@@ -156,20 +156,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &4366125896251675416
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4581118211227860957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8cbed9f7040ecbc4991d67a1b273e3fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  appIconImage: {fileID: 3992501689690198869}
-  appDisplayText: {fileID: 1734745047705135520}
 --- !u!95 &7304694612757208774
 Animator:
   serializedVersion: 5
@@ -191,6 +177,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3818169631332777813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4581118211227860957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c911ead667233543aadcdb566eee5dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  appIconImage: {fileID: 3992501689690198869}
+  appDisplayText: {fileID: 1734745047705135520}
 --- !u!1 &5170346777386644448
 GameObject:
   m_ObjectHideFlags: 0

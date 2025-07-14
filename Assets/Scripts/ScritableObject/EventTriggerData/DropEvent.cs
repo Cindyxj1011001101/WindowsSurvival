@@ -21,7 +21,8 @@ public class Drop
 
     public string cardName;
 
-    public CardData GetCardData() => Resources.Load<CardData>("ScriptableObject/Card/" + cardName);
+    [JsonIgnore]
+    public CardData CardData => Resources.Load<CardData>("ScriptableObject/Card/" + cardName);
 
     [JsonIgnore]
     public bool IsEmpty => DropNum == 0;
@@ -34,7 +35,7 @@ public class DropEvent : EventTrigger
     public List<Drop> dropList;
     private int sumProb;
 
-    public override void EventResolve()
+    public override void Invoke()
     {
         if (dropList != null)
         {
@@ -43,7 +44,7 @@ public class DropEvent : EventTrigger
             {
                 if (rand < drop.DropProb)
                 {
-                    EffectResolve.Instance.AddDropCard(drop, true);
+                    GameManager.Instance.AddDropCard(drop, true);
                     return;
                 }
 

@@ -10,7 +10,7 @@ public class PlaceDropEvent:EventTrigger
     public List<Drop> curOnceDropList;
     public int SumRepeatProb;
     //掉落-场景掉落（掉一次后不掉/重复掉）
-    public override void EventResolve()
+    public override void Invoke()
     {
         if (curOnceDropList.Count != 0)
         {
@@ -24,7 +24,7 @@ public class PlaceDropEvent:EventTrigger
             {
                 if (rand < drop.DropProb)
                 {
-                    EffectResolve.Instance.AddDropCard(drop,false);
+                    GameManager.Instance.AddDropCard(drop,false);
                     curOnceDropList.Remove(drop);
                     //处理探索度变化
                     float explore =(1- (float)curOnceDropList.Count / OnceDropList.Count)*100;
@@ -57,9 +57,9 @@ public class PlaceDropEvent:EventTrigger
     {
         foreach (var drop in curOnceDropList)
         {
-            if (drop.GetCardData() is PlaceCardData placeCardData && placeCardData.place == place)
+            if (drop.CardData is PlaceCardData placeCardData && placeCardData.place == place)
             {
-                EffectResolve.Instance.AddDropCard(drop,false);
+                GameManager.Instance.AddDropCard(drop,false);
                 curOnceDropList.Remove(drop);
                 //处理探索度变化
                 float explore =(1- (float)curOnceDropList.Count / OnceDropList.Count)*100;
@@ -68,8 +68,6 @@ public class PlaceDropEvent:EventTrigger
             }
         }
     }
-
-
 
     public override void Init()
     {

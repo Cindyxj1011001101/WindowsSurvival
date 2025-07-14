@@ -6,7 +6,7 @@ public class ValueEvent:EventTrigger
         public StateEnum State;
         public int Value;
 
-        public override void EventResolve()
+        public override void Invoke()
         {
                 EventManager.Instance.TriggerEvent<ChangeStateArgs>(EventType.ChangeState,
                         new ChangeStateArgs(State, Value));

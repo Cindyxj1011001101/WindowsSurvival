@@ -11,6 +11,7 @@ public enum EventType
     RefreshState,//更新状态数据
     ChangeDiscoveryDegree, // 探索度变化
     ChangeTime, // 时间变化
+    ChangePlayerBagCards, // 玩家背包卡牌变化
 }
 
 public class ChangeStateArgs
@@ -59,4 +60,10 @@ public class ChangeTimeArgs
 {
     public DateTime currentTime;
     public int timeDelta;
+}
+
+public class ChangePlayerBagCardsArgs
+{
+    public CardInstance card;
+    public int add;
 }

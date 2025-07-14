@@ -8,7 +8,7 @@ public enum CardTag
 }
 
 [Serializable]
-public class CardData:ScriptableObject
+public class CardData : ScriptableObject
 {
     public string cardName;
     public Sprite cardImage;    
@@ -20,4 +20,15 @@ public class CardData:ScriptableObject
     public List<CardEvent> cardEventList;
     public List<CardTag> CardTagList;
     public CardEvent onUsedUp; // 耐久归零触发
+
+    public override bool Equals(object other)
+    {
+        if (other is not CardData) return false;
+        return (other as CardData).cardName == cardName;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }

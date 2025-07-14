@@ -6,7 +6,7 @@ public class GMCommand
     [MenuItem("Command/初始化游戏数据")]
     public static void Init()
     {
-        EffectResolve.Instance.Init();
+        GameManager.Instance.Init();
     }
 
     private static void AddCard(string cardName)
@@ -17,8 +17,6 @@ public class GMCommand
 
         var bag = GetFocusedBag();
         if (bag != null) bag.AddCard(card);
-
-        //Debug.Log(card + "添加到" + bag.gameObject.name);
     }
 
     [MenuItem("Command/添加一个格子")]
@@ -125,6 +123,12 @@ public class GMCommand
     public static void SaveAudioData()
     {
         GameDataManager.Instance.SaveAudioData();
+    }
+
+    [MenuItem("Command/保存已解锁的配方")]
+    public static void SaveUnlockedRecipes()
+    {
+        GameDataManager.Instance.SaveUnlockedRecipes();
     }
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using UnityEngine;
 
 public abstract class CardInstance : IComparable<CardInstance>
@@ -9,7 +10,11 @@ public abstract class CardInstance : IComparable<CardInstance>
 
     private CardSlot slot;
 
-    public CardData GetCardData() => Resources.Load<CardData>(dataPath);
+    [JsonIgnore]
+    public CardSlot Slot => slot;
+
+    [JsonIgnore]
+    public CardData CardData => Resources.Load<CardData>(dataPath);
 
     public void SetCardSlot(CardSlot slot)
     {
@@ -28,13 +33,13 @@ public abstract class CardInstance : IComparable<CardInstance>
 
     public override string ToString()
     {
-        return GetCardData().ToString();
+        return CardData.ToString();
     }
 
     public void Use()
     {
         // maxEndurance <= 0表示无限耐久
-        if (GetCardData().maxEndurance <= 0) return;
+        if (CardData.maxEndurance <= 0) return;
 
         currentEndurance--;
         if (currentEndurance <= 0)
@@ -42,7 +47,7 @@ public abstract class CardInstance : IComparable<CardInstance>
             // 销毁这张卡牌
             DestroyThisCard();
             // 触发卡牌耐久归零事件
-            EffectResolve.Instance.Resolve(GetCardData().onUsedUp);
+            GameManager.Instance.HandleCardEvent(CardData.onUsedUp);
         }
         // 刷新前端显示的卡牌数据
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);

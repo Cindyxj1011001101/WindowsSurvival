@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,29 +9,23 @@ public class GameDataManager
     private static GameDataManager instance = new();
     public static GameDataManager Instance => instance;
 
-    public GameDataManager()
-    {
-        lastPlace = JsonManager.LoadData<PlaceEnum>("LastPlace");
-
-        playerBagData = JsonManager.LoadData<PlayerBagRuntimeData>("PlayerBag");
-
-        poweCabinBagData = JsonManager.LoadData<EnvironmentBagRuntimeData>("PowerCabinBag");
-        environmentBagDataDict.Add(PlaceEnum.PowerCabin, poweCabinBagData);
-
-        cockpitBagData = JsonManager.LoadData<EnvironmentBagRuntimeData>("CockpitBag");
-        environmentBagDataDict.Add(PlaceEnum.Cockpit, cockpitBagData);
-
-        audioData = JsonManager.LoadData<AudioData>("Audio");
-    }
+    private GameDataManager() { }
 
     #region 玩家背包
     private PlayerBagRuntimeData playerBagData;
 
-    public PlayerBagRuntimeData PlayerBagData => playerBagData;
+    public PlayerBagRuntimeData PlayerBagData
+    {
+        get
+        {
+            playerBagData ??= JsonManager.LoadData<PlayerBagRuntimeData>("PlayerBag");
+            return playerBagData;
+        }
+    }
 
     public void SavePlayerBagRuntimeData()
     {
-        PlayerBag bag = EffectResolve.Instance.PlayerBag;
+        PlayerBag bag = GameManager.Instance.PlayerBag;
         playerBagData = new();
         playerBagData.maxLoad = bag.MaxLoad;
         playerBagData.cardSlotsRuntimeData = new();
@@ -44,26 +39,43 @@ public class GameDataManager
 
     #region 环境背包
     // 最后一次玩家出现时的地点
-    private PlaceEnum lastPlace;
+    private int lastPlace = -1;
 
-    public PlaceEnum LastPlace => lastPlace;
+    public PlaceEnum LastPlace
+    {
+        get
+        {
+            if (lastPlace == -1)
+                lastPlace = JsonManager.LoadData<int>("LastPlace");
+            return (PlaceEnum)lastPlace;
+        }
+    }
 
     public Dictionary<PlaceEnum, EnvironmentBagRuntimeData> environmentBagDataDict = new();
 
-    public EnvironmentBagRuntimeData GetEnvironmentBagDataByPlace(PlaceEnum place) => environmentBagDataDict[place];
+    public EnvironmentBagRuntimeData GetEnvironmentBagDataByPlace(PlaceEnum place)
+    {
+        if (!environmentBagDataDict.ContainsKey(place))
+        {
+            var data = JsonManager.LoadData<EnvironmentBagRuntimeData>(place.ToString() + "Bag");
+            environmentBagDataDict.Add(place, data);
+        }
+
+        return environmentBagDataDict[place];
+    }
 
     /// <summary>
     /// 保存所有环境背包的数据
     /// </summary>
     public void SaveEnvironmentBagRuntimeData()
     {
-        foreach (var (place, bag) in EffectResolve.Instance.EnvironmentBags)
+        foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
         {
             EnvironmentBagRuntimeData data = new();
             // 保存探索度
             data.discoveryDegree = bag.DiscoveryDegree;
             // 保存一次性掉落列表
-            var e = bag.CardEvent.eventList.Find(c => c is PlaceDropEvent);
+            var e = bag.ExploreEvent.eventList.Find(c => c is PlaceDropEvent);
             data.disposableDropList = (e as PlaceDropEvent).curOnceDropList;
             // 保存背包中的卡牌
             data.cardSlotsRuntimeData = new();
@@ -77,21 +89,28 @@ public class GameDataManager
 
     public void SaveLastPlace()
     {
-        JsonManager.SaveData(EffectResolve.Instance.CurEnvironmentBag.PlaceData.placeType, "LastPlace");
+        JsonManager.SaveData(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, "LastPlace");
     }
 
     // 动力舱的背包数据
-    private EnvironmentBagRuntimeData poweCabinBagData;
-    public EnvironmentBagRuntimeData PoweCabinBagData => poweCabinBagData;
+    //private EnvironmentBagRuntimeData poweCabinBagData;
+    //public EnvironmentBagRuntimeData PoweCabinBagData => poweCabinBagData;
 
-    // 驾驶室的背包数据
-    private EnvironmentBagRuntimeData cockpitBagData;
-    public EnvironmentBagRuntimeData CockpitBagData => cockpitBagData;
+    //// 驾驶室的背包数据
+    //private EnvironmentBagRuntimeData cockpitBagData;
+    //public EnvironmentBagRuntimeData CockpitBagData => cockpitBagData;
     #endregion
 
     #region 音频
     private AudioData audioData;
-    public AudioData AudioData => audioData;
+    public AudioData AudioData
+    {
+        get
+        {
+            audioData ??= JsonManager.LoadData<AudioData>("Audio");
+            return audioData;
+        }
+    }
 
     public UnityEvent onBGMVolumeChanged = new();
 
@@ -115,5 +134,23 @@ public class GameDataManager
         JsonManager.SaveData(audioData, "Audio");
     }
 
+    #endregion
+
+    #region 配方
+    private List<string> unlockedRecipes;
+
+    public List<string> UnlockedRecipes
+    {
+        get
+        {
+            unlockedRecipes ??= JsonManager.LoadData<List<string>>("UnlockedRecipes");
+            return unlockedRecipes;
+        }
+    }
+
+    public void SaveUnlockedRecipes()
+    {
+        JsonManager.SaveData(unlockedRecipes, "UnlockedRecipes");
+    }
     #endregion
 }

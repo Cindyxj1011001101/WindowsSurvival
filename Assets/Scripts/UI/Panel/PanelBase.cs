@@ -16,7 +16,7 @@ public abstract class PanelBase : MonoBehaviour
     /// <summary>
     /// 控制面板透明度的CanvasGroup组件
     /// </summary>
-    private CanvasGroup canvasGroup;
+    protected CanvasGroup canvasGroup;
 
     /// <summary>
     /// 淡入/淡出时间
