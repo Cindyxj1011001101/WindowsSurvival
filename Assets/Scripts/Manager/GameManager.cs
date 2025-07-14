@@ -14,7 +14,12 @@ public enum PlaceEnum
     /// <summary>
     /// 维生舱
     /// </summary>
-    LifeSupportCabin
+    LifeSupportCabin,
+    /// <summary>
+    /// 珊瑚礁海岸
+    /// </summary>
+    CoralCoast,
+
 }
 
 public class GameManager : MonoBehaviour

@@ -8,20 +8,26 @@ public enum EventType
     ChangeLoad, // 背包载重变化
     ChangeCardProperty, // 卡牌属性变化
     Move,//场景移动界面刷新
-    RefreshState,//更新状态数据
+    RefreshPlayerState,//更新玩家状态数据
+    RefreshEnvironmentState,//更新环境状态数据
     ChangeDiscoveryDegree, // 探索度变化
     //ChangeTime, // 时间变化
     ChangePlayerBagCards, // 玩家背包卡牌变化
     ChangeStudyProgress, // 研究进度变化
     UnlockRecipe,
+    GameOver, // 游戏结束
+    EquipCard, // 装备卡牌
+    UnequipCard, // 卸下卡牌
+    CurEnvironmentChangeState, // 当前环境状态变化
+
 }
 
 public class ChangeStateArgs
 {
-    public StateEnum state;
+    public PlayerStateEnum state;
     public float value;
 
-    public ChangeStateArgs(StateEnum s, float i)
+    public ChangeStateArgs(PlayerStateEnum s, float i)
     {
         state = s;
         value = i;
@@ -69,3 +75,31 @@ public class ChangePlayerBagCardsArgs
     public CardInstance card;
     public int add;
 }
+
+#region 装备卡牌
+public class EquipCardArgs
+{
+    public EquipmentType type;
+    public CardInstance card;
+
+    public EquipCardArgs(EquipmentType t, CardInstance c)
+    {
+        type = t;
+        card = c;
+    }
+}
+#endregion
+
+#region 环境状态变化
+public class ChangeEnvironmentStateArgs
+{
+    public EnvironmentStateEnum state;
+    public float value;
+
+    public ChangeEnvironmentStateArgs(EnvironmentStateEnum s, float i)
+    {
+        state = s;
+        value = i;
+    }
+}
+#endregion

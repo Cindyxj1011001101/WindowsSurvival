@@ -3,18 +3,25 @@
 [CreateAssetMenu(fileName = "InitPlayerStateData", menuName = "ScritableObject/InitPlayerStateData")]
 public class InitPlayerStateData:SingleScriptableObject<InitPlayerStateData>
 {
-    public int Health;
-    public int Fullness;
-    public int Thirst;
-    public int Tired;
-    public int San;
+    //玩家状态
+    [Header("玩家状态")]
+    public float Health;
+    public float Fullness;
+    public float Thirst;
+    public float San;
+    public float Oxygen;
+    public float Tired;
+    //玩家状态基础变化
+    [Header("玩家状态基础变化")]
     public float BasicHealthChange;
     public float BasicFullnessChange;
     public float BasicThirstChange;
-    public float BasicTiredChange;
     public float BasicSanChange;
-    public int maxPlayerGrid;
-    public float maxPlayerWeight;
-    public float maxWeightFactor;
+    public float BasicOxygenChange;
+    public float BasicTiredChange;
+    //地点状态基础变化
+    [Header("地点状态基础变化")]
+    public float BasicElectricityChange;
+    [Header("初始地点")]
     public PlaceEnum place;
 }

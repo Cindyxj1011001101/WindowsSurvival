@@ -3,8 +3,8 @@
 [CreateAssetMenu(fileName = "ValueEvent", menuName = "ScritableObject/ValueEvent")]
 public class ValueEvent:EventTrigger
 {
-        public StateEnum State;
-        public int Value;
+        public PlayerStateEnum State;
+        public float Value;
 
         public override void Invoke()
         {

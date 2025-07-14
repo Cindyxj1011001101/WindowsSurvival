@@ -5,7 +5,20 @@ using UnityEngine;
 public enum CardTag
 {
     Rubbish,
+    Cut,
 }
+
+
+public enum CardType
+{
+    Food,
+    Tool,
+    Resource,
+    Place,
+    ResourcePoint,
+    Equipment,
+}
+
 
 [Serializable]
 public class CardData : ScriptableObject

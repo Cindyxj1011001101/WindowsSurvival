@@ -22,18 +22,18 @@ public class StateWindow : WindowBase
     protected override void Start()
     {
         base.Start();
-        EventManager.Instance.AddListener<StateEnum>(EventType.RefreshState, RefreshState);
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshState);
     }
 
     public void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<StateEnum>(EventType.RefreshState, RefreshState);
+        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshState);
     }
 
     //更新显示数据
-    public void RefreshState(StateEnum stateEnum)
+    public void RefreshState(PlayerStateEnum stateEnum)
     {
-        State state = StateManager.Instance.StateDict[stateEnum];
+        PlayerState state = StateManager.Instance.PlayerStateDict[stateEnum];
         Sliders[(int)stateEnum].value = state.curValue / state.MaxValue;
         StateNumTexts[(int)stateEnum].text = state.curValue.ToString() + "/" + state.MaxValue.ToString();
     }
@@ -41,9 +41,9 @@ public class StateWindow : WindowBase
     //初始化显示数据
     protected override void Init()
     {
-        RefreshState(StateEnum.Fullness);
-        RefreshState(StateEnum.Health);
-        RefreshState(StateEnum.Thirst);
-        RefreshState(StateEnum.San);
+        RefreshState(PlayerStateEnum.Fullness);
+        RefreshState(PlayerStateEnum.Health);
+        RefreshState(PlayerStateEnum.Thirst);
+        RefreshState(PlayerStateEnum.San);
     }
 }
