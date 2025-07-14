@@ -14,7 +14,7 @@ public enum EventType
     //ChangeTime, // 时间变化
     ChangePlayerBagCards, // 玩家背包卡牌变化
     ChangeStudyProgress, // 研究进度变化
-    UnlockRecipe,
+    UnlockRecipe, // 解锁合成配方
     GameOver, // 游戏结束
     EquipCard, // 装备卡牌
     UnequipCard, // 卸下卡牌
@@ -34,11 +34,11 @@ public class ChangeStateArgs
     }
 }
 
-public class ChangeLoadArgs
-{
-    public float currentLoad;
-    public float maxLoad;
-}
+//public class ChangeLoadArgs
+//{
+//    public float currentLoad;
+//    public float maxLoad;
+//}
 
 public class AddDropCardArgs
 {
@@ -76,19 +76,19 @@ public class ChangePlayerBagCardsArgs
     public int add;
 }
 
-#region 装备卡牌
-public class EquipCardArgs
-{
-    public EquipmentType type;
-    public CardInstance card;
+//#region 装备卡牌
+//public class EquipCardArgs
+//{
+//    public EquipmentType type;
+//    public CardInstance card;
 
-    public EquipCardArgs(EquipmentType t, CardInstance c)
-    {
-        type = t;
-        card = c;
-    }
-}
-#endregion
+//    public EquipCardArgs(EquipmentType t, CardInstance c)
+//    {
+//        type = t;
+//        card = c;
+//    }
+//}
+//#endregion
 
 #region 环境状态变化
 public class ChangeEnvironmentStateArgs

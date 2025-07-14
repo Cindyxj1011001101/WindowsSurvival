@@ -7,7 +7,6 @@ public abstract class BagBase : MonoBehaviour
 {
     [SerializeField] private GameObject slotPrefab; // 格子预制体
     [SerializeField] private GridLayoutGroup slotLayout; // 格子布局
-    [SerializeField] private Button organizeButton; // 整理背包按钮
 
     protected List<CardSlot> slots = new();
 
@@ -27,16 +26,6 @@ public abstract class BagBase : MonoBehaviour
     }
     protected int SlotsCount => slots.Count; // 格子总数
     protected bool IsBagFull => UsedSlotsCount == SlotsCount; // 背包是否已满
-
-    private void OnEnable()
-    {
-        organizeButton.onClick.AddListener(CompactCards);
-    }
-
-    private void OnDisable()
-    {
-        organizeButton.onClick.RemoveListener(CompactCards);
-    }
 
     protected virtual void Start()
     {
@@ -121,7 +110,7 @@ public abstract class BagBase : MonoBehaviour
     /// <param name="card"></param>
     public virtual void AddCard(CardInstance card)
     {
-        if (!CanAddCard(card)) return;
+        //if (!CanAddCard(card)) return;
 
         // 尝试堆叠同类卡牌
         foreach (var slot in GetSlotsContainingSimilarCard(card.CardData))

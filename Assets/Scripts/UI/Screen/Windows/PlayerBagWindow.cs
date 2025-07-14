@@ -9,16 +9,19 @@ public class PlayerBagWindow : BagWindow
     {
         base.Awake();
         loadText = transform.Find("TopBar/CurrentLoad").GetComponent<Text>();
-        EventManager.Instance.AddListener<ChangeLoadArgs>(EventType.ChangeLoad, OnLoadChanged);
+        EventManager.Instance.AddListener/*<ChangeLoadArgs>*/(EventType.ChangeLoad, OnLoadChanged);
     }
 
     protected override void Init()
     {
+        // 显示载重
+        OnLoadChanged();
     }
 
-    private void OnLoadChanged(ChangeLoadArgs args)
+    private void OnLoadChanged(/*ChangeLoadArgs args*/)
     {
-        DisplayBagLoad(args.currentLoad, args.maxLoad);
+        //DisplayBagLoad(args.currentLoad, args.maxLoad);
+        DisplayBagLoad(StateManager.Instance.curLoad, StateManager.Instance.maxLoad);
     }
 
     private void DisplayBagLoad(float currentLoad, float maxLoad)
@@ -27,6 +30,6 @@ public class PlayerBagWindow : BagWindow
     }
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<ChangeLoadArgs>(EventType.ChangeLoad, OnLoadChanged);
+        EventManager.Instance.RemoveListener/*<ChangeLoadArgs>*/(EventType.ChangeLoad, OnLoadChanged);
     }
 }

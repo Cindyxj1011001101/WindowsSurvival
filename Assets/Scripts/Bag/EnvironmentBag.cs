@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnvironmentBag : BagBase
 {
@@ -21,6 +22,17 @@ public class EnvironmentBag : BagBase
     public Dictionary<EnvironmentStateEnum, EnvironmentState> EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>();
 
 
+    [SerializeField] private Button organizeButton; // 整理背包按钮
+
+    private void OnEnable()
+    {
+        organizeButton.onClick.AddListener(CompactCards);
+    }
+
+    private void OnDisable()
+    {
+        organizeButton.onClick.RemoveListener(CompactCards);
+    }
     protected override void Init()
     {
         InitBag(GameDataManager.Instance.GetEnvironmentBagDataByPlace(placeData.placeType));
@@ -67,10 +79,15 @@ public class EnvironmentBag : BagBase
         (e as PlaceDropEvent).curOnceDropList = data.disposableDropList;
     }
 
+    public override bool CanAddCard(CardInstance card)
+    {
+        return true;
+    }
+
     public override void AddCard(CardInstance card)
-    {   
+    {
         // 如果放不下，就新增格子
-        if (!CanAddCard(card))
+        if (!base.CanAddCard(card))
         {
             // 暂定每次新增3个格子
             AddSlot(3);

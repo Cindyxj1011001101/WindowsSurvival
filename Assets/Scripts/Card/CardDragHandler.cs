@@ -39,8 +39,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         BagBase targetBag = currentObject.GetComponentInParent<BagBase>();
         BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
 
-        bool cardMoved = false;
-
         if (targetBag != null)
         {
             // 同背包放置
@@ -49,32 +47,21 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 CardSlot targetSlot = currentObject.GetComponentInParent<CardSlot>();
                 if (targetSlot != null && targetSlot != sourceSlot)
                 {
-                    cardMoved = TryPlaceCardInSameBag(targetSlot);
+                    PlaceCardInSameBag(targetSlot);
                 }
             }
             // 跨背包放置
             else if (sourceSlot.CanDragOverBag)
             {
-                cardMoved = TryPlaceCardInDifferentBag(targetBag);
+                PlaceCardInDifferentBag(targetBag);
             }
         }
-
-        // 如果卡牌移动了，执行紧凑排列
-        //if (cardMoved)
-        //{
-        //    sourceBag.CompactCards();
-        //    if (targetBag != sourceBag)
-        //    {
-        //        targetBag.CompactCards();
-        //    }
-        //}
 
         Home();
     }
 
-    private bool TryPlaceCardInSameBag(CardSlot targetSlot)
+    private void PlaceCardInSameBag(CardSlot targetSlot)
     {
-        
         // 如果目标格子为空
         if (targetSlot.IsEmpty)
         {
@@ -83,35 +70,24 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 targetSlot.AddCard(sourceSlot.RemoveCard());
             }
-            return true;
         }
         // 如果目标格子有相同卡牌
         else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData))
         {
             // 往目标格子里尽可能放更多
-            bool movedAny = false;
             while (sourceSlot.StackCount > 0 && targetSlot.CanStack())
             {
                 targetSlot.AddCard(sourceSlot.RemoveCard());
-                movedAny = true;
             }
-            return movedAny;
         }
-        return false;
     }
 
-    private bool TryPlaceCardInDifferentBag(BagBase targetBag)
+    private void PlaceCardInDifferentBag(BagBase targetBag)
     {
-        bool movedAny = false;
-        
-        // targetBag is EnvironmentBag 表示如果目标背包是环境背包则一定能放入卡牌
-        while (sourceSlot.StackCount > 0 && (targetBag is EnvironmentBag || targetBag.CanAddCard(sourceSlot.PeekCard())))
+        while (sourceSlot.StackCount > 0 && targetBag.CanAddCard(sourceSlot.PeekCard()))
         {
-
             targetBag.AddCard(sourceSlot.RemoveCard());
-            movedAny = true;
         }
-        return movedAny;
     }
 
     /// <summary>

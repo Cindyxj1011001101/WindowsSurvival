@@ -38,11 +38,6 @@ public class CardSlot : MonoBehaviour
 
     private void Awake()
     {
-        //iconImage = transform.Find("Card/Icon").GetComponent<Image>();
-        //fillImage = transform.Find("Card/Fill").GetComponent<Image>();
-        //propertyText = transform.Find("Card/Property").GetComponent<Text>();
-        //nameText = transform.Find("Card/Name").GetComponent<Text>();
-        //cardTransform = transform.Find("Card");
         if (cardTransform.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
         {
             doubleClickHandler.onDoubleClick.AddListener(() =>
@@ -135,10 +130,13 @@ public class CardSlot : MonoBehaviour
 
         OnCardPropertyChanged();
 
-        if (bag is PlayerBag && (card.Slot == null || card.Slot.bag is not PlayerBag))
-            //bag.OnCardAdded(card);
+        // 当卡牌添加到玩家背包时
+        if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = 1 });
+        // 当装备卡牌时
+        if (bag is EquipmentBag)
+            EventManager.Instance.TriggerEvent(EventType.EquipCard, card as EquipmentCardInstance);
 
         card.SetCardSlot(this);
     }
@@ -159,11 +157,13 @@ public class CardSlot : MonoBehaviour
         else
             OnCardPropertyChanged();
 
-
-        if (bag is PlayerBag && (card.Slot == null || card.Slot.bag is not PlayerBag))
-            //bag.OnCardAdded(card);
+        // 当卡牌从玩家背包移除时
+        if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = -1 });
+        // 当卸下装备时
+        if (bag is EquipmentBag)
+            EventManager.Instance.TriggerEvent(EventType.UnequipCard, card as EquipmentCardInstance);
     }
 
     /// <summary>
