@@ -68,7 +68,7 @@ public class GMCommand
     [MenuItem("Command/添加被安全泡沫覆盖的废物堆")]
     public static void F()
     {
-        AddCard("被安全泡沫覆盖的废料堆");
+        AddCard("被安全泡沫覆盖的废物堆");
     }
 
     [MenuItem("Command/添加硬质纤维")]
