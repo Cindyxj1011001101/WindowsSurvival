@@ -12,6 +12,8 @@ public abstract class BagBase : MonoBehaviour
 
     public List<CardSlot> Slots => slots;
 
+    [SerializeField] private Button organizeButton; // 整理背包按钮
+
     protected int UsedSlotsCount // 放有卡牌的格子的数量
     {
         get
@@ -26,6 +28,18 @@ public abstract class BagBase : MonoBehaviour
     }
     protected int SlotsCount => slots.Count; // 格子总数
     protected bool IsBagFull => UsedSlotsCount == SlotsCount; // 背包是否已满
+
+    private void OnEnable()
+    {
+        if (organizeButton != null)
+            organizeButton.onClick.AddListener(CompactCards);
+    }
+
+    private void OnDisable()
+    {
+        if (organizeButton != null)
+            organizeButton.onClick.RemoveListener(CompactCards);
+    }
 
     protected virtual void Start()
     {
