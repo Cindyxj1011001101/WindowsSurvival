@@ -16,8 +16,6 @@ public enum EventType
     ChangeStudyProgress, // 研究进度变化
     UnlockRecipe, // 解锁合成配方
     GameOver, // 游戏结束
-    EquipCard, // 装备卡牌
-    UnequipCard, // 卸下卡牌
     CurEnvironmentChangeState, // 当前环境状态变化
 
 }
@@ -93,13 +91,27 @@ public class ChangePlayerBagCardsArgs
 #region 环境状态变化
 public class ChangeEnvironmentStateArgs
 {
+    public PlaceEnum place;
     public EnvironmentStateEnum state;
     public float value;
 
     public ChangeEnvironmentStateArgs(EnvironmentStateEnum s, float i)
     {
+        place = GameManager.Instance.CurEnvironmentBag.PlaceData.placeType;
         state = s;
         value = i;
     }
 }
 #endregion
+
+public class RefreshEnvironmentStateArgs
+{
+    public PlaceEnum place;
+    public EnvironmentStateEnum state;
+
+    public RefreshEnvironmentStateArgs(PlaceEnum p, EnvironmentStateEnum s)
+    {
+        place = p;
+        state = s;
+    }
+}
