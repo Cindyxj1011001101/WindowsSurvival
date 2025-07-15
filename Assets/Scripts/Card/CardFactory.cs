@@ -39,6 +39,10 @@ public static class CardFactory
                 return CreateCardInstance<ResourcePointCardInstance>(cardName);
             case ToolCardData:
                 return CreateCardInstance<ToolCardInstance>(cardName);
+            case ConstructionCardData:
+                return CreateCardInstance<ConstructionCardInstance>(cardName);
+            case EquipmentCardData:
+                return CreateCardInstance<EquipmentCardInstance>(cardName);
             default:
                 break;
         }

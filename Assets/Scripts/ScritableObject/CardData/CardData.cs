@@ -4,8 +4,9 @@ using UnityEngine;
 
 public enum CardTag
 {
-    Rubbish,
-    Cut,
+    Rubbish, // 垃圾
+    Cut, // 切割类
+    Collectable, // 可采集
 }
 
 
@@ -17,6 +18,7 @@ public enum CardType
     Place,
     ResourcePoint,
     Equipment,
+    Construction
 }
 
 
@@ -43,5 +45,39 @@ public class CardData : ScriptableObject
     public override int GetHashCode()
     {
         return base.GetHashCode();
+    }
+
+    private void OnValidate()
+    {
+        cardName = name;
+        Type thisType = GetType();
+        if (thisType == typeof(FoodCardData))
+        {
+            cardType = CardType.Food;
+        }
+        else if (thisType == typeof(ToolCardData))
+        {
+            cardType = CardType.Tool;
+        }
+        else if (thisType == typeof(ResourceCardData))
+        {
+            cardType = CardType.Resource;
+        }
+        else if (thisType == typeof(EquipmentCardData))
+        {
+            cardType = CardType.Equipment;
+        }
+        else if (thisType == typeof(ResourcePointCardData))
+        {
+            cardType = CardType.ResourcePoint;
+        }
+        else if (thisType == typeof(ConstructionCardData))
+        {
+            cardType = CardType.Construction;
+        }
+        else if (thisType == typeof(PlaceCardData))
+        {
+            cardType = CardType.Place;
+        }
     }
 }
