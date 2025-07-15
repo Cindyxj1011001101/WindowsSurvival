@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: "\u73BB\u7483"
   cardImage: {fileID: 0}
-  cardDesc: 
+  cardDesc: "\u73BB\u7483"
   cardType: 2
   weight: 0.9
   maxStackNum: 10
-  maxEndurance: 1
+  maxEndurance: -1
   cardEventList: []
   CardTagList: 
   onUsedUp: {fileID: 0}

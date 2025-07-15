@@ -12,14 +12,14 @@ public enum CardTag
 
 public enum CardType
 {
-    Food,
-    Tool,
-    Resource,
-    Place,
-    ResourcePoint,
-    Equipment,
-    Creature,
-    Construction,
+    Food,//食物
+    Tool,//工具
+    Resource,//资源
+    Place,//地点
+    ResourcePoint,//资源点
+    Equipment,//装备
+    Creature,//生物
+    Construction,//建筑
 }
 
 
