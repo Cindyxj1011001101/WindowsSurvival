@@ -46,7 +46,7 @@ public class CardSlot : MonoBehaviour
             });
         }
 
-        EventManager.Instance.AddListener(EventType.ChangeCardProperty, OnCardPropertyChanged);
+        EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
     }
 
     public void SetBag(BagBase bag)
@@ -62,7 +62,7 @@ public class CardSlot : MonoBehaviour
         }
     }
 
-    private void OnCardPropertyChanged()
+    private void RefreshCurrentDisplay()
     {
         if (IsEmpty) return;
 
@@ -121,6 +121,10 @@ public class CardSlot : MonoBehaviour
     /// <returns></returns>
     public bool CanStack() => StackCount < currentCard.maxStackNum;
 
+    /// <summary>
+    /// 添加一张卡牌
+    /// </summary>
+    /// <param name="card"></param>
     public void AddCard(CardInstance card)
     {
         currentCard = card.CardData;
@@ -128,7 +132,7 @@ public class CardSlot : MonoBehaviour
         cards.Add(card);
         cards.Sort((a, b) => a.CompareTo(b));
 
-        OnCardPropertyChanged();
+        RefreshCurrentDisplay();
 
         // 当卡牌添加到玩家背包时
         if (bag is PlayerBag)
@@ -155,7 +159,7 @@ public class CardSlot : MonoBehaviour
         if (StackCount == 0)
             ClearSlot();
         else
-            OnCardPropertyChanged();
+            RefreshCurrentDisplay();
 
         // 当卡牌从玩家背包移除时
         if (bag is PlayerBag)
@@ -179,6 +183,10 @@ public class CardSlot : MonoBehaviour
         return cardToRemove;
     }
 
+    /// <summary>
+    /// 移除指定数量的卡牌
+    /// </summary>
+    /// <param name="amount"></param>
     public void RemoveCards(int amount)
     {
         for (int i = 0; i < amount; i++)
@@ -212,6 +220,6 @@ public class CardSlot : MonoBehaviour
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, OnCardPropertyChanged);
+        EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
     }
 }

@@ -6,18 +6,9 @@ public class TechnologyManager
     private static TechnologyManager instance = new();
     public static TechnologyManager Instance => instance;
 
-    //private float basicStudyRate = 2.0f; // 基础研究速率，即每15分钟增长多少科技点
-
-    //private List<string> studiedTechNodes = new(); // 学习过的科技节点
-
-    //private string curStudiedTechNodeName; // 当前正在学习的科技节点
-    //private float curProgress; // 当前学习进度
-    //private float curStudyRate; // 当前学习速度
-
     private TechnologyData techData;
 
     public ScriptableTechnologyNode CurStudiedTechNode => Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techData.curStudiedTechNodeName);
-    public float CurProgress => techData.curProgress;
     public float CurStudyRate => techData.curStudyRate;
 
     private TechnologyManager()
@@ -32,29 +23,41 @@ public class TechnologyManager
     public void Study(ScriptableTechnologyNode techNode)
     {
         techData.curStudiedTechNodeName = techNode.techName;
-        techData.curProgress = 0;
         techData.curStudyRate = CalcStudyRate();
         // 添加监听，每回合结算研究进度
         EventManager.Instance.AddListener(EventType.IntervalSettle, OnStudy);
+        //EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
     }
 
+    /// <summary>
+    /// 停止研究
+    /// </summary>
+    public void StopStudy()
+    {
+        // 设置正在研究的科技节点为空
+        techData.curStudiedTechNodeName = null;
+        // 移除监听
+        EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnStudy);
+    }
+
+    /// <summary>
+    /// 每15分钟结算研究进度
+    /// </summary>
     private void OnStudy()
     {
         // 计算研究速率
         techData.curStudyRate = CalcStudyRate();
         // 进度增长
-        techData.curProgress += techData.curStudyRate;
+        //CurStudiedTechNode.progress += techData.curStudyRate;
+        techData.CurStudiedTechNodeData.progress += techData.curStudyRate;
         // 研究完成
-        if (techData.curProgress >= CurStudiedTechNode.cost)
+        if (techData.CurStudiedTechNodeData.progress >= CurStudiedTechNode.cost)
         {
+            techData.CurStudiedTechNodeData.progress = CurStudiedTechNode.cost;
             // 解锁该科技
             UnlockTechNode(CurStudiedTechNode);
-            // 设置正在研究的科技节点为空
-            techData.curStudiedTechNodeName = null;
-            // 设置研究进度为0
-            techData.curProgress = 0;
-            // 移除监听
-            EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnStudy);
+            // 停止研究
+            StopStudy();
         }
         EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
     }
@@ -62,6 +65,11 @@ public class TechnologyManager
     private float CalcStudyRate()
     {
         return techData.basicStudyRate;
+    }
+
+    public float GetStudyProgress(ScriptableTechnologyNode techNode)
+    {
+        return techData.techNodeDict[techNode.techName].progress;
     }
 
     /// <summary>
@@ -101,15 +109,6 @@ public class TechnologyManager
     public bool IsTechNodeStudied(ScriptableTechnologyNode techNode)
     {
         return techData.studiedTechNodes.Contains(techNode.techName);
-    }
-
-    /// <summary>
-    /// 判断是否有科技节点正在被研究
-    /// </summary>
-    /// <returns></returns>
-    public bool IsAnyTechNodeBeingStudied()
-    {
-        return techData.curStudiedTechNodeName != null && techData.curStudiedTechNodeName != "";
     }
 
     /// <summary>

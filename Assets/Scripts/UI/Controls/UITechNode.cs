@@ -9,21 +9,20 @@ public class UITechNode : MonoBehaviour
     [SerializeField] private Transform recipeLayout;
     [SerializeField] private Slider progressSlider;
     [SerializeField] private Image lockImage;
+    [SerializeField] private Image background;
 
     public void DisplayTechNode(ScriptableTechnologyNode techNode)
     {
         // 显示解锁情况
-        // 当科技节点未几所或者不是当前正在研究科技节点时
-        // 该节点置灰
-        if ((TechnologyManager.Instance.IsAnyTechNodeBeingStudied() &&
-            !TechnologyManager.Instance.IsTechNodeBeingStudied(techNode)) ||
-            TechnologyManager.Instance.IsTechNodeLocked(techNode))
-            lockImage.gameObject.SetActive(true);
-        else
-            lockImage.gameObject.SetActive(false);
+        lockImage.gameObject.SetActive(TechnologyManager.Instance.IsTechNodeLocked(techNode));
 
-        // 显示科技名称
-        techName.text = techNode.techName;
+        if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
+            background.color = Color.cyan;
+        else
+            background.color = Color.white;
+
+            // 显示科技名称
+            techName.text = techNode.techName;
 
         // 显示解锁配方
         MonoUtility.DestroyAllChildren(recipeLayout);
@@ -39,19 +38,14 @@ public class UITechNode : MonoBehaviour
         if (TechnologyManager.Instance.IsTechNodeStudied(techNode))
         {
             progressSlider.value = 1;
-            progressSlider.GetComponentInChildren<Text>().text = $"{techNode.cost} / {techNode.cost}";
+            progressSlider.GetComponentInChildren<Text>().text = $"已完成";
         }
-        // 研究正在进行
-        else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
-        {
-            progressSlider.value = TechnologyManager.Instance.CurProgress / techNode.cost;
-            progressSlider.GetComponentInChildren<Text>().text = $"{TechnologyManager.Instance.CurProgress} / {techNode.cost}";
-        }
-        // 其他不能研究的情况
+        // 其他情况
         else
         {
-            progressSlider.value = 0;
-            progressSlider.GetComponentInChildren<Text>().text = $"0 / {techNode.cost}";
+            var progress = TechnologyManager.Instance.GetStudyProgress(techNode);
+            progressSlider.value = progress / techNode.cost;
+            progressSlider.GetComponentInChildren<Text>().text = $"{progress} / {techNode.cost}";
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,6 +31,11 @@ public class StudyWindow : WindowBase
 
     protected override void Init()
     {
+        //foreach (var node in techNodes)
+        //{
+        //    GameDataManager.Instance.TechnologyData.techNodeDict.Add(node.gameObject.name, new TechNodeData { name = node.gameObject.name, progress = 0 });
+        //}
+        //GameDataManager.Instance.SaveTechnologyData();
         DisplayTechTree();
     }
 
@@ -84,6 +90,8 @@ public class StudyWindow : WindowBase
         }
 
         // 显示研究按钮
+        studyButton.gameObject.SetActive(!TechnologyManager.Instance.IsTechNodeStudied(techNode));
+
         // 研究已完成
         if (TechnologyManager.Instance.IsTechNodeStudied(techNode))
         {
@@ -93,8 +101,17 @@ public class StudyWindow : WindowBase
         // 研究正在进行
         else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
         {
-            studyButton.interactable = false;
-            studyButton.GetComponentInChildren<Text>().text = "研究中";
+            studyButton.interactable = true;
+            studyButton.GetComponentInChildren<Text>().text = "暂停研究";
+            // 添加事件监听
+            studyButton.onClick.RemoveAllListeners();
+            studyButton.onClick.AddListener(() =>
+            {
+                // 暂停当前研究
+                TechnologyManager.Instance.StopStudy();
+                // 刷新显示
+                RefreshCurrentDisplay();
+            });
         }
         // 研究未解锁
         else if (TechnologyManager.Instance.IsTechNodeLocked(techNode))
@@ -102,13 +119,6 @@ public class StudyWindow : WindowBase
             studyButton.interactable = false;
             studyButton.GetComponentInChildren<Text>().text = "未解锁";
         }
-        // 有其他研究在进行
-        else if (TechnologyManager.Instance.IsAnyTechNodeBeingStudied())
-        {
-            studyButton.interactable = false;
-            studyButton.GetComponentInChildren<Text>().text = "研究";
-        }
-        // 可以研究
         else
         {
             studyButton.interactable = true;
@@ -117,7 +127,9 @@ public class StudyWindow : WindowBase
             studyButton.onClick.RemoveAllListeners();
             studyButton.onClick.AddListener(() =>
             {
-                // 点击按钮开始研究
+                // 暂停当前研究
+                TechnologyManager.Instance.StopStudy();
+                // 研究当前科技节点
                 TechnologyManager.Instance.Study(techNode);
                 // 刷新显示
                 RefreshCurrentDisplay();
@@ -129,22 +141,24 @@ public class StudyWindow : WindowBase
         if (TechnologyManager.Instance.IsTechNodeStudied(techNode))
         {
             progressSlider.value = 1;
-            progressSlider.GetComponentInChildren<Text>().text = $"{techNode.cost} / {techNode.cost}";
-            studyRate.gameObject.SetActive(false);
+            progressSlider.GetComponentInChildren<Text>().text = $"已完成";
         }
-        // 研究正在进行
-        else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
-        {
-            progressSlider.value = TechnologyManager.Instance.CurProgress / techNode.cost;
-            progressSlider.GetComponentInChildren<Text>().text = $"{TechnologyManager.Instance.CurProgress} / {techNode.cost}";
-            studyRate.gameObject.SetActive(true);
-            studyRate.text = $"{TechnologyManager.Instance.CurStudyRate} / 15 分钟";
-        }
-        // 其他不能研究的情况
+        // 其他情况
         else
         {
-            progressSlider.value = 0;
-            progressSlider.GetComponentInChildren<Text>().text = $"0 / {techNode.cost}";
+            var progress = TechnologyManager.Instance.GetStudyProgress(techNode);
+            progressSlider.value = progress / techNode.cost;
+            progressSlider.GetComponentInChildren<Text>().text = $"{progress} / {techNode.cost}";
+        }
+
+        // 显示研究速度
+        if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
+        {
+            studyRate.gameObject.SetActive(true);
+            studyRate.text = $"+ {TechnologyManager.Instance.CurStudyRate:0.0} 科技点 / 15 分钟";
+        }
+        else
+        {
             studyRate.gameObject.SetActive(false);
         }
     }
