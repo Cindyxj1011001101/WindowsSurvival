@@ -61,12 +61,6 @@ public class TechnologyManager
 
     private float CalcStudyRate()
     {
-        // 疲劳状态下有30%的研究速度减益，极度疲劳状态下有70%的研究速度减益。睡眠时不会进行研究。
-        // 疲劳状态下有30%的研究速度减益，极度疲劳状态下有70%的研究速度减益。睡眠时不会进行研究。
-        // 疲劳状态下有30%的研究速度减益，极度疲劳状态下有70%的研究速度减益。睡眠时不会进行研究。
-
-
-
         return techData.basicStudyRate;
     }
 
