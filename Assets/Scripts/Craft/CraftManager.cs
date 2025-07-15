@@ -33,9 +33,9 @@ public class CraftManager
 
     public void UnlockRecipe(ScriptableRecipe recipe)
     {
-        if (unlockedRecipes.Contains(recipe.cardData.cardName)) return;
+        if (unlockedRecipes.Contains(recipe.card.cardName)) return;
 
-        unlockedRecipes.Add(recipe.cardData.cardName);
+        unlockedRecipes.Add(recipe.card.cardName);
         EventManager.Instance.TriggerEvent(EventType.UnlockRecipe);
     }
 
@@ -75,7 +75,7 @@ public class CraftManager
 
         // 掉落制作出的卡牌
         // 如果是建筑卡牌，则优先掉落到环境里
-        GameManager.Instance.AddCard(recipe.cardData, recipe.cardData is not ConstructionCardData);
+        GameManager.Instance.AddCard(recipe.card, recipe.card.cardType is not CardType.Construction);
 
         // 消耗时间
         TimeManager.Instance.AddTime(recipe.craftTime);

@@ -106,7 +106,7 @@ public class CraftWindow : WindowBase
             button.group = group;
             var recipeButton = recipeButtonObj.GetComponent<UIRecipeButton>();
             recipeButton.DisplayRecipe(
-                recipe.cardData.cardImage,
+                recipe.card.cardImage,
                 CraftManager.Instance.IsRecipeLocked(recipe),
                 CraftManager.Instance.CanCrfat(recipe)
                 );
@@ -130,13 +130,13 @@ public class CraftWindow : WindowBase
 
         MonoUtility.DestroyAllChildren(materialLayout);
         // 显示卡牌图标
-        cardIcon.sprite = recipe.cardData.cardImage;
+        cardIcon.sprite = recipe.card.cardImage;
 
         // 显示卡牌名称
-        cardNameText.text = recipe.cardData.cardName;
+        cardNameText.text = recipe.card.cardName;
 
         // 显示卡牌描述
-        cradDescriptionText.text = recipe.cardData.cardDesc;
+        cradDescriptionText.text = recipe.card.cardDesc;
 
         // 显示所需材料
         foreach (var material in recipe.materials)

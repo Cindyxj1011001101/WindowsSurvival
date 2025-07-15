@@ -25,7 +25,7 @@ public class RecipeMaterial
 [CreateAssetMenu(fileName = "Recipe", menuName = "ScritableObject/Recipe")]
 public class ScriptableRecipe : ScriptableObject
 {
-    public CardData cardData; // 制作出来的卡牌
+    public Card card; // 制作出来的卡牌
     public List<RecipeMaterial> materials; // 制作需要的材料
     public RecipeType craftType; // 配方类型
     public int craftTime; // 制作时间

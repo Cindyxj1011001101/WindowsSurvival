@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class CardSlot : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
-    [SerializeField] private Image fillImage; // ÓÃÓÚÏÔÊ¾ÐÂÏÊ¶ÈµÈ
-    [SerializeField] private Text propertyText; // ÓÃÓÚÏÔÊ¾ÊýÁ¿ºÍÄÍ¾ÃµÈ
+    [SerializeField] private Image fillImage; 
+    [SerializeField] private Text propertyText;
     [SerializeField] private Text nameText;
     [SerializeField] private Transform cardTransform;
 
@@ -15,8 +15,10 @@ public class CardSlot : MonoBehaviour
 
     private List<CardInstance> cards = new();
 
-    public bool IsEmpty => currentCard == null;
+    public bool IsEmpty => card == null;
     public CardData CardData => currentCard;
+    public Card card;
+
     public int StackCount => cards.Count;
 
     public List<CardInstance> Cards => cards;
@@ -24,9 +26,6 @@ public class CardSlot : MonoBehaviour
     private BagBase bag;
     public BagBase Bag => bag;
 
-    /// <summary>
-    /// ÄÜ·ñ¿ç±³°üÒÆ¶¯
-    /// </summary>
     public bool CanDragOverBag
     {
         get
@@ -80,10 +79,10 @@ public class CardSlot : MonoBehaviour
         switch (data)
         {
             case FoodCardData cardData:
-                // ±£ÖÊÆÚÎÞÏÞ
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 if (cardData.MaxFresh == -1)
                     fillImage.gameObject.SetActive(false);
-                // ÓÐ±£ÖÊÆÚ
+                // ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½
                 else
                     fillImage.fillAmount = (float)(card as FoodCardInstance).currentFresh / cardData.MaxFresh;
 
@@ -116,7 +115,7 @@ public class CardSlot : MonoBehaviour
     public bool ContainsSimilarCard(CardData cardData) => !IsEmpty && currentCard.Equals(cardData);
     
     /// <summary>
-    /// ÄÜ·ñ¶Ñµþ£¬ÔÚÊ¹ÓÃ¸Ã·½·¨Ç°ÇëÎñ±ØÈ·ÈÏÒª¶ÑµþµÄ¿¨ÅÆºÍÕâ¸öslot·ÅÓÐµÄ¿¨ÅÆÊÇÍ¬ÀàµÄ
+    /// ï¿½Ü·ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¸Ã·ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½Òªï¿½Ñµï¿½ï¿½Ä¿ï¿½ï¿½Æºï¿½ï¿½ï¿½ï¿½slotï¿½ï¿½ï¿½ÐµÄ¿ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½
     /// </summary>
     /// <returns></returns>
     public bool CanStack() => StackCount < currentCard.maxStackNum;
@@ -130,11 +129,11 @@ public class CardSlot : MonoBehaviour
 
         OnCardPropertyChanged();
 
-        // µ±¿¨ÅÆÌí¼Óµ½Íæ¼Ò±³°üÊ±
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½Ò±ï¿½ï¿½ï¿½Ê±
         if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = 1 });
-        // µ±×°±¸¿¨ÅÆÊ±
+        // ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
         if (bag is EquipmentBag)
             EventManager.Instance.TriggerEvent(EventType.EquipCard, card as EquipmentCardInstance);
 
@@ -142,7 +141,7 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
-    /// ÒÆ³ýÖ¸¶¨µÄÒ»ÕÅ¿¨ÅÆ
+    /// ï¿½Æ³ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Å¿ï¿½ï¿½ï¿½
     /// </summary>
     /// <param name="card"></param>
     public void RemoveCard(CardInstance card)
@@ -157,17 +156,17 @@ public class CardSlot : MonoBehaviour
         else
             OnCardPropertyChanged();
 
-        // µ±¿¨ÅÆ´ÓÍæ¼Ò±³°üÒÆ³ýÊ±
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Æ´ï¿½ï¿½ï¿½Ò±ï¿½ï¿½ï¿½ï¿½Æ³ï¿½Ê±
         if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = -1 });
-        // µ±Ð¶ÏÂ×°±¸Ê±
+        // ï¿½ï¿½Ð¶ï¿½ï¿½×°ï¿½ï¿½Ê±
         if (bag is EquipmentBag)
             EventManager.Instance.TriggerEvent(EventType.UnequipCard, card as EquipmentCardInstance);
     }
 
     /// <summary>
-    /// ÒÆ³ý×îÓÅÏÈÏÔÊ¾µÄ¿¨ÅÆ
+    /// ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ä¿ï¿½ï¿½ï¿½
     /// </summary>
     /// <returns></returns>
     public CardInstance RemoveCard()
@@ -186,7 +185,7 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
-    /// ÒÆ³ýËùÓÐ¿¨ÅÆ
+    /// ï¿½Æ³ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½
     /// </summary>
     public void RemoveAllCards()
     {

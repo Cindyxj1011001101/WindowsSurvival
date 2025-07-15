@@ -16,7 +16,7 @@ public class StudyWindow : WindowBase
     [SerializeField] ToggleGroup techNodesGroup;
     [SerializeField] List<UITechNode> techNodes;
 
-    private ScriptableTechnologyNode curSelectedTechNode; // ¼ÇÂ¼µ±Ç°Ñ¡ÖÐµÄ¿Æ¼¼½Úµã
+    private ScriptableTechnologyNode curSelectedTechNode; // ï¿½ï¿½Â¼ï¿½ï¿½Ç°Ñ¡ï¿½ÐµÄ¿Æ¼ï¿½ï¿½Úµï¿½
 
     protected override void Awake()
     {
@@ -60,87 +60,87 @@ public class StudyWindow : WindowBase
 
     private void DisplayTechNodeDetails(ScriptableTechnologyNode techNode)
     {
-        // ÏÔÊ¾¿Æ¼¼µÄÃû³ÆºÍÃèÊö
+        // ï¿½ï¿½Ê¾ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æºï¿½ï¿½ï¿½ï¿½ï¿½
         techName.text = techNode.techName;
         techDescription.text = techNode.techDescription;
 
-        // ÏÔÊ¾¿Æ¼¼µÄÇ°ÖÃÑÐ¾¿ÏîÄ¿
+        // ï¿½ï¿½Ê¾ï¿½Æ¼ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ð¾ï¿½ï¿½ï¿½Ä¿
         MonoUtility.DestroyAllChildren(prerequisiteLayout);
         var techNodeEntry = Resources.Load<GameObject>("Prefabs/UI/Controls/TechNodeEntry");
         foreach (var prerequisite in techNode.prerequisites)
         {
             var content = Instantiate(techNodeEntry, prerequisiteLayout).GetComponentInChildren<Text>();
-            content.text = $"¡ª¡ª {prerequisite.techName}";
+            content.text = $"ï¿½ï¿½ï¿½ï¿½ {prerequisite.techName}";
         }
 
-        // ÏÔÊ¾¿Æ¼¼¿ÉÒÔ½âËøµÄÅä·½
+        // ï¿½ï¿½Ê¾ï¿½Æ¼ï¿½ï¿½ï¿½ï¿½Ô½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ä·½
         MonoUtility.DestroyAllChildren(recipeLayout);
         var recipeEntry = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeEntry");
         foreach (var recipe in techNode.recipes)
         {
             var obj = Instantiate(recipeEntry, recipeLayout);
-            obj.transform.Find("Icon").GetComponent<Image>().sprite = recipe.cardData.cardImage;
-            obj.GetComponentInChildren<Text>().text = recipe.cardData.cardName;
+            obj.transform.Find("Icon").GetComponent<Image>().sprite = recipe.card.cardImage;
+            obj.GetComponentInChildren<Text>().text = recipe.card.cardName;
         }
 
-        // ÏÔÊ¾ÑÐ¾¿°´Å¥
-        // ÑÐ¾¿ÒÑÍê³É
+        // ï¿½ï¿½Ê¾ï¿½Ð¾ï¿½ï¿½ï¿½Å¥
+        // ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (TechnologyManager.Instance.IsTechNodeStudied(techNode))
         {
             studyButton.interactable = false;
-            studyButton.GetComponentInChildren<Text>().text = "ÒÑÍê³É";
+            studyButton.GetComponentInChildren<Text>().text = "ï¿½ï¿½ï¿½ï¿½ï¿½";
         }
-        // ÑÐ¾¿ÕýÔÚ½øÐÐ
+        // ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½
         else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
         {
             studyButton.interactable = false;
-            studyButton.GetComponentInChildren<Text>().text = "ÑÐ¾¿ÖÐ";
+            studyButton.GetComponentInChildren<Text>().text = "ï¿½Ð¾ï¿½ï¿½ï¿½";
         }
-        // ÑÐ¾¿Î´½âËø
+        // ï¿½Ð¾ï¿½Î´ï¿½ï¿½ï¿½ï¿½
         else if (TechnologyManager.Instance.IsTechNodeLocked(techNode))
         {
             studyButton.interactable = false;
-            studyButton.GetComponentInChildren<Text>().text = "Î´½âËø";
+            studyButton.GetComponentInChildren<Text>().text = "Î´ï¿½ï¿½ï¿½ï¿½";
         }
-        // ÓÐÆäËûÑÐ¾¿ÔÚ½øÐÐ
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¾ï¿½ï¿½Ú½ï¿½ï¿½ï¿½
         else if (TechnologyManager.Instance.IsAnyTechNodeBeingStudied())
         {
             studyButton.interactable = false;
-            studyButton.GetComponentInChildren<Text>().text = "ÑÐ¾¿";
+            studyButton.GetComponentInChildren<Text>().text = "ï¿½Ð¾ï¿½";
         }
-        // ¿ÉÒÔÑÐ¾¿
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Ð¾ï¿½
         else
         {
             studyButton.interactable = true;
-            studyButton.GetComponentInChildren<Text>().text = "ÑÐ¾¿";
-            // Ìí¼ÓÊÂ¼þ¼àÌý
+            studyButton.GetComponentInChildren<Text>().text = "ï¿½Ð¾ï¿½";
+            // ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½
             studyButton.onClick.RemoveAllListeners();
             studyButton.onClick.AddListener(() =>
             {
-                // µã»÷°´Å¥¿ªÊ¼ÑÐ¾¿
+                // ï¿½ï¿½ï¿½ï¿½ï¿½Å¥ï¿½ï¿½Ê¼ï¿½Ð¾ï¿½
                 TechnologyManager.Instance.Study(techNode);
-                // Ë¢ÐÂÏÔÊ¾
+                // Ë¢ï¿½ï¿½ï¿½ï¿½Ê¾
                 RefreshCurrentDisplay();
             });
         }
 
-        // ÏÔÊ¾ÑÐ¾¿½ø¶ÈºÍÑÐ¾¿ËÙ¶È
-        // ÑÐ¾¿ÒÑÍê³É
+        // ï¿½ï¿½Ê¾ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½Èºï¿½ï¿½Ð¾ï¿½ï¿½Ù¶ï¿½
+        // ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if (TechnologyManager.Instance.IsTechNodeStudied(techNode))
         {
             progressSlider.value = 1;
             progressSlider.GetComponentInChildren<Text>().text = $"{techNode.cost} / {techNode.cost}";
             studyRate.gameObject.SetActive(false);
         }
-        // ÑÐ¾¿ÕýÔÚ½øÐÐ
+        // ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½Ú½ï¿½ï¿½ï¿½
         else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
         {
             progressSlider.value = TechnologyManager.Instance.CurProgress / techNode.cost;
             progressSlider.GetComponentInChildren<Text>().text = $"{TechnologyManager.Instance.CurProgress} / {techNode.cost}";
             studyRate.gameObject.SetActive(true);
-            studyRate.text = $"{TechnologyManager.Instance.CurStudyRate} / 15 ·ÖÖÓ";
+            studyRate.text = $"{TechnologyManager.Instance.CurStudyRate} / 15 ï¿½ï¿½ï¿½ï¿½";
         }
-        // ÆäËû²»ÄÜÑÐ¾¿µÄÇé¿ö
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         else
         {
             progressSlider.value = 0;

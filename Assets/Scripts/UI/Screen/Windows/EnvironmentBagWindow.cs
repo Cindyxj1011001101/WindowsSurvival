@@ -88,7 +88,6 @@ public class EnvironmentBagWindow : BagWindow
                 //TODO：压强显示为文字
                 if (args.state == EnvironmentStateEnum.Electricity)
                 {
-                    Debug.Log(StateManager.Instance.Electricity);
                     resultValue = StateManager.Instance.Electricity / GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue;
                     EnvironmentStateSliders[args.state].GetComponentInChildren<Slider>().value = resultValue;
                     EnvironmentStateSliders[args.state].transform.Find("StateNum").GetComponent<TMP_Text>().text =

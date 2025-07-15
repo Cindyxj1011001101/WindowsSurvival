@@ -1,10 +1,4 @@
-﻿public enum EquipmentType
-{
-    Head = 0,
-    Body = 1,
-    Back = 2,
-    Leg = 3,
-}
+﻿
 
 public class EquipmentBag : BagBase
 {

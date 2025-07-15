@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab955decb80a6a949a64ba0d446fa923, type: 3}
+  m_Name: "\u6E17\u6C34\u88C2\u7F1D"
+  m_EditorClassIdentifier: 
+  cardName: "\u6E17\u6C34\u88C2\u7F1D"
+  cardImage: {fileID: 0}
+  cardDesc: "\u98DE\u8239\u5916\u58F3\u7684\u88C2\u7F1D\uFF0C\u6B63\u4E0D\u65AD\u5730\u6F0F\u6C34\u8FDB\u6765\uFF0C\u5982\u679C\u4E0D\u8D76\u7D27\u5835\u8D77\u6765\u7684\u8BDD\uFF0C\u4E00\u5207\u5C31\u90FD\u7ED3\r\n\u675F\u4E86\u3002"
+  cardType: 7
+  weight: 0
+  maxStackNum: 1
+  maxEndurance: -1
+  cardEventList: []
+  CardTagList: 
+  onUsedUp: {fileID: 0}

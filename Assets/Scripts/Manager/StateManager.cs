@@ -65,6 +65,9 @@ public class StateManager : MonoBehaviour
     public Dictionary<PlayerStateEnum, PlayerState> PlayerStateDict = new Dictionary<PlayerStateEnum, PlayerState>();
     [Header("电力")]
     public float Electricity;
+    [Header("玩家额外状态")]
+    public Dictionary<PlayerStateEnum, float> PlayerExtraStateDict = new Dictionary<PlayerStateEnum, float>();
+    
     #region 单例
     private static StateManager instance;
     public static StateManager Instance
@@ -118,6 +121,13 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.San, new PlayerState(InitPlayerStateData.Instance.San, 100, PlayerStateEnum.San));
         PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 100, PlayerStateEnum.Oxygen));
         PlayerStateDict.Add(PlayerStateEnum.Tired, new PlayerState(InitPlayerStateData.Instance.Tired, 100, PlayerStateEnum.Tired));
+
+        PlayerExtraStateDict.Add(PlayerStateEnum.Fullness, 0);
+        PlayerExtraStateDict.Add(PlayerStateEnum.Health, 0);
+        PlayerExtraStateDict.Add(PlayerStateEnum.Thirst, 0);
+        PlayerExtraStateDict.Add(PlayerStateEnum.San, 0);
+        PlayerExtraStateDict.Add(PlayerStateEnum.Oxygen, 0);
+        PlayerExtraStateDict.Add(PlayerStateEnum.Tired, 0);
     }
 
         /// <summary>
@@ -157,10 +167,16 @@ public class StateManager : MonoBehaviour
     {
         if (PlayerStateDict.ContainsKey(args.state))
         {
-            PlayerStateDict[args.state].curValue += args.value;
-            if (PlayerStateDict[args.state].curValue >= PlayerStateDict[args.state].MaxValue)
+            //氧气在室内时，氧气变化影响环境氧气
+            if(args.state==PlayerStateEnum.Oxygen&&GameManager.Instance.CurEnvironmentBag.PlaceData.isIndoor)
             {
-                PlayerStateDict[args.state].curValue = PlayerStateDict[args.state].MaxValue;
+                OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Oxygen, args.value));
+                return;
+            }
+            PlayerStateDict[args.state].curValue += args.value;
+            if (PlayerStateDict[args.state].curValue >= PlayerStateDict[args.state].MaxValue+PlayerExtraStateDict[args.state])
+            {
+                PlayerStateDict[args.state].curValue = PlayerStateDict[args.state].MaxValue+PlayerExtraStateDict[args.state];
             }
             if (PlayerStateDict[args.state].curValue <= 0)
             {
@@ -195,6 +211,22 @@ public class StateManager : MonoBehaviour
         {
             //在当前背包中做数值变化
             EventManager.Instance.TriggerEvent(EventType.CurEnvironmentChangeState, args);
+        }
+    }
+
+    public void EquipExtraState(EquipmentCardInstance equipment)
+    {
+        if(equipment.CardData is EquipmentCardData data)
+        {
+            PlayerExtraStateDict[PlayerStateEnum.Oxygen] += data.ExtraOxygen;
+        }
+    }
+
+    public void UnequipExtraState(EquipmentCardInstance equipment)
+    {
+        if(equipment.CardData is EquipmentCardData data)
+        {
+            PlayerExtraStateDict[PlayerStateEnum.Oxygen] -= data.ExtraOxygen;
         }
     }
     #endregion

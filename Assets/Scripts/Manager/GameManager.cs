@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
                 EventTrigger.Invoke();
             }
         }
-        // 3. 处理时间变化
+        // 处理时间变化
         TimeManager.Instance.AddTime(cardEvent.Time);
     }
 
@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
     public void HandleCardEvent(CardEvent cardEvent)
     {
         if (cardEvent == null) return;
+        // 数值变化-场景移动-时间变化-卡牌掉落
 
         if (!CanCardEventInvoke(cardEvent)) return;
         // 1. 处理玩家状态的数值变化
@@ -140,15 +141,15 @@ public class GameManager : MonoBehaviour
                 continue;
             }
 
-            AddCard(drop.CardData, toPlayerBag);
+            AddCard(drop.card, toPlayerBag);
         }
     }
 
-    public void AddCard(CardData cardData, bool toPlayerBag)
+    public void AddCard(Card card, bool toPlayerBag)
     {
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("抽卡");
-        CardInstance cardInstance = CardFactory.CreateCardIntance(cardData);
+        CardInstance cardInstance = CardFactory.CreateCardIntance(card);
         if (toPlayerBag)
         {
             if (playerBag.CanAddCard(cardInstance))

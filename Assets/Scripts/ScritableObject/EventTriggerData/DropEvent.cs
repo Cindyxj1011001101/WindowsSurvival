@@ -11,7 +11,7 @@ public class Drop
     public int DropProb;
 
     //掉落物体及其数量
-    //public CardData cardData;
+    public Card card;
 
     public int DropNum;
 

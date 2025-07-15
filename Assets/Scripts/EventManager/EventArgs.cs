@@ -17,6 +17,8 @@ public enum EventType
     UnlockRecipe, // 解锁合成配方
     GameOver, // 游戏结束
     CurEnvironmentChangeState, // 当前环境状态变化
+    EquipCard,
+    UnequipCard,
 
 }
 
