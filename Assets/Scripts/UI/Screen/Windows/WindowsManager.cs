@@ -66,7 +66,7 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
             window = openedWindows[appName];
         }
         if(SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("万能泡泡音");
+            SoundManager.Instance.PlaySound("万能泡泡音",true);
 
         // 打开窗口
         window.Open();

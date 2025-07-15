@@ -96,7 +96,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private void Home()
     {
         if(SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("放置卡牌");
+            SoundManager.Instance.PlaySound("放置卡牌",true);
         transform.SetParent(sourceParent);
         rectTransform.anchoredPosition = Vector2.zero;
     }

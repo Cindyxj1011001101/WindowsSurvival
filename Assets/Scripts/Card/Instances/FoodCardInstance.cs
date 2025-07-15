@@ -53,6 +53,6 @@
     public override void Use()
     {
         base.Use();
-        SoundManager.Instance.PlaySound("吃_01");
+        SoundManager.Instance.PlaySound("吃_01",true);
     }
 }
