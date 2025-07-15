@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using TMPro;
 
@@ -81,7 +81,9 @@ public class TimeManager : MonoBehaviour
                 time -= curInterval;
                 curInterval = SettleInterval;
                 EventManager.Instance.TriggerEvent(EventType.IntervalSettle);
-                EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
+                // 这里没必要触发这个事件
+                // 这个事件是在卡牌的属性发生变化时，由卡牌自己调用的
+                //EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
             }
             else
             {

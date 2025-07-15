@@ -136,7 +136,7 @@ public class CardSlot : MonoBehaviour
                 new ChangePlayerBagCardsArgs { card = card, add = 1 });
         // 当装备卡牌时
         if (bag is EquipmentBag)
-            EventManager.Instance.TriggerEvent(EventType.EquipCard, card as EquipmentCardInstance);
+            EventManager.Instance.TriggerEvent(EventType.Equip, card as EquipmentCardInstance);
 
         card.SetCardSlot(this);
     }
@@ -163,7 +163,7 @@ public class CardSlot : MonoBehaviour
                 new ChangePlayerBagCardsArgs { card = card, add = -1 });
         // 当卸下装备时
         if (bag is EquipmentBag)
-            EventManager.Instance.TriggerEvent(EventType.UnequipCard, card as EquipmentCardInstance);
+            EventManager.Instance.TriggerEvent(EventType.Unequip, card as EquipmentCardInstance);
     }
 
     /// <summary>
