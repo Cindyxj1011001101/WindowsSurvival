@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class UITechNode : MonoBehaviour
@@ -14,7 +16,7 @@ public class UITechNode : MonoBehaviour
         // 当科技节点未几所或者不是当前正在研究科技节点时
         // 该节点置灰
         if ((TechnologyManager.Instance.IsAnyTechNodeBeingStudied() &&
-            !TechnologyManager.Instance.IsTechNodeStudied(techNode)) ||
+            !TechnologyManager.Instance.IsTechNodeBeingStudied(techNode)) ||
             TechnologyManager.Instance.IsTechNodeLocked(techNode))
             lockImage.gameObject.SetActive(true);
         else
