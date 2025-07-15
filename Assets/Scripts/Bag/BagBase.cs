@@ -288,6 +288,8 @@ public abstract class BagBase : MonoBehaviour
     /// </summary>
     public void CompactCards()
     {
+        if(SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("万能泡泡音",true);
         // 记录需要移动的卡牌和它们的原始位置
         List<(CardSlot slot, int index)> nonEmptySlots = new List<(CardSlot, int)>();
 
@@ -345,5 +347,7 @@ public abstract class BagBase : MonoBehaviour
                 targetSlot.AddCard(sourceSlot.RemoveCard());
             }
         }
+        if(SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("整理",true);
     }
 }

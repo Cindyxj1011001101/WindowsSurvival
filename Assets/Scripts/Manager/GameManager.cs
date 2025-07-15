@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
     public void AddCard(CardData cardData, bool toPlayerBag)
     {
         if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("抽卡");
+            SoundManager.Instance.PlaySound("抽卡",true);
         CardInstance cardInstance = CardFactory.CreateCardIntance(cardData);
         if (toPlayerBag)
         {

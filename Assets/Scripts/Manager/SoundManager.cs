@@ -51,15 +51,36 @@ public class SoundManager : MonoBehaviour
         audioSource.Stop();
     }
 
-    public void PlaySound(AudioClip clip)
+    public void PlaySound(AudioClip clip, bool isRandom)
     {
-        audioSource.PlayOneShot(clip, GetNormalizedSFXVolume());
+        // 获取基础音量（原逻辑）
+        float baseVolume = GetNormalizedSFXVolume();
+        if (isRandom == true)
+        {
+            // 随机音量波动（±10%）
+            float volumeVariation = 1f + UnityEngine.Random.Range(-0.1f, 0.1f);
+            float finalVolume = Mathf.Clamp(baseVolume * volumeVariation, 0f, 1f);
+
+            // 随机音调波动（±5%）
+            audioSource.pitch = 1f + UnityEngine.Random.Range(-0.1f, 0.1f);
+
+            // 播放音效
+            audioSource.PlayOneShot(clip, finalVolume);
+
+            
+        }
+        else
+        {
+            audioSource.pitch = 1f;
+            audioSource.PlayOneShot(clip, baseVolume);
+        }
+        
     }
 
-    public void PlaySound(string clipName)
+    public void PlaySound(string clipName,bool isRandom = false)
     {
         var clip = GetClip(clipName, "SFX");
-        PlaySound(clip);
+        PlaySound(clip,isRandom);
     }
 
     private AudioClip GetClip(string clipName, string type)
