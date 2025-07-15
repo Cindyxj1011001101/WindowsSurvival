@@ -11,7 +11,14 @@ public class UITechNode : MonoBehaviour
     public void DisplayTechNode(ScriptableTechnologyNode techNode)
     {
         // 显示解锁情况
-        lockImage.gameObject.SetActive(TechnologyManager.Instance.IsTechNodeLocked(techNode));
+        // 当科技节点未几所或者不是当前正在研究科技节点时
+        // 该节点置灰
+        if ((TechnologyManager.Instance.IsAnyTechNodeBeingStudied() &&
+            !TechnologyManager.Instance.IsTechNodeStudied(techNode)) ||
+            TechnologyManager.Instance.IsTechNodeLocked(techNode))
+            lockImage.gameObject.SetActive(true);
+        else
+            lockImage.gameObject.SetActive(false);
 
         // 显示科技名称
         techName.text = techNode.techName;

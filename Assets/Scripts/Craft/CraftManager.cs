@@ -26,9 +26,7 @@ public class CraftManager
 
     public bool IsRecipeLocked(ScriptableRecipe recipe)
     {
-        //return !unlockedRecipes.Contains(recipe.cardData.name);
-
-        return false;
+        return !unlockedRecipes.Contains(recipe.cardData.name);
     }
 
     public void UnlockRecipe(ScriptableRecipe recipe)

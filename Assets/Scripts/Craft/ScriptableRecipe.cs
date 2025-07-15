@@ -12,6 +12,8 @@ public enum RecipeType
     Medic = 2,
     Tool = 3,
     Material = 4,
+    Equipment = 5,
+    Construction = 6,
 }
 
 [Serializable]

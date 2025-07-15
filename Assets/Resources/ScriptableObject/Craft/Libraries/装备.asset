@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 803290fb9841c6747abe99e7cd31ffcc, type: 3}
-  m_Name: "\u91CE\u708A"
+  m_Script: {fileID: 11500000, guid: 7bfb33a3becfee048b3ebef908168600, type: 3}
+  m_Name: "\u88C5\u5907"
   m_EditorClassIdentifier: 
-  techName: "\u91CE\u708A"
-  techDescription: 
-  recipes: []
-  prerequisites: []
-  cost: 12
+  craftType: 5
+  recipes:
+  - {fileID: 11400000, guid: 5156f6c9538865944b84e525fc428713, type: 2}
+  - {fileID: 11400000, guid: 5ed6c56ae90daf94c916412c38735c58, type: 2}

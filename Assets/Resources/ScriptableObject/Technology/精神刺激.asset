@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 803290fb9841c6747abe99e7cd31ffcc, type: 3}
-  m_Name: "\u91CE\u708A"
+  m_Name: "\u7CBE\u795E\u523A\u6FC0"
   m_EditorClassIdentifier: 
-  techName: "\u91CE\u708A"
+  techName: "\u7CBE\u795E\u523A\u6FC0"
   techDescription: 
   recipes: []
-  prerequisites: []
-  cost: 12
+  prerequisites:
+  - {fileID: 11400000, guid: ebf44d50809f1d743b25524bb8c70d5f, type: 2}
+  cost: 96

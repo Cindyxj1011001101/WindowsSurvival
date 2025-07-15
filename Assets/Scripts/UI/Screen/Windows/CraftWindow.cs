@@ -159,6 +159,10 @@ public class CraftWindow : WindowBase
 
         // 显示制作按钮
         craftButton.interactable = CraftManager.Instance.CanCrfat(recipe);
+        if (CraftManager.Instance.IsRecipeLocked(recipe))
+            craftButton.GetComponentInChildren<Text>().text = "未解锁";
+        else
+            craftButton.GetComponentInChildren<Text>().text = "制作";
 
         // 添加制作事件
         craftButton.onClick.RemoveAllListeners();
