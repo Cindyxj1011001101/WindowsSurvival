@@ -10,14 +10,14 @@ public class EquipmentBag : BagBase
 {
     private void Awake()
     {
-        EventManager.Instance.AddListener<EquipmentCardInstance>(EventType.EquipCard, OnCardEquipped);
-        EventManager.Instance.AddListener<EquipmentCardInstance>(EventType.UnequipCard, OnCardUnequipped);
+        EventManager.Instance.AddListener<EquipmentCardInstance>(EventType.Equip, OnCardEquipped);
+        EventManager.Instance.AddListener<EquipmentCardInstance>(EventType.Unequip, OnCardUnequipped);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<EquipmentCardInstance>(EventType.EquipCard, OnCardEquipped);
-        EventManager.Instance.RemoveListener<EquipmentCardInstance>(EventType.UnequipCard, OnCardUnequipped);
+        EventManager.Instance.RemoveListener<EquipmentCardInstance>(EventType.Equip, OnCardEquipped);
+        EventManager.Instance.RemoveListener<EquipmentCardInstance>(EventType.Unequip, OnCardUnequipped);
     }
 
     protected override void Init()
