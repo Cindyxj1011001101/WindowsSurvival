@@ -36,7 +36,12 @@ public class StateWindow : WindowBase
     {
         PlayerState state = StateManager.Instance.PlayerStateDict[stateEnum];
         Sliders[(int)stateEnum].value = state.curValue / state.MaxValue;
-        StateNumTexts[(int)stateEnum].text = state.curValue.ToString() + "/" + state.MaxValue.ToString();
+        //StateNumTexts[(int)stateEnum].text = state.curValue.ToString() + "/" + state.MaxValue.ToString();
+        // 对当前值进行向上取整到小数点后一位
+        float roundedCurValue = Mathf.Ceil(state.curValue * 10) / 10f;
+    
+        // 使用F1格式确保显示一位小数
+        StateNumTexts[(int)stateEnum].text = $"{roundedCurValue:F1}/{state.MaxValue}";
     }
 
     //初始化显示数据
