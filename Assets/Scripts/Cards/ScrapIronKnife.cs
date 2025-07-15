@@ -36,4 +36,9 @@ public class ScrapIronKnife:Card
     {
         return;
     }
+
+    public override void Grow()
+    {
+        return;
+    }
 }

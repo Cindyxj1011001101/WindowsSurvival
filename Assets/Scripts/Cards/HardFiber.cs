@@ -28,4 +28,9 @@ public class HardFiber:Card
     {
         return;
     }
+
+    public override void Grow()
+    {
+        return;
+    }
 }

@@ -129,4 +129,9 @@ public class RatBody:Card
         }
     }
 #endregion
+
+    public override void Grow()
+    {
+        return;
+    }
 }

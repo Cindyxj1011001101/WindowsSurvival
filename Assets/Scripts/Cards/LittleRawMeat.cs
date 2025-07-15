@@ -58,4 +58,9 @@ public class LittleRawMeat:Card
     {
         return;
     }
+
+    public override void Grow()
+    {
+        return;
+    }
 }

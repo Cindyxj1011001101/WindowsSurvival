@@ -91,4 +91,9 @@ public class WasteHeap:Card
         }
     }
 
+    public override void Grow()
+    {
+        return;
+    }
+
 }

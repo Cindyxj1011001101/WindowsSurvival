@@ -27,6 +27,13 @@ public class Drop
     [JsonIgnore]
     public bool IsEmpty => DropNum == 0;
 
+    public Drop(Card card, int dropNum, string dropDesc)
+    {
+        this.card = card;
+        this.DropNum = dropNum;
+        this.DropDesc = dropDesc;
+    }
+
 }
 
 [CreateAssetMenu(fileName = "DropEvent", menuName = "ScritableObject/DropEvent")]

@@ -37,6 +37,12 @@ public class DoorToCockpit:Card
     {
         return;
     }
+
+    public override void Grow()
+    {
+        return;
+    }
+
         public override void Fresh()
     {
         return;

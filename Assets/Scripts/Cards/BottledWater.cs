@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //瓶装水
-public class BottledWater:Card//或许要改成英文名
+public class BottledWater : Card//或许要改成英文名
 {
 
 
@@ -14,7 +14,7 @@ public class BottledWater:Card//或许要改成英文名
         cardDesc = "一瓶纯净水，连瓶子也是用水凝胶做的，饮用时连同瓶子一起喝下去。";
         cardImage = Resources.Load<Sprite>("CardImage/瓶装水");
         cardType = CardType.Food;
-        maxStackNum =4;
+        maxStackNum = 4;
         moveable = true;
         weight = 1f;
         events = new List<Event>();
@@ -37,7 +37,13 @@ public class BottledWater:Card//或许要改成英文名
     {
         return;
     }
-        public override void Fresh()
+
+    public override void Grow()
+    {
+        return;
+    }
+
+    public override void Fresh()
     {
         return;
     }

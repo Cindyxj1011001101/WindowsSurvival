@@ -18,6 +18,7 @@ public abstract class Card
 
     public abstract void Use();
     public abstract void Fresh();
+    public abstract void Grow();
 }
 
 //事件类

@@ -42,4 +42,9 @@ public class RotMaterial:Card
     {
         return;
     }
+
+    public override void Grow()
+    {
+        return;
+    }
 }

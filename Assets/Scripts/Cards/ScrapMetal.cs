@@ -29,4 +29,9 @@ public class ScrapMetal:Card
     {
         return;
     }
+
+    public override void Grow()
+    {
+        return;
+    }
 }
