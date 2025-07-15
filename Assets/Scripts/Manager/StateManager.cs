@@ -23,7 +23,7 @@ public enum EnvironmentStateEnum
 {
     Electricity,
     Oxygen,
-    Temperature,
+    Pressure,
     Height,
     HasCable,
 }
@@ -111,6 +111,7 @@ public class StateManager : MonoBehaviour
     }
     public void Init()
     {
+        //初始化玩家状态
         PlayerStateDict.Add(PlayerStateEnum.Health, new PlayerState(InitPlayerStateData.Instance.Health, 100, PlayerStateEnum.Health));
         PlayerStateDict.Add(PlayerStateEnum.Fullness, new PlayerState(InitPlayerStateData.Instance.Fullness, 100, PlayerStateEnum.Fullness));
         PlayerStateDict.Add(PlayerStateEnum.Thirst, new PlayerState(InitPlayerStateData.Instance.Thirst, 100, PlayerStateEnum.Thirst));
@@ -118,9 +119,8 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 100, PlayerStateEnum.Oxygen));
         PlayerStateDict.Add(PlayerStateEnum.Tired, new PlayerState(InitPlayerStateData.Instance.Tired, 100, PlayerStateEnum.Tired));
     }
-    #endregion
 
-    /// <summary>
+        /// <summary>
     /// 开局初始化环境状态
     /// </summary>
     public Dictionary<EnvironmentStateEnum, EnvironmentState> InitEnvironmentStateDict()
@@ -131,7 +131,7 @@ public class StateManager : MonoBehaviour
         {
             environmentStateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
         }
-        environmentStateDict.Add(EnvironmentStateEnum.Temperature, new EnvironmentState(2, 4, EnvironmentStateEnum.Temperature));
+        environmentStateDict.Add(EnvironmentStateEnum.Pressure, new EnvironmentState(2, 4, EnvironmentStateEnum.Pressure));
         environmentStateDict.Add(EnvironmentStateEnum.Height, new EnvironmentState(0, 100, EnvironmentStateEnum.Height));
         if(GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
         {
@@ -141,9 +141,12 @@ public class StateManager : MonoBehaviour
         {
             environmentStateDict.Add(EnvironmentStateEnum.HasCable, new EnvironmentState(0, 1, EnvironmentStateEnum.HasCable));
         }
-
+        environmentStateDict.Add(EnvironmentStateEnum.Electricity, new EnvironmentState(Electricity, 50, EnvironmentStateEnum.Electricity));
         return environmentStateDict;
     }
+    #endregion
+
+
 
     #region 状态变化相关
     /// <summary>
@@ -164,7 +167,6 @@ public class StateManager : MonoBehaviour
                 PlayerStateDict[args.state].curValue = 0;
             }
         }
-
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, args.state);
     }
 
@@ -174,6 +176,7 @@ public class StateManager : MonoBehaviour
     /// </summary>
     public void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
     {
+        //判断一下是否为修改电力，如果是则直接修改电力值
         if(args.state==EnvironmentStateEnum.Electricity)
         {
             Electricity += args.value;
@@ -185,10 +188,12 @@ public class StateManager : MonoBehaviour
             {
                 Electricity=0;
             }
-            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, EnvironmentStateEnum.Electricity);
+            //前端UI刷新
+            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Electricity));
         }
         else
         {
+            //在当前背包中做数值变化
             EventManager.Instance.TriggerEvent(EventType.CurEnvironmentChangeState, args);
         }
     }
@@ -209,6 +214,7 @@ public class StateManager : MonoBehaviour
 
     public void EnvironmentIntervalSettle()
     {
+        Debug.Log("-0.2电力");
         OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Electricity, -0.2f));
     }
 
@@ -268,7 +274,7 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraHealthChange()
     {
-        throw new NotImplementedException();
+
     }
 
     /// <summary>
@@ -311,7 +317,7 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraOxygenChange()
     {
-        throw new NotImplementedException();
+
     }
 
     /// <summary>

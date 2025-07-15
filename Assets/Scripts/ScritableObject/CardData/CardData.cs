@@ -18,7 +18,8 @@ public enum CardType
     Place,
     ResourcePoint,
     Equipment,
-    Construction
+    Creature,
+    Construction,
 }
 
 
@@ -26,7 +27,8 @@ public enum CardType
 public class CardData : ScriptableObject
 {
     public string cardName;
-    public Sprite cardImage;    
+    public Sprite cardImage;
+    [TextArea(3, 5)]
     public string cardDesc;
     public CardType cardType;
     public float weight;

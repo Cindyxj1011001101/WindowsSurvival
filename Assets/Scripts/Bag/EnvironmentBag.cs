@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EnvironmentBag : BagBase
@@ -27,27 +27,33 @@ public class EnvironmentBag : BagBase
         EventManager.Instance.AddListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
     }
 
+
     private void OnDiscoveryDegreeChanged(ChangeDiscoveryDegreeArgs args)
     {
         if (args.place == placeData.placeType)
             discoveryDegree = args.discoveryDegree;
     }
-
+    //当前环境状态变化(除电力以外的数值变化)
     private void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
     {
-        if(EnvironmentStateDict.ContainsKey(args.state))
+        if (args.place == placeData.placeType)
         {
-            EnvironmentStateDict[args.state].curValue += args.value;
-            if(EnvironmentStateDict[args.state].curValue>=EnvironmentStateDict[args.state].MaxValue)
+            if (EnvironmentStateDict.ContainsKey(args.state))
             {
-                EnvironmentStateDict[args.state].curValue=EnvironmentStateDict[args.state].MaxValue;
+                EnvironmentStateDict[args.state].curValue += args.value;
+                if (EnvironmentStateDict[args.state].curValue >= EnvironmentStateDict[args.state].MaxValue)
+                {
+                    EnvironmentStateDict[args.state].curValue = EnvironmentStateDict[args.state].MaxValue;
+                }
+                if (EnvironmentStateDict[args.state].curValue <= 0)
+                {
+                    EnvironmentStateDict[args.state].curValue = 0;
+                }
+                //前端UI刷新
+                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, args.state);
             }
-            if(EnvironmentStateDict[args.state].curValue<=0)
-            {
-                EnvironmentStateDict[args.state].curValue=0;
-            }
-            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, args.state);
         }
+
     }
 
     protected override void InitBag(BagRuntimeData runtimeData)
@@ -58,9 +64,15 @@ public class EnvironmentBag : BagBase
         discoveryDegree = data.discoveryDegree;
         EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>(data.environmentStateDict);
         //如果是开局进入，则初始化环境状态
-        if (EnvironmentStateDict.Count == 0){
-            EnvironmentStateDict=StateManager.Instance.InitEnvironmentStateDict();
+        if (EnvironmentStateDict.Count == 0)
+        {
+            EnvironmentStateDict = StateManager.Instance.InitEnvironmentStateDict();
         }
+        foreach (var state in EnvironmentStateDict)
+        {
+            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, state.Key));
+        }
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, EnvironmentStateEnum.Electricity));
         // 初始化一次性掉落列表
         var e = exploreEvent.eventList.Find(c => c is PlaceDropEvent);
         (e as PlaceDropEvent).curOnceDropList = data.disposableDropList;
@@ -87,4 +99,5 @@ public class EnvironmentBag : BagBase
         EventManager.Instance.RemoveListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDiscoveryDegreeChanged);
         EventManager.Instance.RemoveListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
     }
+
 }

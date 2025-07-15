@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85950229e70970441a82e6fdea7bdccd, type: 3}
+  m_Name: "\u7231\u60C5\u8D1D"
+  m_EditorClassIdentifier: 
+  cardName: "\u7231\u60C5\u8D1D "
+  cardImage: {fileID: 0}
+  cardDesc: "\u5F62\u4F3C\u6247\u8D1D\u7684\u53E4\u602A\u5F02\u661F\u751F\u7269\u3002\u5176\u5F3A\u5927\u7684\u808C\u8089\u4F7F\u5176\u80FD\u50CF\u9C7C\u4E00\u6837\u6247\u52A8\u8D1D\u58F3\u6E38\u52A8\u3002\u7E41\u6B96\u671F\u7684\u96C4\u8D1D\u4F1A\u641C\u96C6\u5404\u7C7B\u73CD\u5B9D\u85CF\u5728\u8D1D\u58F3\u4E2D\u4EE5\u5438\u5F15\u96CC\u8D1D\u3002\n"
+  cardType: 6
+  weight: 1.5
+  maxStackNum: 5
+  maxEndurance: 1
+  cardEventList: []
+  CardTagList: 
+  onUsedUp: {fileID: 0}
+  MaxFresh: 2160
+  MaxProductProcedure: 14400
+  MaxProductAmount: 1
