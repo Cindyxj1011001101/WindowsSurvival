@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-public abstract class CardInstance : IComparable<CardInstance>
+public class CardInstance : IComparable<CardInstance>
 {
     public string dataPath;
 

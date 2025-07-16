@@ -19,6 +19,9 @@ public enum EventType
     CurEnvironmentChangeState, // 当前环境状态变化
     Equip, // 穿上装备
     Unequip // 卸下装备
+    EquipCard,
+    UnequipCard,
+
 }
 
 public class ChangeStateArgs

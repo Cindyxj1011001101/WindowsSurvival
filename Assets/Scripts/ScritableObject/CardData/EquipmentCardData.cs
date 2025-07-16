@@ -4,4 +4,6 @@ using UnityEngine;
 public class EquipmentCardData:CardData
 {
     public EquipmentType equipmentType;
+    public int ExtraOxygen;
+
 }

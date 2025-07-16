@@ -30,7 +30,7 @@ public class UITechNode : MonoBehaviour
         foreach (var recipe in techNode.recipes)
         {
             var obj = Instantiate(recipeEntry, recipeLayout);
-            obj.transform.Find("Icon").GetComponent<Image>().sprite = recipe.cardData.cardImage;
+            obj.transform.Find("Icon").GetComponent<Image>().sprite = recipe.card.cardImage;
         }
 
         // 显示研究进度和研究速度

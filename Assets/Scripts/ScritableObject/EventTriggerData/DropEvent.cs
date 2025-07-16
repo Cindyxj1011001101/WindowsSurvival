@@ -11,7 +11,7 @@ public class Drop
     public int DropProb;
 
     //掉落物体及其数量
-    //public CardData cardData;
+    public Card card;
 
     public int DropNum;
 
@@ -26,6 +26,13 @@ public class Drop
 
     [JsonIgnore]
     public bool IsEmpty => DropNum == 0;
+
+    public Drop(Card card, int dropNum, string dropDesc)
+    {
+        this.card = card;
+        this.DropNum = dropNum;
+        this.DropDesc = dropDesc;
+    }
 
 }
 
