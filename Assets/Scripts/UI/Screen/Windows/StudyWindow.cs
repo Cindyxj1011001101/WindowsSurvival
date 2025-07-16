@@ -120,11 +120,11 @@ public class StudyWindow : WindowBase
             studyButton.GetComponentInChildren<Text>().text = "δ����";
         }
         // �������о��ڽ���
-        else if (TechnologyManager.Instance.IsAnyTechNodeBeingStudied())
-        {
-            studyButton.interactable = false;
-            studyButton.GetComponentInChildren<Text>().text = "�о�";
-        }
+        // else if (TechnologyManager.Instance.IsAnyTechNodeBeingStudied())
+        // {
+        //     studyButton.interactable = false;
+        //     studyButton.GetComponentInChildren<Text>().text = "�о�";
+        // }
         // �����о�
         else
         {
@@ -166,13 +166,13 @@ public class StudyWindow : WindowBase
             studyRate.text = $"+ {TechnologyManager.Instance.CurStudyRate:0.0} �Ƽ��� / 15 ����";
         }
         // �о����ڽ���
-        else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
-        {
-            progressSlider.value = TechnologyManager.Instance.CurProgress / techNode.cost;
-            progressSlider.GetComponentInChildren<Text>().text = $"{TechnologyManager.Instance.CurProgress} / {techNode.cost}";
-            studyRate.gameObject.SetActive(true);
-            studyRate.text = $"{TechnologyManager.Instance.CurStudyRate} / 15 ����";
-        }
+        // else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
+        // {
+        //     progressSlider.value = TechnologyManager.Instance.CurProgress / techNode.cost;
+        //     progressSlider.GetComponentInChildren<Text>().text = $"{TechnologyManager.Instance.CurProgress} / {techNode.cost}";
+        //     studyRate.gameObject.SetActive(true);
+        //     studyRate.text = $"{TechnologyManager.Instance.CurStudyRate} / 15 ����";
+        // }
         // ���������о������
         else
         {
