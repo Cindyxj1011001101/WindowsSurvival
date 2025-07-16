@@ -86,15 +86,20 @@ public abstract class BagBase : MonoBehaviour
     /// <returns></returns>
     public virtual bool CanAddCard(CardInstance card)
     {
-        // 如果背包未满，则可以添加
-        if (!IsBagFull) return true;
+        //// 如果背包未满，则可以添加
+        //if (!IsBagFull) return true;
 
-        // 背包已满
-        // 则能否添加取决于背包中是否有同类卡牌并且没有达到堆叠上限
-        var slots = GetSlotsContainingSimilarCard(card.CardData);
+        //// 背包已满
+        //// 则能否添加取决于背包中是否有同类卡牌并且没有达到堆叠上限
+        //var slots = GetSlotsContainingSimilarCard(card.CardData);
+        //foreach (CardSlot slot in slots)
+        //{
+        //    if (slot.CanAddCard()) return true;
+        //}
+
         foreach (CardSlot slot in slots)
         {
-            if (slot.CanStack()) return true;
+            if (slot.CanAddCard(card)) return true;
         }
 
         return false;
@@ -129,7 +134,7 @@ public abstract class BagBase : MonoBehaviour
         // 尝试堆叠同类卡牌
         foreach (var slot in GetSlotsContainingSimilarCard(card.CardData))
         {
-            if (slot.CanStack())
+            if (slot.CanAddCard(card))
             {
                 slot.AddCard(card);
                 return;
@@ -225,7 +230,8 @@ public abstract class BagBase : MonoBehaviour
             // 否则将剩余卡牌全部移除
             foreach (var slot in slots)
             {
-                slot.RemoveAllCards();
+                //slot.RemoveAllCards();
+                slot.ClearSlot();
             }
             return totalCount;
         }
@@ -239,7 +245,8 @@ public abstract class BagBase : MonoBehaviour
             // 全部从slot中移除
             if (leftAmount > slot.StackCount)
             {
-                slot.RemoveAllCards();
+                //slot.RemoveAllCards();
+                slot.ClearSlot();
                 leftAmount -= slot.StackCount;
             }
             // 剩余要移除的数量小于等于当前slot的总数
@@ -291,7 +298,7 @@ public abstract class BagBase : MonoBehaviour
         if(SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("万能泡泡音",true);
         // 记录需要移动的卡牌和它们的原始位置
-        List<(CardSlot slot, int index)> nonEmptySlots = new List<(CardSlot, int)>();
+        List<(CardSlot slot, int index)> nonEmptySlots = new();
 
         // 第一次遍历：收集所有非空槽位信息
         for (int i = 0; i < slots.Count; i++)
@@ -330,24 +337,30 @@ public abstract class BagBase : MonoBehaviour
 
         CardSlot targetSlot = slots[targetIndex];
 
-        // 如果目标槽位为空，直接移动整个堆叠
-        if (targetSlot.IsEmpty)
+        //// 如果目标槽位为空，直接移动整个堆叠
+        //if (targetSlot.IsEmpty)
+        //{
+        //    while (!sourceSlot.IsEmpty)
+        //    {
+        //        targetSlot.AddCard(sourceSlot.RemoveCard());
+        //    }
+        //}
+        //// 如果目标槽位有相同卡牌且可以堆叠
+        //else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData) && targetSlot.CanAddCard())
+        //{
+        //    // 尽可能多地移动卡牌到目标槽位
+        //    while (sourceSlot.StackCount > 0 && targetSlot.CanAddCard())
+        //    {
+        //        targetSlot.AddCard(sourceSlot.RemoveCard());
+        //    }
+        //}
+
+        while (!sourceSlot.IsEmpty && targetSlot.CanAddCard(sourceSlot.PeekCard()))
         {
-            while (!sourceSlot.IsEmpty)
-            {
-                targetSlot.AddCard(sourceSlot.RemoveCard());
-            }
+            targetSlot.AddCard(sourceSlot.RemoveCard());
         }
-        // 如果目标槽位有相同卡牌且可以堆叠
-        else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData) && targetSlot.CanStack())
-        {
-            // 尽可能多地移动卡牌到目标槽位
-            while (sourceSlot.StackCount > 0 && targetSlot.CanStack())
-            {
-                targetSlot.AddCard(sourceSlot.RemoveCard());
-            }
-        }
-        if(SoundManager.Instance != null)
+
+        if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("整理",true);
     }
 }
