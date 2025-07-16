@@ -1,22 +1,16 @@
-﻿using UnityEditor.Localization.Plugins.XLIFF.V12;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
-    //private Transform sourceParent;
     private CardSlot sourceSlot;
     private Canvas canvas;
-    //private RectTransform rectTransform;
-    //private CanvasGroup canvasGroup;
 
     private CardSlot cursorSlot;
     private int pickedCount;
 
     private void Awake()
     {
-        //rectTransform = GetComponent<RectTransform>();
-        //canvasGroup = GetComponent<CanvasGroup>();
         sourceSlot = GetComponentInParent<CardSlot>();
         canvas = GetComponentInParent<Canvas>();
     }
@@ -36,24 +30,16 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         sourceSlot.DisplayCard(sourceSlot.PeekCard(), sourceSlot.StackCount - pickedCount);
         cursorSlot.DisplayCard(sourceSlot.PeekCard(), pickedCount);
-
-        //sourceParent = transform.parent;
-        //transform.SetParent(canvas.transform);
-        //canvasGroup.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        //rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         (cursorSlot.transform as RectTransform).anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
         Destroy(cursorSlot.gameObject);
-
-        //canvasGroup.blocksRaycasts = true;
-        //canvasGroup.alpha = 1f;
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
 
@@ -72,7 +58,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 }
             }
             // 跨背包放置
-            else if (sourceSlot.CanDragOverBag)
+            else if (sourceSlot.PeekCard().moveable)
             {
                 PlaceCardInDifferentBag(targetBag, pickedCount);
             }
@@ -85,36 +71,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private void PlaceCardInSameBag(CardSlot targetSlot, int amount)
     {
-        // 如果目标格子为空
-        //if (targetSlot.IsEmpty)
-        //{
-        //    //// 直接全部放到目标格子中
-        //    //while (sourceSlot.StackCount > 0)
-        //    //{
-        //    //    targetSlot.AddCard(sourceSlot.RemoveCard());
-        //    //}
-
-        //    // 直接放入目标格子中
-        //    for (int i = 0; i < amount; i++)
-        //    {
-        //        targetSlot.AddCard(sourceSlot.RemoveCard());
-        //    }
-        //}
-        //// 如果目标格子有相同卡牌
-        //else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData))
-        //{
-        //    // 往目标格子里尽可能放更多
-        //    //while (sourceSlot.StackCount > 0 && targetSlot.CanStack())
-        //    //{
-        //    //    targetSlot.AddCard(sourceSlot.RemoveCard());
-        //    //}
-        //    for (int i = 0; i < amount; i++)
-        //    {
-        //        if (!targetSlot.CanAddCard()) break;
-        //        targetSlot.AddCard(sourceSlot.RemoveCard());
-        //    }
-        //}
-
         for (int i = 0; i < amount; i++)
         {
             if (!targetSlot.CanAddCard(sourceSlot.PeekCard())) break;
@@ -124,11 +80,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private void PlaceCardInDifferentBag(BagBase targetBag, int amount)
     {
-        //while (sourceSlot.StackCount > 0 && targetBag.CanAddCard(sourceSlot.PeekCard()))
-        //{
-        //    targetBag.AddCard(sourceSlot.RemoveCard());
-        //}
-
         for (int i = 0; i < amount; i++)
         {
             if (!targetBag.CanAddCard(sourceSlot.PeekCard())) break;
@@ -152,15 +103,4 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
         }
     }
-
-    ///// <summary>
-    ///// 将原格子归位
-    ///// </summary>
-    //private void Home()
-    //{
-    //    if(SoundManager.Instance != null)
-    //        SoundManager.Instance.PlaySound("放置卡牌",true);
-    //    transform.SetParent(sourceParent);
-    //    rectTransform.anchoredPosition = Vector2.zero;
-    //}
 }

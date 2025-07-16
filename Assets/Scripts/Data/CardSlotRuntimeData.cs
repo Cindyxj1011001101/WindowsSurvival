@@ -2,5 +2,5 @@
 
 public class CardSlotRuntimeData
 {
-    public List<CardInstance> cardInstanceList = new();
+    public List<Card> cardList = new();
 }

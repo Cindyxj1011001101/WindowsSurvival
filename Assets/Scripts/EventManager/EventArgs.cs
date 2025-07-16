@@ -1,6 +1,4 @@
-﻿using System;
-
-public enum EventType
+﻿public enum EventType
 {
     ChangeState,
     IntervalSettle,
@@ -19,9 +17,6 @@ public enum EventType
     CurEnvironmentChangeState, // 当前环境状态变化
     Equip, // 穿上装备
     Unequip // 卸下装备
-    EquipCard,
-    UnequipCard,
-
 }
 
 public class ChangeStateArgs
@@ -35,13 +30,6 @@ public class ChangeStateArgs
         value = i;
     }
 }
-
-//public class ChangeLoadArgs
-//{
-//    public float currentLoad;
-//    public float maxLoad;
-//}
-
 public class AddDropCardArgs
 {
     public Drop drop;
@@ -65,32 +53,11 @@ public class ChangeDiscoveryDegreeArgs
         discoveryDegree = d;
     }
 }
-
-//public class ChangeTimeArgs
-//{
-//    public DateTime currentTime;
-//    public int timeDelta;
-//}
-
 public class ChangePlayerBagCardsArgs
 {
-    public CardInstance card;
+    public Card card;
     public int add;
 }
-
-//#region 装备卡牌
-//public class EquipCardArgs
-//{
-//    public EquipmentType type;
-//    public CardInstance card;
-
-//    public EquipCardArgs(EquipmentType t, CardInstance c)
-//    {
-//        type = t;
-//        card = c;
-//    }
-//}
-//#endregion
 
 #region 环境状态变化
 public class ChangeEnvironmentStateArgs

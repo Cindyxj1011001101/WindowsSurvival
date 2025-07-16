@@ -12,19 +12,20 @@
 
     public void OnCardsChanged(ChangePlayerBagCardsArgs args)
     {
-        StateManager.Instance.AddLoad(args.card.CardData.weight * args.add);
+        StateManager.Instance.AddLoad(args.card.weight * args.add);
     }
 
     protected override void Init()
     {
         InitBag(GameDataManager.Instance.PlayerBagData);
     }
-    public override bool CanAddCard(CardInstance card)
+
+    public override bool CanAddCard(Card card)
     {
         // 因为背包和装备共用载重
         // 不是从装备中添加的，要看载重够不够
-        if ((card.Slot == null || card.Slot.Bag is not EquipmentBag) &&
-            StateManager.Instance.curLoad + card.CardData.weight > StateManager.Instance.maxLoad)
+        if ((card.slot == null || card.slot.Bag is not EquipmentBag) &&
+            StateManager.Instance.curLoad + card.weight > StateManager.Instance.maxLoad)
             return false;
 
         // 载重足够则按照父类的判断标准进行判断

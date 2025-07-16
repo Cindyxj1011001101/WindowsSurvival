@@ -78,12 +78,12 @@ public class EnvironmentBag : BagBase
         (e as PlaceDropEvent).curOnceDropList = data.disposableDropList;
     }
 
-    public override bool CanAddCard(CardInstance card)
+    public override bool CanAddCard(Card card)
     {
         return true;
     }
 
-    public override void AddCard(CardInstance card)
+    public override void AddCard(Card card)
     {
         // 如果放不下，就新增格子
         if (!base.CanAddCard(card))

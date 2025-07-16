@@ -81,86 +81,31 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.AddTime(cardEvent.Time);
     }
 
-    // 判断事件执行条件
-    public bool CanCardEventInvoke(CardEvent cardEvent)
-    {
-        if (cardEvent.GetType() == typeof(ConditionalCardEvent))
-        {
-            ConditionalCardEvent conditionCardEvent = cardEvent as ConditionalCardEvent;
-            foreach (var conditionData in conditionCardEvent.ConditionCardList)
-            {
-                CardSlot slot = playerBag.TryGetCardByCondition(conditionData);
-                if (slot == null)
-                {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    // 处理卡牌事件
-    public void HandleCardEvent(CardEvent cardEvent)
-    {
-        if (cardEvent == null) return;
-        // 数值变化-场景移动-时间变化-卡牌掉落
-
-        if (!CanCardEventInvoke(cardEvent)) return;
-        // 1. 处理玩家状态的数值变化
-        foreach (var EventTrigger in cardEvent.eventList)
-        {
-            if (EventTrigger.GetType() == typeof(ValueEvent)) EventTrigger.Invoke();
-        }
-        // 2. 处理场景移动
-        foreach (var EventTrigger in cardEvent.eventList)
-        {
-            if (EventTrigger.GetType() == typeof(MoveEvent)) EventTrigger.Invoke();
-        }
-        // 3. 处理时间变化
-        TimeManager.Instance.AddTime(cardEvent.Time);
-        // 4. 处理卡牌掉落
-        foreach (var EventTrigger in cardEvent.eventList)
-        {
-            if (EventTrigger.GetType() == typeof(DropEvent)) EventTrigger.Invoke();
-        }
-    }
-
-    /// <summary>
-    /// 掉落一张卡牌
-    /// </summary>
-    /// <param name="drop">掉落物的配置</param>
-    /// <param name="toPlayerBag">是否优先掉落到玩家背包</param>
-    public void AddDropCard(Drop drop, bool toPlayerBag)
-    {
-        for (int i = 0; i < drop.DropNum; i++)
-        {
-            // 处理空掉落
-            if (drop.IsEmpty)
-            {
-                Debug.Log("什么也没有掉落");
-                continue;
-            }
-
-            AddCard(drop.card, toPlayerBag);
-        }
-    }
-
     public void AddCard(Card card, bool toPlayerBag)
     {
         if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("抽卡",true);
-        CardInstance cardInstance = CardFactory.CreateCardIntance(card);
+            SoundManager.Instance.PlaySound("抽卡", true);
+
+        // 卡牌的属性开始随时间变化
+        card.StartUpdating();
         if (toPlayerBag)
         {
-            if (playerBag.CanAddCard(cardInstance))
-                playerBag.AddCard(cardInstance);
+            if (playerBag.CanAddCard(card))
+                playerBag.AddCard(card);
             else
-                curEnvironmentBag.AddCard(cardInstance);
+                curEnvironmentBag.AddCard(card);
         }
         else
         {
-            curEnvironmentBag.AddCard(cardInstance);
+            curEnvironmentBag.AddCard(card);
         }
+    }
+
+    public void AddCard(string cardName, bool toPlayerBag)
+    {
+        var card = CardFactory.CreateCard(cardName);
+        if (card != null)
+            AddCard(card, toPlayerBag);
     }
 
     // 移动到目标场景

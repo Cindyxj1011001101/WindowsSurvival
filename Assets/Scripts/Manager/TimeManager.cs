@@ -69,7 +69,6 @@ public class TimeManager : MonoBehaviour
     
     public void AddTime(int minute)
     {
-        //EventManager.Instance.TriggerEvent(EventType.ChangeTime, new ChangeTimeArgs() { timeDelta = minute, currentTime = curTime});
         int time = minute;
         curTime = curTime.AddMinutes(minute);
         dateText.text = CalculateDate();
@@ -81,9 +80,7 @@ public class TimeManager : MonoBehaviour
                 time -= curInterval;
                 curInterval = SettleInterval;
                 EventManager.Instance.TriggerEvent(EventType.IntervalSettle);
-                // 这里没必要触发这个事件
-                // 这个事件是在卡牌的属性发生变化时，由卡牌自己调用的
-                //EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
+                EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
             }
             else
             {
@@ -92,5 +89,4 @@ public class TimeManager : MonoBehaviour
             }
         }
     }
-
 }

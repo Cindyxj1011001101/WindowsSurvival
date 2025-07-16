@@ -1,5 +1,4 @@
 using UnityEditor;
-using UnityEngine;
 
 public class GMCommand
 {
@@ -11,12 +10,17 @@ public class GMCommand
 
     private static void AddCard(string cardName)
     {
-        string dataPath = "ScriptableObject/Card/" + cardName;
-        CardData defaultData = Resources.Load<CardData>(dataPath);
-        //var card = CardFactory.CreateCardIntance(defaultData);
-
+        var card = CardFactory.CreateCard(cardName);
+        card.StartUpdating();
         var bag = GetFocusedBag();
-        //if (bag != null && bag.CanAddCard(card)) bag.AddCard(card);
+        if (bag != null && bag.CanAddCard(card)) bag.AddCard(card);
+    }
+
+    private static BagBase GetFocusedBag()
+    {
+        var window = WindowsManager.Instance.GetCurrentFocusedWindow();
+        if (window == null) return null;
+        return window.GetComponentInChildren<BagBase>(false);
     }
 
     [MenuItem("Command/添加一个格子")]
@@ -24,15 +28,6 @@ public class GMCommand
     {
         var bag = GetFocusedBag();
         if (bag != null) bag.AddSlot();
-    }
-
-    private static BagBase GetFocusedBag()
-    {
-        var window = WindowsManager.Instance.GetCurrentFocusedWindow();
-        if (window == null) return null;
-        BagBase bag = window.GetComponentInChildren<BagBase>(false);
-        if (bag == null) return null;
-        return bag;
     }
 
     [MenuItem("Command/添加压缩饼干")]
@@ -65,10 +60,10 @@ public class GMCommand
         AddCard("通往动力舱的门");
     }
 
-    [MenuItem("Command/添加被安全泡沫覆盖的废物堆")]
+    [MenuItem("Command/添加安全泡沫覆盖的废料堆")]
     public static void F()
     {
-        AddCard("被安全泡沫覆盖的废物堆");
+        AddCard("安全泡沫覆盖的废料堆");
     }
 
     [MenuItem("Command/添加硬质纤维")]
@@ -83,10 +78,10 @@ public class GMCommand
         AddCard("老鼠尸体");
     }
 
-    [MenuItem("Command/添加小块肉")]
+    [MenuItem("Command/添加小块生肉")]
     public static void I()
     {
-        AddCard("小块肉");
+        AddCard("小块生肉");
     }
 
     [MenuItem("Command/添加废铁刀")]

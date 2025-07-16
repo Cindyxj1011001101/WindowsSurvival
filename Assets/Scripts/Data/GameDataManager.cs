@@ -29,7 +29,7 @@ public class GameDataManager
         playerBagData.cardSlotsRuntimeData = new();
         foreach (var slot in bag.Slots)
         {
-            playerBagData.cardSlotsRuntimeData.Add(new() { cardInstanceList = slot.Cards });
+            playerBagData.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
         }
         JsonManager.SaveData(playerBagData, "PlayerBag");
     }
@@ -79,7 +79,7 @@ public class GameDataManager
             data.cardSlotsRuntimeData = new();
             foreach (var slot in bag.Slots)
             {
-                data.cardSlotsRuntimeData.Add(new() { cardInstanceList = slot.Cards });
+                data.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
             }
             JsonManager.SaveData(data, place.ToString() + "Bag");
         }
@@ -188,7 +188,7 @@ public class GameDataManager
         equipmentData.cardSlotsRuntimeData = new();
         foreach (var slot in bag.Slots)
         {
-            equipmentData.cardSlotsRuntimeData.Add(new() { cardInstanceList = slot.Cards });
+            equipmentData.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
         }
         JsonManager.SaveData(equipmentData, "Equipment");
     }

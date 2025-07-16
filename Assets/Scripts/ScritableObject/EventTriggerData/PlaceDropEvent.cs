@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlaceDropEvent", menuName = "ScritableObject/PlaceDropEvent")]
-public class PlaceDropEvent:EventTrigger
+public class PlaceDropEvent : EventTrigger
 {
     public PlaceEnum Place;
     public List<Drop> OnceDropList;
@@ -14,7 +14,7 @@ public class PlaceDropEvent:EventTrigger
     {
         if (curOnceDropList.Count != 0)
         {
-            int sumProb=0;
+            int sumProb = 0;
             foreach (var drop in curOnceDropList)
             {
                 sumProb += drop.DropProb;
@@ -24,13 +24,14 @@ public class PlaceDropEvent:EventTrigger
             {
                 if (rand < drop.DropProb)
                 {
-                    GameManager.Instance.AddDropCard(drop,false);
+                    // 掉落卡牌
+                    GameManager.Instance.AddCard(drop.cardName, false);
                     curOnceDropList.Remove(drop);
                     //处理探索度变化
-                    float explore =(1- (float)curOnceDropList.Count / OnceDropList.Count)*100;
-                    EventManager.Instance.TriggerEvent<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree,new ChangeDiscoveryDegreeArgs(Place,explore));
+                    float explore = (1 - (float)curOnceDropList.Count / OnceDropList.Count) * 100;
+                    EventManager.Instance.TriggerEvent<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, new ChangeDiscoveryDegreeArgs(Place, explore));
                     return;
-                }   
+                }
                 rand -= drop.DropProb;
             }
         }
@@ -38,34 +39,33 @@ public class PlaceDropEvent:EventTrigger
         {
             if (RepeatDropList != null)
             {
-                int random = Random.Range(1,SumRepeatProb);
+                int random = Random.Range(1, SumRepeatProb);
                 foreach (var drop in RepeatDropList)
                 {
-                    if (random<drop.DropProb)
+                    if (random < drop.DropProb)
                     {
-                        EventManager.Instance.TriggerEvent<AddDropCardArgs>(EventType.AddDropCard,new AddDropCardArgs(drop,false));
+                        EventManager.Instance.TriggerEvent<AddDropCardArgs>(EventType.AddDropCard, new AddDropCardArgs(drop, false));
                         return;
                     }
-                    random-=drop.DropProb;
+                    random -= drop.DropProb;
                 }
             }
         }
-        
     }
 
     public void DropCertainPlaceCard(PlaceEnum place)
     {
         foreach (var drop in curOnceDropList)
         {
-            if (drop.CardData is PlaceCardData placeCardData && placeCardData.place == place)
-            {
-                GameManager.Instance.AddDropCard(drop,false);
-                curOnceDropList.Remove(drop);
-                //处理探索度变化
-                float explore =(1- (float)curOnceDropList.Count / OnceDropList.Count)*100;
-                EventManager.Instance.TriggerEvent<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree,new ChangeDiscoveryDegreeArgs(Place,explore));
-                return;
-            }
+            //if (drop.CardData is PlaceCardData placeCardData && placeCardData.place == place)
+            //{
+            //    GameManager.Instance.AddDropCard(drop, false);
+            //    curOnceDropList.Remove(drop);
+            //    //处理探索度变化
+            //    float explore = (1 - (float)curOnceDropList.Count / OnceDropList.Count) * 100;
+            //    EventManager.Instance.TriggerEvent<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, new ChangeDiscoveryDegreeArgs(Place, explore));
+            //    return;
+            //}
         }
     }
 
@@ -75,7 +75,7 @@ public class PlaceDropEvent:EventTrigger
         curOnceDropList = new List<Drop>(OnceDropList);
         foreach (var drop in RepeatDropList)
         {
-            SumRepeatProb+=drop.DropProb;
+            SumRepeatProb += drop.DropProb;
         }
         return;
     }

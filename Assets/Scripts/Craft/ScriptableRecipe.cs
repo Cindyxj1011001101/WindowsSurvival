@@ -19,16 +19,25 @@ public enum RecipeType
 [Serializable]
 public class RecipeMaterial
 {
-    public CardData cardData;
+    public string cardName;
     public int requiredAmount;
+    public Sprite CardImage => Resources.Load<Sprite>("Sprites/" + cardName);
 }
 
 
 [CreateAssetMenu(fileName = "Recipe", menuName = "ScritableObject/Recipe")]
 public class ScriptableRecipe : ScriptableObject
 {
-    public Card card; // 制作出来的卡牌
-    public List<RecipeMaterial> materials; // 制作需要的材料
+    public string cardName; // 制作出来的卡牌
+    public string cardDesc; // 卡牌描述
     public RecipeType craftType; // 配方类型
+    public List<RecipeMaterial> materials; // 制作需要的材料
     public int craftTime; // 制作时间
+
+    public Sprite CardImage => Resources.Load<Sprite>("Sprites/" + cardName);
+
+    private void OnValidate()
+    {
+        cardName = name;
+    }
 }

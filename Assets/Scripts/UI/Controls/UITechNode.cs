@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class UITechNode : MonoBehaviour
@@ -30,7 +28,7 @@ public class UITechNode : MonoBehaviour
         foreach (var recipe in techNode.recipes)
         {
             var obj = Instantiate(recipeEntry, recipeLayout);
-            obj.transform.Find("Icon").GetComponent<Image>().sprite = recipe.card.cardImage;
+            obj.transform.Find("Icon").GetComponent<Image>().sprite = recipe.CardImage;
         }
 
         // 显示研究进度和研究速度
