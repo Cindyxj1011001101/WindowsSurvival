@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 //卡牌基类
-public abstract class Card
+public class Card
 {
     public string cardName;//显示名称
     public string cardDesc;//描述
@@ -16,9 +16,22 @@ public abstract class Card
     public List<CardTag> tags;
     public List<Event> events;
 
-    public abstract void Use();
-    public abstract void Fresh();
-    public abstract void Grow();
+    public virtual void Use()
+    {
+        return;
+    }
+    public virtual void Fresh()
+    {
+        return;
+    }
+    public virtual void Grow()
+    {
+        return;
+    }
+    public virtual void TimeProgress()
+    {
+        return;
+    }
 }
 
 //事件类

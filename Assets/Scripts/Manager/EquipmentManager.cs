@@ -15,13 +15,13 @@ public class EquipmentManager : MonoBehaviour
 
    [Header("装备")]
    //头部
-   public EquipmentCardInstance HeadEquipment;
+   public Card HeadEquipment;
    //身体
-   public EquipmentCardInstance BodyEquipment;
+   public Card BodyEquipment;
    //背部
-   public EquipmentCardInstance BackEquipment;
+   public Card BackEquipment;
    //腿部
-   public EquipmentCardInstance LegEquipment;
+   public Card LegEquipment;
 
    #region 初始化
    private void Awake()
@@ -66,24 +66,28 @@ public class EquipmentManager : MonoBehaviour
    /// <summary>
    /// 装备卡牌
    /// </summary>
-   public void EquipCard(EquipmentCardInstance equipment)
+   public void EquipCard(Card equipment)
    {
-       switch ((equipment.CardData as EquipmentCardData).equipmentType)  
+        if(equipment.cardType!=CardType.Equipment)
+        {
+            return;
+        }
+       if(equipment.tags.Contains(CardTag.Head))
        {
-           case EquipmentType.Head:
-               HeadEquipment = equipment;
-               break;
-           case EquipmentType.Body:
-               BodyEquipment = equipment;
-               break;
-           case EquipmentType.Back:
-               BackEquipment = equipment;
-               break;
-           case EquipmentType.Leg:
-               LegEquipment = equipment;
-               break;
+            HeadEquipment = equipment;
        }
-       StateManager.Instance.EquipExtraState(equipment);
+       else if(equipment.tags.Contains(CardTag.Body))
+       {
+            BodyEquipment = equipment;
+       }
+       else if(equipment.tags.Contains(CardTag.Back))
+       {
+            BackEquipment = equipment;
+       }
+       else if(equipment.tags.Contains(CardTag.Leg))
+       {
+            LegEquipment = equipment;
+       }
    }
    #endregion
 
@@ -92,24 +96,28 @@ public class EquipmentManager : MonoBehaviour
    /// 卸下卡牌
    /// </summary>
    /// <param name="type">卸下的位置</param>
-   public void UnequipCard(EquipmentCardInstance equipment)
+   public void UnequipCard(Card equipment)
    {
-       switch ((equipment.CardData as EquipmentCardData).equipmentType)
+       if(equipment.cardType!=CardType.Equipment)
+        {
+            return;
+        }
+       if(equipment.tags.Contains(CardTag.Head))
        {
-           case EquipmentType.Head:
-               HeadEquipment = null;
-               break;
-           case EquipmentType.Body:
-               BodyEquipment = null;
-               break;
-           case EquipmentType.Back:
-               BackEquipment = null;
-               break;
-           case EquipmentType.Leg:
-               LegEquipment = null;
-               break;
+            HeadEquipment = null;
        }
-       StateManager.Instance.UnequipExtraState(equipment);
+       else if(equipment.tags.Contains(CardTag.Body))
+       {
+            BodyEquipment = null;
+       }
+       else if(equipment.tags.Contains(CardTag.Back))
+       {
+            BackEquipment = null;
+       }
+       else if(equipment.tags.Contains(CardTag.Leg))
+       {
+            LegEquipment = null;
+       }
    }
    #endregion
 }

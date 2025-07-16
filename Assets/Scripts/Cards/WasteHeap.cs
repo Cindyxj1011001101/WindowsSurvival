@@ -50,11 +50,6 @@ public class WasteHeap:Card
         }
     }
 
-    public override void Fresh()
-    {
-        return;
-    }
-
     public void RandomDrop()
     {
         //TODO:掉落卡牌逻辑
@@ -89,11 +84,6 @@ public class WasteHeap:Card
             //TODO:掉落氧烛
             //GameManager.Instance.AddCard(new 氧烛, true);
         }
-    }
-
-    public override void Grow()
-    {
-        return;
     }
 
 }

@@ -32,19 +32,4 @@ public class DoorToCockpit:Card
     {
         return true;
     }
-
-    public override void Use()
-    {
-        return;
-    }
-
-    public override void Grow()
-    {
-        return;
-    }
-
-        public override void Fresh()
-    {
-        return;
-    }
 }

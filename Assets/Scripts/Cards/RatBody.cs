@@ -35,11 +35,6 @@ public class RatBody:Card
             GameManager.Instance.AddCard(new RotMaterial(), true);
         }
     }
-
-    public override void Use()
-    {
-        return;
-    }
 #region 食用
     public void Event_Eat()
     {
@@ -129,9 +124,4 @@ public class RatBody:Card
         }
     }
 #endregion
-
-    public override void Grow()
-    {
-        return;
-    }
 }

@@ -20,18 +20,4 @@ public class ScrapMetal:Card
         weight = 0.6f;
         events = new List<Event>();
     }
-
-    public override void Use()
-    {
-        return;
-    }
-    public override void Fresh()
-    {
-        return;
-    }
-
-    public override void Grow()
-    {
-        return;
-    }
 }

@@ -33,18 +33,4 @@ public class RotMaterial:Card
     {
         return true;
     }
-    public override void Use()
-    {
-        return;
-    }
-
-    public override void Fresh()
-    {
-        return;
-    }
-
-    public override void Grow()
-    {
-        return;
-    }
 }

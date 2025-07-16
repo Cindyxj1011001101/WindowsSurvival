@@ -7,6 +7,11 @@ public enum CardTag
     Rubbish, // 垃圾
     Cut, // 切割类
     Collectable, // 可采集
+    Dig, // 挖掘类
+    Head, // 头部
+    Body, // 身体
+    Back, // 背部
+    Leg, // 腿部
 }
 
 

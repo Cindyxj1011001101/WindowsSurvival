@@ -49,18 +49,9 @@ public class LittleRawMeat:Card
         if(curFresh<=0)
         {
             //TODO:删除本卡牌
-            //TODO:掉落新卡牌
+            //掉落新卡牌
             GameManager.Instance.AddCard(new RotMaterial(), true);
         }
     }
 
-    public override void Use()
-    {
-        return;
-    }
-
-    public override void Grow()
-    {
-        return;
-    }
 }

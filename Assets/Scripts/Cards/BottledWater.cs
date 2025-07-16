@@ -32,19 +32,4 @@ public class BottledWater : Card//或许要改成英文名
     {
         return true;
     }
-
-    public override void Use()
-    {
-        return;
-    }
-
-    public override void Grow()
-    {
-        return;
-    }
-
-    public override void Fresh()
-    {
-        return;
-    }
 }

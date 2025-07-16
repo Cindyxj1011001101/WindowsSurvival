@@ -214,20 +214,9 @@ public class StateManager : MonoBehaviour
         }
     }
 
-    public void EquipExtraState(EquipmentCardInstance equipment)
+    public void ChangePlayerExtraState(PlayerStateEnum stateEnum, float value)
     {
-        if(equipment.CardData is EquipmentCardData data)
-        {
-            PlayerExtraStateDict[PlayerStateEnum.Oxygen] += data.ExtraOxygen;
-        }
-    }
-
-    public void UnequipExtraState(EquipmentCardInstance equipment)
-    {
-        if(equipment.CardData is EquipmentCardData data)
-        {
-            PlayerExtraStateDict[PlayerStateEnum.Oxygen] -= data.ExtraOxygen;
-        }
+        PlayerExtraStateDict[stateEnum] += value;
     }
     #endregion
 

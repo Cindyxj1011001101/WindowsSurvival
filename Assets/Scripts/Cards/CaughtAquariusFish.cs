@@ -69,11 +69,6 @@ public class CaughtAquariusFish:Card
         return false;
     }
 
-    public override void Use()
-    {
-        return;
-    }
-
     public override void Fresh()
     {
         curFresh-=15;
@@ -81,11 +76,6 @@ public class CaughtAquariusFish:Card
         {
             //TODO:删除本卡牌
         }
-        return;
-    }
-
-    public override void Grow()
-    {
         return;
     }
 }

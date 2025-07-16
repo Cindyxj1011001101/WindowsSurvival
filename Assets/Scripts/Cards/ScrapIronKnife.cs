@@ -31,14 +31,4 @@ public class ScrapIronKnife:Card
         }
         return;
     }
-
-    public override void Fresh()
-    {
-        return;
-    }
-
-    public override void Grow()
-    {
-        return;
-    }
 }

@@ -114,10 +114,6 @@ public class AquariusFish:Card
         return true;
     }
     #endregion  
-    public override void Use()
-    {
-        return;
-    }
 
     public override void Grow()
     {
@@ -131,10 +127,5 @@ public class AquariusFish:Card
             curProductProcess=0;
             curProductNum+=1;
         }
-    }
-
-    public override void Fresh()
-    {
-        return;
     }
 }

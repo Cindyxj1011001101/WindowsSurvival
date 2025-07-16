@@ -19,18 +19,4 @@ public class HardFiber:Card
         weight = 0.25f;
         events = new List<Event>();
     }
-
-    public override void Use()
-    {
-        return;
-    }
-    public override void Fresh()
-    {
-        return;
-    }
-
-    public override void Grow()
-    {
-        return;
-    }
 }
