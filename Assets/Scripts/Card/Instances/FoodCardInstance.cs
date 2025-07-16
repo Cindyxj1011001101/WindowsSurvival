@@ -40,7 +40,7 @@
             DestroyThisCard();
             GameManager.Instance.HandleCardEvent((CardData as FoodCardData).onRotton);
         }
-        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, slot);
     }
 
     protected override void DestroyThisCard()

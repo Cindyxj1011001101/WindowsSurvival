@@ -8,7 +8,7 @@ public abstract class CardInstance : IComparable<CardInstance>
 
     public int currentEndurance;
 
-    private CardSlot slot;
+    protected CardSlot slot;
 
     [JsonIgnore]
     public CardSlot Slot => slot;
@@ -50,7 +50,7 @@ public abstract class CardInstance : IComparable<CardInstance>
             GameManager.Instance.HandleCardEvent(CardData.onUsedUp);
         }
         // 刷新前端显示的卡牌数据
-        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, slot);
     }
 
     protected virtual void DestroyThisCard()

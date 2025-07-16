@@ -9,7 +9,7 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private Image fillImage; // 用于显示新鲜度等
     [SerializeField] private Text propertyText; // 用于显示数量和耐久等
     [SerializeField] private Text nameText;
-    [SerializeField] private Transform cardTransform;
+    [SerializeField] private CanvasGroup cardCanvas;
 
     private CardData currentCard;
 
@@ -38,7 +38,7 @@ public class CardSlot : MonoBehaviour
 
     private void Awake()
     {
-        if (cardTransform.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
+        if (cardCanvas.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
         {
             doubleClickHandler.onDoubleClick.AddListener(() =>
             {
@@ -46,7 +46,7 @@ public class CardSlot : MonoBehaviour
             });
         }
 
-        EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
+        EventManager.Instance.AddListener<CardSlot>(EventType.ChangeCardProperty, RefreshCurrentDisplay);
     }
 
     public void SetBag(BagBase bag)
@@ -62,16 +62,41 @@ public class CardSlot : MonoBehaviour
         }
     }
 
-    private void RefreshCurrentDisplay()
+    /// <summary>
+    /// 刷新当前显示
+    /// </summary>
+    public void RefreshCurrentDisplay()
     {
         if (IsEmpty) return;
 
-        DisplayCard(PeekCard());
+        DisplayCard(PeekCard(), StackCount);
     }
 
-    public void DisplayCard(CardInstance card)
+    /// <summary>
+    /// 刷新当前显示，只有当发生属性变化的卡牌的属于当前slot时才执行
+    /// </summary>
+    /// <param name="slot"></param>
+    private void RefreshCurrentDisplay(CardSlot slot)
     {
-        cardTransform.gameObject.SetActive(true);
+        if (slot != this) return;
+        RefreshCurrentDisplay();
+    }
+
+    /// <summary>
+    /// 显示指定数量的卡牌
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="stackCount"></param>
+    public void DisplayCard(CardInstance card, int stackCount)
+    {
+        // 如果要显示的数量小于等于零，则什么也不显示
+        if (stackCount <= 0)
+        {
+            DisableDisplay();
+            return;
+        }
+
+        EnableDisplay();
         var data = card.CardData;
         iconImage.sprite = data.cardImage;
         nameText.text = data.cardName;
@@ -87,14 +112,14 @@ public class CardSlot : MonoBehaviour
                 else
                     fillImage.fillAmount = (float)(card as FoodCardInstance).currentFresh / cardData.MaxFresh;
 
-                if (StackCount > 1)
-                    propertyText.text = $"x{StackCount}";
+                if (stackCount > 1)
+                    propertyText.text = $"x{stackCount}";
 
                 break;
 
             case ResourceCardData:
-                if (StackCount > 1)
-                    propertyText.text = $"x{StackCount}";
+                if (stackCount > 1)
+                    propertyText.text = $"x{stackCount}";
                 break;
 
             case PlaceCardData:
@@ -113,13 +138,39 @@ public class CardSlot : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 不显示卡牌
+    /// </summary>
+    private void DisableDisplay()
+    {
+        //iconImage.sprite = null;
+        //nameText.text = "";
+        //propertyText.text = "";
+        cardCanvas.alpha = 0;
+        cardCanvas.blocksRaycasts = false;
+        cardCanvas.interactable = false;
+    }
+
+    /// <summary>
+    /// 允许显示卡牌
+    /// </summary>
+    private void EnableDisplay()
+    {
+        cardCanvas.alpha = 1;
+        cardCanvas.blocksRaycasts = true;
+        cardCanvas.interactable = true;
+    }
+
     public bool ContainsSimilarCard(CardData cardData) => !IsEmpty && currentCard.Equals(cardData);
     
     /// <summary>
     /// 能否堆叠，在使用该方法前请务必确认要堆叠的卡牌和这个slot放有的卡牌是同类的
     /// </summary>
     /// <returns></returns>
-    public bool CanStack() => StackCount < currentCard.maxStackNum;
+    public bool CanAddCard(CardInstance card)
+    {
+        return IsEmpty || (ContainsSimilarCard(card.CardData) && StackCount < currentCard.maxStackNum);
+    }
 
     /// <summary>
     /// 添加一张卡牌
@@ -193,33 +244,30 @@ public class CardSlot : MonoBehaviour
             RemoveCard();
     }
 
-    /// <summary>
-    /// 移除所有卡牌
-    /// </summary>
-    public void RemoveAllCards()
-    {
-        while (StackCount > 0)
-        {
-            RemoveCard();
-        }
-    }
+    ///// <summary>
+    ///// 移除所有卡牌
+    ///// </summary>
+    //public void RemoveAllCards()
+    //{
+    //    while (StackCount > 0)
+    //    {
+    //        RemoveCard();
+    //    }
+    //}
 
     public CardInstance PeekCard() => cards[0];
 
     public void ClearSlot()
     {
         currentCard = null;
-        RemoveAllCards();
+        //RemoveAllCards();
         cards.Clear();
-        iconImage.sprite = null;
-        nameText.text = "";
-        propertyText.text = "";
-        cardTransform.gameObject.SetActive(false);
+        DisableDisplay();
     }
 
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
+        EventManager.Instance.RemoveListener<CardSlot>(EventType.ChangeCardProperty, RefreshCurrentDisplay);
     }
 }
