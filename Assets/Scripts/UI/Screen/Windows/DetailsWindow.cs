@@ -49,7 +49,7 @@ public class DetailsWindow : WindowBase
         currentDisplayedCard = sourceSlot.PeekCard();
 
         // 显示卡牌
-        slot.DisplayCard(currentDisplayedCard);
+        slot.DisplayCard(currentDisplayedCard, 1);
 
         // 显示卡牌标签
         CardData cardData = currentDisplayedCard.CardData;

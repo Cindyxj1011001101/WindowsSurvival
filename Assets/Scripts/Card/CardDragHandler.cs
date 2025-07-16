@@ -1,38 +1,59 @@
-﻿using UnityEngine;
+﻿using UnityEditor.Localization.Plugins.XLIFF.V12;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
-    private Transform sourceParent;
+    //private Transform sourceParent;
     private CardSlot sourceSlot;
     private Canvas canvas;
-    private RectTransform rectTransform;
-    private CanvasGroup canvasGroup;
+    //private RectTransform rectTransform;
+    //private CanvasGroup canvasGroup;
+
+    private CardSlot cursorSlot;
+    private int pickedCount;
 
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
-        canvasGroup = GetComponent<CanvasGroup>();
+        //rectTransform = GetComponent<RectTransform>();
+        //canvasGroup = GetComponent<CanvasGroup>();
         sourceSlot = GetComponentInParent<CardSlot>();
         canvas = GetComponentInParent<Canvas>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        sourceParent = transform.parent;
-        transform.SetParent(canvas.transform);
-        canvasGroup.blocksRaycasts = false;
+        // 在鼠标位置创建图标
+        cursorSlot = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot"), eventData.position, Quaternion.identity, canvas.transform).GetComponent<CardSlot>();
+        cursorSlot.GetComponent<CanvasGroup>().blocksRaycasts = false; // 防止射线命中cursorSlot
+        
+        if (eventData.button == PointerEventData.InputButton.Left)
+            // 左键拖拽
+            pickedCount = sourceSlot.StackCount;
+        else
+            // 右键拖拽
+            pickedCount = 1;
+
+        sourceSlot.DisplayCard(sourceSlot.PeekCard(), sourceSlot.StackCount - pickedCount);
+        cursorSlot.DisplayCard(sourceSlot.PeekCard(), pickedCount);
+
+        //sourceParent = transform.parent;
+        //transform.SetParent(canvas.transform);
+        //canvasGroup.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        //rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        (cursorSlot.transform as RectTransform).anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        canvasGroup.blocksRaycasts = true;
-        canvasGroup.alpha = 1f;
+        Destroy(cursorSlot.gameObject);
+
+        //canvasGroup.blocksRaycasts = true;
+        //canvasGroup.alpha = 1f;
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
 
@@ -47,57 +68,99 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 CardSlot targetSlot = currentObject.GetComponentInParent<CardSlot>();
                 if (targetSlot != null && targetSlot != sourceSlot)
                 {
-                    PlaceCardInSameBag(targetSlot);
+                    PlaceCardInSameBag(targetSlot, pickedCount);
                 }
             }
             // 跨背包放置
             else if (sourceSlot.CanDragOverBag)
             {
-                PlaceCardInDifferentBag(targetBag);
+                PlaceCardInDifferentBag(targetBag, pickedCount);
             }
         }
 
-        Home();
+        sourceSlot.RefreshCurrentDisplay();
+
+        //Home();
     }
 
-    private void PlaceCardInSameBag(CardSlot targetSlot)
+    private void PlaceCardInSameBag(CardSlot targetSlot, int amount)
     {
         // 如果目标格子为空
-        if (targetSlot.IsEmpty)
+        //if (targetSlot.IsEmpty)
+        //{
+        //    //// 直接全部放到目标格子中
+        //    //while (sourceSlot.StackCount > 0)
+        //    //{
+        //    //    targetSlot.AddCard(sourceSlot.RemoveCard());
+        //    //}
+
+        //    // 直接放入目标格子中
+        //    for (int i = 0; i < amount; i++)
+        //    {
+        //        targetSlot.AddCard(sourceSlot.RemoveCard());
+        //    }
+        //}
+        //// 如果目标格子有相同卡牌
+        //else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData))
+        //{
+        //    // 往目标格子里尽可能放更多
+        //    //while (sourceSlot.StackCount > 0 && targetSlot.CanStack())
+        //    //{
+        //    //    targetSlot.AddCard(sourceSlot.RemoveCard());
+        //    //}
+        //    for (int i = 0; i < amount; i++)
+        //    {
+        //        if (!targetSlot.CanAddCard()) break;
+        //        targetSlot.AddCard(sourceSlot.RemoveCard());
+        //    }
+        //}
+
+        for (int i = 0; i < amount; i++)
         {
-            // 直接全部放到目标格子中
-            while (sourceSlot.StackCount > 0)
-            {
-                targetSlot.AddCard(sourceSlot.RemoveCard());
-            }
-        }
-        // 如果目标格子有相同卡牌
-        else if (targetSlot.ContainsSimilarCard(sourceSlot.CardData))
-        {
-            // 往目标格子里尽可能放更多
-            while (sourceSlot.StackCount > 0 && targetSlot.CanStack())
-            {
-                targetSlot.AddCard(sourceSlot.RemoveCard());
-            }
+            if (!targetSlot.CanAddCard(sourceSlot.PeekCard())) break;
+            targetSlot.AddCard(sourceSlot.RemoveCard());
         }
     }
 
-    private void PlaceCardInDifferentBag(BagBase targetBag)
+    private void PlaceCardInDifferentBag(BagBase targetBag, int amount)
     {
-        while (sourceSlot.StackCount > 0 && targetBag.CanAddCard(sourceSlot.PeekCard()))
+        //while (sourceSlot.StackCount > 0 && targetBag.CanAddCard(sourceSlot.PeekCard()))
+        //{
+        //    targetBag.AddCard(sourceSlot.RemoveCard());
+        //}
+
+        for (int i = 0; i < amount; i++)
         {
+            if (!targetBag.CanAddCard(sourceSlot.PeekCard())) break;
             targetBag.AddCard(sourceSlot.RemoveCard());
         }
     }
 
-    /// <summary>
-    /// 将原格子归位
-    /// </summary>
-    private void Home()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if(SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("放置卡牌",true);
-        transform.SetParent(sourceParent);
-        rectTransform.anchoredPosition = Vector2.zero;
+        if (eventData.button == PointerEventData.InputButton.Right)
+        {
+            // 右键点击在玩家背包和环境背包之间传送卡牌，一次一张
+            BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
+            if (sourceBag is PlayerBag && WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))
+            {
+                PlaceCardInDifferentBag(GameManager.Instance.CurEnvironmentBag, 1);
+            }
+            else if (sourceBag is EnvironmentBag && WindowsManager.Instance.IsWindowOpen("PlayerBag"))
+            {
+                PlaceCardInDifferentBag(GameManager.Instance.PlayerBag, 1);
+            }
+        }
     }
+
+    ///// <summary>
+    ///// 将原格子归位
+    ///// </summary>
+    //private void Home()
+    //{
+    //    if(SoundManager.Instance != null)
+    //        SoundManager.Instance.PlaySound("放置卡牌",true);
+    //    transform.SetParent(sourceParent);
+    //    rectTransform.anchoredPosition = Vector2.zero;
+    //}
 }
