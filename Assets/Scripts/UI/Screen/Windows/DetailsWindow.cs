@@ -24,10 +24,12 @@ public class DetailsWindow : WindowBase
     {
     }
 
+    bool moved = false;
     private void OnMove(EnvironmentBag curEnvironmentBag)
     {
         // 切地点时清除显示
         Clear();
+        moved = true;
     }
 
     public void Refresh(CardSlot sourceSlot)
@@ -70,8 +72,13 @@ public class DetailsWindow : WindowBase
                     var sourceSlot = currentDisplayedCard.slot;
                     // 先执行事件
                     e.Inovke();
-                    // 再刷新
-                    Refresh(sourceSlot);
+                    // 如果地点发生改变则不刷新
+                    if (!moved)
+                    {
+                        // 再刷新
+                        Refresh(sourceSlot);
+                        moved = false;
+                    }
                 });
                 button.interactable = true;
             }

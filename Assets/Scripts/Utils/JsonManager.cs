@@ -7,7 +7,8 @@ public static class JsonManager
     static JsonSerializerSettings settings = new JsonSerializerSettings
     {
         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-        TypeNameHandling = TypeNameHandling.Auto // 存储类型信息
+        TypeNameHandling = TypeNameHandling.Auto, // 存储类型信息
+        Formatting = Formatting.Indented
     };
 
     /// <summary>
@@ -20,7 +21,7 @@ public static class JsonManager
         // 确定存储路径
         string path = Application.persistentDataPath + "/" + fileName + ".json";
         // 序列化
-        string json = JsonConvert.SerializeObject(data, settings);
+        string json = SerializeObject(data);
         // 将序列化后的字符串写入指定路径的文件中
         File.WriteAllText(path, json);
     }
@@ -48,6 +49,21 @@ public static class JsonManager
         // 反序列化
         string json = File.ReadAllText(path);
 
+        return DeserializeObject<T>(json);
+    }
+
+    public static string SerializeObject(object obj)
+    {
+        return JsonConvert.SerializeObject(obj, settings);
+    }
+
+    public static T DeserializeObject<T>(string json)
+    {
         return JsonConvert.DeserializeObject<T>(json, settings);
+    }
+
+    public static T DeepCopy<T>(T obj)
+    {
+        return DeserializeObject<T>(SerializeObject(obj));
     }
 }

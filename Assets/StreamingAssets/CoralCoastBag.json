@@ -1,0 +1,363 @@
+{
+    "disposableDropList": {
+        "maxCount": 35,
+        "dropList": [
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 2,
+                "dropProb": 1
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 2,
+                "dropProb": 1
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "HardFiber, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "HardFiber, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "HardFiber, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 2,
+                "dropProb": 1
+            },
+            {
+                "card": null,
+                "dropNum": 2,
+                "dropProb": 1
+            },
+            {
+                "card": null,
+                "dropNum": 2,
+                "dropProb": 1
+            },
+            {
+                "card": null,
+                "dropNum": 2,
+                "dropProb": 1
+            },
+            {
+                "card": null,
+                "dropNum": 2,
+                "dropProb": 1
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 1
+            },
+            {
+                "card": null,
+                "dropNum": 2,
+                "dropProb": 1
+            },
+            {
+                "card": null,
+                "dropNum": 2,
+                "dropProb": 1
+            }
+        ]
+    },
+    "repeatableDropList": {
+        "emptyPopulationSizeChangeOnNotCaught": 1000,
+        "emptyPopulation": {
+            "card": null,
+            "dropNum": 0,
+            "curSize": 1000,
+            "maxSize": 10000,
+            "sizeChangePerRound": -6,
+            "sizeChangeOnCaught": 0,
+            "Proportion": 1000
+        },
+        "populationList": [
+            {
+                "card": {
+                    "$type": "AquariusFish, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {
+                        "ProgressComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+                            "$type": "ProgressComponent, Assembly-CSharp",
+                            "progress": 0,
+                            "maxProgress": 5760,
+                            "productNum": 0,
+                            "maxProductNum": 1,
+                            "updateRate": 1
+                        }
+                    }
+                },
+                "dropNum": 1,
+                "curSize": 2000,
+                "maxSize": 5000,
+                "sizeChangePerRound": 3,
+                "sizeChangeOnCaught": -1000,
+                "Proportion": 2000
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "curSize": 3000,
+                "maxSize": 5000,
+                "sizeChangePerRound": 4,
+                "sizeChangeOnCaught": -1000,
+                "Proportion": 3000
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "curSize": 3000,
+                "maxSize": 5000,
+                "sizeChangePerRound": 4,
+                "sizeChangeOnCaught": -1000,
+                "Proportion": 3000
+            },
+            {
+                "card": null,
+                "dropNum": 2,
+                "curSize": 3000,
+                "maxSize": 15000,
+                "sizeChangePerRound": 9,
+                "sizeChangeOnCaught": -1000,
+                "Proportion": 3000
+            },
+            {
+                "card": null,
+                "dropNum": 2,
+                "curSize": 3000,
+                "maxSize": 15000,
+                "sizeChangePerRound": 12,
+                "sizeChangeOnCaught": -1000,
+                "Proportion": 3000
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 2,
+                "curSize": 3000,
+                "maxSize": 15000,
+                "sizeChangePerRound": 9,
+                "sizeChangeOnCaught": -1000,
+                "Proportion": 3000
+            },
+            {
+                "card": {
+                    "$type": "HardFiber, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 2,
+                "curSize": 4000,
+                "maxSize": 15000,
+                "sizeChangePerRound": 10,
+                "sizeChangeOnCaught": -1000,
+                "Proportion": 4000
+            }
+        ]
+    },
+    "environmentStateDict": {},
+    "cardSlotsRuntimeData": [
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        }
+    ]
+}

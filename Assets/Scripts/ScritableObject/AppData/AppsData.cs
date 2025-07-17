@@ -19,7 +19,7 @@ public class App
     }
 }
 
-[CreateAssetMenu(fileName = "New Apps Data", menuName = "Data/AppsData", order = 1)]
+[CreateAssetMenu(fileName = "New Apps Data", menuName = "ScriptableObject/AppsData", order = 1)]
 public class AppsData : ScriptableObject
 {
     public List<App> appsData;

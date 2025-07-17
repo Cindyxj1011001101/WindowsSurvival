@@ -23,17 +23,22 @@ public enum CardType
     Construction,//建筑
 }
 
-
 //卡牌基类
 public abstract class Card : IComparable<Card>
 {
+    [JsonIgnore]
     public string cardName; // 显示名称
+    [JsonIgnore]
     public string cardDesc; // 描述
-    //public Sprite cardImage; // 根据名称在文件夹中找图片
+    [JsonIgnore]
     public CardType cardType; // 卡牌类型
+    [JsonIgnore]
     public int maxStackNum; // 最大堆叠数
+    [JsonIgnore]
     public bool moveable; // 能否移动
+    [JsonIgnore]
     public float weight; // 重量
+    [JsonIgnore]
     public List<CardTag> tags; // 标签
     [JsonIgnore]
     public List<Event> events; // 可交互事件

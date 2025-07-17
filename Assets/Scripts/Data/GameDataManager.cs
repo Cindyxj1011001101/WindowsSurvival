@@ -70,8 +70,9 @@ public class GameDataManager
         foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
         {
             EnvironmentBagRuntimeData data = new();
-            // 保存一次性掉落列表
-            data.remainingDrops = bag.disposableDropList.remainingDrops;
+            // 保存掉落列表
+            data.disposableDropList = bag.disposableDropList;
+            data.repeatableDropList = bag.repeatableDropList;
             // 保存背包中的卡牌
             data.cardSlotsRuntimeData = new();
             foreach (var slot in bag.Slots)
@@ -86,14 +87,6 @@ public class GameDataManager
     {
         JsonManager.SaveData(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, "LastPlace");
     }
-
-    // 动力舱的背包数据
-    //private EnvironmentBagRuntimeData poweCabinBagData;
-    //public EnvironmentBagRuntimeData PoweCabinBagData => poweCabinBagData;
-
-    //// 驾驶室的背包数据
-    //private EnvironmentBagRuntimeData cockpitBagData;
-    //public EnvironmentBagRuntimeData CockpitBagData => cockpitBagData;
     #endregion
 
     #region 音频

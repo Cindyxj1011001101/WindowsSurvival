@@ -25,7 +25,7 @@ public class RecipeMaterial
 }
 
 
-[CreateAssetMenu(fileName = "Recipe", menuName = "ScritableObject/Recipe")]
+[CreateAssetMenu(fileName = "Recipe", menuName = "ScriptableObject/Recipe")]
 public class ScriptableRecipe : ScriptableObject
 {
     public string cardName; // 制作出来的卡牌

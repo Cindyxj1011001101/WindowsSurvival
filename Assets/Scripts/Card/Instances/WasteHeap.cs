@@ -11,8 +11,8 @@ public class WasteHeap : Card
     public WasteHeap()
     {
         //初始化参数
-        cardName = "安全泡沫覆盖的废料堆";
-        cardDesc = "安全泡沫覆盖的废料堆。";
+        cardName = "废料堆";
+        cardDesc = "被安全泡沫覆盖的废料堆。";
         //cardImage = Resources.Load<Sprite>("CardImage/安全泡沫覆盖的废料堆");
         cardType = CardType.ResourcePoint;
         maxStackNum = 1;
@@ -35,21 +35,6 @@ public class WasteHeap : Card
         TimeManager.Instance.AddTime(1);
         //掉落卡牌
         RandomDrop();
-
-    }
-
-    public bool Judge_Dig()
-    {
-        return true;
-    }
-
-    public override void Use()
-    {
-        curEndurance--;
-        if (curEndurance <= 0)
-        {
-            //TODO:删除本卡牌
-        }
     }
 
     public void RandomDrop()
