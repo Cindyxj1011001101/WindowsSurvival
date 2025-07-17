@@ -5,28 +5,24 @@
 /// </summary>
 public static class CardFactory
 {
-    public static T CreateCardInstance<T>(string cardName) where T : CardInstance, new()
+    public static Card CreateCard(string cardName)
     {
-        string dataPath = "ScriptableObject/Card/" + cardName;
-
-        // 1. 加载ScriptableObject默认数据
-        CardData defaultData = Resources.Load<CardData>(dataPath);
-        if (defaultData == null)
+        return cardName switch
         {
-            Debug.LogError($"Failed to load ObjectAData at path: {dataPath}");
-            return null;
-        }
-
-        // 2. 创建运行时数据实例
-        T instance = new T { dataPath = dataPath };
-        instance.InitFromCardData(defaultData);
-
-        return instance;
-    }
-
-    public static CardInstance CreateCardIntance(Card card)
-    {
-        string cardName = card.cardName;
-        return CreateCardInstance<CardInstance>(cardName);
+            "水瓶鱼" => new AquariusFish(),
+            "瓶装水" => new BottledWater(),
+            "被捉住的水瓶鱼" => new CaughtAquariusFish(),
+            "压缩饼干" => new CompactBiscuit(),
+            "通往驾驶室的门" => new DoorToCockpit(),
+            "通往动力舱的门" => new DoorToPowerCabin(),
+            "硬质纤维" => new HardFiber(),
+            "小块生肉" => new LittleRawMeat(),
+            "老鼠尸体" => new RatBody(),
+            "腐烂物" => new RotMaterial(),
+            "废铁刀" => new ScrapIronKnife(),
+            "废金属" => new ScrapMetal(),
+            "安全泡沫覆盖的废料堆" => new WasteHeap(),
+            _ => null,
+        };
     }
 }

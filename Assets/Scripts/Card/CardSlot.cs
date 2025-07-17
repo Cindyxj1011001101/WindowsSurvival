@@ -6,38 +6,23 @@ using UnityEngine.UI;
 public class CardSlot : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
-    [SerializeField] private Image fillImage; 
-    [SerializeField] private Text propertyText;
+    [SerializeField] private Text countText; // ÓÃÓÚÏÔÊ¾ÊýÁ¿ºÍÄÍ¾ÃµÈ
+    [SerializeField] private Text percentageText; // ÓÃÓÚÏÔÊ¾ÐÂÏÊ¶È»òÄÍ¾Ã
     [SerializeField] private Text nameText;
-    [SerializeField] private Transform cardTransform;
+    [SerializeField] private CanvasGroup cardCanvas;
 
-    private CardData currentCard;
-
-    private List<CardInstance> cards = new();
-
-    public bool IsEmpty => card == null;
-    public CardData CardData => currentCard;
-    public Card card;
-
+    private List<Card> cards = new();
+    public bool IsEmpty => cards.Count == 0;
     public int StackCount => cards.Count;
 
-    public List<CardInstance> Cards => cards;
+    public List<Card> Cards => cards;
 
     private BagBase bag;
     public BagBase Bag => bag;
 
-    public bool CanDragOverBag
-    {
-        get
-        {
-            if (currentCard == null) return false;
-            return currentCard is FoodCardData || currentCard is ResourceCardData || currentCard is ToolCardData;
-        }
-    }
-
     private void Awake()
     {
-        if (cardTransform.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
+        if (cardCanvas.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
         {
             doubleClickHandler.onDoubleClick.AddListener(() =>
             {
@@ -55,100 +40,118 @@ public class CardSlot : MonoBehaviour
 
     public void InitFromRuntimeData(CardSlotRuntimeData cardSlotRuntimeData)
     {
-        foreach (var card in cardSlotRuntimeData.cardInstanceList)
+        foreach (var card in cardSlotRuntimeData.cardList)
         {
             AddCard(card);
         }
     }
 
-    private void RefreshCurrentDisplay()
+    /// <summary>
+    /// Ë¢ÐÂµ±Ç°ÏÔÊ¾
+    /// </summary>
+    public void RefreshCurrentDisplay()
     {
         if (IsEmpty) return;
 
-        DisplayCard(PeekCard());
+        DisplayCard(PeekCard(), StackCount);
     }
 
-    public void DisplayCard(CardInstance card)
+    /// <summary>
+    /// ÏÔÊ¾Ö¸¶¨ÊýÁ¿µÄ¿¨ÅÆ
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="stackCount"></param>
+    public void DisplayCard(Card card, int stackCount)
     {
-        cardTransform.gameObject.SetActive(true);
-        var data = card.CardData;
-        iconImage.sprite = data.cardImage;
-        nameText.text = data.cardName;
-        fillImage.gameObject.SetActive(data is FoodCardData);
-        propertyText.text = "";
-        switch (data)
+        // Èç¹ûÒªÏÔÊ¾µÄÊýÁ¿Ð¡ÓÚµÈÓÚÁã£¬ÔòÊ²Ã´Ò²²»ÏÔÊ¾
+        if (stackCount <= 0)
         {
-            case FoodCardData cardData:
-                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-                if (cardData.MaxFresh == -1)
-                    fillImage.gameObject.SetActive(false);
-                // ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½
-                else
-                    fillImage.fillAmount = (float)(card as FoodCardInstance).currentFresh / cardData.MaxFresh;
-
-                if (StackCount > 1)
-                    propertyText.text = $"x{StackCount}";
-
-                break;
-
-            case ResourceCardData:
-                if (StackCount > 1)
-                    propertyText.text = $"x{StackCount}";
-                break;
-
-            case PlaceCardData:
-                break;
-
-            case ResourcePointCardData cardData:
-                propertyText.text = $"{Math.Round((float)(card as ResourcePointCardInstance).currentEndurance / cardData.maxEndurance, 1) * 100} %";
-                break;
-
-            case ToolCardData cardData:
-                propertyText.text = $"{Math.Round((float)(card as ToolCardInstance).currentEndurance / cardData.maxEndurance, 1) * 100} %";
-                break;
-
-            default:
-                break;
+            DisableDisplay();
+            return;
         }
+
+        EnableDisplay();
+
+        iconImage.sprite = card.CardImage;
+        nameText.text = card.cardName;
+        // ÏÔÊ¾¶ÑµþÊýÁ¿
+        countText.text = "";
+        if (stackCount > 1)
+            countText.text = $"x{stackCount}";
+
+        percentageText.text = "";
+
+        // ÏÔÊ¾ÄÍ¾Ã
+        if (card.maxEndurance > 1)
+            percentageText.text = $"{Math.Round((float)card.curEndurance / card.maxEndurance, 2) * 100}%";
+        // ÏÔÊ¾ÐÂÏÊ¶È
+        else if (card.TryGetComponent<FreshnessComponent>(out var component))
+            percentageText.text = $"{Math.Round((float)component.freshness / component.maxFreshness, 2) * 100}%";
+
+        // ÏÔÊ¾Éú³¤¶È
+
+        // ÏÔÊ¾²úÎï½ø¶È
+
     }
 
-    public bool ContainsSimilarCard(CardData cardData) => !IsEmpty && currentCard.Equals(cardData);
+    /// <summary>
+    /// ²»ÏÔÊ¾¿¨ÅÆ
+    /// </summary>
+    private void DisableDisplay()
+    {
+        cardCanvas.alpha = 0;
+        cardCanvas.blocksRaycasts = false;
+        cardCanvas.interactable = false;
+    }
+
+    /// <summary>
+    /// ÔÊÐíÏÔÊ¾¿¨ÅÆ
+    /// </summary>
+    private void EnableDisplay()
+    {
+        cardCanvas.alpha = 1;
+        cardCanvas.blocksRaycasts = true;
+        cardCanvas.interactable = true;
+    }
+
+    public bool ContainsSimilarCard(string cardName) => !IsEmpty && cardName == cards[0].cardName;
     
     /// <summary>
-    /// ï¿½Ü·ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¸Ã·ï¿½ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½Òªï¿½Ñµï¿½ï¿½Ä¿ï¿½ï¿½Æºï¿½ï¿½ï¿½ï¿½slotï¿½ï¿½ï¿½ÐµÄ¿ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½ï¿½
+    /// ÄÜ·ñ¶Ñµþ£¬ÔÚÊ¹ÓÃ¸Ã·½·¨Ç°ÇëÎñ±ØÈ·ÈÏÒª¶ÑµþµÄ¿¨ÅÆºÍÕâ¸öslot·ÅÓÐµÄ¿¨ÅÆÊÇÍ¬ÀàµÄ
     /// </summary>
     /// <returns></returns>
-    public bool CanStack() => StackCount < currentCard.maxStackNum;
+    public bool CanAddCard(Card card)
+    {
+        return IsEmpty || (ContainsSimilarCard(card.cardName) && StackCount < card.maxStackNum);
+    }
 
     /// <summary>
     /// Ìí¼ÓÒ»ÕÅ¿¨ÅÆ
     /// </summary>
     /// <param name="card"></param>
-    public void AddCard(CardInstance card)
+    public void AddCard(Card card)
     {
-        currentCard = card.CardData;
-
         cards.Add(card);
         cards.Sort((a, b) => a.CompareTo(b));
 
         RefreshCurrentDisplay();
 
-        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½Ò±ï¿½ï¿½ï¿½Ê±
+        // µ±¿¨ÅÆÌí¼Óµ½Íæ¼Ò±³°üÊ±
         if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = 1 });
-        // ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
+        // µ±×°±¸¿¨ÅÆÊ±
         if (bag is EquipmentBag)
-            EventManager.Instance.TriggerEvent(EventType.Equip, card as EquipmentCardInstance);
+            EventManager.Instance.TriggerEvent(EventType.Equip, card);
 
         card.SetCardSlot(this);
     }
 
     /// <summary>
-    /// ï¿½Æ³ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Å¿ï¿½ï¿½ï¿½
+    /// ÒÆ³ýÖ¸¶¨µÄÒ»ÕÅ¿¨ÅÆ
     /// </summary>
     /// <param name="card"></param>
-    public void RemoveCard(CardInstance card)
+    public void RemoveCard(Card card)
     {
         if (!cards.Contains(card)) return;
 
@@ -160,20 +163,20 @@ public class CardSlot : MonoBehaviour
         else
             RefreshCurrentDisplay();
 
-        // ï¿½ï¿½ï¿½ï¿½ï¿½Æ´ï¿½ï¿½ï¿½Ò±ï¿½ï¿½ï¿½ï¿½Æ³ï¿½Ê±
+        // µ±¿¨ÅÆ´ÓÍæ¼Ò±³°üÒÆ³ýÊ±
         if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = -1 });
-        // ï¿½ï¿½Ð¶ï¿½ï¿½×°ï¿½ï¿½Ê±
+        // µ±Ð¶ÏÂ×°±¸Ê±
         if (bag is EquipmentBag)
-            EventManager.Instance.TriggerEvent(EventType.Unequip, card as EquipmentCardInstance);
+            EventManager.Instance.TriggerEvent(EventType.Unequip, card);
     }
 
     /// <summary>
-    /// ï¿½Æ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ä¿ï¿½ï¿½ï¿½
+    /// ÒÆ³ý×îÓÅÏÈÏÔÊ¾µÄ¿¨ÅÆ
     /// </summary>
     /// <returns></returns>
-    public CardInstance RemoveCard()
+    public Card RemoveCard()
     {
         var cardToRemove = cards[0];
 
@@ -192,28 +195,12 @@ public class CardSlot : MonoBehaviour
             RemoveCard();
     }
 
-    /// <summary>
-    /// ï¿½Æ³ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½
-    /// </summary>
-    public void RemoveAllCards()
-    {
-        while (StackCount > 0)
-        {
-            RemoveCard();
-        }
-    }
-
-    public CardInstance PeekCard() => cards[0];
+    public Card PeekCard() => cards[0];
 
     public void ClearSlot()
     {
-        currentCard = null;
-        RemoveAllCards();
         cards.Clear();
-        iconImage.sprite = null;
-        nameText.text = "";
-        propertyText.text = "";
-        cardTransform.gameObject.SetActive(false);
+        DisableDisplay();
     }
 
 

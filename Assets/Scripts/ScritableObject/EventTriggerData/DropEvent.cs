@@ -18,11 +18,7 @@ public class Drop
     //掉落描述
     public string DropDesc;
 
-
     public string cardName;
-
-    [JsonIgnore]
-    public CardData CardData => Resources.Load<CardData>("ScriptableObject/Card/" + cardName);
 
     [JsonIgnore]
     public bool IsEmpty => DropNum == 0;
@@ -51,7 +47,7 @@ public class DropEvent : EventTrigger
             {
                 if (rand < drop.DropProb)
                 {
-                    GameManager.Instance.AddDropCard(drop, true);
+                    GameManager.Instance.AddCard(drop.cardName, true);
                     return;
                 }
 

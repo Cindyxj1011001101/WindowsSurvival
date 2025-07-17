@@ -17,7 +17,7 @@ public class StudyWindow : WindowBase
     [SerializeField] ToggleGroup techNodesGroup;
     [SerializeField] List<UITechNode> techNodes;
 
-    private ScriptableTechnologyNode curSelectedTechNode; // ��¼��ǰѡ�еĿƼ��ڵ�
+    private ScriptableTechnologyNode curSelectedTechNode; // 记录当前选中的科技节点
 
     protected override void Awake()
     {
@@ -66,58 +66,58 @@ public class StudyWindow : WindowBase
 
     private void DisplayTechNodeDetails(ScriptableTechnologyNode techNode)
     {
-        // ��ʾ�Ƽ������ƺ�����
+        // 显示科技的名称和描述
         techName.text = techNode.techName;
         techDescription.text = techNode.techDescription;
 
-        // ��ʾ�Ƽ���ǰ���о���Ŀ
+        // 显示科技的前置研究项目
         MonoUtility.DestroyAllChildren(prerequisiteLayout);
         var techNodeEntry = Resources.Load<GameObject>("Prefabs/UI/Controls/TechNodeEntry");
         foreach (var prerequisite in techNode.prerequisites)
         {
             var content = Instantiate(techNodeEntry, prerequisiteLayout).GetComponentInChildren<Text>();
-            content.text = $"���� {prerequisite.techName}";
+            content.text = $"—— {prerequisite.techName}";
         }
 
-        // ��ʾ�Ƽ����Խ������䷽
+        // 显示科技可以解锁的配方
         MonoUtility.DestroyAllChildren(recipeLayout);
         var recipeEntry = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeEntry");
         foreach (var recipe in techNode.recipes)
         {
             var obj = Instantiate(recipeEntry, recipeLayout);
-            obj.transform.Find("Icon").GetComponent<Image>().sprite = recipe.card.cardImage;
-            obj.GetComponentInChildren<Text>().text = recipe.card.cardName;
+            obj.transform.Find("Icon").GetComponent<Image>().sprite = recipe.CardImage;
+            obj.GetComponentInChildren<Text>().text = recipe.cardName;
         }
 
-        // ��ʾ�о���ť
+        // 显示研究按钮
         studyButton.gameObject.SetActive(!TechnologyManager.Instance.IsTechNodeStudied(techNode));
 
-        // �о������
+        // 研究已完成
         if (TechnologyManager.Instance.IsTechNodeStudied(techNode))
         {
             studyButton.interactable = false;
-            studyButton.GetComponentInChildren<Text>().text = "�����";
+            studyButton.GetComponentInChildren<Text>().text = "已完成";
         }
-        // �о����ڽ���
+        // 研究正在进行
         else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
         {
             studyButton.interactable = true;
-            studyButton.GetComponentInChildren<Text>().text = "��ͣ�о�";
-            // �����¼�����
+            studyButton.GetComponentInChildren<Text>().text = "暂停研究";
+            // 添加事件监听
             studyButton.onClick.RemoveAllListeners();
             studyButton.onClick.AddListener(() =>
             {
-                // ��ͣ��ǰ�о�
+                // 暂停当前研究
                 TechnologyManager.Instance.StopStudy();
-                // ˢ����ʾ
+                // 刷新显示
                 RefreshCurrentDisplay();
             });
         }
-        // �о�δ����
+        // 研究未解锁
         else if (TechnologyManager.Instance.IsTechNodeLocked(techNode))
         {
             studyButton.interactable = false;
-            studyButton.GetComponentInChildren<Text>().text = "δ����";
+            studyButton.GetComponentInChildren<Text>().text = "未解锁";
         }
         // �������о��ڽ���
         // else if (TechnologyManager.Instance.IsAnyTechNodeBeingStudied())
@@ -129,29 +129,28 @@ public class StudyWindow : WindowBase
         else
         {
             studyButton.interactable = true;
-            studyButton.GetComponentInChildren<Text>().text = "�о�";
-            // �����¼�����
+            studyButton.GetComponentInChildren<Text>().text = "研究";
+            // 添加事件监听
             studyButton.onClick.RemoveAllListeners();
             studyButton.onClick.AddListener(() =>
             {
-                // ��ͣ��ǰ�о�
+                // 暂停当前研究
                 TechnologyManager.Instance.StopStudy();
-                // �о���ǰ�Ƽ��ڵ�
-                // �����ť��ʼ�о�
+                // 研究当前科技节点
                 TechnologyManager.Instance.Study(techNode);
-                // ˢ����ʾ
+                // 刷新显示
                 RefreshCurrentDisplay();
             });
         }
 
-        // ��ʾ�о����Ⱥ��о��ٶ�
-        // �о������
+        // 显示研究进度和研究速度
+        // 研究已完成
         if (TechnologyManager.Instance.IsTechNodeStudied(techNode))
         {
             progressSlider.value = 1;
-            progressSlider.GetComponentInChildren<Text>().text = $"�����";
+            progressSlider.GetComponentInChildren<Text>().text = $"已完成";
         }
-        // �������
+        // 其他情况
         else
         {
             var progress = TechnologyManager.Instance.GetStudyProgress(techNode);
@@ -159,11 +158,11 @@ public class StudyWindow : WindowBase
             progressSlider.GetComponentInChildren<Text>().text = $"{progress} / {techNode.cost}";
         }
 
-        // ��ʾ�о��ٶ�
+        // 显示研究速度
         if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
         {
             studyRate.gameObject.SetActive(true);
-            studyRate.text = $"+ {TechnologyManager.Instance.CurStudyRate:0.0} �Ƽ��� / 15 ����";
+            studyRate.text = $"+ {TechnologyManager.Instance.CurStudyRate:0.0} 科技点 / 15 分钟";
         }
         // �о����ڽ���
         // else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))

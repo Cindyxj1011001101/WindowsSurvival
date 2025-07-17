@@ -24,16 +24,25 @@ public class CraftManager
         unlockedRecipes = GameDataManager.Instance.UnlockedRecipes;
     }
 
+    /// <summary>
+    /// 判断合成配方是否解锁
+    /// </summary>
+    /// <param name="recipe"></param>
+    /// <returns></returns>
     public bool IsRecipeLocked(ScriptableRecipe recipe)
     {
-        return !unlockedRecipes.Contains(recipe.card.cardName);
+        return !unlockedRecipes.Contains(recipe.cardName);
     }
 
+    /// <summary>
+    /// 解锁指定的合成配方
+    /// </summary>
+    /// <param name="recipe"></param>
     public void UnlockRecipe(ScriptableRecipe recipe)
     {
-        if (unlockedRecipes.Contains(recipe.card.cardName)) return;
+        if (unlockedRecipes.Contains(recipe.cardName)) return;
 
-        unlockedRecipes.Add(recipe.card.cardName);
+        unlockedRecipes.Add(recipe.cardName);
         EventManager.Instance.TriggerEvent(EventType.UnlockRecipe);
     }
 
@@ -52,7 +61,7 @@ public class CraftManager
         foreach (var material in recipe.materials)
         {
             // 任何一项材料不满足数量需求，不能合成
-            if (playerBag.GetTotalCountOfSpecificCard(material.cardData) < material.requiredAmount) return false;
+            if (playerBag.GetTotalCountOfSpecificCard(material.cardName) < material.requiredAmount) return false;
         }
 
         return true;
@@ -68,12 +77,15 @@ public class CraftManager
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
         foreach (var material in recipe.materials)
         {
-            playerBag.RemoveCards(material.cardData, material.requiredAmount);
+            playerBag.RemoveCards(material.cardName, material.requiredAmount);
         }
+
+        // 创建一个新的卡牌
+        var card = CardFactory.CreateCard(recipe.cardName);
 
         // 掉落制作出的卡牌
         // 如果是建筑卡牌，则优先掉落到环境里
-        GameManager.Instance.AddCard(recipe.card, recipe.card.cardType is not CardType.Construction);
+        GameManager.Instance.AddCard(card, card.cardType != CardType.Construction);
 
         // 消耗时间
         TimeManager.Instance.AddTime(recipe.craftTime);

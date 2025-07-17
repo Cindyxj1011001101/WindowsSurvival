@@ -46,6 +46,9 @@ public class CraftWindow : WindowBase
         DisplayRecipesByType(currentRecipeType, true); // 传递true表示是刷新操作
     }
 
+    /// <summary>
+    /// 显示配方类别
+    /// </summary>
     private void DisplayRecipeTypes()
     {
         var recipeTypeButtonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeTypeButton");
@@ -60,7 +63,7 @@ public class CraftWindow : WindowBase
             var button = buttonObj.GetComponent<CustomButton>();
             button.group = group;
             var text = buttonObj.GetComponentInChildren<Text>();
-            text.text = type.ToString();
+            text.text = library.libraryName;
             button.onSelect.AddListener(() =>
             {
                 currentRecipeType = type;
@@ -70,6 +73,11 @@ public class CraftWindow : WindowBase
         }
     }
 
+    /// <summary>
+    /// 显示某一类的所有配方
+    /// </summary>
+    /// <param name="recipeType"></param>
+    /// <param name="isRefresh"></param>
     private void DisplayRecipesByType(RecipeType recipeType, bool isRefresh = false)
     {
         var recipeButtonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeButton");
@@ -106,7 +114,7 @@ public class CraftWindow : WindowBase
             button.group = group;
             var recipeButton = recipeButtonObj.GetComponent<UIRecipeButton>();
             recipeButton.DisplayRecipe(
-                recipe.card.cardImage,
+                recipe.CardImage,
                 CraftManager.Instance.IsRecipeLocked(recipe),
                 CraftManager.Instance.CanCrfat(recipe)
                 );
@@ -124,28 +132,32 @@ public class CraftWindow : WindowBase
         MonoUtility.UpdateContainerHeight(recipieLayout.GetComponent<GridLayoutGroup>(), recipes.Count);
     }
 
+    /// <summary>
+    /// 显示具体的配方信息
+    /// </summary>
+    /// <param name="recipe"></param>
     private void DisplayRecipeDetails(ScriptableRecipe recipe)
     {
         var recipeMaterialPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeMaterial");
 
         MonoUtility.DestroyAllChildren(materialLayout);
         // 显示卡牌图标
-        cardIcon.sprite = recipe.card.cardImage;
+        cardIcon.sprite = recipe.CardImage;
 
         // 显示卡牌名称
-        cardNameText.text = recipe.card.cardName;
+        cardNameText.text = recipe.cardName;
 
         // 显示卡牌描述
-        cradDescriptionText.text = recipe.card.cardDesc;
+        cradDescriptionText.text = recipe.cardDesc;
 
         // 显示所需材料
         foreach (var material in recipe.materials)
         {
             var recipeMaterial = Instantiate(recipeMaterialPrefab, materialLayout).GetComponent<UIRecipeMaterial>();
             recipeMaterial.DisplayMaterial(
-                material.cardData.cardImage,
+                material.CardImage,
                 material.requiredAmount,
-                GameManager.Instance.PlayerBag.GetTotalCountOfSpecificCard(material.cardData)
+                GameManager.Instance.PlayerBag.GetTotalCountOfSpecificCard(material.cardName)
                 );
         }
 

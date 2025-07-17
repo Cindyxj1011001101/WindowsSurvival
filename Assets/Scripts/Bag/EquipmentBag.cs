@@ -1,17 +1,15 @@
-﻿
-
-public class EquipmentBag : BagBase
+﻿public class EquipmentBag : BagBase
 {
     private void Awake()
     {
-        EventManager.Instance.AddListener<EquipmentCardInstance>(EventType.Equip, OnCardEquipped);
-        EventManager.Instance.AddListener<EquipmentCardInstance>(EventType.Unequip, OnCardUnequipped);
+        EventManager.Instance.AddListener<Card>(EventType.Equip, OnCardEquipped);
+        EventManager.Instance.AddListener<Card>(EventType.Unequip, OnCardUnequipped);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<EquipmentCardInstance>(EventType.Equip, OnCardEquipped);
-        EventManager.Instance.RemoveListener<EquipmentCardInstance>(EventType.Unequip, OnCardUnequipped);
+        EventManager.Instance.RemoveListener<Card>(EventType.Equip, OnCardEquipped);
+        EventManager.Instance.RemoveListener<Card>(EventType.Unequip, OnCardUnequipped);
     }
 
     protected override void Init()
@@ -24,42 +22,44 @@ public class EquipmentBag : BagBase
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public EquipmentCardInstance GetEquipmentByType(EquipmentType type)
+    public Card GetEquipmentByType(EquipmentType type)
     {
         int index = (int)type;
         if (slots[index].IsEmpty) return null;
-        return slots[index].PeekCard() as EquipmentCardInstance;
+        return slots[index].PeekCard();
     }
 
-    private void OnCardEquipped(EquipmentCardInstance equipment)
+    private void OnCardEquipped(Card equipment)
     {
-        StateManager.Instance.AddLoad(equipment.CardData.weight);
+        StateManager.Instance.AddLoad(equipment.weight);
     }
 
-    private void OnCardUnequipped(EquipmentCardInstance equipment)
+    private void OnCardUnequipped(Card equipment)
     {
-        StateManager.Instance.AddLoad(-equipment.CardData.weight);
+        StateManager.Instance.AddLoad(-equipment.weight);
     }
 
-    public override void AddCard(CardInstance card)
+    public override void AddCard(Card card)
     {
         // 在对应装备位置上添加装备卡
-        var slotIndex = (int)(card.CardData as EquipmentCardData).equipmentType;
+        card.TryGetComponent<EquipmentComponent>(out var component);
+        var slotIndex = (int)component.equipmentType;
         slots[slotIndex].AddCard(card);
     }
 
-    public override bool CanAddCard(CardInstance card)
+    public override bool CanAddCard(Card card)
     {
         // 不是装备卡无法添加
-        if (card is not EquipmentCardInstance) return false;
+        //if (card is not EquipmentCardInstance) return false;
+        if (!card.TryGetComponent<EquipmentComponent>(out var component)) return false;
 
         // 不是从玩家背包装备的，要看载重够不够
-        if ((card.Slot == null || card.Slot.Bag is not PlayerBag) &&
-            StateManager.Instance.curLoad + card.CardData.weight > StateManager.Instance.maxLoad)
+        if ((card.slot == null || card.slot.Bag is not PlayerBag) &&
+            StateManager.Instance.curLoad + card.weight > StateManager.Instance.maxLoad)
             return false;
         
         // 最后看装备格子有没有位置
-        var slotIndex = (int)(card.CardData as EquipmentCardData).equipmentType;
+        var slotIndex = (int)component.equipmentType;
         return slots[slotIndex].IsEmpty;
     }
 }
