@@ -8,6 +8,7 @@ public enum CardTag
 {
     Rubbish, // 垃圾
     Cut, // 切割类
+    Dig, // 挖掘类
 }
 
 public enum CardType
@@ -21,6 +22,7 @@ public enum CardType
     Creature,//生物
     Construction,//建筑
 }
+
 
 //卡牌基类
 public abstract class Card : IComparable<Card>

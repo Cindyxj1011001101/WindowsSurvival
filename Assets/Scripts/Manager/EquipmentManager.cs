@@ -1,12 +1,5 @@
 using UnityEngine;
 
-public enum EquipmentType
-{
-   Head = 0,
-   Body = 1,
-   Back = 2,
-   Leg = 3,
-}
 
 public class EquipmentManager : MonoBehaviour
 {
@@ -47,18 +40,16 @@ public class EquipmentManager : MonoBehaviour
    /// 卡牌tag中需包含对应装备位置的tag
    /// </summary>
    /// <returns>是否可以装备</returns>
-   public bool CanEquipCard(CardInstance card)
+   public bool CanEquipCard(Card card)
    {
-       if (card is not EquipmentCardInstance) return false;
-       EquipmentCardData data = card.CardData as EquipmentCardData;
-       return data.equipmentType switch
+       if(card.TryGetComponent<EquipmentComponent>(out var equipmentComponent))
        {
-           EquipmentType.Head => HeadEquipment == null,
-           EquipmentType.Body => BodyEquipment == null,
-           EquipmentType.Back => BackEquipment == null,
-           EquipmentType.Leg => LegEquipment == null,
-           _ => false,
-       };
+            return equipmentComponent.equipmentType == EquipmentType.Head ? HeadEquipment == null :
+                   equipmentComponent.equipmentType == EquipmentType.Body ? BodyEquipment == null :
+                   equipmentComponent.equipmentType == EquipmentType.Back ? BackEquipment == null :
+                   equipmentComponent.equipmentType == EquipmentType.Leg ? LegEquipment == null : false;
+       }
+       return false;
    }
    #endregion
 
@@ -68,26 +59,25 @@ public class EquipmentManager : MonoBehaviour
    /// </summary>
    public void EquipCard(Card equipment)
    {
-        if(equipment.cardType!=CardType.Equipment)
+        if(CanEquipCard(equipment))
         {
-            return;
+            equipment.TryGetComponent<EquipmentComponent>(out var equipmentComponent);
+            switch(equipmentComponent.equipmentType)
+            {
+                case EquipmentType.Head:
+                    HeadEquipment = equipment;
+                    break;
+                case EquipmentType.Body:
+                    BodyEquipment = equipment;
+                    break;
+                case EquipmentType.Back:
+                    BackEquipment = equipment;
+                    break;
+                case EquipmentType.Leg:
+                    LegEquipment = equipment;
+                    break;
+            }
         }
-       if(equipment.tags.Contains(CardTag.Head))
-       {
-            HeadEquipment = equipment;
-       }
-       else if(equipment.tags.Contains(CardTag.Body))
-       {
-            BodyEquipment = equipment;
-       }
-       else if(equipment.tags.Contains(CardTag.Back))
-       {
-            BackEquipment = equipment;
-       }
-       else if(equipment.tags.Contains(CardTag.Leg))
-       {
-            LegEquipment = equipment;
-       }
    }
    #endregion
 
@@ -95,29 +85,27 @@ public class EquipmentManager : MonoBehaviour
    /// <summary>
    /// 卸下卡牌
    /// </summary>
-   /// <param name="type">卸下的位置</param>
+   /// <param name="equipment">卸下的卡牌</param>
    public void UnequipCard(Card equipment)
    {
-       if(equipment.cardType!=CardType.Equipment)
+        if(equipment.TryGetComponent<EquipmentComponent>(out var equipmentComponent))
         {
-            return;
+            switch(equipmentComponent.equipmentType)
+            {
+                case EquipmentType.Head:
+                    HeadEquipment = null;
+                    break;
+                case EquipmentType.Body:
+                    BodyEquipment = null;
+                    break;
+                case EquipmentType.Back:
+                    BackEquipment = null;
+                    break;
+                case EquipmentType.Leg:
+                    LegEquipment = null;
+                    break;
+            }
         }
-       if(equipment.tags.Contains(CardTag.Head))
-       {
-            HeadEquipment = null;
-       }
-       else if(equipment.tags.Contains(CardTag.Body))
-       {
-            BodyEquipment = null;
-       }
-       else if(equipment.tags.Contains(CardTag.Back))
-       {
-            BackEquipment = null;
-       }
-       else if(equipment.tags.Contains(CardTag.Leg))
-       {
-            LegEquipment = null;
-       }
-   }
+    }
    #endregion
 }

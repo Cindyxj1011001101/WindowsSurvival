@@ -1,16 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
-//public enum EventTypeEnum
-//{
-//    CanTriggerEvent,// 判断某一卡牌行为是否可执行
-//    TriggerEvent,//执行某一卡牌行为
-//    //获取某一事件参数
-//    //获取卡牌参数
-//    Fresh,//卡牌腐烂
-//    Endurance,//卡牌损坏
-//}
-
 /// <summary>
 /// 水瓶鱼
 /// </summary>

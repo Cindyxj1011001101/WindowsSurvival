@@ -15,7 +15,6 @@ public class LoveBead : Card
     {
         cardName = "爱情贝";
         cardDesc = "形似扇贝的古怪异星生物。其强大的肌肉使其能像鱼一样扇动贝壳游动。繁殖期的雄贝会搜集各类珍宝藏在贝壳中以吸引雌贝。";
-        cardImage = Resources.Load<Sprite>("CardImage/爱情贝");
         cardType = CardType.Creature;
         maxStackNum = 5;
         moveable = true;
@@ -27,12 +26,19 @@ public class LoveBead : Card
         curFresh = 2160;
         weight = 1.5f;
         isOpened = false;
-        events = new List<Event>();
+        events = new List<Event>()
+        {
+            new Event("撬开", "撬开爱情贝", Event_OpenByTool, Judge_OpenByTool),
+            new Event("取贝肉", "取贝肉", Event_GetMeat,Judge_GetMeat)
+        };
         tags = new List<CardTag>();
-        events.Add(new Event("撬开", "撬开爱情贝", Event_OpenByTool, () => Judge_OpenByTool()));
-        events.Add(new Event("取贝肉", "取贝肉", Event_GetMeat, () => Judge_GetMeat()));
+        components = new()
+        {
+            { typeof(FreshnessComponent), new FreshnessComponent(2160, OnFreshnessChanged) },
+            { typeof(ProgressComponent), new ProgressComponent(3600, 1, OnProgressChanged, OnProductNumChanged) },
+        };
     }
-
+    #region 事件
     public void Event_OpenByTool()
     {
         Card tool = FindTool();
@@ -82,12 +88,12 @@ public class LoveBead : Card
 
     public Card FindTool()
     {
-        EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
-        foreach (CardSlot slot in environmentBag.Slots)
+        PlayerBag playerBag = GameManager.Instance.PlayerBag;
+        foreach (CardSlot slot in playerBag.Slots)
         {
-            if (slot.card.tags.Contains(CardTag.Cut) || slot.card.tags.Contains(CardTag.Dig))
+            if (slot.PeekCard().tags.Contains(CardTag.Cut) || slot.PeekCard().tags.Contains(CardTag.Dig))
             {
-                return slot.card;
+                return slot.PeekCard();
             }
         }
         return null;
@@ -111,26 +117,22 @@ public class LoveBead : Card
         }
         return false;
     }
+    #endregion
 
-    public override void Grow()
+    #region 组件
+    private void OnFreshnessChanged(int freshness)
     {
-        if (curProductNum == maxProductNum)
-        {
-            return;
-        }
-        curProductProcess += 15;
-        if (curProductProcess >= maxProductProcess)
-        {
-            curProductProcess = 0;
-            curProductNum += 1;
-        }
+        Debug.Log("当前新鲜度：" + freshness);
     }
 
-    public override void Fresh()
+    private void OnProgressChanged(int progress)
     {
-        //TODO:只有在玩家背包或非水域环境会掉新鲜度，一旦回到水域环境中会回满新鲜度
-        //需要做成两张卡牌分别在背包和环境中
-        //TODO:腐烂爱情贝
+        Debug.Log("当前生产进度：" + progress);
     }
 
+    private void OnProductNumChanged(int productNum)
+    {
+        Debug.Log("当前生产数量：" + productNum);
+    }
+    #endregion
 }

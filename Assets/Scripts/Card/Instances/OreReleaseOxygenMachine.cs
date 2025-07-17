@@ -14,7 +14,6 @@ public class OreReleaseOxygenMachine : Card
     {
         cardName = "矿石释氧机";
         cardDesc = "将白爆矿加热到合适的温度使其反应释放氧气。操作过程中请勿吸烟。";
-        cardImage = Resources.Load<Sprite>("CardImage/矿石释氧机");
         cardType = CardType.Construction;
         maxStackNum = 1;
         moveable = false;
@@ -61,7 +60,7 @@ public class OreReleaseOxygenMachine : Card
         return false;
     }
    
-    public override void TimeProgress()
+    public void TimeProgress()
     {
         if(isWorking)
         {

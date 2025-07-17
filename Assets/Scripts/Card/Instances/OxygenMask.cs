@@ -8,7 +8,6 @@ public class OxygenMask : Card
     {
         cardName = "氧气面罩";
         cardDesc = "用于水下探索的简易氧气面罩，让你能看清水下世界。";
-        cardImage = Resources.Load<Sprite>("CardImage/氧气面罩");
         cardType = CardType.Equipment;
         isEquipped = false;
         maxStackNum = 1;
@@ -16,7 +15,6 @@ public class OxygenMask : Card
         weight = 1.1f;
         events = new List<Event>();
         tags = new List<CardTag>();
-        tags.Add(CardTag.Head);
         events.Add(new Event("装备", "装备氧气面罩", Event_Equip, () => Judge_Equip()));
         events.Add(new Event("卸下", "卸下氧气面罩", Event_UnEquip, () => Judge_UnEquip()));
     }
