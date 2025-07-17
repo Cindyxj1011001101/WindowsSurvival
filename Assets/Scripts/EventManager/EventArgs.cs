@@ -30,17 +30,17 @@ public class ChangeStateArgs
         value = i;
     }
 }
-public class AddDropCardArgs
-{
-    public Drop drop;
-    public bool ToPlayer;
+//public class AddDropCardArgs
+//{
+//    public Drop drop;
+//    public bool ToPlayer;
 
-    public AddDropCardArgs(Drop d, bool b)
-    {
-        drop = d;
-        ToPlayer = b;
-    }
-}
+//    public AddDropCardArgs(Drop d, bool b)
+//    {
+//        drop = d;
+//        ToPlayer = b;
+//    }
+//}
 
 public class ChangeDiscoveryDegreeArgs
 {

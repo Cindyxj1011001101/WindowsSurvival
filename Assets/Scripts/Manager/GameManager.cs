@@ -53,34 +53,6 @@ public class GameManager : MonoBehaviour
         equipmentBag = FindObjectOfType<EquipmentBag>(true);
     }
 
-    //初始化SO数据
-    public void Init()
-    {
-        EventTrigger[] eventTriggers = Resources.LoadAll<EventTrigger>("ScriptableObject/EventTrigger");
-        if (eventTriggers != null && eventTriggers.Length > 0)
-        {
-            foreach (var trigger in eventTriggers)
-            {
-                trigger.Init();
-            }
-        }
-    }
-
-    // 处理场景探索
-    public void HandleExplore()
-    {
-        CardEvent cardEvent = curEnvironmentBag.ExploreEvent;
-        foreach (var EventTrigger in cardEvent.eventList)
-        {
-            if (EventTrigger.GetType() == typeof(PlaceDropEvent))
-            {
-                EventTrigger.Invoke();
-            }
-        }
-        // 处理时间变化
-        TimeManager.Instance.AddTime(cardEvent.Time);
-    }
-
     public void AddCard(Card card, bool toPlayerBag)
     {
         if (SoundManager.Instance != null)
@@ -123,12 +95,20 @@ public class GameManager : MonoBehaviour
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
 
         //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
-        foreach (var EventTrigger in curEnvironmentBag.ExploreEvent.eventList)
+        var door = curEnvironmentBag.disposableDropList.CertainDrop($"通往{ParsePlaceEnum(lastPlace)}的门");
+        if (door != null)
+            AddCard(door[0], false);
+    }
+
+    private string ParsePlaceEnum(PlaceEnum place)
+    {
+        return place switch
         {
-            if (EventTrigger is PlaceDropEvent placeDropEvent)
-            {
-                placeDropEvent.DropCertainPlaceCard(lastPlace);
-            }
-        }
+            PlaceEnum.PowerCabin => "动力舱",
+            PlaceEnum.Cockpit => "驾驶室",
+            PlaceEnum.LifeSupportCabin => "维生舱",
+            PlaceEnum.CoralCoast => "珊瑚礁海域",
+            _ => null,
+        };
     }
 }

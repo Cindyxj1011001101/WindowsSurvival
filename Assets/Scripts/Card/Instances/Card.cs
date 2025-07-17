@@ -64,6 +64,11 @@ public abstract class Card : IComparable<Card>
             EventManager.Instance.AddListener(EventType.IntervalSettle, OnUpdate);
     }
 
+    public void StopUpdating()
+    {
+        EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
+    }
+
     public virtual void Use()
     {
         // 无限耐久
@@ -82,7 +87,7 @@ public abstract class Card : IComparable<Card>
     public void DestroyThis()
     {
         slot.RemoveCard(this);
-        EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
+        StopUpdating();
     }
 
     public bool TryGetComponent<T>(out T component) where T : ICardComponent

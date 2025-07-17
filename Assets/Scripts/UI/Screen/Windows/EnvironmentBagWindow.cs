@@ -24,15 +24,10 @@ public class EnvironmentBagWindow : BagWindow
         EnvironmentStateSliders.Add(EnvironmentStateEnum.Oxygen, transform.Find("LeftBar/EnvironmentState/BagScrollView/Viewport/Container/Oxygen").gameObject);
         EnvironmentStateSliders.Add(EnvironmentStateEnum.Pressure, transform.Find("LeftBar/EnvironmentState/BagScrollView/Viewport/Container/Pressure").gameObject);
         EnvironmentStateSliders.Add(EnvironmentStateEnum.Height, transform.Find("LeftBar/EnvironmentState/BagScrollView/Viewport/Container/Height").gameObject);
-        discoverButton.onClick.AddListener(() =>
-        {
-            GameManager.Instance.HandleExplore();
-            //GameManager.Instance.HandleCardEvent(GameManager.Instance.CurEnvironmentBag.ExploreEvent);
-        });
 
         // 注册发现度变化事件
         EventManager.Instance.AddListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDicoveryDegreeChanged);
-        // 注册环境袋移动事件
+        // 注册环境移动事件
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentChangeState);
@@ -74,6 +69,9 @@ public class EnvironmentBagWindow : BagWindow
         discoveryDegreeText.text = $"{Math.Round(curEnvironmentBag.DiscoveryDegree, 1)} %";
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
         placeDetailsText.text = $"{curEnvironmentBag.PlaceData.placeDesc}";
+        // 探索事件
+        discoverButton.onClick.RemoveAllListeners();
+        discoverButton.onClick.AddListener(GameManager.Instance.CurEnvironmentBag.HandeleExplore);
     }
     /// <summary>
     /// 单个环境状态变化UI刷新

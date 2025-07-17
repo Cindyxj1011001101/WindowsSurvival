@@ -2,10 +2,13 @@ using UnityEditor;
 
 public class GMCommand
 {
-    [MenuItem("Command/初始化游戏数据")]
-    public static void Init()
+    [MenuItem("Command/初始化所有环境的一次性探索列表")]
+    public static void InitDisposableDropList()
     {
-        GameManager.Instance.Init();
+        foreach (var bag in GameManager.Instance.EnvironmentBags.Values)
+        {
+            bag.disposableDropList.Init();
+        }
     }
 
     private static void AddCard(string cardName)

@@ -31,8 +31,8 @@ public class FreshnessComponent : ICardComponent
         if (freshness <= 0)
         {
             freshness = 0;
-            onFreshnessChanged?.Invoke(freshness);
         }
+        onFreshnessChanged?.Invoke(freshness);
     }
 }
 
@@ -61,8 +61,8 @@ public class GrowthComponent : ICardComponent
         if (growth >= maxGrowth)
         {
             growth = maxGrowth;
-            onGrowthChanged?.Invoke(growth);
         }
+        onGrowthChanged?.Invoke(growth);
     }
 }
 

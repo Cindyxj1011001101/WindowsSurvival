@@ -3,10 +3,16 @@ using UnityEngine;
 
 public class EnvironmentBag : BagBase
 {
-    [Header("探索事件")]
-    [SerializeField] private CardEvent exploreEvent;
+    //[Header("探索事件")]
+    //[SerializeField] private CardEvent exploreEvent;
 
-    public CardEvent ExploreEvent => exploreEvent;
+    //public CardEvent ExploreEvent => exploreEvent;
+
+    [Header("一次性掉落列表")]
+    public DisposableDropList disposableDropList = new();
+
+    [Header("探索用时")]
+    public int explorationTime;
 
     [Header("地点数据")]
     [SerializeField] private PlaceData placeData;
@@ -27,12 +33,36 @@ public class EnvironmentBag : BagBase
         EventManager.Instance.AddListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
     }
 
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDiscoveryDegreeChanged);
+        EventManager.Instance.RemoveListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
+    }
 
     private void OnDiscoveryDegreeChanged(ChangeDiscoveryDegreeArgs args)
     {
         if (args.place == placeData.placeType)
             discoveryDegree = args.discoveryDegree;
     }
+
+    public void HandeleExplore()
+    {
+        if (disposableDropList.IsEmpty)
+        {
+            Debug.Log("探索完全");
+            return;
+        }
+
+        // 消耗时间
+        TimeManager.Instance.AddTime(explorationTime);
+        // 掉落卡牌
+        foreach (var card in disposableDropList.RandomDrop())
+        {
+            // 掉落到环境里
+            GameManager.Instance.AddCard(card, false);
+        }
+    }
+
     //当前环境状态变化(除电力以外的数值变化)
     private void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
     {
@@ -74,8 +104,7 @@ public class EnvironmentBag : BagBase
         }
         EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, EnvironmentStateEnum.Electricity));
         // 初始化一次性掉落列表
-        var e = exploreEvent.eventList.Find(c => c is PlaceDropEvent);
-        (e as PlaceDropEvent).curOnceDropList = data.disposableDropList;
+        disposableDropList.Init(data.remainingDrops);
     }
 
     public override bool CanAddCard(Card card)
@@ -93,11 +122,4 @@ public class EnvironmentBag : BagBase
         }
         base.AddCard(card);
     }
-
-    private void OnDestroy()
-    {
-        EventManager.Instance.RemoveListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDiscoveryDegreeChanged);
-        EventManager.Instance.RemoveListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
-    }
-
 }

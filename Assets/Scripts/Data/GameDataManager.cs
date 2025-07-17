@@ -73,8 +73,7 @@ public class GameDataManager
             // 保存探索度
             data.discoveryDegree = bag.DiscoveryDegree;
             // 保存一次性掉落列表
-            var e = bag.ExploreEvent.eventList.Find(c => c is PlaceDropEvent);
-            data.disposableDropList = (e as PlaceDropEvent).curOnceDropList;
+            data.remainingDrops = bag.disposableDropList.remainingDrops;
             // 保存背包中的卡牌
             data.cardSlotsRuntimeData = new();
             foreach (var slot in bag.Slots)
