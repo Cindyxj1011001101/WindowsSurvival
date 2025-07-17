@@ -11,8 +11,8 @@ public class WasteHeap : Card
     public WasteHeap()
     {
         //初始化参数
-        cardName = "安全泡沫覆盖的废料堆";
-        cardDesc = "安全泡沫覆盖的废料堆。";
+        cardName = "废料堆";
+        cardDesc = "被安全泡沫覆盖的废料堆。";
         cardType = CardType.ResourcePoint;
         maxStackNum = 1;
         moveable = false;
