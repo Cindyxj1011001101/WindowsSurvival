@@ -1,4 +1,5 @@
-﻿using UnityEngine.Events;
+﻿using Newtonsoft.Json;
+using UnityEngine.Events;
 
 /// <summary>
 /// 组件接口
@@ -16,6 +17,7 @@ public class FreshnessComponent : ICardComponent
 
     public float updateRate = 1.0f;
 
+    [JsonIgnore]
     public UnityAction<int> onFreshnessChanged;
 
     public FreshnessComponent(int maxFreshness, UnityAction<int> onFreshnessChanged)
@@ -44,6 +46,7 @@ public class GrowthComponent : ICardComponent
 
     public float updateRate = 1.0f;
 
+    [JsonIgnore]
     public UnityAction<int> onGrowthChanged;
 
     public GrowthComponent(int maxGrowth, UnityAction<int> onGrowthChanged)
@@ -76,7 +79,9 @@ public class ProgressComponent : ICardComponent
 
     public float updateRate = 1.0f;
 
+    [JsonIgnore]
     public UnityAction<int> onProgressChanged;
+    [JsonIgnore]
     public UnityAction<int> onProductNumChanged;
 
     public ProgressComponent(int maxProgress, int maxProductNum,

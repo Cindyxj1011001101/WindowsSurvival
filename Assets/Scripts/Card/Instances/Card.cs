@@ -35,6 +35,7 @@ public abstract class Card : IComparable<Card>
     public bool moveable; // 能否移动
     public float weight; // 重量
     public List<CardTag> tags; // 标签
+    [JsonIgnore]
     public List<Event> events; // 可交互事件
     public int maxEndurance; // 最大耐久度
     public int curEndurance; // 当前耐久度

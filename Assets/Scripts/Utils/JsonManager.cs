@@ -6,6 +6,7 @@ public static class JsonManager
 {
     static JsonSerializerSettings settings = new JsonSerializerSettings
     {
+        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
         TypeNameHandling = TypeNameHandling.Auto // 存储类型信息
     };
 

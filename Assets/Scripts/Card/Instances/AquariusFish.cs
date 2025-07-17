@@ -87,22 +87,7 @@ public class AquariusFish : Card
             // 3. 时间变化
             TimeManager.Instance.AddTime(30);
 
-            // 4. 鱼进入环境探索列表
-            EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
-            // 目前的实现是进入探索列表后所有属性都不变化
-            TryGetComponent<ProgressComponent>(out var component);
-            var progress = component.progress;
-            var productNum = component.productNum;
-            var drop = new Drop("水瓶鱼", 1, 1, card =>
-            {
-                card.TryGetComponent<ProgressComponent>(out var component);
-                component.progress = progress;
-                component.productNum = productNum;
-            });
-            environmentBag.disposableDropList.AddDrop(drop);
-            //var e = environmentBag.ExploreEvent.eventList.Find(c => c is PlaceDropEvent);
-            //TryGetComponent<ProgressComponent>(out var component);
-            //(e as PlaceDropEvent).curOnceDropList.Add(new Drop(new AquariusFish(component.progress, component.productNum), 1, "水瓶鱼"));
+            // 4. 鱼逃跑了    
         }
         else
         {

@@ -43,6 +43,7 @@ public class CardSlot : MonoBehaviour
         foreach (var card in cardSlotRuntimeData.cardList)
         {
             AddCard(card);
+            card.StartUpdating();
         }
     }
 
