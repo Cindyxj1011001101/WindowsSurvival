@@ -70,8 +70,6 @@ public class GameDataManager
         foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
         {
             EnvironmentBagRuntimeData data = new();
-            // 保存探索度
-            data.discoveryDegree = bag.DiscoveryDegree;
             // 保存一次性掉落列表
             data.remainingDrops = bag.disposableDropList.remainingDrops;
             // 保存背包中的卡牌

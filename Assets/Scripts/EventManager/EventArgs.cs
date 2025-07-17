@@ -30,29 +30,7 @@ public class ChangeStateArgs
         value = i;
     }
 }
-//public class AddDropCardArgs
-//{
-//    public Drop drop;
-//    public bool ToPlayer;
 
-//    public AddDropCardArgs(Drop d, bool b)
-//    {
-//        drop = d;
-//        ToPlayer = b;
-//    }
-//}
-
-public class ChangeDiscoveryDegreeArgs
-{
-    public PlaceEnum place;
-    public float discoveryDegree;
-
-    public ChangeDiscoveryDegreeArgs(PlaceEnum p, float d)
-    {
-        place = p;
-        discoveryDegree = d;
-    }
-}
 public class ChangePlayerBagCardsArgs
 {
     public Card card;

@@ -3,11 +3,6 @@ using UnityEngine;
 
 public class EnvironmentBag : BagBase
 {
-    //[Header("探索事件")]
-    //[SerializeField] private CardEvent exploreEvent;
-
-    //public CardEvent ExploreEvent => exploreEvent;
-
     [Header("一次性掉落列表")]
     public DisposableDropList disposableDropList = new();
 
@@ -19,9 +14,10 @@ public class EnvironmentBag : BagBase
 
     public PlaceData PlaceData => placeData;
 
-    [Header("探索度")]
-    private float discoveryDegree;
-    public float DiscoveryDegree => discoveryDegree;
+    //[Header("探索度")]
+    //private float discoveryDegree;
+    //public float DiscoveryDegree => discoveryDegree;
+    public float DiscoveryDegree => 1 - disposableDropList.RemainingDropsRate;
 
     [Header("环境状态")]
     public Dictionary<EnvironmentStateEnum, EnvironmentState> EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>();
@@ -29,20 +25,12 @@ public class EnvironmentBag : BagBase
     protected override void Init()
     {
         InitBag(GameDataManager.Instance.GetEnvironmentBagDataByPlace(placeData.placeType));
-        EventManager.Instance.AddListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDiscoveryDegreeChanged);
         EventManager.Instance.AddListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDiscoveryDegreeChanged);
         EventManager.Instance.RemoveListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
-    }
-
-    private void OnDiscoveryDegreeChanged(ChangeDiscoveryDegreeArgs args)
-    {
-        if (args.place == placeData.placeType)
-            discoveryDegree = args.discoveryDegree;
     }
 
     public void HandeleExplore()
@@ -61,6 +49,10 @@ public class EnvironmentBag : BagBase
             // 掉落到环境里
             GameManager.Instance.AddCard(card, false);
         }
+
+        // 探索度变化
+        //discoveryDegree = 1 - disposableDropList.RemainingDropsRate;
+        EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, DiscoveryDegree);
     }
 
     //当前环境状态变化(除电力以外的数值变化)
@@ -91,7 +83,7 @@ public class EnvironmentBag : BagBase
         // 初始化背包中的物品，探索度，环境状态值
         base.InitBag(runtimeData);
         var data = (runtimeData as EnvironmentBagRuntimeData);
-        discoveryDegree = data.discoveryDegree;
+        //discoveryDegree = data.discoveryDegree;
         EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>(data.environmentStateDict);
         //如果是开局进入，则初始化环境状态
         if (EnvironmentStateDict.Count == 0)

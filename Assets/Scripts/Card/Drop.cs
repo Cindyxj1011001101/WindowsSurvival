@@ -59,6 +59,11 @@ public class DisposableDropList : DropList
 
     public bool IsEmpty => remainingDrops.Count == 0;
 
+    /// <summary>
+    /// 剩余掉落占比
+    /// </summary>
+    public float RemainingDropsRate => (float)remainingDrops.Count / dropList.Count;
+
     public void Init()
     {
         remainingDrops = new List<Drop>(dropList);

@@ -26,7 +26,7 @@ public class EnvironmentBagWindow : BagWindow
         EnvironmentStateSliders.Add(EnvironmentStateEnum.Height, transform.Find("LeftBar/EnvironmentState/BagScrollView/Viewport/Container/Height").gameObject);
 
         // 注册发现度变化事件
-        EventManager.Instance.AddListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDicoveryDegreeChanged);
+        EventManager.Instance.AddListener<float>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         // 注册环境移动事件
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         // 注册环境状态变化事件
@@ -66,7 +66,7 @@ public class EnvironmentBagWindow : BagWindow
                 EnvironmentStateSliders[EnvironmentStateEnum.Height].SetActive(false);
             }
         }
-        discoveryDegreeText.text = $"{Math.Round(curEnvironmentBag.DiscoveryDegree, 1)} %";
+        discoveryDegreeText.text = $"{Math.Round(curEnvironmentBag.DiscoveryDegree, 3) * 100} %";
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
         placeDetailsText.text = $"{curEnvironmentBag.PlaceData.placeDesc}";
         // 探索事件
@@ -101,21 +101,19 @@ public class EnvironmentBagWindow : BagWindow
                     GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue.ToString() + "/"
                     + GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue.ToString();
                 }
-
             }
         }
     }
 
-    private void OnDicoveryDegreeChanged(ChangeDiscoveryDegreeArgs args)
+    private void DisplayDiscoveryDegree(float degree)
     {
-        if (args.place == GameManager.Instance.CurEnvironmentBag.PlaceData.placeType)
-            discoveryDegreeText.text = $"{Math.Round(args.discoveryDegree, 1)} %";
+        discoveryDegreeText.text = $"{Math.Round(degree, 3) * 100} %";
     }
 
     private void OnDestroy()
     {
         // 移除事件
-        EventManager.Instance.RemoveListener<ChangeDiscoveryDegreeArgs>(EventType.ChangeDiscoveryDegree, OnDicoveryDegreeChanged);
+        EventManager.Instance.RemoveListener<float>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentChangeState);
     }
