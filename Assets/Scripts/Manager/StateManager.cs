@@ -214,21 +214,10 @@ public class StateManager : MonoBehaviour
         }
     }
 
-    //public void EquipExtraState(EquipmentCardInstance equipment)
-    //{
-    //    if(equipment.CardData is EquipmentCardData data)
-    //    {
-    //        PlayerExtraStateDict[PlayerStateEnum.Oxygen] += data.ExtraOxygen;
-    //    }
-    //}
-
-    //public void UnequipExtraState(EquipmentCardInstance equipment)
-    //{
-    //    if(equipment.CardData is EquipmentCardData data)
-    //    {
-    //        PlayerExtraStateDict[PlayerStateEnum.Oxygen] -= data.ExtraOxygen;
-    //    }
-    //}
+    public void ChangePlayerExtraState(PlayerStateEnum stateEnum, float value)
+    {
+        PlayerExtraStateDict[stateEnum] += value;
+    }
     #endregion
 
     #region 定时结算相关

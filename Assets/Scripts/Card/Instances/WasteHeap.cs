@@ -35,6 +35,21 @@ public class WasteHeap : Card
         TimeManager.Instance.AddTime(1);
         //掉落卡牌
         RandomDrop();
+
+    }
+
+    public bool Judge_Dig()
+    {
+        return true;
+    }
+
+    public override void Use()
+    {
+        curEndurance--;
+        if (curEndurance <= 0)
+        {
+            //TODO:删除本卡牌
+        }
     }
 
     public void RandomDrop()

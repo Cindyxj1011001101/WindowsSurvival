@@ -37,5 +37,11 @@ public class RotMaterial : Card
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -10));
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
+        //TODO:删除本卡牌
+    }
+
+    public bool Judge_Eat()
+    {
+        return true;
     }
 }

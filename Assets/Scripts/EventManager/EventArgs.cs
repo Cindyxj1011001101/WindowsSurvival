@@ -16,7 +16,7 @@
     GameOver, // 游戏结束
     CurEnvironmentChangeState, // 当前环境状态变化
     Equip, // 穿上装备
-    Unequip // 卸下装备
+    Unequip, // 卸下装备
 }
 
 public class ChangeStateArgs

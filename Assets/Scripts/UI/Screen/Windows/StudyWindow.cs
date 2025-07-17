@@ -119,6 +119,13 @@ public class StudyWindow : WindowBase
             studyButton.interactable = false;
             studyButton.GetComponentInChildren<Text>().text = "未解锁";
         }
+        // �������о��ڽ���
+        // else if (TechnologyManager.Instance.IsAnyTechNodeBeingStudied())
+        // {
+        //     studyButton.interactable = false;
+        //     studyButton.GetComponentInChildren<Text>().text = "�о�";
+        // }
+        // �����о�
         else
         {
             studyButton.interactable = true;
@@ -157,6 +164,15 @@ public class StudyWindow : WindowBase
             studyRate.gameObject.SetActive(true);
             studyRate.text = $"+ {TechnologyManager.Instance.CurStudyRate:0.0} 科技点 / 15 分钟";
         }
+        // �о����ڽ���
+        // else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
+        // {
+        //     progressSlider.value = TechnologyManager.Instance.CurProgress / techNode.cost;
+        //     progressSlider.GetComponentInChildren<Text>().text = $"{TechnologyManager.Instance.CurProgress} / {techNode.cost}";
+        //     studyRate.gameObject.SetActive(true);
+        //     studyRate.text = $"{TechnologyManager.Instance.CurStudyRate} / 15 ����";
+        // }
+        // ���������о������
         else
         {
             studyRate.gameObject.SetActive(false);
