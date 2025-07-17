@@ -3,14 +3,15 @@ using UnityEngine;
 /// <summary>
 /// 水瓶鱼
 /// </summary>
-public class AquariusFish : Card
+public class AquariusFishWithProduct : Card
 {
-    public AquariusFish()
+    public AquariusFishWithProduct()
     {
         //初始化参数
         cardName = "水瓶鱼";
         cardDesc = "水瓶鱼是白塔星浅海特有的卵胎生鱼类，其雄鱼体型不足雌鱼0.1% ，终生附着在雌鱼泄殖腔附近。怀孕期间，雌鱼通过腹腔生物渗透膜从海水中过滤淡水，混合蛋白质形成富含营养的琥珀色育卵液。其半透明腹腔可见游动的胚胎群。";
         cardType = CardType.Creature;
+        CardImage = Resources.Load<Sprite>("CardImage/水瓶鱼有产物");
         maxStackNum = 5;
         moveable = false;
         weight = 1.1f;
@@ -23,21 +24,14 @@ public class AquariusFish : Card
         };
         components = new()
         {
-            { typeof(ProgressComponent), new ProgressComponent(5760, OnProgressFull) },
+            { typeof(ProgressComponent), new ProgressComponent(5760, null) },
         };
     }
 
-    public AquariusFish(int progress) : this()
+    public AquariusFishWithProduct(int progress) : this()
     {
         TryGetComponent<ProgressComponent>(out var component);
         component.progress = progress;
-    }
-
-    private void OnProgressFull()
-    {
-        Use();
-        TryGetComponent<ProgressComponent>(out var component);
-        GameManager.Instance.AddCard(new AquariusFishWithProduct(component.progress), true);
     }
 
     #region 用捕网捉
@@ -58,7 +52,7 @@ public class AquariusFish : Card
         // 获得一张“被捉住的水瓶鱼”
         // 继承产物进度
         TryGetComponent<ProgressComponent>(out var component);
-        GameManager.Instance.AddCard(new CaughtAquariusFish(component.progress), true);
+        GameManager.Instance.AddCard(new CaughtAquariusFishWithProduct(component.progress), true);
     }
 
     public bool Judge_CatchByNet()
@@ -91,7 +85,7 @@ public class AquariusFish : Card
             // 获得一张“被捉住的水瓶鱼”
             // 继承产物进度
             TryGetComponent<ProgressComponent>(out var component);
-            GameManager.Instance.AddCard(new CaughtAquariusFish(component.progress), true);
+            GameManager.Instance.AddCard(new CaughtAquariusFishWithProduct(component.progress), true);
         }
     }
     #endregion

@@ -4,9 +4,9 @@ using UnityEngine;
 /// <summary>
 /// 生贝肉
 /// </summary>
-public class RowOysterMeat : Card
+public class RawOysterMeat : Card
 {
-    public RowOysterMeat()
+    public RawOysterMeat()
     {
         //初始化参数
         cardName = "生贝肉";

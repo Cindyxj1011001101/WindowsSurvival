@@ -76,41 +76,30 @@ public class ProgressComponent : ICardComponent
 {
     public int progress;
     public int maxProgress;
-    public int productNum;
-    public int maxProductNum; // 最大生产数量
 
     public float updateRate = 1.0f;
 
     [JsonIgnore]
-    public UnityAction<int> onProgressChanged;
-    [JsonIgnore]
-    public UnityAction<int> onProductNumChanged;
+    public UnityAction onProgressFull;
 
-    public ProgressComponent(int maxProgress, int maxProductNum,
-        UnityAction<int> onProgressChanged, UnityAction<int> onProductNumChanged)
+    public ProgressComponent(int maxProgress, UnityAction onProgressFull)
     {
         this.maxProgress = maxProgress;
         progress = 0;
-        this.maxProductNum = maxProductNum;
-        productNum = 0;
-        this.onProgressChanged = onProgressChanged;
-        this.onProductNumChanged = onProductNumChanged;
+        this.onProgressFull = onProgressFull;
     }
 
     public void Update(int deltaTime)
     {
-        if (productNum >= maxProductNum) return;
-    
+        if (progress >= maxProgress) return;
         // 随时间自动增加产物进度
         progress += (int)(deltaTime * updateRate);
-        // 增加到maxProgress后，产物+1
         if (progress >= maxProgress)
         {
-            progress -= maxProgress;
-            productNum++;
-            onProductNumChanged?.Invoke(productNum);
+            progress = maxProgress;
+            onProgressFull?.Invoke();
         }
-        onProgressChanged?.Invoke(progress);
+        
     }
 }
 #endregion
