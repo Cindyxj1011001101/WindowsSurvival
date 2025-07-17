@@ -1,19 +1,19 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// 硬质纤维
+/// 珊瑚
 /// </summary>
-public class HardFiber : Card
+public class Coral : Card
 {
-    public HardFiber()
+    public Coral()
     {
         //初始化参数
-        cardName = "硬质纤维";
-        cardDesc = "一块硬质纤维，可以用来制作绳索。";
+        cardName = "珊瑚";
+        cardDesc = "一种疏松多孔的海洋微生物骨骼，是石灰石的原料。";
         cardType = CardType.Resource;
         maxStackNum = 10;
         moveable = true;
-        weight = 0.25f;
+        weight = 0.8f;
         curEndurance = maxEndurance = 1;
         tags = new();
         events = new List<Event>();

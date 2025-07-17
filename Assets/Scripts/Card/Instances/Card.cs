@@ -7,8 +7,6 @@ using UnityEngine.Events;
 public enum CardTag
 {
     Rubbish, // 垃圾
-    Cut, // 切割类
-    Dig, // 挖掘类
 }
 
 public enum CardType
@@ -27,9 +25,8 @@ public enum CardType
 //卡牌基类
 public abstract class Card : IComparable<Card>
 {
-    public string cardName; // 显示名称
-    public string cardDesc; // 描述
-    //public Sprite cardImage; // 根据名称在文件夹中找图片
+    public virtual string cardName { get; set; } // 显示名称
+    public virtual string cardDesc { get; set; } // 描述
     public CardType cardType; // 卡牌类型
     public int maxStackNum; // 最大堆叠数
     public bool moveable; // 能否移动
@@ -46,7 +43,11 @@ public abstract class Card : IComparable<Card>
     public CardSlot slot;
 
     [JsonIgnore]
-    public Sprite CardImage => Resources.Load<Sprite>("Sprites/" + cardName);
+    public virtual Sprite CardImage
+    {
+        get => Resources.Load<Sprite>("Sprites/" + cardName);
+        set { }
+    }
 
     /// <summary>
     /// 每回合结算时执行

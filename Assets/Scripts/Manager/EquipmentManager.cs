@@ -1,38 +1,45 @@
 using UnityEngine;
 
+public enum EquipmentType
+{
+    Head = 0,
+    Body = 1,
+    Back = 2,
+    Leg = 3,
+}
 
 public class EquipmentManager : MonoBehaviour
 {
-   private static EquipmentManager instance;
-   public static EquipmentManager Instance => instance;
+    private static EquipmentManager instance;
+    public static EquipmentManager Instance => instance;
 
-   [Header("装备")]
-   //头部
-   public Card HeadEquipment;
-   //身体
-   public Card BodyEquipment;
-   //背部
-   public Card BackEquipment;
-   //腿部
-   public Card LegEquipment;
+    [Header("装备")]
+    //头部
+    public Card HeadEquipment;
+    //身体
+    public Card BodyEquipment;
+    //背部
+    public Card BackEquipment;
+    //腿部
+    public Card LegEquipment;
 
-   #region 初始化
-   private void Awake()
-   {
-       instance = this;
-   }
-   private void Start()
-   {
-       Init();
-   }
-   public void Init()
-   {
-       HeadEquipment = null;
-       BodyEquipment = null;
-       BackEquipment = null;
-       LegEquipment = null;
-   }
-   #endregion
+    #region 初始化
+    private void Awake()
+    {
+        instance = this;
+    }
+    private void Start()
+    {
+        Init();
+    }
+    public void Init()
+    {
+        HeadEquipment = null;
+        BodyEquipment = null;
+        BackEquipment = null;
+        LegEquipment = null;
+    }
+    #endregion
 
    #region 判断是否可以装备
    /// <summary>

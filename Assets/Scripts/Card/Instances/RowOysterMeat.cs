@@ -2,31 +2,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 老鼠尸体
+/// 生贝肉
 /// </summary>
-public class RatBody : Card
+public class RowOysterMeat : Card
 {
-    public RatBody()
+    public RowOysterMeat()
     {
         //初始化参数
-        cardName = "老鼠尸体";
-        cardDesc = "一只老鼠的尸体，可以用来制作食物。";
-        //cardImage = Resources.Load<Sprite>("CardImage/老鼠尸体");
+        cardName = "生贝肉";
+        cardDesc = "肌纤维极其发达的贝肉，咬完感觉有点塞牙。希望生吃不会感染寄生虫。";
         cardType = CardType.Food;
         maxStackNum = 1;
         moveable = true;
-        weight = 0.7f;
+        weight = 0.3f;
         curEndurance = maxEndurance = 1;
         tags = new();
         events = new List<Event>
         {
-            new Event("食用", "食用老鼠尸体", Event_Eat, null),
-            new Event("用手剥", "用手剥老鼠尸体", Event_PeelByHand, null),
-            new Event("用刀切割", "用刀切割老鼠尸体", Event_PeelByKnife, Judge_PeelByKnife),
+            new Event("食用", "食用生贝肉", Event_Eat, null),
         };
         components = new()
         {
-            { typeof(FreshnessComponent), new FreshnessComponent(2880, OnFreshnessChanged) }
+            { typeof(FreshnessComponent), new FreshnessComponent(1440, OnFreshnessChanged) }
         };
     }
 
@@ -44,14 +41,12 @@ public class RatBody : Card
     {
         //销毁老鼠尸体
         Use();
-        //+16饱食
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 16));
-        //-20精神值
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -20));
-        //-8健康
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -8));
-        //消耗30分钟
-        TimeManager.Instance.AddTime(30);
+        //+6饱食
+        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 6));
+        //-1.2健康
+        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -1.2f));
+        //消耗5分钟
+        TimeManager.Instance.AddTime(5);
     }
     #endregion
 
@@ -75,7 +70,8 @@ public class RatBody : Card
     public void Event_PeelByKnife()
     {
         Use();
-        foreach (var slot in GameManager.Instance.PlayerBag.Slots)
+        PlayerBag playerBag = GameManager.Instance.PlayerBag;
+        foreach (var slot in playerBag.Slots)
         {
             if (slot.PeekCard() != null && slot.PeekCard().TryGetComponent<ToolComponent>(out var component))
             {
@@ -93,7 +89,8 @@ public class RatBody : Card
 
     public bool Judge_PeelByKnife()
     {
-        foreach (var slot in GameManager.Instance.PlayerBag.Slots)
+        PlayerBag playerBag = GameManager.Instance.PlayerBag;
+        foreach (var slot in playerBag.Slots)
         {
             if (slot.PeekCard() != null && slot.PeekCard().TryGetComponent<ToolComponent>(out var component))
             {

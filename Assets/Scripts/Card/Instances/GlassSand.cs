@@ -1,19 +1,19 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// 硬质纤维
+/// 玻璃沙
 /// </summary>
-public class HardFiber : Card
+public class GlassSand : Card
 {
-    public HardFiber()
+    public GlassSand()
     {
         //初始化参数
-        cardName = "硬质纤维";
-        cardDesc = "一块硬质纤维，可以用来制作绳索。";
+        cardName = "玻璃沙";
+        cardDesc = "硅基浮游藻类死亡后沉底，经长年风化形成的细腻玻璃沙。经高温锻造可制成玻璃。";
         cardType = CardType.Resource;
         maxStackNum = 10;
         moveable = true;
-        weight = 0.25f;
+        weight = 0.3f;
         curEndurance = maxEndurance = 1;
         tags = new();
         events = new List<Event>();

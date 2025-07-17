@@ -9,7 +9,7 @@ public interface ICardComponent
 
 }
 
-// 新鲜度组件
+#region 新鲜度组件
 public class FreshnessComponent : ICardComponent
 {
     public int freshness;
@@ -37,8 +37,9 @@ public class FreshnessComponent : ICardComponent
         onFreshnessChanged?.Invoke(freshness);
     }
 }
+#endregion
 
-// 生长度组件
+#region 生长度组件
 public class GrowthComponent : ICardComponent
 {
     public int growth;
@@ -68,8 +69,9 @@ public class GrowthComponent : ICardComponent
         onGrowthChanged?.Invoke(growth);
     }
 }
+#endregion
 
-// 产物进度组件
+#region 产物进度组件
 public class ProgressComponent : ICardComponent
 {
     public int progress;
@@ -111,27 +113,22 @@ public class ProgressComponent : ICardComponent
         onProgressChanged?.Invoke(progress);
     }
 }
+#endregion
 
-public enum EquipmentType
-{
-    Head = 0,
-    Body = 1,
-    Back = 2,
-    Leg = 3,
-}
-
-// 装备组件
+#region 装备组件
 public class EquipmentComponent : ICardComponent
 {
     public EquipmentType equipmentType;
+    public bool isEquipped;
 
     public EquipmentComponent(EquipmentType equipmentType)
     {
         this.equipmentType = equipmentType;
     }
 }
+#endregion
 
-// 地点组件
+#region 地点组件
 public class PlaceComponent : ICardComponent
 {
     public PlaceEnum placeType;
@@ -141,3 +138,22 @@ public class PlaceComponent : ICardComponent
         this.placeType = placeType;
     }
 }
+#endregion
+
+#region 工具组件
+public enum ToolType
+{
+    Cut,//切割
+    Dig,//挖掘
+}
+
+public class ToolComponent : ICardComponent
+{
+    public ToolType toolType;
+
+    public ToolComponent(ToolType toolType)
+    {
+        this.toolType = toolType;
+    }
+}
+#endregion
