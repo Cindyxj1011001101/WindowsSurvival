@@ -1,16 +1,7 @@
 using UnityEditor;
-
+using UnityEngine;
 public class GMCommand
 {
-    [MenuItem("Command/初始化所有环境的一次性探索列表")]
-    public static void InitDisposableDropList()
-    {
-        foreach (var bag in GameManager.Instance.EnvironmentBags.Values)
-        {
-            bag.disposableDropList.Init();
-        }
-    }
-
     private static void AddCard(string cardName)
     {
         var card = CardFactory.CreateCard(cardName);
@@ -66,7 +57,7 @@ public class GMCommand
     [MenuItem("Command/添加安全泡沫覆盖的废料堆")]
     public static void F()
     {
-        AddCard("安全泡沫覆盖的废料堆");
+        AddCard("废料堆");
     }
 
     [MenuItem("Command/添加硬质纤维")]

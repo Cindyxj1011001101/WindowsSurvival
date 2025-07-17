@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Technology", menuName = "ScritableObject/Technology")]
+[CreateAssetMenu(fileName = "Technology", menuName = "ScriptableObject/Technology")]
 public class ScriptableTechnologyNode : ScriptableObject
 {
     public string techName; // 科技的名称

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "RecipeLibrary", menuName = "ScritableObject/RecipeLibrary")]
+[CreateAssetMenu(fileName = "RecipeLibrary", menuName = "ScriptableObject/RecipeLibrary")]
 public class ScriptableRecipeLibrary : ScriptableObject
 {
     public string libraryName;

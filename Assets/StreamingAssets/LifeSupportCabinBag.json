@@ -1,16 +1,16 @@
 {
     "disposableDropList": {
-        "maxCount": 12,
+        "maxCount": 18,
         "dropList": [
             {
                 "card": {
-                    "$type": "DoorToPowerCabin, Assembly-CSharp",
+                    "$type": "DoorToCockpit, Assembly-CSharp",
                     "maxEndurance": -1,
                     "curEndurance": -1,
                     "components": {
                         "PlaceComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
                             "$type": "PlaceComponent, Assembly-CSharp",
-                            "placeType": 0
+                            "placeType": 1
                         }
                     }
                 },
@@ -18,94 +18,144 @@
                 "dropProb": 2
             },
             {
-                "card": null,
+                "card": {
+                    "$type": "WasteHeap, Assembly-CSharp",
+                    "maxEndurance": 5,
+                    "curEndurance": 5,
+                    "components": {}
+                },
                 "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "WasteHeap, Assembly-CSharp",
+                    "maxEndurance": 5,
+                    "curEndurance": 5,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "BottledWater, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 4
+            },
+            {
+                "card": {
+                    "$type": "BottledWater, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 4
+            },
+            {
+                "card": {
+                    "$type": "BottledWater, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 4
+            },
+            {
+                "card": {
+                    "$type": "BottledWater, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 4
+            },
+            {
+                "card": {
+                    "$type": "HardFiber, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "HardFiber, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "HardFiber, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 2,
                 "dropProb": 1
             },
             {
-                "card": null,
-                "dropNum": 1,
-                "dropProb": 2
-            },
-            {
-                "card": {
-                    "$type": "WasteHeap, Assembly-CSharp",
-                    "maxEndurance": 5,
-                    "curEndurance": 5,
-                    "components": {}
-                },
-                "dropNum": 1,
-                "dropProb": 2
-            },
-            {
-                "card": {
-                    "$type": "WasteHeap, Assembly-CSharp",
-                    "maxEndurance": 5,
-                    "curEndurance": 5,
-                    "components": {}
-                },
-                "dropNum": 1,
-                "dropProb": 2
-            },
-            {
-                "card": {
-                    "$type": "BottledWater, Assembly-CSharp",
-                    "maxEndurance": 1,
-                    "curEndurance": 1,
-                    "components": {}
-                },
-                "dropNum": 1,
-                "dropProb": 4
-            },
-            {
-                "card": {
-                    "$type": "BottledWater, Assembly-CSharp",
-                    "maxEndurance": 1,
-                    "curEndurance": 1,
-                    "components": {}
-                },
-                "dropNum": 1,
-                "dropProb": 4
-            },
-            {
-                "card": {
-                    "$type": "HardFiber, Assembly-CSharp",
-                    "maxEndurance": 1,
-                    "curEndurance": 1,
-                    "components": {}
-                },
-                "dropNum": 1,
-                "dropProb": 3
-            },
-            {
-                "card": {
-                    "$type": "HardFiber, Assembly-CSharp",
-                    "maxEndurance": 1,
-                    "curEndurance": 1,
-                    "components": {}
-                },
-                "dropNum": 1,
-                "dropProb": 3
-            },
-            {
                 "card": {
                     "$type": "ScrapMetal, Assembly-CSharp",
                     "maxEndurance": 1,
                     "curEndurance": 1,
                     "components": {}
                 },
-                "dropNum": 1,
-                "dropProb": 2
-            },
-            {
-                "card": {
-                    "$type": "ScrapMetal, Assembly-CSharp",
-                    "maxEndurance": 1,
-                    "curEndurance": 1,
-                    "components": {}
-                },
-                "dropNum": 1,
-                "dropProb": 2
+                "dropNum": 2,
+                "dropProb": 1
             },
             {
                 "card": {
@@ -121,6 +171,16 @@
                         }
                     }
                 },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
                 "dropNum": 1,
                 "dropProb": 2
             }

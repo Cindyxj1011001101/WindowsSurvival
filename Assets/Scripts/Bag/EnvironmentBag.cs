@@ -6,6 +6,9 @@ public class EnvironmentBag : BagBase
     [Header("一次性掉落列表")]
     public DisposableDropList disposableDropList = new();
 
+    [Header("重复掉落列表")]
+    public RepeatableDropList repeatableDropList = new();
+
     [Header("探索用时")]
     public int explorationTime;
 
@@ -14,13 +17,10 @@ public class EnvironmentBag : BagBase
 
     public PlaceData PlaceData => placeData;
 
-    //[Header("探索度")]
-    //private float discoveryDegree;
-    //public float DiscoveryDegree => discoveryDegree;
     public float DiscoveryDegree => 1 - disposableDropList.RemainingDropsRate;
 
     [Header("环境状态")]
-    public Dictionary<EnvironmentStateEnum, EnvironmentState> EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>();
+    public Dictionary<EnvironmentStateEnum, EnvironmentState> EnvironmentStateDict = new();
 
     protected override void Init()
     {
@@ -33,9 +33,32 @@ public class EnvironmentBag : BagBase
         EventManager.Instance.RemoveListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
     }
 
+    protected override void InitBag(BagRuntimeData runtimeData)
+    {
+        // 初始化背包中的物品，探索度，环境状态值
+        base.InitBag(runtimeData);
+        var data = (runtimeData as EnvironmentBagRuntimeData);
+        //discoveryDegree = data.discoveryDegree;
+        EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>(data.environmentStateDict);
+        //如果是开局进入，则初始化环境状态
+        if (EnvironmentStateDict.Count == 0)
+        {
+            EnvironmentStateDict = StateManager.Instance.InitEnvironmentStateDict();
+        }
+        foreach (var state in EnvironmentStateDict)
+        {
+            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, state.Key));
+        }
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, EnvironmentStateEnum.Electricity));
+        // 初始化掉落列表
+        disposableDropList = data.disposableDropList;
+        repeatableDropList = data.repeatableDropList;
+        repeatableDropList.StartUpdating();
+    }
+
     public void HandeleExplore()
     {
-        if (disposableDropList.IsEmpty)
+        if (disposableDropList.IsEmpty && repeatableDropList.IsEmpty)
         {
             Debug.Log("探索完全");
             return;
@@ -43,16 +66,41 @@ public class EnvironmentBag : BagBase
 
         // 消耗时间
         TimeManager.Instance.AddTime(explorationTime);
-        // 掉落卡牌
-        foreach (var card in disposableDropList.RandomDrop())
-        {
-            // 掉落到环境里
-            GameManager.Instance.AddCard(card, false);
-        }
 
-        // 探索度变化
-        //discoveryDegree = 1 - disposableDropList.RemainingDropsRate;
-        EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, DiscoveryDegree);
+        // 当一次性探索列表还有剩余
+        if (!disposableDropList.IsEmpty)
+        {
+            // 掉落卡牌
+            foreach (var card in disposableDropList.RandomDrop())
+            {
+                // 掉落到环境里
+                GameManager.Instance.AddCard(card, false);
+            }
+
+            // 探索完成后让环境生态开始更新
+            if (disposableDropList.IsEmpty)
+                repeatableDropList.StartUpdating();
+
+            // 探索度变化
+            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, DiscoveryDegree);
+        }
+        // 如果还可以重复探索
+        else if (!repeatableDropList.IsEmpty)
+        {
+            var droppedCards = repeatableDropList.RandomDrop();
+            if (droppedCards == null || droppedCards.Count == 0)
+            {
+                Debug.Log("什么也没有捞到");
+                return;
+            }
+
+            // 掉落卡牌
+            foreach (var card in droppedCards)
+            {
+                // 掉落到环境里
+                GameManager.Instance.AddCard(card, false);
+            }
+        }
     }
 
     //当前环境状态变化(除电力以外的数值变化)
@@ -75,28 +123,6 @@ public class EnvironmentBag : BagBase
                 EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, args.state);
             }
         }
-
-    }
-
-    protected override void InitBag(BagRuntimeData runtimeData)
-    {
-        // 初始化背包中的物品，探索度，环境状态值
-        base.InitBag(runtimeData);
-        var data = (runtimeData as EnvironmentBagRuntimeData);
-        //discoveryDegree = data.discoveryDegree;
-        EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>(data.environmentStateDict);
-        //如果是开局进入，则初始化环境状态
-        if (EnvironmentStateDict.Count == 0)
-        {
-            EnvironmentStateDict = StateManager.Instance.InitEnvironmentStateDict();
-        }
-        foreach (var state in EnvironmentStateDict)
-        {
-            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, state.Key));
-        }
-        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, EnvironmentStateEnum.Electricity));
-        // 初始化一次性掉落列表
-        disposableDropList.Init(data.remainingDrops);
     }
 
     public override bool CanAddCard(Card card)

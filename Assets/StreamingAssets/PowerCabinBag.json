@@ -1,1 +1,175 @@
-{"remainingDrops":[{"cardName":"压缩饼干","dropNum":1,"dropProb":3,"onCardCreated":null},{"cardName":"废金属","dropNum":2,"dropProb":2,"onCardCreated":null},{"cardName":"废金属","dropNum":1,"dropProb":3,"onCardCreated":null},{"cardName":"废金属","dropNum":1,"dropProb":3,"onCardCreated":null},{"cardName":"硬质纤维","dropNum":1,"dropProb":3,"onCardCreated":null},{"cardName":"硬质纤维","dropNum":1,"dropProb":3,"onCardCreated":null},{"cardName":"通往驾驶室的门","dropNum":1,"dropProb":2,"onCardCreated":null},{"cardName":"安全泡沫覆盖的废料堆","dropNum":1,"dropProb":3,"onCardCreated":null},{"cardName":"安全泡沫覆盖的废料堆","dropNum":1,"dropProb":3,"onCardCreated":null},{"cardName":"安全泡沫覆盖的废料堆","dropNum":1,"dropProb":3,"onCardCreated":null},{"cardName":"瓶装水","dropNum":1,"dropProb":4,"onCardCreated":null}],"environmentStateDict":{},"cardSlotsRuntimeData":[{"cardList":[]},{"cardList":[]},{"cardList":[]},{"cardList":[]},{"cardList":[]},{"cardList":[]},{"cardList":[]},{"cardList":[]},{"cardList":[]}]}
+{
+    "disposableDropList": {
+        "maxCount": 13,
+        "dropList": [
+            {
+                "card": {
+                    "$type": "CompactBiscuit, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 2,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "ScrapMetal, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "HardFiber, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "HardFiber, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "DoorToCockpit, Assembly-CSharp",
+                    "maxEndurance": -1,
+                    "curEndurance": -1,
+                    "components": {
+                        "PlaceComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+                            "$type": "PlaceComponent, Assembly-CSharp",
+                            "placeType": 1
+                        }
+                    }
+                },
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": {
+                    "$type": "WasteHeap, Assembly-CSharp",
+                    "maxEndurance": 5,
+                    "curEndurance": 5,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "WasteHeap, Assembly-CSharp",
+                    "maxEndurance": 5,
+                    "curEndurance": 5,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 3
+            },
+            {
+                "card": {
+                    "$type": "BottledWater, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 4
+            },
+            {
+                "card": {
+                    "$type": "BottledWater, Assembly-CSharp",
+                    "maxEndurance": 1,
+                    "curEndurance": 1,
+                    "components": {}
+                },
+                "dropNum": 1,
+                "dropProb": 4
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            },
+            {
+                "card": null,
+                "dropNum": 1,
+                "dropProb": 2
+            }
+        ]
+    },
+    "repeatableDropList": {
+        "emptyPopulationSizeChangeOnNotCaught": 0,
+        "emptyPopulation": {
+            "card": null,
+            "dropNum": 0,
+            "curSize": 0,
+            "maxSize": 0,
+            "sizeChangePerRound": 0,
+            "sizeChangeOnCaught": 0,
+            "Proportion": 0
+        },
+        "populationList": []
+    },
+    "environmentStateDict": {},
+    "cardSlotsRuntimeData": [
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        },
+        {
+            "cardList": []
+        }
+    ]
+}

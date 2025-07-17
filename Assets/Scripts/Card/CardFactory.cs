@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-/// <summary>
+﻿/// <summary>
 /// 卡牌工厂，用于创建卡牌的实例
 /// </summary>
 public static class CardFactory
@@ -21,7 +19,7 @@ public static class CardFactory
             "腐烂物" => new RotMaterial(),
             "废铁刀" => new ScrapIronKnife(),
             "废金属" => new ScrapMetal(),
-            "安全泡沫覆盖的废料堆" => new WasteHeap(),
+            "废料堆" => new WasteHeap(),
             _ => null,
         };
     }
