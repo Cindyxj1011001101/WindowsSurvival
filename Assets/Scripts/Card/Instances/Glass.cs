@@ -1,19 +1,19 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// 硬质纤维
+/// 玻璃
 /// </summary>
-public class HardFiber : Card
+public class Glass : Card
 {
-    public HardFiber()
+    public Glass()
     {
         //初始化参数
-        cardName = "硬质纤维";
-        cardDesc = "一块硬质纤维，可以用来制作绳索。";
+        cardName = "玻璃";
+        cardDesc = "玻璃";
         cardType = CardType.Resource;
         maxStackNum = 10;
         moveable = true;
-        weight = 0.25f;
+        weight = 0.9f;
         curEndurance = maxEndurance = 1;
         tags = new();
         events = new List<Event>();

@@ -11,7 +11,6 @@ public class LittleRawMeat : Card
         //初始化参数
         cardName = "小块生肉";
         cardDesc = "一小块生肉，最好烹饪一下再食用。";
-        //cardImage = Resources.Load<Sprite>("CardImage/小块生肉");
         cardType = CardType.Food;
         maxStackNum = 5;
         moveable = true;

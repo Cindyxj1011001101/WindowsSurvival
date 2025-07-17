@@ -88,14 +88,6 @@ public class LoveBead : Card
 
     public Card FindTool()
     {
-        PlayerBag playerBag = GameManager.Instance.PlayerBag;
-        foreach (CardSlot slot in playerBag.Slots)
-        {
-            if (slot.PeekCard().tags.Contains(CardTag.Cut) || slot.PeekCard().tags.Contains(CardTag.Dig))
-            {
-                return slot.PeekCard();
-            }
-        }
         return null;
     }
 

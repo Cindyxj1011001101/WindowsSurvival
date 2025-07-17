@@ -7,8 +7,6 @@ using UnityEngine.Events;
 public enum CardTag
 {
     Rubbish, // 垃圾
-    Cut, // 切割类
-    Dig, // 挖掘类
 }
 
 public enum CardType
@@ -23,22 +21,16 @@ public enum CardType
     Construction,//建筑
 }
 
+
 //卡牌基类
 public abstract class Card : IComparable<Card>
 {
-    [JsonIgnore]
-    public string cardName; // 显示名称
-    [JsonIgnore]
-    public string cardDesc; // 描述
-    [JsonIgnore]
+    public virtual string cardName { get; set; } // 显示名称
+    public virtual string cardDesc { get; set; } // 描述
     public CardType cardType; // 卡牌类型
-    [JsonIgnore]
     public int maxStackNum; // 最大堆叠数
-    [JsonIgnore]
     public bool moveable; // 能否移动
-    [JsonIgnore]
     public float weight; // 重量
-    [JsonIgnore]
     public List<CardTag> tags; // 标签
     [JsonIgnore]
     public List<Event> events; // 可交互事件
@@ -51,7 +43,11 @@ public abstract class Card : IComparable<Card>
     public CardSlot slot;
 
     [JsonIgnore]
-    public Sprite CardImage => Resources.Load<Sprite>("Sprites/" + cardName);
+    public virtual Sprite CardImage
+    {
+        get => Resources.Load<Sprite>("Sprites/" + cardName);
+        set { }
+    }
 
     /// <summary>
     /// 每回合结算时执行

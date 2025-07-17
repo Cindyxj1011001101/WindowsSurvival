@@ -65,6 +65,9 @@ public class StateManager : MonoBehaviour
     public Dictionary<PlayerStateEnum, PlayerState> PlayerStateDict = new Dictionary<PlayerStateEnum, PlayerState>();
     [Header("电力")]
     public float Electricity;
+    [Header("飞船水平面高度")]
+    public float WaterLevel;
+    
     [Header("玩家额外状态")]
     public Dictionary<PlayerStateEnum, float> PlayerExtraStateDict = new Dictionary<PlayerStateEnum, float>();
     
@@ -142,10 +145,11 @@ public class StateManager : MonoBehaviour
             environmentStateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
         }
         environmentStateDict.Add(EnvironmentStateEnum.Pressure, new EnvironmentState(2, 4, EnvironmentStateEnum.Pressure));
-        environmentStateDict.Add(EnvironmentStateEnum.Height, new EnvironmentState(0, 100, EnvironmentStateEnum.Height));
+
         if(GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
         {
             environmentStateDict.Add(EnvironmentStateEnum.HasCable, new EnvironmentState(1, 1, EnvironmentStateEnum.HasCable));
+            environmentStateDict.Add(EnvironmentStateEnum.Height, new EnvironmentState(WaterLevel, 100, EnvironmentStateEnum.Height));
         }
         else
         {
@@ -203,6 +207,20 @@ public class StateManager : MonoBehaviour
             if(Electricity<=0)
             {
                 Electricity=0;
+            }
+            //前端UI刷新
+            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Electricity));
+        }
+        else if(args.state==EnvironmentStateEnum.Height)
+        {
+            WaterLevel += args.value;
+            if(WaterLevel>=100)
+            {
+                WaterLevel=100;
+            }
+            if(WaterLevel<=0)
+            {
+                WaterLevel=0;
             }
             //前端UI刷新
             EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Electricity));

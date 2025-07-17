@@ -15,11 +15,11 @@ public class ScrapIronKnife : Card
         moveable = true;
         weight = 0.3f;
         curEndurance = maxEndurance = 60;
-        tags = new List<CardTag>
-        {
-            CardTag.Cut,
-        };
+        tags = new List<CardTag>();
         events = new List<Event>();
-        components = new();
+        components = new()
+        {
+            { typeof(ToolComponent), new ToolComponent(ToolType.Cut) }
+        };
     }
 }

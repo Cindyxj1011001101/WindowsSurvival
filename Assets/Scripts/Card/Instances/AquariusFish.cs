@@ -37,12 +37,15 @@ public class AquariusFish : Card
 
     private void OnProgressChanged(int progress)
     {
-        Debug.Log("当前产物进度：" + progress);
+        
     }
 
     private void OnProductNumChanged(int productNum)
     {
-        Debug.Log("当前产物数量：" + productNum);
+        if (productNum> 0)
+        {
+            CardImage = Resources.Load<Sprite>("Sprites/有产物的水瓶鱼");
+        }
     }
 
     #region 用捕网捉
