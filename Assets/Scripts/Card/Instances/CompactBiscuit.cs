@@ -12,7 +12,6 @@ public class CompactBiscuit:Card
         //初始化参数
         cardName = "压缩饼干";
         cardDesc = "一块放了很久的饼干，年龄比麦麦的太奶奶大，但还没过保质期的一半。";
-        cardImage = Resources.Load<Sprite>("CardImage/压缩饼干");
         cardType = CardType.Food;
         maxStackNum =5;
         moveable = true;

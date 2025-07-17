@@ -14,7 +14,6 @@ public class WasteHeap:Card
         //初始化参数
         cardName = "安全泡沫覆盖的废料堆";
         cardDesc = "安全泡沫覆盖的废料堆。";
-        cardImage = Resources.Load<Sprite>("CardImage/安全泡沫覆盖的废料堆");
         cardType = CardType.ResourcePoint;
         maxStackNum =1;
         moveable = false;

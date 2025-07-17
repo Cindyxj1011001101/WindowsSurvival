@@ -7,7 +7,6 @@ public class RotMaterial:Card
     {
         cardName = "腐烂物";
         cardDesc = "一块腐烂物。";
-        cardImage = Resources.Load<Sprite>("CardImage/腐烂物");
         cardType = CardType.Food;
         maxStackNum = 10;
         moveable = true;

@@ -17,7 +17,6 @@ public class CaughtAquariusFish:Card
         //初始化参数
         cardName = "被捉住的水瓶鱼";
         cardDesc = "一只水瓶鱼，其怀孕时体内的育卵液是重要的淡水来源。";
-        cardImage = Resources.Load<Sprite>("CardImage/被捉住的水瓶鱼");
         cardType = CardType.Creature;
         maxStackNum = 5;
         moveable = false;
@@ -67,15 +66,5 @@ public class CaughtAquariusFish:Card
             return true;
         }
         return false;
-    }
-
-    public override void Fresh()
-    {
-        curFresh-=15;
-        if(curFresh<=0)
-        {
-            //TODO:删除本卡牌
-        }
-        return;
     }
 }

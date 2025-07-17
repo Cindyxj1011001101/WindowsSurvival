@@ -13,7 +13,6 @@ public class LittleRawMeat:Card
         //初始化参数
         cardName = "小块生肉";
         cardDesc = "一小块生肉，最好烹饪一下再食用。";
-        cardImage = Resources.Load<Sprite>("CardImage/小块生肉");
         cardType = CardType.Food;
         maxStackNum =5;
         maxFresh=2880;
@@ -40,18 +39,6 @@ public class LittleRawMeat:Card
     public bool Judge_Eat()
     {
         return true;
-    }
-
-    //刷新耐久度
-    public override void Fresh()
-    {
-        curFresh--;
-        if(curFresh<=0)
-        {
-            //TODO:删除本卡牌
-            //掉落新卡牌
-            GameManager.Instance.AddCard(new RotMaterial(), true);
-        }
     }
 
 }

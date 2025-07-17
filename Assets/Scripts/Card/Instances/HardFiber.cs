@@ -12,7 +12,6 @@ public class HardFiber:Card
         //初始化参数
         cardName = "硬质纤维";
         cardDesc = "一块硬质纤维，可以用来制作绳索。";
-        cardImage = Resources.Load<Sprite>("CardImage/硬质纤维");
         cardType = CardType.Resource;
         maxStackNum =10;
         moveable = true;
