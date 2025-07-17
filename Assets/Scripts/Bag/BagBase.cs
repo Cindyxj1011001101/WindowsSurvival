@@ -238,13 +238,135 @@ public abstract class BagBase : MonoBehaviour
         }
     }
 
+    ///// <summary>
+    ///// 使卡牌紧凑排列
+    ///// </summary>
+    //public void CompactCards()
+    //{
+    //    if(SoundManager.Instance != null)
+    //        SoundManager.Instance.PlaySound("万能泡泡音",true);
+    //    // 记录需要移动的卡牌和它们的原始位置
+    //    List<(CardSlot slot, int index)> nonEmptySlots = new();
+
+    //    // 第一次遍历：收集所有非空槽位信息
+    //    for (int i = 0; i < slots.Count; i++)
+    //    {
+    //        if (!slots[i].IsEmpty)
+    //        {
+    //            nonEmptySlots.Add((slots[i], i));
+    //        }
+    //    }
+
+    //    // 第二次遍历：从前往后填充空位
+    //    int currentPosition = 0;
+    //    foreach (var (slot, index) in nonEmptySlots)
+    //    {
+    //        // 如果当前卡牌已经在正确位置，跳过
+    //        if (currentPosition == index)
+    //        {
+    //            currentPosition++;
+    //            continue;
+    //        }
+
+    //        // 移动卡牌到当前位置
+    //        MoveCardToPosition(slot, currentPosition);
+    //        currentPosition++;
+    //    }
+    //}
+
+    ///// <summary>
+    ///// 将卡牌从一个槽位移动到另一个槽位
+    ///// </summary>
+    //private void MoveCardToPosition(CardSlot sourceSlot, int targetIndex)
+    //{
+    //    // 如果目标位置就是当前位置，不做任何操作
+    //    int sourceIndex = slots.IndexOf(sourceSlot);
+    //    if (sourceIndex == targetIndex) return;
+
+    //    CardSlot targetSlot = slots[targetIndex];
+
+    //    while (!sourceSlot.IsEmpty && targetSlot.CanAddCard(sourceSlot.PeekCard()))
+    //    {
+    //        targetSlot.AddCard(sourceSlot.RemoveCard());
+    //    }
+
+    //    if (SoundManager.Instance != null)
+    //        SoundManager.Instance.PlaySound("整理",true);
+    //}
+
     /// <summary>
-    /// 使卡牌紧凑排列
+    /// 使卡牌紧凑排列并尽可能堆叠
     /// </summary>
     public void CompactCards()
     {
-        if(SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("万能泡泡音",true);
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("万能泡泡音", true);
+
+        // 第一步：尝试合并相同类型的卡牌
+        TryMergeSimilarCards();
+
+        // 第二步：紧凑排列剩余的卡牌
+        CompactRemainingCards();
+    }
+
+    /// <summary>
+    /// 尝试合并相同类型的卡牌
+    /// </summary>
+    private void TryMergeSimilarCards()
+    {
+        // 创建一个字典来记录每种卡牌的槽位
+        Dictionary<string, List<CardSlot>> cardSlotsDict = new();
+
+        // 收集所有非空槽位并按卡牌类型分组
+        foreach (var slot in slots)
+        {
+            if (!slot.IsEmpty)
+            {
+                string cardName = slot.PeekCard().cardName;
+                if (!cardSlotsDict.ContainsKey(cardName))
+                {
+                    cardSlotsDict[cardName] = new List<CardSlot>();
+                }
+                cardSlotsDict[cardName].Add(slot);
+            }
+        }
+
+        // 对每种卡牌类型尝试合并
+        foreach (var kvp in cardSlotsDict)
+        {
+            var slotsOfType = kvp.Value;
+            if (slotsOfType.Count > 1)
+            {
+                // 按堆叠数量升序排列，优先合并到堆叠较少的槽位
+                slotsOfType.Sort((a, b) => a.StackCount - b.StackCount);
+
+                // 从第二个槽位开始，尝试将卡牌合并到前面的槽位
+                for (int i = 1; i < slotsOfType.Count; i++)
+                {
+                    var sourceSlot = slotsOfType[i];
+                    for (int j = 0; j < i; j++)
+                    {
+                        var targetSlot = slotsOfType[j];
+
+                        // 尝试将卡牌从sourceSlot移动到targetSlot
+                        while (!sourceSlot.IsEmpty && targetSlot.CanAddCard(sourceSlot.PeekCard()))
+                        {
+                            targetSlot.AddCard(sourceSlot.RemoveCard());
+                        }
+
+                        // 如果sourceSlot已经空了，可以提前退出
+                        if (sourceSlot.IsEmpty) break;
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 紧凑排列剩余的卡牌
+    /// </summary>
+    private void CompactRemainingCards()
+    {
         // 记录需要移动的卡牌和它们的原始位置
         List<(CardSlot slot, int index)> nonEmptySlots = new();
 
@@ -285,12 +407,24 @@ public abstract class BagBase : MonoBehaviour
 
         CardSlot targetSlot = slots[targetIndex];
 
-        while (!sourceSlot.IsEmpty && targetSlot.CanAddCard(sourceSlot.PeekCard()))
+        // 如果目标槽位为空，直接移动整个堆叠
+        if (targetSlot.IsEmpty)
         {
-            targetSlot.AddCard(sourceSlot.RemoveCard());
+            while (!sourceSlot.IsEmpty)
+            {
+                targetSlot.AddCard(sourceSlot.RemoveCard());
+            }
+        }
+        else
+        {
+            // 否则尝试将卡牌添加到目标槽位
+            while (!sourceSlot.IsEmpty && targetSlot.CanAddCard(sourceSlot.PeekCard()))
+            {
+                targetSlot.AddCard(sourceSlot.RemoveCard());
+            }
         }
 
         if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("整理",true);
+            SoundManager.Instance.PlaySound("整理", true);
     }
 }
