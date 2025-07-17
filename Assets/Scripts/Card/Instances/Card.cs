@@ -45,7 +45,7 @@ public abstract class Card : IComparable<Card>
     [JsonIgnore]
     public virtual Sprite CardImage
     {
-        get => Resources.Load<Sprite>("Sprites/" + cardName);
+        get => Resources.Load<Sprite>("CardImage/" + cardName);
         set { }
     }
 
