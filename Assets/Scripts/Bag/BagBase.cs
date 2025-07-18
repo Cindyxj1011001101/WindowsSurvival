@@ -156,7 +156,7 @@ public abstract class BagBase : MonoBehaviour
     }
 
     /// <summary>
-    /// 根据工具类型查找卡牌
+    /// 根据工具类型查找卡牌，参数之间是“或”的关系
     /// </summary>
     /// <param name="toolTypes"></param>
     /// <returns></returns>
@@ -176,6 +176,11 @@ public abstract class BagBase : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// 根据工具类型查找卡牌
+    /// </summary>
+    /// <param name="toolType"></param>
+    /// <returns></returns>
     public Card FindCardOfToolType(ToolType toolType)
     {
         foreach (var slot in slots)
@@ -282,6 +287,7 @@ public abstract class BagBase : MonoBehaviour
         }
     }
 
+    #region 紧凑排列（旧）
     ///// <summary>
     ///// 使卡牌紧凑排列
     ///// </summary>
@@ -337,7 +343,9 @@ public abstract class BagBase : MonoBehaviour
     //    if (SoundManager.Instance != null)
     //        SoundManager.Instance.PlaySound("整理",true);
     //}
+    #endregion
 
+    #region 紧凑排列
     /// <summary>
     /// 使卡牌紧凑排列并尽可能堆叠
     /// </summary>
@@ -471,4 +479,5 @@ public abstract class BagBase : MonoBehaviour
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("整理", true);
     }
+    #endregion
 }
