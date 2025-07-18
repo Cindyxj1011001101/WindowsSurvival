@@ -17,14 +17,14 @@ public class WaterCrack : Card
         };
     }
 
-    private void Event_Fix()
+    public void Event_Fix()
     {
         DestroyThis();
         GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物").DestroyThis();
         TimeManager.Instance.AddTime(15);
     }
 
-    private bool Jugde_Fix()
+    public bool Jugde_Fix()
     {
         return GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物") != null;
     }

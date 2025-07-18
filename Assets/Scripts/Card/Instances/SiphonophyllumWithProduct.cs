@@ -5,6 +5,8 @@ using UnityEngine;
 /// </summary>
 public class SiphonophyllumWithProduct : Card
 {
+    public override Sprite CardImage => Resources.Load<Sprite>("Sprites/有产物的虹吸海葵");
+
     public SiphonophyllumWithProduct()
     {
         cardName = "虹吸海葵";

@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class CaughtAquariusFishWithProduct : Card
 {
-    public override Sprite CardImage => Resources.Load<Sprite>("CardImage/有产物的被捉住的水瓶鱼");
+    public override Sprite CardImage => Resources.Load<Sprite>("Sprites/有产物的被捉住的水瓶鱼");
     public CaughtAquariusFishWithProduct()
     {
         //初始化参数

@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class AquariusFishWithProduct : Card
 {
-    public override Sprite CardImage => Resources.Load<Sprite>("CardImage/有产物的水瓶鱼");
+    public override Sprite CardImage => Resources.Load<Sprite>("Sprites/有产物的水瓶鱼");
 
     public AquariusFishWithProduct()
     {
