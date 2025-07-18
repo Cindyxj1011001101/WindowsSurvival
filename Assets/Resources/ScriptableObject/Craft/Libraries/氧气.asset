@@ -10,8 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bfb33a3becfee048b3ebef908168600, type: 3}
-  m_Name: "\u88C5\u5907"
+  m_Name: "\u6C27\u6C14"
   m_EditorClassIdentifier: 
-  craftType: 5
+  libraryName: "\u6C27\u6C14"
+  craftType: 1
   recipes:
+  - {fileID: 11400000, guid: 101339fc122b28c4681b34b0cc04c108, type: 2}
   - {fileID: 11400000, guid: 5156f6c9538865944b84e525fc428713, type: 2}
+  - {fileID: 11400000, guid: 85f4785c3276a064ea711ff313777108, type: 2}
