@@ -23,6 +23,7 @@ public class LoveBeadWithProduct : Card
     #region 事件
     public void Event_OpenByTool()
     {
+        DestroyThis();
         Card tool = GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig });
         tool.TryUse();
 
