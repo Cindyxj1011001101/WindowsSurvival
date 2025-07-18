@@ -101,13 +101,23 @@ public abstract class Card : IComparable<Card>
         if (TryGetComponent<FreshnessComponent>(out var a))
         {
             // 新鲜度低的优先
-            other.TryGetComponent<FreshnessComponent>(out var b);
-            return a.freshness - b.freshness;
+            other.TryGetComponent<FreshnessComponent>(out var o);
+            return a.freshness - o.freshness;
+        }
+        else if (TryGetComponent<ProgressComponent>(out var b))
+        {
+            // 产物进度高的优先
+            other.TryGetComponent<ProgressComponent>(out var o);
+            return o.progress - b.progress;
+        }
+        else if (TryGetComponent<DurabilityComponent>(out var c))
+        {
+            // 耐久度低的优先
+            other.TryGetComponent<DurabilityComponent>(out var o);
+            return c.durability - o.durability;
         }
         else
         {
-            // 耐久度低的优先
-            //return curEndurance - other.curEndurance;
             return 0;
         }
     }

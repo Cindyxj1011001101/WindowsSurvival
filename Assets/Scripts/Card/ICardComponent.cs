@@ -150,7 +150,7 @@ public class ToolComponent : ICardComponent
 #region 耐久度组件
 public class DurabilityComponent : ICardComponent
 {
-    public int curDurability;
+    public int durability;
     public int maxDurability;
 
     [JsonIgnore]
@@ -158,18 +158,18 @@ public class DurabilityComponent : ICardComponent
 
     public DurabilityComponent(int maxDurability, UnityAction<int> onDurabilityChanged)
     {
-        curDurability = this.maxDurability = maxDurability;
+        durability = this.maxDurability = maxDurability;
         this.onDurabilityChanged = onDurabilityChanged;
     }
 
     public void Use()
     {
-        curDurability--;
-        if (curDurability < 0)
+        durability--;
+        if (durability < 0)
         {
-            curDurability = 0;
+            durability = 0;
         }
-        onDurabilityChanged?.Invoke(curDurability);
+        onDurabilityChanged?.Invoke(durability);
     }
 }
 #endregion
