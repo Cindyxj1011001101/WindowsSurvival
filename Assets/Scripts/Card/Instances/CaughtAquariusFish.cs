@@ -18,7 +18,7 @@ public class CaughtAquariusFish : Card
         };
         components = new()
         {
-            { typeof(ProgressComponent), new ProgressComponent(5760, null) },
+            { typeof(ProgressComponent), new ProgressComponent(5760) },
         };
     }
 

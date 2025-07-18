@@ -77,6 +77,20 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
     }
 
+    public virtual void TryUse()
+    {
+        if (TryGetComponent<DurabilityComponent>(out var component))
+        {
+            if (component.durability <= 0) return;
+
+            component.durability--;
+            if (component.durability <= 0)
+                DestroyThis();
+            else
+                slot.RefreshCurrentDisplay();
+        }
+    }
+
     public void DestroyThis()
     {
         slot.RemoveCard(this);

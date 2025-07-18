@@ -20,17 +20,14 @@ public class LittleRawMeat : Card
         };
         components = new()
         {
-            { typeof(FreshnessComponent), new FreshnessComponent(2880, OnFreshnessChanged) }
+            { typeof(FreshnessComponent), new FreshnessComponent(2880) }
         };
     }
 
-    private void OnFreshnessChanged(int freshness)
+    private void OnRotton()
     {
-        if (freshness == 0)
-        {
-            DestroyThis();
-            GameManager.Instance.AddCard(new RotMaterial(), true);
-        }
+        DestroyThis();
+        GameManager.Instance.AddCard(new RotMaterial(), true);
     }
 
     public void Event_Eat()
@@ -52,6 +49,6 @@ public class LittleRawMeat : Card
     protected override Action OnUpdate => () =>
     {
         TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval);
+        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
     };
 }

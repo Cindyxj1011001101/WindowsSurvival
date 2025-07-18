@@ -16,10 +16,6 @@ public class DoorToLifeSupportCabin : Card
         {
             new Event("前往", "前往维生舱", Event_Move, null)
         };
-        components = new()
-        {
-            { typeof(PlaceComponent), new PlaceComponent(PlaceEnum.LifeSupportCabin) },
-        };
     }
 
     public void Event_Move()

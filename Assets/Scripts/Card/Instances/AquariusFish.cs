@@ -20,7 +20,7 @@ public class AquariusFish : Card
         };
         components = new()
         {
-            { typeof(ProgressComponent), new ProgressComponent(5760, OnProgressFull) },
+            { typeof(ProgressComponent), new ProgressComponent(5760) },
         };
     }
 
@@ -43,8 +43,7 @@ public class AquariusFish : Card
 
         // “捞网”耐久-1
         var tool = GameManager.Instance.PlayerBag.FindCardOfName("捞网");
-        tool.TryGetComponent<DurabilityComponent>(out var c);
-        c.Use();
+        tool.TryUse();
         // 销毁卡牌
         DestroyThis();
 
@@ -97,6 +96,6 @@ public class AquariusFish : Card
     protected override System.Action OnUpdate => () =>
     {
         TryGetComponent<ProgressComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval);
+        component.Update(TimeManager.Instance.SettleInterval, OnProgressFull);
     };
 }
