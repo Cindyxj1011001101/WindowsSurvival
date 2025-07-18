@@ -16,10 +16,6 @@ public class DoorToCockpit : Card
         {
             new Event("前往", "前往驾驶室", Event_Move, null)
         };
-        components = new()
-        {
-            { typeof(PlaceComponent), new PlaceComponent(PlaceEnum.Cockpit) },
-        };
     }
 
     public void Event_Move()

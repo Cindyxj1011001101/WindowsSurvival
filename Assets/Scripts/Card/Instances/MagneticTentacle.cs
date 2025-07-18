@@ -20,22 +20,22 @@ public class MagneticTentacle : Card
         };
         components = new()
         {
-            { typeof(FreshnessComponent), new FreshnessComponent(11520, OnFreshnessChanged) }
+            { typeof(FreshnessComponent), new FreshnessComponent(11520) }
         };
     }
 
-    private void OnFreshnessChanged(int freshness)
+    private void OnRotton()
     {
-        if (freshness == 0)
-        {
-            DestroyThis();
-            GameManager.Instance.AddCard(new ScrapMetal(), true);
-        }
+        DestroyThis();
+        GameManager.Instance.AddCard(new ScrapMetal(), true);
     }
 
     public void Event_Eat()
     {
         DestroyThis();
+        // 播放吃的音效
+        if(SoundManager.Instance != null)
+        {SoundManager.Instance.PlaySound("吃_01",true);}
         //+14饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 14));
         //-6精神
@@ -49,6 +49,6 @@ public class MagneticTentacle : Card
     protected override Action OnUpdate => () =>
     {
         TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval);
+        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
     };
 }

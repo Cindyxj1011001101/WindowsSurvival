@@ -1,16 +1,11 @@
 {
-    "disposableDropList": {
+  "disposableDropList": {
   "maxCount": 18,
   "dropList": [
     {
       "card": {
         "$type": "DoorToCockpit, Assembly-CSharp",
-        "components": {
-          "PlaceComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-            "$type": "PlaceComponent, Assembly-CSharp",
-            "placeType": 1
-          }
-        }
+        "components": {}
       },
       "dropNum": 1,
       "dropProb": 2
@@ -172,47 +167,47 @@
     }
   ]
 },
-    "repeatableDropList": {
-        "emptyPopulationSizeChangeOnNotCaught": 0,
-        "emptyPopulation": {
-            "card": null,
-            "dropNum": 0,
-            "curSize": 0,
-            "maxSize": 0,
-            "sizeChangePerRound": 0,
-            "sizeChangeOnCaught": 0,
-            "Proportion": 0
-        },
-        "populationList": []
+  "repeatableDropList": {
+    "emptyPopulationSizeChangeOnNotCaught": 0,
+    "emptyPopulation": {
+      "card": null,
+      "dropNum": 0,
+      "curSize": 0,
+      "maxSize": 0,
+      "sizeChangePerRound": 0,
+      "sizeChangeOnCaught": 0,
+      "Proportion": 0
     },
-    "environmentStateDict": {},
-    "cardSlotsRuntimeData": [
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        }
-    ]
+    "populationList": []
+  },
+  "environmentStateDict": {},
+  "cardSlotsRuntimeData": [
+    {
+      "cardList": []
+    },
+    {
+      "cardList": []
+    },
+    {
+      "cardList": []
+    },
+    {
+      "cardList": []
+    },
+    {
+      "cardList": []
+    },
+    {
+      "cardList": []
+    },
+    {
+      "cardList": []
+    },
+    {
+      "cardList": []
+    },
+    {
+      "cardList": []
+    }
+  ]
 }

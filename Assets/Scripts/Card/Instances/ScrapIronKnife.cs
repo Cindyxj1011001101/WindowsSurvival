@@ -14,16 +14,7 @@ public class ScrapIronKnife : Card
         components = new()
         {
             { typeof(ToolComponent), new ToolComponent(ToolType.Cut) },
-            { typeof(DurabilityComponent), new DurabilityComponent(60, OnDurabilityChanged) }
+            { typeof(DurabilityComponent), new DurabilityComponent(60) }
         };
-    }
-
-    private void OnDurabilityChanged(int durability)
-    {
-        if (durability == 0)
-        {
-            DestroyThis();
-        }
-        slot.RefreshCurrentDisplay();
     }
 }

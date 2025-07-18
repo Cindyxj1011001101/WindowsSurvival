@@ -16,10 +16,9 @@ public enum PlaceEnum
     /// </summary>
     LifeSupportCabin,
     /// <summary>
-    /// 珊瑚礁海岸
+    /// 珊瑚礁海域
     /// </summary>
     CoralCoast,
-
 }
 
 public class GameManager : MonoBehaviour
@@ -73,11 +72,87 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddCard(string cardName, bool toPlayerBag)
+    public void HandleExplore()
     {
-        var card = CardFactory.CreateCard(cardName);
-        if (card != null)
-            AddCard(card, toPlayerBag);
+        var disposableDropList = curEnvironmentBag.disposableDropList;
+        var repeatableDropList = curEnvironmentBag.repeatableDropList;
+        if (disposableDropList.IsEmpty && repeatableDropList.IsEmpty)
+        {
+            Debug.Log("探索完全");
+            return;
+        }
+
+        float explorationTime = curEnvironmentBag.explorationTime;
+
+        switch (curEnvironmentBag.PlaceData.placeType)
+        {
+            case PlaceEnum.PowerCabin:
+                break;
+            case PlaceEnum.Cockpit:
+                break;
+            case PlaceEnum.LifeSupportCabin:
+                break;
+            case PlaceEnum.CoralCoast:
+                // 如果没有佩戴氧气面罩
+                if (equipmentBag.FindCardOfName("氧气面罩") == null)
+                {
+                    // 探索时间+40%
+                    explorationTime *= 1.4f;
+                    // 健康值-4
+                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -4));
+                }
+                break;
+            default:
+                break;
+        }
+
+        // 消耗时间
+        TimeManager.Instance.AddTime((int)explorationTime);
+
+        HandeleExploreDrop();
+    }
+
+
+    private void HandeleExploreDrop()
+    {
+        var disposableDropList = curEnvironmentBag.disposableDropList;
+        var repeatableDropList = curEnvironmentBag.repeatableDropList;
+        var discoverDegree = curEnvironmentBag.DiscoveryDegree;
+
+        // 当一次性探索列表还有剩余
+        if (!disposableDropList.IsEmpty)
+        {
+            // 掉落卡牌
+            foreach (var card in disposableDropList.RandomDrop())
+            {
+                // 掉落到环境里
+                AddCard(card, false);
+            }
+
+            // 探索完成后让环境生态开始更新
+            if (disposableDropList.IsEmpty)
+                repeatableDropList.StartUpdating();
+
+            // 探索度变化
+            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, discoverDegree);
+        }
+        // 如果还可以重复探索
+        else if (!repeatableDropList.IsEmpty)
+        {
+            var droppedCards = repeatableDropList.RandomDrop();
+            if (droppedCards == null || droppedCards.Count == 0)
+            {
+                Debug.Log("什么也没有捞到");
+                return;
+            }
+
+            // 掉落卡牌
+            foreach (var card in droppedCards)
+            {
+                // 掉落到环境里
+                AddCard(card, false);
+            }
+        }
     }
 
     // 移动到目标场景
