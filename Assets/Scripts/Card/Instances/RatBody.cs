@@ -37,6 +37,9 @@ public class RatBody : Card
     {
         //销毁老鼠尸体
         DestroyThis();
+        // 播放吃的音效
+        if(SoundManager.Instance != null)
+        {SoundManager.Instance.PlaySound("吃_01",true);}
         //+16饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 16));
         //-20精神值

@@ -33,6 +33,9 @@ public class MagneticTentacle : Card
     public void Event_Eat()
     {
         DestroyThis();
+        // 播放吃的音效
+        if(SoundManager.Instance != null)
+        {SoundManager.Instance.PlaySound("吃_01",true);}
         //+14饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 14));
         //-6精神
