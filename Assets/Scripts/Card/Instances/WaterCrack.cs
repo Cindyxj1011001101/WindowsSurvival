@@ -1,6 +1,6 @@
-using System.Collections.Generic;
-using UnityEditorInternal;
-using UnityEngine;
+/// <summary>
+/// 渗水裂缝
+/// </summary>
 public class WaterCrack : Card
 {
     public WaterCrack()
@@ -11,37 +11,35 @@ public class WaterCrack : Card
         maxStackNum = 1;
         moveable = false;
         weight = 0f;
-        events = new List<Event>();
-        events.Add(new Event("堵住", "堵住渗水裂缝", Event_Fix, null));
-        tags = new List<CardTag>();
-        components = new();
+        events = new()
+        {
+            new Event("堵住", "堵住渗水裂缝", Event_Fix, Jugde_Fix),
+        };
     }
 
     public void Event_Fix()
     {
-        Use();
-        PlayerBag playerBag = GameManager.Instance.PlayerBag;
-        foreach(CardSlot slot in playerBag.Slots)
-        {
-            if(slot.PeekCard().cardName=="补丁")
-            {
-                slot.PeekCard().Use();
-                break;
-            }
-        }
+        DestroyThis();
+        GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物").DestroyThis();
         TimeManager.Instance.AddTime(15);
     }
+
+    public bool Jugde_Fix()
+    {
+        return GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物") != null;
+    }
+
     protected override System.Action OnUpdate => () =>
     {
         //每个渗水裂缝每回合会使飞船水平面高度+0.3，渗水裂缝所在的地点每回合-8氧气。
         EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
-        if(environmentBag!=null)
+        if (environmentBag != null)
         {
             StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(environmentBag.PlaceData.placeType, EnvironmentStateEnum.Height, 0.3f));
             (slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue-=8;
             if((slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue<=0)
             {
-                (slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue=0;
+                (slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue = 0;
             }
         }
     };

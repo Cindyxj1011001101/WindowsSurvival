@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 硬质纤维
 /// </summary>
@@ -14,9 +12,5 @@ public class HardFiber : Card
         maxStackNum = 10;
         moveable = true;
         weight = 0.25f;
-        curEndurance = maxEndurance = 1;
-        tags = new();
-        events = new List<Event>();
-        components = new();
     }
 }

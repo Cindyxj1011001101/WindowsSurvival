@@ -83,8 +83,8 @@ public class CardSlot : MonoBehaviour
         percentageText.text = "";
 
         // 显示耐久
-        if (card.maxEndurance > 1)
-            percentageText.text = $"{Math.Round((float)card.curEndurance / card.maxEndurance, 2) * 100}%";
+        if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
+            percentageText.text = $"{Math.Round((float)durabilityComponent.curDurability / durabilityComponent.maxDurability, 2) * 100}%";
         // 显示新鲜度
         else if (card.TryGetComponent<FreshnessComponent>(out var component))
             percentageText.text = $"{Math.Round((float)component.freshness / component.maxFreshness, 2) * 100}%";

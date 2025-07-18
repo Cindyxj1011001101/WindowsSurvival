@@ -1,5 +1,6 @@
-using System.Collections.Generic;
-
+/// <summary>
+/// 氧烛
+/// </summary>
 public class OxygenCandle : Card
 {   
     public OxygenCandle()
@@ -10,15 +11,15 @@ public class OxygenCandle : Card
         maxStackNum = 5;
         moveable = true;
         weight = 1.8f;
-        events = new List<Event>();
-        events.Add(new Event("点燃", "点燃氧烛", Event_Light, null));
-        tags = new List<CardTag>();
-        components = new();
+        events = new()
+        {
+            new Event("点燃", "点燃氧烛", Event_Light, null),
+        };
     }
 
     public void Event_Light()
     {
-        Use();
+        DestroyThis();
         GameManager.Instance.AddCard(new LightenedOxygenCandle(), true);
     }
 }

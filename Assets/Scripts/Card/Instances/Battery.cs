@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 电池
 /// </summary>
@@ -13,10 +11,6 @@ public class Battery : Card
         cardType = CardType.Resource;
         maxStackNum = 10;
         moveable = true;
-        weight = 0f;
-        curEndurance = maxEndurance = 1;
-        tags = new();
-        events = new List<Event>();
-        components = new();
+        weight = 1f;
     }
 }

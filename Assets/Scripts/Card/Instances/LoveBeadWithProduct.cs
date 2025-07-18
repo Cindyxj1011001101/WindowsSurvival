@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 有产物的爱情贝
+/// </summary>
 public class LoveBeadWithProduct : Card
 {
     public LoveBeadWithProduct()
@@ -11,83 +14,51 @@ public class LoveBeadWithProduct : Card
         maxStackNum = 5;
         moveable = true;
         weight = 1.5f;
-        events = new List<Event>()
+        events = new()
         {
             new Event("撬开", "撬开爱情贝", Event_OpenByTool, Judge_OpenByTool),
         };
-        tags = new List<CardTag>();
-        components = new()
-        {
-            { typeof(ProgressComponent), new ProgressComponent(3600, null) },
-        };
-    }
-
-    public LoveBeadWithProduct(int progress) : this()
-    {
-        TryGetComponent<ProgressComponent>(out var component);
-        component.progress = progress;
     }
 
     #region 事件
     public void Event_OpenByTool()
     {
-        Card tool = FindTool();
-        if (tool != null)
+        Card tool = GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig });
+        tool.TryGetComponent<DurabilityComponent>(out var component);
+        component.Use();
+
+        // 变回爱情贝
+        GameManager.Instance.AddCard(new LoveBead(), true);
+        TimeManager.Instance.AddTime(15);
+        //撬开概率
+        int random = Random.Range(0, 15);
+        if (random < 3)
         {
-            tool.Use();
-            GameManager.Instance.AddCard(new LoveBeadWithProduct(0), true);
-            TimeManager.Instance.AddTime(15);
-            //撬开概率
-            int random = Random.Range(0, 15);
-            if (random < 3)
-            {
-                GameManager.Instance.AddCard(new GlassSand(), true);
-                GameManager.Instance.AddCard(new GlassSand(), true);
-            }
-            else if (random < 6)
-            {
-                GameManager.Instance.AddCard(new ScrapMetal(), true);
-                GameManager.Instance.AddCard(new ScrapMetal(), true);
-            }
-            else if (random < 9)
-            {
-                GameManager.Instance.AddCard(new Coral(), true);
-            }
-            else if (random < 12)
-            {
-                GameManager.Instance.AddCard(new HardFiber(), true);
-            }
-            else if (random < 15)
-            {
-                GameManager.Instance.AddCard(new WhiteBlastMine(), true);
-            }
+            GameManager.Instance.AddCard(new GlassSand(), true);
+            GameManager.Instance.AddCard(new GlassSand(), true);
+        }
+        else if (random < 6)
+        {
+            GameManager.Instance.AddCard(new ScrapMetal(), true);
+            GameManager.Instance.AddCard(new ScrapMetal(), true);
+        }
+        else if (random < 9)
+        {
+            GameManager.Instance.AddCard(new Coral(), true);
+        }
+        else if (random < 12)
+        {
+            GameManager.Instance.AddCard(new HardFiber(), true);
+        }
+        else if (random < 15)
+        {
+            GameManager.Instance.AddCard(new WhiteBlastMine(), true);
         }
     }
 
     public bool Judge_OpenByTool()
     {
-        Card tool = FindTool();
-        if (tool != null)
-        {
-            return true;
-        }
-        return false;
+        return GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }) != null;
     }
-
-    public Card FindTool()
-    {
-        foreach (var slot in GameManager.Instance.PlayerBag.Slots)  
-        {
-            if (slot.Cards[0].TryGetComponent<ToolComponent>(out var component))
-            {
-                if (component.toolType == ToolType.Dig || component.toolType == ToolType.Cut)
-                {
-                    return slot.Cards[0];
-                }
-            }
-        }
-        return null;
-    }
-
     #endregion
 }

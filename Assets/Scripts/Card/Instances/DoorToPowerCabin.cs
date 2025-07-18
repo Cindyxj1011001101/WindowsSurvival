@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 通往动力舱的门
 /// </summary>
@@ -10,14 +8,11 @@ public class DoorToPowerCabin : Card
         //初始化参数
         cardName = "通往动力舱的门";
         cardDesc = "通往动力舱的门，可以通往动力舱。";
-        //cardImage = Resources.Load<Sprite>("CardImage/通往动力舱的门");
         cardType = CardType.Place;
         maxStackNum = 1;
-        moveable = true;
+        moveable = false;
         weight = 0;
-        curEndurance = maxEndurance = -1;
-        tags = new();
-        events = new List<Event>
+        events = new()
         {
             new Event("前往", "前往动力舱", Event_Move, null)
         };

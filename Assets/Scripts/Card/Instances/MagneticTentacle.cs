@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
 
 /// <summary>
-/// 磁力触手
+/// 磁性触手
 /// </summary>
 public class MagneticTentacle : Card
 {
@@ -15,9 +14,7 @@ public class MagneticTentacle : Card
         maxStackNum = 5;
         moveable = true;
         weight = 0.6f;
-        curEndurance = maxEndurance = 1;
-        tags = new();
-        events = new List<Event>
+        events = new()
         {
             new Event("食用", "食用磁性触手", Event_Eat,null)
         };
@@ -31,14 +28,14 @@ public class MagneticTentacle : Card
     {
         if (freshness == 0)
         {
-            Use();
+            DestroyThis();
             GameManager.Instance.AddCard(new ScrapMetal(), true);
         }
     }
 
     public void Event_Eat()
     {
-
+        DestroyThis();
         //+14饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 14));
         //-6精神
@@ -47,7 +44,6 @@ public class MagneticTentacle : Card
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -5));
         //消耗30分钟
         TimeManager.Instance.AddTime(30);
-        Use();
     }
 
     protected override Action OnUpdate => () =>

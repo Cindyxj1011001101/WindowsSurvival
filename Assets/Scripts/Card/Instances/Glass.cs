@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 玻璃
 /// </summary>
@@ -14,9 +12,5 @@ public class Glass : Card
         maxStackNum = 10;
         moveable = true;
         weight = 0.9f;
-        curEndurance = maxEndurance = 1;
-        tags = new();
-        events = new List<Event>();
-        components = new();
     }
 }

@@ -99,7 +99,6 @@ public class ProgressComponent : ICardComponent
             progress = maxProgress;
             onProgressFull?.Invoke();
         }
-        
     }
 }
 #endregion
@@ -112,6 +111,7 @@ public class EquipmentComponent : ICardComponent
 
     public EquipmentComponent(EquipmentType equipmentType)
     {
+        isEquipped = false;
         this.equipmentType = equipmentType;
     }
 }
@@ -143,6 +143,33 @@ public class ToolComponent : ICardComponent
     public ToolComponent(ToolType toolType)
     {
         this.toolType = toolType;
+    }
+}
+#endregion
+
+#region 耐久度组件
+public class DurabilityComponent : ICardComponent
+{
+    public int curDurability;
+    public int maxDurability;
+
+    [JsonIgnore]
+    public UnityAction<int> onDurabilityChanged;
+
+    public DurabilityComponent(int maxDurability, UnityAction<int> onDurabilityChanged)
+    {
+        curDurability = this.maxDurability = maxDurability;
+        this.onDurabilityChanged = onDurabilityChanged;
+    }
+
+    public void Use()
+    {
+        curDurability--;
+        if (curDurability < 0)
+        {
+            curDurability = 0;
+        }
+        onDurabilityChanged?.Invoke(curDurability);
     }
 }
 #endregion

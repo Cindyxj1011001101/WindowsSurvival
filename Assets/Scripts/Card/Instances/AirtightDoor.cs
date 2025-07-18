@@ -1,4 +1,6 @@
-using System.Collections.Generic;
+/// <summary>
+/// 气密舱门
+/// </summary>
 public class AirtightDoor : Card
 {
     public AirtightDoor()
@@ -9,10 +11,11 @@ public class AirtightDoor : Card
         maxStackNum = 1;
         moveable = false;
         weight = 0f;
-        events = new List<Event>();
-        events.Add(new Event("进入飞船", "进入飞船", Event_Enter, Judge_Enter));
-        events.Add(new Event("离开飞船", "离开飞船", Event_Leave, Judge_Leave));
-        tags = new List<CardTag>();
+        events = new()
+        {
+            new Event("进入飞船", "进入飞船", Event_Enter, Judge_Enter),
+            new Event("离开飞船", "离开飞船", Event_Leave, Judge_Leave)
+        };
     }
 
     public void Event_Enter()
@@ -23,7 +26,7 @@ public class AirtightDoor : Card
 
     public bool Judge_Enter()
     {
-        return GameManager.Instance.CurEnvironmentBag.PlaceData.placeType==PlaceEnum.CoralCoast;
+        return GameManager.Instance.CurEnvironmentBag.PlaceData.placeType == PlaceEnum.CoralCoast;
     }
 
     public void Event_Leave()
@@ -34,6 +37,6 @@ public class AirtightDoor : Card
 
     public bool Judge_Leave()
     {
-         return GameManager.Instance.CurEnvironmentBag.PlaceData.placeType==PlaceEnum.Cockpit;
+        return GameManager.Instance.CurEnvironmentBag.PlaceData.placeType == PlaceEnum.Cockpit;
     }
 }

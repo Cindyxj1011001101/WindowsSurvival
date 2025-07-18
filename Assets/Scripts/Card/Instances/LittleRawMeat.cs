@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 /// <summary>
 /// 小块肉
@@ -15,9 +14,7 @@ public class LittleRawMeat : Card
         maxStackNum = 5;
         moveable = true;
         weight = 0.5f;
-        curEndurance = maxEndurance = 1;
-        tags = new();
-        events = new List<Event>
+        events = new()
         {
             new Event("食用", "食用小块生肉", Event_Eat, null)
         };
@@ -31,14 +28,14 @@ public class LittleRawMeat : Card
     {
         if (freshness == 0)
         {
-            Use();
+            DestroyThis();
             GameManager.Instance.AddCard(new RotMaterial(), true);
         }
     }
 
     public void Event_Eat()
     {
-        Use();
+        DestroyThis();
         //+12饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 12));
         //-2精神值

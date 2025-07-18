@@ -138,13 +138,57 @@ public abstract class BagBase : MonoBehaviour
         }
     }
 
-    public Card GetCardOfName(string cardName)
+    /// <summary>
+    /// 根据名称查找卡牌
+    /// </summary>
+    /// <param name="cardName"></param>
+    /// <returns></returns>
+    public Card FindCardOfName(string cardName)
     {
+        foreach (var slot in slots)
+        {
+            if (slot.IsEmpty) continue;
+
+            if (slot.ContainsSimilarCard(cardName)) return slot.PeekCard();
+        }
+
         return null;
     }
 
-    public Card GetCardOfTag(CardTag cardTag)
+    /// <summary>
+    /// 根据工具类型查找卡牌
+    /// </summary>
+    /// <param name="toolTypes"></param>
+    /// <returns></returns>
+    public Card FindCardOfToolTypes(List<ToolType> toolTypes)
     {
+        foreach (var slot in slots)
+        {
+            if (slot.IsEmpty) continue;
+
+            var card = slot.PeekCard();
+            if (card.TryGetComponent<ToolComponent>(out var component))
+            {
+                if (toolTypes.Contains(component.toolType)) return card;
+            }
+        }
+
+        return null;
+    }
+
+    public Card FindCardOfToolType(ToolType toolType)
+    {
+        foreach (var slot in slots)
+        {
+            if (slot.IsEmpty) continue;
+
+            var card = slot.PeekCard();
+            if (card.TryGetComponent<ToolComponent>(out var component))
+            {
+                if (toolType == component.toolType) return card;
+            }
+        }
+
         return null;
     }
 

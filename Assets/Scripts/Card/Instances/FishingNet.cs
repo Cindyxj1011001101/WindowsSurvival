@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 捞网
 /// </summary>
@@ -13,9 +11,18 @@ public class FishingNet : Card
         maxStackNum = 1;
         moveable = true;
         weight = 1.2f;
-        curEndurance = maxEndurance = 60;
-        tags = new List<CardTag>();
-        events = new List<Event>();
-        components = new();
+        components = new()
+        {
+            { typeof(DurabilityComponent), new DurabilityComponent(10, OnDurabilityChanged) }
+        };
+    }
+
+    private void OnDurabilityChanged(int durability)
+    {
+        if (durability == 0)
+        {
+            DestroyThis();
+        }
+        slot.RefreshCurrentDisplay();
     }
 }

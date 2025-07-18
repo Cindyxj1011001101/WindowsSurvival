@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -11,14 +10,11 @@ public class RatBody : Card
         //初始化参数
         cardName = "老鼠尸体";
         cardDesc = "一只老鼠的尸体，可以用来制作食物。";
-        //cardImage = Resources.Load<Sprite>("CardImage/老鼠尸体");
         cardType = CardType.Food;
         maxStackNum = 1;
         moveable = true;
         weight = 0.7f;
-        curEndurance = maxEndurance = 1;
-        tags = new();
-        events = new List<Event>
+        events = new()
         {
             new Event("食用", "食用老鼠尸体", Event_Eat, null),
             new Event("用手剥", "用手剥老鼠尸体", Event_PeelByHand, null),
@@ -34,7 +30,7 @@ public class RatBody : Card
     {
         if (freshness == 0)
         {
-            Use();
+            DestroyThis();
             GameManager.Instance.AddCard(new RotMaterial(), true);
         }
     }
@@ -43,7 +39,7 @@ public class RatBody : Card
     public void Event_Eat()
     {
         //销毁老鼠尸体
-        Use();
+        DestroyThis();
         //+16饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 16));
         //-20精神值
@@ -59,7 +55,7 @@ public class RatBody : Card
     public void Event_PeelByHand()
     {
         //销毁老鼠尸体
-        Use();
+        DestroyThis();
         //-3精神值
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -3));
         //-2健康
@@ -74,18 +70,10 @@ public class RatBody : Card
     #region 用刀切割
     public void Event_PeelByKnife()
     {
-        Use();
-        foreach (var slot in GameManager.Instance.PlayerBag.Slots)
-        {
-            if (slot.PeekCard() != null && slot.PeekCard().TryGetComponent<ToolComponent>(out var component))
-            {
-                if (component.toolType == ToolType.Cut)
-                {
-                    slot.PeekCard().Use();
-                    break;
-                }
-            }
-        }
+        DestroyThis();
+        var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
+        card.TryGetComponent<DurabilityComponent>(out var component);
+        component.Use();
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
         GameManager.Instance.AddCard(new LittleRawMeat(), true);
@@ -93,17 +81,7 @@ public class RatBody : Card
 
     public bool Judge_PeelByKnife()
     {
-        foreach (var slot in GameManager.Instance.PlayerBag.Slots)
-        {
-            if (slot.PeekCard() != null && slot.PeekCard().TryGetComponent<ToolComponent>(out var component))
-            {
-                if (component.toolType == ToolType.Cut)
-                {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) != null;
     }
     #endregion
 
@@ -117,7 +95,7 @@ public class RatBody : Card
         }
         else if (rand < 4)
         {
-            //GameManager.Instance.AddCard(null, true);
+            // 什么也没有掉落
         }
     }
     #endregion

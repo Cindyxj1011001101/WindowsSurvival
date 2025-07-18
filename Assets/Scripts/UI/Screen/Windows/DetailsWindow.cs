@@ -13,15 +13,27 @@ public class DetailsWindow : WindowBase
     {
         base.Awake();
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
     protected override void Init()
     {
+    }
+
+    /// <summary>
+    /// 当玩家背包物品变化时触发，这是为了刷新卡牌事件的触发条件
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnPlayerCardsChanged(ChangePlayerBagCardsArgs args)
+    {
+        if (currentDisplayedCard != null)
+            Refresh(currentDisplayedCard.slot);
     }
 
     bool moved = false;

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 通往驾驶室的门
 /// </summary>
@@ -10,14 +8,11 @@ public class DoorToCockpit : Card
         //初始化参数
         cardName = "通往驾驶室的门";
         cardDesc = "通往驾驶室的门，可以通往驾驶室。";
-        //cardImage = Resources.Load<Sprite>("CardImage/通往驾驶室的门");
         cardType = CardType.Place;
         maxStackNum = 1;
-        moveable = true;
+        moveable = false;
         weight = 0;
-        curEndurance = maxEndurance = -1;
-        tags = new();
-        events = new List<Event>
+        events = new()
         {
             new Event("前往", "前往驾驶室", Event_Move, null)
         };

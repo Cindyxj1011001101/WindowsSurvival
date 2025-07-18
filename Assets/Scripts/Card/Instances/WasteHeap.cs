@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -13,20 +12,31 @@ public class WasteHeap : Card
         cardType = CardType.ResourcePoint;
         maxStackNum = 1;
         moveable = false;
-        weight = 0.3f;
-        curEndurance = maxEndurance = 5;
-        tags = new();
-        events = new List<Event>
+        weight = 0f;
+        events = new()
         {
             new Event("挖掘", "挖掘废料堆", Event_Dig, null)
         };
-        components = new();
+        components = new()
+        {
+            { typeof(DurabilityComponent), new DurabilityComponent(5, OnDurabilityChanged) }
+        };
+    }
+
+    private void OnDurabilityChanged(int durability)
+    {
+        if (durability == 0)
+        {
+            DestroyThis();
+            slot.RefreshCurrentDisplay();
+        }
     }
 
     public void Event_Dig()
     {
         //消耗1点耐久度
-        Use();
+        TryGetComponent<DurabilityComponent>(out var component);
+        component.Use();
         //消耗45分钟
         TimeManager.Instance.AddTime(45);
         //掉落卡牌
