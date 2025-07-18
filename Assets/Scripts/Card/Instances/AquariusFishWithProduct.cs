@@ -30,8 +30,7 @@ public class AquariusFishWithProduct : Card
 
         // “捞网”耐久-1
         var tool = GameManager.Instance.PlayerBag.FindCardOfName("捞网");
-        tool.TryGetComponent<DurabilityComponent>(out var c);
-        c.Use();
+        tool.TryUse();
         // 销毁卡牌
         DestroyThis();
 

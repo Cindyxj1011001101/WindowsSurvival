@@ -19,7 +19,7 @@ public class LoveBead : Card
         };
         components = new()
         {
-            { typeof(ProgressComponent), new ProgressComponent(4320, OnProgressFull) },
+            { typeof(ProgressComponent), new ProgressComponent(4320) },
         };
     }
 
@@ -31,7 +31,7 @@ public class LoveBead : Card
         GameManager.Instance.AddCard(new RawOysterMeat(), true);
     }
 
-    private void OnProgressFull()
+    private void OnProgressChanged()
     {
         DestroyThis();
         GameManager.Instance.AddCard(new LoveBeadWithProduct(), true);
@@ -40,6 +40,6 @@ public class LoveBead : Card
     protected override Action OnUpdate => () =>
     {
         TryGetComponent<ProgressComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval);
+        component.Update(TimeManager.Instance.SettleInterval, OnProgressChanged);
     };
 }

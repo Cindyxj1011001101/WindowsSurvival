@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using UnityEngine.Events;
+﻿using UnityEngine.Events;
 
 /// <summary>
 /// 组件接口
@@ -17,24 +16,22 @@ public class FreshnessComponent : ICardComponent
 
     public float updateRate = 1.0f;
 
-    [JsonIgnore]
-    public UnityAction<int> onFreshnessChanged;
-
-    public FreshnessComponent(int maxFreshness, UnityAction<int> onFreshnessChanged)
+    public FreshnessComponent(int maxFreshness)
     {
         freshness = this.maxFreshness = maxFreshness;
-        this.onFreshnessChanged = onFreshnessChanged;
     }
 
-    public void Update(int deltaTime)
+    public void Update(int deltaTime, UnityAction onRotton)
     {
+        if (freshness <= 0) return;
+
         // 随时间自动减少新鲜度
         freshness -= (int)(deltaTime * updateRate);
         if (freshness <= 0)
         {
             freshness = 0;
+            onRotton?.Invoke();
         }
-        onFreshnessChanged?.Invoke(freshness);
     }
 }
 #endregion
@@ -47,26 +44,24 @@ public class GrowthComponent : ICardComponent
 
     public float updateRate = 1.0f;
 
-    [JsonIgnore]
-    public UnityAction<int> onGrowthChanged;
-
-    public GrowthComponent(int maxGrowth, UnityAction<int> onGrowthChanged)
+    public GrowthComponent(int maxGrowth)
     {
         this.maxGrowth = maxGrowth;
         growth = 0;
-        this.onGrowthChanged = onGrowthChanged;
     }
 
-    public void Update(int deltaTime)
+    public void Update(int deltaTime, UnityAction onGrownUp)
     {
+        if (growth >= maxGrowth) return;
+
         // 随时间自动增加生长度
         growth += (int)(deltaTime * updateRate);
 
         if (growth >= maxGrowth)
         {
             growth = maxGrowth;
+            onGrownUp?.Invoke();
         }
-        onGrowthChanged?.Invoke(growth);
     }
 }
 #endregion
@@ -79,19 +74,16 @@ public class ProgressComponent : ICardComponent
 
     public float updateRate = 1.0f;
 
-    [JsonIgnore]
-    public UnityAction onProgressFull;
-
-    public ProgressComponent(int maxProgress, UnityAction onProgressFull)
+    public ProgressComponent(int maxProgress)
     {
         this.maxProgress = maxProgress;
         progress = 0;
-        this.onProgressFull = onProgressFull;
     }
 
-    public void Update(int deltaTime)
+    public void Update(int deltaTime, UnityAction onProgressFull)
     {
         if (progress >= maxProgress) return;
+
         // 随时间自动增加产物进度
         progress += (int)(deltaTime * updateRate);
         if (progress >= maxProgress)
@@ -113,18 +105,6 @@ public class EquipmentComponent : ICardComponent
     {
         isEquipped = false;
         this.equipmentType = equipmentType;
-    }
-}
-#endregion
-
-#region 地点组件
-public class PlaceComponent : ICardComponent
-{
-    public PlaceEnum placeType;
-
-    public PlaceComponent(PlaceEnum placeType)
-    {
-        this.placeType = placeType;
     }
 }
 #endregion
@@ -153,23 +133,9 @@ public class DurabilityComponent : ICardComponent
     public int durability;
     public int maxDurability;
 
-    [JsonIgnore]
-    public UnityAction<int> onDurabilityChanged;
-
-    public DurabilityComponent(int maxDurability, UnityAction<int> onDurabilityChanged)
+    public DurabilityComponent(int maxDurability)
     {
         durability = this.maxDurability = maxDurability;
-        this.onDurabilityChanged = onDurabilityChanged;
-    }
-
-    public void Use()
-    {
-        durability--;
-        if (durability < 0)
-        {
-            durability = 0;
-        }
-        onDurabilityChanged?.Invoke(durability);
     }
 }
 #endregion

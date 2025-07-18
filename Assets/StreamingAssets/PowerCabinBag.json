@@ -1,171 +1,166 @@
 {
-    "disposableDropList": {
-  "maxCount": 13,
-  "dropList": [
-    {
-      "card": {
-        "$type": "CompactBiscuit, Assembly-CSharp",
-        "components": {}
+  "disposableDropList": {
+    "maxCount": 13,
+    "dropList": [
+      {
+        "card": {
+          "$type": "CompactBiscuit, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "ScrapMetal, Assembly-CSharp",
-        "components": {}
+      {
+        "card": {
+          "$type": "ScrapMetal, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 2,
+        "dropProb": 2
       },
-      "dropNum": 2,
-      "dropProb": 2
-    },
-    {
-      "card": {
-        "$type": "ScrapMetal, Assembly-CSharp",
-        "components": {}
+      {
+        "card": {
+          "$type": "ScrapMetal, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "ScrapMetal, Assembly-CSharp",
-        "components": {}
+      {
+        "card": {
+          "$type": "ScrapMetal, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "HardFiber, Assembly-CSharp",
-        "components": {}
+      {
+        "card": {
+          "$type": "HardFiber, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "HardFiber, Assembly-CSharp",
-        "components": {}
+      {
+        "card": {
+          "$type": "HardFiber, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "DoorToCockpit, Assembly-CSharp",
-        "components": {
-          "PlaceComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-            "$type": "PlaceComponent, Assembly-CSharp",
-            "placeType": 1
+      {
+        "card": {
+          "$type": "DoorToCockpit, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 1,
+        "dropProb": 2
+      },
+      {
+        "card": {
+          "$type": "WasteHeap, Assembly-CSharp",
+          "components": {
+            "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+              "$type": "DurabilityComponent, Assembly-CSharp",
+              "durability": 5,
+              "maxDurability": 5
+            }
           }
-        }
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 2
-    },
-    {
-      "card": {
-        "$type": "WasteHeap, Assembly-CSharp",
-        "components": {
-          "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-            "$type": "DurabilityComponent, Assembly-CSharp",
-            "durability": 5,
-            "maxDurability": 5
+      {
+        "card": {
+          "$type": "WasteHeap, Assembly-CSharp",
+          "components": {
+            "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+              "$type": "DurabilityComponent, Assembly-CSharp",
+              "durability": 5,
+              "maxDurability": 5
+            }
           }
-        }
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 3
+      {
+        "card": {
+          "$type": "BottledWater, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 1,
+        "dropProb": 4
+      },
+      {
+        "card": {
+          "$type": "BottledWater, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 1,
+        "dropProb": 4
+      },
+      {
+        "card": {
+          "$type": "Glass, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 1,
+        "dropProb": 2
+      },
+      {
+        "card": {
+          "$type": "Glass, Assembly-CSharp",
+          "components": {}
+        },
+        "dropNum": 1,
+        "dropProb": 2
+      }
+    ]
+  },
+  "repeatableDropList": {
+    "emptyPopulationSizeChangeOnNotCaught": 0,
+    "emptyPopulation": {
+      "card": null,
+      "dropNum": 0,
+      "curSize": 0,
+      "maxSize": 0,
+      "sizeChangePerRound": 0,
+      "sizeChangeOnCaught": 0,
+      "Proportion": 0
+    },
+    "populationList": []
+  },
+  "environmentStateDict": {},
+  "cardSlotsRuntimeData": [
+    {
+      "cardList": []
     },
     {
-      "card": {
-        "$type": "WasteHeap, Assembly-CSharp",
-        "components": {
-          "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-            "$type": "DurabilityComponent, Assembly-CSharp",
-            "durability": 5,
-            "maxDurability": 5
-          }
-        }
-      },
-      "dropNum": 1,
-      "dropProb": 3
+      "cardList": []
     },
     {
-      "card": {
-        "$type": "BottledWater, Assembly-CSharp",
-        "components": {}
-      },
-      "dropNum": 1,
-      "dropProb": 4
+      "cardList": []
     },
     {
-      "card": {
-        "$type": "BottledWater, Assembly-CSharp",
-        "components": {}
-      },
-      "dropNum": 1,
-      "dropProb": 4
+      "cardList": []
     },
     {
-      "card": {
-        "$type": "Glass, Assembly-CSharp",
-        "components": {}
-      },
-      "dropNum": 1,
-      "dropProb": 2
+      "cardList": []
     },
     {
-      "card": {
-        "$type": "Glass, Assembly-CSharp",
-        "components": {}
-      },
-      "dropNum": 1,
-      "dropProb": 2
+      "cardList": []
+    },
+    {
+      "cardList": []
+    },
+    {
+      "cardList": []
+    },
+    {
+      "cardList": []
     }
   ]
-},
-    "repeatableDropList": {
-        "emptyPopulationSizeChangeOnNotCaught": 0,
-        "emptyPopulation": {
-            "card": null,
-            "dropNum": 0,
-            "curSize": 0,
-            "maxSize": 0,
-            "sizeChangePerRound": 0,
-            "sizeChangeOnCaught": 0,
-            "Proportion": 0
-        },
-        "populationList": []
-    },
-    "environmentStateDict": {},
-    "cardSlotsRuntimeData": [
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        },
-        {
-            "cardList": []
-        }
-    ]
 }

@@ -25,8 +25,7 @@ public class SiphonophyllumWithProduct : Card
     {
         DestroyThis();
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
-        card.TryGetComponent<DurabilityComponent>(out var component);
-        component.Use();
+        card.TryUse();
         TimeManager.Instance.AddTime(45);
         GameManager.Instance.AddCard(new MagneticTentacle(), true);
         GameManager.Instance.AddCard(new MagneticTentacle(), true);

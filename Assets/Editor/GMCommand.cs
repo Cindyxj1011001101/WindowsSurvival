@@ -172,7 +172,7 @@ public class GMCommand
     {
         private Dictionary<Type, ICardComponent> components = new()
     {
-        { typeof(FreshnessComponent), new FreshnessComponent(20, null) }
+        { typeof(FreshnessComponent), new FreshnessComponent(20) }
     };
 
         private List<Event> events = new()

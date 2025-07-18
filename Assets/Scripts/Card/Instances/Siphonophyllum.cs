@@ -1,3 +1,5 @@
+using System;
+
 /// <summary>
 /// 虹吸海葵
 /// </summary>
@@ -17,7 +19,7 @@ public class Siphonophyllum : Card
         };
         components = new()
         {
-            { typeof(ProgressComponent), new ProgressComponent(3600, OnProgressFull) },
+            { typeof(ProgressComponent), new ProgressComponent(3600) },
         };
     }
 
@@ -31,14 +33,20 @@ public class Siphonophyllum : Card
     {
         DestroyThis();
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
-        card.TryGetComponent<DurabilityComponent>(out var component);
-        component.Use();
+        card.TryUse();
         TimeManager.Instance.AddTime(45);
         GameManager.Instance.AddCard(new MagneticTentacle(), true);
         GameManager.Instance.AddCard(new MagneticTentacle(), true);
     }
+
     public bool Judge_Cut()
     {
         return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) != null;
     }
+
+    protected override Action OnUpdate => () =>
+    {
+        TryGetComponent<ProgressComponent>(out var component);
+        component.Update(TimeManager.Instance.SettleInterval, OnProgressFull);
+    };
 }

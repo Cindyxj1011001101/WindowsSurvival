@@ -13,16 +13,7 @@ public class FishingNet : Card
         weight = 1.2f;
         components = new()
         {
-            { typeof(DurabilityComponent), new DurabilityComponent(10, OnDurabilityChanged) }
+            { typeof(DurabilityComponent), new DurabilityComponent(10) }
         };
-    }
-
-    private void OnDurabilityChanged(int durability)
-    {
-        if (durability == 0)
-        {
-            DestroyThis();
-        }
-        slot.RefreshCurrentDisplay();
     }
 }

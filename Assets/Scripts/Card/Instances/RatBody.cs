@@ -22,17 +22,14 @@ public class RatBody : Card
         };
         components = new()
         {
-            { typeof(FreshnessComponent), new FreshnessComponent(2880, OnFreshnessChanged) }
+            { typeof(FreshnessComponent), new FreshnessComponent(2880) }
         };
     }
 
-    private void OnFreshnessChanged(int freshness)
+    private void OnRotton()
     {
-        if (freshness == 0)
-        {
-            DestroyThis();
-            GameManager.Instance.AddCard(new RotMaterial(), true);
-        }
+        DestroyThis();
+        GameManager.Instance.AddCard(new RotMaterial(), true);
     }
 
     #region 食用
@@ -72,8 +69,7 @@ public class RatBody : Card
     {
         DestroyThis();
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
-        card.TryGetComponent<DurabilityComponent>(out var component);
-        component.Use();
+        card.TryUse();
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
         GameManager.Instance.AddCard(new LittleRawMeat(), true);
@@ -103,6 +99,6 @@ public class RatBody : Card
     protected override System.Action OnUpdate => () =>
     {
         TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval);
+        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
     };
 }
