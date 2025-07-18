@@ -56,53 +56,6 @@ public class EnvironmentBag : BagBase
         repeatableDropList.StartUpdating();
     }
 
-    public void HandeleExplore()
-    {
-        if (disposableDropList.IsEmpty && repeatableDropList.IsEmpty)
-        {
-            Debug.Log("探索完全");
-            return;
-        }
-
-        // 消耗时间
-        TimeManager.Instance.AddTime(explorationTime);
-
-        // 当一次性探索列表还有剩余
-        if (!disposableDropList.IsEmpty)
-        {
-            // 掉落卡牌
-            foreach (var card in disposableDropList.RandomDrop())
-            {
-                // 掉落到环境里
-                GameManager.Instance.AddCard(card, false);
-            }
-
-            // 探索完成后让环境生态开始更新
-            if (disposableDropList.IsEmpty)
-                repeatableDropList.StartUpdating();
-
-            // 探索度变化
-            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, DiscoveryDegree);
-        }
-        // 如果还可以重复探索
-        else if (!repeatableDropList.IsEmpty)
-        {
-            var droppedCards = repeatableDropList.RandomDrop();
-            if (droppedCards == null || droppedCards.Count == 0)
-            {
-                Debug.Log("什么也没有捞到");
-                return;
-            }
-
-            // 掉落卡牌
-            foreach (var card in droppedCards)
-            {
-                // 掉落到环境里
-                GameManager.Instance.AddCard(card, false);
-            }
-        }
-    }
-
     //当前环境状态变化(除电力以外的数值变化)
     private void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
     {

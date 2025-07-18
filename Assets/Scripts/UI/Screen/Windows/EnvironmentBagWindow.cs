@@ -80,7 +80,7 @@ public class EnvironmentBagWindow : BagWindow
         placeDetailsText.text = $"{curEnvironmentBag.PlaceData.placeDesc}";
         // 探索事件
         discoverButton.onClick.RemoveAllListeners();
-        discoverButton.onClick.AddListener(GameManager.Instance.CurEnvironmentBag.HandeleExplore);
+        discoverButton.onClick.AddListener(GameManager.Instance.HandleExplore);
     }
     /// <summary>
     /// 单个环境状态变化UI刷新
