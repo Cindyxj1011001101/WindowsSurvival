@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// 卡牌格
+/// </summary>
 public class CardSlot : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private Text countText; // 用于显示数量和耐久等
     [SerializeField] private Text percentageText; // 用于显示新鲜度或耐久
     [SerializeField] private Text nameText;
-    [SerializeField] private CanvasGroup cardCanvas;
+    [SerializeField] private CanvasGroup cardCanvasGroup;
 
     private List<Card> cards = new();
     public bool IsEmpty => cards.Count == 0;
@@ -22,7 +25,7 @@ public class CardSlot : MonoBehaviour
 
     private void Awake()
     {
-        if (cardCanvas.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
+        if (cardCanvasGroup.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
         {
             doubleClickHandler.onDoubleClick.AddListener(() =>
             {
@@ -100,9 +103,9 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     private void DisableDisplay()
     {
-        cardCanvas.alpha = 0;
-        cardCanvas.blocksRaycasts = false;
-        cardCanvas.interactable = false;
+        cardCanvasGroup.alpha = 0;
+        cardCanvasGroup.blocksRaycasts = false;
+        cardCanvasGroup.interactable = false;
     }
 
     /// <summary>
@@ -110,9 +113,9 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     private void EnableDisplay()
     {
-        cardCanvas.alpha = 1;
-        cardCanvas.blocksRaycasts = true;
-        cardCanvas.interactable = true;
+        cardCanvasGroup.alpha = 1;
+        cardCanvasGroup.blocksRaycasts = true;
+        cardCanvasGroup.interactable = true;
     }
 
     public bool ContainsSimilarCard(string cardName) => !IsEmpty && cardName == cards[0].cardName;
@@ -121,7 +124,7 @@ public class CardSlot : MonoBehaviour
     /// 能否堆叠，在使用该方法前请务必确认要堆叠的卡牌和这个slot放有的卡牌是同类的
     /// </summary>
     /// <returns></returns>
-    public bool CanAddCard(Card card)
+    public virtual bool CanAddCard(Card card)
     {
         return IsEmpty || (ContainsSimilarCard(card.cardName) && StackCount < card.maxStackNum);
     }
@@ -130,7 +133,7 @@ public class CardSlot : MonoBehaviour
     /// 添加一张卡牌
     /// </summary>
     /// <param name="card"></param>
-    public void AddCard(Card card)
+    public virtual void AddCard(Card card)
     {
         cards.Add(card);
         cards.Sort((a, b) => a.CompareTo(b));
@@ -141,9 +144,9 @@ public class CardSlot : MonoBehaviour
         if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = 1 });
-        // 当装备卡牌时
-        if (bag is EquipmentBag)
-            EventManager.Instance.TriggerEvent(EventType.Equip, card);
+        //// 当装备卡牌时
+        //if (bag is EquipmentBag)
+        //    EventManager.Instance.TriggerEvent(EventType.Equip, card);
 
         card.SetCardSlot(this);
     }
@@ -152,7 +155,7 @@ public class CardSlot : MonoBehaviour
     /// 移除指定的一张卡牌
     /// </summary>
     /// <param name="card"></param>
-    public void RemoveCard(Card card)
+    public virtual void RemoveCard(Card card)
     {
         if (!cards.Contains(card)) return;
 
@@ -168,9 +171,9 @@ public class CardSlot : MonoBehaviour
         if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = -1 });
-        // 当卸下装备时
-        if (bag is EquipmentBag)
-            EventManager.Instance.TriggerEvent(EventType.Unequip, card);
+        //// 当卸下装备时
+        //if (bag is EquipmentBag)
+        //    EventManager.Instance.TriggerEvent(EventType.Unequip, card);
     }
 
     /// <summary>
@@ -203,7 +206,6 @@ public class CardSlot : MonoBehaviour
         cards.Clear();
         DisableDisplay();
     }
-
 
     private void OnDestroy()
     {

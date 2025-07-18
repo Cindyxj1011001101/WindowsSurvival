@@ -152,11 +152,13 @@ public class GameDataManager
     {
         EquipmentBag bag = GameManager.Instance.EquipmentBag;
         equipmentData = new();
-        equipmentData.cardSlotsRuntimeData = new();
-        foreach (var slot in bag.Slots)
+        equipmentData.cardSlotsRuntimeData = new()
         {
-            equipmentData.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
-        }
+            new() { cardList = bag.headSlot.Cards },
+            new() { cardList = bag.bodySlot.Cards },
+            new() { cardList = bag.backSlot.Cards },
+            new() { cardList = bag.legSlot.Cards }
+        };
         JsonManager.SaveData(equipmentData, "Equipment");
     }
     #endregion

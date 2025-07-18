@@ -67,8 +67,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         sourceSlot.RefreshCurrentDisplay();
-
-        //Home();
     }
 
     private void PlaceCardInSameBag(CardSlot targetSlot, int amount)

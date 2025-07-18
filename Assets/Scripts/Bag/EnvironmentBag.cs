@@ -38,7 +38,6 @@ public class EnvironmentBag : BagBase
         // 初始化背包中的物品，探索度，环境状态值
         base.InitBag(runtimeData);
         var data = (runtimeData as EnvironmentBagRuntimeData);
-        //discoveryDegree = data.discoveryDegree;
         EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>(data.environmentStateDict);
         //如果是开局进入，则初始化环境状态
         if (EnvironmentStateDict.Count == 0)

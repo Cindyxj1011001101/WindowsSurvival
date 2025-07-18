@@ -1,7 +1,26 @@
-﻿public class EquipmentBag : BagBase
+﻿using System.Collections.Generic;
+
+public class EquipmentBag : BagBase
 {
+    public EquipmentCardSlot headSlot;
+    public EquipmentCardSlot bodySlot;
+    public EquipmentCardSlot backSlot;
+    public EquipmentCardSlot legSlot;
+
+    private Dictionary<EquipmentType, EquipmentCardSlot> equipmentSlotDict;
     private void Awake()
     {
+        equipmentSlotDict = new()
+        {
+            { EquipmentType.Head, headSlot},
+            { EquipmentType.Body, bodySlot},
+            { EquipmentType.Back, backSlot},
+            { EquipmentType.Leg, legSlot},
+        };
+        foreach (var slot in equipmentSlotDict.Values)
+        {
+            slot.ClearSlot();
+        }
         EventManager.Instance.AddListener<Card>(EventType.Equip, OnCardEquipped);
         EventManager.Instance.AddListener<Card>(EventType.Unequip, OnCardUnequipped);
     }
@@ -17,6 +36,14 @@
         InitBag(GameDataManager.Instance.EquipmentData);
     }
 
+    protected override void InitBag(BagRuntimeData runtimeData)
+    {
+        headSlot.InitFromRuntimeData(runtimeData.cardSlotsRuntimeData[0]);
+        bodySlot.InitFromRuntimeData(runtimeData.cardSlotsRuntimeData[1]);
+        backSlot.InitFromRuntimeData(runtimeData.cardSlotsRuntimeData[2]);
+        legSlot.InitFromRuntimeData(runtimeData.cardSlotsRuntimeData[3]);
+    }
+
     /// <summary>
     /// 得到指定部位的装备
     /// </summary>
@@ -24,9 +51,7 @@
     /// <returns></returns>
     public Card GetEquipmentByType(EquipmentType type)
     {
-        int index = (int)type;
-        if (slots[index].IsEmpty) return null;
-        return slots[index].PeekCard();
+        return equipmentSlotDict[type].PeekCard();
     }
 
     private void OnCardEquipped(Card equipment)
@@ -59,8 +84,7 @@
     {
         // 从装备格子中移除
         equipment.TryGetComponent<EquipmentComponent>(out var component);
-        var slotIndex = (int)component.equipmentType;
-        slots[slotIndex].RemoveCard(equipment);
+        equipmentSlotDict[component.equipmentType].RemoveCard(equipment);
 
         // 添加到背包(优先)或环境中
         GameManager.Instance.AddCard(equipment, true);
@@ -80,8 +104,7 @@
     {
         // 在对应装备位置上添加装备卡
         card.TryGetComponent<EquipmentComponent>(out var component);
-        var slotIndex = (int)component.equipmentType;
-        slots[slotIndex].AddCard(card);
+        equipmentSlotDict[component.equipmentType].AddCard(card);
     }
 
     public override bool CanAddCard(Card card)
@@ -95,7 +118,6 @@
             return false;
         
         // 最后看装备格子有没有位置
-        var slotIndex = (int)component.equipmentType;
-        return slots[slotIndex].IsEmpty;
+        return equipmentSlotDict[component.equipmentType].IsEmpty;
     }
 }
