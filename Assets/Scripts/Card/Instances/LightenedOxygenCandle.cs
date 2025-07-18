@@ -22,7 +22,7 @@ public class LightenedOxygenCandle : Card
         EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
         if(environmentBag.PlaceData.isIndoor)
         {
-            StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Oxygen, 10));
+            StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(environmentBag.PlaceData.placeType, EnvironmentStateEnum.Oxygen, 10));
         }
         else
         {

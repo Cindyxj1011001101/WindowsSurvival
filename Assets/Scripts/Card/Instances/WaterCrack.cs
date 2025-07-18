@@ -37,7 +37,7 @@ public class WaterCrack : Card
         EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
         if(environmentBag!=null)
         {
-            StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Height, 0.3f));
+            StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(environmentBag.PlaceData.placeType, EnvironmentStateEnum.Height, 0.3f));
             (slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue-=8;
             if((slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue<=0)
             {

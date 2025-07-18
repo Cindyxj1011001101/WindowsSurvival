@@ -21,7 +21,7 @@ public class WhiteBlastMine : Card
         EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
         if(environmentBag.PlaceData.isIndoor)
         {
-            StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Oxygen, 80));
+            StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(environmentBag.PlaceData.placeType, EnvironmentStateEnum.Oxygen, 80));
         }
         else
         {

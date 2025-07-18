@@ -370,6 +370,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -35
       objectReference: {fileID: 0}
+    - target: {fileID: 6636944450015686865, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6636944450015686865, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7410040285003882173, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -393,6 +401,14 @@ PrefabInstance:
     - target: {fileID: 7410040285003882173, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -95
+      objectReference: {fileID: 0}
+    - target: {fileID: 7473253973235314370, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7473253973235314370, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8847958479376062953, guid: 9b4ace59eac396646a8465b5be4e98ea, type: 3}
       propertyPath: m_AnchorMax.x
@@ -574,6 +590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Electricity: 0
+  WaterLevel: 0
   maxLoad: 15
   curLoad: 0
 --- !u!114 &1720048210

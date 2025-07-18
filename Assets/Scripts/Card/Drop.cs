@@ -79,6 +79,8 @@ public class DisposableDropList
         for (int i = 0; i < dropList.Count; i++)
         {
             Drop drop = dropList[i];
+            Debug.Log(drop.card);
+            Debug.Log(drop.card.cardName);
             if (drop.card.cardName == cardName)
             {
                 dropList.RemoveAt(i);

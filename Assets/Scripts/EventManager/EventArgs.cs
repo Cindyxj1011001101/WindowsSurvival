@@ -44,7 +44,7 @@ public class ChangeEnvironmentStateArgs
     public EnvironmentStateEnum state;
     public float value;
 
-    public ChangeEnvironmentStateArgs(EnvironmentStateEnum s, float i)
+    public ChangeEnvironmentStateArgs(PlaceEnum p, EnvironmentStateEnum s, float i)
     {
         place = GameManager.Instance.CurEnvironmentBag.PlaceData.placeType;
         state = s;

@@ -15,14 +15,14 @@ MonoBehaviour:
   Health: 0
   Fullness: 0
   Thirst: 0
-  Tired: 0
   San: 0
+  Oxygen: 0
+  Tired: 0
   BasicHealthChange: 0.1
   BasicFullnessChange: -1.2
   BasicThirstChange: -1.5
-  BasicTiredChange: 1.1
   BasicSanChange: 0.1
-  maxPlayerGrid: 0
-  maxPlayerWeight: 0
-  maxWeightFactor: 0
-  EnvBag: {fileID: 0}
+  BasicOxygenChange: -7
+  BasicTiredChange: 1.1
+  BasicElectricityChange: 0
+  place: 0

@@ -174,7 +174,7 @@ public class StateManager : MonoBehaviour
             //氧气在室内时，氧气变化影响环境氧气
             if(args.state==PlayerStateEnum.Oxygen&&GameManager.Instance.CurEnvironmentBag.PlaceData.isIndoor)
             {
-                OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Oxygen, args.value));
+                OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Oxygen, args.value));
                 return;
             }
             PlayerStateDict[args.state].curValue += args.value;
@@ -253,8 +253,8 @@ public class StateManager : MonoBehaviour
 
     public void EnvironmentIntervalSettle()
     {
-        Debug.Log("-0.2电力");
-        OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Electricity, -0.2f));
+        OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Electricity, -0.2f));
+
     }
 
     public void ExtraEnvironmentIntervalSettle()
@@ -268,8 +268,8 @@ public class StateManager : MonoBehaviour
         OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, InitPlayerStateData.Instance.BasicHealthChange));
         OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, InitPlayerStateData.Instance.BasicThirstChange));
         OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, InitPlayerStateData.Instance.BasicSanChange));
-        OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, InitPlayerStateData.Instance.BasicOxygenChange));
         OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Tired, InitPlayerStateData.Instance.BasicTiredChange));
+        OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, InitPlayerStateData.Instance.BasicOxygenChange));
     }
 
     /// <summary>

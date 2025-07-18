@@ -98,7 +98,7 @@ public class EnvironmentBagWindow : BagWindow
                     / GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue;
                     EnvironmentStateSliders[args.state].GetComponentInChildren<Slider>().value = resultValue;
                     EnvironmentStateSliders[args.state].transform.Find("StateNum").GetComponent<TMP_Text>().text =
-                    GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue.ToString() + "/"
+                    GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue.ToString("f1") + "/"
                     + GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue.ToString();
                 }
             }

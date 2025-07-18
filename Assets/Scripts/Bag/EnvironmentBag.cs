@@ -120,7 +120,7 @@ public class EnvironmentBag : BagBase
                     EnvironmentStateDict[args.state].curValue = 0;
                 }
                 //前端UI刷新
-                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, args.state);
+                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, args.state));
             }
         }
     }
