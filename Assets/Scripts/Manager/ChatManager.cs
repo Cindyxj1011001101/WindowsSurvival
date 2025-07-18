@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ChatManager : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class ChatManager : MonoBehaviour
         }
     }
 
+    public List<ChatData> ChatDataList;
+
     private void Awake()
     {
         // 确保只有一个实例
@@ -33,10 +36,9 @@ public class ChatManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    //进入游戏-加载保存当前进度的对话-是否段落结束/等待选择判断，未结束继续运行弹出对话-段落结束
-    //1.加载保存当前进度的对话
-    //2.判断是否需要继续加载对话（对话中，开始运行时）
-    //3.运行对话到某句
+    public void LoadChatData()
+    {
+    }
 
 
 }

@@ -4,6 +4,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum PressureType
+{
+    极低,
+    低,
+    标准,
+    高,
+    极高
+}
+
 public class EnvironmentBagWindow : BagWindow
 {
     private Text discoveryDegreeText; // 探索度显示
@@ -91,6 +100,32 @@ public class EnvironmentBagWindow : BagWindow
                     EnvironmentStateSliders[args.state].transform.Find("StateNum").GetComponent<TMP_Text>().text =
                     StateManager.Instance.Electricity.ToString("f1") + "/"
                     + GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue.ToString();
+                }
+                else if (args.state == EnvironmentStateEnum.Pressure)
+                {
+                    resultValue = GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue
+                    / GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue;
+                    EnvironmentStateSliders[args.state].GetComponentInChildren<Slider>().value = resultValue;
+                    string showText = "";
+                    switch (GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue)
+                    {
+                        case 0:
+                            showText = "极低";
+                            break;
+                        case 1:
+                            showText = "低";
+                            break;
+                        case 2:
+                            showText = "标准";
+                            break;
+                        case 3:
+                            showText = "高";
+                            break;
+                        case 4:
+                            showText = "极高";
+                            break;
+                    }
+                    EnvironmentStateSliders[args.state].transform.Find("StateNum").GetComponent<TMP_Text>().text = showText;
                 }
                 else
                 {

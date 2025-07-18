@@ -6,11 +6,8 @@ using UnityEngine;
 /// </summary>
 public class WasteHeap : Card
 {
-    //private List<Drop> dropCards;
-
     public WasteHeap()
     {
-        //初始化参数
         cardName = "废料堆";
         cardDesc = "被安全泡沫覆盖的废料堆。";
         cardType = CardType.ResourcePoint;
@@ -31,29 +28,14 @@ public class WasteHeap : Card
         //消耗1点耐久度
         Use();
         //消耗45分钟
-        TimeManager.Instance.AddTime(1);
+        TimeManager.Instance.AddTime(45);
         //掉落卡牌
         RandomDrop();
 
     }
 
-    public bool Judge_Dig()
-    {
-        return true;
-    }
-
-    public override void Use()
-    {
-        curEndurance--;
-        if (curEndurance <= 0)
-        {
-            //TODO:删除本卡牌
-        }
-    }
-
     public void RandomDrop()
     {
-        //TODO:掉落卡牌逻辑
         int rand = Random.Range(0, 20);
         if (rand < 5)
         {
@@ -82,8 +64,7 @@ public class WasteHeap : Card
         }
         else
         {
-            //TODO:掉落氧烛
-            //GameManager.Instance.AddCard(new 氧烛, true);
+            GameManager.Instance.AddCard(new OxygenCandle(), true);
         }
     }
 }

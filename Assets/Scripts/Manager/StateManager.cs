@@ -313,7 +313,10 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraHealthChange()
     {
-
+        if (PlayerStateDict[PlayerStateEnum.Health].curValue <= 0)
+        {
+            EventManager.Instance.TriggerEvent(EventType.GameOver);
+        }
     }
 
     /// <summary>
@@ -341,14 +344,10 @@ public class StateManager : MonoBehaviour
 
     /// <summary>
     /// 精神导致的额外变化结算
-    /// 健康等于0时死亡
     /// </summary>
     private void ExtraSanChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Health].curValue <= 0)
-        {
-            EventManager.Instance.TriggerEvent(EventType.GameOver);
-        }
+
     }
 
     /// <summary>

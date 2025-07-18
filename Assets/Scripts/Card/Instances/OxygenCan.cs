@@ -26,7 +26,8 @@ public class OxygenCan : Card
     {
         TryGetComponent<EquipmentComponent>(out var component);
         component.isEquipped = true;
-        EquipmentManager.Instance.EquipCard(this);
+        GameManager.Instance.EquipmentBag.AddCard(this);
+        GameManager.Instance.PlayerBag.RemoveCards(this.cardName,1);
         StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, 120);
     }
 
@@ -39,7 +40,8 @@ public class OxygenCan : Card
     {
         TryGetComponent<EquipmentComponent>(out var component);
         component.isEquipped = false;   
-        EquipmentManager.Instance.UnequipCard(this);
+        GameManager.Instance.EquipmentBag.RemoveCards(this.cardName,1);
+        GameManager.Instance.PlayerBag.AddCard(this);
         StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, -120);
     }
 

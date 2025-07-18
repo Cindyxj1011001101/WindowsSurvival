@@ -166,7 +166,7 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
+        //Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
         // 根据点击到的内容清除不必要的选择
     }
 }
