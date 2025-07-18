@@ -1,7 +1,9 @@
 /// <summary>
 /// 氧气面罩
 /// </summary>
-
+public class OxygenMask : Card
+{
+}
 
     // public void Event_Equip()
     // {
