@@ -91,7 +91,7 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    public void DestroyThis()
+    public virtual void DestroyThis()
     {
         slot.RemoveCard(this);
         StopUpdating();

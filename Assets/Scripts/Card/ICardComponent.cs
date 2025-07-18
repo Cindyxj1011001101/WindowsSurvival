@@ -96,6 +96,14 @@ public class ProgressComponent : ICardComponent
 #endregion
 
 #region 装备组件
+public enum EquipmentType
+{
+    Head = 0,
+    Body = 1,
+    Back = 2,
+    Leg = 3,
+}
+
 public class EquipmentComponent : ICardComponent
 {
     public EquipmentType equipmentType;
