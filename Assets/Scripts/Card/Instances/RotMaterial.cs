@@ -24,6 +24,9 @@ public class RotMaterial : Card
     public void Event_Eat()
     {
         DestroyThis();
+        // 播放吃的音效
+        if(SoundManager.Instance != null)
+        {SoundManager.Instance.PlaySound("吃_01",true);}
         //+6饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 6));
         //-20精神值
