@@ -22,7 +22,7 @@ public class OxygenCan : Card
         };
 
         EventManager.Instance.AddListener<Card>(EventType.Equip, OnEquipped);
-        EventManager.Instance.AddListener<Card>(EventType.Equip, OnUnequipped);
+        EventManager.Instance.AddListener<Card>(EventType.Unequip, OnUnequipped);
     }
 
     private void OnEquipped(Card equipment)
@@ -52,7 +52,7 @@ public class OxygenCan : Card
     {
         base.DestroyThis();
         EventManager.Instance.RemoveListener<Card>(EventType.Equip, OnEquipped);
-        EventManager.Instance.RemoveListener<Card>(EventType.Equip, OnUnequipped);
+        EventManager.Instance.RemoveListener<Card>(EventType.Unequip, OnUnequipped);
     }
 
     public void Event_Equip()
