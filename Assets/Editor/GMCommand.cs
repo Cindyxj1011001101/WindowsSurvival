@@ -148,14 +148,6 @@ public class GMCommand
         JsonManager.SaveData(a, "CardA");
         CardA cardA = JsonManager.LoadData<CardA>("CardA");
     }
-
-    [MenuItem("Command/序列化")]
-    public static void N()
-    {
-        Card c = new AquariusFish();
-
-        Debug.Log(JsonManager.SerializeObject(c));
-    }
 }
 
 public abstract class TestCard
