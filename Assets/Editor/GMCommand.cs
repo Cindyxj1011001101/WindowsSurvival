@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 public class GMCommand
@@ -137,5 +139,90 @@ public class GMCommand
     public static void L()
     {
        TimeManager.Instance.AddTime(50);
+    }
+
+    [MenuItem("Command/测试")]
+    public static void M()
+    {
+        CardA a = new(88);
+        JsonManager.SaveData(a, "CardA");
+        CardA cardA = JsonManager.LoadData<CardA>("CardA");
+    }
+}
+
+public abstract class TestCard
+{
+    public abstract string GiveName();
+    public abstract string GiveDescription();
+    public abstract CardType GiveCardType();
+    public abstract List<CardTag> GiveTags();
+    public abstract int GiveMaxStackCount();
+    public abstract bool GiveMoveable();
+    public abstract float GiveWeight();
+    public abstract List<Event> GiveEvents();
+    public abstract Dictionary<System.Type, ICardComponent> GiveComponents();
+}
+
+public class CardA : TestCard
+{
+    private Dictionary<Type, ICardComponent> components = new()
+    {
+        { typeof(FreshnessComponent), new FreshnessComponent(20, null) }
+    };
+
+    private List<Event> events = new()
+    {
+        new Event("使用卡牌A", "使用卡牌A", null, null),
+    };
+
+    public CardA() { }
+    public CardA(int freshness)
+    {
+        (components[typeof(FreshnessComponent)] as FreshnessComponent).freshness = freshness;
+    }
+
+    public override Dictionary<Type, ICardComponent> GiveComponents()
+    {
+        return components;
+    }
+
+    public override CardType GiveCardType()
+    {
+        return CardType.Food;
+    }
+
+    public override string GiveDescription()
+    {
+        return "这是测试卡牌A";
+    }
+
+    public override List<Event> GiveEvents()
+    {
+        return events;
+    }
+
+    public override int GiveMaxStackCount()
+    {
+        return 9;
+    }
+
+    public override bool GiveMoveable()
+    {
+        return false;
+    }
+
+    public override string GiveName()
+    {
+        return "卡牌A";
+    }
+
+    public override List<CardTag> GiveTags()
+    {
+        return new List<CardTag>();
+    }
+
+    public override float GiveWeight()
+    {
+        return 1.2f;
     }
 }

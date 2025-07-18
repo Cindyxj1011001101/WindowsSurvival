@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 /// <summary>
 /// 被捉住的水瓶鱼
 /// </summary>
@@ -13,17 +10,14 @@ public class CaughtAquariusFish : Card
         cardDesc = "一只水瓶鱼，其怀孕时体内的育卵液是重要的淡水来源。";
         cardType = CardType.Creature;
         maxStackNum = 5;
-        moveable = false;
+        moveable = true;
         weight = 1.1f;
-        curEndurance = maxEndurance = 1;
-        tags = new List<CardTag>();
-        events = new List<Event>
+        events = new()
         {
             new Event("放生", "放生水瓶鱼", Event_Release, Judge_Release),
         };
         components = new()
         {
-            { typeof(FreshnessComponent), new FreshnessComponent(1440, OnFreshnessChanged) },
             { typeof(ProgressComponent), new ProgressComponent(5760, null) },
         };
     }
@@ -36,7 +30,7 @@ public class CaughtAquariusFish : Card
 
     public void Event_Release()
     {
-        Use();
+        DestroyThis();
         // 地点中增加一个水瓶鱼
         TryGetComponent<ProgressComponent>(out var component);
         GameManager.Instance.AddCard(new AquariusFish(component.progress), false);
@@ -46,21 +40,4 @@ public class CaughtAquariusFish : Card
     {
         return GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater;
     }
-
-    private void OnFreshnessChanged(int freshness)
-    {
-        if (freshness == 0)
-        {
-            // 腐烂
-            Use();
-            // 其他行为
-        }
-    }
-
-    protected override Action OnUpdate => () =>
-    {
-        TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval);
-        // 因为产物进度不会变化，所以这里没必要添加它的Update
-    };
 }

@@ -1,4 +1,6 @@
-using System.Collections.Generic;
+/// <summary>
+/// 虹吸海葵
+/// </summary>
 public class Siphonophyllum : Card
 {
     public Siphonophyllum()
@@ -7,9 +9,9 @@ public class Siphonophyllum : Card
         cardDesc = "虹吸海葵";
         cardType = CardType.Creature;
         maxStackNum = 5;
-        moveable = true;
+        moveable = false;
         weight = 1.5f;
-        events = new List<Event>()
+        events = new()
         {
             new Event("切割", "切割虹吸海葵", Event_Cut, Judge_Cut)
         };
@@ -21,33 +23,22 @@ public class Siphonophyllum : Card
 
     private void OnProgressFull()
     {
-        Use();
-        TryGetComponent<ProgressComponent>(out var component);
-        GameManager.Instance.AddCard(new SiphonophyllumWithProduct(component.progress), true);
+        DestroyThis();
+        GameManager.Instance.AddCard(new SiphonophyllumWithProduct(), true);
     }
 
     public void Event_Cut()
     {
-        if(GetTool()==null) return;
-        Use();
-        GetTool().Use();
-        TimeManager.Instance.AddTime(15);
+        DestroyThis();
+        var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
+        card.TryGetComponent<DurabilityComponent>(out var component);
+        component.Use();
+        TimeManager.Instance.AddTime(45);
         GameManager.Instance.AddCard(new MagneticTentacle(), true);
         GameManager.Instance.AddCard(new MagneticTentacle(), true);
     }
     public bool Judge_Cut()
     {
-        return GetTool() != null;
-    }
-    public Card GetTool()
-    {
-        foreach (var slot in GameManager.Instance.PlayerBag.Slots)
-        {
-            if (slot.Cards[0].TryGetComponent<ToolComponent>(out var component) && component.toolType == ToolType.Cut)
-            {
-                return slot.Cards[0];
-            }
-        }
-        return null;
+        return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) != null;
     }
 }

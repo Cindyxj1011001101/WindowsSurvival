@@ -89,7 +89,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Right)
+        if (eventData.button == PointerEventData.InputButton.Right && sourceSlot.PeekCard().moveable)
         {
             // 右键点击在玩家背包和环境背包之间传送卡牌，一次一张
             BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();

@@ -1,5 +1,6 @@
-using System.Collections.Generic;   
-
+/// <summary>
+/// 白爆矿
+/// </summary>
 public class WhiteBlastMine : Card
 {
     public WhiteBlastMine()
@@ -10,16 +11,16 @@ public class WhiteBlastMine : Card
         maxStackNum = 10;
         moveable = true;
         weight = 0.9f;
-        events = new List<Event>();
-        events.Add(new Event("敲碎", "敲碎白爆矿", Event_Break,null));
-        tags = new List<CardTag>();
-        components = new();
+        events = new()
+        {
+            new Event("敲碎", "敲碎白爆矿", Event_Break,null)
+        };
     }
 
     public void Event_Break()
     {
         EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
-        if(environmentBag.PlaceData.isIndoor)
+        if (environmentBag.PlaceData.isIndoor)
         {
             StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Oxygen, 80));
         }
@@ -27,6 +28,6 @@ public class WhiteBlastMine : Card
         {
             StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, 80));
         }
-        TimeManager.Instance.AddTime(1);
+        TimeManager.Instance.AddTime(3);
     }
 }

@@ -1,8 +1,10 @@
 using System;
-using System.Collections.Generic;
 
+/// <summary>
+/// 点燃的氧烛
+/// </summary>
 public class LightenedOxygenCandle : Card
-{   
+{
     public LightenedOxygenCandle()
     {
         cardName = "点燃的氧烛";
@@ -10,17 +12,29 @@ public class LightenedOxygenCandle : Card
         cardType = CardType.Tool;
         maxStackNum = 1;
         moveable = true;
-        curEndurance = maxEndurance = 14;
         weight = 1.8f;
-        events = new List<Event>();
-        tags = new List<CardTag>();
-        components = new();
+        components = new()
+        {
+            { typeof(DurabilityComponent), new DurabilityComponent(14, OnDurabilityChanged) }
+        };
     }
+
+    private void OnDurabilityChanged(int durability)
+    {
+        if (durability == 0)
+        {
+            DestroyThis();
+        }
+        slot.RefreshCurrentDisplay();
+    }
+
     protected override Action OnUpdate => () =>
     {
-        Use();
+        // 每回合消耗耐久
+        TryGetComponent<DurabilityComponent>(out var component);
+        component.Use();
         EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
-        if(environmentBag.PlaceData.isIndoor)
+        if (environmentBag.PlaceData.isIndoor)
         {
             StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(EnvironmentStateEnum.Oxygen, 10));
         }

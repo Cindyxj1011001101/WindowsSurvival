@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 废金属
 /// </summary>
@@ -14,9 +12,5 @@ public class ScrapMetal : Card
         maxStackNum = 5;
         moveable = true;
         weight = 0.6f;
-        curEndurance = maxEndurance = 1;
-        tags = new();
-        events = new List<Event>();
-        components = new();
     }
 }

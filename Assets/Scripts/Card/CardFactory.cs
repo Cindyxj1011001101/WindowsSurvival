@@ -17,6 +17,7 @@ public static class CardFactory
             "压缩饼干" => new CompactBiscuit(),
             "珊瑚" => new Coral(),
             "通往驾驶室的门" => new DoorToCockpit(),
+            "通往维生舱的门" => new DoorToLifeSupportCabin(),
             "通往动力舱的门" => new DoorToPowerCabin(),
             "捞网" => new FishingNet(),
             "玻璃" => new Glass(),

@@ -1,5 +1,6 @@
-using System.Collections.Generic;
-
+/// <summary>
+/// 人力发电机
+/// </summary>
 public class HumanPoweredGenerator : Card
 {
     public HumanPoweredGenerator()
@@ -8,12 +9,12 @@ public class HumanPoweredGenerator : Card
         cardDesc = "麦麦的父母都是香蕉寰宇联合体的人力发电工，她对这台机器可太熟了。她拼命地想摆脱这一切，可即使逃到异星还是躲不开跑轮子的命运吗？";
         cardType = CardType.Construction;
         maxStackNum = 1;
-        moveable = true;
-        weight = 0.9f;
-        events = new List<Event>();
-        events.Add(new Event("人力发电", "人力发电", Event_Generate, Judge_Generate));
-        tags = new List<CardTag>();
-        components = new();
+        moveable = false;
+        weight = 0f;
+        events = new()
+        {
+            new Event("人力发电", "人力发电", Event_Generate, Judge_Generate),
+        };
     }
 
     public void Event_Generate()
@@ -26,9 +27,9 @@ public class HumanPoweredGenerator : Card
 
     public bool Judge_Generate()
     {
-        if(slot.Bag is EnvironmentBag environmentBag)
+        if (slot.Bag is EnvironmentBag environmentBag)
         {
-            if(environmentBag.EnvironmentStateDict[EnvironmentStateEnum.HasCable].curValue==1)
+            if (environmentBag.EnvironmentStateDict[EnvironmentStateEnum.HasCable].curValue == 1)
             {
                 return true;
             }

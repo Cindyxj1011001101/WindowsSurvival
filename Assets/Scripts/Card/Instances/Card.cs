@@ -26,9 +26,9 @@ public enum CardType
 public abstract class Card : IComparable<Card>
 {
     [JsonIgnore]
-    public virtual string cardName { get; set; } // 显示名称
+    public string cardName; // 显示名称
     [JsonIgnore]
-    public virtual string cardDesc { get; set; } // 描述
+    public string cardDesc; // 描述
     [JsonIgnore]
     public CardType cardType; // 卡牌类型
     [JsonIgnore]
@@ -38,11 +38,9 @@ public abstract class Card : IComparable<Card>
     [JsonIgnore]
     public float weight; // 重量
     [JsonIgnore]
-    public List<CardTag> tags; // 标签
+    public List<CardTag> tags = new(); // 标签
     [JsonIgnore]
-    public List<Event> events; // 可交互事件
-    public int maxEndurance; // 最大耐久度
-    public int curEndurance; // 当前耐久度
+    public List<Event> events = new(); // 可交互事件
 
     public Dictionary<Type, ICardComponent> components = new();
 
@@ -53,7 +51,6 @@ public abstract class Card : IComparable<Card>
     public virtual Sprite CardImage
     {
         get => Resources.Load<Sprite>("CardImage/" + cardName);
-        set { }
     }
 
     /// <summary>
@@ -78,21 +75,6 @@ public abstract class Card : IComparable<Card>
     public void StopUpdating()
     {
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
-    }
-
-    public virtual void Use()
-    {
-        // 无限耐久
-        if (maxEndurance < 0) return;
-
-        // 耐久--
-        curEndurance--;
-        if (curEndurance <= 0)
-            // 销毁卡牌
-            DestroyThis();
-        else
-            // 刷新前端显示的卡牌数据
-            slot.RefreshCurrentDisplay();
     }
 
     public void DestroyThis()
@@ -125,7 +107,8 @@ public abstract class Card : IComparable<Card>
         else
         {
             // 耐久度低的优先
-            return curEndurance - other.curEndurance;
+            //return curEndurance - other.curEndurance;
+            return 0;
         }
     }
 }
