@@ -4,10 +4,10 @@ using UnityEngine;
 
 public static class JsonManager
 {
-    static JsonSerializerSettings settings = new JsonSerializerSettings
+    static JsonSerializerSettings settings = new()
     {
         ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-        TypeNameHandling = TypeNameHandling.Auto, // 存储类型信息
+        TypeNameHandling = TypeNameHandling.All, // 存储类型信息
         Formatting = Formatting.Indented
     };
 
@@ -52,7 +52,7 @@ public static class JsonManager
         return DeserializeObject<T>(json);
     }
 
-    public static string SerializeObject(object obj)
+    public static string SerializeObject<T>(T obj)
     {
         return JsonConvert.SerializeObject(obj, settings);
     }
