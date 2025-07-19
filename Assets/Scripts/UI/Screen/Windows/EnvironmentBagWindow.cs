@@ -53,7 +53,6 @@ public class EnvironmentBagWindow : BagWindow
     private void OnMove(EnvironmentBag curEnvironmentBag)
     {
         // 新的环境信息
-        // TODO：所有环境状态变化UI刷新,当前环境中不包含的UI关闭
         foreach (var state in EnvironmentStateSliders)
         {
             //室内显示氧气
@@ -74,6 +73,7 @@ public class EnvironmentBagWindow : BagWindow
             {
                 EnvironmentStateSliders[EnvironmentStateEnum.Height].SetActive(false);
             }
+            OnEnvironmentChangeState(new RefreshEnvironmentStateArgs(curEnvironmentBag.PlaceData.placeType, state.Key));
         }
         discoveryDegreeText.text = $"{Math.Round(curEnvironmentBag.DiscoveryDegree, 3) * 100} %";
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
@@ -92,7 +92,6 @@ public class EnvironmentBagWindow : BagWindow
             if (EnvironmentStateSliders.ContainsKey(args.state) && GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict.ContainsKey(args.state))
             {
                 float resultValue = 0;
-                //TODO：压强显示为文字
                 if (args.state == EnvironmentStateEnum.Electricity)
                 {
                     resultValue = StateManager.Instance.Electricity / GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue;
