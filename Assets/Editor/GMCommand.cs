@@ -167,4 +167,13 @@ public class GMCommand
     {
         AddCard("渗水裂缝");
     }
+
+    [MenuItem("Command/测试读取卡牌配置")]
+    public static void R()
+    {
+        foreach (var config in ExcelReader.ReadCardConfig("CardConfig"))
+        {
+            Debug.Log(config);
+        }
+    }
 }
