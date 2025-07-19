@@ -3,7 +3,7 @@
 /// </summary>
 public class CompactBiscuit : Card
 {
-    public CompactBiscuit()
+    private CompactBiscuit()
     {
         events = new()
         {

@@ -3,7 +3,7 @@
 /// </summary>
 public class CaughtAquariusFish : Card
 {
-    public CaughtAquariusFish()
+    private CaughtAquariusFish()
     {
         events = new()
         {

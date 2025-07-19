@@ -3,7 +3,7 @@
 /// </summary>
 public class AirtightDoor : Card
 {
-    public AirtightDoor()
+    private AirtightDoor()
     {
         events = new()
         {

@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class AquariusFish : Card
 {
-    public AquariusFish()
+    private AquariusFish()
     {
         events = new()
         {

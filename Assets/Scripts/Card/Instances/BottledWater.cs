@@ -3,7 +3,7 @@
 /// </summary>
 public class BottledWater : Card
 {
-    public BottledWater()
+    private BottledWater()
     {
         events = new()
         {

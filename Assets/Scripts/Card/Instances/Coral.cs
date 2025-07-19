@@ -3,4 +3,8 @@
 /// </summary>
 public class Coral : Card
 {
+    private Coral()
+    {
+
+    }
 }

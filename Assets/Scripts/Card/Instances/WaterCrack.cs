@@ -3,7 +3,7 @@
 /// </summary>
 public class WaterCrack : Card
 {
-    public WaterCrack()
+    private WaterCrack()
     {
         events = new()
         {

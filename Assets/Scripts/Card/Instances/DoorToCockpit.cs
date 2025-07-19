@@ -3,7 +3,7 @@
 /// </summary>
 public class DoorToCockpit : Card
 {
-    public DoorToCockpit()
+    private DoorToCockpit()
     {
         events = new()
         {

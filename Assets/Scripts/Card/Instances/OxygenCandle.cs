@@ -2,8 +2,8 @@
 /// 氧烛
 /// </summary>
 public class OxygenCandle : Card
-{   
-    public OxygenCandle()
+{
+    private OxygenCandle()
     {
         events = new()
         {

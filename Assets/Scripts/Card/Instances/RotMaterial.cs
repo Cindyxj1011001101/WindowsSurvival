@@ -3,7 +3,7 @@
 /// </summary>
 public class RotMaterial : Card
 {
-    public RotMaterial()
+    private RotMaterial()
     {
         events = new()
         {

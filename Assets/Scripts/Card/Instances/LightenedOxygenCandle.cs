@@ -5,6 +5,11 @@ using System;
 /// </summary>
 public class LightenedOxygenCandle : Card
 {
+    private LightenedOxygenCandle()
+    {
+
+    }
+
     protected override Action OnUpdate => () =>
     {
         // 每回合消耗耐久

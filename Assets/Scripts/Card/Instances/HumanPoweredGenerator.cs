@@ -3,7 +3,7 @@
 /// </summary>
 public class HumanPoweredGenerator : Card
 {
-    public HumanPoweredGenerator()
+    private HumanPoweredGenerator()
     {
         events = new()
         {

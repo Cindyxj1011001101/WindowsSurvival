@@ -3,7 +3,7 @@
 /// </summary>
 public class WhiteBlastMine : Card
 {
-    public WhiteBlastMine()
+    private WhiteBlastMine()
     {
         events = new()
         {

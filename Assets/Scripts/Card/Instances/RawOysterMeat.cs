@@ -3,7 +3,7 @@
 /// </summary>
 public class RawOysterMeat : Card
 {
-    public RawOysterMeat()
+    private RawOysterMeat()
     {
         events = new()
         {

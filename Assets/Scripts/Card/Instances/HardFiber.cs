@@ -3,4 +3,8 @@
 /// </summary>
 public class HardFiber : Card
 {
+    private HardFiber()
+    {
+
+    }
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class WasteHeap : Card
 {
-    public WasteHeap()
+    private WasteHeap()
     {
         events = new()
         {

@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class SiphonophyllumWithProduct : Card
 {
-    public SiphonophyllumWithProduct()
+    private SiphonophyllumWithProduct()
     {
         events = new()
         {

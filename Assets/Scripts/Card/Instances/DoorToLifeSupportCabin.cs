@@ -3,7 +3,7 @@
 /// </summary>
 public class DoorToLifeSupportCabin : Card
 {
-    public DoorToLifeSupportCabin()
+    private DoorToLifeSupportCabin()
     {
         events = new()
         {

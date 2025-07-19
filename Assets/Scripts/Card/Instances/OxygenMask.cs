@@ -3,7 +3,7 @@
 /// </summary>
 public class OxygenMask : Card
 {
-    public OxygenMask()
+    private OxygenMask()
     {
         events = new()
         {

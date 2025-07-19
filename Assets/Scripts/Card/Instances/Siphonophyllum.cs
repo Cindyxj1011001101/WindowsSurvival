@@ -5,7 +5,7 @@ using System;
 /// </summary>
 public class Siphonophyllum : Card
 {
-    public Siphonophyllum()
+    private Siphonophyllum()
     {
         events = new()
         {

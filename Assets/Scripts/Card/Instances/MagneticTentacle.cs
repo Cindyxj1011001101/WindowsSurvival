@@ -5,7 +5,7 @@ using System;
 /// </summary>
 public class MagneticTentacle : Card
 {
-    public MagneticTentacle()
+    private MagneticTentacle()
     {
         events = new()
         {

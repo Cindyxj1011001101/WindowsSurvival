@@ -3,4 +3,8 @@
 /// </summary>
 public class FishingNet : Card
 {
+    private FishingNet()
+    {
+
+    }
 }

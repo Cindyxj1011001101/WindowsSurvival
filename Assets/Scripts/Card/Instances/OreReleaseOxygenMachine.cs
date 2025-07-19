@@ -16,7 +16,7 @@ public class OreReleaseOxygenMachine : Card
     public int oreConsumption; // 白爆矿消耗量
     public float electricityConsumption; // 电力消耗量
 
-    public OreReleaseOxygenMachine()
+    private OreReleaseOxygenMachine()
     {
         maxOxygenStorage = 360;
         curOxygenStorage = 0;

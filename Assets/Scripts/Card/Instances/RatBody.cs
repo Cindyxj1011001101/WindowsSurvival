@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class RatBody : Card
 {
-    public RatBody()
+    private RatBody()
     {
         events = new()
         {

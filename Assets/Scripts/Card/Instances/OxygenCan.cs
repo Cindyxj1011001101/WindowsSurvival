@@ -3,7 +3,7 @@
 /// </summary>
 public class OxygenCan : Card
 {
-    public OxygenCan()
+    private OxygenCan()
     {
         events = new()
         {

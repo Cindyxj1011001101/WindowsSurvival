@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class LoveBeadWithProduct : Card
 {
-    public LoveBeadWithProduct()
+    private LoveBeadWithProduct()
     {
         events = new()
         {

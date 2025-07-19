@@ -5,7 +5,7 @@ using System;
 /// </summary>
 public class LoveBead : Card
 {
-    public LoveBead()
+    private LoveBead()
     {
         events = new()
         {
