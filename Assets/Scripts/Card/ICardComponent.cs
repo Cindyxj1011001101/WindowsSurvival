@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 using UnityEngine.Events;
 
 /// <summary>
@@ -34,6 +35,14 @@ public class FreshnessComponent : ICardComponent
             onRotton?.Invoke();
         }
     }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"新鲜度: {freshness}/{maxFreshness}\t");
+        sb.Append($"更新速率: {updateRate}");
+        return sb.ToString();
+    }
 }
 #endregion
 
@@ -64,6 +73,14 @@ public class GrowthComponent : ICardComponent
             onGrownUp?.Invoke();
         }
     }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"生长度: {growth}/{maxGrowth}\t");
+        sb.Append($"更新速率: {updateRate}");
+        return sb.ToString();
+    }
 }
 #endregion
 
@@ -93,6 +110,14 @@ public class ProgressComponent : ICardComponent
             onProgressFull?.Invoke();
         }
     }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"产物进度: {progress}/{maxProgress}\t");
+        sb.Append($"更新速率: {updateRate}");
+        return sb.ToString();
+    }
 }
 #endregion
 
@@ -114,6 +139,14 @@ public class EquipmentComponent : ICardComponent
     {
         isEquipped = false;
         this.equipmentType = equipmentType;
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"装备类型: {equipmentType}\t");
+        sb.Append($"是否装备: {isEquipped}");
+        return sb.ToString();
     }
 }
 #endregion
@@ -138,6 +171,17 @@ public class ToolComponent : ICardComponent
     {
         this.toolTypes = toolTypes;
     }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("工具类型: \t");
+        foreach (var type in toolTypes)
+        {
+            sb.Append($"- {type}\t");
+        }
+        return sb.ToString();
+    }
 }
 #endregion
 
@@ -150,6 +194,13 @@ public class DurabilityComponent : ICardComponent
     public DurabilityComponent(int maxDurability)
     {
         durability = this.maxDurability = maxDurability;
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"耐久度: {durability}/{maxDurability}");
+        return sb.ToString();
     }
 }
 #endregion

@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -134,6 +135,29 @@ public abstract class Card : IComparable<Card>
         {
             return 0;
         }
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine($"卡牌名称: {cardName}");
+        sb.AppendLine($"卡牌描述: {cardDesc}");
+        sb.AppendLine($"卡牌类型: {cardType}");
+        sb.AppendLine($"最大堆叠数: {maxStackNum}");
+        sb.AppendLine($"可移动: {moveable}");
+        sb.AppendLine($"重量: {weight}");
+        sb.AppendLine($"标签: {string.Join(", ", tags)}");
+        sb.AppendLine($"事件数量: {events.Count}");
+        foreach (var ev in events)
+        {
+            sb.AppendLine($"  - 事件名称: {ev.name}, 描述: {ev.description}");
+        }
+        sb.AppendLine($"组件数量: {components.Count}");
+        foreach (var kvp in components)
+        {
+            sb.AppendLine($"  - 组件类型: {kvp.Key.Name}, 实例: {kvp.Value}");
+        }
+        return sb.ToString();
     }
 }
 

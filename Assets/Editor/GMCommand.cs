@@ -148,51 +148,10 @@ public class GMCommand
         AddCard("氧气面罩");
     }
 
-    [MenuItem("Command/读取Excel")]
+    [MenuItem("Command/从Excel创建一个水瓶鱼")]
     public static void O()
     {
-        var configs = ExcelReader.ReadCardConfig("CardConfig");
-        var config = configs["水瓶鱼"];
-        Card a = new AquariusFish()
-        {
-            cardName = config.CardName,
-            cardDesc = config.CardDesc,
-            cardType = config.CardType,
-            maxStackNum = config.MaxStackCount,
-            moveable = config.Moveable,
-            weight = config.Weight,
-            tags = config.Tags,
-        };
-        if (config.HasFreshness)
-        {
-            a.components.Add(typeof(FreshnessComponent), new FreshnessComponent(config.MaxFreshness));
-        }
-        if (config.HasDurability)
-        {
-            a.components.Add(typeof(DurabilityComponent), new DurabilityComponent(config.MaxDurability));
-        }
-        if (config.HasGrowth)
-        {
-            a.components.Add(typeof(GrowthComponent), new GrowthComponent(config.MaxGrowth));
-        }
-        if (config.HasProgress)
-        {
-            a.components.Add(typeof(ProgressComponent), new ProgressComponent(config.MaxProgress));
-        }
-        if (config.IsEquipment)
-        {
-            a.components.Add(typeof(EquipmentComponent), new EquipmentComponent(config.EquipmentType));
-        }
-        if (config.IsTool)
-        {
-            a.components.Add(typeof(ToolComponent), new ToolComponent(config.ToolTypes));
-        }
-
-        var jsonStr = JsonConvert.SerializeObject(a, Formatting.Indented, new JsonSerializerSettings
-        {
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            TypeNameHandling = TypeNameHandling.All
-        });
-        Debug.Log(jsonStr);
+        var card = CardFactory.CreateCardFromExcel("水瓶鱼");
+        Debug.Log(card);
     }
 }
