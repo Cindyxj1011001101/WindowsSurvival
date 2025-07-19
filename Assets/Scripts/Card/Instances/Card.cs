@@ -21,6 +21,7 @@ public enum CardType
     Equipment,//装备
     Creature,//生物
     Construction,//建筑
+    Other,//其他
 }
 
 
