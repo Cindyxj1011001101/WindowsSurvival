@@ -173,6 +173,97 @@ public static class ExcelReader
             DisposableDropList disposableDropList = new() { maxCount = dropList.Count, dropList = dropList };
             JsonManager.SaveData(disposableDropList, table.TableName + "一次性掉落列表");
         }
+        Debug.Log("Disposable drop list generated successfully!");
+    }
+
+    public static void GenerateRepeatableDropListJson(string fileName)
+    {
+        // 打开Excel文件
+        using FileStream fs = File.Open(Application.dataPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
+        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+        DataSet result = excelReader.AsDataSet();
+
+
+        foreach (DataTable table in result.Tables)
+        {
+            DataRow emptyPopulationConfig = table.Rows[1]; // 假设第一行是空种群配置
+
+            Population emptyPopulation = new()
+            {
+                curSize = int.Parse(emptyPopulationConfig[2].ToString()),
+                maxSize = int.Parse(emptyPopulationConfig[3].ToString()),
+                sizeChangePerRound = int.Parse(emptyPopulationConfig[4].ToString()),
+            };
+            int sizeChangeOnNotCaught = int.Parse(emptyPopulationConfig[6].ToString());
+
+            // 假设每个表都是重复掉落列表
+            List <Population> populationList = new();
+            DataRow row;
+            for (int i = 2; i < table.Rows.Count; i++) // 从2开始跳过表头个空种群配置
+            {
+                row = table.Rows[i];
+                // 读取掉落配置
+                PopulationConfig config = new()
+                {
+                    CardId = row[0].ToString(),
+                    DropNum = int.Parse(row[1].ToString()),
+                    Size = int.Parse(row[2].ToString()),
+                    MaxSize = int.Parse(row[3].ToString()),
+                    SizeChangePerRound = int.Parse(row[4].ToString()),
+                    SizeChangeOnCaught = int.Parse(row[5].ToString()),
+                    OverwriteFreshness = bool.Parse(row[7].ToString()),
+                    OverwriteDurability = bool.Parse(row[9].ToString()),
+                    OverwriteGrowth = bool.Parse(row[11].ToString()),
+                    OverwriteProgress = bool.Parse(row[13].ToString())
+                };
+                // 创建卡牌实例
+                var card = CardFactory.CreateCard(config.CardId);
+                // 覆写卡牌属性
+                if (config.OverwriteFreshness)
+                {
+                    config.freshness = int.Parse(row[8].ToString());
+                    if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
+                        freshnessComponent.freshness = config.freshness; // 设置新鲜度
+                }
+                if (config.OverwriteDurability)
+                {
+                    config.Durability = int.Parse(row[10].ToString());
+                    if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
+                        durabilityComponent.durability = config.Durability; // 设置耐久度
+                }
+                if (config.OverwriteGrowth)
+                {
+                    config.Growth = int.Parse(row[12].ToString());
+                    if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
+                        growthComponent.growth = config.Growth; // 设置生长进度
+                }
+                if (config.OverwriteProgress)
+                {
+                    config.Progress = int.Parse(row[14].ToString());
+                    if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
+                        progressComponent.progress = config.Progress; // 设置产物进度
+                }
+                // 添加到掉落列表
+                populationList.Add(new Population()
+                {
+                    card = card,
+                    dropNum = config.DropNum,
+                    curSize = config.Size,
+                    maxSize = config.MaxSize,
+                    sizeChangePerRound = config.SizeChangePerRound,
+                    sizeChangeOnCaught = config.SizeChangeOnCaught
+                });
+            }
+            // 保存为Json
+            RepeatableDropList repeatableDropList = new()
+            {
+                emptyPopulation = emptyPopulation,
+                emptyPopulationSizeChangeOnNotCaught = sizeChangeOnNotCaught,
+                populationList = populationList
+            };
+            JsonManager.SaveData(repeatableDropList, table.TableName + "重复掉落列表");
+        }
+        Debug.Log("Repeatable drop list generated successfully!");
     }
 }
 public class CardConfig
@@ -205,6 +296,24 @@ public class DropConfig
     public string CardId; // 卡牌
     public int DropNum; // 掉落数量
     public int DropProb;
+    public bool OverwriteFreshness; // 是否覆盖新鲜度
+    public int freshness; // 新鲜度
+    public bool OverwriteDurability; // 是否覆盖耐久度
+    public int Durability; // 耐久度
+    public bool OverwriteGrowth;
+    public int Growth; // 生长进度
+    public bool OverwriteProgress; // 是否覆盖产物进度
+    public int Progress;
+}
+
+public class PopulationConfig
+{
+    public string CardId; // 卡牌ID
+    public int DropNum; // 掉落数量
+    public int Size; // 人口数量
+    public int MaxSize; // 最大人口数量
+    public int SizeChangePerRound; // 每回合数量变化
+    public int SizeChangeOnCaught; // 捕捞后的数量变化
     public bool OverwriteFreshness; // 是否覆盖新鲜度
     public int freshness; // 新鲜度
     public bool OverwriteDurability; // 是否覆盖耐久度

@@ -155,9 +155,10 @@ public class GMCommand
         Debug.Log(card);
     }
 
-    [MenuItem("Command/生成一次性掉落列表的Json文件")]
+    [MenuItem("Command/生成掉落列表的Json文件")]
     public static void P()
     {
         ExcelReader.GenerateDisposableDropListJson("DisposableDropListConfig");
+        ExcelReader.GenerateRepeatableDropListJson("RepeatableDropListConfig");
     }
 }
