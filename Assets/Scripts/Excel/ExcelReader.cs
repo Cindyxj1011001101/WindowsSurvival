@@ -21,6 +21,7 @@ public static class ExcelReader
         for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
         {
             row = table.Rows[i];
+            if (string.IsNullOrEmpty(row[0].ToString())) break; // 如果卡牌ID为空，跳出循环
             CardConfig cardConfig = new()
             {
                 CardId = row[0].ToString(),
