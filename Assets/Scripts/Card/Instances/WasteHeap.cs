@@ -7,19 +7,9 @@ public class WasteHeap : Card
 {
     public WasteHeap()
     {
-        cardName = "废料堆";
-        cardDesc = "被安全泡沫覆盖的废料堆。";
-        cardType = CardType.ResourcePoint;
-        maxStackNum = 1;
-        moveable = false;
-        weight = 0f;
         events = new()
         {
             new Event("挖掘", "挖掘废料堆", Event_Dig, null)
-        };
-        components = new()
-        {
-            { typeof(DurabilityComponent), new DurabilityComponent(5) }
         };
     }
 
@@ -38,32 +28,32 @@ public class WasteHeap : Card
         int rand = Random.Range(0, 20);
         if (rand < 5)
         {
-            GameManager.Instance.AddCard(new ScrapMetal(), true);
-            GameManager.Instance.AddCard(new ScrapMetal(), true);
+            GameManager.Instance.AddCard("废金属", true);
+            GameManager.Instance.AddCard("废金属", true);
         }
         else if (rand < 9)
         {
-            GameManager.Instance.AddCard(new ScrapMetal(), true);
+            GameManager.Instance.AddCard("废金属", true);
         }
         else if (rand < 13)
         {
-            GameManager.Instance.AddCard(new HardFiber(), true);
+            GameManager.Instance.AddCard("硬质纤维", true);
         }
         else if (rand < 16)
         {
-            GameManager.Instance.AddCard(new CompactBiscuit(), true);
+            GameManager.Instance.AddCard("压缩饼干", true);
         }
         else if (rand < 17)
         {
-            GameManager.Instance.AddCard(new RatBody(), true);
+            GameManager.Instance.AddCard("老鼠尸体", true);
         }
         else if (rand < 18)
         {
-            GameManager.Instance.AddCard(new RotMaterial(), true);
+            GameManager.Instance.AddCard("腐烂物", true);
         }
         else
         {
-            GameManager.Instance.AddCard(new OxygenCandle(), true);
+            GameManager.Instance.AddCard("氧烛", true);
         }
     }
 }

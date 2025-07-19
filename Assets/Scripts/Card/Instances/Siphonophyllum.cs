@@ -7,26 +7,16 @@ public class Siphonophyllum : Card
 {
     public Siphonophyllum()
     {
-        cardName = "虹吸海葵";
-        cardDesc = "虹吸海葵";
-        cardType = CardType.Creature;
-        maxStackNum = 5;
-        moveable = false;
-        weight = 1.5f;
         events = new()
         {
             new Event("切割", "切割虹吸海葵", Event_Cut, Judge_Cut)
-        };
-        components = new()
-        {
-            { typeof(ProgressComponent), new ProgressComponent(3600) },
         };
     }
 
     private void OnProgressFull()
     {
         DestroyThis();
-        GameManager.Instance.AddCard(new SiphonophyllumWithProduct(), true);
+        GameManager.Instance.AddCard("有产物的虹吸海葵", true);
     }
 
     public void Event_Cut()
@@ -35,8 +25,8 @@ public class Siphonophyllum : Card
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
         card.TryUse();
         TimeManager.Instance.AddTime(45);
-        GameManager.Instance.AddCard(new MagneticTentacle(), true);
-        GameManager.Instance.AddCard(new MagneticTentacle(), true);
+        GameManager.Instance.AddCard("磁性触手", true);
+        GameManager.Instance.AddCard("磁性触手", true);
     }
 
     public bool Judge_Cut()

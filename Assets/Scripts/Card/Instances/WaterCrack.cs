@@ -5,12 +5,6 @@ public class WaterCrack : Card
 {
     public WaterCrack()
     {
-        cardName = "渗水裂缝";
-        cardDesc = "飞船外壳的裂缝，正不断地漏水进来，如果不赶紧堵起来的话，一切就都结束了。";
-        cardType = CardType.Place;
-        maxStackNum = 1;
-        moveable = false;
-        weight = 0f;
         events = new()
         {
             new Event("堵住", "堵住渗水裂缝", Event_Fix, Jugde_Fix),
@@ -36,8 +30,8 @@ public class WaterCrack : Card
         if (environmentBag != null)
         {
             StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(environmentBag.PlaceData.placeType, EnvironmentStateEnum.Height, 0.3f));
-            (slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue-=8;
-            if((slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue<=0)
+            (slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue -= 8;
+            if ((slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue <= 0)
             {
                 (slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue = 0;
             }

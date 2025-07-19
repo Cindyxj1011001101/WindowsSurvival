@@ -5,20 +5,10 @@ public class OxygenMask : Card
 {
     public OxygenMask()
     {
-        cardName = "氧气面罩";
-        cardDesc = "用于水下探索的简易氧气面罩，让你能看清水下世界。";
-        cardType = CardType.Equipment;
-        maxStackNum = 1;
-        moveable = true;
-        weight = 1.1f;
         events = new()
         {
             new Event("装备", "装备氧气面罩", Event_Equip, Judge_Equip),
             new Event("卸下", "卸下氧气面罩", Event_UnEquip, Judge_UnEquip)
-        };
-        components = new()
-        {
-            { typeof(EquipmentComponent), new EquipmentComponent(EquipmentType.Head) }
         };
 
         EventManager.Instance.AddListener<Card>(EventType.Equip, OnEquipped);

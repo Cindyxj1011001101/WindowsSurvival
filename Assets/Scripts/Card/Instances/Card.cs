@@ -27,32 +27,25 @@ public enum CardType
 //卡牌基类
 public abstract class Card : IComparable<Card>
 {
-    [JsonIgnore]
+    public string cardId; // 卡牌ID
     public string cardName; // 显示名称
-    [JsonIgnore]
     public string cardDesc; // 描述
-    [JsonIgnore]
+    public string imagePath; // 图片路径
     public CardType cardType; // 卡牌类型
-    [JsonIgnore]
     public int maxStackNum; // 最大堆叠数
-    [JsonIgnore]
     public bool moveable; // 能否移动
-    [JsonIgnore]
     public float weight; // 重量
-    [JsonIgnore]
     public List<CardTag> tags = new(); // 标签
+    public Dictionary<Type, ICardComponent> components = new();
+
     [JsonIgnore]
     public List<Event> events = new(); // 可交互事件
-    public Dictionary<Type, ICardComponent> components = new();
 
     [JsonIgnore]
     public CardSlot slot;
 
     [JsonIgnore]
-    public virtual Sprite CardImage
-    {
-        get => Resources.Load<Sprite>("Sprites/" + cardName);
-    }
+    public Sprite CardImage => Resources.Load<Sprite>("Sprites/" + imagePath);
 
     /// <summary>
     /// 每回合结算时执行
@@ -73,6 +66,9 @@ public abstract class Card : IComparable<Card>
             EventManager.Instance.AddListener(EventType.IntervalSettle, OnUpdate);
     }
 
+    /// <summary>
+    /// 结束监听每回合的结算
+    /// </summary>
     public void StopUpdating()
     {
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
@@ -98,6 +94,12 @@ public abstract class Card : IComparable<Card>
         StopUpdating();
     }
 
+    /// <summary>
+    /// 获取卡牌的组件
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="component"></param>
+    /// <returns></returns>
     public bool TryGetComponent<T>(out T component) where T : ICardComponent
     {
         if (components.TryGetValue(typeof(T), out var comp))
@@ -108,6 +110,18 @@ public abstract class Card : IComparable<Card>
 
         component = default;
         return false;
+    }
+
+    /// <summary>
+    /// 继承其他卡牌的组件
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="other"></param>
+    public void InheritComponent<T>(Card other) where T : ICardComponent
+    {
+        // 如果other有该组件，并且当前卡牌也有该组件，则复制一份
+        if (other.TryGetComponent<T>(out var component) && TryGetComponent<T>(out _))
+            components[typeof(T)] = JsonManager.DeepCopy(component);
     }
 
     public int CompareTo(Card other)

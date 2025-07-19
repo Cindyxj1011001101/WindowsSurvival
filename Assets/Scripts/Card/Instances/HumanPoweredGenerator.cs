@@ -5,12 +5,6 @@ public class HumanPoweredGenerator : Card
 {
     public HumanPoweredGenerator()
     {
-        cardName = "人力发电机";
-        cardDesc = "麦麦的父母都是香蕉寰宇联合体的人力发电工，她对这台机器可太熟了。她拼命地想摆脱这一切，可即使逃到异星还是躲不开跑轮子的命运吗？";
-        cardType = CardType.Construction;
-        maxStackNum = 1;
-        moveable = false;
-        weight = 0f;
         events = new()
         {
             new Event("人力发电", "人力发电", Event_Generate, Judge_Generate),

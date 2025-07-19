@@ -120,19 +120,19 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
-    /// 判断该卡牌格是否放有同类卡牌
+    /// 判断该卡牌格是否放有同类卡牌（名称相同即同类）
     /// </summary>
     /// <param name="cardName"></param>
     /// <returns></returns>
     public bool ContainsSimilarCard(string cardName) => !IsEmpty && cardName == cards[0].cardName;
-    
+
     /// <summary>
-    /// 能否堆叠，在使用该方法前请务必确认要堆叠的卡牌和这个slot放有的卡牌是同类的
+    /// 能否添加指定卡牌，只有id相同才能堆叠
     /// </summary>
     /// <returns></returns>
     public virtual bool CanAddCard(Card card)
     {
-        return IsEmpty || (ContainsSimilarCard(card.cardName) && StackCount < card.maxStackNum);
+        return IsEmpty || (card.cardId == cards[0].cardId && StackCount < card.maxStackNum);
     }
 
     /// <summary>
