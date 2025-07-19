@@ -1,4 +1,5 @@
-﻿using UnityEngine.Events;
+﻿using System.Collections.Generic;
+using UnityEngine.Events;
 
 /// <summary>
 /// 组件接口
@@ -126,11 +127,16 @@ public enum ToolType
 
 public class ToolComponent : ICardComponent
 {
-    public ToolType toolType;
+    public List<ToolType> toolTypes;
 
-    public ToolComponent(ToolType toolType)
+    public ToolComponent(params ToolType[] toolTypes)
     {
-        this.toolType = toolType;
+        this.toolTypes = new List<ToolType>(toolTypes);
+    }
+
+    public ToolComponent(List<ToolType> toolTypes)
+    {
+        this.toolTypes = toolTypes;
     }
 }
 #endregion

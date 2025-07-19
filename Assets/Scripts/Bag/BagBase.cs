@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -169,7 +170,8 @@ public abstract class BagBase : MonoBehaviour
             var card = slot.PeekCard();
             if (card.TryGetComponent<ToolComponent>(out var component))
             {
-                if (toolTypes.Contains(component.toolType)) return card;
+                // 如果卡牌的工具类型与传入的列表有交集，则返回该卡牌
+                if (component.toolTypes.Intersect(toolTypes).Any()) return card;
             }
         }
 
@@ -190,7 +192,7 @@ public abstract class BagBase : MonoBehaviour
             var card = slot.PeekCard();
             if (card.TryGetComponent<ToolComponent>(out var component))
             {
-                if (toolType == component.toolType) return card;
+                if (component.toolTypes.Contains(toolType)) return card;
             }
         }
 
