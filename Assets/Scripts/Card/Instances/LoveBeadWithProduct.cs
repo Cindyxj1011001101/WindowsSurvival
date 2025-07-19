@@ -17,14 +17,15 @@ public class LoveBeadWithProduct : Card
     #region 事件
     public void Event_OpenByTool()
     {
+        var sourceBag = slot.Bag;
         DestroyThis();
         Card tool = GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig });
         tool.TryUse();
 
         // 变回爱情贝
-        GameManager.Instance.AddCard("爱情贝", true);
+        // 如果原来在玩家背包，则优先添加到玩家背包，否则添加到环境里
+        GameManager.Instance.AddCard("爱情贝", sourceBag is PlayerBag);
         TimeManager.Instance.AddTime(15);
-        List<Card> cards = new();
         //撬开概率
         int random = Random.Range(0, 15);
         if (random < 3)

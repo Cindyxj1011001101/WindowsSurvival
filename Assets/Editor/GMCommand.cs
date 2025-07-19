@@ -140,10 +140,16 @@ public class GMCommand
     {
         TimeManager.Instance.AddTime(50);
     }
-    [MenuItem("Command/添加/装备")]
+
+    [MenuItem("Command/添加/氧气罐")]
     public static void M()
     {
         AddCard("氧气罐");
+    }
+
+    [MenuItem("Command/添加/氧气面罩")]
+    public static void N()
+    {
         AddCard("氧气面罩");
     }
 

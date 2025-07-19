@@ -32,9 +32,10 @@ public class SiphonophyllumWithProduct : Card
 
     public void Event_Collect()
     {
+        var sourceBag = slot.Bag;
         DestroyThis();
         // 变回虹吸海葵
-        GameManager.Instance.AddCard("虹吸海葵", true);
+        GameManager.Instance.AddCard("虹吸海葵", sourceBag is PlayerBag);
         TimeManager.Instance.AddTime(15);
         int random = Random.Range(0, 6);
         if (random < 3)
