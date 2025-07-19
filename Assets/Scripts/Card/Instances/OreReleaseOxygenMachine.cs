@@ -64,8 +64,7 @@ public class OreReleaseOxygenMachine : Card
     #region 获取氧气
     public void Event_GetOxygen()
     {
-        Card backEquipment = EquipmentManager.Instance.BackEquipment;
-        if (backEquipment != null && backEquipment.cardName == "氧气罐")
+        if (GameManager.Instance.EquipmentBag.FindCardOfName("氧气罐") != null)
         {
             Dictionary<PlayerStateEnum, PlayerState> playerStateDict = StateManager.Instance.PlayerStateDict;
             if (playerStateDict[PlayerStateEnum.Oxygen].curValue < playerStateDict[PlayerStateEnum.Oxygen].MaxValue + StateManager.Instance.PlayerExtraStateDict[PlayerStateEnum.Oxygen])
@@ -90,8 +89,8 @@ public class OreReleaseOxygenMachine : Card
 
     public bool Judge_GetOxygen()
     {
-        Card backEquipment = EquipmentManager.Instance.BackEquipment;
-        if (backEquipment != null && backEquipment.cardName == "氧气罐")
+        //TODO:判断是否装备氧气罐，氧气是否已满
+        if (GameManager.Instance.EquipmentBag.FindCardOfName("氧气罐") != null)
         {
             Dictionary<PlayerStateEnum, PlayerState> playerStateDict = StateManager.Instance.PlayerStateDict;
             if (playerStateDict[PlayerStateEnum.Oxygen].curValue < playerStateDict[PlayerStateEnum.Oxygen].MaxValue + StateManager.Instance.PlayerExtraStateDict[PlayerStateEnum.Oxygen])
@@ -141,14 +140,16 @@ public class OreReleaseOxygenMachine : Card
                 if (environmentBag.PlaceData.isIndoor)
                 {
                     float canRelease = environmentBag.EnvironmentStateDict[EnvironmentStateEnum.Oxygen].MaxValue - environmentBag.EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue;
-                    if (canRelease > OxygenRelease)//室内能存下，全部释放到室内
+                    if (canRelease > OxygenRelease)
                     {
+                        //室内能存下，全部释放到室内
                         environmentBag.EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue += OxygenRelease;
                         EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs((slot.Bag as EnvironmentBag).PlaceData.placeType, EnvironmentStateEnum.Oxygen));
                         curOxygenStorage -= OxygenRelease;
                     }
-                    else//室内存不下，剩余部分留在机器存储中
+                    else
                     {
+                        //室内存不下，剩余部分留在机器存储中
                         environmentBag.EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue += canRelease;
                         EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs((slot.Bag as EnvironmentBag).PlaceData.placeType, EnvironmentStateEnum.Oxygen));
                         curOxygenStorage -= canRelease;

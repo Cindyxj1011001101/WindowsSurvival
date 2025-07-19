@@ -18,22 +18,22 @@ public class RawOysterMeat : Card
         };
         components = new()
         {
-            { typeof(FreshnessComponent), new FreshnessComponent(1440, OnFreshnessChanged) }
+            { typeof(FreshnessComponent), new FreshnessComponent(1440) }
         };
     }
 
-    private void OnFreshnessChanged(int freshness)
+    private void OnRotton()
     {
-        if (freshness == 0)
-        {
-            DestroyThis();
-        }
+        DestroyThis();
     }
 
     #region 食用
     public void Event_Eat()
     {
         DestroyThis();
+        // 播放吃的音效
+        if(SoundManager.Instance != null)
+        {SoundManager.Instance.PlaySound("吃_01",true);}
         //+6饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 6));
         //-1.2健康
@@ -46,6 +46,6 @@ public class RawOysterMeat : Card
     protected override System.Action OnUpdate => () =>
     {
         TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval);
+        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
     };
 }

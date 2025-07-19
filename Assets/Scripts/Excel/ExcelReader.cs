@@ -1,0 +1,134 @@
+﻿using Excel;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using UnityEngine;
+
+public static class ExcelReader
+{
+    public static Dictionary<string, CardConfig> ReadCardConfig(string fileName)
+    {
+        // 打开Excel文件
+        using FileStream fs = File.Open(Application.dataPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
+        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+        DataSet result = excelReader.AsDataSet();
+        DataTable table = result.Tables[0]; // 假设配置在第一张表中
+
+        // 存储卡牌配置的字典
+        Dictionary<string, CardConfig> cardConfigs = new();
+
+        DataRow row;
+        for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
+        {
+            row = table.Rows[i];
+            CardConfig cardConfig = new()
+            {
+                CardId = row[0].ToString(),
+                CardName = row[1].ToString(),
+                CardDesc = row[2].ToString(),
+                CardImagePath = row[3].ToString(),
+                CardType = ParseCardType(row[4].ToString()),
+                MaxStackCount = int.Parse(row[5].ToString()),
+                Moveable = bool.Parse(row[6].ToString()),
+                Weight = float.Parse(row[7].ToString()),
+                Tags = ParseTags(row[8].ToString()),
+                HasFreshness = bool.Parse(row[9].ToString()),
+                HasDurability = bool.Parse(row[11].ToString()),
+                HasGrowth = bool.Parse(row[13].ToString()),
+                HasProgress = bool.Parse(row[15].ToString()),
+                IsEquipment = bool.Parse(row[17].ToString()),
+                IsTool = bool.Parse(row[19].ToString()),
+            };
+            if (cardConfig.HasFreshness)
+            {
+                cardConfig.MaxFreshness = int.Parse(row[10].ToString());
+            }
+            if (cardConfig.HasDurability)
+            {
+                cardConfig.MaxDurability = int.Parse(row[12].ToString());
+            }
+            if (cardConfig.HasGrowth)
+            {
+                cardConfig.MaxGrowth = int.Parse(row[14].ToString());
+            }
+            if (cardConfig.HasProgress)
+            {
+                cardConfig.MaxProgress = int.Parse(row[16].ToString());
+            }
+            if (cardConfig.IsEquipment)
+            {
+                cardConfig.EquipmentType = ParseEquipmentType(row[18].ToString());
+            }
+            if (cardConfig.IsTool)
+            {
+                cardConfig.ToolTypes = ParseToolTypes(row[20].ToString());
+            }
+            Debug.Log($"读取卡牌配置: {cardConfig.CardName}");
+            cardConfigs.Add(cardConfig.CardId, cardConfig);
+        }
+
+        fs.Close();
+
+        return cardConfigs;
+    }
+
+    private static CardType ParseCardType(string typeStr)
+    {
+        return (CardType)System.Enum.Parse(typeof(CardType), typeStr);
+    }
+
+    private static List<CardTag> ParseTags(string tagsStr)
+    {
+        var tags = new List<CardTag>();
+        if (string.IsNullOrEmpty(tagsStr)) return tags;
+
+        var tagArray = tagsStr.Split(',');
+        foreach (var tag in tagArray)
+        {
+            tags.Add((CardTag)System.Enum.Parse(typeof(CardTag), tag.Trim()));
+        }
+
+        return tags;
+    }
+
+    private static EquipmentType ParseEquipmentType(string typeStr)
+    {
+        return (EquipmentType)System.Enum.Parse(typeof(EquipmentType), typeStr);
+    }
+
+    private static List<ToolType> ParseToolTypes(string toolTypesStr)
+    {
+        var toolTypes = new List<ToolType>();
+        if (string.IsNullOrEmpty(toolTypesStr)) return toolTypes;
+        var toolTypeArray = toolTypesStr.Split(',');
+        foreach (var toolType in toolTypeArray)
+        {
+            toolTypes.Add((ToolType)System.Enum.Parse(typeof(ToolType), toolType.Trim()));
+        }
+        return toolTypes;
+    }
+}
+public class CardConfig
+{
+    public string CardId; // 卡牌ID
+    public string CardName; // 卡牌名称
+    public string CardDesc; // 卡牌描述
+    public string CardImagePath; // 卡牌图片路径
+    public CardType CardType; // 卡牌类型
+    public int MaxStackCount; // 最大堆叠数
+    public bool Moveable; // 是否可移动
+    public float Weight; // 重量
+    public List<CardTag> Tags = new(); // 标签
+    public bool HasFreshness; // 是否有新鲜度
+    public int MaxFreshness; // 新鲜度最大值
+    public bool HasDurability; // 是否有耐久度
+    public int MaxDurability; // 耐久度最大值
+    public bool HasGrowth; // 是否有生长进度
+    public int MaxGrowth; // 生长最大进度
+    public bool HasProgress; // 是否有产物进度
+    public int MaxProgress; // 产物最大进度
+    public bool IsEquipment; // 是否是装备
+    public EquipmentType EquipmentType; // 装备类型
+    public bool IsTool; // 是否是工具
+    public List<ToolType> ToolTypes; // 工具类型
+}

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,25 +8,39 @@ public class GameDataManager
     private static GameDataManager instance = new();
     public static GameDataManager Instance => instance;
 
-    private GameDataManager() { }
+    private GameDataManager()
+    {
+        // 玩家背包
+        playerBagData = JsonManager.LoadData<BagRuntimeData>("PlayerBag");
+        // 上次地点
+        lastPlace = JsonManager.LoadData<int>("LastPlace");
+        // 环境
+        environmentBagDataDict = new();
+        foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
+        {
+            environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(place.ToString() + "Bag"));
+        }
+        // 音频数据
+        audioData = JsonManager.LoadData<AudioData>("Audio");
+        // 已解锁的配方
+        unlockedRecipes = JsonManager.LoadData<List<string>>("UnlockedRecipes");
+        // 科技数据
+        technologyData = JsonManager.LoadData<TechnologyData>("Technology");
+        // 装备数据
+        equipmentData = JsonManager.LoadData<BagRuntimeData>("Equipment");
+        // 其他数据
+        gameRuntimeData = JsonManager.LoadData<GameRuntimeData>("GameRuntimeData");
+    }
 
     #region 玩家背包
     private BagRuntimeData playerBagData;
 
-    public BagRuntimeData PlayerBagData
-    {
-        get
-        {
-            playerBagData ??= JsonManager.LoadData<BagRuntimeData>("PlayerBag");
-            return playerBagData;
-        }
-    }
+    public BagRuntimeData PlayerBagData => playerBagData;
 
     public void SavePlayerBagRuntimeData()
     {
         PlayerBag bag = GameManager.Instance.PlayerBag;
         playerBagData = new();
-        //playerBagData.maxLoad = bag.MaxLoad;
         playerBagData.cardSlotsRuntimeData = new();
         foreach (var slot in bag.Slots)
         {
@@ -35,30 +50,25 @@ public class GameDataManager
     }
     #endregion
 
-    #region 环境背包
+    #region 地点
+
     // 最后一次玩家出现时的地点
     private int lastPlace = -1;
 
-    public PlaceEnum LastPlace
+    public PlaceEnum LastPlace => (PlaceEnum)lastPlace;
+
+    public void SaveLastPlace()
     {
-        get
-        {
-            if (lastPlace == -1)
-                lastPlace = JsonManager.LoadData<int>("LastPlace");
-            return (PlaceEnum)lastPlace;
-        }
+        JsonManager.SaveData(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, "LastPlace");
     }
+    #endregion
+
+    #region 环境背包
 
     public Dictionary<PlaceEnum, EnvironmentBagRuntimeData> environmentBagDataDict = new();
 
     public EnvironmentBagRuntimeData GetEnvironmentBagDataByPlace(PlaceEnum place)
     {
-        if (!environmentBagDataDict.ContainsKey(place))
-        {
-            var data = JsonManager.LoadData<EnvironmentBagRuntimeData>(place.ToString() + "Bag");
-            environmentBagDataDict.Add(place, data);
-        }
-
         return environmentBagDataDict[place];
     }
 
@@ -82,23 +92,11 @@ public class GameDataManager
             JsonManager.SaveData(data, place.ToString() + "Bag");
         }
     }
-
-    public void SaveLastPlace()
-    {
-        JsonManager.SaveData(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, "LastPlace");
-    }
     #endregion
 
     #region 音频
     private AudioData audioData;
-    public AudioData AudioData
-    {
-        get
-        {
-            audioData ??= JsonManager.LoadData<AudioData>("Audio");
-            return audioData;
-        }
-    }
+    public AudioData AudioData => audioData;
 
     public UnityEvent onBGMVolumeChanged = new();
 
@@ -127,14 +125,7 @@ public class GameDataManager
     #region 合成
     private List<string> unlockedRecipes;
 
-    public List<string> UnlockedRecipes
-    {
-        get
-        {
-            unlockedRecipes ??= JsonManager.LoadData<List<string>>("UnlockedRecipes");
-            return unlockedRecipes;
-        }
-    }
+    public List<string> UnlockedRecipes => unlockedRecipes;
 
     public void SaveUnlockedRecipes()
     {
@@ -145,14 +136,7 @@ public class GameDataManager
     #region 科技
     private TechnologyData technologyData;
 
-    public TechnologyData TechnologyData
-    {
-        get
-        {
-            technologyData ??= JsonManager.LoadData<TechnologyData>("Technology");
-            return technologyData;
-        }
-    }
+    public TechnologyData TechnologyData => technologyData;
 
     public void SaveTechnologyData()
     {
@@ -162,38 +146,26 @@ public class GameDataManager
 
     #region 装备
     private BagRuntimeData equipmentData;
-    public BagRuntimeData EquipmentData
-    {
-        get
-        {
-            equipmentData ??= JsonManager.LoadData<BagRuntimeData>("Equipment");
-            return equipmentData;
-        }
-    }
+    public BagRuntimeData EquipmentData => equipmentData;
 
     public void SaveEquipmentData()
     {
         EquipmentBag bag = GameManager.Instance.EquipmentBag;
         equipmentData = new();
-        equipmentData.cardSlotsRuntimeData = new();
-        foreach (var slot in bag.Slots)
+        equipmentData.cardSlotsRuntimeData = new()
         {
-            equipmentData.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
-        }
+            new() { cardList = bag.headSlot.Cards },
+            new() { cardList = bag.bodySlot.Cards },
+            new() { cardList = bag.backSlot.Cards },
+            new() { cardList = bag.legSlot.Cards }
+        };
         JsonManager.SaveData(equipmentData, "Equipment");
     }
     #endregion
 
     #region 游戏运行时数据
     private GameRuntimeData gameRuntimeData;
-    public GameRuntimeData GameRuntimeData
-    {
-        get
-        {
-            gameRuntimeData ??= JsonManager.LoadData<GameRuntimeData>("GameRuntimeData");
-            return gameRuntimeData;
-        }
-    }
+    public GameRuntimeData GameRuntimeData => gameRuntimeData;
 
     public void SaveGameRuntimeData()
     {

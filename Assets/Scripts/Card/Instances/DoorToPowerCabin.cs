@@ -16,10 +16,6 @@ public class DoorToPowerCabin : Card
         {
             new Event("前往", "前往动力舱", Event_Move, null)
         };
-        components = new()
-        {
-            { typeof(PlaceComponent), new PlaceComponent(PlaceEnum.PowerCabin) },
-        };
     }
 
     public void Event_Move()

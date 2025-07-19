@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using System.Text;
 using UnityEngine.Events;
 
 /// <summary>
@@ -17,24 +18,30 @@ public class FreshnessComponent : ICardComponent
 
     public float updateRate = 1.0f;
 
-    [JsonIgnore]
-    public UnityAction<int> onFreshnessChanged;
-
-    public FreshnessComponent(int maxFreshness, UnityAction<int> onFreshnessChanged)
+    public FreshnessComponent(int maxFreshness)
     {
         freshness = this.maxFreshness = maxFreshness;
-        this.onFreshnessChanged = onFreshnessChanged;
     }
 
-    public void Update(int deltaTime)
+    public void Update(int deltaTime, UnityAction onRotton)
     {
+        if (freshness <= 0) return;
+
         // 随时间自动减少新鲜度
         freshness -= (int)(deltaTime * updateRate);
         if (freshness <= 0)
         {
             freshness = 0;
+            onRotton?.Invoke();
         }
-        onFreshnessChanged?.Invoke(freshness);
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"新鲜度: {freshness}/{maxFreshness}\t");
+        sb.Append($"更新速率: {updateRate}");
+        return sb.ToString();
     }
 }
 #endregion
@@ -47,26 +54,32 @@ public class GrowthComponent : ICardComponent
 
     public float updateRate = 1.0f;
 
-    [JsonIgnore]
-    public UnityAction<int> onGrowthChanged;
-
-    public GrowthComponent(int maxGrowth, UnityAction<int> onGrowthChanged)
+    public GrowthComponent(int maxGrowth)
     {
         this.maxGrowth = maxGrowth;
         growth = 0;
-        this.onGrowthChanged = onGrowthChanged;
     }
 
-    public void Update(int deltaTime)
+    public void Update(int deltaTime, UnityAction onGrownUp)
     {
+        if (growth >= maxGrowth) return;
+
         // 随时间自动增加生长度
         growth += (int)(deltaTime * updateRate);
 
         if (growth >= maxGrowth)
         {
             growth = maxGrowth;
+            onGrownUp?.Invoke();
         }
-        onGrowthChanged?.Invoke(growth);
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"生长度: {growth}/{maxGrowth}\t");
+        sb.Append($"更新速率: {updateRate}");
+        return sb.ToString();
     }
 }
 #endregion
@@ -79,19 +92,16 @@ public class ProgressComponent : ICardComponent
 
     public float updateRate = 1.0f;
 
-    [JsonIgnore]
-    public UnityAction onProgressFull;
-
-    public ProgressComponent(int maxProgress, UnityAction onProgressFull)
+    public ProgressComponent(int maxProgress)
     {
         this.maxProgress = maxProgress;
         progress = 0;
-        this.onProgressFull = onProgressFull;
     }
 
-    public void Update(int deltaTime)
+    public void Update(int deltaTime, UnityAction onProgressFull)
     {
         if (progress >= maxProgress) return;
+
         // 随时间自动增加产物进度
         progress += (int)(deltaTime * updateRate);
         if (progress >= maxProgress)
@@ -100,10 +110,26 @@ public class ProgressComponent : ICardComponent
             onProgressFull?.Invoke();
         }
     }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"产物进度: {progress}/{maxProgress}\t");
+        sb.Append($"更新速率: {updateRate}");
+        return sb.ToString();
+    }
 }
 #endregion
 
 #region 装备组件
+public enum EquipmentType
+{
+    Head = 0,
+    Body = 1,
+    Back = 2,
+    Leg = 3,
+}
+
 public class EquipmentComponent : ICardComponent
 {
     public EquipmentType equipmentType;
@@ -114,17 +140,13 @@ public class EquipmentComponent : ICardComponent
         isEquipped = false;
         this.equipmentType = equipmentType;
     }
-}
-#endregion
 
-#region 地点组件
-public class PlaceComponent : ICardComponent
-{
-    public PlaceEnum placeType;
-
-    public PlaceComponent(PlaceEnum placeType)
+    public override string ToString()
     {
-        this.placeType = placeType;
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"装备类型: {equipmentType}\t");
+        sb.Append($"是否装备: {isEquipped}");
+        return sb.ToString();
     }
 }
 #endregion
@@ -138,11 +160,27 @@ public enum ToolType
 
 public class ToolComponent : ICardComponent
 {
-    public ToolType toolType;
+    public List<ToolType> toolTypes;
 
-    public ToolComponent(ToolType toolType)
+    public ToolComponent(params ToolType[] toolTypes)
     {
-        this.toolType = toolType;
+        this.toolTypes = new List<ToolType>(toolTypes);
+    }
+
+    public ToolComponent(List<ToolType> toolTypes)
+    {
+        this.toolTypes = toolTypes;
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("工具类型: \t");
+        foreach (var type in toolTypes)
+        {
+            sb.Append($"- {type}\t");
+        }
+        return sb.ToString();
     }
 }
 #endregion
@@ -150,26 +188,19 @@ public class ToolComponent : ICardComponent
 #region 耐久度组件
 public class DurabilityComponent : ICardComponent
 {
-    public int curDurability;
+    public int durability;
     public int maxDurability;
 
-    [JsonIgnore]
-    public UnityAction<int> onDurabilityChanged;
-
-    public DurabilityComponent(int maxDurability, UnityAction<int> onDurabilityChanged)
+    public DurabilityComponent(int maxDurability)
     {
-        curDurability = this.maxDurability = maxDurability;
-        this.onDurabilityChanged = onDurabilityChanged;
+        durability = this.maxDurability = maxDurability;
     }
 
-    public void Use()
+    public override string ToString()
     {
-        curDurability--;
-        if (curDurability < 0)
-        {
-            curDurability = 0;
-        }
-        onDurabilityChanged?.Invoke(curDurability);
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"耐久度: {durability}/{maxDurability}");
+        return sb.ToString();
     }
 }
 #endregion

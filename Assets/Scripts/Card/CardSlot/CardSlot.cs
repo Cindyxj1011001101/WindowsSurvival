@@ -1,15 +1,18 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// å¡ç‰Œæ ¼
+/// </summary>
 public class CardSlot : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
-    [SerializeField] private Text countText; // ÓÃÓÚÏÔÊ¾ÊıÁ¿ºÍÄÍ¾ÃµÈ
-    [SerializeField] private Text percentageText; // ÓÃÓÚÏÔÊ¾ĞÂÏÊ¶È»òÄÍ¾Ã
+    [SerializeField] private Text countText; // ç”¨äºæ˜¾ç¤ºæ•°é‡å’Œè€ä¹…ç­‰
+    [SerializeField] private Text percentageText; // ç”¨äºæ˜¾ç¤ºæ–°é²œåº¦æˆ–è€ä¹…
     [SerializeField] private Text nameText;
-    [SerializeField] private CanvasGroup cardCanvas;
+    [SerializeField] private CanvasGroup cardCanvasGroup;
 
     private List<Card> cards = new();
     public bool IsEmpty => cards.Count == 0;
@@ -22,7 +25,7 @@ public class CardSlot : MonoBehaviour
 
     private void Awake()
     {
-        if (cardCanvas.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
+        if (cardCanvasGroup.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
         {
             doubleClickHandler.onDoubleClick.AddListener(() =>
             {
@@ -48,7 +51,7 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
-    /// Ë¢ĞÂµ±Ç°ÏÔÊ¾
+    /// åˆ·æ–°å½“å‰æ˜¾ç¤º
     /// </summary>
     public void RefreshCurrentDisplay()
     {
@@ -58,13 +61,13 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
-    /// ÏÔÊ¾Ö¸¶¨ÊıÁ¿µÄ¿¨ÅÆ
+    /// æ˜¾ç¤ºæŒ‡å®šæ•°é‡çš„å¡ç‰Œ
     /// </summary>
     /// <param name="card"></param>
     /// <param name="stackCount"></param>
     public void DisplayCard(Card card, int stackCount)
     {
-        // Èç¹ûÒªÏÔÊ¾µÄÊıÁ¿Ğ¡ÓÚµÈÓÚÁã£¬ÔòÊ²Ã´Ò²²»ÏÔÊ¾
+        // å¦‚æœè¦æ˜¾ç¤ºçš„æ•°é‡å°äºç­‰äºé›¶ï¼Œåˆ™ä»€ä¹ˆä¹Ÿä¸æ˜¾ç¤º
         if (stackCount <= 0)
         {
             DisableDisplay();
@@ -75,84 +78,87 @@ public class CardSlot : MonoBehaviour
 
         iconImage.sprite = card.CardImage;
         nameText.text = card.cardName;
-        // ÏÔÊ¾¶ÑµşÊıÁ¿
+        // æ˜¾ç¤ºå †å æ•°é‡
         countText.text = "";
         if (stackCount > 1)
             countText.text = $"x{stackCount}";
 
         percentageText.text = "";
 
-        // ÏÔÊ¾ÄÍ¾Ã
-        if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-            percentageText.text = $"{Math.Round((float)durabilityComponent.curDurability / durabilityComponent.maxDurability, 2) * 100}%";
-        // ÏÔÊ¾ĞÂÏÊ¶È
-        else if (card.TryGetComponent<FreshnessComponent>(out var component))
-            percentageText.text = $"{Math.Round((float)component.freshness / component.maxFreshness, 2) * 100}%";
-
-        // ÏÔÊ¾Éú³¤¶È
-
-        // ÏÔÊ¾²úÎï½ø¶È
-
+        // æ˜¾ç¤ºè€ä¹…
+        if (card.TryGetComponent<DurabilityComponent>(out var d))
+            percentageText.text = $"{Math.Round((float)d.durability / d.maxDurability, 2) * 100}%";
+        // æ˜¾ç¤ºæ–°é²œåº¦
+        else if (card.TryGetComponent<FreshnessComponent>(out var f))
+            percentageText.text = $"{Math.Round((float)f.freshness / f.maxFreshness, 2) * 100}%";
+        // æ˜¾ç¤ºç”Ÿé•¿åº¦
+        else if (card.TryGetComponent<GrowthComponent>(out var g))
+            percentageText.text = $"{Math.Round((float)g.growth / g.maxGrowth, 2) * 100}%";
+        // æ˜¾ç¤ºäº§ç‰©è¿›åº¦
+        else if (card.TryGetComponent<ProgressComponent>(out var p))
+            percentageText.text = $"{Math.Round((float)p.progress / p.maxProgress, 2) * 100}%";
     }
 
     /// <summary>
-    /// ²»ÏÔÊ¾¿¨ÅÆ
+    /// ä¸æ˜¾ç¤ºå¡ç‰Œ
     /// </summary>
     private void DisableDisplay()
     {
-        cardCanvas.alpha = 0;
-        cardCanvas.blocksRaycasts = false;
-        cardCanvas.interactable = false;
+        cardCanvasGroup.alpha = 0;
+        cardCanvasGroup.blocksRaycasts = false;
+        cardCanvasGroup.interactable = false;
     }
 
     /// <summary>
-    /// ÔÊĞíÏÔÊ¾¿¨ÅÆ
+    /// å…è®¸æ˜¾ç¤ºå¡ç‰Œ
     /// </summary>
     private void EnableDisplay()
     {
-        cardCanvas.alpha = 1;
-        cardCanvas.blocksRaycasts = true;
-        cardCanvas.interactable = true;
+        cardCanvasGroup.alpha = 1;
+        cardCanvasGroup.blocksRaycasts = true;
+        cardCanvasGroup.interactable = true;
     }
 
+    /// <summary>
+    /// åˆ¤æ–­è¯¥å¡ç‰Œæ ¼æ˜¯å¦æ”¾æœ‰åŒç±»å¡ç‰Œ
+    /// </summary>
+    /// <param name="cardName"></param>
+    /// <returns></returns>
     public bool ContainsSimilarCard(string cardName) => !IsEmpty && cardName == cards[0].cardName;
     
     /// <summary>
-    /// ÄÜ·ñ¶Ñµş£¬ÔÚÊ¹ÓÃ¸Ã·½·¨Ç°ÇëÎñ±ØÈ·ÈÏÒª¶ÑµşµÄ¿¨ÅÆºÍÕâ¸öslot·ÅÓĞµÄ¿¨ÅÆÊÇÍ¬ÀàµÄ
+    /// èƒ½å¦å †å ï¼Œåœ¨ä½¿ç”¨è¯¥æ–¹æ³•å‰è¯·åŠ¡å¿…ç¡®è®¤è¦å †å çš„å¡ç‰Œå’Œè¿™ä¸ªslotæ”¾æœ‰çš„å¡ç‰Œæ˜¯åŒç±»çš„
     /// </summary>
     /// <returns></returns>
-    public bool CanAddCard(Card card)
+    public virtual bool CanAddCard(Card card)
     {
         return IsEmpty || (ContainsSimilarCard(card.cardName) && StackCount < card.maxStackNum);
     }
 
     /// <summary>
-    /// Ìí¼ÓÒ»ÕÅ¿¨ÅÆ
+    /// æ·»åŠ ä¸€å¼ å¡ç‰Œ
     /// </summary>
     /// <param name="card"></param>
-    public void AddCard(Card card)
+    public virtual void AddCard(Card card)
     {
         cards.Add(card);
         cards.Sort((a, b) => a.CompareTo(b));
 
         RefreshCurrentDisplay();
 
-        // µ±¿¨ÅÆÌí¼Óµ½Íæ¼Ò±³°üÊ±
+        // å½“å¡ç‰Œæ·»åŠ åˆ°ç©å®¶èƒŒåŒ…æ—¶
         if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = 1 });
-        // µ±×°±¸¿¨ÅÆÊ±
-        if (bag is EquipmentBag)
-            EventManager.Instance.TriggerEvent(EventType.Equip, card);
 
         card.SetCardSlot(this);
     }
 
     /// <summary>
-    /// ÒÆ³ıÖ¸¶¨µÄÒ»ÕÅ¿¨ÅÆ
+    /// ç§»é™¤æŒ‡å®šçš„ä¸€å¼ å¡ç‰Œ
     /// </summary>
     /// <param name="card"></param>
-    public void RemoveCard(Card card)
+    public virtual void RemoveCard(Card card)
     {
         if (!cards.Contains(card)) return;
 
@@ -164,17 +170,14 @@ public class CardSlot : MonoBehaviour
         else
             RefreshCurrentDisplay();
 
-        // µ±¿¨ÅÆ´ÓÍæ¼Ò±³°üÒÆ³ıÊ±
+        // å½“å¡ç‰Œä»ç©å®¶èƒŒåŒ…ç§»é™¤æ—¶
         if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = -1 });
-        // µ±Ğ¶ÏÂ×°±¸Ê±
-        if (bag is EquipmentBag)
-            EventManager.Instance.TriggerEvent(EventType.Unequip, card);
     }
 
     /// <summary>
-    /// ÒÆ³ı×îÓÅÏÈÏÔÊ¾µÄ¿¨ÅÆ
+    /// ç§»é™¤æœ€ä¼˜å…ˆæ˜¾ç¤ºçš„å¡ç‰Œ
     /// </summary>
     /// <returns></returns>
     public Card RemoveCard()
@@ -187,7 +190,7 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
-    /// ÒÆ³ıÖ¸¶¨ÊıÁ¿µÄ¿¨ÅÆ
+    /// ç§»é™¤æŒ‡å®šæ•°é‡çš„å¡ç‰Œ
     /// </summary>
     /// <param name="amount"></param>
     public void RemoveCards(int amount)
@@ -203,7 +206,6 @@ public class CardSlot : MonoBehaviour
         cards.Clear();
         DisableDisplay();
     }
-
 
     private void OnDestroy()
     {

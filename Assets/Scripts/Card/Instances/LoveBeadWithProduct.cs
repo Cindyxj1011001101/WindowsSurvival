@@ -23,9 +23,9 @@ public class LoveBeadWithProduct : Card
     #region 事件
     public void Event_OpenByTool()
     {
+        DestroyThis();
         Card tool = GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig });
-        tool.TryGetComponent<DurabilityComponent>(out var component);
-        component.Use();
+        tool.TryUse();
 
         // 变回爱情贝
         GameManager.Instance.AddCard(new LoveBead(), true);

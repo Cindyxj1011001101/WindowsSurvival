@@ -19,29 +19,18 @@ public class WasteHeap : Card
         };
         components = new()
         {
-            { typeof(DurabilityComponent), new DurabilityComponent(5, OnDurabilityChanged) }
+            { typeof(DurabilityComponent), new DurabilityComponent(5) }
         };
-    }
-
-    private void OnDurabilityChanged(int durability)
-    {
-        if (durability == 0)
-        {
-            DestroyThis();
-            slot.RefreshCurrentDisplay();
-        }
     }
 
     public void Event_Dig()
     {
         //消耗1点耐久度
-        TryGetComponent<DurabilityComponent>(out var component);
-        component.Use();
+        TryUse();
         //消耗45分钟
         TimeManager.Instance.AddTime(45);
         //掉落卡牌
         RandomDrop();
-
     }
 
     public void RandomDrop()

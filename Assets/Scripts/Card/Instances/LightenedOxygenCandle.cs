@@ -15,24 +15,14 @@ public class LightenedOxygenCandle : Card
         weight = 1.8f;
         components = new()
         {
-            { typeof(DurabilityComponent), new DurabilityComponent(14, OnDurabilityChanged) }
+            { typeof(DurabilityComponent), new DurabilityComponent(14) }
         };
-    }
-
-    private void OnDurabilityChanged(int durability)
-    {
-        if (durability == 0)
-        {
-            DestroyThis();
-        }
-        slot.RefreshCurrentDisplay();
     }
 
     protected override Action OnUpdate => () =>
     {
         // 每回合消耗耐久
-        TryGetComponent<DurabilityComponent>(out var component);
-        component.Use();
+        TryUse();
         EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
         if (environmentBag.PlaceData.isIndoor)
         {

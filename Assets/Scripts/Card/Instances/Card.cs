@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -77,7 +78,21 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
     }
 
-    public void DestroyThis()
+    public virtual void TryUse()
+    {
+        if (TryGetComponent<DurabilityComponent>(out var component))
+        {
+            if (component.durability <= 0) return;
+
+            component.durability--;
+            if (component.durability <= 0)
+                DestroyThis();
+            else
+                slot.RefreshCurrentDisplay();
+        }
+    }
+
+    public virtual void DestroyThis()
     {
         slot.RemoveCard(this);
         StopUpdating();
@@ -101,15 +116,48 @@ public abstract class Card : IComparable<Card>
         if (TryGetComponent<FreshnessComponent>(out var a))
         {
             // 新鲜度低的优先
-            other.TryGetComponent<FreshnessComponent>(out var b);
-            return a.freshness - b.freshness;
+            other.TryGetComponent<FreshnessComponent>(out var o);
+            return a.freshness - o.freshness;
+        }
+        else if (TryGetComponent<ProgressComponent>(out var b))
+        {
+            // 产物进度高的优先
+            other.TryGetComponent<ProgressComponent>(out var o);
+            return o.progress - b.progress;
+        }
+        else if (TryGetComponent<DurabilityComponent>(out var c))
+        {
+            // 耐久度低的优先
+            other.TryGetComponent<DurabilityComponent>(out var o);
+            return c.durability - o.durability;
         }
         else
         {
-            // 耐久度低的优先
-            //return curEndurance - other.curEndurance;
             return 0;
         }
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine($"卡牌名称: {cardName}");
+        sb.AppendLine($"卡牌描述: {cardDesc}");
+        sb.AppendLine($"卡牌类型: {cardType}");
+        sb.AppendLine($"最大堆叠数: {maxStackNum}");
+        sb.AppendLine($"可移动: {moveable}");
+        sb.AppendLine($"重量: {weight}");
+        sb.AppendLine($"标签: {string.Join(", ", tags)}");
+        sb.AppendLine($"事件数量: {events.Count}");
+        foreach (var ev in events)
+        {
+            sb.AppendLine($"  - 事件名称: {ev.name}, 描述: {ev.description}");
+        }
+        sb.AppendLine($"组件数量: {components.Count}");
+        foreach (var kvp in components)
+        {
+            sb.AppendLine($"  - 组件类型: {kvp.Key.Name}, 实例: {kvp.Value}");
+        }
+        return sb.ToString();
     }
 }
 

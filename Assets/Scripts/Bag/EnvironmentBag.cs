@@ -38,7 +38,6 @@ public class EnvironmentBag : BagBase
         // 初始化背包中的物品，探索度，环境状态值
         base.InitBag(runtimeData);
         var data = (runtimeData as EnvironmentBagRuntimeData);
-        //discoveryDegree = data.discoveryDegree;
         EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>(data.environmentStateDict);
         //如果是开局进入，则初始化环境状态
         if (EnvironmentStateDict.Count == 0)
@@ -54,53 +53,6 @@ public class EnvironmentBag : BagBase
         disposableDropList = data.disposableDropList;
         repeatableDropList = data.repeatableDropList;
         repeatableDropList.StartUpdating();
-    }
-
-    public void HandeleExplore()
-    {
-        if (disposableDropList.IsEmpty && repeatableDropList.IsEmpty)
-        {
-            Debug.Log("探索完全");
-            return;
-        }
-
-        // 消耗时间
-        TimeManager.Instance.AddTime(explorationTime);
-
-        // 当一次性探索列表还有剩余
-        if (!disposableDropList.IsEmpty)
-        {
-            // 掉落卡牌
-            foreach (var card in disposableDropList.RandomDrop())
-            {
-                // 掉落到环境里
-                GameManager.Instance.AddCard(card, false);
-            }
-
-            // 探索完成后让环境生态开始更新
-            if (disposableDropList.IsEmpty)
-                repeatableDropList.StartUpdating();
-
-            // 探索度变化
-            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, DiscoveryDegree);
-        }
-        // 如果还可以重复探索
-        else if (!repeatableDropList.IsEmpty)
-        {
-            var droppedCards = repeatableDropList.RandomDrop();
-            if (droppedCards == null || droppedCards.Count == 0)
-            {
-                Debug.Log("什么也没有捞到");
-                return;
-            }
-
-            // 掉落卡牌
-            foreach (var card in droppedCards)
-            {
-                // 掉落到环境里
-                GameManager.Instance.AddCard(card, false);
-            }
-        }
     }
 
     //当前环境状态变化(除电力以外的数值变化)

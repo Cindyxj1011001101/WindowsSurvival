@@ -742,48 +742,43 @@ MonoBehaviour:
   slotLayout: {fileID: 1243185034929769997}
   organizeButton: {fileID: 5542767981334835326}
   disposableDropList:
+    maxCount: 0
     dropList:
-    - cardName: "\u6C14\u5BC6\u8231\u95E8"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 1
-    - cardName: "\u901A\u5F80\u7EF4\u751F\u8231\u7684\u95E8"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u74F6\u88C5\u6C34"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 4
-    - cardName: "\u74F6\u88C5\u6C34"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 4
-    - cardName: "\u786C\u8D28\u7EA4\u7EF4"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u786C\u8D28\u7EA4\u7EF4"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u8001\u9F20\u5C38\u4F53"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u901A\u5F80\u52A8\u529B\u8231\u7684\u95E8"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    remainingDrops: []
+  repeatableDropList:
+    emptyPopulationSizeChangeOnNotCaught: 0
+    emptyPopulation:
+      dropNum: 0
+      curSize: 0
+      maxSize: 0
+      sizeChangePerRound: 0
+      sizeChangeOnCaught: 0
+    populationList: []
   explorationTime: 15
   placeData: {fileID: 11400000, guid: b416e26146f51dc4082c8a8ffbcef356, type: 2}
-  ecology:
-    populationList: []
 --- !u!1 &966911031722670129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1190,10 +1185,10 @@ RectTransform:
   - {fileID: 4328705403584478601}
   m_Father: {fileID: 8011680549218545613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -155}
-  m_SizeDelta: {x: 180, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1466423482869150804
 GameObject:
@@ -1455,48 +1450,43 @@ MonoBehaviour:
   slotLayout: {fileID: 8469812815510018585}
   organizeButton: {fileID: 5542767981334835326}
   disposableDropList:
+    maxCount: 0
     dropList:
-    - cardName: "\u6C14\u5BC6\u8231\u95E8"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 1
-    - cardName: "\u901A\u5F80\u7EF4\u751F\u8231\u7684\u95E8"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u74F6\u88C5\u6C34"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 4
-    - cardName: "\u74F6\u88C5\u6C34"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 4
-    - cardName: "\u786C\u8D28\u7EA4\u7EF4"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u786C\u8D28\u7EA4\u7EF4"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u8001\u9F20\u5C38\u4F53"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u901A\u5F80\u52A8\u529B\u8231\u7684\u95E8"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    remainingDrops: []
+  repeatableDropList:
+    emptyPopulationSizeChangeOnNotCaught: 0
+    emptyPopulation:
+      dropNum: 0
+      curSize: 0
+      maxSize: 0
+      sizeChangePerRound: 0
+      sizeChangeOnCaught: 0
+    populationList: []
   explorationTime: 15
   placeData: {fileID: 11400000, guid: c550a8b0e4ce7474e940b4db16893b49, type: 2}
-  ecology:
-    populationList: []
 --- !u!1 &1601406867046999116
 GameObject:
   m_ObjectHideFlags: 0
@@ -2750,66 +2740,55 @@ MonoBehaviour:
   slotLayout: {fileID: 1294885886427911333}
   organizeButton: {fileID: 5542767981334835326}
   disposableDropList:
+    maxCount: 0
     dropList:
-    - cardName: "\u901A\u5F80\u9A7E\u9A76\u5BA4\u7684\u95E8"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u74F6\u88C5\u6C34"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 4
-    - cardName: "\u74F6\u88C5\u6C34"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 4
-    - cardName: "\u74F6\u88C5\u6C34"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 4
-    - cardName: "\u74F6\u88C5\u6C34"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 4
-    - cardName: "\u786C\u8D28\u7EA4\u7EF4"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u786C\u8D28\u7EA4\u7EF4"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u786C\u8D28\u7EA4\u7EF4"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 2
+    - dropNum: 2
       dropProb: 1
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 2
+    - dropNum: 2
       dropProb: 1
-    - cardName: "\u8001\u9F20\u5C38\u4F53"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u6C27\u70DB"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u6C27\u70DB"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    remainingDrops: []
+  repeatableDropList:
+    emptyPopulationSizeChangeOnNotCaught: 0
+    emptyPopulation:
+      dropNum: 0
+      curSize: 0
+      maxSize: 0
+      sizeChangePerRound: 0
+      sizeChangeOnCaught: 0
+    populationList: []
   explorationTime: 15
   placeData: {fileID: 11400000, guid: b907534beb8093a418d284905d2cac4e, type: 2}
-  ecology:
-    populationList: []
 --- !u!1 &3484246499942995703
 GameObject:
   m_ObjectHideFlags: 0
@@ -2844,10 +2823,10 @@ RectTransform:
   - {fileID: 6409963452930263549}
   m_Father: {fileID: 8011680549218545613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -95}
-  m_SizeDelta: {x: 180, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3676178745751627818
 GameObject:
@@ -3226,10 +3205,10 @@ RectTransform:
   - {fileID: 7630891502495904124}
   m_Father: {fileID: 8011680549218545613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -215}
-  m_SizeDelta: {x: 180, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4292783970092658350
 GameObject:
@@ -4659,10 +4638,10 @@ RectTransform:
   - {fileID: 472364693328179407}
   m_Father: {fileID: 8011680549218545613}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 100, y: -35}
-  m_SizeDelta: {x: 180, y: 50}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5989424782947238458
 GameObject:
@@ -6671,51 +6650,45 @@ MonoBehaviour:
   slotLayout: {fileID: 8694479340009125335}
   organizeButton: {fileID: 5542767981334835326}
   disposableDropList:
+    maxCount: 0
     dropList:
-    - cardName: "\u538B\u7F29\u997C\u5E72"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 2
+    - dropNum: 2
       dropProb: 2
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u5E9F\u91D1\u5C5E"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u786C\u8D28\u7EA4\u7EF4"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u786C\u8D28\u7EA4\u7EF4"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u901A\u5F80\u9A7E\u9A76\u5BA4\u7684\u95E8"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u5B89\u5168\u6CE1\u6CAB\u8986\u76D6\u7684\u5E9F\u6599\u5806"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 3
-    - cardName: "\u74F6\u88C5\u6C34"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 4
-    - cardName: "\u74F6\u88C5\u6C34"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 4
-    - cardName: "\u73BB\u7483"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    - cardName: "\u73BB\u7483"
-      dropNum: 1
+    - dropNum: 1
       dropProb: 2
-    remainingDrops: []
+  repeatableDropList:
+    emptyPopulationSizeChangeOnNotCaught: 0
+    emptyPopulation:
+      dropNum: 0
+      curSize: 0
+      maxSize: 0
+      sizeChangePerRound: 0
+      sizeChangeOnCaught: 0
+    populationList: []
   explorationTime: 15
   placeData: {fileID: 11400000, guid: 0477a3ea042b4c0488260a06bebc0f9b, type: 2}
-  ecology:
-    populationList: []
 --- !u!1 &8988064233089949599
 GameObject:
   m_ObjectHideFlags: 0

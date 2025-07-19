@@ -40,7 +40,9 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnEndDrag(PointerEventData eventData)
     {
         Destroy(cursorSlot.gameObject);
-
+        // 播放放置的音效
+        if(SoundManager.Instance != null)
+        {SoundManager.Instance.PlaySound("放置卡牌",true);}
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
 
         BagBase targetBag = currentObject.GetComponentInParent<BagBase>();
@@ -65,12 +67,11 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         sourceSlot.RefreshCurrentDisplay();
-
-        //Home();
     }
 
     private void PlaceCardInSameBag(CardSlot targetSlot, int amount)
     {
+        
         for (int i = 0; i < amount; i++)
         {
             if (!targetSlot.CanAddCard(sourceSlot.PeekCard())) break;
@@ -80,6 +81,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private void PlaceCardInDifferentBag(BagBase targetBag, int amount)
     {
+        
         for (int i = 0; i < amount; i++)
         {
             if (!targetBag.CanAddCard(sourceSlot.PeekCard())) break;
@@ -91,6 +93,9 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         if (eventData.button == PointerEventData.InputButton.Right && sourceSlot.PeekCard().moveable)
         {
+            // 播放放置的音效
+            if(SoundManager.Instance != null)
+            {SoundManager.Instance.PlaySound("放置卡牌",true);}
             // 右键点击在玩家背包和环境背包之间传送卡牌，一次一张
             BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
             if (sourceBag is PlayerBag && WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))

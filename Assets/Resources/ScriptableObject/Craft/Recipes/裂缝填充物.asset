@@ -9,9 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bfb33a3becfee048b3ebef908168600, type: 3}
-  m_Name: "\u88C5\u5907"
+  m_Script: {fileID: 11500000, guid: 652377b71f7eb0b4b81f661c252dacc6, type: 3}
+  m_Name: "\u88C2\u7F1D\u586B\u5145\u7269"
   m_EditorClassIdentifier: 
-  craftType: 5
-  recipes:
-  - {fileID: 11400000, guid: 5156f6c9538865944b84e525fc428713, type: 2}
+  cardName: "\u88C2\u7F1D\u586B\u5145\u7269"
+  cardDesc: 
+  craftType: 3
+  materials:
+  - cardName: "\u5E9F\u91D1\u5C5E"
+    requiredAmount: 1
+  craftTime: 15
