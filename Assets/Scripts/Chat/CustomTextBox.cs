@@ -12,12 +12,12 @@ using DG.Tweening;
 public class CustomTextBox : MonoBehaviour
 {
     [Header("Spacing")]
-    public float frontSpace = 40f;
-    public float backSpace = 20f;
+    public float frontSpace;
+    public float backSpace;
 
     [Header("Width Constraints")]
-    public float minWidth = 160f;
-    public float maxWidth = 400f;
+    public float minWidth;
+    public float maxWidth;
 
 
     private RectTransform rectTransform;

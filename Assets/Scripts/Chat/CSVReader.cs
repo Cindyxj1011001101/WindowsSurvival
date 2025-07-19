@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 
 /// <summary>
 /// 读取CSV文件
@@ -9,7 +10,7 @@ public class CSVReader
     /// <summary>
     /// CSV文件夹路径
     /// </summary>
-    public static string FolderPath = "Assets/Resources/CSV";
+    public static string FolderPath = "Assets/Resources/CSV/";
 
     /// <summary>
     /// 读取CSV文件
@@ -19,7 +20,7 @@ public class CSVReader
     public static List<string[]> ReadCSVByFileName( string fileName)
     {
         var result = new List<string[]>();
-        string filePath = Path.Combine(FolderPath, fileName);
+        string filePath = FolderPath+fileName+".csv";
         if (File.Exists(filePath))
         {
             var lines = File.ReadAllLines(filePath);

@@ -6,9 +6,12 @@ using UnityEngine.UI;
 [RequireComponent(typeof(RectTransform))]
 public class CustomVerticalLayout : MonoBehaviour
 {
-    public float topSpacing = 20f;
-    public float bottomSpacing = 40f;
-    public float spacing = 10f;
+    //上方间距
+    public float topSpacing;
+    //下方间距
+    public float bottomSpacing;
+    //普通间距
+    public float spacing;
 
     private RectTransform rectTransform;
     private List<RectTransform> children = new List<RectTransform>();
@@ -31,6 +34,7 @@ public class CustomVerticalLayout : MonoBehaviour
         {
             var child = transform.GetChild(i) as RectTransform;
             if (child == null) continue;
+            if (child.gameObject.activeSelf == false) continue;
             children.Add(child);
 
             var textbox = child.GetComponent<CustomTextBox>();
