@@ -171,6 +171,10 @@ public class GameManager : MonoBehaviour
         {
             bag.gameObject.SetActive(place == targetPlace);
         }
+
+        PlayPlaceMusic(environmentBags[targetPlace]);
+
+
         curEnvironmentBag = environmentBags[targetPlace];
 
         //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
@@ -179,6 +183,8 @@ public class GameManager : MonoBehaviour
             AddCard(door[0], false);
 
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
+
+
     }
 
     private string ParsePlaceEnum(PlaceEnum place)
@@ -191,5 +197,68 @@ public class GameManager : MonoBehaviour
             PlaceEnum.CoralCoast => "珊瑚礁海域",
             _ => null,
         };
+    }
+    public void PlayPlaceMusic(EnvironmentBag nextEnvironmentBag)
+    {
+        if (curEnvironmentBag.PlaceData.placeType == PlaceEnum.PowerCabin)
+        {
+            //能从动力舱到动力舱说明这是游戏开局
+            if (nextEnvironmentBag.PlaceData.placeType == PlaceEnum.PowerCabin)
+            {
+                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                return;
+            }
+            
+            if (nextEnvironmentBag.PlaceData.isInSpacecraft)
+            {
+                SoundManager.Instance.PlaySound("飞船门");
+                
+            }
+            else
+            {
+                SoundManager.Instance.StopBGM();
+                
+            }
+        }
+        else if (curEnvironmentBag.PlaceData.placeType == PlaceEnum.Cockpit)
+        {
+            if (nextEnvironmentBag.PlaceData.isInSpacecraft)
+            {
+                SoundManager.Instance.PlaySound("飞船门");
+            }
+            else
+            {
+                SoundManager.Instance.StopBGM();
+                
+            }
+        }
+        else if (curEnvironmentBag.PlaceData.placeType == PlaceEnum.LifeSupportCabin)
+        {
+            if (nextEnvironmentBag.PlaceData.isInSpacecraft)
+            {
+                SoundManager.Instance.PlaySound("飞船门");
+            }
+            else
+            {
+                SoundManager.Instance.StopBGM();
+                
+            }
+        }
+        else if (curEnvironmentBag.PlaceData.placeType == PlaceEnum.CoralCoast)
+        {
+            if (!nextEnvironmentBag.PlaceData.isInSpacecraft)
+            {
+                
+            }
+            else
+            {
+                SoundManager.Instance.StopBGM();
+                
+            }
+        }     
+        
+        
+       
+
     }
 }
