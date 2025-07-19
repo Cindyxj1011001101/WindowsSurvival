@@ -43,7 +43,6 @@ public abstract class Card : IComparable<Card>
     public List<CardTag> tags = new(); // 标签
     [JsonIgnore]
     public List<Event> events = new(); // 可交互事件
-
     public Dictionary<Type, ICardComponent> components = new();
 
     [JsonIgnore]

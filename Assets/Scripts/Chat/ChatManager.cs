@@ -80,10 +80,10 @@ public class ChatManager : MonoBehaviour
 
     private void Start()
     {
-        // 获取自定义布局组件
-        layout = ChatArea.GetComponent<CustomVerticalLayout>();
-        // 加载本地已生成消息key
-        LoadGeneratedChatData();
+        // // 获取自定义布局组件
+        // layout = ChatArea.GetComponent<CustomVerticalLayout>();
+        // // 加载本地已生成消息key
+        // LoadGeneratedChatData();
     }
 
 

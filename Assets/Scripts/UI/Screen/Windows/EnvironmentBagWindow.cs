@@ -100,6 +100,14 @@ public class EnvironmentBagWindow : BagWindow
                     StateManager.Instance.Electricity.ToString("f1") + "/"
                     + GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue.ToString();
                 }
+                else if (args.state == EnvironmentStateEnum.Height)
+                {
+                    resultValue = StateManager.Instance.WaterLevel / GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue;
+                    EnvironmentStateSliders[args.state].GetComponentInChildren<Slider>().value = resultValue;
+                    EnvironmentStateSliders[args.state].transform.Find("StateNum").GetComponent<TMP_Text>().text =
+                    StateManager.Instance.WaterLevel.ToString("f1") + "/"
+                    + GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].MaxValue.ToString();
+                }
                 else if (args.state == EnvironmentStateEnum.Pressure)
                 {
                     resultValue = GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict[args.state].curValue

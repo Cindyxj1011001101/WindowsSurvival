@@ -223,7 +223,7 @@ public class StateManager : MonoBehaviour
                 WaterLevel=0;
             }
             //前端UI刷新
-            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Electricity));
+            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Height));
         }
         else
         {
