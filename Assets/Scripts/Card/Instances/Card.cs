@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.U2D;
 
 public enum CardTag
 {
