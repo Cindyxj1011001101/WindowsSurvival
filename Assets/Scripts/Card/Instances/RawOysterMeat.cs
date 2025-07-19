@@ -3,22 +3,11 @@
 /// </summary>
 public class RawOysterMeat : Card
 {
-    public RawOysterMeat()
+    private RawOysterMeat()
     {
-        //初始化参数
-        cardName = "生贝肉";
-        cardDesc = "肌纤维极其发达的贝肉，咬完感觉有点塞牙。希望生吃不会感染寄生虫。";
-        cardType = CardType.Food;
-        maxStackNum = 5;
-        moveable = true;
-        weight = 0.3f;
         events = new()
         {
             new Event("食用", "食用生贝肉", Event_Eat, null),
-        };
-        components = new()
-        {
-            { typeof(FreshnessComponent), new FreshnessComponent(1440) }
         };
     }
 
@@ -32,8 +21,8 @@ public class RawOysterMeat : Card
     {
         DestroyThis();
         // 播放吃的音效
-        if(SoundManager.Instance != null)
-        {SoundManager.Instance.PlaySound("吃_01",true);}
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         //+6饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 6));
         //-1.2健康

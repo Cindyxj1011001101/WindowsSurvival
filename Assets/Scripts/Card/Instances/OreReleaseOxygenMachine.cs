@@ -16,14 +16,8 @@ public class OreReleaseOxygenMachine : Card
     public int oreConsumption; // 白爆矿消耗量
     public float electricityConsumption; // 电力消耗量
 
-    public OreReleaseOxygenMachine()
+    private OreReleaseOxygenMachine()
     {
-        cardName = "矿石释氧机";
-        cardDesc = "将白爆矿加热到合适的温度使其反应释放氧气。操作过程中请勿吸烟。";
-        cardType = CardType.Construction;
-        maxStackNum = 1;
-        moveable = false;
-        weight = 1.1f;
         maxOxygenStorage = 360;
         curOxygenStorage = 0;
         maxTimeProgress = 360;

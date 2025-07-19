@@ -3,22 +3,12 @@
 /// </summary>
 public class OxygenCan : Card
 {
-    public OxygenCan()
+    private OxygenCan()
     {
-        cardName = "氧气罐";
-        cardDesc = "氧气罐";
-        cardType = CardType.Equipment;
-        maxStackNum = 1;
-        moveable = true;
-        weight = 4f;
         events = new()
         {
             new Event("穿上", "穿上氧气罐", Event_Equip, Judge_Equip),
             new Event("脱下", "脱下氧气罐", Event_UnEquip,Judge_UnEquip)
-        };
-        components = new()
-        {
-            { typeof(EquipmentComponent), new EquipmentComponent(EquipmentType.Back)}
         };
 
         EventManager.Instance.AddListener<Card>(EventType.Equip, OnEquipped);

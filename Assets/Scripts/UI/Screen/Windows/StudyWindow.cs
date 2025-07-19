@@ -86,7 +86,7 @@ public class StudyWindow : WindowBase
         {
             var obj = Instantiate(recipeEntry, recipeLayout);
             obj.transform.Find("Icon").GetComponent<Image>().sprite = recipe.CardImage;
-            obj.GetComponentInChildren<Text>().text = recipe.cardName;
+            obj.GetComponentInChildren<Text>().text = recipe.cardId;
         }
 
         // 显示研究按钮

@@ -5,17 +5,8 @@ using UnityEngine;
 /// </summary>
 public class AquariusFishWithProduct : Card
 {
-    public override Sprite CardImage => Resources.Load<Sprite>("Sprites/有产物的水瓶鱼");
-
-    public AquariusFishWithProduct()
+    private AquariusFishWithProduct()
     {
-        //初始化参数
-        cardName = "水瓶鱼";
-        cardDesc = "水瓶鱼是白塔星浅海特有的卵胎生鱼类，其雄鱼体型不足雌鱼0.1% ，终生附着在雌鱼泄殖腔附近。怀孕期间，雌鱼通过腹腔生物渗透膜从海水中过滤淡水，混合蛋白质形成富含营养的琥珀色育卵液。其半透明腹腔可见游动的胚胎群。";
-        cardType = CardType.Creature;
-        maxStackNum = 5;
-        moveable = false;
-        weight = 1.1f;
         events = new()
         {
             new Event("用捕网捉", "用捕网捉水瓶鱼", Event_CatchByNet, Judge_CatchByNet),
@@ -40,7 +31,7 @@ public class AquariusFishWithProduct : Card
         // 3. 掉落卡牌
 
         // 获得一张“有产物的被捉住的水瓶鱼”
-        GameManager.Instance.AddCard(new CaughtAquariusFishWithProduct(), true);
+        GameManager.Instance.AddCard("有产物的被捉住的水瓶鱼", true);
     }
 
     public bool Judge_CatchByNet()
@@ -71,7 +62,7 @@ public class AquariusFishWithProduct : Card
             TimeManager.Instance.AddTime(30);
 
             // 获得一张“有产物的被捉住的水瓶鱼”
-            GameManager.Instance.AddCard(new CaughtAquariusFishWithProduct(), true);
+            GameManager.Instance.AddCard("有产物的被捉住的水瓶鱼", true);
         }
     }
     #endregion

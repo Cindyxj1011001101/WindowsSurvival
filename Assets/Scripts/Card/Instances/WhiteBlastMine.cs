@@ -3,14 +3,8 @@
 /// </summary>
 public class WhiteBlastMine : Card
 {
-    public WhiteBlastMine()
+    private WhiteBlastMine()
     {
-        cardName = "白爆矿";
-        cardDesc = "一种由白塔星早期火山运动产生的矿物，可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。";
-        cardType = CardType.Resource;
-        maxStackNum = 10;
-        moveable = true;
-        weight = 0.9f;
         events = new()
         {
             new Event("敲碎", "敲碎白爆矿", Event_Break,null)

@@ -3,14 +3,8 @@
 /// </summary>
 public class GlassSand : Card
 {
-    public GlassSand()
+    private GlassSand()
     {
-        //初始化参数
-        cardName = "玻璃沙";
-        cardDesc = "硅基浮游藻类死亡后沉底，经长年风化形成的细腻玻璃沙。经高温锻造可制成玻璃。";
-        cardType = CardType.Resource;
-        maxStackNum = 10;
-        moveable = true;
-        weight = 0.3f;
+
     }
 }

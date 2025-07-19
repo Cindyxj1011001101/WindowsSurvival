@@ -145,7 +145,7 @@ public class CraftWindow : WindowBase
         cardIcon.sprite = recipe.CardImage;
 
         // 显示卡牌名称
-        cardNameText.text = recipe.cardName;
+        cardNameText.text = recipe.cardId;
 
         // 显示卡牌描述
         cradDescriptionText.text = recipe.cardDesc;
@@ -157,7 +157,7 @@ public class CraftWindow : WindowBase
             recipeMaterial.DisplayMaterial(
                 material.CardImage,
                 material.requiredAmount,
-                GameManager.Instance.PlayerBag.GetTotalCountOfSpecificCard(material.cardName)
+                GameManager.Instance.PlayerBag.GetTotalCountOfSpecificCard(material.cardId)
                 );
         }
 

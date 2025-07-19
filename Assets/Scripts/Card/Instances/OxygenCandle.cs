@@ -2,15 +2,9 @@
 /// 氧烛
 /// </summary>
 public class OxygenCandle : Card
-{   
-    public OxygenCandle()
+{
+    private OxygenCandle()
     {
-        cardName = "氧烛";
-        cardDesc = "无需氧气助燃的化学氧烛，顶部有一个引信，按下后内部就会开始反应，在水下也能轻松点燃。";
-        cardType = CardType.Tool;
-        maxStackNum = 5;
-        moveable = true;
-        weight = 1.8f;
         events = new()
         {
             new Event("点燃", "点燃氧烛", Event_Light, null),
@@ -20,6 +14,6 @@ public class OxygenCandle : Card
     public void Event_Light()
     {
         DestroyThis();
-        GameManager.Instance.AddCard(new LightenedOxygenCandle(), true);
+        GameManager.Instance.AddCard("点燃的氧烛", true);
     }
 }

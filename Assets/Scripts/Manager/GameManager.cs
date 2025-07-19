@@ -72,6 +72,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public Card AddCard(string cardId, bool toPlayerBag)
+    {
+        var card = CardFactory.CreateCard(cardId);
+        AddCard(card, toPlayerBag);
+        return card;
+    }
+
     public void HandleExplore()
     {
         var disposableDropList = curEnvironmentBag.disposableDropList;

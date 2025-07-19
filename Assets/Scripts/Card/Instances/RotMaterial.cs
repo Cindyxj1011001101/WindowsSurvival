@@ -3,18 +3,8 @@
 /// </summary>
 public class RotMaterial : Card
 {
-    public RotMaterial()
+    private RotMaterial()
     {
-        cardName = "腐烂物";
-        cardDesc = "一块腐烂物。";
-        cardType = CardType.Food;
-        maxStackNum = 10;
-        moveable = true;
-        weight = 0.3f;
-        tags = new()
-        {
-            CardTag.Rubbish,
-        };
         events = new()
         {
             new Event("食用", "食用腐烂物", Event_Eat, null)
@@ -25,8 +15,8 @@ public class RotMaterial : Card
     {
         DestroyThis();
         // 播放吃的音效
-        if(SoundManager.Instance != null)
-        {SoundManager.Instance.PlaySound("吃_01",true);}
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         //+6饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 6));
         //-20精神值

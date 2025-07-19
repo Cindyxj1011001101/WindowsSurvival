@@ -5,31 +5,20 @@ using UnityEngine;
 /// </summary>
 public class RatBody : Card
 {
-    public RatBody()
+    private RatBody()
     {
-        //初始化参数
-        cardName = "老鼠尸体";
-        cardDesc = "一只老鼠的尸体，可以用来制作食物。";
-        cardType = CardType.Food;
-        maxStackNum = 1;
-        moveable = true;
-        weight = 0.7f;
         events = new()
         {
             new Event("食用", "食用老鼠尸体", Event_Eat, null),
             new Event("用手剥", "用手剥老鼠尸体", Event_PeelByHand, null),
             new Event("用刀切割", "用刀切割老鼠尸体", Event_PeelByKnife, Judge_PeelByKnife),
         };
-        components = new()
-        {
-            { typeof(FreshnessComponent), new FreshnessComponent(2880) }
-        };
     }
 
     private void OnRotton()
     {
         DestroyThis();
-        GameManager.Instance.AddCard(new RotMaterial(), true);
+        GameManager.Instance.AddCard("腐烂物", true);
     }
 
     #region 食用
@@ -38,8 +27,8 @@ public class RatBody : Card
         //销毁老鼠尸体
         DestroyThis();
         // 播放吃的音效
-        if(SoundManager.Instance != null)
-        {SoundManager.Instance.PlaySound("吃_01",true);}
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         //+16饱食
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 16));
         //-20精神值
@@ -75,7 +64,7 @@ public class RatBody : Card
         card.TryUse();
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
-        GameManager.Instance.AddCard(new LittleRawMeat(), true);
+        GameManager.Instance.AddCard("小块生肉", true);
     }
 
     public bool Judge_PeelByKnife()
@@ -90,7 +79,7 @@ public class RatBody : Card
         int rand = Random.Range(0, 4);
         if (rand < 3)
         {
-            GameManager.Instance.AddCard(new LittleRawMeat(), true);
+            GameManager.Instance.AddCard("小块生肉", true);
         }
         else if (rand < 4)
         {
