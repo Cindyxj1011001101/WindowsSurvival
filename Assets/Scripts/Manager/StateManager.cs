@@ -122,7 +122,7 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.Fullness, new PlayerState(InitPlayerStateData.Instance.Fullness, 100, PlayerStateEnum.Fullness));
         PlayerStateDict.Add(PlayerStateEnum.Thirst, new PlayerState(InitPlayerStateData.Instance.Thirst, 100, PlayerStateEnum.Thirst));
         PlayerStateDict.Add(PlayerStateEnum.San, new PlayerState(InitPlayerStateData.Instance.San, 100, PlayerStateEnum.San));
-        PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 100, PlayerStateEnum.Oxygen));
+        PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 30, PlayerStateEnum.Oxygen));
         PlayerStateDict.Add(PlayerStateEnum.Tired, new PlayerState(InitPlayerStateData.Instance.Tired, 100, PlayerStateEnum.Tired));
 
         PlayerExtraStateDict.Add(PlayerStateEnum.Fullness, 0);
