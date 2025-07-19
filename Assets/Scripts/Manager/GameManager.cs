@@ -117,7 +117,6 @@ public class GameManager : MonoBehaviour
     {
         var disposableDropList = curEnvironmentBag.disposableDropList;
         var repeatableDropList = curEnvironmentBag.repeatableDropList;
-        var discoverDegree = curEnvironmentBag.DiscoveryDegree;
 
         // 当一次性探索列表还有剩余
         if (!disposableDropList.IsEmpty)
@@ -134,7 +133,7 @@ public class GameManager : MonoBehaviour
                 repeatableDropList.StartUpdating();
 
             // 探索度变化
-            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, discoverDegree);
+            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, curEnvironmentBag.DiscoveryDegree);
         }
         // 如果还可以重复探索
         else if (!repeatableDropList.IsEmpty)
