@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 
-public class DialogueWindow : WindowBase
+public class ChatWindow : WindowBase
 {
 
     protected override void Start()

@@ -33,6 +33,7 @@ public class GMCommand
         AddCard("压缩饼干");
     }
 
+
     [MenuItem("Command/添加废金属")]
     public static void B()
     {
@@ -160,5 +161,11 @@ public class GMCommand
     {
         ExcelReader.GenerateDisposableDropListJson("DisposableDropListConfig");
         ExcelReader.GenerateRepeatableDropListJson("RepeatableDropListConfig");
+    }
+
+    [MenuItem("Command/掉落渗水裂缝")]
+    public static void Q()
+    {
+        AddCard("渗水裂缝");
     }
 }
