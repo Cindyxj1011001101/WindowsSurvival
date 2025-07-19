@@ -65,7 +65,7 @@ public static class CardFactory
         var classType = classTypes[cardId];
 
         // 创建卡牌实例
-        Card card = Activator.CreateInstance(classType) as Card;
+        Card card = Activator.CreateInstance(classType, true) as Card;
 
         // 配置基础属性
         card.cardId = config.CardId;
