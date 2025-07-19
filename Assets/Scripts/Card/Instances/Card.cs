@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.U2D;
 
 public enum CardTag
 {
@@ -45,7 +46,17 @@ public abstract class Card : IComparable<Card>
     public CardSlot slot;
 
     [JsonIgnore]
-    public Sprite CardImage => Resources.Load<Sprite>("Sprites/" + imagePath);
+    public Sprite CardImage
+    {
+        get
+        {
+            // 获取图集的所有图片
+            var sprites = Resources.LoadAll<Sprite>("Sprites/" + cardType.ToString());
+            // 找到图片的索引
+            var index = int.Parse(imagePath);
+            return sprites[index];
+        }
+    }
 
     /// <summary>
     /// 每回合结算时执行
