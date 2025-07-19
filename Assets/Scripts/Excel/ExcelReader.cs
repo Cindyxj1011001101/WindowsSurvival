@@ -107,6 +107,73 @@ public static class ExcelReader
         }
         return toolTypes;
     }
+
+    public static void GenerateDisposableDropListJson(string fileName)
+    {
+        // 打开Excel文件
+        using FileStream fs = File.Open(Application.dataPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
+        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+        DataSet result = excelReader.AsDataSet();
+
+        foreach (DataTable table in result.Tables)
+        {
+            // 假设每个表都是一次性掉落列表
+            List<Drop> dropList = new();
+            DataRow row;
+            for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
+            {
+                row = table.Rows[i];
+                // 读取掉落配置
+                DropConfig config = new()
+                {
+                    CardId = row[0].ToString(),
+                    DropNum = int.Parse(row[1].ToString()),
+                    DropProb = int.Parse(row[2].ToString()),
+                    OverwriteFreshness = bool.Parse(row[3].ToString()),
+                    OverwriteDurability = bool.Parse(row[5].ToString()),
+                    OverwriteGrowth = bool.Parse(row[7].ToString()),
+                    OverwriteProgress = bool.Parse(row[9].ToString())
+                };
+                // 创建卡牌实例
+                var card = CardFactory.CreateCard(config.CardId);
+                // 覆写卡牌属性
+                if (config.OverwriteFreshness)
+                {
+                    config.freshness = int.Parse(row[4].ToString());
+                    if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
+                        freshnessComponent.freshness = config.freshness; // 设置新鲜度
+                }
+                if (config.OverwriteDurability)
+                {
+                    config.Durability = int.Parse(row[6].ToString());
+                    if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
+                        durabilityComponent.durability = config.Durability; // 设置耐久度
+                }
+                if (config.OverwriteGrowth)
+                {
+                    config.Growth = int.Parse(row[8].ToString());
+                    if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
+                        growthComponent.growth = config.Growth; // 设置生长进度
+                }
+                if (config.OverwriteProgress)
+                {
+                    config.Progress = int.Parse(row[10].ToString());
+                    if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
+                        progressComponent.progress = config.Progress; // 设置产物进度
+                }
+                // 添加到掉落列表
+                dropList.Add(new Drop
+                {
+                    card = card,
+                    dropNum = config.DropNum,
+                    dropProb = config.DropProb
+                });
+            }
+            // 保存为Json
+            DisposableDropList disposableDropList = new() { maxCount = dropList.Count, dropList = dropList };
+            JsonManager.SaveData(disposableDropList, table.TableName + "一次性掉落列表");
+        }
+    }
 }
 public class CardConfig
 {
@@ -131,4 +198,19 @@ public class CardConfig
     public EquipmentType EquipmentType; // 装备类型
     public bool IsTool; // 是否是工具
     public List<ToolType> ToolTypes; // 工具类型
+}
+
+public class DropConfig
+{
+    public string CardId; // 卡牌
+    public int DropNum; // 掉落数量
+    public int DropProb;
+    public bool OverwriteFreshness; // 是否覆盖新鲜度
+    public int freshness; // 新鲜度
+    public bool OverwriteDurability; // 是否覆盖耐久度
+    public int Durability; // 耐久度
+    public bool OverwriteGrowth;
+    public int Growth; // 生长进度
+    public bool OverwriteProgress; // 是否覆盖产物进度
+    public int Progress;
 }

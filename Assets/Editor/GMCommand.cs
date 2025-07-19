@@ -154,4 +154,10 @@ public class GMCommand
         var card = CardFactory.CreateCardFromExcel("水瓶鱼");
         Debug.Log(card);
     }
+
+    [MenuItem("Command/生成一次性掉落列表的Json文件")]
+    public static void P()
+    {
+        ExcelReader.GenerateDisposableDropListJson("DisposableDropListConfig");
+    }
 }
