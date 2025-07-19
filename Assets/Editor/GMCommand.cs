@@ -148,11 +148,10 @@ public class GMCommand
         AddCard("氧气面罩");
     }
 
-    [MenuItem("Command/从Excel创建一个水瓶鱼")]
+    [MenuItem("Command/添加一个渗水裂缝")]
     public static void O()
     {
-        var card = CardFactory.CreateCardFromExcel("水瓶鱼");
-        Debug.Log(card);
+        AddCard("渗水裂缝");
     }
 
     [MenuItem("Command/生成掉落列表的Json文件")]
