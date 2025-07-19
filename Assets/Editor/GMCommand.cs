@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEditor;
@@ -146,90 +147,52 @@ public class GMCommand
         AddCard("氧气罐");
         AddCard("氧气面罩");
     }
-    [MenuItem("Command/测试")]
-    public static void N()
+
+    [MenuItem("Command/读取Excel")]
+    public static void O()
     {
-        CardA a = new(88);
-        JsonManager.SaveData(a, "CardA");
-        CardA cardA = JsonManager.LoadData<CardA>("CardA");
-    }
-
-
-    public abstract class TestCard
-    {
-        public abstract string GiveName();
-        public abstract string GiveDescription();
-        public abstract CardType GiveCardType();
-        public abstract List<CardTag> GiveTags();
-        public abstract int GiveMaxStackCount();
-        public abstract bool GiveMoveable();
-        public abstract float GiveWeight();
-        public abstract List<Event> GiveEvents();
-        public abstract Dictionary<System.Type, ICardComponent> GiveComponents();
-    }
-
-    public class CardA : TestCard
-    {
-        private Dictionary<Type, ICardComponent> components = new()
-    {
-        { typeof(FreshnessComponent), new FreshnessComponent(20) }
-    };
-
-        private List<Event> events = new()
-    {
-        new Event("使用卡牌A", "使用卡牌A", null, null),
-    };
-
-        public CardA() { }
-        public CardA(int freshness)
+        var configs = ExcelReader.ReadCardConfig("CardConfig");
+        var config = configs["水瓶鱼"];
+        Card a = new AquariusFish()
         {
-            (components[typeof(FreshnessComponent)] as FreshnessComponent).freshness = freshness;
+            cardName = config.CardName,
+            cardDesc = config.CardDesc,
+            cardType = config.CardType,
+            maxStackNum = config.MaxStackCount,
+            moveable = config.Moveable,
+            weight = config.Weight,
+            tags = config.Tags,
+        };
+        if (config.HasFreshness)
+        {
+            a.components.Add(typeof(FreshnessComponent), new FreshnessComponent(config.MaxFreshness));
+        }
+        if (config.HasDurability)
+        {
+            a.components.Add(typeof(DurabilityComponent), new DurabilityComponent(config.MaxDurability));
+        }
+        if (config.HasGrowth)
+        {
+            a.components.Add(typeof(GrowthComponent), new GrowthComponent(config.MaxGrowth));
+        }
+        if (config.HasProgress)
+        {
+            a.components.Add(typeof(ProgressComponent), new ProgressComponent(config.MaxProgress));
+        }
+        if (config.IsEquipment)
+        {
+            a.components.Add(typeof(EquipmentComponent), new EquipmentComponent(config.EquipmentType));
+        }
+        if (config.IsTool)
+        {
+            a.components.Add(typeof(ToolComponent), new ToolComponent(config.ToolTypes));
         }
 
-        public override Dictionary<Type, ICardComponent> GiveComponents()
+        var jsonStr = JsonConvert.SerializeObject(a, Formatting.Indented, new JsonSerializerSettings
         {
-            return components;
-        }
-
-        public override CardType GiveCardType()
-        {
-            return CardType.Food;
-        }
-
-        public override string GiveDescription()
-        {
-            return "这是测试卡牌A";
-        }
-
-        public override List<Event> GiveEvents()
-        {
-            return events;
-        }
-
-        public override int GiveMaxStackCount()
-        {
-            return 9;
-        }
-
-        public override bool GiveMoveable()
-        {
-            return false;
-        }
-
-        public override string GiveName()
-        {
-            return "卡牌A";
-        }
-
-        public override List<CardTag> GiveTags()
-        {
-            return new List<CardTag>();
-        }
-
-        public override float GiveWeight()
-        {
-            return 1.2f;
-        }
-
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            TypeNameHandling = TypeNameHandling.All
+        });
+        Debug.Log(jsonStr);
     }
 }
