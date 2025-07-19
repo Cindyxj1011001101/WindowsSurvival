@@ -71,6 +71,7 @@ public static class CardFactory
         card.cardId = config.CardId;
         card.cardName = config.CardName;
         card.cardDesc = config.CardDesc;
+        card.imagePath = config.CardImagePath;
         card.cardType = config.CardType;
         card.maxStackNum = config.MaxStackCount;
         card.moveable = config.Moveable;
