@@ -90,7 +90,6 @@ public class OreReleaseOxygenMachine : Card
 
     public bool Judge_GetOxygen()
     {
-        //TODO:判断是否装备氧气罐，氧气是否已满
         Card backEquipment = EquipmentManager.Instance.BackEquipment;
         if (backEquipment != null && backEquipment.cardName == "氧气罐")
         {
