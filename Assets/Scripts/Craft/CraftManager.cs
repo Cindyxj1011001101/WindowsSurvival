@@ -31,7 +31,7 @@ public class CraftManager
     /// <returns></returns>
     public bool IsRecipeLocked(ScriptableRecipe recipe)
     {
-        return !unlockedRecipes.Contains(recipe.cardName);
+        return !unlockedRecipes.Contains(recipe.cardId);
     }
 
     /// <summary>
@@ -40,9 +40,9 @@ public class CraftManager
     /// <param name="recipe"></param>
     public void UnlockRecipe(ScriptableRecipe recipe)
     {
-        if (unlockedRecipes.Contains(recipe.cardName)) return;
+        if (unlockedRecipes.Contains(recipe.cardId)) return;
 
-        unlockedRecipes.Add(recipe.cardName);
+        unlockedRecipes.Add(recipe.cardId);
         EventManager.Instance.TriggerEvent(EventType.UnlockRecipe);
     }
 
@@ -61,7 +61,7 @@ public class CraftManager
         foreach (var material in recipe.materials)
         {
             // 任何一项材料不满足数量需求，不能合成
-            if (playerBag.GetTotalCountOfSpecificCard(material.cardName) < material.requiredAmount) return false;
+            if (playerBag.GetTotalCountOfSpecificCard(material.cardId) < material.requiredAmount) return false;
         }
 
         return true;
@@ -77,11 +77,11 @@ public class CraftManager
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
         foreach (var material in recipe.materials)
         {
-            playerBag.RemoveCards(material.cardName, material.requiredAmount);
+            playerBag.RemoveCards(material.cardId, material.requiredAmount);
         }
 
         // 创建一个新的卡牌
-        var card = CardFactory.CreateCard(recipe.cardName);
+        var card = CardFactory.CreateCard(recipe.cardId);
 
         // 掉落制作出的卡牌
         // 如果是建筑卡牌，则优先掉落到环境里
