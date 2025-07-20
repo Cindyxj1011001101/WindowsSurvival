@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 卡牌工厂，用于创建卡牌的实例
 /// </summary>
 public static class CardFactory
 {
+    // 键是卡牌ID，值是卡牌配置
     private static Dictionary<string, CardConfig> configCache = null;
-
+    // 键是卡牌ID，值是对应的卡牌类类型
     private static Dictionary<string, Type> classTypes = null;
 
     private static void InitCardConfig()
@@ -55,6 +57,30 @@ public static class CardFactory
         };
     }
 
+    public static Sprite GetCardImage(string cardId)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            // 获取图集的所有图片
+            var sprites = Resources.LoadAll<Sprite>("Sprites/" + config.CardType.ToString());
+            // 找到图片的索引
+            var index = int.Parse(config.CardImagePath);
+            return sprites[index];
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
+    public static bool GetIsBigIcon(string cardId)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            return config.IsBigIcon;
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
     public static Card CreateCard(string cardId)
     {
         // 读取卡牌配置
@@ -71,7 +97,6 @@ public static class CardFactory
         card.cardId = config.CardId;
         card.cardName = config.CardName;
         card.cardDesc = config.CardDesc;
-        card.imagePath = config.CardImagePath;
         card.cardType = config.CardType;
         card.maxStackNum = config.MaxStackCount;
         card.moveable = config.Moveable;
