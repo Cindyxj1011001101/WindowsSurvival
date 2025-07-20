@@ -30,7 +30,6 @@ public abstract class Card : IComparable<Card>
     public string cardId; // 卡牌ID
     public string cardName; // 显示名称
     public string cardDesc; // 描述
-    public string imagePath; // 图片路径
     public CardType cardType; // 卡牌类型
     public int maxStackNum; // 最大堆叠数
     public bool moveable; // 能否移动
@@ -45,17 +44,10 @@ public abstract class Card : IComparable<Card>
     public CardSlot slot;
 
     [JsonIgnore]
-    public Sprite CardImage
-    {
-        get
-        {
-            // 获取图集的所有图片
-            var sprites = Resources.LoadAll<Sprite>("Sprites/" + cardType.ToString());
-            // 找到图片的索引
-            var index = int.Parse(imagePath);
-            return sprites[index];
-        }
-    }
+    public Sprite CardImage => CardFactory.GetCardImage(cardId);
+
+    [JsonIgnore]
+    public bool IsBigIcon => CardFactory.GetIsBigIcon(cardId);
 
     /// <summary>
     /// 每回合结算时执行

@@ -39,6 +39,7 @@ public static class ExcelReader
                 HasProgress = bool.Parse(row[15].ToString()),
                 IsEquipment = bool.Parse(row[17].ToString()),
                 IsTool = bool.Parse(row[19].ToString()),
+                IsBigIcon = bool.Parse(row[21].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
@@ -215,7 +216,7 @@ public static class ExcelReader
                     OverwriteFreshness = bool.Parse(row[7].ToString()),
                     OverwriteDurability = bool.Parse(row[9].ToString()),
                     OverwriteGrowth = bool.Parse(row[11].ToString()),
-                    OverwriteProgress = bool.Parse(row[13].ToString())
+                    OverwriteProgress = bool.Parse(row[13].ToString()),
                 };
                 // 创建卡牌实例
                 var card = CardFactory.CreateCard(config.CardId);
@@ -290,6 +291,7 @@ public class CardConfig
     public EquipmentType EquipmentType; // 装备类型
     public bool IsTool; // 是否是工具
     public List<ToolType> ToolTypes; // 工具类型
+    public bool IsBigIcon; // 是否是大图标
 }
 
 public class DropConfig

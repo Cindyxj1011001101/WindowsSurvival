@@ -21,7 +21,7 @@ public class RecipeMaterial
 {
     public string cardId;
     public int requiredAmount;
-    public Sprite CardImage => Resources.Load<Sprite>("Sprites/" + cardId);
+    public Sprite CardImage => CardFactory.GetCardImage(cardId);
 }
 
 
@@ -34,7 +34,7 @@ public class ScriptableRecipe : ScriptableObject
     public List<RecipeMaterial> materials; // 制作需要的材料
     public int craftTime; // 制作时间
 
-    public Sprite CardImage => Resources.Load<Sprite>("Sprites/" + cardId);
+    public Sprite CardImage => CardFactory.GetCardImage(cardId);
 
     private void OnValidate()
     {
