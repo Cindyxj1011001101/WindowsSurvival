@@ -56,7 +56,11 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
-        if (currentObject == null) return;
+        if (currentObject == null)
+        {
+            AnimateCardReturn(pickedCount);
+            return;
+        }
 
         BagBase targetBag = currentObject.GetComponentInParent<BagBase>();
         BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
