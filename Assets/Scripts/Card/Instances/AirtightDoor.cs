@@ -14,17 +14,19 @@ public class AirtightDoor : Card
 
     public void Event_Enter()
     {
+        SoundManager.Instance.PlaySound("飞船门_02", true);
         GameManager.Instance.Move(PlaceEnum.Cockpit);
         TimeManager.Instance.AddTime(15);
     }
-
     public bool Judge_Enter()
     {
+
         return GameManager.Instance.CurEnvironmentBag.PlaceData.placeType == PlaceEnum.CoralCoast;
     }
 
     public void Event_Leave()
     {
+        SoundManager.Instance.PlaySound("飞船门_02", true);
         GameManager.Instance.Move(PlaceEnum.CoralCoast);
         TimeManager.Instance.AddTime(15);
     }

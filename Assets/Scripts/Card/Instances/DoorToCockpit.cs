@@ -13,6 +13,7 @@ public class DoorToCockpit : Card
 
     public void Event_Move()
     {
+        SoundManager.Instance.PlaySound("飞船门_02", true);
         GameManager.Instance.Move(PlaceEnum.Cockpit);
         TimeManager.Instance.AddTime(1);
     }
