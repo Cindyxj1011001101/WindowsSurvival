@@ -157,7 +157,7 @@ public class CraftWindow : WindowBase
             recipeMaterial.DisplayMaterial(
                 material.CardImage,
                 material.requiredAmount,
-                GameManager.Instance.PlayerBag.GetTotalCountOfSpecificCard(material.cardId)
+                GameManager.Instance.PlayerBag.GetTotalCountByCardId(material.cardId)
                 );
         }
 

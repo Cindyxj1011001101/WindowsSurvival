@@ -92,4 +92,46 @@ public class EnvironmentBag : BagBase
         }
         base.AddCard(card);
     }
+
+    public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)
+    {
+        List<(CardSlot, int)> result = new();
+
+        int leftCount = count; // 剩余要添加的数量
+
+        // 优先堆叠，卡牌格按照已堆叠数量降序排序，即优先堆满
+        foreach (var slot in GetSlotsByCardId(card.cardId, false))
+        {
+            if (leftCount <= 0) return result;
+
+            int remainingCapacity = slot.GetRemainingCapacity(card);
+            if (remainingCapacity > 0)
+            {
+                result.Add((slot, Mathf.Min(remainingCapacity, leftCount)));
+                leftCount -= remainingCapacity;
+            }
+        }
+
+        // 如果还有要添加的卡牌
+        // 这里不能while true，因为上面的循环可能正常结束但是leftCount<=0
+        while (leftCount > 0)
+        {
+            // 找空位
+            foreach (var slot in slots)
+            {
+                if (slot.IsEmpty)
+                {
+                    result.Add((slot, Mathf.Min(card.maxStackNum, leftCount)));
+                    leftCount -= card.maxStackNum;
+                }
+
+                if (leftCount <= 0) return result;
+            }
+            // 没有return说明还有要添加的卡牌
+            // 那么新增3个空卡牌格
+            AddSlot(3);
+        }
+
+        return result;
+    }
 }

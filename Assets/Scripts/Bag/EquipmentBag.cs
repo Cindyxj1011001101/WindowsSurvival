@@ -120,4 +120,9 @@ public class EquipmentBag : BagBase
         // 最后看装备格子有没有位置
         return equipmentSlotDict[component.equipmentType].IsEmpty;
     }
+
+    public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)
+    {
+        throw new System.NotImplementedException();
+    }
 }

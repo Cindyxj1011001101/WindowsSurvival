@@ -124,7 +124,14 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     /// <param name="cardName"></param>
     /// <returns></returns>
-    public bool ContainsSimilarCard(string cardName) => !IsEmpty && cardName == cards[0].cardName;
+    public bool ContainsByCardName(string cardName) => !IsEmpty && cardName == cards[0].cardName;
+
+    /// <summary>
+    /// 判断该卡牌格是否放有相同卡牌（ID相同）
+    /// </summary>
+    /// <param name="cardId"></param>
+    /// <returns></returns>
+    public bool ContainsByCardId(string cardId) => !IsEmpty && cardId == cards[0].cardId;
 
     /// <summary>
     /// 能否添加指定卡牌，只有id相同才能堆叠
@@ -133,6 +140,21 @@ public class CardSlot : MonoBehaviour
     public virtual bool CanAddCard(Card card)
     {
         return IsEmpty || (card.cardId == cards[0].cardId && StackCount < card.maxStackNum);
+    }
+
+    /// <summary>
+    /// 得到对于某张卡牌的剩余容量
+    /// </summary>
+    /// <param name="card"></param>
+    /// <returns></returns>
+    public int GetRemainingCapacity(Card card)
+    {
+        // 如果当前slot为空，剩余容量为card的最大堆叠数量
+        if (IsEmpty) return card.maxStackNum;
+        // 如果当前slot不为空，并且不可以堆叠该卡牌，则剩余容量为0
+        if (!CanAddCard(card)) return 0;
+        // 剩余容量为最大堆叠数 - 当前堆叠数
+        return card.maxStackNum - StackCount;
     }
 
     /// <summary>
@@ -197,6 +219,14 @@ public class CardSlot : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
             RemoveCard();
+    }
+
+    public void TransferCardsTo(CardSlot other, int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            other.AddCard(RemoveCard());
+        }
     }
 
     public Card PeekCard() => cards[0];

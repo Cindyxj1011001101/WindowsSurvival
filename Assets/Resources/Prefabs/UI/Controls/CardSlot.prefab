@@ -411,6 +411,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b4454ca4eab604a98abd53fbec83e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  singleCardDuration: 0.2
+  multiCardDuration: 0.15
+  scaleMultiplier: 1.2
+  moveEase: 27
+  scaleEase: 6
+  multiCardMoveEase: 6
 --- !u!114 &5757994356991497275
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -100,17 +100,42 @@ public abstract class BagBase : MonoBehaviour
     /// </summary>
     /// <param name="ascending">true: 按照堆叠数量升序，false: 按照堆叠数量降序</param>
     /// <returns></returns>
-    protected List<CardSlot> GetSlotsContainingSimilarCard(string cardName, bool ascending = true)
+    public List<CardSlot> GetSlotsByCardName(string cardName, bool ascending = true)
     {
         List<CardSlot> result = new();
         foreach (CardSlot slot in slots)
         {
-            if (slot.ContainsSimilarCard(cardName))
+            if (slot.ContainsByCardName(cardName))
                 result.Add(slot);
         }
         result.Sort((a, b) => ascending ? a.StackCount - b.StackCount : b.StackCount - a.StackCount);
         return result;
     }
+
+    /// <summary>
+    /// 获取放有相同卡牌的slot
+    /// </summary>
+    /// <param name="ascending">true: 按照堆叠数量升序，false: 按照堆叠数量降序</param>
+    /// <returns></returns>
+    public List<CardSlot> GetSlotsByCardId(string cardId, bool ascending = true)
+    {
+        List<CardSlot> result = new();
+        foreach (CardSlot slot in slots)
+        {
+            if (slot.ContainsByCardId(cardId))
+                result.Add(slot);
+        }
+        result.Sort((a, b) => ascending ? a.StackCount - b.StackCount : b.StackCount - a.StackCount);
+        return result;
+    }
+
+    /// <summary>
+    /// 获取所有能放置卡牌的格子以及放置数量
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    public abstract List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count);
 
     /// <summary>
     /// 添加一张卡牌
@@ -119,7 +144,8 @@ public abstract class BagBase : MonoBehaviour
     public virtual void AddCard(Card card)
     {
         // 尝试堆叠同类卡牌
-        foreach (var slot in GetSlotsContainingSimilarCard(card.cardName))
+        // 优先堆叠到当前堆叠数多的格子
+        foreach (var slot in GetSlotsByCardId(card.cardId, false))
         {
             if (slot.CanAddCard(card))
             {
@@ -150,7 +176,7 @@ public abstract class BagBase : MonoBehaviour
         {
             if (slot.IsEmpty) continue;
 
-            if (slot.ContainsSimilarCard(cardName)) return slot.PeekCard();
+            if (slot.ContainsByCardName(cardName)) return slot.PeekCard();
         }
 
         return null;
@@ -207,13 +233,13 @@ public abstract class BagBase : MonoBehaviour
     /// <param name="dontRemoveAnyIfNotAdequate">当背包的卡牌不够移除时，true: 什么也不移除，false: 尽可能多地移除卡牌</param>
     /// <returns>成功移除的卡牌的数量</returns>
     /// <exception cref="ArgumentException">amount必须是正整数</exception>
-    public int RemoveCards(string cardName, int amount, bool dontRemoveAnyIfNotAdequate = true)
+    public int RemoveCardsByCardId(string cardId, int amount, bool dontRemoveAnyIfNotAdequate = true)
     {
         if (amount <= 0) throw new ArgumentException("要移除的卡牌数量必须是正整数。");
 
         // 找到所有同类型的卡牌slot
-        // 并且将这些slot按照stackCount从大到小排序
-        var slots = GetSlotsContainingSimilarCard(cardName, false);
+        // 并且将这些slot按照堆叠数量从小到大排序
+        var slots = GetSlotsByCardId(cardId);
         // 统计总数
         int totalCount = 0;
         foreach (var slot in slots)
@@ -264,14 +290,12 @@ public abstract class BagBase : MonoBehaviour
     /// <summary>
     /// 得到背包中指定卡牌的数量
     /// </summary>
-    /// <param name="cardData"></param>
-    /// <returns></returns>
-    public int GetTotalCountOfSpecificCard(string cardName)
+    public int GetTotalCountByCardId(string cardId)
     {
         int totalCount = 0;
         foreach (var slot in slots)
         {
-            if (slot.ContainsSimilarCard(cardName))
+            if (slot.ContainsByCardId(cardId))
                 totalCount += slot.StackCount;
         }
 
@@ -357,7 +381,7 @@ public abstract class BagBase : MonoBehaviour
             SoundManager.Instance.PlaySound("万能泡泡音", true);
 
         // 第一步：尝试合并相同类型的卡牌
-        TryMergeSimilarCards();
+        TryMergeSameCards();
 
         // 第二步：紧凑排列剩余的卡牌
         CompactRemainingCards();
@@ -366,7 +390,7 @@ public abstract class BagBase : MonoBehaviour
     /// <summary>
     /// 尝试合并相同类型的卡牌
     /// </summary>
-    private void TryMergeSimilarCards()
+    private void TryMergeSameCards()
     {
         // 创建一个字典来记录每种卡牌的槽位
         Dictionary<string, List<CardSlot>> cardSlotsDict = new();
@@ -376,12 +400,12 @@ public abstract class BagBase : MonoBehaviour
         {
             if (!slot.IsEmpty)
             {
-                string cardName = slot.PeekCard().cardName;
-                if (!cardSlotsDict.ContainsKey(cardName))
+                string cardId = slot.PeekCard().cardId;
+                if (!cardSlotsDict.ContainsKey(cardId))
                 {
-                    cardSlotsDict[cardName] = new List<CardSlot>();
+                    cardSlotsDict[cardId] = new List<CardSlot>();
                 }
-                cardSlotsDict[cardName].Add(slot);
+                cardSlotsDict[cardId].Add(slot);
             }
         }
 
