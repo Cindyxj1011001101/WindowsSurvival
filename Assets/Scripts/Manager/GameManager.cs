@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     public EnvironmentBag CurEnvironmentBag => curEnvironmentBag;
     public EquipmentBag EquipmentBag => equipmentBag;
 
-    public void Awake()
+    private void Awake()
     {
         instance = this;
         DontDestroyOnLoad(gameObject);
@@ -50,6 +50,17 @@ public class GameManager : MonoBehaviour
         // 当前环境背包
         curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
         equipmentBag = FindObjectOfType<EquipmentBag>(true);
+    }
+
+    private void Start()
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        Move(GameDataManager.Instance.LastPlace);
+        // 播放环境音乐
     }
 
     public void AddCard(Card card, bool toPlayerBag)
@@ -183,8 +194,6 @@ public class GameManager : MonoBehaviour
             AddCard(door[0], false);
 
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
-
-
     }
 
     private string ParsePlaceEnum(PlaceEnum place)

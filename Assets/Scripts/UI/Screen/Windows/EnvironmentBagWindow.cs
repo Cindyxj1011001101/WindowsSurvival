@@ -44,7 +44,7 @@ public class EnvironmentBagWindow : BagWindow
 
     protected override void Init()
     {
-        GameManager.Instance.Move(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType);
+        //GameManager.Instance.Move(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType);
     }
 
     /// <summary>

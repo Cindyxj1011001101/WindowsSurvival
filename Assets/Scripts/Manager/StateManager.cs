@@ -103,10 +103,10 @@ public class StateManager : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject);
-        Init();
     }
     public void Start()
     {
+        Init();
         EventManager.Instance.AddListener<ChangeStateArgs>(EventType.ChangeState, OnPlayerChangeState);
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
     }
