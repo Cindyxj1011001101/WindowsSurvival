@@ -61,6 +61,23 @@ public class GameManager : MonoBehaviour
     {
         Move(GameDataManager.Instance.LastPlace);
         // 播放环境音乐
+        switch(GameDataManager.Instance.LastPlace)
+        {
+            case PlaceEnum.PowerCabin:
+                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.Cockpit:
+                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.LifeSupportCabin:
+                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.CoralCoast:
+                //珊瑚礁海域的音乐还没制作
+                //SoundManager.Instance.PlayBGM("珊瑚礁海域_01, true);
+                break;
+        }
+
     }
 
     public void AddCard(Card card, bool toPlayerBag)
@@ -209,65 +226,40 @@ public class GameManager : MonoBehaviour
     }
     public void PlayPlaceMusic(EnvironmentBag nextEnvironmentBag)
     {
-        if (curEnvironmentBag.PlaceData.placeType == PlaceEnum.PowerCabin)
+        switch (nextEnvironmentBag.PlaceData.placeType)
         {
-            //能从动力舱到动力舱说明这是游戏开局
-            if (nextEnvironmentBag.PlaceData.placeType == PlaceEnum.PowerCabin)
-            {
-                //SoundManager.Instance.PlayBGM("飞船内_01", true);
-                return;
-            }
-            
-            if (nextEnvironmentBag.PlaceData.isInSpacecraft)
-            {
-                SoundManager.Instance.PlaySound("飞船门");
-                
-            }
-            else
-            {
-                SoundManager.Instance.StopBGM();
-                
-            }
-        }
-        else if (curEnvironmentBag.PlaceData.placeType == PlaceEnum.Cockpit)
-        {
-            if (nextEnvironmentBag.PlaceData.isInSpacecraft)
-            {
-                SoundManager.Instance.PlaySound("飞船门");
-            }
-            else
-            {
-                SoundManager.Instance.StopBGM();
-                
-            }
-        }
-        else if (curEnvironmentBag.PlaceData.placeType == PlaceEnum.LifeSupportCabin)
-        {
-            if (nextEnvironmentBag.PlaceData.isInSpacecraft)
-            {
-                SoundManager.Instance.PlaySound("飞船门");
-            }
-            else
-            {
-                SoundManager.Instance.StopBGM();
-                
-            }
-        }
-        else if (curEnvironmentBag.PlaceData.placeType == PlaceEnum.CoralCoast)
-        {
-            if (!nextEnvironmentBag.PlaceData.isInSpacecraft)
-            {
-                
-            }
-            else
-            {
-                SoundManager.Instance.StopBGM();
-                
-            }
-        }     
         
+            case PlaceEnum.PowerCabin:
+                if (curEnvironmentBag.PlaceData.isInSpacecraft)
+                    //无事发生
+                    break;
+                else
+                    SoundManager.Instance.StopBGM();
+                    SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.Cockpit:
+                if (curEnvironmentBag.PlaceData.isInSpacecraft)
+                    //无事发生
+                    break;
+                else
+                    SoundManager.Instance.StopBGM();
+                    SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.LifeSupportCabin:
+                if (curEnvironmentBag.PlaceData.isInSpacecraft)
+                    //无事发生
+                    break;
+                else
+                    SoundManager.Instance.StopBGM();
+                    SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.CoralCoast:
+                SoundManager.Instance.StopBGM();
+                //珊瑚礁海域的音乐还没制作
+                //SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
+                break;
+        };   
         
-       
 
     }
 }

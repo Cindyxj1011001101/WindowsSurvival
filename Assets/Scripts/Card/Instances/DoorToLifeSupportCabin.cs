@@ -13,6 +13,7 @@ public class DoorToLifeSupportCabin : Card
 
     public void Event_Move()
     {
+        SoundManager.Instance.PlaySound("飞船门_02", true);
         GameManager.Instance.Move(PlaceEnum.LifeSupportCabin);
         TimeManager.Instance.AddTime(1);
     }
