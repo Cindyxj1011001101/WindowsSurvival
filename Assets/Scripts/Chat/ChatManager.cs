@@ -37,19 +37,13 @@ public class ChatManager : MonoBehaviour
     public GameObject AsideTextBox; // 旁白消息文本框预制体
 
     [Header("已生成的对话列表")]
-    public List<ChatData> GeneratedChatDataList;//已生成的对话列表，存档&&读档用
+    public List<ChatData> GeneratedChatDataList=new List<ChatData>();//已生成的对话列表，存档&&读档用
 
-    [Header("存档路径")]
-    public string SaveFolder; // 存档文件夹路径
-    public string SaveFilePath; // 存档文件路径
-    //已生成对话列表考虑用其他方法存储？
-
+    public List<int> ParagraphToTriggeer=new List<int>();//需要触发的对话列表
     #endregion
 
     private void Awake()
     {
-
-
         // 确保只有一个实例
         if (instance != null && instance != this)
         {
@@ -58,13 +52,28 @@ public class ChatManager : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(gameObject);
-
+        EventManager.Instance.AddListener<int>(EventType.TriggerParagraph, TriggerParagraph);//触发某段对话
+        GameDataManager.Instance.LoadGeneratedChatData();   
+        if(GeneratedChatDataList.Count==0)//没有生成过对话时
+        {
+            ParagraphToTriggeer.Add(0);//添加新手引导
+        }
+        CSVReader.ReadChatData("test");
     }
     public void OnDestroy()
     {
         instance = null;
+        GameDataManager.Instance.SaveGeneratedChatData();
+        EventManager.Instance.RemoveListener<int>(EventType.TriggerParagraph, TriggerParagraph);
     }
-
-   
+    public void TriggerParagraph(int paragraphIndex)
+    {
+        ParagraphToTriggeer.Add(paragraphIndex);
+    }
+    
+    public void Update()
+    {
+        
+    }
 
 }

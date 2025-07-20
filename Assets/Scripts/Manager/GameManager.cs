@@ -214,7 +214,7 @@ public class GameManager : MonoBehaviour
             //能从动力舱到动力舱说明这是游戏开局
             if (nextEnvironmentBag.PlaceData.placeType == PlaceEnum.PowerCabin)
             {
-                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                //SoundManager.Instance.PlayBGM("飞船内_01", true);
                 return;
             }
             

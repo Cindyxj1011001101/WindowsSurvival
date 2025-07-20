@@ -17,6 +17,7 @@
     CurEnvironmentChangeState, // 当前环境状态变化
     Equip, // 穿上装备
     Unequip, // 卸下装备
+    TriggerParagraph, // 触发对话
 }
 
 public class ChangeStateArgs
