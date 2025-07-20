@@ -727,9 +727,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1720048206}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e817ebe64554c4f42ab8cdda25141ea2, type: 3}
+  m_Script: {fileID: 11500000, guid: b634f1509a0757b4a8c8c589bb519796, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NPCTextBox: {fileID: 2730436399050498189, guid: 79805b18764676a4590b9d5e39e2f82b, type: 3}
+  PlayerTextBox: {fileID: 7549552764796295716, guid: 6c307692f95b87d4681fc2fa9c2da32f, type: 3}
+  AsideTextBox: {fileID: 7733422497207593300, guid: ff73997b445553f4d8423abd951f0ba9, type: 3}
+  SaveFolder: 
+  SaveFilePath: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

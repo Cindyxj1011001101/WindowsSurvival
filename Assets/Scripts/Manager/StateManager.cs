@@ -26,6 +26,7 @@ public enum EnvironmentStateEnum
     Pressure,
     Height,
     HasCable,
+    InWater,
 }
 
 /// <summary>
@@ -155,6 +156,14 @@ public class StateManager : MonoBehaviour
         {
             environmentStateDict.Add(EnvironmentStateEnum.HasCable, new EnvironmentState(0, 1, EnvironmentStateEnum.HasCable));
         }
+        if(GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
+        {
+            environmentStateDict.Add(EnvironmentStateEnum.InWater, new EnvironmentState(1, 1, EnvironmentStateEnum.InWater));
+        }
+        else
+        {
+            environmentStateDict.Add(EnvironmentStateEnum.InWater, new EnvironmentState(0, 1, EnvironmentStateEnum.InWater));
+        }
         environmentStateDict.Add(EnvironmentStateEnum.Electricity, new EnvironmentState(Electricity, 50, EnvironmentStateEnum.Electricity));
         return environmentStateDict;
     }
@@ -259,7 +268,20 @@ public class StateManager : MonoBehaviour
 
     public void ExtraEnvironmentIntervalSettle()
     {
-
+        //水位满时，所有在飞船内的环境修改为水域环境
+        if(GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict.ContainsKey(EnvironmentStateEnum.Height))
+        {
+            if(StateManager.Instance.WaterLevel==100)
+            {
+                foreach(var item in GameManager.Instance.EnvironmentBags)
+                {
+                    if(item.Value.PlaceData.isInSpacecraft)
+                    {
+                        item.Value.EnvironmentStateDict[EnvironmentStateEnum.InWater].curValue=1;
+                    }
+                }
+            }
+        }
     }
 
     public void PlayerIntervalSettle()

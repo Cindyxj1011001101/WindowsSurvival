@@ -163,6 +163,23 @@ public class GameDataManager
     }
     #endregion
 
+    #region 已生成的对话
+    private GeneratedChatData generatedChatData;
+    public GeneratedChatData GeneratedChatData => generatedChatData;
+
+    public void SaveGeneratedChatData()
+    {
+        generatedChatData = new GeneratedChatData();
+        generatedChatData.GeneratedChatDataList = ChatManager.Instance.GeneratedChatDataList;
+        JsonManager.SaveData(generatedChatData, "GeneratedChatData");
+    }
+
+    public void LoadGeneratedChatData()
+    {
+        generatedChatData = JsonManager.LoadData<GeneratedChatData>("GeneratedChatData");
+    }
+    #endregion
+
     #region 游戏运行时数据
     private GameRuntimeData gameRuntimeData;
     public GameRuntimeData GameRuntimeData => gameRuntimeData;
