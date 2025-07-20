@@ -38,5 +38,8 @@ public static class MonoUtility
         float containerHeight = totalRows * layout.cellSize.y + (totalRows - 1) * layout.spacing.y + layout.padding.top + layout.padding.bottom;
 
         layoutTransform.sizeDelta = new Vector2(layoutTransform.sizeDelta.x, containerHeight);
+
+        // 立刻更新布局
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
     }
 }
