@@ -7,15 +7,19 @@ public class SoundManager : MonoBehaviour
     public static SoundManager Instance => instance;
 
     private AudioSource audioSource;
+    private AudioSource sfxSource; // 专用于音效
 
     private void Awake()
     {
         instance = this;
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-            audioSource = gameObject.AddComponent<AudioSource>();
+        
+        audioSource = gameObject.AddComponent<AudioSource>();
 
         audioSource.playOnAwake = false;
+
+        
+        sfxSource = gameObject.AddComponent<AudioSource>();
+        sfxSource.playOnAwake = false;
 
         GameDataManager.Instance.onBGMVolumeChanged.AddListener(OnBGMVolumeChanged);
         DontDestroyOnLoad(gameObject);
@@ -62,25 +66,26 @@ public class SoundManager : MonoBehaviour
             float finalVolume = Mathf.Clamp(baseVolume * volumeVariation, 0f, 1f);
 
             // 随机音调波动（±5%）
-            audioSource.pitch = 1f + UnityEngine.Random.Range(-0.1f, 0.1f);
+            sfxSource.pitch = 1f + UnityEngine.Random.Range(-0.1f, 0.1f);
 
             // 播放音效
-            audioSource.PlayOneShot(clip, finalVolume);
+            sfxSource.PlayOneShot(clip, finalVolume);
 
             
         }
         else
         {
-            audioSource.pitch = 1f;
-            audioSource.PlayOneShot(clip, baseVolume);
+            sfxSource.pitch = 1f;
+            sfxSource.PlayOneShot(clip, baseVolume);
         }
         
     }
+   
 
-    public void PlaySound(string clipName,bool isRandom = false)
+    public void PlaySound(string clipName, bool isRandom = false)
     {
         var clip = GetClip(clipName, "SFX");
-        PlaySound(clip,isRandom);
+        PlaySound(clip, isRandom);
     }
 
     private AudioClip GetClip(string clipName, string type)
