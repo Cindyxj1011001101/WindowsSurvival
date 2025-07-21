@@ -7,50 +7,34 @@ using UnityEngine.UI;
 /// </summary>
 public class BottomBarShortcut : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    [SerializeField]
-    private Image appIconImage;
+    [SerializeField] private Image normalImage;
+    [SerializeField] private CanvasGroup closedCanvasGroup;
+    [SerializeField] private Image hoveredImage;
 
     private bool selected = false;
 
     public bool Selected => selected;
 
-    private string appName;
-    public string AppName => appName;
+    public string AppName => name;
 
-    [SerializeField]
-    private Animator selectAnimator;
-    [SerializeField]
-    private Animator appearAnimator;
-
-    private void Start()
-    {
-        Appear();
-    }
-
-    public void Init(App app)
-    {
-        appName = app.name;
-        appIconImage.sprite = app.icon;
-    }
+    public RectTransform RectTransform => transform as RectTransform;
 
     public void OnPointerClick(PointerEventData eventData)
     {
         if (selected)
-            WindowsManager.Instance.MinimizeWindow(appName);
+            WindowsManager.Instance.MinimizeWindow(AppName);
         else
-            WindowsManager.Instance.OpenWindow(appName);
+            WindowsManager.Instance.OpenWindow(AppName);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (!selected)
-            selectAnimator.SetTrigger("Highlight");
+        hoveredImage.gameObject.SetActive(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (!selected)
-            selectAnimator.SetTrigger("Normal");
+        hoveredImage.gameObject.SetActive(false);
     }
 
     // 不要自己调用
@@ -61,25 +45,17 @@ public class BottomBarShortcut : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (this.selected == selected) return;
 
         // 由非选中到选中
-        if (selected && !this.selected)
-            selectAnimator.SetTrigger("Select");
-        // 由选中到非选中
-        else
-            selectAnimator.SetTrigger("Deselect");
+        //if (selected && !this.selected)
+        //    selectAnimator.SetTrigger("Select");
+        //// 由选中到非选中
+        //else
+        //    selectAnimator.SetTrigger("Deselect");
 
         this.selected = selected;
     }
 
-    // 播放出现的动画
-    public void Appear()
+    public void SetOpened(bool value)
     {
-        appearAnimator.SetTrigger("Appear");
-    }
-
-    // 播放消失的动画
-    public void Disappear()
-    {
-        appearAnimator.SetTrigger("Disappear");
-        Destroy(gameObject, .2f);
+        closedCanvasGroup.enabled = !value;
     }
 }

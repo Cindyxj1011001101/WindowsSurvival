@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BtnMinimizedDefult
+      name: UI_btn_Minimized_defult
       rect:
         serializedVersion: 2
         x: 35
@@ -202,7 +202,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_0
+      name: UI_btn_Minimized_hovered
       rect:
         serializedVersion: 2
         x: 35
@@ -223,7 +223,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_1
+      name: UI_btn_FullScreen_hovered
       rect:
         serializedVersion: 2
         x: 55
@@ -244,7 +244,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_2
+      name: UI_btn_Closed_hovered
       rect:
         serializedVersion: 2
         x: 75
@@ -265,7 +265,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_3
+      name: UI_Panel
       rect:
         serializedVersion: 2
         x: 93
@@ -286,7 +286,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_4
+      name: UI_HoveredFrame
       rect:
         serializedVersion: 2
         x: 126
@@ -307,7 +307,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_5
+      name: UI_ProgressBarFrame_2
       rect:
         serializedVersion: 2
         x: 152
@@ -328,7 +328,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_6
+      name: UI_ProgressBarFrame_1
       rect:
         serializedVersion: 2
         x: 152
@@ -349,7 +349,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_7
+      name: UI_Arrow
       rect:
         serializedVersion: 2
         x: 3
@@ -370,7 +370,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_8
+      name: UI_btn_Up_hovered
       rect:
         serializedVersion: 2
         x: 12
@@ -391,7 +391,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_9
+      name: UI_btn_Left_hovered
       rect:
         serializedVersion: 2
         x: 1
@@ -412,7 +412,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_10
+      name: UI_btn_Down_hovered
       rect:
         serializedVersion: 2
         x: 12
@@ -433,7 +433,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_11
+      name: UI_btn_Right_hovered
       rect:
         serializedVersion: 2
         x: 23
@@ -454,7 +454,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_12
+      name: UI_Slidingbar_hovered
       rect:
         serializedVersion: 2
         x: 23
@@ -475,7 +475,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_13
+      name: UI_Slidingbar_default
       rect:
         serializedVersion: 2
         x: 34
@@ -496,7 +496,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_14
+      name: UI_btn_Up_defult
       rect:
         serializedVersion: 2
         x: 45
@@ -517,7 +517,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_15
+      name: UI_btn_Left_defult
       rect:
         serializedVersion: 2
         x: 34
@@ -538,7 +538,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_16
+      name: UI_btn_Down_defult
       rect:
         serializedVersion: 2
         x: 45
@@ -559,7 +559,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_17
+      name: UI_btn_Right_defult
       rect:
         serializedVersion: 2
         x: 56
@@ -580,7 +580,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_18
+      name: UI_NameTooltip
       rect:
         serializedVersion: 2
         x: 108
@@ -853,7 +853,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_31
+      name: UI_CardSlot
       rect:
         serializedVersion: 2
         x: 0
@@ -874,7 +874,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_32
+      name: UI_Card
       rect:
         serializedVersion: 2
         x: 68
@@ -895,7 +895,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_33
+      name: UI_CardHoveredFrame
       rect:
         serializedVersion: 2
         x: 136
@@ -916,7 +916,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_34
+      name: UI_Number
       rect:
         serializedVersion: 2
         x: 68
@@ -924,7 +924,7 @@ TextureImporter:
         width: 17
         height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -937,7 +937,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_35
+      name: UI_MaximumNumber
       rect:
         serializedVersion: 2
         x: 88
@@ -945,7 +945,7 @@ TextureImporter:
         width: 17
         height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -953,6 +953,69 @@ TextureImporter:
       bones: []
       spriteID: 4fe75f804e83ac44e8d3b333859bb65a
       internalID: -1474591250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_checkbox_checked
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 477
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40ef9faec6113184f8ba5431a58f11af
+      internalID: -736511663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_checkbox_default
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 477
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d96f093b66e1b1e4a9e1466f60b0bb28
+      internalID: 1879455347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Locked
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 477
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b8c1120b5f10a4a40a23c302598df7ad
+      internalID: -758408193
       vertices: []
       indices: 
       edges: []
@@ -968,20 +1031,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      BtnMinimizedDefult: -1399726919
-      UI_0: -416697522
-      UI_1: 1210181592
-      UI_10: -2028475834
-      UI_11: -1658534207
-      UI_12: 853517195
-      UI_13: 959292114
-      UI_14: -1508199800
-      UI_15: 965470697
-      UI_16: 1652564440
-      UI_17: 1958250545
-      UI_18: -1275816256
       UI_19: -1067156244
-      UI_2: 1634247039
       UI_20: 1605050901
       UI_21: 688397521
       UI_22: -561198943
@@ -992,23 +1042,39 @@ TextureImporter:
       UI_27: 1579222815
       UI_28: -819797999
       UI_29: -150795827
-      UI_3: -1503842033
       UI_30: -704582210
-      UI_31: -1859285613
-      UI_32: 470443997
-      UI_33: -275653607
-      UI_34: -841556680
-      UI_35: -1474591250
-      UI_4: 1242553631
-      UI_5: -1122912679
-      UI_6: -1837554866
-      UI_7: -817005766
-      UI_8: 2045139253
-      UI_9: -587034484
+      UI_Arrow: -817005766
+      UI_Card: 470443997
+      UI_CardHoveredFrame: -275653607
+      UI_CardSlot: -1859285613
+      UI_HoveredFrame: 1242553631
+      UI_Locked: -758408193
+      UI_MaximumNumber: -1474591250
+      UI_NameTooltip: -1275816256
+      UI_Number: -841556680
+      UI_Panel: -1503842033
+      UI_ProgressBarFrame_1: -1837554866
+      UI_ProgressBarFrame_2: -1122912679
+      UI_Slidingbar_default: 959292114
+      UI_Slidingbar_hovered: 853517195
       UI_btn_Arrange_defult: -757670956
       UI_btn_Arrange_hovered: 1569353146
       UI_btn_Closed_defult: -563433557
+      UI_btn_Closed_hovered: 1634247039
+      UI_btn_Down_defult: 1652564440
+      UI_btn_Down_hovered: -2028475834
       UI_btn_FullScreen_defult: -836057702
+      UI_btn_FullScreen_hovered: 1210181592
+      UI_btn_Left_defult: 965470697
+      UI_btn_Left_hovered: -587034484
+      UI_btn_Minimized_defult: -1399726919
+      UI_btn_Minimized_hovered: -416697522
+      UI_btn_Right_defult: 1958250545
+      UI_btn_Right_hovered: -1658534207
+      UI_btn_Up_defult: -1508199800
+      UI_btn_Up_hovered: 2045139253
+      UI_checkbox_checked: -736511663
+      UI_checkbox_default: 1879455347
   mipmapLimitGroupName: 
   pSDRemoveMatte: 1
   userData: 

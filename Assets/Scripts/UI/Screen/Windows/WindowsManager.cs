@@ -59,7 +59,7 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
             // 添加到已打开窗口中
             openedWindows.Add(appName, window);
             // 将快捷方式添加到底部栏
-            bottomBar.AddShortcut(appsData.Find(app => app.name == appName));
+            //bottomBar.AddShortcut(appsData.Find(app => app.name == appName));
         }
         else
         {
@@ -88,7 +88,7 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         windowGroup.CloseWindow(window);
 
         // 将底边栏的快捷方式移除
-        bottomBar.RemoveShortcut(appName);
+        //bottomBar.RemoveShortcut(appName);
 
         // 设置获得焦点的窗口是渲染层级最靠前的窗口
         // 或者是null
