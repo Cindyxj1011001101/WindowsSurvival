@@ -101,7 +101,7 @@ public class BottomBar : MonoBehaviour
         selectRect.anchoredPosition = startPos;
 
         Vector2 targetPos = shortcuts[appName].RectTransform.anchoredPosition;
-        Vector2 targetSize = shortcuts[appName].RectTransform.sizeDelta;
+        Vector2 targetSize = selectRect.sizeDelta;
         Vector2 stretchedSize = new Vector2(
             targetSize.x * 1.2f, // 拉伸比例
             targetSize.y);
