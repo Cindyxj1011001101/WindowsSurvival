@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Collections;
 
 [ExecuteAlways]
 [RequireComponent(typeof(RectTransform))]
@@ -23,11 +24,10 @@ public class CustomVerticalLayout : MonoBehaviour
 
     void OnEnable()
     {
-        RefreshChildren();
+        RefreshAllChildren();
     }
 
-
-    public void RefreshChildren()
+    public void RefreshAllChildren()
     {
         children.Clear();
         for (int i = 0; i < transform.childCount; i++)
@@ -36,40 +36,20 @@ public class CustomVerticalLayout : MonoBehaviour
             if (child == null) continue;
             if (child.gameObject.activeSelf == false) continue;
             children.Add(child);
-
-            var textbox = child.GetComponent<CustomTextBox>();
-            if (textbox != null)
-            {
-                textbox.OnSizeChanged -= UpdateLayout;
-                textbox.OnSizeChanged += UpdateLayout;
-            }
         }
-    }
-
-    public void RefreshAllTextBoxWidths()
-    {
         foreach (var child in children)
         {
-            var textbox = child.GetComponent<CustomTextBox>();
-            if (textbox != null)
-            {
-                textbox.RefreshSizeIfNeeded(); 
-            }
+            child.GetComponentInChildren<CustomTextBox>().RefreshSizeIfNeeded();
+            //Debug.Log(child.name + " " + child.GetComponentInChildren<RectTransform>().rect.height);
         }
-    }
-
-    public void UpdateLayout()
-    {
         float currentY = topSpacing;
         foreach (var child in children)
         {
             child.anchoredPosition = new Vector2(child.anchoredPosition.x, -currentY);
             currentY += child.sizeDelta.y + spacing;
         }
-
         float totalHeight = currentY + bottomSpacing;
         totalHeight = Mathf.Max(0, totalHeight);
         rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, totalHeight);
     }
-
 }

@@ -25,7 +25,10 @@ public class EventManager : MonoBehaviour
                 {
                     GameObject managerObj = new GameObject("EventManager");
                     instance = managerObj.AddComponent<EventManager>();
-                    DontDestroyOnLoad(managerObj); // 跨场景保持实例
+                    if (Application.isPlaying)
+                    {
+                        DontDestroyOnLoad(managerObj);
+                    }
                 }
             }
             return instance;
