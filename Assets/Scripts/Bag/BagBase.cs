@@ -108,7 +108,7 @@ public abstract class BagBase : MonoBehaviour
             if (slot.ContainsByCardName(cardName))
                 result.Add(slot);
         }
-        result.Sort((a, b) => ascending ? a.StackCount - b.StackCount : b.StackCount - a.StackCount);
+        result.Sort((a, b) => ascending ? a.StackNum - b.StackNum : b.StackNum - a.StackNum);
         return result;
     }
 
@@ -125,7 +125,7 @@ public abstract class BagBase : MonoBehaviour
             if (slot.ContainsByCardId(cardId))
                 result.Add(slot);
         }
-        result.Sort((a, b) => ascending ? a.StackCount - b.StackCount : b.StackCount - a.StackCount);
+        result.Sort((a, b) => ascending ? a.StackNum - b.StackNum : b.StackNum - a.StackNum);
         return result;
     }
 
@@ -244,7 +244,7 @@ public abstract class BagBase : MonoBehaviour
         int totalCount = 0;
         foreach (var slot in slots)
         {
-            totalCount += slot.StackCount;
+            totalCount += slot.StackNum;
         }
 
         // 如果总数小于需要移除的数量
@@ -269,10 +269,10 @@ public abstract class BagBase : MonoBehaviour
         {
             // 剩余要移除的数量大于当前slot的总数
             // 全部从slot中移除
-            if (leftAmount > slot.StackCount)
+            if (leftAmount > slot.StackNum)
             {
                 slot.ClearSlot();
-                leftAmount -= slot.StackCount;
+                leftAmount -= slot.StackNum;
             }
             // 剩余要移除的数量小于等于当前slot的总数
             // 则将这些卡牌移除，退出循环
@@ -296,7 +296,7 @@ public abstract class BagBase : MonoBehaviour
         foreach (var slot in slots)
         {
             if (slot.ContainsByCardId(cardId))
-                totalCount += slot.StackCount;
+                totalCount += slot.StackNum;
         }
 
         return totalCount;
@@ -416,7 +416,7 @@ public abstract class BagBase : MonoBehaviour
             if (slotsOfType.Count > 1)
             {
                 // 按堆叠数量升序排列，优先合并到堆叠较少的槽位
-                slotsOfType.Sort((a, b) => a.StackCount - b.StackCount);
+                slotsOfType.Sort((a, b) => a.StackNum - b.StackNum);
 
                 // 从第二个槽位开始，尝试将卡牌合并到前面的槽位
                 for (int i = 1; i < slotsOfType.Count; i++)

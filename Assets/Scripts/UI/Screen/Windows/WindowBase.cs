@@ -24,9 +24,9 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     private WindowState lastState = WindowState.Closed;
     private WindowState state = WindowState.Closed;
 
-    private Vector2 lastPosition;
-    private Vector2 lastScale;
-    private Vector2 lastSizeDelta;
+    private Vector3 lastPosition;
+    private Vector3 lastScale;
+    private Vector3 lastSizeDelta;
 
     private bool focused = false;
 

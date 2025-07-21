@@ -30,13 +30,13 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         if (eventData.button == PointerEventData.InputButton.Left)
             // 左键拖拽
-            pickedCount = sourceSlot.StackCount;
+            pickedCount = sourceSlot.StackNum;
         else
             // 右键拖拽
             pickedCount = 1;
 
         // 更新源卡槽显示
-        sourceSlot.DisplayCard(sourceSlot.PeekCard(), sourceSlot.StackCount - pickedCount);
+        sourceSlot.DisplayCard(sourceSlot.PeekCard(), sourceSlot.StackNum - pickedCount);
         cursorSlot.DisplayCard(sourceSlot.PeekCard(), pickedCount);
     }
 
@@ -47,7 +47,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        dragEndPosition = cursorSlot.transform.position;
+        dragEndPosition = eventData.position;
         Destroy(cursorSlot.gameObject);
 
         if (SoundManager.Instance != null)
@@ -128,7 +128,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
             if (targetBag != null && targetBag.CanAddCard(sourceSlot.PeekCard()))
             {
-                sourceSlot.DisplayCard(sourceSlot.PeekCard(), sourceSlot.StackCount - 1);
+                sourceSlot.DisplayCard(sourceSlot.PeekCard(), sourceSlot.StackNum - 1);
                 PlaceCardInDifferentBag(targetBag, 1, sourceSlot.transform.position);
             }
         }

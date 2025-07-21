@@ -10,7 +10,7 @@ public class BottomBar : MonoBehaviour
 
     private Dictionary<string, BottomBarShortcut> shortcuts = new();
 
-    private string curSelectedAppName;
+    private string selectedAppName;
     private Sequence currentAnimation;
 
     public BottomBarShortcut this[string appName]
@@ -31,6 +31,7 @@ public class BottomBar : MonoBehaviour
             if (layoutTransform.GetChild(i).TryGetComponent<BottomBarShortcut>(out var shortcut))
             {
                 shortcuts.Add(shortcut.AppName, shortcut);
+                shortcut.SetOpened(false);
             }
         }
         selectRect.gameObject.SetActive(false);
@@ -59,16 +60,16 @@ public class BottomBar : MonoBehaviour
 
     public void SelectAppShortcut(string appName)
     {
-        //foreach (var shortcut in shortcuts.Values)
-        //{
-        //    // 找到被选中的对象
-        //    if (appName == shortcut.AppName)
-        //        // 将选择反过来
-        //        shortcut.SetSelected(!shortcut.Selected);
-        //    // 其他没有被选中的对象都是false
-        //    else
-        //        shortcut.SetSelected(false);
-        //}
+        foreach (var shortcut in shortcuts.Values)
+        {
+            // 找到被选中的对象
+            if (appName == shortcut.AppName)
+                // 将选择反过来
+                shortcut.SetSelected(!shortcut.Selected);
+            // 其他没有被选中的对象都是false
+            else
+                shortcut.SetSelected(false);
+        }
         SelectIconWithTween(appName);
     }
 
@@ -79,11 +80,13 @@ public class BottomBar : MonoBehaviour
         {
             shortcut.SetSelected(false);
         }
+        selectedAppName = null;
+        selectRect.gameObject.SetActive(false);
     }
 
     public void SelectIconWithTween(string appName)
     {
-        if (curSelectedAppName == appName) return;
+        if (selectedAppName == appName) return;
 
         // 停止当前动画
         if (currentAnimation != null && currentAnimation.IsActive())
@@ -91,18 +94,9 @@ public class BottomBar : MonoBehaviour
             currentAnimation.Kill();
         }
 
-        //Vector2 startPos = currentSelected >= 0 ?
-        //    dockIcons[currentSelected].anchoredPosition :
-        //    selectionBox.anchoredPosition;
-        Vector2 startPos = string.IsNullOrEmpty(curSelectedAppName) ?
+        Vector2 startPos = string.IsNullOrEmpty(selectedAppName) ?
             selectRect.anchoredPosition :
-            shortcuts[curSelectedAppName].RectTransform.anchoredPosition;
-
-        //Vector2 targetPos = dockIcons[index].anchoredPosition;
-        //Vector2 targetSize = dockIcons[index].sizeDelta;
-        //Vector2 stretchedSize = new Vector2(
-        //    targetSize.x * stretchOvershoot,
-        //    targetSize.y);
+            shortcuts[selectedAppName].RectTransform.anchoredPosition;
 
         selectRect.anchoredPosition = startPos;
 
@@ -126,6 +120,27 @@ public class BottomBar : MonoBehaviour
         currentAnimation.Append(selectRect.DOSizeDelta(targetSize, 0.15f).SetEase(Ease.OutBack));
 
         //currentSelected = index;
-        curSelectedAppName = appName;
+        selectedAppName = appName;
+    }
+
+    public void AlignCenters(RectTransform source, RectTransform target)
+    {
+        // 获取目标中心在世界空间的位置
+        Vector3 targetWorldPosition = target.position;
+
+        // 转换到源对象的局部空间
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            source.parent as RectTransform,
+            RectTransformUtility.WorldToScreenPoint(null, targetWorldPosition),
+            null,
+            out Vector2 localPosition))
+        {
+            source.anchoredPosition = localPosition;
+        }
+    }
+
+    public void SetOpened(string appName, bool value)
+    {
+        shortcuts[appName].SetOpened(value);
     }
 }

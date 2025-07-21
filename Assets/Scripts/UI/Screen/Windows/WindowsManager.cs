@@ -1,32 +1,29 @@
 ﻿using System.Collections.Generic;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class WindowsManager : MonoBehaviour, IPointerDownHandler
 {
     private static WindowsManager instance;
     public static WindowsManager Instance => instance;
 
-    private Desktop desktop; // 桌面布局
+    //private Desktop desktop; // 桌面布局
     private BottomBar bottomBar; // 底边栏布局
-    private Button settingsButton; // 设置按钮(Windows键)
 
     private Dictionary<string, WindowBase> openedWindows = new(); // 当前所有打开的窗口，最小化的窗口也算打开的
     private WindowBase currentFocusedWindow; // 当前持有焦点的窗口，可能是openWindows[0]，可能是null
 
     private WindowGroup windowGroup; // 所有窗口作为其子物体，由该脚本控制窗口的渲染顺序
 
-    private List<App> appsData;
+    //private List<App> appsData;
 
-    public Desktop Desktop => desktop;
-    public BottomBar BottomBar => bottomBar;
+    //public Desktop Desktop => desktop;
+    //public BottomBar BottomBar => bottomBar;
 
     private void Awake()
     {
         instance = this;
-        desktop = transform.Find("Desktop").GetComponent<Desktop>();
+        //desktop = transform.Find("Desktop").GetComponent<Desktop>();
         bottomBar = transform.Find("BottomBar").GetComponent<BottomBar>();
         windowGroup = transform.Find("Desktop/WindowGroup").GetComponent<WindowGroup>();
     }
@@ -36,15 +33,13 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         currentFocusedWindow = null;
 
         // 加载桌面图标数据
-        appsData = Resources.Load<AppsData>("ScriptableObject/App/TestAppsData").appsData;
-        desktop.Init(appsData);
-
-        // 添加settingsButton点击的回调
+        //appsData = Resources.Load<AppsData>("ScriptableObject/App/TestAppsData").appsData;
+        //desktop.Init(appsData);
 
     }
 
     public WindowBase OpenWindow(string appName)
-    {    
+    {
         WindowBase window;
         // 窗口没有打开
         if (!IsWindowOpen(appName))
@@ -58,15 +53,16 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
             }
             // 添加到已打开窗口中
             openedWindows.Add(appName, window);
-            // 将快捷方式添加到底部栏
-            //bottomBar.AddShortcut(appsData.Find(app => app.name == appName));
+            // 底边栏的快捷方式变亮
+            bottomBar.SetOpened(appName, true);
         }
         else
         {
             window = openedWindows[appName];
         }
-        if(SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("万能泡泡音",true);
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("万能泡泡音", true);
 
         // 打开窗口
         window.Open();
@@ -87,8 +83,8 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         // 将窗口从渲染层级中移除
         windowGroup.CloseWindow(window);
 
-        // 将底边栏的快捷方式移除
-        //bottomBar.RemoveShortcut(appName);
+        // 底边栏的快捷方式变暗
+        bottomBar.SetOpened(appName, false);
 
         // 设置获得焦点的窗口是渲染层级最靠前的窗口
         // 或者是null

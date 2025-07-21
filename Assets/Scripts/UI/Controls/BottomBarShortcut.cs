@@ -8,8 +8,8 @@ using UnityEngine.UI;
 public class BottomBarShortcut : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private Image normalImage;
-    [SerializeField] private CanvasGroup closedCanvasGroup;
     [SerializeField] private Image hoveredImage;
+    [SerializeField] private Color closedColor;
 
     private bool selected = false;
 
@@ -56,6 +56,7 @@ public class BottomBarShortcut : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void SetOpened(bool value)
     {
-        closedCanvasGroup.enabled = !value;
+        //closedCanvasGroup.enabled = !value;
+        normalImage.color = value ? Color.white : closedColor;
     }
 }
