@@ -6,30 +6,34 @@ using TMPro;
 using System.IO;
 
 public class ChatManager : MonoBehaviour
-{   
+{
     #region 单例
     private static ChatManager instance;
-    public static ChatManager Instance => instance;
-    //{ get
-    //    {
-    //        if (instance == null)
-    //        {
-    //            instance = FindObjectOfType<ChatManager>();
-    //            if (instance == null)
-    //            {
-    //                GameObject managerObj = new GameObject("ChatManager");
-    //                instance = managerObj.AddComponent<ChatManager>();
-    //                DontDestroyOnLoad(managerObj); // 跨场景保持实例
-    //            }
-    //        }
-    //        return instance;
-    //    }
-    //}
+    public static ChatManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<ChatManager>();
+                if (instance == null)
+                {
+                    GameObject managerObj = new GameObject("ChatManager");
+                    instance = managerObj.AddComponent<ChatManager>();
+                    if (Application.isPlaying)
+                    {
+                        DontDestroyOnLoad(managerObj);
+                    }
+                }
+            }
+            return instance;
+        }
+    }
     #endregion
 
     #region 数据
     [Header("对话数据")]
-    public List<ParagraphData> ParagraphDataList;
+    public List<ParagraphData> ParagraphDataList = new List<ParagraphData>();
 
     [Header("预制体")]
     public GameObject NPCTextBox; // 作者消息文本框预制体
@@ -37,24 +41,27 @@ public class ChatManager : MonoBehaviour
     public GameObject AsideTextBox; // 旁白消息文本框预制体
 
     [Header("已生成的对话列表")]
-    public List<ChatData> GeneratedChatDataList=new List<ChatData>();//已生成的对话列表，存档&&读档用
+    public List<ChatData> GeneratedChatDataList = new List<ChatData>();//已生成的对话列表，存档&&读档用
 
-    public List<int> ParagraphToTriggeer=new List<int>();//需要触发的对话列表
+    public List<int> ParagraphToTriggeer = new List<int>();//需要触发的对话列表
     #endregion
 
     private void Awake()
     {
-        //// 确保只有一个实例
-        //if (instance != null && instance != this)
-        //{
-        //    Destroy(gameObject);
-        //    return;
-        //}
+        // 确保只有一个实例
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
-        DontDestroyOnLoad(gameObject);
+        if (Application.isPlaying)
+        {
+            DontDestroyOnLoad(gameObject);
+        }
         EventManager.Instance.AddListener<int>(EventType.TriggerParagraph, TriggerParagraph);//触发某段对话
-        GameDataManager.Instance.LoadGeneratedChatData();   
-        if(GeneratedChatDataList.Count==0)//没有生成过对话时
+        GameDataManager.Instance.LoadGeneratedChatData();
+        if (GeneratedChatDataList.Count == 0)//没有生成过对话时
         {
             ParagraphToTriggeer.Add(0);//添加新手引导
         }
@@ -70,10 +77,4 @@ public class ChatManager : MonoBehaviour
     {
         ParagraphToTriggeer.Add(paragraphIndex);
     }
-    
-    public void Update()
-    {
-        
-    }
-
 }

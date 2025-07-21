@@ -377,7 +377,10 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraOxygenChange()
     {
-
+        if(PlayerStateDict[PlayerStateEnum.Oxygen].curValue == 0)
+        {
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -10f));
+        }
     }
 
     /// <summary>
@@ -395,6 +398,11 @@ public class StateManager : MonoBehaviour
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1.5f));
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -2f));
+        }
+        else if(PlayerStateDict[PlayerStateEnum.Tired].curValue == 100)
+        {
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -6f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -4f));
         }
     }
 
