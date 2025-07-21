@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using DG.Tweening;
+
 public enum WindowState
 {
     Normal = 0,
@@ -10,16 +10,15 @@ public enum WindowState
     Closed = 3,
 }
 
-
 public abstract class WindowBase : PanelBase, IPointerDownHandler
 {
     [SerializeField] private bool destroyAfterClosed = false;
 
     public string AppName => GetType().Name.Replace("Window", "");
 
-    private Button closeButton;
-    private Button maximizeButton;
-    private Button minimizeButton;
+    private HoverableButton closeButton;
+    private HoverableButton maximizeButton;
+    private HoverableButton minimizeButton;
 
     private WindowState lastState = WindowState.Closed;
     private WindowState state = WindowState.Closed;
@@ -50,15 +49,13 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
             doubleClickHandler = topBar.gameObject.AddComponent<DoubleClickHandler>();
         doubleClickHandler.onDoubleClick.AddListener(MaximizeOrRestore);
 
-        closeButton = transform.Find("TopBar/CloseButton").GetComponent<Button>();
-        maximizeButton = transform.Find("TopBar/MaximizeButton").GetComponent<Button>();
-        minimizeButton = transform.Find("TopBar/MinimizeButton").GetComponent<Button>();
+        closeButton = transform.Find("TopBar/CloseButton").GetComponent<HoverableButton>();
+        maximizeButton = transform.Find("TopBar/MaximizeButton").GetComponent<HoverableButton>();
+        minimizeButton = transform.Find("TopBar/MinimizeButton").GetComponent<HoverableButton>();
 
         closeButton.onClick.AddListener(OnCloseButtonClicked);
         maximizeButton.onClick.AddListener(OnMaximizeButtonClicked);
         minimizeButton.onClick.AddListener(OnMinimizeButtonClicked);
-
-        //gameObject.SetActive(false);
     }
 
     private void OnCloseButtonClicked()
@@ -87,8 +84,6 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     public void Open()
     {
-        //gameObject.SetActive(true);
-
         switch (state)
         {
             case WindowState.Normal:
