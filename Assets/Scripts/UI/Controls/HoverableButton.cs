@@ -11,8 +11,9 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public float fadeDuration = 0.1f; // 淡入淡出持续时间
 
     public UnityEvent onClick { get; set; } = new UnityEvent();
+    public UnityEvent onPointerEnter { get; set; } = new UnityEvent();
 
-    private void Awake()
+    protected virtual void Awake()
     {
         // 初始化时确保hoveredImage是透明的
         if (hoveredImage != null)
@@ -24,13 +25,15 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         }
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public virtual void OnPointerClick(PointerEventData eventData)
     {
         onClick?.Invoke();
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
+        onPointerEnter?.Invoke();
+
         if (hoveredImage == null) return;
 
         // 激活图像并开始淡入动画
@@ -41,7 +44,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             .SetEase(Ease.OutQuad);
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public virtual void OnPointerExit(PointerEventData eventData)
     {
         if (hoveredImage == null) return;
 
@@ -53,7 +56,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             .OnComplete(() => hoveredImage.gameObject.SetActive(false));
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         // 清理DOTween动画
         if (hoveredImage != null)

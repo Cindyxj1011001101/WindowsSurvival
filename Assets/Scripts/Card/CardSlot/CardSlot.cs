@@ -15,6 +15,7 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private Image maxStackNumImage; // 显示最大堆叠数量的图标
     [SerializeField] private VerticalLayoutGroup componentLayout; // 用于显示新鲜度、耐久等组件的布局
     [SerializeField] private CanvasGroup cardCanvasGroup;
+    [SerializeField] private Text moreInfoText; // 额外信息
 
     private Dictionary<ICardComponent, Slider> componentSliders = new(); // 用于存储组件的滑动条
 
@@ -140,6 +141,8 @@ public class CardSlot : MonoBehaviour
 
         // 显示堆叠数量
         DisplayStackNum(stackCount, card.maxStackNum, displayStack);
+
+        moreInfoText.text = "";
 
         // 显示耐久
         if (card.TryGetComponent<DurabilityComponent>(out var d))
