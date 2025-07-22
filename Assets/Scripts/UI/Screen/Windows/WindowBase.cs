@@ -22,6 +22,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     private HoverableButton maximizeButton;
     private HoverableButton minimizeButton;
 
+    private DragMoveHandler dragMoveHandler;
+
     private WindowState lastState = WindowState.Closed;
     private WindowState state = WindowState.Closed;
 
@@ -31,15 +33,13 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     private bool focused = false;
 
-    private Transform topBar;
-
     protected override void Awake()
     {
         base.Awake();
 
         // 添加拖拽支持
-        topBar = transform.Find("TopBar");
-        DragMoveHandler dragMoveHandler = topBar.GetComponent<DragMoveHandler>();
+        Transform topBar = transform.Find("TopBar");
+        dragMoveHandler = topBar.GetComponent<DragMoveHandler>();
         if (dragMoveHandler == null)
             dragMoveHandler = topBar.gameObject.AddComponent<DragMoveHandler>();
         dragMoveHandler.targetToMove = transform as RectTransform;
@@ -117,6 +117,9 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
             return;
         }
 
+        // 启用窗口拖拽
+        dragMoveHandler.enabled = true;
+
         SetState(WindowState.Normal);
 
         canvasGroup.interactable = false;
@@ -178,16 +181,20 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     {
         if (state == WindowState.Maximized) return;
 
+        // 禁止拖拽窗口
+        dragMoveHandler.enabled = false;
+
         // 保存当前状态以便恢复
         RecordLastTransformInfo();
 
         SetState(WindowState.Maximized);
 
-        // 获取Canvas的RectTransform作为最大化的参考尺寸
-        RectTransform targetRect = WindowsManager.Instance.GetComponentInParent<Canvas>().GetComponent<RectTransform>();
 
         //// 获取桌面的RectTransform作为最大化的参考尺寸
-        //RectTransform targetRect = WindowsManager.Instance.Desktop.transform as RectTransform;
+        RectTransform targetRect = GameObject.Find("Desktop").transform as RectTransform;
+
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = true;
 
         // 使用DOTween创建动画序列
         Sequence maximizeSequence = DOTween.Sequence();
@@ -195,7 +202,11 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         // 同时执行移动和缩放动画
         maximizeSequence.Join(transform.DOMove(targetRect.position, animDuration));
         maximizeSequence.Join(transform.DOScale(Vector3.one, animDuration));
-        maximizeSequence.Join(GetComponent<RectTransform>().DOSizeDelta(targetRect.sizeDelta, animDuration));
+        maximizeSequence.Join(GetComponent<RectTransform>().DOSizeDelta(targetRect.rect.size, animDuration));
+        maximizeSequence.OnComplete(() =>
+        {
+            canvasGroup.interactable = true;
+        });
 
         // 播放动画
         maximizeSequence.Play();
