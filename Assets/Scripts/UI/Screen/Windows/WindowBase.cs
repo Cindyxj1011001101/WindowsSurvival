@@ -22,6 +22,11 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     private HoverableButton maximizeButton;
     private HoverableButton minimizeButton;
 
+    [SerializeField] private Sprite maximize_default;
+    [SerializeField] private Sprite maximize_hovered;
+    [SerializeField] private Sprite restore_default;
+    [SerializeField] private Sprite restore_hovered;
+
     private DragMoveHandler dragMoveHandler;
 
     private WindowState lastState = WindowState.Closed;
@@ -119,6 +124,9 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
         // 启用窗口拖拽
         dragMoveHandler.enabled = true;
+        // 最大化按钮图标改变
+        maximizeButton.normalImage.sprite = maximize_default;
+        maximizeButton.hoveredImage.sprite = maximize_hovered;
 
         SetState(WindowState.Normal);
 
@@ -183,6 +191,9 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
         // 禁止拖拽窗口
         dragMoveHandler.enabled = false;
+        // 最大化按钮图标改变
+        maximizeButton.normalImage.sprite = restore_default;
+        maximizeButton.hoveredImage.sprite = restore_hovered;
 
         // 保存当前状态以便恢复
         RecordLastTransformInfo();
