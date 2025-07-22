@@ -1029,7 +1029,7 @@ TextureImporter:
         width: 31
         height: 26
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 4, y: 5, z: 8, w: 5}
       outline: []
       physicsShape: []
@@ -1037,6 +1037,48 @@ TextureImporter:
       bones: []
       spriteID: 50f0a21887ae333428b322ebd5b98d1a
       internalID: 1154874342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_btn_ReduceScreen_default
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 496
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa311280da37bd046a4a6bf0b6a803d8
+      internalID: 154959178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_btn_ReduceScreen_hovered
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 496
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 521357fa0f255e04a9ea48a14ad56b6b
+      internalID: 2130795967
       vertices: []
       indices: 
       edges: []
@@ -1091,6 +1133,8 @@ TextureImporter:
       UI_btn_Left_hovered: -587034484
       UI_btn_Minimized_defult: -1399726919
       UI_btn_Minimized_hovered: -416697522
+      UI_btn_ReduceScreen_default: 154959178
+      UI_btn_ReduceScreen_hovered: 2130795967
       UI_btn_Right_defult: 1958250545
       UI_btn_Right_hovered: -1658534207
       UI_btn_Up_defult: -1508199800
