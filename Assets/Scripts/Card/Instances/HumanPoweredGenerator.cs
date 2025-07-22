@@ -15,7 +15,7 @@ public class HumanPoweredGenerator : Card
     {
         StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Electricity, 10));
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, -5));
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Tired, 6));
+        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Soberiety, 6));
         TimeManager.Instance.AddTime(60);
     }
 
