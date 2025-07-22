@@ -14,16 +14,6 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     private void Awake()
     {
-        if (normalImage == null)
-        {
-            normalImage = transform.Find("Normal").GetComponent<Image>();
-        }
-
-        if (hoveredImage == null)
-        {
-            hoveredImage = transform.Find("Hovered").GetComponent<Image>();
-        }
-
         // 初始化时确保hoveredImage是透明的
         if (hoveredImage != null)
         {

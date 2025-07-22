@@ -12,14 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 652377b71f7eb0b4b81f661c252dacc6, type: 3}
   m_Name: "\u77FF\u77F3\u91CA\u6C27\u673A"
   m_EditorClassIdentifier: 
-  cardName: "\u77FF\u77F3\u91CA\u6C27\u673A"
-  cardDesc: 
-  craftType: 6
+  cardId: "\u77FF\u77F3\u91CA\u6C27\u673A"
+  craftType: 1
   materials:
-  - cardName: "\u7535\u6C60"
-    requiredAmount: 1
-  - cardName: "\u5E9F\u91D1\u5C5E"
-    requiredAmount: 2
-  - cardName: "\u767D\u7206\u77FF"
-    requiredAmount: 2
+  - cardId: "\u7535\u6C60"
+    requiredNum: 1
+  - cardId: "\u5E9F\u91D1\u5C5E"
+    requiredNum: 2
+  - cardId: "\u767D\u7206\u77FF"
+    requiredNum: 2
   craftTime: 120
