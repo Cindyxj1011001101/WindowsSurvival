@@ -1004,9 +1004,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 152
-        y: 477
-        width: 7
-        height: 8
+        y: 476
+        width: 9
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1016,6 +1016,27 @@ TextureImporter:
       bones: []
       spriteID: b8c1120b5f10a4a40a23c302598df7ad
       internalID: -758408193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Selectionbox
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 463
+        width: 31
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 4, y: 5, z: 8, w: 5}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50f0a21887ae333428b322ebd5b98d1a
+      internalID: 1154874342
       vertices: []
       indices: 
       edges: []
@@ -1055,6 +1076,7 @@ TextureImporter:
       UI_Panel: -1503842033
       UI_ProgressBarFrame_1: -1837554866
       UI_ProgressBarFrame_2: -1122912679
+      UI_Selectionbox: 1154874342
       UI_Slidingbar_default: 959292114
       UI_Slidingbar_hovered: 853517195
       UI_btn_Arrange_defult: -757670956
