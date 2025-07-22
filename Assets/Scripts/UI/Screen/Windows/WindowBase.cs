@@ -14,6 +14,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 {
     [SerializeField] private bool destroyAfterClosed = false;
 
+    [SerializeField] private float animDuration = 0.2f;
+
     public string AppName => GetType().Name.Replace("Window", "");
 
     private HoverableButton closeButton;
@@ -122,9 +124,9 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
         Sequence restoreSequence = DOTween.Sequence();
 
-        restoreSequence.Join(transform.DOMove(lastPosition, .2f));
-        restoreSequence.Join(transform.DOScale(lastScale, .2f));
-        restoreSequence.Join(GetComponent<RectTransform>().DOSizeDelta(lastSizeDelta, 0.3f));
+        restoreSequence.Join(transform.DOMove(lastPosition, animDuration));
+        restoreSequence.Join(transform.DOScale(lastScale, animDuration));
+        restoreSequence.Join(GetComponent<RectTransform>().DOSizeDelta(lastSizeDelta, animDuration));
 
         restoreSequence.OnComplete(() =>
         {
@@ -163,8 +165,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         Sequence minimizeSequence = DOTween.Sequence();
 
         // 同时执行缩小和移动动画
-        minimizeSequence.Join(transform.DOScale(Vector3.zero, 0.2f));
-        minimizeSequence.Join(transform.DOMove(shortcut.position, 0.2f));
+        minimizeSequence.Join(transform.DOScale(Vector3.zero, animDuration));
+        minimizeSequence.Join(transform.DOMove(shortcut.position, animDuration));
 
         minimizeSequence.OnComplete(() => { canvasGroup.blocksRaycasts = false; });
 
@@ -191,9 +193,9 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         Sequence maximizeSequence = DOTween.Sequence();
 
         // 同时执行移动和缩放动画
-        maximizeSequence.Join(transform.DOMove(targetRect.position, 0.2f));
-        maximizeSequence.Join(transform.DOScale(Vector3.one, 0.2f));
-        maximizeSequence.Join(GetComponent<RectTransform>().DOSizeDelta(targetRect.sizeDelta, 0.2f));
+        maximizeSequence.Join(transform.DOMove(targetRect.position, animDuration));
+        maximizeSequence.Join(transform.DOScale(Vector3.one, animDuration));
+        maximizeSequence.Join(GetComponent<RectTransform>().DOSizeDelta(targetRect.sizeDelta, animDuration));
 
         // 播放动画
         maximizeSequence.Play();
