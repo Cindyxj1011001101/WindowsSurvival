@@ -13,7 +13,7 @@ public enum PlayerStateEnum
     Thirst,
     San,
     Oxygen,
-    Tired,
+    Soberiety,
 }
 
 /// <summary>
@@ -124,14 +124,14 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.Thirst, new PlayerState(InitPlayerStateData.Instance.Thirst, 100, PlayerStateEnum.Thirst));
         PlayerStateDict.Add(PlayerStateEnum.San, new PlayerState(InitPlayerStateData.Instance.San, 100, PlayerStateEnum.San));
         PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 30, PlayerStateEnum.Oxygen));
-        PlayerStateDict.Add(PlayerStateEnum.Tired, new PlayerState(InitPlayerStateData.Instance.Tired, 100, PlayerStateEnum.Tired));
+        PlayerStateDict.Add(PlayerStateEnum.Soberiety, new PlayerState(InitPlayerStateData.Instance.Tired, 100, PlayerStateEnum.Soberiety));
 
         PlayerExtraStateDict.Add(PlayerStateEnum.Fullness, 0);
         PlayerExtraStateDict.Add(PlayerStateEnum.Health, 0);
         PlayerExtraStateDict.Add(PlayerStateEnum.Thirst, 0);
         PlayerExtraStateDict.Add(PlayerStateEnum.San, 0);
         PlayerExtraStateDict.Add(PlayerStateEnum.Oxygen, 0);
-        PlayerExtraStateDict.Add(PlayerStateEnum.Tired, 0);
+        PlayerExtraStateDict.Add(PlayerStateEnum.Soberiety, 0);
     }
 
         /// <summary>
@@ -193,7 +193,7 @@ public class StateManager : MonoBehaviour
                     StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, value));
                     break;
                     case "疲劳":
-                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Tired, value));
+                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Soberiety, value));
                     break;
                 }
     }
@@ -340,7 +340,7 @@ public class StateManager : MonoBehaviour
         OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, InitPlayerStateData.Instance.BasicHealthChange));
         OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, InitPlayerStateData.Instance.BasicThirstChange));
         OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, InitPlayerStateData.Instance.BasicSanChange));
-        OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Tired, InitPlayerStateData.Instance.BasicTiredChange));
+        OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Soberiety, InitPlayerStateData.Instance.BasicTiredChange));
         OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, InitPlayerStateData.Instance.BasicOxygenChange));
     }
 
@@ -440,16 +440,16 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraTiredChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Tired].curValue >=70)
+        if (PlayerStateDict[PlayerStateEnum.Soberiety].curValue >=70)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.3f));
         }
-        else if (PlayerStateDict[PlayerStateEnum.Tired].curValue >= 90)
+        else if (PlayerStateDict[PlayerStateEnum.Soberiety].curValue >= 90)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1.5f));
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -2f));
         }
-        else if(PlayerStateDict[PlayerStateEnum.Tired].curValue == 100)
+        else if(PlayerStateDict[PlayerStateEnum.Soberiety].curValue == 100)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -6f));
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -4f));

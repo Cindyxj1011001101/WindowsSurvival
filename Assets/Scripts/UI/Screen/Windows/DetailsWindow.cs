@@ -5,7 +5,7 @@ public class DetailsWindow : WindowBase
 {
     [SerializeField] private Text detailsText;
     [SerializeField] private Transform buttonLayout;
-    [SerializeField] private Transform tagLayout;
+    //[SerializeField] private Transform tagLayout;
     [SerializeField] private CardSlot slot;
     private Card currentDisplayedCard;
 
@@ -57,12 +57,12 @@ public class DetailsWindow : WindowBase
         // 显示卡牌
         slot.DisplayCard(currentDisplayedCard, 1);
 
-        // 显示卡牌标签
-        foreach (var tag in currentDisplayedCard.tags)
-        {
-            GameObject tagPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tags/" + tag.ToString());
-            Instantiate(tagPrefab, tagLayout);
-        }
+        //// 显示卡牌标签
+        //foreach (var tag in currentDisplayedCard.tags)
+        //{
+        //    GameObject tagPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tags/" + tag.ToString());
+        //    Instantiate(tagPrefab, tagLayout);
+        //}
 
         // 显示卡牌详细信息
         detailsText.text = currentDisplayedCard.cardDesc;
@@ -103,6 +103,6 @@ public class DetailsWindow : WindowBase
         currentDisplayedCard = null;
         detailsText.text = "";
         MonoUtility.DestroyAllChildren(buttonLayout);
-        MonoUtility.DestroyAllChildren(tagLayout);
+        //MonoUtility.DestroyAllChildren(tagLayout);
     }
 }

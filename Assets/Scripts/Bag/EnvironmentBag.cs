@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class EnvironmentBag : BagBase
 {
-    [Header("一次性掉落列表")]
+    [HideInInspector]
     public DisposableDropList disposableDropList = new();
 
-    [Header("重复掉落列表")]
+    [HideInInspector]
     public RepeatableDropList repeatableDropList = new();
 
     [Header("探索用时")]

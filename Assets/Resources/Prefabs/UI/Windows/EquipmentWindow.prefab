@@ -715,6 +715,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destroyAfterClosed: 0
+  animDuration: 0.2
+  maximize_default: {fileID: -836057702, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  restore_default: {fileID: 154959178, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
 --- !u!1 &6985488683776921586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1093,6 +1098,7 @@ MonoBehaviour:
   maxStackNumImage: {fileID: 6632580603331445458}
   componentLayout: {fileID: 6053393711278860418}
   cardCanvasGroup: {fileID: 4333524096654650546}
+  moreInfoText: {fileID: 0}
   equipmentType: 3
 --- !u!114 &8897433557214507488 stripped
 MonoBehaviour:
@@ -1292,6 +1298,7 @@ MonoBehaviour:
   maxStackNumImage: {fileID: 7677977964583529420}
   componentLayout: {fileID: 7099917320376320412}
   cardCanvasGroup: {fileID: 767236573384312236}
+  moreInfoText: {fileID: 0}
   equipmentType: 2
 --- !u!114 &7099917320376320412 stripped
 MonoBehaviour:
@@ -1618,6 +1625,7 @@ MonoBehaviour:
   maxStackNumImage: {fileID: 8341599324270543259}
   componentLayout: {fileID: 8919661684380101579}
   cardCanvasGroup: {fileID: 1435308790467358715}
+  moreInfoText: {fileID: 0}
   equipmentType: 1
 --- !u!114 &6103204485907509929 stripped
 MonoBehaviour:
@@ -1911,6 +1919,7 @@ MonoBehaviour:
   maxStackNumImage: {fileID: 3799564140581041068}
   componentLayout: {fileID: 4373155889672002044}
   cardCanvasGroup: {fileID: 6094125291886648780}
+  moreInfoText: {fileID: 0}
   equipmentType: 0
 --- !u!114 &1426342779826176158 stripped
 MonoBehaviour:
