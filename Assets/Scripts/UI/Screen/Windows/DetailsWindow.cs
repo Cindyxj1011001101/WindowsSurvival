@@ -49,7 +49,7 @@ public class DetailsWindow : WindowBase
         // 清除原数据
         Clear();
 
-        if (sourceSlot == null || sourceSlot.StackCount <= 0) return;
+        if (sourceSlot == null || sourceSlot.StackNum <= 0) return;
 
         // 记录当前显示的卡牌
         currentDisplayedCard = sourceSlot.PeekCard();

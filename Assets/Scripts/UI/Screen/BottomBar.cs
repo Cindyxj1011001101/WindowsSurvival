@@ -7,13 +7,14 @@ public class BottomBar : MonoBehaviour
 {
     private Transform layoutTransform;
     [SerializeField] RectTransform selectRect;
+    [SerializeField] Color closedColor;
 
-    private Dictionary<string, BottomBarShortcut> shortcuts = new();
+    private Dictionary<string, HoverableButton> shortcuts = new();
 
-    private string curSelectedAppName;
+    private string selectedAppName;
     private Sequence currentAnimation;
 
-    public BottomBarShortcut this[string appName]
+    public HoverableButton this[string appName]
     {
         get
         {
@@ -28,62 +29,25 @@ public class BottomBar : MonoBehaviour
         layoutTransform = GetComponentInChildren<GridLayoutGroup>().transform;
         for (int i = 0; i < layoutTransform.childCount; i++)
         {
-            if (layoutTransform.GetChild(i).TryGetComponent<BottomBarShortcut>(out var shortcut))
+            if (layoutTransform.GetChild(i).TryGetComponent<HoverableButton>(out var shortcut))
             {
-                shortcuts.Add(shortcut.AppName, shortcut);
+                shortcuts.Add(shortcut.name, shortcut);
+                SetOpened(shortcut, false);
+                shortcut.onClick.AddListener(() =>
+                {
+                    if (shortcut.name != selectedAppName)
+                        WindowsManager.Instance.OpenWindow(shortcut.name);
+                    else
+                        WindowsManager.Instance.MinimizeWindow(shortcut.name);
+                });
             }
         }
         selectRect.gameObject.SetActive(false);
     }
 
-    //public void AddShortcut(App app)
-    //{
-    //    if (shortcuts.ContainsKey(app.name)) return;
-
-    //    GameObject shortcutPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/BottomBarShortcut");
-    //    BottomBarShortcut shortcut = Instantiate(shortcutPrefab, layoutTransform).GetComponent<BottomBarShortcut>();
-    //    //shortcut.Init(app);
-    //    shortcuts.Add(app.name, shortcut);
-    //}
-
-    //public void RemoveShortcut(string appName)
-    //{
-    //    if (!shortcuts.ContainsKey(appName)) return;
-
-    //    // 找到要移除的快捷方式
-    //    var toRemove = shortcuts[appName];
-    //    // 调用移除的方法
-    //    //toRemove.Disappear();
-    //    shortcuts.Remove(appName);
-    //}
-
     public void SelectAppShortcut(string appName)
     {
-        //foreach (var shortcut in shortcuts.Values)
-        //{
-        //    // 找到被选中的对象
-        //    if (appName == shortcut.AppName)
-        //        // 将选择反过来
-        //        shortcut.SetSelected(!shortcut.Selected);
-        //    // 其他没有被选中的对象都是false
-        //    else
-        //        shortcut.SetSelected(false);
-        //}
-        SelectIconWithTween(appName);
-    }
-
-
-    public void ClearSelection()
-    {
-        foreach (var shortcut in shortcuts.Values)
-        {
-            shortcut.SetSelected(false);
-        }
-    }
-
-    public void SelectIconWithTween(string appName)
-    {
-        if (curSelectedAppName == appName) return;
+        if (selectedAppName == appName) return;
 
         // 停止当前动画
         if (currentAnimation != null && currentAnimation.IsActive())
@@ -91,23 +55,14 @@ public class BottomBar : MonoBehaviour
             currentAnimation.Kill();
         }
 
-        //Vector2 startPos = currentSelected >= 0 ?
-        //    dockIcons[currentSelected].anchoredPosition :
-        //    selectionBox.anchoredPosition;
-        Vector2 startPos = string.IsNullOrEmpty(curSelectedAppName) ?
+        Vector2 startPos = string.IsNullOrEmpty(selectedAppName) ?
             selectRect.anchoredPosition :
-            shortcuts[curSelectedAppName].RectTransform.anchoredPosition;
-
-        //Vector2 targetPos = dockIcons[index].anchoredPosition;
-        //Vector2 targetSize = dockIcons[index].sizeDelta;
-        //Vector2 stretchedSize = new Vector2(
-        //    targetSize.x * stretchOvershoot,
-        //    targetSize.y);
+            (shortcuts[selectedAppName].transform as RectTransform).anchoredPosition;
 
         selectRect.anchoredPosition = startPos;
 
-        Vector2 targetPos = shortcuts[appName].RectTransform.anchoredPosition;
-        Vector2 targetSize = shortcuts[appName].RectTransform.sizeDelta;
+        Vector2 targetPos = (shortcuts[appName].transform as RectTransform).anchoredPosition;
+        Vector2 targetSize = selectRect.sizeDelta;
         Vector2 stretchedSize = new Vector2(
             targetSize.x * 1.2f, // 拉伸比例
             targetSize.y);
@@ -125,7 +80,22 @@ public class BottomBar : MonoBehaviour
         // 第二步：收缩回正常大小
         currentAnimation.Append(selectRect.DOSizeDelta(targetSize, 0.15f).SetEase(Ease.OutBack));
 
-        //currentSelected = index;
-        curSelectedAppName = appName;
+        selectedAppName = appName;
+    }
+
+    public void ClearSelection()
+    {
+        selectedAppName = null;
+        selectRect.gameObject.SetActive(false);
+    }
+
+    public void SetOpened(string appName, bool value)
+    {
+        SetOpened(shortcuts[appName], value);
+    }
+
+    private void SetOpened(HoverableButton shortcut, bool value)
+    {
+        shortcut.normalImage.color = value ? Color.white : closedColor;
     }
 }

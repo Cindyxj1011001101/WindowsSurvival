@@ -21,12 +21,50 @@ public class CardMoveTween
         }
     }
 
-    public static CardSlot CreateSlot(Vector3 position)
+    //public static CardSlot CreateSlot(Vector3 position)
+    //{
+    //    var slot = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot"),
+    //        position, Quaternion.identity, Canvas.transform).GetComponent<CardSlot>();
+    //    slot.GetComponent<CanvasGroup>().blocksRaycasts = false;
+    //    return slot;
+    //}
+
+    public static CardSlot CreateSlot(Vector2 screenPosition)
     {
-        var slot = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot"),
-            position, Quaternion.identity, Canvas.transform).GetComponent<CardSlot>();
-        slot.GetComponent<CanvasGroup>().blocksRaycasts = false;
-        return slot;
+        // 获取Canvas和它的RectTransform
+        RectTransform canvasRect = Canvas.GetComponent<RectTransform>();
+
+        // 获取事件相机（对于Screen Space - Camera模式很重要）
+        Camera eventCamera = Canvas.worldCamera;
+        // 或者使用 EventSystem.current.currentInputModule.eventCamera;
+
+        // 将屏幕坐标转换为Canvas局部坐标
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect,
+            screenPosition,
+            eventCamera,
+            out Vector2 localPosition))
+        {
+            // 实例化预制体
+            GameObject slotObj = Object.Instantiate(
+                Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot"),
+                Canvas.transform);
+
+            // 获取RectTransform并设置位置
+            RectTransform slotRect = slotObj.GetComponent<RectTransform>();
+            slotRect.anchoredPosition = localPosition;
+            slotRect.localRotation = Quaternion.identity;
+            slotRect.localScale = Vector3.one;
+
+            // 设置CardSlot组件
+            CardSlot slot = slotObj.GetComponent<CardSlot>();
+            slot.GetComponent<CanvasGroup>().blocksRaycasts = false;
+
+            return slot;
+        }
+
+        Debug.LogError("无法在位置 " + screenPosition + " 创建CardSlot");
+        return null;
     }
 
     /// <summary>

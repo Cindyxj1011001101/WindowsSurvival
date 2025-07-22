@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class UIRecipeButton : MonoBehaviour
+public class UIRecipeItem : MonoBehaviour
 {
     [SerializeField] Image icon;
-    [SerializeField] Image canCraftImage;
     [SerializeField] Image lockImage;
+    [SerializeField] Image adequateImage;
+    [SerializeField] Color lockedColor;
 
     public void DisplayRecipe(Sprite icon, bool locked, bool canCraft)
     {
         this.icon.sprite = icon;
+        this.icon.color = locked ? lockedColor : Color.white;
         lockImage.gameObject.SetActive(locked);
-        if (locked)
-            canCraftImage.gameObject.SetActive(false);
-        else
-            canCraftImage.gameObject.SetActive(!canCraft);
+        adequateImage.gameObject.SetActive(canCraft);
     }
 }

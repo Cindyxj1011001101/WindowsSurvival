@@ -5,14 +5,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+public enum AlignmentMode
+{
+    Left,
+    Center
+}
+
 [AddComponentMenu("UI/Effects/TextSpacing")]
 public class TextSpacing : BaseMeshEffect
 {
-
     [SerializeField]
     public float spacing_x;
     [SerializeField]
     public float spacing_y;
+
+    [SerializeField]
+    public AlignmentMode alignment = AlignmentMode.Center;
 
     private List<UIVertex> mVertexList;
 
@@ -24,38 +32,53 @@ public class TextSpacing : BaseMeshEffect
         if (count == 0) { return; }
         if (mVertexList == null) { mVertexList = new List<UIVertex>(); }
         vh.GetUIVertexStream(mVertexList);
-        int row = 1;
-        int column = 2;
-        List<UIVertex> sub_vertexs = mVertexList.GetRange(0, 6);
-        float min_row_left = sub_vertexs.Min(v => v.position.x);
+
         int vertex_count = mVertexList.Count;
-        for (int i = 6; i < vertex_count;)
+        List<List<UIVertex>> lines = new List<List<UIVertex>>();
+        List<UIVertex> currentLine = new List<UIVertex>();
+
+        float last_left = mVertexList[0].position.x;
+        for (int i = 0; i < vertex_count; i += 6)
         {
-            if (i % 6 == 0)
+            var sub = mVertexList.GetRange(i, 6);
+            float left = sub.Min(v => v.position.x);
+            if (lines.Count == 0 || Mathf.Abs(left - last_left) < 1e-3)
             {
-                sub_vertexs = mVertexList.GetRange(i, 6);
-                float tem_row_left = sub_vertexs.Min(v => v.position.x);
-              //  Debug.LogError("min_row_left=" + min_row_left.ToString() + " tem_row_left=" + tem_row_left.ToString() + " tem_row_left <=min_row_left= " + (tem_row_left <= min_row_left).ToString());
-                if (min_row_left - tem_row_left >= -10)
+                currentLine.AddRange(sub);
+            }
+            else
+            {
+                lines.Add(currentLine);
+                currentLine = new List<UIVertex>();
+                currentLine.AddRange(sub);
+            }
+            last_left = left;
+        }
+        if (currentLine.Count > 0)
+            lines.Add(currentLine);
+
+        int charIndex = 0;
+        for (int row = 0; row < lines.Count; row++)
+        {
+            var line = lines[row];
+            int charCount = line.Count / 6;
+            float lineWidth = (charCount - 1) * spacing_x;
+            float centerOffset = alignment == AlignmentMode.Center ? -lineWidth / 2f : 0f;
+
+            for (int col = 0; col < charCount; col++)
+            {
+                for (int v = 0; v < 6; v++)
                 {
-                    min_row_left = tem_row_left;
-                    ++row;
-                    column = 1;
-                    //continue;
+                    int idx = charIndex + col * 6 + v;
+                    UIVertex vertex = mVertexList[idx];
+                    vertex.position += Vector3.right * (col * spacing_x + centerOffset);
+                    vertex.position += Vector3.down * (row * spacing_y);
+                    mVertexList[idx] = vertex;
                 }
             }
-
-            for (int j = 0; j < 6; j++)
-            {
-                UIVertex vertex = mVertexList[i];
-                vertex.position += Vector3.right * (column - 1) * spacing_x;
-                vertex.position += Vector3.down * (row - 1) * spacing_y;
-                mVertexList[i] = vertex;
-                ++i;
-            }
-            ++column;
-
+            charIndex += line.Count;
         }
+
         vh.Clear();
         vh.AddUIVertexTriangleStream(mVertexList);
     }

@@ -9,14 +9,18 @@ using UnityEngine.UI;
 public class CardSlot : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
-    [SerializeField] private Text countText; // 用于显示数量和耐久等
-    [SerializeField] private Text percentageText; // 用于显示新鲜度或耐久
     [SerializeField] private Text nameText;
+    [SerializeField] private GameObject stackObject; // 控制是否显示堆叠
+    [SerializeField] private Text stackNumText; // 显示数量
+    [SerializeField] private Image maxStackNumImage; // 显示最大堆叠数量的图标
+    [SerializeField] private VerticalLayoutGroup componentLayout; // 用于显示新鲜度、耐久等组件的布局
     [SerializeField] private CanvasGroup cardCanvasGroup;
+
+    private Dictionary<ICardComponent, Slider> componentSliders = new(); // 用于存储组件的滑动条
 
     private List<Card> cards = new();
     public bool IsEmpty => cards.Count == 0;
-    public int StackCount => cards.Count;
+    public int StackNum => cards.Count;
 
     public List<Card> Cards => cards;
 
@@ -50,6 +54,8 @@ public class CardSlot : MonoBehaviour
         }
     }
 
+    #region 显示
+
     /// <summary>
     /// 刷新当前显示
     /// </summary>
@@ -57,7 +63,60 @@ public class CardSlot : MonoBehaviour
     {
         if (IsEmpty) return;
 
-        DisplayCard(PeekCard(), StackCount);
+        DisplayCard(PeekCard(), StackNum);
+    }
+
+    private void DisplayCardImage(Sprite sprite, bool isBigIcon)
+    {
+        iconImage.sprite = sprite;
+        Vector2 offset = isBigIcon ? new Vector2(16, -16) : new Vector2(30, -30);
+        (iconImage.transform as RectTransform).anchoredPosition = offset;
+    }
+
+    private void DisplayStackNum(int stackNum, int maxStackNum, bool displayStack)
+    {
+
+        if (maxStackNum <= 1 || !displayStack)
+        {
+            stackObject.SetActive(false);
+            maxStackNumImage.gameObject.SetActive(false);
+        }
+        else
+        {
+            stackObject.SetActive(true);
+            stackNumText.text = $"{stackNum}";
+
+            maxStackNumImage.gameObject.SetActive(stackNum == maxStackNum);
+        }
+    }
+
+    private void DisplayComponent(ICardComponent component)
+    {
+        if (!componentSliders.TryGetValue(component, out Slider slider))
+        {
+            var prefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Components/" + component.GetType().Name);
+            slider = Instantiate(prefab, componentLayout.transform).GetComponent<Slider>();
+            componentSliders.Add(component, slider);
+        }
+
+        switch (component)
+        {
+            case DurabilityComponent durabilityComponent:
+                slider.value = (float)durabilityComponent.durability / durabilityComponent.maxDurability;
+                break;
+            case FreshnessComponent freshnessComponent:
+                slider.value = (float)freshnessComponent.freshness / freshnessComponent.maxFreshness;
+                break;
+            case GrowthComponent growthComponent:
+                slider.value = (float)growthComponent.growth / growthComponent.maxGrowth;
+                break;
+            case ProgressComponent progressComponent:
+                slider.value = (float)progressComponent.progress / progressComponent.maxProgress;
+                break;
+            default:
+                Debug.LogWarning($"未知组件类型: {component.GetType()}");
+                break;
+        }
     }
 
     /// <summary>
@@ -65,7 +124,7 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     /// <param name="card"></param>
     /// <param name="stackCount"></param>
-    public void DisplayCard(Card card, int stackCount)
+    public void DisplayCard(Card card, int stackCount, bool displayStack = true)
     {
         // 如果要显示的数量小于等于零，则什么也不显示
         if (stackCount <= 0)
@@ -76,27 +135,24 @@ public class CardSlot : MonoBehaviour
 
         EnableDisplay();
 
-        iconImage.sprite = card.CardImage;
+        DisplayCardImage(card.CardImage, card.IsBigIcon);
         nameText.text = card.cardName;
-        // 显示堆叠数量
-        countText.text = "";
-        if (stackCount > 1)
-            countText.text = $"x{stackCount}";
 
-        percentageText.text = "";
+        // 显示堆叠数量
+        DisplayStackNum(stackCount, card.maxStackNum, displayStack);
 
         // 显示耐久
         if (card.TryGetComponent<DurabilityComponent>(out var d))
-            percentageText.text = $"{Math.Round((float)d.durability / d.maxDurability, 2) * 100}%";
+            DisplayComponent(d);
         // 显示新鲜度
-        else if (card.TryGetComponent<FreshnessComponent>(out var f))
-            percentageText.text = $"{Math.Round((float)f.freshness / f.maxFreshness, 2) * 100}%";
+        if (card.TryGetComponent<FreshnessComponent>(out var f))
+            DisplayComponent(f);
         // 显示生长度
-        else if (card.TryGetComponent<GrowthComponent>(out var g))
-            percentageText.text = $"{Math.Round((float)g.growth / g.maxGrowth, 2) * 100}%";
+        if (card.TryGetComponent<GrowthComponent>(out var g))
+            DisplayComponent(g);
         // 显示产物进度
-        else if (card.TryGetComponent<ProgressComponent>(out var p))
-            percentageText.text = $"{Math.Round((float)p.progress / p.maxProgress, 2) * 100}%";
+        if (card.TryGetComponent<ProgressComponent>(out var p))
+            DisplayComponent(p);
     }
 
     /// <summary>
@@ -118,6 +174,7 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.blocksRaycasts = true;
         cardCanvasGroup.interactable = true;
     }
+    #endregion
 
     /// <summary>
     /// 判断该卡牌格是否放有同类卡牌（名称相同即同类）
@@ -139,7 +196,7 @@ public class CardSlot : MonoBehaviour
     /// <returns></returns>
     public virtual bool CanAddCard(Card card)
     {
-        return IsEmpty || (card.cardId == cards[0].cardId && StackCount < card.maxStackNum);
+        return IsEmpty || (card.cardId == cards[0].cardId && StackNum < card.maxStackNum);
     }
 
     /// <summary>
@@ -154,7 +211,7 @@ public class CardSlot : MonoBehaviour
         // 如果当前slot不为空，并且不可以堆叠该卡牌，则剩余容量为0
         if (!CanAddCard(card)) return 0;
         // 剩余容量为最大堆叠数 - 当前堆叠数
-        return card.maxStackNum - StackCount;
+        return card.maxStackNum - StackNum;
     }
 
     /// <summary>
@@ -187,7 +244,7 @@ public class CardSlot : MonoBehaviour
         cards.Remove(card);
         card.SetCardSlot(null);
 
-        if (StackCount == 0)
+        if (StackNum == 0)
             ClearSlot();
         else
             RefreshCurrentDisplay();
@@ -234,6 +291,8 @@ public class CardSlot : MonoBehaviour
     public void ClearSlot()
     {
         cards.Clear();
+        componentSliders.Clear();
+        MonoUtility.DestroyAllChildren(componentLayout.transform);
         DisableDisplay();
     }
 

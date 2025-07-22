@@ -172,6 +172,56 @@ public class StateManager : MonoBehaviour
 
 
     #region 状态变化相关
+
+    public void ChangePlayerStateByString(string stateName, float value)
+    {
+         switch (stateName)
+                {
+                    case "健康":
+                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, value));
+                    break;
+                    case "饱食":
+                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, value));
+                    break;
+                    case "口渴":
+                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, value));
+                    break;
+                    case "精神":
+                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, value));
+                    break;
+                    case "氧气":
+                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, value));
+                    break;
+                    case "疲劳":
+                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Tired, value));
+                    break;
+                }
+    }
+
+    public void ChangeEnvironmentStateByString(PlaceEnum placeType, string stateName, float value)
+    {
+        switch (stateName)
+        {
+            case "电力":
+                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.Electricity, value));
+                break;
+            case "氧气":
+                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.Oxygen, value));
+                break;
+            case "压力":
+                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.Pressure, value));
+                break;
+            case "高度":
+                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.Height, value));
+                break;
+            case "电缆":
+                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.HasCable, value));
+                break;
+            case "水域":
+                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.InWater, value));
+                break;
+            }
+    }
     /// <summary>
     /// 玩家状态变化
     /// 修改某一玩家状态值，保证在最大最小之间，触发刷新UI事件
@@ -377,7 +427,10 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraOxygenChange()
     {
-
+        if(PlayerStateDict[PlayerStateEnum.Oxygen].curValue == 0)
+        {
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -10f));
+        }
     }
 
     /// <summary>
@@ -395,6 +448,11 @@ public class StateManager : MonoBehaviour
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1.5f));
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -2f));
+        }
+        else if(PlayerStateDict[PlayerStateEnum.Tired].curValue == 100)
+        {
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -6f));
+            OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -4f));
         }
     }
 
