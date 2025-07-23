@@ -39,11 +39,18 @@ public class ChatManager : MonoBehaviour
     public GameObject NPCTextBox; // 作者消息文本框预制体
     public GameObject PlayerTextBox; // 玩家消息文本框预制体
     public GameObject AsideTextBox; // 旁白消息文本框预制体
+    public GameObject MessagePrefab;//选项框预制体
 
     [Header("已生成的对话列表")]
     public List<ChatData> GeneratedChatDataList = new List<ChatData>();//已生成的对话列表，存档&&读档用
 
-    public List<int> ParagraphToTriggeer = new List<int>();//需要触发的对话列表
+    public List<ParagraphData> ParagraphToTriggeer = new List<ParagraphData>();//需要触发的对话列表
+
+    public ParagraphData CurrentParagraphData;//当前段落数据
+
+    public bool canConfirm = false;//是否可以确认
+    public ChatData ChoosedChatData;//当前对话数据
+    public ChatData NextMessage=null;//下一个对话数据
     #endregion
 
     private void Awake()
@@ -55,26 +62,27 @@ public class ChatManager : MonoBehaviour
             return;
         }
         instance = this;
-        if (Application.isPlaying)
-        {
-            DontDestroyOnLoad(gameObject);
-        }
-        EventManager.Instance.AddListener<int>(EventType.TriggerParagraph, TriggerParagraph);//触发某段对话
+        DontDestroyOnLoad(gameObject);
+        EventManager.Instance.AddListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
+        ExcelReader.ReadChat("test");
         GameDataManager.Instance.LoadGeneratedChatData();
         if (GeneratedChatDataList.Count == 0)//没有生成过对话时
         {
-            ParagraphToTriggeer.Add(0);//添加新手引导
+            ParagraphToTriggeer.Add(ParagraphDataList[0]);//添加新手引导
         }
-        CSVReader.ReadChatData("test");
+
     }
     public void OnDestroy()
     {
-        instance = null;
         GameDataManager.Instance.SaveGeneratedChatData();
-        EventManager.Instance.RemoveListener<int>(EventType.TriggerParagraph, TriggerParagraph);
+        EventManager.Instance.RemoveListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
     }
-    public void TriggerParagraph(int paragraphIndex)
+    public void TriggerParagraph(ParagraphData paragraphData)
     {
-        ParagraphToTriggeer.Add(paragraphIndex);
+        ParagraphToTriggeer.Add(paragraphData);
+    }
+    public void TriggerChat(ChatData chatData)
+    {
+        NextMessage=chatData;
     }
 }

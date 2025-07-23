@@ -56,6 +56,14 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         closeButton.onClick.AddListener(OnCloseButtonClicked);
         maximizeButton.onClick.AddListener(OnMaximizeButtonClicked);
         minimizeButton.onClick.AddListener(OnMinimizeButtonClicked);
+<<<<<<< Updated upstream
+=======
+
+
+
+
+        //gameObject.SetActive(false);
+>>>>>>> Stashed changes
     }
 
     private void OnCloseButtonClicked()
@@ -84,6 +92,12 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     public void Open()
     {
+<<<<<<< Updated upstream
+=======
+        //gameObject.SetActive(true);
+        Debug.Log("Open"+AppName);
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("AwakeWindow", AppName));
+>>>>>>> Stashed changes
         switch (state)
         {
             case WindowState.Normal:

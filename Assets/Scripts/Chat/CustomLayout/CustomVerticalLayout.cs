@@ -27,6 +27,11 @@ public class CustomVerticalLayout : MonoBehaviour
         RefreshAllChildren();
     }
 
+    public void Update()
+    {
+        RefreshAllChildren();
+    }
+
     public void RefreshAllChildren()
     {
         children.Clear();

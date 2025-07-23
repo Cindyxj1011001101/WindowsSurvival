@@ -109,6 +109,7 @@ public class GameManager : MonoBehaviour
 
     public void HandleExplore()
     {
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
         var disposableDropList = curEnvironmentBag.disposableDropList;
         var repeatableDropList = curEnvironmentBag.repeatableDropList;
         if (disposableDropList.IsEmpty && repeatableDropList.IsEmpty)

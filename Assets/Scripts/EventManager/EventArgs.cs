@@ -18,6 +18,7 @@
     Equip, // 穿上装备
     Unequip, // 卸下装备
     TriggerParagraph, // 触发对话
+    DialogueCondition, // 触发对话条件
 }
 
 public class ChangeStateArgs
@@ -63,5 +64,17 @@ public class RefreshEnvironmentStateArgs
     {
         place = p;
         state = s;
+    }
+}
+
+public class SubscribeActionArgs
+{
+    public string type;
+    public string value;
+
+    public SubscribeActionArgs(string t, string v)
+    {
+        type = t;
+        value = v;
     }
 }

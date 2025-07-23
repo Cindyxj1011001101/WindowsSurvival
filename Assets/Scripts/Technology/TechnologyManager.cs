@@ -26,6 +26,8 @@ public class TechnologyManager
         techData.curStudyRate = CalcStudyRate();
         // 添加监听，每回合结算研究进度
         EventManager.Instance.AddListener(EventType.IntervalSettle, OnStudy);
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("StartResearch", techNode.techName));
+
         //EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
     }
 
@@ -88,6 +90,8 @@ public class TechnologyManager
         {
             CraftManager.Instance.UnlockRecipe(recipe);
         }
+
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("FinishResearch", techNode.techName));
     }
 
     /// <summary>
