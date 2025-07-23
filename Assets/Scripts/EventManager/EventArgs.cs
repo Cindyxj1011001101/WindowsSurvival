@@ -16,6 +16,7 @@
     TriggerParagraph, // 触发对话
     DialogueCondition, // 触发对话条件
     ChangeWaterLevel, // 水平面变化
+    ChangeTime, // 时间变化
 }
 
 public class ChangeStateArgs

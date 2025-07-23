@@ -16,7 +16,7 @@ public class StateSlider : MonoBehaviour
 
     public void SetValue(float value, float maxValue)
     {
-        slider.value = value;
+        slider.value = value / maxValue;
         if (displayPercentage)
             valueText.text = $"{value * 100 / maxValue: 0.0}%";
         else

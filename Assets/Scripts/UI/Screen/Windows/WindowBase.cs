@@ -177,7 +177,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         Sequence minimizeSequence = DOTween.Sequence();
 
         // 同时执行缩小和移动动画
-        minimizeSequence.Join(transform.DOScale(Vector3.zero, animDuration));
+        minimizeSequence.Join(transform.DOScale(Vector3.one * .1f, animDuration));
         minimizeSequence.Join(transform.DOMove(shortcut.position, animDuration));
 
         minimizeSequence.OnComplete(() => { canvasGroup.blocksRaycasts = false; });

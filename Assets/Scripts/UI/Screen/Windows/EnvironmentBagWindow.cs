@@ -95,10 +95,10 @@ public class EnvironmentBagWindow : BagWindow
             stateSliders.Add(EnvironmentStateEnum.Oxygen, slider);
         }
 
-       MonoUtility.UpdateContainerHeight(stateLayout.GetComponent<VerticalLayoutGroup>());
+        MonoUtility.UpdateContainerHeight(stateLayout.GetComponent<VerticalLayoutGroup>());
 
         // 显示探索度
-        discoveryDegreeSlider.SetValue(curEnvironmentBag.DiscoveryDegree, 100);
+        discoveryDegreeSlider.SetValue(curEnvironmentBag.DiscoveryDegree, 1);
         // 显示环境名称
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
 
@@ -140,6 +140,6 @@ public class EnvironmentBagWindow : BagWindow
 
     private void DisplayDiscoveryDegree(float degree)
     {
-        discoveryDegreeSlider.SetValue(degree, 100);
+        discoveryDegreeSlider.SetValue(degree, 1);
     }
 }
