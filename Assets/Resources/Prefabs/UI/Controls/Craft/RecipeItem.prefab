@@ -116,6 +116,11 @@ MonoBehaviour:
   lockImage: {fileID: 4092021446330848388}
   adequateImage: {fileID: 6519838625980594853}
   lockedColor: {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 1}
+  normalLockSprite: {fileID: -758408193, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  hoveredLockSprite: {fileID: -1122691988, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  normalAdequateSprite: {fileID: -736511663, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  hoveredAdequateSprite: {fileID: -420838126, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  button: {fileID: 7919662616530164511}
 --- !u!1 &5280827813800850522
 GameObject:
   m_ObjectHideFlags: 0
