@@ -144,8 +144,6 @@ public class CardSlot : MonoBehaviour
         // 显示堆叠数量
         DisplayStackNum(stackCount, card.MaxStackNum, displayStack);
 
-        moreInfoText.text = "";
-
         // 显示耐久
         if (card.TryGetComponent<DurabilityComponent>(out var d))
             DisplayComponent(d);
@@ -158,6 +156,9 @@ public class CardSlot : MonoBehaviour
         // 显示产物进度
         if (card.TryGetComponent<ProgressComponent>(out var p))
             DisplayComponent(p);
+
+        // 显示额外信息
+        moreInfoText.text = card.ExtraInfo;
     }
 
     /// <summary>
