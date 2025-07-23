@@ -109,8 +109,8 @@ public class GameManager : MonoBehaviour
 
     public void HandleExplore()
     {
-        var disposableDropList = curEnvironmentBag.disposableDropList;
-        var repeatableDropList = curEnvironmentBag.repeatableDropList;
+        var disposableDropList = curEnvironmentBag.DisposableDropList;
+        var repeatableDropList = curEnvironmentBag.RepeatableDropList;
         if (disposableDropList.IsEmpty && repeatableDropList.IsEmpty)
         {
             Debug.Log("探索完全");
@@ -150,8 +150,8 @@ public class GameManager : MonoBehaviour
 
     private void HandeleExploreDrop()
     {
-        var disposableDropList = curEnvironmentBag.disposableDropList;
-        var repeatableDropList = curEnvironmentBag.repeatableDropList;
+        var disposableDropList = curEnvironmentBag.DisposableDropList;
+        var repeatableDropList = curEnvironmentBag.RepeatableDropList;
 
         // 当一次性探索列表还有剩余
         if (!disposableDropList.IsEmpty)
@@ -206,7 +206,7 @@ public class GameManager : MonoBehaviour
         curEnvironmentBag = environmentBags[targetPlace];
 
         //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
-        var door = curEnvironmentBag.disposableDropList.CertainDrop($"通往{ParsePlaceEnum(lastPlace)}的门");
+        var door = curEnvironmentBag.DisposableDropList.CertainDrop($"通往{ParsePlaceEnum(lastPlace)}的门");
         if (door != null)
             AddCard(door[0], false);
 
