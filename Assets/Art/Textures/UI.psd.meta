@@ -961,10 +961,10 @@ TextureImporter:
       name: UI_checkbox_checked
       rect:
         serializedVersion: 2
-        x: 130
-        y: 477
-        width: 8
-        height: 8
+        x: 129
+        y: 476
+        width: 10
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -982,10 +982,10 @@ TextureImporter:
       name: UI_checkbox_default
       rect:
         serializedVersion: 2
-        x: 141
-        y: 477
-        width: 8
-        height: 8
+        x: 140
+        y: 476
+        width: 10
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1021,7 +1021,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_Selectionbox
+      name: UI_Selectionbox_1
       rect:
         serializedVersion: 2
         x: 171
@@ -1030,7 +1030,7 @@ TextureImporter:
         height: 26
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 4, y: 5, z: 8, w: 5}
+      border: {x: 4, y: 10, z: 8, w: 10}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1092,7 +1092,7 @@ TextureImporter:
         width: 8
         height: 12
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1100,6 +1100,69 @@ TextureImporter:
       bones: []
       spriteID: cc0e4184e986c0a4d95877de189e274f
       internalID: -573434214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Selectionbox_2
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 461
+        width: 72
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 17, y: 7, z: 17, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a76951f307d3d4b4b8e3a323660f68d8
+      internalID: -675735941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_0
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 440
+        width: 129
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 18}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fdb2a69cf0ad8f47a32623b3ecd22fb
+      internalID: 940146804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_1
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 363
+        width: 129
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 17, z: 4, w: 18}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a054bd8cb41e084389eb185f406211a
+      internalID: -393629588
       vertices: []
       indices: 
       edges: []
@@ -1115,6 +1178,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      UI_0: 940146804
+      UI_1: -393629588
       UI_19: -1067156244
       UI_20: 1605050901
       UI_21: 688397521
@@ -1140,7 +1205,8 @@ TextureImporter:
       UI_PowerOn: -573434214
       UI_ProgressBarFrame_1: -1837554866
       UI_ProgressBarFrame_2: -1122912679
-      UI_Selectionbox: 1154874342
+      UI_Selectionbox_1: 1154874342
+      UI_Selectionbox_2: -675735941
       UI_Slidingbar_default: 959292114
       UI_Slidingbar_hovered: 853517195
       UI_btn_Arrange_defult: -757670956
