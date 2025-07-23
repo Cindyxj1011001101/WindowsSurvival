@@ -26,11 +26,11 @@ public class MagneticTentacle : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
         //+14饱食
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 14));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 14);
         //-6精神
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -6));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -6);
         //-5健康
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -5));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -5);
         //消耗30分钟
         TimeManager.Instance.AddTime(30);
     }

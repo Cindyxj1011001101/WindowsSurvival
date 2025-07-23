@@ -16,9 +16,9 @@ public class HumanPoweredGenerator : Card
         // 电力+10
         StateManager.Instance.ChangeElectricity(+10);
         // 水分-5
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, -5));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -5);
         // 清醒-6
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Soberiety, -6));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -6);
         // 消耗60分钟
         TimeManager.Instance.AddTime(60);
     }

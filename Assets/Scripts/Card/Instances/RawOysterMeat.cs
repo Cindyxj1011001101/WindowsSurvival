@@ -24,9 +24,9 @@ public class RawOysterMeat : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
         //+6饱食
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 6));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 6);
         //-1.2健康
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -1.2f));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -1.2f);
         //消耗5分钟
         TimeManager.Instance.AddTime(5);
     }

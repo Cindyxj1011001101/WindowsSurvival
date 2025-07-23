@@ -17,7 +17,7 @@ public class CompactBiscuit : Card
         // 播放吃的音效
         if(SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01",true);
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 12));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 12);
         TimeManager.Instance.AddTime(3);
     }
 }

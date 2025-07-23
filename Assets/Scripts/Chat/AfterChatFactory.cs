@@ -44,26 +44,78 @@ public class AfterChatFactory
         switch (eventItemList[1])
         {
             case "玩家":
-                StateManager.Instance.ChangePlayerStateByString(eventItemList[2], float.Parse(eventItemList[3]));
+                ChangePlayerStateByString(eventItemList[2], float.Parse(eventItemList[3]));
                 break;
             case "当前环境":
-                StateManager.Instance.ChangeEnvironmentStateByString(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, eventItemList[2], float.Parse(eventItemList[3]));
+                ChangeEnvironmentStateByString(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, eventItemList[2], float.Parse(eventItemList[3]));
                 break;
             case "维生舱":
-                StateManager.Instance.ChangeEnvironmentStateByString(PlaceEnum.LifeSupportCabin, eventItemList[2], float.Parse(eventItemList[3]));
+                ChangeEnvironmentStateByString(PlaceEnum.LifeSupportCabin, eventItemList[2], float.Parse(eventItemList[3]));
                 break;
             case "驾驶室":
-                StateManager.Instance.ChangeEnvironmentStateByString(PlaceEnum.Cockpit, eventItemList[2], float.Parse(eventItemList[3]));
+                ChangeEnvironmentStateByString(PlaceEnum.Cockpit, eventItemList[2], float.Parse(eventItemList[3]));
                 break;
             case "动力舱":
-                StateManager.Instance.ChangeEnvironmentStateByString(PlaceEnum.PowerCabin, eventItemList[2], float.Parse(eventItemList[3]));
+                ChangeEnvironmentStateByString(PlaceEnum.PowerCabin, eventItemList[2], float.Parse(eventItemList[3]));
                 break;
             case "珊瑚礁海域":
-                StateManager.Instance.ChangeEnvironmentStateByString(PlaceEnum.CoralCoast, eventItemList[2], float.Parse(eventItemList[3]));
+                ChangeEnvironmentStateByString(PlaceEnum.CoralCoast, eventItemList[2], float.Parse(eventItemList[3]));
                 break;
         }
 
     }
+
+    private void ChangePlayerStateByString(string stateName, float delta)
+    {
+        switch (stateName)
+        {
+            case "健康":
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, delta);
+                break;
+            case "饱食":
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, delta);
+                break;
+            case "口渴":
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, delta);
+                break;
+            case "精神":
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, delta);
+                break;
+            case "氧气":
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, delta);
+                break;
+            case "清醒":
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, delta);
+                break;
+        }
+    }
+
+    private void ChangeEnvironmentStateByString(PlaceEnum placeType, string stateName, float delta)
+    {
+        var env = GameManager.Instance.EnvironmentBags[placeType];
+        switch (stateName)
+        {
+            case "电力":
+                StateManager.Instance.ChangeElectricity(delta);
+                break;
+            case "氧气":
+                env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, delta);
+                break;
+            case "压力":
+                env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, delta);
+                break;
+            case "高度":
+                StateManager.Instance.ChangeWaterLevel(delta);
+                break;
+            //case "电缆":
+            //    OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.HasCable, delta));
+            //    break;
+            //case "水域":
+            //    OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.InWater, delta));
+            //    break;
+        }
+    }
+
     public void OtherEvent(List<string> eventItemList)
     {
         switch (eventItemList[1])

@@ -72,28 +72,28 @@ public class EnvironmentBagWindow : BagWindow
 
 
         // 新的环境信息
-        foreach (var state in stateStateSliders)
-        {
-            //室内显示氧气
-            if (curEnvironmentBag.PlaceData.isIndoor)
-            {
-                stateStateSliders[EnvironmentStateEnum.Oxygen].SetActive(true);
-            }
-            else
-            {
-                stateStateSliders[EnvironmentStateEnum.Oxygen].SetActive(false);
-            }
-            //飞船中显示水平面高度
-            if (curEnvironmentBag.PlaceData.isInSpacecraft)
-            {
-                stateStateSliders[EnvironmentStateEnum.WaterLevel].SetActive(true);
-            }
-            else
-            {
-                stateStateSliders[EnvironmentStateEnum.WaterLevel].SetActive(false);
-            }
-            OnEnvironmentStateChanged(new RefreshEnvironmentStateArgs(curEnvironmentBag.PlaceData.placeType, state.Key));
-        }
+        //foreach (var state in stateStateSliders)
+        //{
+        //    //室内显示氧气
+        //    if (curEnvironmentBag.PlaceData.isIndoor)
+        //    {
+        //        stateStateSliders[EnvironmentStateEnum.Oxygen].SetActive(true);
+        //    }
+        //    else
+        //    {
+        //        stateStateSliders[EnvironmentStateEnum.Oxygen].SetActive(false);
+        //    }
+        //    //飞船中显示水平面高度
+        //    if (curEnvironmentBag.PlaceData.isInSpacecraft)
+        //    {
+        //        stateStateSliders[EnvironmentStateEnum.WaterLevel].SetActive(true);
+        //    }
+        //    else
+        //    {
+        //        stateStateSliders[EnvironmentStateEnum.WaterLevel].SetActive(false);
+        //    }
+        //    OnEnvironmentStateChanged(new RefreshEnvironmentStateArgs(curEnvironmentBag.PlaceData.placeType, state.Key));
+        //}
         discoveryDegreeText.text = $"{Math.Round(curEnvironmentBag.DiscoveryDegree, 3) * 100} %";
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
         //placeDetailsText.text = $"{curEnvironmentBag.PlaceData.placeDesc}";

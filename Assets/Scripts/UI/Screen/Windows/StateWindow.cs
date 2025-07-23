@@ -23,6 +23,11 @@ public class StateWindow : WindowBase
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshState);
     }
 
+    public void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshState);
+    }
+
     //初始化显示数据
     protected override void Init()
     {
@@ -31,12 +36,7 @@ public class StateWindow : WindowBase
         RefreshState(PlayerStateEnum.Thirst);
         RefreshState(PlayerStateEnum.San);
         RefreshState(PlayerStateEnum.Oxygen);
-        RefreshState(PlayerStateEnum.Soberiety);
-    }
-
-    public void OnDestroy()
-    {
-        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshState);
+        RefreshState(PlayerStateEnum.Sobriety);
     }
 
     //更新显示数据

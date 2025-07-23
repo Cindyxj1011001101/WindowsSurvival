@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
                     // 探索时间+40%
                     explorationTime *= 1.4f;
                     // 健康值-4
-                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -4));
+                    StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -4);
                 }
                 break;
             default:

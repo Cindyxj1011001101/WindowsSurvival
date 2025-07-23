@@ -58,7 +58,7 @@ public class AquariusFish : Card
         if (rand < 3)
         {
             // 2. 玩家状态变化
-            StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -2));
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -2);
 
             // 3. 时间变化
             TimeManager.Instance.AddTime(30);

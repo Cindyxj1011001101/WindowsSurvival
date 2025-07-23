@@ -61,7 +61,7 @@ public class OreReleaseOxygenMachine : Card
     {
         //if (GameManager.Instance.EquipmentBag.FindCardOfName("氧气罐") == null) return;
 
-        Dictionary<PlayerStateEnum, PlayerState> playerStateDict = StateManager.Instance.PlayerStateDict;
+        //Dictionary<PlayerStateEnum, PlayerState> playerStateDict = StateManager.Instance.PlayerStateDict;
 
         
 

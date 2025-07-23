@@ -20,8 +20,6 @@ public class CameraWindow : WindowBase
     private void OnSleepButtonClick()
     {
         TimeManager.Instance.AddTime(240);
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Soberiety, -56));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 56);
     }
-
-
 }
