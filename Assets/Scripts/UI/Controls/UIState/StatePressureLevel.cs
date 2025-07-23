@@ -19,12 +19,12 @@ public class StatePressureLevel : MonoBehaviour
         for (int i = 0; i < (int)level; i++)
         {
             levels[i].gameObject.SetActive(true);
-            levels[i].color = colors[(int)level];
+            levels[i].color = colors[(int)level - 1];
         }
 
         pressureLevelText.text = ParsePressureLevel(level);
 
-        pressureLevelText.color = colors[(int)level];
+        pressureLevelText.color = colors[(int)level - 1];
     }
 
     private string ParsePressureLevel(PressureLevel level)

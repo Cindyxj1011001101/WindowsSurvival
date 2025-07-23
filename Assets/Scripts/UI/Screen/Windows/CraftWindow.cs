@@ -192,8 +192,8 @@ public class CraftWindow : WindowBase
         craftTimeText.text = sb.ToString();
 
         // 显示制作按钮
-        //craftButton.DisplayButton(CraftManager.Instance.IsRecipeLocked(recipe), CraftManager.Instance.CanCrfat(recipe));
-        craftButton.DisplayButton(false, true);
+        craftButton.DisplayButton(CraftManager.Instance.IsRecipeLocked(recipe), CraftManager.Instance.CanCrfat(recipe));
+        //craftButton.DisplayButton(false, true);
 
         // 添加制作事件
         craftButton.onClick.RemoveAllListeners();

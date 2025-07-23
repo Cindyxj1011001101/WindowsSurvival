@@ -69,12 +69,6 @@ public class EnvironmentBag : BagBase
         //如果是开局进入，则初始化环境状态
         if (StateDict.Count == 0)
             InitState();
-
-        //foreach (var state in stateDict)
-        //{
-        //    EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, state.Key));
-        //}
-        //EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, EnvironmentStateEnum.Electricity));
     }
 
     private void InitState()
@@ -89,12 +83,6 @@ public class EnvironmentBag : BagBase
         // 在室内显示氧气
         if (placeData.isIndoor)
             StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(UnityEngine.Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
-
-        // 压强都显示
-        pressureLevel = PressureLevel.Standard;
-
-        // 是否铺设电缆都显示
-        hasCable = true;
     }
 
     /// <summary>
