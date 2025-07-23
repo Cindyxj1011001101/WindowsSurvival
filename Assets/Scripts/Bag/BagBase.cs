@@ -8,8 +8,9 @@ public abstract class BagBase : MonoBehaviour
 {
     [SerializeField] private GameObject slotPrefab; // 格子预制体
     [SerializeField] private GridLayoutGroup slotLayout; // 格子布局
+    [SerializeField] private HoverableButton organizeButton; // 整理背包按钮
 
-    [SerializeField] private Button organizeButton; // 整理背包按钮
+
 
     protected List<CardSlot> slots = new();
 

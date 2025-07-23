@@ -30,11 +30,11 @@ public class RatBody : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
         //+16饱食
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 16));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 16);
         //-20精神值
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -20));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -20);
         //-8健康
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -8));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -8);
         //消耗30分钟
         TimeManager.Instance.AddTime(30);
     }
@@ -46,9 +46,9 @@ public class RatBody : Card
         //销毁老鼠尸体
         DestroyThis();
         //-3精神值
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -3));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         //-2健康
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -2));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -2);
         //消耗45分钟
         TimeManager.Instance.AddTime(45);
         //随机掉落卡牌

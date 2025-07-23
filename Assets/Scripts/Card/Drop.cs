@@ -72,14 +72,14 @@ public class DisposableDropList
     /// <summary>
     /// 掉落指定卡牌
     /// </summary>
-    /// <param name="cardName"></param>
+    /// <param name="cardId"></param>
     /// <returns></returns>
-    public List<Card> CertainDrop(string cardName)
+    public List<Card> CertainDrop(string cardId)
     {
         for (int i = 0; i < dropList.Count; i++)
         {
             Drop drop = dropList[i];
-            if (drop.card.cardName == cardName)
+            if (drop.card.cardId == cardId)
             {
                 dropList.RemoveAt(i);
                 return DropCards(drop);

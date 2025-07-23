@@ -61,7 +61,7 @@ public class CraftManager
         foreach (var material in recipe.materials)
         {
             // 任何一项材料不满足数量需求，不能合成
-            if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredAmount) return false;
+            if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum) return false;
         }
 
         return true;
@@ -77,7 +77,7 @@ public class CraftManager
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
         foreach (var material in recipe.materials)
         {
-            playerBag.RemoveCardsByCardId(material.cardId, material.requiredAmount);
+            playerBag.RemoveCardsByCardId(material.cardId, material.requiredNum);
         }
 
         // 创建一个新的卡牌

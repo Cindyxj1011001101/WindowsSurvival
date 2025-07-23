@@ -15,6 +15,7 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private Image maxStackNumImage; // 显示最大堆叠数量的图标
     [SerializeField] private VerticalLayoutGroup componentLayout; // 用于显示新鲜度、耐久等组件的布局
     [SerializeField] private CanvasGroup cardCanvasGroup;
+    [SerializeField] private Text moreInfoText; // 额外信息
 
     private Dictionary<ICardComponent, Slider> componentSliders = new(); // 用于存储组件的滑动条
 
@@ -73,19 +74,20 @@ public class CardSlot : MonoBehaviour
         (iconImage.transform as RectTransform).anchoredPosition = offset;
     }
 
-    private void DisplayStackNum(int stackNum, int maxStackNum)
+    private void DisplayStackNum(int stackNum, int maxStackNum, bool displayStack)
     {
-        if (maxStackNum > 1)
+
+        if (maxStackNum <= 1 || !displayStack)
+        {
+            stackObject.SetActive(false);
+            maxStackNumImage.gameObject.SetActive(false);
+        }
+        else
         {
             stackObject.SetActive(true);
             stackNumText.text = $"{stackNum}";
 
             maxStackNumImage.gameObject.SetActive(stackNum == maxStackNum);
-        }
-        else
-        {
-            stackObject.SetActive(false);
-            maxStackNumImage.gameObject.SetActive(false);
         }
     }
 
@@ -123,7 +125,7 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     /// <param name="card"></param>
     /// <param name="stackCount"></param>
-    public void DisplayCard(Card card, int stackCount)
+    public void DisplayCard(Card card, int stackCount, bool displayStack = true)
     {
         // 如果要显示的数量小于等于零，则什么也不显示
         if (stackCount <= 0)
@@ -138,7 +140,9 @@ public class CardSlot : MonoBehaviour
         nameText.text = card.cardName;
 
         // 显示堆叠数量
-        DisplayStackNum(stackCount, card.maxStackNum);
+        DisplayStackNum(stackCount, card.maxStackNum, displayStack);
+
+        moreInfoText.text = "";
 
         // 显示耐久
         if (card.TryGetComponent<DurabilityComponent>(out var d))
@@ -290,6 +294,8 @@ public class CardSlot : MonoBehaviour
     public void ClearSlot()
     {
         cards.Clear();
+        componentSliders.Clear();
+        MonoUtility.DestroyAllChildren(componentLayout.transform);
         DisableDisplay();
     }
 

@@ -26,11 +26,11 @@ public class LittleRawMeat : Card
         if(SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01",true);
         //+12饱食
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 12));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 12);
         //-2精神值
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -2));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -2);
         //-3健康
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -3));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -3);
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
     }

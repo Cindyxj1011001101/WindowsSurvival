@@ -18,8 +18,8 @@ public class CaughtAquariusFishWithProduct : Card
         // 播放喝水的音效
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("喝_01", true);
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, 15));
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 4));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 15);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 4);
         TimeManager.Instance.AddTime(15);
     }
 

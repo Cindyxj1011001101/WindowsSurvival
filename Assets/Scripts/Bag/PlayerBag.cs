@@ -27,7 +27,7 @@ public class PlayerBag : BagBase
         // 因为背包和装备共用载重
         // 不是从装备中添加的，要看载重够不够
         if ((card.slot == null || card.slot.Bag is not EquipmentBag) &&
-            StateManager.Instance.curLoad + card.weight > StateManager.Instance.maxLoad)
+            StateManager.Instance.CurLoad + card.weight > StateManager.Instance.MaxLoad)
             return false;
 
         // 载重足够则按照父类的判断标准进行判断
@@ -36,8 +36,8 @@ public class PlayerBag : BagBase
 
     public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)
     {
-        float maxLoad = StateManager.Instance.maxLoad;
-        float curLoad = StateManager.Instance.curLoad;
+        float maxLoad = StateManager.Instance.MaxLoad;
+        float curLoad = StateManager.Instance.CurLoad;
 
         List<(CardSlot, int)> result = new();
 

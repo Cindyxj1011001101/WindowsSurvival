@@ -10,19 +10,20 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public Image hoveredImage; // 鼠标悬停时显示的图像
     public float fadeDuration = 0.1f; // 淡入淡出持续时间
 
+    public Text[] textsNeedToReverseColor;
+    public Image[] imagseNeedToReverseColor;
+
+    private Color normalColor;
+    [SerializeField]
+    private Color reversedColor = new Color(17, 17, 17, 255);
+
     public UnityEvent onClick { get; set; } = new UnityEvent();
+    public UnityEvent onPointerEnter { get; set; } = new UnityEvent();
 
-    private void Awake()
+    protected virtual void Awake()
     {
-        if (normalImage == null)
-        {
-            normalImage = transform.Find("Normal").GetComponent<Image>();
-        }
-
-        if (hoveredImage == null)
-        {
-            hoveredImage = transform.Find("Hovered").GetComponent<Image>();
-        }
+        if (normalImage != null)
+            normalColor = normalImage.color;
 
         // 初始化时确保hoveredImage是透明的
         if (hoveredImage != null)
@@ -34,13 +35,18 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         }
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public virtual void OnPointerClick(PointerEventData eventData)
     {
         onClick?.Invoke();
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
+        onPointerEnter?.Invoke();
+
+        if (normalImage != null)
+            normalColor = normalImage.color;
+
         if (hoveredImage == null) return;
 
         // 激活图像并开始淡入动画
@@ -48,10 +54,11 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         hoveredImage.DOKill(); // 停止所有正在进行的动画
 
         hoveredImage.DOFade(1, fadeDuration)
-            .SetEase(Ease.OutQuad);
+            .SetEase(Ease.OutQuad)
+            .OnStart(() => ChangeColor(reversedColor));
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public virtual void OnPointerExit(PointerEventData eventData)
     {
         if (hoveredImage == null) return;
 
@@ -60,15 +67,31 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
         hoveredImage.DOFade(0f, fadeDuration)
             .SetEase(Ease.OutQuad)
-            .OnComplete(() => hoveredImage.gameObject.SetActive(false));
+            .OnComplete(() =>
+            {
+                hoveredImage.gameObject.SetActive(false);
+            })
+            .OnStart(() => ChangeColor(normalColor));
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         // 清理DOTween动画
         if (hoveredImage != null)
         {
             hoveredImage.DOKill();
+        }
+    }
+
+    private void ChangeColor(Color color)
+    {
+        foreach (var text in textsNeedToReverseColor)
+        {
+            text.color = color;
+        }
+        foreach (var image in imagseNeedToReverseColor)
+        {
+            image.color = color;
         }
     }
 }

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -83,10 +84,11 @@ public abstract class PanelBase : MonoBehaviour
         switch (showMode)
         {
             case ShowMode.Fade:
-                PublicMonoBehaviour.Instance.StartCoroutine(FadeIn());
+                //PublicMonoBehaviour.Instance.StartCoroutine(FadeIn());
+                FadeIn();
                 break;
             case ShowMode.Animator:
-                PublicMonoBehaviour.Instance.StartCoroutine(PlayAnimatorShow());
+                //PublicMonoBehaviour.Instance.StartCoroutine(PlayAnimatorShow());
                 break;
         }
     }
@@ -112,50 +114,71 @@ public abstract class PanelBase : MonoBehaviour
         switch (showMode)
         {
             case ShowMode.Fade:
-                PublicMonoBehaviour.Instance.StartCoroutine(FadeOut());
+                //PublicMonoBehaviour.Instance.StartCoroutine(FadeOut());
+                FadeOut();
                 break;
             case ShowMode.Animator:
-                PublicMonoBehaviour.Instance.StartCoroutine(PlayAnimatorHide());
+                //PublicMonoBehaviour.Instance.StartCoroutine(PlayAnimatorHide());
                 break;
         }
     }
 
-    /// <summary>
-    /// 淡入动画协程
-    /// </summary>
-    private IEnumerator FadeIn()
+    ///// <summary>
+    ///// 淡入动画协程
+    ///// </summary>
+    //private IEnumerator FadeIn()
+    //{
+    //    canvasGroup.alpha = 0;
+    //    float fadeSpeed = 1f / fadeTime;
+
+    //    while (canvasGroup.alpha < 1)
+    //    {
+    //        canvasGroup.alpha += fadeSpeed * Time.deltaTime;
+    //        yield return null;
+    //    }
+
+    //    canvasGroup.alpha = 1;
+
+    //    onShown?.Invoke();
+    //    onShown.RemoveAllListeners();
+    //}
+
+    private void FadeIn()
     {
         canvasGroup.alpha = 0;
-        float fadeSpeed = 1f / fadeTime;
-
-        while (canvasGroup.alpha < 1)
+        canvasGroup.DOFade(1, fadeTime).OnComplete(() =>
         {
-            canvasGroup.alpha += fadeSpeed * Time.deltaTime;
-            yield return null;
-        }
-
-        canvasGroup.alpha = 1;
-
-        onShown?.Invoke();
-        onShown.RemoveAllListeners();
+            onShown?.Invoke();
+            onShown.RemoveAllListeners();
+        });
     }
 
-    /// <summary>
-    /// 淡出动画协程
-    /// </summary>
-    private IEnumerator FadeOut()
+    ///// <summary>
+    ///// 淡出动画协程
+    ///// </summary>
+    //private IEnumerator FadeOut()
+    //{
+    //    canvasGroup.alpha = 1;
+    //    float fadeSpeed = 1f / fadeTime;
+
+    //    while (canvasGroup.alpha > 0)
+    //    {
+    //        canvasGroup.alpha -= fadeSpeed * Time.deltaTime;
+    //        yield return null;
+    //    }
+
+    //    onHidden?.Invoke();
+    //    onHidden.RemoveAllListeners();
+    //}
+
+    private void FadeOut()
     {
         canvasGroup.alpha = 1;
-        float fadeSpeed = 1f / fadeTime;
-
-        while (canvasGroup.alpha > 0)
+        canvasGroup.DOFade(0, fadeTime).OnComplete(() =>
         {
-            canvasGroup.alpha -= fadeSpeed * Time.deltaTime;
-            yield return null;
-        }
-
-        onHidden?.Invoke();
-        onHidden.RemoveAllListeners();
+            onHidden?.Invoke();
+            onHidden.RemoveAllListeners();
+        });
     }
 
     /// <summary>

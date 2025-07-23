@@ -18,11 +18,11 @@ public class RotMaterial : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
         //+6饱食
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, 6));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 6);
         //-20精神值
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -20));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -20);
         //-10健康
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -10));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -10);
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
     }

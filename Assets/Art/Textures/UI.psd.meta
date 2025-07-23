@@ -961,10 +961,10 @@ TextureImporter:
       name: UI_checkbox_checked
       rect:
         serializedVersion: 2
-        x: 130
-        y: 477
-        width: 8
-        height: 8
+        x: 129
+        y: 476
+        width: 10
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -982,10 +982,10 @@ TextureImporter:
       name: UI_checkbox_default
       rect:
         serializedVersion: 2
-        x: 141
-        y: 477
-        width: 8
-        height: 8
+        x: 140
+        y: 476
+        width: 10
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1004,9 +1004,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 152
-        y: 477
-        width: 7
-        height: 8
+        y: 476
+        width: 9
+        height: 10
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -1016,6 +1016,153 @@ TextureImporter:
       bones: []
       spriteID: b8c1120b5f10a4a40a23c302598df7ad
       internalID: -758408193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Selectionbox_1
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 463
+        width: 31
+        height: 26
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 10, z: 8, w: 10}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 50f0a21887ae333428b322ebd5b98d1a
+      internalID: 1154874342
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_btn_ReduceScreen_default
+      rect:
+        serializedVersion: 2
+        x: 222
+        y: 496
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa311280da37bd046a4a6bf0b6a803d8
+      internalID: 154959178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_btn_ReduceScreen_hovered
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 496
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 521357fa0f255e04a9ea48a14ad56b6b
+      internalID: 2130795967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_PowerOn
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 461
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc0e4184e986c0a4d95877de189e274f
+      internalID: -573434214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Selectionbox_2
+      rect:
+        serializedVersion: 2
+        x: 211
+        y: 461
+        width: 72
+        height: 30
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 17, y: 7, z: 17, w: 4}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a76951f307d3d4b4b8e3a323660f68d8
+      internalID: -675735941
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_0
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 440
+        width: 129
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 18}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8fdb2a69cf0ad8f47a32623b3ecd22fb
+      internalID: 940146804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_1
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 363
+        width: 129
+        height: 71
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 17, z: 4, w: 18}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a054bd8cb41e084389eb185f406211a
+      internalID: -393629588
       vertices: []
       indices: 
       edges: []
@@ -1031,6 +1178,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      UI_0: 940146804
+      UI_1: -393629588
       UI_19: -1067156244
       UI_20: 1605050901
       UI_21: 688397521
@@ -1053,8 +1202,11 @@ TextureImporter:
       UI_NameTooltip: -1275816256
       UI_Number: -841556680
       UI_Panel: -1503842033
+      UI_PowerOn: -573434214
       UI_ProgressBarFrame_1: -1837554866
       UI_ProgressBarFrame_2: -1122912679
+      UI_Selectionbox_1: 1154874342
+      UI_Selectionbox_2: -675735941
       UI_Slidingbar_default: 959292114
       UI_Slidingbar_hovered: 853517195
       UI_btn_Arrange_defult: -757670956
@@ -1069,6 +1221,8 @@ TextureImporter:
       UI_btn_Left_hovered: -587034484
       UI_btn_Minimized_defult: -1399726919
       UI_btn_Minimized_hovered: -416697522
+      UI_btn_ReduceScreen_default: 154959178
+      UI_btn_ReduceScreen_hovered: 2130795967
       UI_btn_Right_defult: 1958250545
       UI_btn_Right_hovered: -1658534207
       UI_btn_Up_defult: -1508199800

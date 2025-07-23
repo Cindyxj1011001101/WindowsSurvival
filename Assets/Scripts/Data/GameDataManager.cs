@@ -81,8 +81,8 @@ public class GameDataManager
         {
             EnvironmentBagRuntimeData data = new();
             // 保存掉落列表
-            data.disposableDropList = bag.disposableDropList;
-            data.repeatableDropList = bag.repeatableDropList;
+            data.disposableDropList = bag.DisposableDropList;
+            data.repeatableDropList = bag.RepeatableDropList;
             // 保存背包中的卡牌
             data.cardSlotsRuntimeData = new();
             foreach (var slot in bag.Slots)

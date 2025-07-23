@@ -20,7 +20,7 @@ public enum RecipeType
 public class RecipeMaterial
 {
     public string cardId;
-    public int requiredAmount;
+    public int requiredNum;
     public Sprite CardImage => CardFactory.GetCardImage(cardId);
 }
 
@@ -29,10 +29,20 @@ public class RecipeMaterial
 public class ScriptableRecipe : ScriptableObject
 {
     public string cardId; // 制作出来的卡牌
-    public string cardDesc; // 卡牌描述
     public RecipeType craftType; // 配方类型
     public List<RecipeMaterial> materials; // 制作需要的材料
     public int craftTime; // 制作时间
+
+    private Card craftedCard;
+
+    public Card CraftedCard
+    {
+        get
+        {
+            craftedCard ??= CardFactory.CreateCard(cardId);
+            return craftedCard;
+        }
+    }
 
     public Sprite CardImage => CardFactory.GetCardImage(cardId);
 

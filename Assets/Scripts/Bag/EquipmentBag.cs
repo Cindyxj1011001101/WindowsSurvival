@@ -114,7 +114,7 @@ public class EquipmentBag : BagBase
 
         // 不是从玩家背包装备的，要看载重够不够
         if ((card.slot == null || card.slot.Bag is not PlayerBag) &&
-            StateManager.Instance.curLoad + card.weight > StateManager.Instance.maxLoad)
+            StateManager.Instance.CurLoad + card.weight > StateManager.Instance.MaxLoad)
             return false;
         
         // 最后看装备格子有没有位置

@@ -25,16 +25,10 @@ public class WaterCrack : Card
 
     protected override System.Action OnUpdate => () =>
     {
-        //每个渗水裂缝每回合会使飞船水平面高度+0.3，渗水裂缝所在的地点每回合-8氧气。
-        EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
-        if (environmentBag != null)
-        {
-            StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(environmentBag.PlaceData.placeType, EnvironmentStateEnum.Height, 0.3f));
-            (slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue -= 8;
-            if ((slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue <= 0)
-            {
-                (slot.Bag as EnvironmentBag).EnvironmentStateDict[EnvironmentStateEnum.Oxygen].curValue = 0;
-            }
-        }
+        var bag = slot.Bag as EnvironmentBag;
+        // 渗水裂缝所在的地点每回合-8氧气
+        bag.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -8);
+        // 每个渗水裂缝每回合会使飞船水平面高度+0.3
+        StateManager.Instance.ChangeWaterLevel(+0.3f);
     };
 }

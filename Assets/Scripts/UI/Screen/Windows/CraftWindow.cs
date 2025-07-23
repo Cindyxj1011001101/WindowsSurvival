@@ -1,21 +1,27 @@
-﻿using System.Text;
+﻿using DG.Tweening;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
 
 public class CraftWindow : WindowBase
 {
-    [SerializeField] private Transform leftBar;
+    [SerializeField] private Transform recipeLibraryLayout;
     [SerializeField] private Transform recipieLayout;
     [SerializeField] private Transform materialLayout;
-    [SerializeField] private Image cardIcon;
+    [SerializeField] private CardSlot slot;
     [SerializeField] private Text craftTimeText;
-    [SerializeField] private Text cardNameText;
-    [SerializeField] private Text cradDescriptionText;
-    [SerializeField] private Button craftButton;
+    [SerializeField] private CraftButton craftButton;
+    [SerializeField] private RectTransform selectRect;
 
     private RecipeType currentRecipeType;
     private ScriptableRecipe currentSelectedRecipe; // 记录当前选中的配方
+
+    private Sequence currentAnimation;
+
+    private Dictionary<RecipeType, RectTransform> recipeLibraryItemTransforms = new();
 
     protected override void Awake()
     {
@@ -28,7 +34,10 @@ public class CraftWindow : WindowBase
 
     protected override void Init()
     {
-        DisplayRecipeTypes();
+        var firstChild = recipeLibraryLayout.GetChild(0);
+        //selectRect.anchoredPosition = new(selectRect.anchoredPosition.x, (firstChild.transform as RectTransform).anchoredPosition.y);
+        currentRecipeType = (RecipeType)Enum.Parse(typeof(RecipeType), firstChild.name);
+        DisplayRecipeLibraries();
     }
 
     private void OnDestroy()
@@ -41,6 +50,7 @@ public class CraftWindow : WindowBase
     {
         RefreshCurrentDisplay();
     }
+
     private void RefreshCurrentDisplay()
     {
         DisplayRecipesByType(currentRecipeType, true); // 传递true表示是刷新操作
@@ -49,28 +59,41 @@ public class CraftWindow : WindowBase
     /// <summary>
     /// 显示配方类别
     /// </summary>
-    private void DisplayRecipeTypes()
+    private void DisplayRecipeLibraries()
     {
-        var recipeTypeButtonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeTypeButton");
+        LayoutRebuilder.ForceRebuildLayoutImmediate(recipeLibraryLayout.transform as RectTransform);
 
-        MonoUtility.DestroyAllChildren(leftBar);
-
-        var group = leftBar.GetComponent<ToggleGroup>();
-
-        foreach (var (type, library) in CraftManager.Instance.LibraryDict)
+        for (int i = 0; i < recipeLibraryLayout.childCount; i++)
         {
-            var buttonObj = Instantiate(recipeTypeButtonPrefab, leftBar);
-            var button = buttonObj.GetComponent<CustomButton>();
-            button.group = group;
-            var text = buttonObj.GetComponentInChildren<Text>();
-            text.text = library.libraryName;
-            button.onSelect.AddListener(() =>
+            var button = recipeLibraryLayout.GetChild(i).GetComponent<HoverableButton>();
+            button.onClick.RemoveAllListeners();
+            RecipeType type = (RecipeType)Enum.Parse(typeof(RecipeType), button.name);
+            button.onClick.AddListener(() =>
             {
                 currentRecipeType = type;
                 currentSelectedRecipe = null; // 切换类型时清空选中记录
                 DisplayRecipesByType(type);
             });
+            recipeLibraryItemTransforms.Add(type, button.transform as RectTransform);
         }
+
+        DisplayRecipesByType(currentRecipeType);
+    }
+
+    private void SelectRecipeLibraryWithTween(RecipeType type)
+    {
+        // 停止当前动画
+        if (currentAnimation != null && currentAnimation.IsActive())
+        {
+            currentAnimation.Kill();
+        }
+
+        Vector2 targetPos = new(selectRect.anchoredPosition.x, recipeLibraryItemTransforms[type].anchoredPosition.y);
+
+        // 创建动画序列
+        currentAnimation = DOTween.Sequence();
+
+        currentAnimation.Append(selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad));
     }
 
     /// <summary>
@@ -80,11 +103,9 @@ public class CraftWindow : WindowBase
     /// <param name="isRefresh"></param>
     private void DisplayRecipesByType(RecipeType recipeType, bool isRefresh = false)
     {
-        var recipeButtonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeButton");
+        var recipeButtonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Craft/RecipeItem");
 
         MonoUtility.DestroyAllChildren(recipieLayout);
-
-        var group = recipieLayout.GetComponent<ToggleGroup>();
 
         // 获取当前类型的配方列表
         var recipes = CraftManager.Instance.LibraryDict[recipeType].recipes;
@@ -109,16 +130,15 @@ public class CraftWindow : WindowBase
         // 创建所有配方按钮
         foreach (var recipe in sortedRecipes)
         {
-            var recipeButtonObj = Instantiate(recipeButtonPrefab, recipieLayout);
-            var button = recipeButtonObj.GetComponent<CustomButton>();
-            button.group = group;
-            var recipeButton = recipeButtonObj.GetComponent<UIRecipeButton>();
-            recipeButton.DisplayRecipe(
+            var recipeItemObj = Instantiate(recipeButtonPrefab, recipieLayout);
+            var button = recipeItemObj.GetComponent<HoverableButton>();
+            var recipeItem = recipeItemObj.GetComponent<UIRecipeItem>();
+            recipeItem.DisplayRecipe(
                 recipe.CardImage,
                 CraftManager.Instance.IsRecipeLocked(recipe),
                 CraftManager.Instance.CanCrfat(recipe)
                 );
-            button.onSelect.AddListener(() =>
+            button.onClick.AddListener(() =>
             {
                 currentSelectedRecipe = recipe; // 记录选中的配方
                 DisplayRecipeDetails(recipe);
@@ -126,10 +146,16 @@ public class CraftWindow : WindowBase
 
             // 如果是刷新，继续选中上一个选中的配方
             if (isRefresh && recipe == currentSelectedRecipe)
-                button.isOn = true;
+                DisplayRecipeDetails(recipe);
         }
 
+        if (currentSelectedRecipe == null)
+            DisplayRecipeDetails(sortedRecipes[0]);
+
         MonoUtility.UpdateContainerHeight(recipieLayout.GetComponent<GridLayoutGroup>(), recipes.Count);
+
+        // 播放选择动效
+        SelectRecipeLibraryWithTween(recipeType);
     }
 
     /// <summary>
@@ -138,17 +164,13 @@ public class CraftWindow : WindowBase
     /// <param name="recipe"></param>
     private void DisplayRecipeDetails(ScriptableRecipe recipe)
     {
-        var recipeMaterialPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/RecipeMaterial");
+        var recipeMaterialPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Craft/MaterialItem");
 
         MonoUtility.DestroyAllChildren(materialLayout);
-        // 显示卡牌图标
-        cardIcon.sprite = recipe.CardImage;
 
-        // 显示卡牌名称
-        cardNameText.text = recipe.cardId;
-
-        // 显示卡牌描述
-        cradDescriptionText.text = recipe.cardDesc;
+        // 显示卡牌
+        slot.ClearSlot();
+        slot.DisplayCard(recipe.CraftedCard, 1, false);
 
         // 显示所需材料
         foreach (var material in recipe.materials)
@@ -156,7 +178,7 @@ public class CraftWindow : WindowBase
             var recipeMaterial = Instantiate(recipeMaterialPrefab, materialLayout).GetComponent<UIRecipeMaterial>();
             recipeMaterial.DisplayMaterial(
                 material.CardImage,
-                material.requiredAmount,
+                material.requiredNum,
                 GameManager.Instance.PlayerBag.GetTotalCountByCardId(material.cardId)
                 );
         }
@@ -164,17 +186,14 @@ public class CraftWindow : WindowBase
         // 显示制作时间
         int hour = recipe.craftTime / 60;
         int minute = recipe.craftTime % 60;
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine(hour > 0 ? $"{hour} 时 " : "");
-        sb.AppendLine($"{minute} 分");
+        StringBuilder sb = new();
+        sb.Append(hour > 0 ? $"{hour}h" : "");
+        sb.Append(minute > 0 ? $"{minute}min" : "");
         craftTimeText.text = sb.ToString();
 
         // 显示制作按钮
-        craftButton.interactable = CraftManager.Instance.CanCrfat(recipe);
-        if (CraftManager.Instance.IsRecipeLocked(recipe))
-            craftButton.GetComponentInChildren<Text>().text = "未解锁";
-        else
-            craftButton.GetComponentInChildren<Text>().text = "制作";
+        //craftButton.DisplayButton(CraftManager.Instance.IsRecipeLocked(recipe), CraftManager.Instance.CanCrfat(recipe));
+        craftButton.DisplayButton(false, true);
 
         // 添加制作事件
         craftButton.onClick.RemoveAllListeners();

@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 652377b71f7eb0b4b81f661c252dacc6, type: 3}
   m_Name: "\u6C27\u6C14\u7F50"
   m_EditorClassIdentifier: 
-  cardName: "\u6C27\u6C14\u7F50"
-  cardDesc: 
+  cardId: "\u6C27\u6C14\u7F50"
   craftType: 1
   materials:
-  - cardName: "\u5E9F\u91D1\u5C5E"
-    requiredAmount: 3
+  - cardId: "\u5E9F\u91D1\u5C5E"
+    requiredNum: 3
   craftTime: 30
