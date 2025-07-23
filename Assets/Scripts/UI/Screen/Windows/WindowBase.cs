@@ -91,9 +91,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     public void Open()
     {
-        Debug.Log("Open"+AppName);
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("AwakeWindow", AppName));
-
         switch (state)
         {
             case WindowState.Normal:
