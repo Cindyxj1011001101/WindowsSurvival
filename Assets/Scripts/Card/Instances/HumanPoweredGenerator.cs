@@ -13,21 +13,21 @@ public class HumanPoweredGenerator : Card
 
     public void Event_Generate()
     {
-        StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Electricity, 10));
+        // 电力+10
+        StateManager.Instance.ChangeElectricity(+10);
+        // 水分-5
         StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, -5));
-        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Soberiety, 6));
+        // 清醒-6
+        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Soberiety, -6));
+        // 消耗60分钟
         TimeManager.Instance.AddTime(60);
     }
 
     public bool Judge_Generate()
     {
-        if (slot.Bag is EnvironmentBag environmentBag)
-        {
-            if (environmentBag.EnvironmentStateDict[EnvironmentStateEnum.HasCable].curValue == 1)
-            {
-                return true;
-            }
-        }
-        return false;
+        if (slot == null || slot.Bag == null || slot.Bag is not EnvironmentBag) return false;
+
+        var env = slot.Bag as EnvironmentBag;
+        return env.HasCable;
     }
 }
