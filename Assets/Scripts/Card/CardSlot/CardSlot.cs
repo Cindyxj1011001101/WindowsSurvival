@@ -139,10 +139,10 @@ public class CardSlot : MonoBehaviour
         EnableDisplay();
 
         DisplayCardImage(card.CardImage, card.IsBigIcon);
-        nameText.text = card.cardName;
+        nameText.text = card.CardName;
 
         // 显示堆叠数量
-        DisplayStackNum(stackCount, card.maxStackNum, displayStack);
+        DisplayStackNum(stackCount, card.MaxStackNum, displayStack);
 
         moreInfoText.text = "";
 
@@ -186,14 +186,14 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     /// <param name="cardName"></param>
     /// <returns></returns>
-    public bool ContainsByCardName(string cardName) => !IsEmpty && cardName == cards[0].cardName;
+    public bool ContainsByCardName(string cardName) => !IsEmpty && cardName == cards[0].CardName;
 
     /// <summary>
     /// 判断该卡牌格是否放有相同卡牌（ID相同）
     /// </summary>
     /// <param name="cardId"></param>
     /// <returns></returns>
-    public bool ContainsByCardId(string cardId) => !IsEmpty && cardId == cards[0].cardId;
+    public bool ContainsByCardId(string cardId) => !IsEmpty && cardId == cards[0].CardId;
 
     /// <summary>
     /// 能否添加指定卡牌，只有id相同才能堆叠
@@ -201,7 +201,7 @@ public class CardSlot : MonoBehaviour
     /// <returns></returns>
     public virtual bool CanAddCard(Card card)
     {
-        return IsEmpty || (card.cardId == cards[0].cardId && StackNum < card.maxStackNum);
+        return IsEmpty || (card.CardId == cards[0].CardId && StackNum < card.MaxStackNum);
     }
 
     /// <summary>
@@ -212,11 +212,11 @@ public class CardSlot : MonoBehaviour
     public int GetRemainingCapacity(Card card)
     {
         // 如果当前slot为空，剩余容量为card的最大堆叠数量
-        if (IsEmpty) return card.maxStackNum;
+        if (IsEmpty) return card.MaxStackNum;
         // 如果当前slot不为空，并且不可以堆叠该卡牌，则剩余容量为0
         if (!CanAddCard(card)) return 0;
         // 剩余容量为最大堆叠数 - 当前堆叠数
-        return card.maxStackNum - StackNum;
+        return card.MaxStackNum - StackNum;
     }
 
     /// <summary>

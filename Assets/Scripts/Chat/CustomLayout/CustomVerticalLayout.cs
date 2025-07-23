@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System.Collections;
 
-[ExecuteAlways]
 [RequireComponent(typeof(RectTransform))]
 public class CustomVerticalLayout : MonoBehaviour
 {
@@ -27,10 +26,6 @@ public class CustomVerticalLayout : MonoBehaviour
         RefreshAllChildren();
     }
 
-    public void Update()
-    {
-        RefreshAllChildren();
-    }
 
     public void RefreshAllChildren()
     {
@@ -56,5 +51,6 @@ public class CustomVerticalLayout : MonoBehaviour
         float totalHeight = currentY + bottomSpacing;
         totalHeight = Mathf.Max(0, totalHeight);
         rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, totalHeight);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
     }
 }

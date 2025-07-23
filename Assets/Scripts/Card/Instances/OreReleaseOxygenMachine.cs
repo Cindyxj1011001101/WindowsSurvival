@@ -26,7 +26,7 @@ public class OreReleaseOxygenMachine : Card
         curOreNum = 0;
         oreConsumption = 1;
         electricityConsumption = 1;
-        events = new()
+        Events = new()
         {
             new Event("打开", "打开矿石释氧机", Event_Open, Judge_Open),
             new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
@@ -110,7 +110,7 @@ public class OreReleaseOxygenMachine : Card
     // 释放氧气
     private void ReleaseOxygen()
     {
-        var env = slot.Bag as EnvironmentBag;
+        var env = Slot.Bag as EnvironmentBag;
         // 不是室内环境不释放氧气
         if (!env.PlaceData.isIndoor) return;
 
@@ -151,7 +151,7 @@ public class OreReleaseOxygenMachine : Card
         if (curOreNum < oreConsumption) return;
 
         // 没连接到电网不制氧
-        var env = slot.Bag as EnvironmentBag;
+        var env = Slot.Bag as EnvironmentBag;
         if (!env.HasCable) return;
 
         // 电力不足不制氧

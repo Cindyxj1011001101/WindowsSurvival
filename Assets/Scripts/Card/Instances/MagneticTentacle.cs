@@ -7,7 +7,7 @@ public class MagneticTentacle : Card
 {
     private MagneticTentacle()
     {
-        events = new()
+        Events = new()
         {
             new Event("食用", "食用磁性触手", Event_Eat,null)
         };

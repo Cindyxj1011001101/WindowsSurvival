@@ -1,744 +1,450 @@
 {
   "disposableDropList": {
-    "maxCount": 35,
-    "dropList": [
-      {
-        "card": {
-          "$type": "AquariusFishWithProduct, Assembly-CSharp",
-          "cardId": "有产物的水瓶鱼",
-          "cardName": "水瓶鱼",
-          "cardDesc": "水瓶鱼是白塔星浅海特有的卵胎生鱼类,其雄鱼体型不足雌鱼0.1%,终生附着在雌鱼泄殖腔附近。怀孕期间,雌鱼通过腹腔生物渗透膜从海水中过滤淡水,混合蛋白质形成富含营养的琥珀色育卵液。其半透明腹腔可见游动的胚胎群。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
+  "maxCount": 35,
+  "dropList": [
+    {
+      "card": {
+        "$type": "AquariusFishWithProduct, Assembly-CSharp",
+        "components": {},
+        "CardId": "有产物的水瓶鱼"
       },
-      {
-        "card": {
-          "$type": "AquariusFishWithProduct, Assembly-CSharp",
-          "cardId": "有产物的水瓶鱼",
-          "cardName": "水瓶鱼",
-          "cardDesc": "水瓶鱼是白塔星浅海特有的卵胎生鱼类,其雄鱼体型不足雌鱼0.1%,终生附着在雌鱼泄殖腔附近。怀孕期间,雌鱼通过腹腔生物渗透膜从海水中过滤淡水,混合蛋白质形成富含营养的琥珀色育卵液。其半透明腹腔可见游动的胚胎群。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "AquariusFishWithProduct, Assembly-CSharp",
-          "cardId": "有产物的水瓶鱼",
-          "cardName": "水瓶鱼",
-          "cardDesc": "水瓶鱼是白塔星浅海特有的卵胎生鱼类,其雄鱼体型不足雌鱼0.1%,终生附着在雌鱼泄殖腔附近。怀孕期间,雌鱼通过腹腔生物渗透膜从海水中过滤淡水,混合蛋白质形成富含营养的琥珀色育卵液。其半透明腹腔可见游动的胚胎群。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "AquariusFishWithProduct, Assembly-CSharp",
-          "cardId": "有产物的水瓶鱼",
-          "cardName": "水瓶鱼",
-          "cardDesc": "水瓶鱼是白塔星浅海特有的卵胎生鱼类,其雄鱼体型不足雌鱼0.1%,终生附着在雌鱼泄殖腔附近。怀孕期间,雌鱼通过腹腔生物渗透膜从海水中过滤淡水,混合蛋白质形成富含营养的琥珀色育卵液。其半透明腹腔可见游动的胚胎群。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "Coral, Assembly-CSharp",
-          "cardId": "珊瑚",
-          "cardName": "珊瑚",
-          "cardDesc": "一种疏松多孔的海洋微生物骨骼,是石灰石的原料。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.8,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
-      },
-      {
-        "card": {
-          "$type": "Coral, Assembly-CSharp",
-          "cardId": "珊瑚",
-          "cardName": "珊瑚",
-          "cardDesc": "一种疏松多孔的海洋微生物骨骼,是石灰石的原料。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.8,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
-      },
-      {
-        "card": {
-          "$type": "Coral, Assembly-CSharp",
-          "cardId": "珊瑚",
-          "cardName": "珊瑚",
-          "cardDesc": "一种疏松多孔的海洋微生物骨骼,是石灰石的原料。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.8,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
-      },
-      {
-        "card": {
-          "$type": "Coral, Assembly-CSharp",
-          "cardId": "珊瑚",
-          "cardName": "珊瑚",
-          "cardDesc": "一种疏松多孔的海洋微生物骨骼,是石灰石的原料。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.8,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
-      },
-      {
-        "card": {
-          "$type": "ScrapMetal, Assembly-CSharp",
-          "cardId": "废金属",
-          "cardName": "废金属",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "dropProb": 1
-      },
-      {
-        "card": {
-          "$type": "ScrapMetal, Assembly-CSharp",
-          "cardId": "废金属",
-          "cardName": "废金属",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "dropProb": 1
-      },
-      {
-        "card": {
-          "$type": "ScrapMetal, Assembly-CSharp",
-          "cardId": "废金属",
-          "cardName": "废金属",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "ScrapMetal, Assembly-CSharp",
-          "cardId": "废金属",
-          "cardName": "废金属",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "ScrapMetal, Assembly-CSharp",
-          "cardId": "废金属",
-          "cardName": "废金属",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "ScrapMetal, Assembly-CSharp",
-          "cardId": "废金属",
-          "cardName": "废金属",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "ScrapMetal, Assembly-CSharp",
-          "cardId": "废金属",
-          "cardName": "废金属",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "HardFiber, Assembly-CSharp",
-          "cardId": "硬质纤维",
-          "cardName": "硬质纤维",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.3,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
-      },
-      {
-        "card": {
-          "$type": "HardFiber, Assembly-CSharp",
-          "cardId": "硬质纤维",
-          "cardName": "硬质纤维",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.3,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
-      },
-      {
-        "card": {
-          "$type": "HardFiber, Assembly-CSharp",
-          "cardId": "硬质纤维",
-          "cardName": "硬质纤维",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.3,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
-      },
-      {
-        "card": {
-          "$type": "LoveBeadWithProduct, Assembly-CSharp",
-          "cardId": "有产物的爱情贝",
-          "cardName": "爱情贝",
-          "cardDesc": "形似扇贝的古怪异星生物。其强大的肌肉使其能像鱼一样扇动贝壳游动。繁殖期的雄贝会搜集各类珍宝藏在贝壳中以吸引雌贝。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": true,
-          "weight": 1.5,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "LoveBeadWithProduct, Assembly-CSharp",
-          "cardId": "有产物的爱情贝",
-          "cardName": "爱情贝",
-          "cardDesc": "形似扇贝的古怪异星生物。其强大的肌肉使其能像鱼一样扇动贝壳游动。繁殖期的雄贝会搜集各类珍宝藏在贝壳中以吸引雌贝。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": true,
-          "weight": 1.5,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "LoveBeadWithProduct, Assembly-CSharp",
-          "cardId": "有产物的爱情贝",
-          "cardName": "爱情贝",
-          "cardDesc": "形似扇贝的古怪异星生物。其强大的肌肉使其能像鱼一样扇动贝壳游动。繁殖期的雄贝会搜集各类珍宝藏在贝壳中以吸引雌贝。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": true,
-          "weight": 1.5,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "WhiteBlastMine, Assembly-CSharp",
-          "cardId": "白爆矿",
-          "cardName": "白爆矿",
-          "cardDesc": "一种由白塔星早期火山运动产生的矿物,可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.9,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "dropProb": 1
-      },
-      {
-        "card": {
-          "$type": "WhiteBlastMine, Assembly-CSharp",
-          "cardId": "白爆矿",
-          "cardName": "白爆矿",
-          "cardDesc": "一种由白塔星早期火山运动产生的矿物,可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.9,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "dropProb": 1
-      },
-      {
-        "card": {
-          "$type": "WhiteBlastMine, Assembly-CSharp",
-          "cardId": "白爆矿",
-          "cardName": "白爆矿",
-          "cardDesc": "一种由白塔星早期火山运动产生的矿物,可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.9,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "dropProb": 1
-      },
-      {
-        "card": {
-          "$type": "WhiteBlastMine, Assembly-CSharp",
-          "cardId": "白爆矿",
-          "cardName": "白爆矿",
-          "cardDesc": "一种由白塔星早期火山运动产生的矿物,可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.9,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "dropProb": 1
-      },
-      {
-        "card": {
-          "$type": "WhiteBlastMine, Assembly-CSharp",
-          "cardId": "白爆矿",
-          "cardName": "白爆矿",
-          "cardDesc": "一种由白塔星早期火山运动产生的矿物,可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.9,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "dropProb": 1
-      },
-      {
-        "card": {
-          "$type": "WhiteBlastMine, Assembly-CSharp",
-          "cardId": "白爆矿",
-          "cardName": "白爆矿",
-          "cardDesc": "一种由白塔星早期火山运动产生的矿物,可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.9,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "WhiteBlastMine, Assembly-CSharp",
-          "cardId": "白爆矿",
-          "cardName": "白爆矿",
-          "cardDesc": "一种由白塔星早期火山运动产生的矿物,可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.9,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "WhiteBlastMine, Assembly-CSharp",
-          "cardId": "白爆矿",
-          "cardName": "白爆矿",
-          "cardDesc": "一种由白塔星早期火山运动产生的矿物,可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.9,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "WhiteBlastMine, Assembly-CSharp",
-          "cardId": "白爆矿",
-          "cardName": "白爆矿",
-          "cardDesc": "一种由白塔星早期火山运动产生的矿物,可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.9,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
-      },
-      {
-        "card": {
-          "$type": "SiphonophyllumWithProduct, Assembly-CSharp",
-          "cardId": "有产物的虹吸海葵",
-          "cardName": "虹吸海葵",
-          "cardDesc": "形如粗柄的花朵,用底部的伪根牢牢地附着在礁石上。其顶部的磁性触手能吸引富含铁的浮游生物。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
-      },
-      {
-        "card": {
-          "$type": "SiphonophyllumWithProduct, Assembly-CSharp",
-          "cardId": "有产物的虹吸海葵",
-          "cardName": "虹吸海葵",
-          "cardDesc": "形如粗柄的花朵,用底部的伪根牢牢地附着在礁石上。其顶部的磁性触手能吸引富含铁的浮游生物。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
-      },
-      {
-        "card": {
-          "$type": "MagneticTentacle, Assembly-CSharp",
-          "cardId": "磁性触手",
-          "cardName": "磁性触手",
-          "cardDesc": "用于吸引含铁浮游生物的磁性触手。处理得当可作为电池的原材料。实在饿了的时候可作为食物,可食用部分主要是触手的外套膜,有着咸腥的生锈金属味。",
-          "cardType": 2,
-          "maxStackNum": 5,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {
-            "FreshnessComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-              "$type": "FreshnessComponent, Assembly-CSharp",
-              "freshness": 11520,
-              "maxFreshness": 11520,
-              "updateRate": 1.0
-            }
-          }
-        },
-        "dropNum": 1,
-        "dropProb": 1
-      },
-      {
-        "card": {
-          "$type": "GlassSand, Assembly-CSharp",
-          "cardId": "玻璃沙",
-          "cardName": "玻璃沙",
-          "cardDesc": "硅基浮游藻类死亡后沉底,经长年风化形成的细腻玻璃沙。经高温锻造可制成玻璃。",
-          "cardType": 2,
-          "maxStackNum": 20,
-          "moveable": true,
-          "weight": 0.3,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "dropProb": 1
-      },
-      {
-        "card": {
-          "$type": "GlassSand, Assembly-CSharp",
-          "cardId": "玻璃沙",
-          "cardName": "玻璃沙",
-          "cardDesc": "硅基浮游藻类死亡后沉底,经长年风化形成的细腻玻璃沙。经高温锻造可制成玻璃。",
-          "cardType": 2,
-          "maxStackNum": 20,
-          "moveable": true,
-          "weight": 0.3,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "dropProb": 1
-      }
-    ]
-  },
-  "repeatableDropList": {
-    "emptyPopulationSizeChangeOnNotCaught": 1000,
-    "emptyPopulation": {
-      "card": null,
-      "dropNum": 0,
-      "curSize": 1000,
-      "maxSize": 10000,
-      "sizeChangePerRound": -6,
-      "sizeChangeOnCaught": 0,
-      "Proportion": 1000
+      "dropNum": 1,
+      "dropProb": 2
     },
-    "populationList": [
-      {
-        "card": {
-          "$type": "AquariusFish, Assembly-CSharp",
-          "cardId": "水瓶鱼",
-          "cardName": "水瓶鱼",
-          "cardDesc": "水瓶鱼是白塔星浅海特有的卵胎生鱼类,其雄鱼体型不足雌鱼0.1%,终生附着在雌鱼泄殖腔附近。怀孕期间,雌鱼通过腹腔生物渗透膜从海水中过滤淡水,混合蛋白质形成富含营养的琥珀色育卵液。其半透明腹腔可见游动的胚胎群。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {
-            "ProgressComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-              "$type": "ProgressComponent, Assembly-CSharp",
-              "progress": 0,
-              "maxProgress": 5760,
-              "updateRate": 1.0
-            }
+    {
+      "card": {
+        "$type": "AquariusFishWithProduct, Assembly-CSharp",
+        "components": {},
+        "CardId": "有产物的水瓶鱼"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "AquariusFishWithProduct, Assembly-CSharp",
+        "components": {},
+        "CardId": "有产物的水瓶鱼"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "AquariusFishWithProduct, Assembly-CSharp",
+        "components": {},
+        "CardId": "有产物的水瓶鱼"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "Coral, Assembly-CSharp",
+        "components": {},
+        "CardId": "珊瑚"
+      },
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "Coral, Assembly-CSharp",
+        "components": {},
+        "CardId": "珊瑚"
+      },
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "Coral, Assembly-CSharp",
+        "components": {},
+        "CardId": "珊瑚"
+      },
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "Coral, Assembly-CSharp",
+        "components": {},
+        "CardId": "珊瑚"
+      },
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "ScrapMetal, Assembly-CSharp",
+        "components": {},
+        "CardId": "废金属"
+      },
+      "dropNum": 2,
+      "dropProb": 1
+    },
+    {
+      "card": {
+        "$type": "ScrapMetal, Assembly-CSharp",
+        "components": {},
+        "CardId": "废金属"
+      },
+      "dropNum": 2,
+      "dropProb": 1
+    },
+    {
+      "card": {
+        "$type": "ScrapMetal, Assembly-CSharp",
+        "components": {},
+        "CardId": "废金属"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "ScrapMetal, Assembly-CSharp",
+        "components": {},
+        "CardId": "废金属"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "ScrapMetal, Assembly-CSharp",
+        "components": {},
+        "CardId": "废金属"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "ScrapMetal, Assembly-CSharp",
+        "components": {},
+        "CardId": "废金属"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "ScrapMetal, Assembly-CSharp",
+        "components": {},
+        "CardId": "废金属"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "HardFiber, Assembly-CSharp",
+        "components": {},
+        "CardId": "硬质纤维"
+      },
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "HardFiber, Assembly-CSharp",
+        "components": {},
+        "CardId": "硬质纤维"
+      },
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "HardFiber, Assembly-CSharp",
+        "components": {},
+        "CardId": "硬质纤维"
+      },
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "LoveBeadWithProduct, Assembly-CSharp",
+        "components": {},
+        "CardId": "有产物的爱情贝"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "LoveBeadWithProduct, Assembly-CSharp",
+        "components": {},
+        "CardId": "有产物的爱情贝"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "LoveBeadWithProduct, Assembly-CSharp",
+        "components": {},
+        "CardId": "有产物的爱情贝"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "WhiteBlastMine, Assembly-CSharp",
+        "components": {},
+        "CardId": "白爆矿"
+      },
+      "dropNum": 2,
+      "dropProb": 1
+    },
+    {
+      "card": {
+        "$type": "WhiteBlastMine, Assembly-CSharp",
+        "components": {},
+        "CardId": "白爆矿"
+      },
+      "dropNum": 2,
+      "dropProb": 1
+    },
+    {
+      "card": {
+        "$type": "WhiteBlastMine, Assembly-CSharp",
+        "components": {},
+        "CardId": "白爆矿"
+      },
+      "dropNum": 2,
+      "dropProb": 1
+    },
+    {
+      "card": {
+        "$type": "WhiteBlastMine, Assembly-CSharp",
+        "components": {},
+        "CardId": "白爆矿"
+      },
+      "dropNum": 2,
+      "dropProb": 1
+    },
+    {
+      "card": {
+        "$type": "WhiteBlastMine, Assembly-CSharp",
+        "components": {},
+        "CardId": "白爆矿"
+      },
+      "dropNum": 2,
+      "dropProb": 1
+    },
+    {
+      "card": {
+        "$type": "WhiteBlastMine, Assembly-CSharp",
+        "components": {},
+        "CardId": "白爆矿"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "WhiteBlastMine, Assembly-CSharp",
+        "components": {},
+        "CardId": "白爆矿"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "WhiteBlastMine, Assembly-CSharp",
+        "components": {},
+        "CardId": "白爆矿"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "WhiteBlastMine, Assembly-CSharp",
+        "components": {},
+        "CardId": "白爆矿"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "SiphonophyllumWithProduct, Assembly-CSharp",
+        "components": {},
+        "CardId": "有产物的虹吸海葵"
+      },
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "SiphonophyllumWithProduct, Assembly-CSharp",
+        "components": {},
+        "CardId": "有产物的虹吸海葵"
+      },
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "MagneticTentacle, Assembly-CSharp",
+        "components": {
+          "FreshnessComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+            "$type": "FreshnessComponent, Assembly-CSharp",
+            "freshness": 11520,
+            "maxFreshness": 11520,
+            "updateRate": 1.0
           }
         },
-        "dropNum": 1,
-        "curSize": 2000,
-        "maxSize": 5000,
-        "sizeChangePerRound": 3,
-        "sizeChangeOnCaught": -1000,
-        "Proportion": 2000
+        "CardId": "磁性触手"
       },
-      {
-        "card": {
-          "$type": "LoveBead, Assembly-CSharp",
-          "cardId": "爱情贝",
-          "cardName": "爱情贝",
-          "cardDesc": "形似扇贝的古怪异星生物。其强大的肌肉使其能像鱼一样扇动贝壳游动。繁殖期的雄贝会搜集各类珍宝藏在贝壳中以吸引雌贝。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": true,
-          "weight": 1.5,
-          "tags": [],
-          "components": {
-            "ProgressComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-              "$type": "ProgressComponent, Assembly-CSharp",
-              "progress": 0,
-              "maxProgress": 4320,
-              "updateRate": 1.0
-            }
-          }
-        },
-        "dropNum": 1,
-        "curSize": 3000,
-        "maxSize": 5000,
-        "sizeChangePerRound": 4,
-        "sizeChangeOnCaught": -1000,
-        "Proportion": 3000
+      "dropNum": 1,
+      "dropProb": 1
+    },
+    {
+      "card": {
+        "$type": "GlassSand, Assembly-CSharp",
+        "components": {},
+        "CardId": "玻璃沙"
       },
-      {
-        "card": {
-          "$type": "Siphonophyllum, Assembly-CSharp",
-          "cardId": "虹吸海葵",
-          "cardName": "虹吸海葵",
-          "cardDesc": "形如粗柄的花朵,用底部的伪根牢牢地附着在礁石上。其顶部的磁性触手能吸引富含铁的浮游生物。",
-          "cardType": 6,
-          "maxStackNum": 5,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "curSize": 3000,
-        "maxSize": 5000,
-        "sizeChangePerRound": 4,
-        "sizeChangeOnCaught": -1000,
-        "Proportion": 3000
+      "dropNum": 2,
+      "dropProb": 1
+    },
+    {
+      "card": {
+        "$type": "GlassSand, Assembly-CSharp",
+        "components": {},
+        "CardId": "玻璃沙"
       },
-      {
-        "card": {
-          "$type": "Coral, Assembly-CSharp",
-          "cardId": "珊瑚",
-          "cardName": "珊瑚",
-          "cardDesc": "一种疏松多孔的海洋微生物骨骼,是石灰石的原料。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.8,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "curSize": 3000,
-        "maxSize": 15000,
-        "sizeChangePerRound": 9,
-        "sizeChangeOnCaught": -1000,
-        "Proportion": 3000
-      },
-      {
-        "card": {
-          "$type": "WhiteBlastMine, Assembly-CSharp",
-          "cardId": "白爆矿",
-          "cardName": "白爆矿",
-          "cardDesc": "一种由白塔星早期火山运动产生的矿物,可用于消毒。直接敲碎会产生粉末和少量氧气。在适宜条件下反应可将其大部分转化为氧气。遇到明火会爆炸。",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.9,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "curSize": 3000,
-        "maxSize": 15000,
-        "sizeChangePerRound": 12,
-        "sizeChangeOnCaught": -1000,
-        "Proportion": 3000
-      },
-      {
-        "card": {
-          "$type": "ScrapMetal, Assembly-CSharp",
-          "cardId": "废金属",
-          "cardName": "废金属",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "curSize": 3000,
-        "maxSize": 15000,
-        "sizeChangePerRound": 9,
-        "sizeChangeOnCaught": -1000,
-        "Proportion": 3000
-      },
-      {
-        "card": {
-          "$type": "HardFiber, Assembly-CSharp",
-          "cardId": "硬质纤维",
-          "cardName": "硬质纤维",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.3,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 2,
-        "curSize": 4000,
-        "maxSize": 15000,
-        "sizeChangePerRound": 10,
-        "sizeChangeOnCaught": -1000,
-        "Proportion": 4000
-      }
-    ]
+      "dropNum": 2,
+      "dropProb": 1
+    }
+  ]
+},
+  "repeatableDropList": {
+  "emptyPopulationSizeChangeOnNotCaught": 1000,
+  "emptyPopulation": {
+    "card": null,
+    "dropNum": 0,
+    "curSize": 1000,
+    "maxSize": 10000,
+    "sizeChangePerRound": -6,
+    "sizeChangeOnCaught": 0,
+    "Proportion": 1000
   },
+  "populationList": [
+    {
+      "card": {
+        "$type": "AquariusFish, Assembly-CSharp",
+        "components": {
+          "ProgressComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+            "$type": "ProgressComponent, Assembly-CSharp",
+            "progress": 0,
+            "maxProgress": 5760,
+            "updateRate": 1.0
+          }
+        },
+        "CardId": "水瓶鱼"
+      },
+      "dropNum": 1,
+      "curSize": 2000,
+      "maxSize": 5000,
+      "sizeChangePerRound": 3,
+      "sizeChangeOnCaught": -1000,
+      "Proportion": 2000
+    },
+    {
+      "card": {
+        "$type": "LoveBead, Assembly-CSharp",
+        "components": {
+          "ProgressComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+            "$type": "ProgressComponent, Assembly-CSharp",
+            "progress": 0,
+            "maxProgress": 4320,
+            "updateRate": 1.0
+          }
+        },
+        "CardId": "爱情贝"
+      },
+      "dropNum": 1,
+      "curSize": 3000,
+      "maxSize": 5000,
+      "sizeChangePerRound": 4,
+      "sizeChangeOnCaught": -1000,
+      "Proportion": 3000
+    },
+    {
+      "card": {
+        "$type": "Siphonophyllum, Assembly-CSharp",
+        "components": {},
+        "CardId": "虹吸海葵"
+      },
+      "dropNum": 1,
+      "curSize": 3000,
+      "maxSize": 5000,
+      "sizeChangePerRound": 4,
+      "sizeChangeOnCaught": -1000,
+      "Proportion": 3000
+    },
+    {
+      "card": {
+        "$type": "Coral, Assembly-CSharp",
+        "components": {},
+        "CardId": "珊瑚"
+      },
+      "dropNum": 2,
+      "curSize": 3000,
+      "maxSize": 15000,
+      "sizeChangePerRound": 9,
+      "sizeChangeOnCaught": -1000,
+      "Proportion": 3000
+    },
+    {
+      "card": {
+        "$type": "WhiteBlastMine, Assembly-CSharp",
+        "components": {},
+        "CardId": "白爆矿"
+      },
+      "dropNum": 2,
+      "curSize": 3000,
+      "maxSize": 15000,
+      "sizeChangePerRound": 12,
+      "sizeChangeOnCaught": -1000,
+      "Proportion": 3000
+    },
+    {
+      "card": {
+        "$type": "ScrapMetal, Assembly-CSharp",
+        "components": {},
+        "CardId": "废金属"
+      },
+      "dropNum": 2,
+      "curSize": 3000,
+      "maxSize": 15000,
+      "sizeChangePerRound": 9,
+      "sizeChangeOnCaught": -1000,
+      "Proportion": 3000
+    },
+    {
+      "card": {
+        "$type": "HardFiber, Assembly-CSharp",
+        "components": {},
+        "CardId": "硬质纤维"
+      },
+      "dropNum": 2,
+      "curSize": 4000,
+      "maxSize": 15000,
+      "sizeChangePerRound": 10,
+      "sizeChangeOnCaught": -1000,
+      "Proportion": 4000
+    }
+  ]
+},
   "environmentStateDict": {},
   "cardSlotsRuntimeData": [
     {

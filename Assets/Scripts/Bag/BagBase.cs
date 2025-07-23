@@ -146,7 +146,7 @@ public abstract class BagBase : MonoBehaviour
     {
         // 尝试堆叠同类卡牌
         // 优先堆叠到当前堆叠数多的格子
-        foreach (var slot in GetSlotsByCardId(card.cardId, false))
+        foreach (var slot in GetSlotsByCardId(card.CardId, false))
         {
             if (slot.CanAddCard(card))
             {
@@ -401,7 +401,7 @@ public abstract class BagBase : MonoBehaviour
         {
             if (!slot.IsEmpty)
             {
-                string cardId = slot.PeekCard().cardId;
+                string cardId = slot.PeekCard().CardId;
                 if (!cardSlotsDict.ContainsKey(cardId))
                 {
                     cardSlotsDict[cardId] = new List<CardSlot>();

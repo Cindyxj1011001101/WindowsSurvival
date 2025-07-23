@@ -5,7 +5,7 @@ public class OxygenCandle : Card
 {
     private OxygenCandle()
     {
-        events = new()
+        Events = new()
         {
             new Event("点燃", "点燃氧烛", Event_Light, null),
         };

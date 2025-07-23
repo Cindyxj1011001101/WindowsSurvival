@@ -21,14 +21,6 @@ public class CardMoveTween
         }
     }
 
-    //public static CardSlot CreateSlot(Vector3 position)
-    //{
-    //    var slot = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot"),
-    //        position, Quaternion.identity, Canvas.transform).GetComponent<CardSlot>();
-    //    slot.GetComponent<CanvasGroup>().blocksRaycasts = false;
-    //    return slot;
-    //}
-
     public static CardSlot CreateSlot(Vector2 screenPosition)
     {
         // 获取Canvas和它的RectTransform

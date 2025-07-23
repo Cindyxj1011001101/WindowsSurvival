@@ -5,7 +5,7 @@ public class BottledWater : Card
 {
     private BottledWater()
     {
-        events = new()
+        Events = new()
         {
             new Event("饮用", "饮用瓶装水", Event_Drink, null),
         };

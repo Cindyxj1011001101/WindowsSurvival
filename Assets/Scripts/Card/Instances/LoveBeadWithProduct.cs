@@ -8,7 +8,7 @@ public class LoveBeadWithProduct : Card
 {
     private LoveBeadWithProduct()
     {
-        events = new()
+        Events = new()
         {
             new Event("撬开", "撬开爱情贝", Event_OpenByTool, Judge_OpenByTool),
         };
@@ -17,7 +17,7 @@ public class LoveBeadWithProduct : Card
     #region 事件
     public void Event_OpenByTool()
     {
-        var sourceBag = slot.Bag;
+        var sourceBag = Slot.Bag;
         DestroyThis();
         Card tool = GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig });
         tool.TryUse();

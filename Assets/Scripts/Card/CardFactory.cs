@@ -81,6 +81,86 @@ public static class CardFactory
         throw new ArgumentException($"不存在ID为{cardId}的卡牌");
     }
 
+    public static string GetCardName(string cardId)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            return config.CardName;
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
+    public static string GetCardDesc(string cardId)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            return config.CardDesc;
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
+    public static CardType GetCardType(string cardId)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            return config.CardType;
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
+    public static int GetMaxStackNum(string cardId)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            return config.MaxStackNum;
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
+    public static bool GetMoveable(string cardId)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            return config.Moveable;
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
+    public static float GetWeight(string cardId)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            return config.Weight;
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
+    public static List<CardTag> GetTags(string cardId)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            return config.Tags;
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
+    public static string GetExtraInfo(string cardId)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            return config.CardExtraInfo;
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
     public static Card CreateCard(string cardId)
     {
         // 读取卡牌配置
@@ -94,40 +174,41 @@ public static class CardFactory
         Card card = Activator.CreateInstance(classType, true) as Card;
 
         // 配置基础属性
-        card.cardId = config.CardId;
-        card.cardName = config.CardName;
-        card.cardDesc = config.CardDesc;
-        card.cardType = config.CardType;
-        card.maxStackNum = config.MaxStackCount;
-        card.moveable = config.Moveable;
-        card.weight = config.Weight;
-        card.tags = config.Tags;
+        card.SetCardId(cardId);
+        //card.CardId = config.CardId;
+        //card.CardName = config.CardName;
+        //card.CardDesc = config.CardDesc;
+        //card.CardType = config.CardType;
+        //card.MaxStackNum = config.MaxStackCount;
+        //card.Moveable = config.Moveable;
+        //card.Weight = config.Weight;
+        //card.Tags = config.Tags;
 
         // 配置可变属性
-        card.components = new();
+        //card.components = new();
         if (config.HasFreshness)
         {
-            card.components.Add(typeof(FreshnessComponent), new FreshnessComponent(config.MaxFreshness));
+            card.AddComponent(typeof(FreshnessComponent), new FreshnessComponent(config.MaxFreshness));
         }
         if (config.HasDurability)
         {
-            card.components.Add(typeof(DurabilityComponent), new DurabilityComponent(config.MaxDurability));
+            card.AddComponent(typeof(DurabilityComponent), new DurabilityComponent(config.MaxDurability));
         }
         if (config.HasGrowth)
         {
-            card.components.Add(typeof(GrowthComponent), new GrowthComponent(config.MaxGrowth));
+            card.AddComponent(typeof(GrowthComponent), new GrowthComponent(config.MaxGrowth));
         }
         if (config.HasProgress)
         {
-            card.components.Add(typeof(ProgressComponent), new ProgressComponent(config.MaxProgress));
+            card.AddComponent(typeof(ProgressComponent), new ProgressComponent(config.MaxProgress));
         }
         if (config.IsEquipment)
         {
-            card.components.Add(typeof(EquipmentComponent), new EquipmentComponent(config.EquipmentType));
+            card.AddComponent(typeof(EquipmentComponent), new EquipmentComponent(config.EquipmentType));
         }
         if (config.IsTool)
         {
-            card.components.Add(typeof(ToolComponent), new ToolComponent(config.ToolTypes));
+            card.AddComponent(typeof(ToolComponent), new ToolComponent(config.ToolTypes));
         }
 
         return card;

@@ -5,7 +5,7 @@ public class CaughtAquariusFishWithProduct : Card
 {
     private CaughtAquariusFishWithProduct()
     {
-        events = new()
+        Events = new()
         {
             new Event("饮用", "饮用水瓶鱼", Event_Drink, null),
             new Event("放生", "放生水瓶鱼", Event_Release, Judge_Release),
