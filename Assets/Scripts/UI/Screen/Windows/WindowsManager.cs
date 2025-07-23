@@ -60,6 +60,7 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         {
             window = openedWindows[appName];
         }
+        if (window.IsPlayingAnim) return window;
 
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("万能泡泡音", true);
@@ -108,6 +109,8 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         if (!IsWindowOpen(appName)) return;
 
         WindowBase window = openedWindows[appName];
+
+        if (window.IsPlayingAnim) return;
         // 最小化窗口
         window.Minimize(bottomBar[appName].transform);
 
