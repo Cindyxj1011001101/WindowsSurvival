@@ -1,12 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class EnvironmentBag : BagBase
 {
-    [HideInInspector]
     public DisposableDropList DisposableDropList { get; private set; } = new();
 
-    [HideInInspector]
     public RepeatableDropList RepeatableDropList { get; private set; } = new();
 
     [Header("探索用时")]
@@ -15,11 +14,19 @@ public class EnvironmentBag : BagBase
     [Header("地点数据")]
     [SerializeField] private PlaceData placeData;
 
+    [Header("是否铺设电缆")]
+    [SerializeField] private bool hasCable;
+
+    [Header("压强等级")]
+    [SerializeField] private PressureLevel pressureLevel;
+
     // 环境状态字典
     public Dictionary<EnvironmentStateEnum, EnvironmentState> StateDict { get; private set; } = new();
 
     // 是否铺设电缆
-    public bool HasCable { get; private set; }
+    public bool HasCable => hasCable;
+
+    public PressureLevel PressureLevel => PressureLevel;
 
     public PlaceData PlaceData => placeData;
 
@@ -50,13 +57,13 @@ public class EnvironmentBag : BagBase
         base.InitBag(runtimeData);
         var data = (runtimeData as EnvironmentBagRuntimeData);
 
-        // 初始化掉落列表
+        // 读取掉落列表
         DisposableDropList = data.disposableDropList;
         RepeatableDropList = data.repeatableDropList;
         RepeatableDropList.StartUpdating();
 
-        // 初始化环境状态
-        StateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>(data.environmentStateDict);
+        // 读取环境状态
+        StateDict = data.environmentStateDict;
 
         //如果是开局进入，则初始化环境状态
         if (StateDict.Count == 0)
@@ -74,33 +81,44 @@ public class EnvironmentBag : BagBase
         // 电力都显示
         StateDict.Add(EnvironmentStateEnum.Electricity, StateManager.Instance.Electricity);
 
-        // 压强都显示
-        StateDict.Add(EnvironmentStateEnum.Pressure, new EnvironmentState((int)PressureLevel.Standard, (int)PressureLevel.VeryHigh, EnvironmentStateEnum.Pressure));
-
         // 在飞船内显示水平面高度
         if (placeData.isInSpacecraft)
             StateDict.Add(EnvironmentStateEnum.WaterLevel, StateManager.Instance.WaterLevel);
 
         // 在室内显示氧气
         if (placeData.isIndoor)
-            StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
+            StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(UnityEngine.Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
 
+        // 压强都显示
         // 是否铺设电缆都显示
     }
 
     /// <summary>
     /// 改变环境状态，电力变化不要在这里处理
     /// </summary>
-    /// <param name="state"></param>
+    /// <param name="stateEnum"></param>
     /// <param name="delta"></param>
-    public void ChangeEnvironmentState(EnvironmentStateEnum state, float delta)
+    public void ChangeEnvironmentState(EnvironmentStateEnum stateEnum, float delta)
     {
-        if (!StateDict.ContainsKey(state)) return;
-
-        StateDict[state].CurValue += delta;
-
-        // 刷新前端显示
-        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, state));
+        switch (stateEnum)
+        {
+            case EnvironmentStateEnum.Electricity:
+            case EnvironmentStateEnum.WaterLevel:
+                throw new ArgumentException("修改电力或水平面请通过StateManager.Instance.ChangeElectricity/ChangeWaterLevel方法");
+            case EnvironmentStateEnum.Oxygen:
+                // 没有这个状态不处理
+                if (!StateDict.ContainsKey(stateEnum)) return;
+                var state = StateDict[stateEnum];
+                state.CurValue += delta;
+                // 刷新前端显示
+                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, stateEnum)
+                {
+                    stateValue = state
+                });
+                break;
+            default:
+                throw new ArgumentException("修改是否铺设电缆或压强请通过ChangeHasCable/ChangePressureLevel方法");
+        }
     }
 
     private void OnWaterLevelChanged(float level)
@@ -121,28 +139,6 @@ public class EnvironmentBag : BagBase
                 placeData.isInWater = true;
         }
     }
-
-    //当前环境状态变化(除电力以外的数值变化)
-    //private void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
-    //{
-    //    if (args.place == placeData.placeType)
-    //    {
-    //        if (StateDict.ContainsKey(args.state))
-    //        {
-    //            StateDict[args.state].curValue += args.value;
-    //            if (StateDict[args.state].curValue >= StateDict[args.state].maxValue)
-    //            {
-    //                StateDict[args.state].curValue = StateDict[args.state].maxValue;
-    //            }
-    //            if (StateDict[args.state].curValue <= 0)
-    //            {
-    //                StateDict[args.state].curValue = 0;
-    //            }
-    //            //前端UI刷新
-    //            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, args.state));
-    //        }
-    //    }
-    //}
 
     public override bool CanAddCard(Card card)
     {

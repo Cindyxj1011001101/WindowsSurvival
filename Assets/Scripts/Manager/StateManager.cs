@@ -22,8 +22,9 @@ public enum EnvironmentStateEnum
 {
     Electricity,
     Oxygen,
-    Pressure,
     WaterLevel,
+    HasCable,
+    PressureLevel
 }
 
 /// <summary>
@@ -222,7 +223,10 @@ public class StateManager : MonoBehaviour
         Electricity.CurValue += delta;
         // 刷新前端显示
         var env = GameManager.Instance.CurEnvironmentBag;
-        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.Electricity));
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.Electricity)
+        {
+            stateValue = Electricity
+        });
     }
 
     public void ChangeWaterLevel(float delta)
@@ -232,7 +236,10 @@ public class StateManager : MonoBehaviour
         EventManager.Instance.TriggerEvent(EventType.ChangeWaterLevel, WaterLevel.CurValue);
         // 刷新前端显示
         var env = GameManager.Instance.CurEnvironmentBag;
-        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.WaterLevel));
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.WaterLevel)
+        {
+            stateValue = WaterLevel
+        });
     }
     #endregion
 

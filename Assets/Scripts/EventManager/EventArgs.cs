@@ -26,11 +26,14 @@ public class ChangePlayerBagCardsArgs
 public class RefreshEnvironmentStateArgs
 {
     public PlaceEnum place;
-    public EnvironmentStateEnum state;
+    public EnvironmentStateEnum stateEnum;
+    public EnvironmentState stateValue;
+    public bool hasCable;
+    public PressureLevel pressureLevel;
 
-    public RefreshEnvironmentStateArgs(PlaceEnum p, EnvironmentStateEnum s)
+    public RefreshEnvironmentStateArgs(PlaceEnum place, EnvironmentStateEnum stateEnum)
     {
-        place = p;
-        state = s;
+        this.place = place;
+        this.stateEnum = stateEnum;
     }
 }

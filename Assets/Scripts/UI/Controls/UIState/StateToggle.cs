@@ -9,9 +9,13 @@ public class StateToggle : MonoBehaviour
 
     public Color offColor;
 
-    public void SetOn(string stateName, bool value)
+    public void SetStateName(string name)
     {
-        stateNameText.text = stateName;
+        stateNameText.text = name;
+    }
+
+    public void SetValue(bool value)
+    {
         onImage.gameObject.SetActive(value);
         offImage.color = stateNameText.color = value ? Color.white : offColor;
     }
