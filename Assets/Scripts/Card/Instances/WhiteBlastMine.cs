@@ -7,21 +7,14 @@ public class WhiteBlastMine : Card
     {
         events = new()
         {
-            new Event("敲碎", "敲碎白爆矿", Event_Break,null)
+            new Event("敲碎", "敲碎白爆矿", Event_Break, null)
         };
     }
 
     public void Event_Break()
     {
-        EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
-        if (environmentBag.PlaceData.isIndoor)
-        {
-            StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(environmentBag.PlaceData.placeType, EnvironmentStateEnum.Oxygen, 80));
-        }
-        else
-        {
-            StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, 80));
-        }
+        // 因为在室内环境加玩家氧气时会优先加到环境里，所以这里可以写直接加给玩家
+        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, 80));
         TimeManager.Instance.AddTime(3);
     }
 }

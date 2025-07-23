@@ -15,13 +15,7 @@ public class LightenedOxygenCandle : Card
         // 每回合消耗耐久
         TryUse();
         EnvironmentBag environmentBag = GameManager.Instance.CurEnvironmentBag;
-        if (environmentBag.PlaceData.isIndoor)
-        {
-            StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(environmentBag.PlaceData.placeType, EnvironmentStateEnum.Oxygen, 10));
-        }
-        else
-        {
-            StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, 10));
-        }
+        // 因为在室内环境加玩家氧气时会优先加到环境里，所以这里可以写直接加给玩家
+        StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, 10));
     };
 }
