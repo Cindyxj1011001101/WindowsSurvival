@@ -4,10 +4,10 @@ using UnityEngine;
 public class EnvironmentBag : BagBase
 {
     [HideInInspector]
-    public DisposableDropList disposableDropList = new();
+    public DisposableDropList DisposableDropList { get; private set; } = new();
 
     [HideInInspector]
-    public RepeatableDropList repeatableDropList = new();
+    public RepeatableDropList RepeatableDropList { get; private set; } = new();
 
     [Header("探索用时")]
     public int explorationTime;
@@ -15,22 +15,33 @@ public class EnvironmentBag : BagBase
     [Header("地点数据")]
     [SerializeField] private PlaceData placeData;
 
+    // 环境状态字典
+    public Dictionary<EnvironmentStateEnum, EnvironmentState> StateDict { get; private set; } = new();
+
+    // 是否铺设电缆
+    public bool HasCable { get; private set; }
+
     public PlaceData PlaceData => placeData;
 
-    public float DiscoveryDegree => 1 - disposableDropList.RemainingDropsRate;
+    public float DiscoveryDegree => 1 - DisposableDropList.RemainingDropsRate;
 
-    [Header("环境状态")]
-    public Dictionary<EnvironmentStateEnum, EnvironmentState> EnvironmentStateDict = new();
+    private void Awake()
+    {
+        // 如果是飞船环境，要考虑水平面变化
+        if (placeData.isInSpacecraft)
+            EventManager.Instance.AddListener<float>(EventType.ChangeWaterLevel, OnWaterLevelChanged);
+    }
 
     protected override void Init()
     {
         InitBag(GameDataManager.Instance.GetEnvironmentBagDataByPlace(placeData.placeType));
-        EventManager.Instance.AddListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<ChangeEnvironmentStateArgs>(EventType.CurEnvironmentChangeState, OnEnvironmentChangeState);
+        // 如果是飞船环境，要考虑水平面变化
+        if (placeData.isInSpacecraft)
+            EventManager.Instance.RemoveListener<float>(EventType.ChangeWaterLevel, OnWaterLevelChanged);
     }
 
     protected override void InitBag(BagRuntimeData runtimeData)
@@ -38,44 +49,100 @@ public class EnvironmentBag : BagBase
         // 初始化背包中的物品，探索度，环境状态值
         base.InitBag(runtimeData);
         var data = (runtimeData as EnvironmentBagRuntimeData);
-        EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>(data.environmentStateDict);
-        //如果是开局进入，则初始化环境状态
-        if (EnvironmentStateDict.Count == 0)
-        {
-            EnvironmentStateDict = StateManager.Instance.InitEnvironmentStateDict();
-        }
-        foreach (var state in EnvironmentStateDict)
-        {
-            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, state.Key));
-        }
-        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, EnvironmentStateEnum.Electricity));
+
         // 初始化掉落列表
-        disposableDropList = data.disposableDropList;
-        repeatableDropList = data.repeatableDropList;
-        repeatableDropList.StartUpdating();
+        DisposableDropList = data.disposableDropList;
+        RepeatableDropList = data.repeatableDropList;
+        RepeatableDropList.StartUpdating();
+
+        // 初始化环境状态
+        StateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>(data.environmentStateDict);
+
+        //如果是开局进入，则初始化环境状态
+        if (StateDict.Count == 0)
+            InitState();
+
+        //foreach (var state in stateDict)
+        //{
+        //    EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, state.Key));
+        //}
+        //EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(this.placeData.placeType, EnvironmentStateEnum.Electricity));
+    }
+
+    private void InitState()
+    {
+        // 电力都显示
+        StateDict.Add(EnvironmentStateEnum.Electricity, StateManager.Instance.Electricity);
+
+        // 压强都显示
+        StateDict.Add(EnvironmentStateEnum.Pressure, new EnvironmentState((int)PressureLevel.Standard, (int)PressureLevel.VeryHigh, EnvironmentStateEnum.Pressure));
+
+        // 在飞船内显示水平面高度
+        if (placeData.isInSpacecraft)
+            StateDict.Add(EnvironmentStateEnum.WaterLevel, StateManager.Instance.WaterLevel);
+
+        // 在室内显示氧气
+        if (placeData.isIndoor)
+            StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
+
+        // 是否铺设电缆都显示
+    }
+
+    /// <summary>
+    /// 改变环境状态，电力变化不要在这里处理
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="delta"></param>
+    public void ChangeEnvironmentState(EnvironmentStateEnum state, float delta)
+    {
+        if (!StateDict.ContainsKey(state)) return;
+
+        StateDict[state].CurValue += delta;
+
+        // 刷新前端显示
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, state));
+    }
+
+    private void OnWaterLevelChanged(float level)
+    {
+        // 如果当前是水域环境
+        if (placeData.isInWater)
+        {
+            // 如果水平面下降
+            if (level < StateManager.Instance.WaterLevel.MaxValue)
+                // 变回陆地环境
+                placeData.isInWater = false;
+        }
+        // 如果当前是陆地环境
+        else
+        {
+            if (level >= StateManager.Instance.WaterLevel.MaxValue)
+                // 变成水域环境
+                placeData.isInWater = true;
+        }
     }
 
     //当前环境状态变化(除电力以外的数值变化)
-    private void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
-    {
-        if (args.place == placeData.placeType)
-        {
-            if (EnvironmentStateDict.ContainsKey(args.state))
-            {
-                EnvironmentStateDict[args.state].curValue += args.value;
-                if (EnvironmentStateDict[args.state].curValue >= EnvironmentStateDict[args.state].MaxValue)
-                {
-                    EnvironmentStateDict[args.state].curValue = EnvironmentStateDict[args.state].MaxValue;
-                }
-                if (EnvironmentStateDict[args.state].curValue <= 0)
-                {
-                    EnvironmentStateDict[args.state].curValue = 0;
-                }
-                //前端UI刷新
-                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, args.state));
-            }
-        }
-    }
+    //private void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
+    //{
+    //    if (args.place == placeData.placeType)
+    //    {
+    //        if (StateDict.ContainsKey(args.state))
+    //        {
+    //            StateDict[args.state].curValue += args.value;
+    //            if (StateDict[args.state].curValue >= StateDict[args.state].maxValue)
+    //            {
+    //                StateDict[args.state].curValue = StateDict[args.state].maxValue;
+    //            }
+    //            if (StateDict[args.state].curValue <= 0)
+    //            {
+    //                StateDict[args.state].curValue = 0;
+    //            }
+    //            //前端UI刷新
+    //            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, args.state));
+    //        }
+    //    }
+    //}
 
     public override bool CanAddCard(Card card)
     {
