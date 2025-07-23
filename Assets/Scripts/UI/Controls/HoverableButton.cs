@@ -19,6 +19,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public UnityEvent onClick { get; set; } = new UnityEvent();
     public UnityEvent onPointerEnter { get; set; } = new UnityEvent();
+    public UnityEvent onPointerExit { get; set; } = new UnityEvent();
 
     protected virtual void Awake()
     {
@@ -60,6 +61,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
+        onPointerExit?.Invoke();
+
         if (hoveredImage == null) return;
 
         // 开始淡出动画，完成后禁用图像

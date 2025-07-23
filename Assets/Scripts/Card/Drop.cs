@@ -79,7 +79,7 @@ public class DisposableDropList
         for (int i = 0; i < dropList.Count; i++)
         {
             Drop drop = dropList[i];
-            if (drop.card.cardId == cardId)
+            if (drop.card.CardId == cardId)
             {
                 dropList.RemoveAt(i);
                 return DropCards(drop);

@@ -26,44 +26,45 @@ public static class ExcelReader
             {
                 CardId = row[0].ToString(),
                 CardName = row[1].ToString(),
-                CardDesc = row[2].ToString(),
-                CardImagePath = row[3].ToString(),
-                CardType = ParseCardType(row[4].ToString()),
-                MaxStackCount = int.Parse(row[5].ToString()),
-                Moveable = bool.Parse(row[6].ToString()),
-                Weight = float.Parse(row[7].ToString()),
-                Tags = ParseTags(row[8].ToString()),
-                HasFreshness = bool.Parse(row[9].ToString()),
-                HasDurability = bool.Parse(row[11].ToString()),
-                HasGrowth = bool.Parse(row[13].ToString()),
-                HasProgress = bool.Parse(row[15].ToString()),
-                IsEquipment = bool.Parse(row[17].ToString()),
-                IsTool = bool.Parse(row[19].ToString()),
-                IsBigIcon = bool.Parse(row[21].ToString()),
+                CardExtraInfo = row[2].ToString(),
+                CardDesc = row[3].ToString(),
+                CardImagePath = row[4].ToString(),
+                CardType = ParseCardType(row[5].ToString()),
+                MaxStackNum = int.Parse(row[6].ToString()),
+                Moveable = bool.Parse(row[7].ToString()),
+                Weight = float.Parse(row[8].ToString()),
+                Tags = ParseTags(row[9].ToString()),
+                HasFreshness = bool.Parse(row[10].ToString()),
+                HasDurability = bool.Parse(row[12].ToString()),
+                HasGrowth = bool.Parse(row[14].ToString()),
+                HasProgress = bool.Parse(row[16].ToString()),
+                IsEquipment = bool.Parse(row[18].ToString()),
+                IsTool = bool.Parse(row[20].ToString()),
+                IsBigIcon = bool.Parse(row[22].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
-                cardConfig.MaxFreshness = int.Parse(row[10].ToString());
+                cardConfig.MaxFreshness = int.Parse(row[11].ToString());
             }
             if (cardConfig.HasDurability)
             {
-                cardConfig.MaxDurability = int.Parse(row[12].ToString());
+                cardConfig.MaxDurability = int.Parse(row[13].ToString());
             }
             if (cardConfig.HasGrowth)
             {
-                cardConfig.MaxGrowth = int.Parse(row[14].ToString());
+                cardConfig.MaxGrowth = int.Parse(row[15].ToString());
             }
             if (cardConfig.HasProgress)
             {
-                cardConfig.MaxProgress = int.Parse(row[16].ToString());
+                cardConfig.MaxProgress = int.Parse(row[17].ToString());
             }
             if (cardConfig.IsEquipment)
             {
-                cardConfig.EquipmentType = ParseEquipmentType(row[18].ToString());
+                cardConfig.EquipmentType = ParseEquipmentType(row[19].ToString());
             }
             if (cardConfig.IsTool)
             {
-                cardConfig.ToolTypes = ParseToolTypes(row[20].ToString());
+                cardConfig.ToolTypes = ParseToolTypes(row[21].ToString());
             }
             Debug.Log($"读取卡牌配置: {cardConfig.CardName}");
             cardConfigs.Add(cardConfig.CardId, cardConfig);
@@ -297,10 +298,11 @@ public class CardConfig
 {
     public string CardId; // 卡牌ID
     public string CardName; // 卡牌名称
+    public string CardExtraInfo; // 额外信息
     public string CardDesc; // 卡牌描述
     public string CardImagePath; // 卡牌图片路径
     public CardType CardType; // 卡牌类型
-    public int MaxStackCount; // 最大堆叠数
+    public int MaxStackNum; // 最大堆叠数
     public bool Moveable; // 是否可移动
     public float Weight; // 重量
     public List<CardTag> Tags = new(); // 标签

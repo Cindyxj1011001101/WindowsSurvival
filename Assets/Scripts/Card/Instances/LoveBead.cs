@@ -7,7 +7,7 @@ public class LoveBead : Card
 {
     private LoveBead()
     {
-        events = new()
+        Events = new()
         {
             new Event("取贝肉", "取贝肉", Event_GetMeat, null)
         };

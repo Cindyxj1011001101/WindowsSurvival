@@ -1,220 +1,136 @@
 {
   "disposableDropList": {
-    "maxCount": 12,
-    "dropList": [
-      {
-        "card": {
-          "$type": "DoorToPowerCabin, Assembly-CSharp",
-          "cardId": "通往动力舱的门",
-          "cardName": "通往动力舱的门",
-          "cardDesc": "这是通往动力舱的门。",
-          "cardType": 3,
-          "maxStackNum": 1,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
+  "maxCount": 12,
+  "dropList": [
+    {
+      "card": {
+        "$type": "DoorToPowerCabin, Assembly-CSharp",
+        "components": {},
+        "CardId": "通往动力舱的门"
       },
-      {
-        "card": {
-          "$type": "AirtightDoor, Assembly-CSharp",
-          "cardId": "气密舱门",
-          "cardName": "气密舱门",
-          "cardDesc": "气密舱门实际上由两层门组成,员工手册上说这两道门永远不能同时打开。两道门中间有一个很小的过渡仓,通过分段加压/减压,让员工可以在不影响舱内环境的情况下安全进出。",
-          "cardType": 3,
-          "maxStackNum": 1,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 1
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "AirtightDoor, Assembly-CSharp",
+        "components": {},
+        "CardId": "气密舱门"
       },
-      {
-        "card": {
-          "$type": "DoorToLifeSupportCabin, Assembly-CSharp",
-          "cardId": "通往维生舱的门",
-          "cardName": "通往维生舱的门",
-          "cardDesc": "这是通往维生舱的门。",
-          "cardType": 3,
-          "maxStackNum": 1,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
+      "dropNum": 1,
+      "dropProb": 1
+    },
+    {
+      "card": {
+        "$type": "DoorToLifeSupportCabin, Assembly-CSharp",
+        "components": {},
+        "CardId": "通往维生舱的门"
       },
-      {
-        "card": {
-          "$type": "WasteHeap, Assembly-CSharp",
-          "cardId": "废料堆",
-          "cardName": "废料堆",
-          "cardDesc": "",
-          "cardType": 4,
-          "maxStackNum": 1,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {
-            "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-              "$type": "DurabilityComponent, Assembly-CSharp",
-              "durability": 5,
-              "maxDurability": 5
-            }
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "WasteHeap, Assembly-CSharp",
+        "components": {
+          "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+            "$type": "DurabilityComponent, Assembly-CSharp",
+            "durability": 5,
+            "maxDurability": 5
           }
         },
-        "dropNum": 1,
-        "dropProb": 2
+        "CardId": "废料堆"
       },
-      {
-        "card": {
-          "$type": "WasteHeap, Assembly-CSharp",
-          "cardId": "废料堆",
-          "cardName": "废料堆",
-          "cardDesc": "",
-          "cardType": 4,
-          "maxStackNum": 1,
-          "moveable": false,
-          "weight": 0.0,
-          "tags": [],
-          "components": {
-            "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-              "$type": "DurabilityComponent, Assembly-CSharp",
-              "durability": 5,
-              "maxDurability": 5
-            }
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "WasteHeap, Assembly-CSharp",
+        "components": {
+          "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+            "$type": "DurabilityComponent, Assembly-CSharp",
+            "durability": 5,
+            "maxDurability": 5
           }
         },
-        "dropNum": 1,
-        "dropProb": 2
+        "CardId": "废料堆"
       },
-      {
-        "card": {
-          "$type": "BottledWater, Assembly-CSharp",
-          "cardId": "瓶装水",
-          "cardName": "瓶装水",
-          "cardDesc": "一瓶纯净水,连瓶子也是用水凝胶做的,饮用时连同瓶子一起喝下去。",
-          "cardType": 0,
-          "maxStackNum": 4,
-          "moveable": true,
-          "weight": 1.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 4
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "BottledWater, Assembly-CSharp",
+        "components": {},
+        "CardId": "瓶装水"
       },
-      {
-        "card": {
-          "$type": "BottledWater, Assembly-CSharp",
-          "cardId": "瓶装水",
-          "cardName": "瓶装水",
-          "cardDesc": "一瓶纯净水,连瓶子也是用水凝胶做的,饮用时连同瓶子一起喝下去。",
-          "cardType": 0,
-          "maxStackNum": 4,
-          "moveable": true,
-          "weight": 1.0,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 4
+      "dropNum": 1,
+      "dropProb": 4
+    },
+    {
+      "card": {
+        "$type": "BottledWater, Assembly-CSharp",
+        "components": {},
+        "CardId": "瓶装水"
       },
-      {
-        "card": {
-          "$type": "HardFiber, Assembly-CSharp",
-          "cardId": "硬质纤维",
-          "cardName": "硬质纤维",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.3,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
+      "dropNum": 1,
+      "dropProb": 4
+    },
+    {
+      "card": {
+        "$type": "HardFiber, Assembly-CSharp",
+        "components": {},
+        "CardId": "硬质纤维"
       },
-      {
-        "card": {
-          "$type": "HardFiber, Assembly-CSharp",
-          "cardId": "硬质纤维",
-          "cardName": "硬质纤维",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.3,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 3
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "HardFiber, Assembly-CSharp",
+        "components": {},
+        "CardId": "硬质纤维"
       },
-      {
-        "card": {
-          "$type": "ScrapMetal, Assembly-CSharp",
-          "cardId": "废金属",
-          "cardName": "废金属",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
+      "dropNum": 1,
+      "dropProb": 3
+    },
+    {
+      "card": {
+        "$type": "ScrapMetal, Assembly-CSharp",
+        "components": {},
+        "CardId": "废金属"
       },
-      {
-        "card": {
-          "$type": "ScrapMetal, Assembly-CSharp",
-          "cardId": "废金属",
-          "cardName": "废金属",
-          "cardDesc": "",
-          "cardType": 2,
-          "maxStackNum": 10,
-          "moveable": true,
-          "weight": 0.6,
-          "tags": [],
-          "components": {}
-        },
-        "dropNum": 1,
-        "dropProb": 2
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "ScrapMetal, Assembly-CSharp",
+        "components": {},
+        "CardId": "废金属"
       },
-      {
-        "card": {
-          "$type": "RatBody, Assembly-CSharp",
-          "cardId": "老鼠尸体",
-          "cardName": "老鼠尸体",
-          "cardDesc": "",
-          "cardType": 0,
-          "maxStackNum": 1,
-          "moveable": true,
-          "weight": 0.7,
-          "tags": [],
-          "components": {
-            "FreshnessComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-              "$type": "FreshnessComponent, Assembly-CSharp",
-              "freshness": 2880,
-              "maxFreshness": 2880,
-              "updateRate": 1.0
-            }
+      "dropNum": 1,
+      "dropProb": 2
+    },
+    {
+      "card": {
+        "$type": "RatBody, Assembly-CSharp",
+        "components": {
+          "FreshnessComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+            "$type": "FreshnessComponent, Assembly-CSharp",
+            "freshness": 2880,
+            "maxFreshness": 2880,
+            "updateRate": 1.0
           }
         },
-        "dropNum": 1,
-        "dropProb": 2
-      }
-    ]
-  },
+        "CardId": "老鼠尸体"
+      },
+      "dropNum": 1,
+      "dropProb": 2
+    }
+  ]
+},
   "repeatableDropList": {
     "emptyPopulationSizeChangeOnNotCaught": 0,
     "emptyPopulation": {

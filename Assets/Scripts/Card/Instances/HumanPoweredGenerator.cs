@@ -5,7 +5,7 @@ public class HumanPoweredGenerator : Card
 {
     private HumanPoweredGenerator()
     {
-        events = new()
+        Events = new()
         {
             new Event("人力发电", "人力发电", Event_Generate, Judge_Generate),
         };
@@ -25,9 +25,9 @@ public class HumanPoweredGenerator : Card
 
     public bool Judge_Generate()
     {
-        if (slot == null || slot.Bag == null || slot.Bag is not EnvironmentBag) return false;
+        if (Slot == null || Slot.Bag == null || Slot.Bag is not EnvironmentBag) return false;
 
-        var env = slot.Bag as EnvironmentBag;
+        var env = Slot.Bag as EnvironmentBag;
         return env.HasCable;
     }
 }

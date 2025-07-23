@@ -5,7 +5,7 @@ public class CaughtAquariusFish : Card
 {
     private CaughtAquariusFish()
     {
-        events = new()
+        Events = new()
         {
             new Event("放生", "放生水瓶鱼", Event_Release, Judge_Release),
         };

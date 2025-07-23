@@ -56,12 +56,12 @@ public class EquipmentBag : BagBase
 
     private void OnCardEquipped(Card equipment)
     {
-        StateManager.Instance.AddLoad(equipment.weight);
+        StateManager.Instance.AddLoad(equipment.Weight);
     }
 
     private void OnCardUnequipped(Card equipment)
     {
-        StateManager.Instance.AddLoad(-equipment.weight);
+        StateManager.Instance.AddLoad(-equipment.Weight);
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public class EquipmentBag : BagBase
     public void Equip(Card equipment)
     {
         // 从原来的格子里移除
-        equipment.slot.RemoveCard(equipment);
+        equipment.Slot.RemoveCard(equipment);
         // 添加到装备格子里
         AddCard(equipment);
     }
@@ -113,8 +113,8 @@ public class EquipmentBag : BagBase
         if (!card.TryGetComponent<EquipmentComponent>(out var component)) return false;
 
         // 不是从玩家背包装备的，要看载重够不够
-        if ((card.slot == null || card.slot.Bag is not PlayerBag) &&
-            StateManager.Instance.CurLoad + card.weight > StateManager.Instance.MaxLoad)
+        if ((card.Slot == null || card.Slot.Bag is not PlayerBag) &&
+            StateManager.Instance.CurLoad + card.Weight > StateManager.Instance.MaxLoad)
             return false;
         
         // 最后看装备格子有没有位置

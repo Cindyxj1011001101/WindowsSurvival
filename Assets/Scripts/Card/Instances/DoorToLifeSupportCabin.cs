@@ -5,7 +5,7 @@ public class DoorToLifeSupportCabin : Card
 {
     private DoorToLifeSupportCabin()
     {
-        events = new()
+        Events = new()
         {
             new Event("前往", "前往维生舱", Event_Move, null)
         };

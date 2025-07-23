@@ -7,7 +7,7 @@ public class AquariusFishWithProduct : Card
 {
     private AquariusFishWithProduct()
     {
-        events = new()
+        Events = new()
         {
             new Event("用捕网捉", "用捕网捉水瓶鱼", Event_CatchByNet, Judge_CatchByNet),
             new Event("用手捉", "用手捉水瓶鱼", Event_CatchByHand, null),

@@ -33,7 +33,7 @@ public class DetailsWindow : WindowBase
     private void OnPlayerCardsChanged(ChangePlayerBagCardsArgs args)
     {
         if (currentDisplayedCard != null)
-            Refresh(currentDisplayedCard.slot);
+            Refresh(currentDisplayedCard.Slot);
     }
 
     bool moved = false;
@@ -57,7 +57,7 @@ public class DetailsWindow : WindowBase
         // 显示卡牌
         slot.DisplayCard(currentDisplayedCard, 1);
 
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.cardName));
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
         //// 显示卡牌标签
         //foreach (var tag in currentDisplayedCard.tags)
         //{
@@ -66,10 +66,10 @@ public class DetailsWindow : WindowBase
         //}
 
         // 显示卡牌详细信息
-        detailsText.text = currentDisplayedCard.cardDesc;
+        detailsText.text = currentDisplayedCard.CardDesc;
 
         // 显示可选择按钮
-        foreach (var e in currentDisplayedCard.events)
+        foreach (var e in currentDisplayedCard.Events)
         {
             GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/CardEventButton");
             Button button = Instantiate(buttonPrefab, buttonLayout).GetComponent<Button>();
@@ -82,7 +82,7 @@ public class DetailsWindow : WindowBase
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() =>
                 {
-                    var sourceSlot = currentDisplayedCard.slot;
+                    var sourceSlot = currentDisplayedCard.Slot;
                     // 先执行事件
                     e.Inovke();
                     // 如果地点发生改变则不刷新

@@ -5,7 +5,7 @@ public class OxygenCan : Card
 {
     private OxygenCan()
     {
-        events = new()
+        Events = new()
         {
             new Event("穿上", "穿上氧气罐", Event_Equip, Judge_Equip),
             new Event("脱下", "脱下氧气罐", Event_UnEquip,Judge_UnEquip)
