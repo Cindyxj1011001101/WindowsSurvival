@@ -1138,9 +1138,9 @@ RectTransform:
   - {fileID: 996975379}
   m_Father: {fileID: 2063913160}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 110, y: -29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 220, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &309681323
@@ -2019,44 +2019,6 @@ MonoBehaviour:
   slotPrefab: {fileID: 8250425150690940461, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
   slotLayout: {fileID: 1854812826}
   organizeButton: {fileID: 1331496240250486322}
-  disposableDropList:
-    maxCount: 0
-    dropList:
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 2
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 4
-    - dropNum: 1
-      dropProb: 4
-    - dropNum: 1
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 2
-  repeatableDropList:
-    emptyPopulationSizeChangeOnNotCaught: 0
-    emptyPopulation:
-      dropNum: 0
-      curSize: 0
-      maxSize: 0
-      sizeChangePerRound: 0
-      sizeChangeOnCaught: 0
-    populationList: []
   explorationTime: 15
   placeData: {fileID: 11400000, guid: b907534beb8093a418d284905d2cac4e, type: 2}
 --- !u!114 &717006526
@@ -2992,7 +2954,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -4577,44 +4539,6 @@ MonoBehaviour:
   slotPrefab: {fileID: 8250425150690940461, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
   slotLayout: {fileID: 535342252}
   organizeButton: {fileID: 1331496240250486322}
-  disposableDropList:
-    maxCount: 0
-    dropList:
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 2
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 4
-    - dropNum: 1
-      dropProb: 4
-    - dropNum: 1
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 2
-  repeatableDropList:
-    emptyPopulationSizeChangeOnNotCaught: 0
-    emptyPopulation:
-      dropNum: 0
-      curSize: 0
-      maxSize: 0
-      sizeChangePerRound: 0
-      sizeChangeOnCaught: 0
-    populationList: []
   explorationTime: 15
   placeData: {fileID: 11400000, guid: b416e26146f51dc4082c8a8ffbcef356, type: 2}
 --- !u!114 &1496890257
@@ -5766,10 +5690,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 332ec90db1e253e409fffba912d7becc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Electricity: 0
-  WaterLevel: 0
-  maxLoad: 15
-  curLoad: 0
 --- !u!114 &1720048210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6550,44 +6470,6 @@ MonoBehaviour:
   slotPrefab: {fileID: 8250425150690940461, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
   slotLayout: {fileID: 1444143287}
   organizeButton: {fileID: 1331496240250486322}
-  disposableDropList:
-    maxCount: 0
-    dropList:
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 2
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 4
-    - dropNum: 1
-      dropProb: 4
-    - dropNum: 1
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 2
-  repeatableDropList:
-    emptyPopulationSizeChangeOnNotCaught: 0
-    emptyPopulation:
-      dropNum: 0
-      curSize: 0
-      maxSize: 0
-      sizeChangePerRound: 0
-      sizeChangeOnCaught: 0
-    populationList: []
   explorationTime: 15
   placeData: {fileID: 11400000, guid: c550a8b0e4ce7474e940b4db16893b49, type: 2}
 --- !u!114 &1957469844
@@ -7145,7 +7027,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 40, y: 40}
-  m_Spacing: {x: 4, y: 0}
+  m_Spacing: {x: 6, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!222 &357082891494259441
@@ -7288,27 +7170,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 746653497935119194, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 746653497935119194, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 746653497935119194, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 746653497935119194, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 746653497935119194, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 746653497935119194, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -215
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 866129247333365263, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -7424,27 +7306,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4157655388003755506, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4157655388003755506, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4157655388003755506, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4157655388003755506, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4157655388003755506, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4157655388003755506, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -155
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4594983686490977546, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMax.y
@@ -7476,27 +7358,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6560947345349373146, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6560947345349373146, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6560947345349373146, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6560947345349373146, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6560947345349373146, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6560947345349373146, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -35
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7694627861213225944, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMax.x
@@ -7516,27 +7398,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7758395664651391911, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7758395664651391911, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7758395664651391911, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7758395664651391911, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7758395664651391911, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7758395664651391911, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -95
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8625757757160166643, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMax.x
@@ -7773,7 +7655,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 12}
-  m_SizeDelta: {x: 372, y: 64}
+  m_SizeDelta: {x: 386, y: 64}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &1545606973053951422
 CanvasRenderer:
@@ -9950,6 +9832,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3010542674449115774, guid: 35a1e69da327ef34b9028ab27b444d65, type: 3}
+      propertyPath: m_Value
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6132133640361746723, guid: 35a1e69da327ef34b9028ab27b444d65, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -17
@@ -10541,6 +10427,7 @@ GameObject:
   - component: {fileID: 3062860805964038964}
   - component: {fileID: 8629795644923847033}
   - component: {fileID: 4407283458922541113}
+  - component: {fileID: 8629795644923847034}
   m_Layer: 5
   m_Name: BottomBar
   m_TagString: Untagged
@@ -10606,44 +10493,6 @@ MonoBehaviour:
   slotPrefab: {fileID: 8250425150690940461, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
   slotLayout: {fileID: 5784601754554488571}
   organizeButton: {fileID: 1331496240250486322}
-  disposableDropList:
-    maxCount: 0
-    dropList:
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 2
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 3
-    - dropNum: 1
-      dropProb: 4
-    - dropNum: 1
-      dropProb: 4
-    - dropNum: 1
-      dropProb: 2
-    - dropNum: 1
-      dropProb: 2
-  repeatableDropList:
-    emptyPopulationSizeChangeOnNotCaught: 0
-    emptyPopulation:
-      dropNum: 0
-      curSize: 0
-      maxSize: 0
-      sizeChangePerRound: 0
-      sizeChangeOnCaught: 0
-    populationList: []
   explorationTime: 15
   placeData: {fileID: 11400000, guid: 0477a3ea042b4c0488260a06bebc0f9b, type: 2}
 --- !u!1 &8327907732793037335
@@ -10740,6 +10589,19 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8629795644923847034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7772202838026887682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShowMaskGraphic: 1
 --- !u!114 &8693595683725693160
 MonoBehaviour:
   m_ObjectHideFlags: 0

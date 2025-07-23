@@ -43,6 +43,6 @@ public class StateWindow : WindowBase
     public void RefreshState(PlayerStateEnum stateEnum)
     {
         PlayerState state = StateManager.Instance.PlayerStateDict[stateEnum];
-        stateSliders[stateEnum].DisplayState(state.curValue, state.MaxValue);
+        stateSliders[stateEnum].DisplayState(state.CurValue, state.MaxValue);
     }
 }

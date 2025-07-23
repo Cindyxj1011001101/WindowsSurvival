@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -24,9 +23,7 @@ public enum EnvironmentStateEnum
     Electricity,
     Oxygen,
     Pressure,
-    Height,
-    HasCable,
-    InWater,
+    WaterLevel,
 }
 
 /// <summary>
@@ -34,13 +31,33 @@ public enum EnvironmentStateEnum
 /// </summary>
 public class PlayerState
 {
-    public float curValue;
-    public float MaxValue;
+    private float curValue;
+    private float extraValue;
+    private float maxValue;
     public PlayerStateEnum stateEnum;
-    public PlayerState(float value, float maxValue, PlayerStateEnum state)
+
+    public float CurValue => Mathf.Clamp(curValue, 0, MaxValue);
+
+    public float ExtraValue => extraValue;
+
+    public float MaxValue => maxValue + extraValue;
+    public float RemainingCapacity => MaxValue - CurValue;
+
+    public void AddCurValue(float delta)
+    {
+        curValue += delta;
+    }
+
+    public void AddExtraValue(float delta)
+    {
+        extraValue += delta;
+    }
+
+    public PlayerState(float value, float maxValue, float extraValue, PlayerStateEnum state)
     {
         curValue = value;
-        MaxValue = maxValue;
+        this.maxValue = maxValue;
+        this.extraValue = extraValue;
         stateEnum = state;
     }
 }
@@ -50,9 +67,20 @@ public class PlayerState
 /// </summary>
 public class EnvironmentState
 {
-    public float curValue;
-    public float MaxValue;
+    private float curValue;
+    public float MaxValue { get; set; }
+    public float RemainingCapacity => MaxValue - CurValue;
     public EnvironmentStateEnum stateEnum;
+
+    public float CurValue
+    {
+        get => curValue;
+        set
+        {
+            curValue = Mathf.Clamp(value, 0, MaxValue);
+        }
+    }
+
     public EnvironmentState(float value, float maxValue, EnvironmentStateEnum state)
     {
         curValue = value;
@@ -60,18 +88,29 @@ public class EnvironmentState
         stateEnum = state;
     }
 }
+
 public class StateManager : MonoBehaviour
 {
-    [Header("玩家状态")]
-    public Dictionary<PlayerStateEnum, PlayerState> PlayerStateDict = new Dictionary<PlayerStateEnum, PlayerState>();
-    [Header("电力")]
-    public float Electricity;
-    [Header("飞船水平面高度")]
-    public float WaterLevel;
-    
-    [Header("玩家额外状态")]
-    public Dictionary<PlayerStateEnum, float> PlayerExtraStateDict = new Dictionary<PlayerStateEnum, float>();
-    
+    /// <summary>
+    /// 玩家状态
+    /// </summary>
+    public Dictionary<PlayerStateEnum, PlayerState> PlayerStateDict { get; private set; } = new();
+
+    /// <summary>
+    /// 玩家额外状态
+    /// </summary>
+    //public Dictionary<PlayerStateEnum, float> PlayerExtraStateDict { get; private set; } = new();
+
+    /// <summary>
+    /// 电力
+    /// </summary>
+    public EnvironmentState Electricity { get; set; }
+
+    /// <summary>
+    /// 飞船水平面高度
+    /// </summary>
+    public EnvironmentState WaterLevel { get; set; }
+
     #region 单例
     private static StateManager instance;
     public static StateManager Instance
@@ -104,123 +143,103 @@ public class StateManager : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject);
-    }
-    public void Start()
-    {
-        Init();
+
         EventManager.Instance.AddListener<ChangeStateArgs>(EventType.ChangeState, OnPlayerChangeState);
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
     }
+
+    public void Start()
+    {
+        InitPlayerState();
+        //InitPlayerExtraState();
+        InitElectricity();
+    }
+
     public void OnDestroy()
     {
         EventManager.Instance.RemoveListener<ChangeStateArgs>(EventType.ChangeState, OnPlayerChangeState);
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
     }
-    public void Init()
+
+    private void InitPlayerState()
     {
         //初始化玩家状态
-        PlayerStateDict.Add(PlayerStateEnum.Health, new PlayerState(InitPlayerStateData.Instance.Health, 100, PlayerStateEnum.Health));
-        PlayerStateDict.Add(PlayerStateEnum.Fullness, new PlayerState(InitPlayerStateData.Instance.Fullness, 100, PlayerStateEnum.Fullness));
-        PlayerStateDict.Add(PlayerStateEnum.Thirst, new PlayerState(InitPlayerStateData.Instance.Thirst, 100, PlayerStateEnum.Thirst));
-        PlayerStateDict.Add(PlayerStateEnum.San, new PlayerState(InitPlayerStateData.Instance.San, 100, PlayerStateEnum.San));
-        PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 30, PlayerStateEnum.Oxygen));
-        PlayerStateDict.Add(PlayerStateEnum.Soberiety, new PlayerState(InitPlayerStateData.Instance.Tired, 100, PlayerStateEnum.Soberiety));
-
-        PlayerExtraStateDict.Add(PlayerStateEnum.Fullness, 0);
-        PlayerExtraStateDict.Add(PlayerStateEnum.Health, 0);
-        PlayerExtraStateDict.Add(PlayerStateEnum.Thirst, 0);
-        PlayerExtraStateDict.Add(PlayerStateEnum.San, 0);
-        PlayerExtraStateDict.Add(PlayerStateEnum.Oxygen, 0);
-        PlayerExtraStateDict.Add(PlayerStateEnum.Soberiety, 0);
+        PlayerStateDict.Add(PlayerStateEnum.Health, new PlayerState(InitPlayerStateData.Instance.Health, 100, 0, PlayerStateEnum.Health));
+        PlayerStateDict.Add(PlayerStateEnum.Fullness, new PlayerState(InitPlayerStateData.Instance.Fullness, 100, 0, PlayerStateEnum.Fullness));
+        PlayerStateDict.Add(PlayerStateEnum.Thirst, new PlayerState(InitPlayerStateData.Instance.Thirst, 100, 0, PlayerStateEnum.Thirst));
+        PlayerStateDict.Add(PlayerStateEnum.San, new PlayerState(InitPlayerStateData.Instance.San, 100, 0, PlayerStateEnum.San));
+        PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 30, 0, PlayerStateEnum.Oxygen));
+        PlayerStateDict.Add(PlayerStateEnum.Soberiety, new PlayerState(InitPlayerStateData.Instance.Tired, 100, 0, PlayerStateEnum.Soberiety));
     }
 
-        /// <summary>
-    /// 开局初始化环境状态
-    /// </summary>
-    public Dictionary<EnvironmentStateEnum, EnvironmentState> InitEnvironmentStateDict()
-    {
-        Electricity=Random.Range(30, 45);
-        Dictionary<EnvironmentStateEnum, EnvironmentState> environmentStateDict = new Dictionary<EnvironmentStateEnum, EnvironmentState>();
-        if(GameManager.Instance.CurEnvironmentBag.PlaceData.isIndoor)
-        {
-            environmentStateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
-        }
-        environmentStateDict.Add(EnvironmentStateEnum.Pressure, new EnvironmentState(2, 4, EnvironmentStateEnum.Pressure));
+    //private void InitPlayerExtraState()
+    //{
+    //    PlayerExtraStateDict.Add(PlayerStateEnum.Fullness, 0);
+    //    PlayerExtraStateDict.Add(PlayerStateEnum.Health, 0);
+    //    PlayerExtraStateDict.Add(PlayerStateEnum.Thirst, 0);
+    //    PlayerExtraStateDict.Add(PlayerStateEnum.San, 0);
+    //    PlayerExtraStateDict.Add(PlayerStateEnum.Oxygen, 0);
+    //    PlayerExtraStateDict.Add(PlayerStateEnum.Soberiety, 0);
+    //}
 
-        if(GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
-        {
-            environmentStateDict.Add(EnvironmentStateEnum.HasCable, new EnvironmentState(1, 1, EnvironmentStateEnum.HasCable));
-            environmentStateDict.Add(EnvironmentStateEnum.Height, new EnvironmentState(WaterLevel, 100, EnvironmentStateEnum.Height));
-        }
-        else
-        {
-            environmentStateDict.Add(EnvironmentStateEnum.HasCable, new EnvironmentState(0, 1, EnvironmentStateEnum.HasCable));
-        }
-        if(GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
-        {
-            environmentStateDict.Add(EnvironmentStateEnum.InWater, new EnvironmentState(1, 1, EnvironmentStateEnum.InWater));
-        }
-        else
-        {
-            environmentStateDict.Add(EnvironmentStateEnum.InWater, new EnvironmentState(0, 1, EnvironmentStateEnum.InWater));
-        }
-        environmentStateDict.Add(EnvironmentStateEnum.Electricity, new EnvironmentState(Electricity, 50, EnvironmentStateEnum.Electricity));
-        return environmentStateDict;
+    private void InitElectricity()
+    {
+        Electricity = new EnvironmentState(Random.Range(30, 45), 50, EnvironmentStateEnum.Electricity);
     }
     #endregion
-
 
 
     #region 状态变化相关
 
     public void ChangePlayerStateByString(string stateName, float value)
     {
-         switch (stateName)
-                {
-                    case "健康":
-                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, value));
-                    break;
-                    case "饱食":
-                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, value));
-                    break;
-                    case "口渴":
-                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, value));
-                    break;
-                    case "精神":
-                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, value));
-                    break;
-                    case "氧气":
-                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, value));
-                    break;
-                    case "疲劳":
-                    StateManager.Instance.OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Soberiety, value));
-                    break;
-                }
+        switch (stateName)
+        {
+            case "健康":
+                OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, value));
+                break;
+            case "饱食":
+                OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Fullness, value));
+                break;
+            case "口渴":
+                OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Thirst, value));
+                break;
+            case "精神":
+                OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, value));
+                break;
+            case "氧气":
+                OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Oxygen, value));
+                break;
+            case "清醒":
+                OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Soberiety, value));
+                break;
+        }
     }
 
-    public void ChangeEnvironmentStateByString(PlaceEnum placeType, string stateName, float value)
+    public void ChangeEnvironmentStateByString(PlaceEnum placeType, string stateName, float delta)
     {
+        var env = GameManager.Instance.EnvironmentBags[placeType];
         switch (stateName)
         {
             case "电力":
-                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.Electricity, value));
+                ChangeElectricity(delta);
                 break;
             case "氧气":
-                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.Oxygen, value));
+                env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, delta);
                 break;
             case "压力":
-                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.Pressure, value));
+                env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, delta);
                 break;
             case "高度":
-                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.Height, value));
+                ChangeWaterLevel(delta);
                 break;
-            case "电缆":
-                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.HasCable, value));
-                break;
-            case "水域":
-                StateManager.Instance.OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.InWater, value));
-                break;
-            }
+            //case "电缆":
+            //    OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.HasCable, delta));
+            //    break;
+            //case "水域":
+            //    OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.InWater, delta));
+            //    break;
+        }
     }
     /// <summary>
     /// 玩家状态变化
@@ -228,72 +247,59 @@ public class StateManager : MonoBehaviour
     /// </summary>
     public void OnPlayerChangeState(ChangeStateArgs args)
     {
-        if (PlayerStateDict.ContainsKey(args.state))
+        if (!PlayerStateDict.ContainsKey(args.state)) return;
+
+        if (args.state == PlayerStateEnum.Oxygen)
         {
-            //氧气在室内时，氧气变化影响环境氧气
-            if(args.state==PlayerStateEnum.Oxygen&&GameManager.Instance.CurEnvironmentBag.PlaceData.isIndoor)
+            var env = GameManager.Instance.CurEnvironmentBag;
+            // 如果获取氧气时在室内环境
+            if (env.PlaceData.isIndoor)
             {
-                OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Oxygen, args.value));
-                return;
-            }
-            PlayerStateDict[args.state].curValue += args.value;
-            if (PlayerStateDict[args.state].curValue >= PlayerStateDict[args.state].MaxValue+PlayerExtraStateDict[args.state])
-            {
-                PlayerStateDict[args.state].curValue = PlayerStateDict[args.state].MaxValue+PlayerExtraStateDict[args.state];
-            }
-            if (PlayerStateDict[args.state].curValue <= 0)
-            {
-                PlayerStateDict[args.state].curValue = 0;
+                // 优先释放到环境
+                // 计算能释放多少
+                var toRelease = Mathf.Min(env.StateDict[EnvironmentStateEnum.Oxygen].RemainingCapacity, args.value);
+                if (toRelease > 0)
+                    // 释放到环境
+                    env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, toRelease);
+
+                // 计算释放到环境之后还剩多少
+                var left = args.value - toRelease;
+                // 加入玩家的氧气
+                if (left > 0)
+                    PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(left);
+                return; 
             }
         }
+
+        PlayerStateDict[args.state].AddCurValue(args.value);
+
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, args.state);
     }
 
-    /// <summary>
-    /// 环境状态变化
-    /// 修改某一环境状态值，保证在最大最小之间，触发刷新UI事件
-    /// </summary>
-    public void OnEnvironmentChangeState(ChangeEnvironmentStateArgs args)
+    public void ChangePlayerExtraState(PlayerStateEnum stateEnum, float delta)
     {
-        //判断一下是否为修改电力，如果是则直接修改电力值
-        if(args.state==EnvironmentStateEnum.Electricity)
-        {
-            Electricity += args.value;
-            if(Electricity>=50)
-            {
-                Electricity=50;
-            }
-            if(Electricity<=0)
-            {
-                Electricity=0;
-            }
-            //前端UI刷新
-            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Electricity));
-        }
-        else if(args.state==EnvironmentStateEnum.Height)
-        {
-            WaterLevel += args.value;
-            if(WaterLevel>=100)
-            {
-                WaterLevel=100;
-            }
-            if(WaterLevel<=0)
-            {
-                WaterLevel=0;
-            }
-            //前端UI刷新
-            EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Height));
-        }
-        else
-        {
-            //在当前背包中做数值变化
-            EventManager.Instance.TriggerEvent(EventType.CurEnvironmentChangeState, args);
-        }
+        //PlayerExtraStateDict[stateEnum] += delta;
+        PlayerStateDict[stateEnum].AddExtraValue(delta);
+    }
+    #endregion
+
+    #region 电力和水平面相关
+    public void ChangeElectricity(float delta)
+    {
+        Electricity.CurValue += delta;
+        // 刷新前端显示
+        var env = GameManager.Instance.CurEnvironmentBag;
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.Electricity));
     }
 
-    public void ChangePlayerExtraState(PlayerStateEnum stateEnum, float value)
+    public void ChangeWaterLevel(float delta)
     {
-        PlayerExtraStateDict[stateEnum] += value;
+        WaterLevel.CurValue += delta;
+        // 触发水平面变化事件
+        EventManager.Instance.TriggerEvent(EventType.ChangeWaterLevel, WaterLevel.CurValue);
+        // 刷新前端显示
+        var env = GameManager.Instance.CurEnvironmentBag;
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.WaterLevel));
     }
     #endregion
 
@@ -307,31 +313,12 @@ public class StateManager : MonoBehaviour
         PlayerIntervalSettle();
         ExtraPlayerIntervalSettle();
         EnvironmentIntervalSettle();
-        ExtraEnvironmentIntervalSettle();
     }
 
     public void EnvironmentIntervalSettle()
     {
-        OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, EnvironmentStateEnum.Electricity, -0.2f));
-
-    }
-
-    public void ExtraEnvironmentIntervalSettle()
-    {
-        //水位满时，所有在飞船内的环境修改为水域环境
-        if(GameManager.Instance.CurEnvironmentBag.EnvironmentStateDict.ContainsKey(EnvironmentStateEnum.Height))
-        {
-            if(StateManager.Instance.WaterLevel==100)
-            {
-                foreach(var item in GameManager.Instance.EnvironmentBags)
-                {
-                    if(item.Value.PlaceData.isInSpacecraft)
-                    {
-                        item.Value.EnvironmentStateDict[EnvironmentStateEnum.InWater].curValue=1;
-                    }
-                }
-            }
-        }
+        // 每回合减少0.2电力
+        ChangeElectricity(InitPlayerStateData.Instance.BasicElectricityChange);
     }
 
     public void PlayerIntervalSettle()
@@ -365,15 +352,15 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraFullnessChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Fullness].curValue <= 20)
+        if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 20)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.3f));
         }
-        else if (PlayerStateDict[PlayerStateEnum.Fullness].curValue <= 10)
+        else if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 10)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.7f));
         }
-        else if (PlayerStateDict[PlayerStateEnum.Fullness].curValue <= 0)
+        else if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 0)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1f));
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -8f));
@@ -385,7 +372,7 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraHealthChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Health].curValue <= 0)
+        if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0)
         {
             EventManager.Instance.TriggerEvent(EventType.GameOver);
         }
@@ -399,15 +386,15 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraThirstChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Thirst].curValue <= 20)
+        if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 20)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.3f));
         }
-        else if (PlayerStateDict[PlayerStateEnum.Thirst].curValue <= 10)
+        else if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 10)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.7f));
         }
-        else if (PlayerStateDict[PlayerStateEnum.Thirst].curValue <= 0)
+        else if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 0)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1f));
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -8f));
@@ -427,7 +414,7 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraOxygenChange()
     {
-        if(PlayerStateDict[PlayerStateEnum.Oxygen].curValue == 0)
+        if (PlayerStateDict[PlayerStateEnum.Oxygen].CurValue == 0)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -10f));
         }
@@ -440,16 +427,16 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraTiredChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Soberiety].curValue >=70)
+        if (PlayerStateDict[PlayerStateEnum.Soberiety].CurValue >= 70)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -0.3f));
         }
-        else if (PlayerStateDict[PlayerStateEnum.Soberiety].curValue >= 90)
+        else if (PlayerStateDict[PlayerStateEnum.Soberiety].CurValue >= 90)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -1.5f));
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -2f));
         }
-        else if(PlayerStateDict[PlayerStateEnum.Soberiety].curValue == 100)
+        else if (PlayerStateDict[PlayerStateEnum.Soberiety].CurValue == 100)
         {
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.San, -6f));
             OnPlayerChangeState(new ChangeStateArgs(PlayerStateEnum.Health, -4f));
@@ -459,16 +446,19 @@ public class StateManager : MonoBehaviour
     #endregion
 
     #region 载重
-
-    [Header("最大负重")]
-    public float maxLoad = 15;
-    [Header("当前负重")]
-    public float curLoad = 0;
+    /// <summary>
+    /// 最大负重
+    /// </summary>
+    public float MaxLoad { get; set; } = 15;
+    /// <summary>
+    /// 当前负重
+    /// </summary>
+    public float CurLoad { get; set; } = 0;
 
     public void AddLoad(float weight)
     {
-        curLoad += weight;
-        EventManager.Instance.TriggerEvent(EventType.ChangeLoad/*, new ChangeLoadArgs { currentLoad = curLoad, maxLoad = maxLoad}*/);
+        CurLoad += weight;
+        EventManager.Instance.TriggerEvent(EventType.ChangeLoad);
     }
     #endregion
 }

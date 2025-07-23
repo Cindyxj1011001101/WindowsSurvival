@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "InitPlayerStateData", menuName = "ScriptableObject/InitPlayerStateData")]
-public class InitPlayerStateData:SingleScriptableObject<InitPlayerStateData>
+public class InitPlayerStateData : SingleScriptableObject<InitPlayerStateData>
 {
     //玩家状态
     [Header("玩家状态")]
