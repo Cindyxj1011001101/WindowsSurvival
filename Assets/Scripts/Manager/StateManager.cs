@@ -141,15 +141,12 @@ public class StateManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
-    }
-
-    public void Start()
-    {
         InitPlayerState();
         InitElectricity();
+        InitWaterLevel();
     }
 
-    public void OnDestroy()
+    private void OnDestroy()
     {
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
     }
@@ -168,6 +165,11 @@ public class StateManager : MonoBehaviour
     private void InitElectricity()
     {
         Electricity = new EnvironmentState(Random.Range(30, 45), 50, EnvironmentStateEnum.Electricity);
+    }
+
+    private void InitWaterLevel()
+    {
+        WaterLevel = new EnvironmentState(0, 100, EnvironmentStateEnum.WaterLevel);
     }
     #endregion
 

@@ -14,14 +14,15 @@ public enum PressureLevel
 
 public class EnvironmentBagWindow : BagWindow
 {
-    [SerializeField] private Text discoveryDegreeText; // 探索度显示
+    //[SerializeField] private Text discoveryDegreeText; // 探索度显示
+    [SerializeField] private StateSlider discoveryDegreeSlider; // 探索度显示
     [SerializeField] private Text placeNameText; // 环境名称
     //[SerializeField] private Text placeDetailsText; // 环境详情
-    [SerializeField] private Button discoverButton; // 探索按钮
-    [SerializeField] private StateToggle hasCabbleToggle;
-    [SerializeField] private StateText pressureLevelText;
+    [SerializeField] private HoverableButton discoverButton; // 探索按钮
     [SerializeField] private RectTransform stateLayout;
 
+    private StateToggle hasCabbleToggle; // 是否铺设电缆
+    private StatePressureLevel pressureLevel; // 压强等级
     private Dictionary<EnvironmentStateEnum, StateSlider> stateSliders = new(); // 环境状态显示
 
     protected override void Awake()
@@ -58,6 +59,10 @@ public class EnvironmentBagWindow : BagWindow
 
         MonoUtility.DestroyAllChildren(stateLayout);
 
+        // 压强都显示
+        pressureLevel = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/PressureLevel"), stateLayout).GetComponent<StatePressureLevel>();
+        pressureLevel.SetValue(curEnvironmentBag.PressureLevel);
+
         // 是否铺设电缆都显示
         hasCabbleToggle = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/ToggleState"), stateLayout).GetComponent<StateToggle>();
         hasCabbleToggle.SetStateName("铺设电缆");
@@ -69,11 +74,6 @@ public class EnvironmentBagWindow : BagWindow
         slider.displayPercentage = false;
         slider.SetValue(StateManager.Instance.Electricity);
         stateSliders.Add(EnvironmentStateEnum.Electricity, slider);
-
-        // 压强都显示
-        pressureLevelText = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/TextState"), stateLayout).GetComponent<StateText>();
-        pressureLevelText.SetStateName("压强");
-        pressureLevelText.SetValue(ParsePressureLevel(curEnvironmentBag.PressureLevel));
 
         // 在飞船内显示水平面高度
         if (curEnvironmentBag.StateDict.ContainsKey(EnvironmentStateEnum.WaterLevel))
@@ -95,28 +95,17 @@ public class EnvironmentBagWindow : BagWindow
             stateSliders.Add(EnvironmentStateEnum.Oxygen, slider);
         }
 
-        // 环境信息
-        discoveryDegreeText.text = $"{Math.Round(curEnvironmentBag.DiscoveryDegree, 3) * 100} %";
+        // 显示探索度
+        discoveryDegreeSlider.SetValue(curEnvironmentBag.DiscoveryDegree, 100);
+        // 显示环境名称
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
-        //placeDetailsText.text = $"{curEnvironmentBag.PlaceData.placeDesc}";
 
         // 探索事件
         discoverButton.onClick.RemoveAllListeners();
         discoverButton.onClick.AddListener(GameManager.Instance.HandleExplore);
     }
 
-    private  string ParsePressureLevel(PressureLevel level)
-    {
-        return level switch
-        {
-            PressureLevel.VeryLow => "极低",
-            PressureLevel.Low => "低",
-            PressureLevel.Standard => "标准",
-            PressureLevel.High => "高",
-            PressureLevel.VeryHigh => "极高",
-            _ => "未知",
-        };
-    }
+    
 
 
     /// <summary>
@@ -140,7 +129,7 @@ public class EnvironmentBagWindow : BagWindow
                 hasCabbleToggle.SetValue(args.hasCable);
                 break;
             case EnvironmentStateEnum.PressureLevel:
-                pressureLevelText.SetValue(ParsePressureLevel(args.pressureLevel));
+                pressureLevel.SetValue(args.pressureLevel);
                 break;
             default:
                 throw new ArgumentException("未知状态改变: " + args.stateEnum.ToString());
@@ -149,6 +138,6 @@ public class EnvironmentBagWindow : BagWindow
 
     private void DisplayDiscoveryDegree(float degree)
     {
-        discoveryDegreeText.text = $"{Math.Round(degree, 3) * 100} %";
+        discoveryDegreeSlider.SetValue(degree, 100);
     }
 }

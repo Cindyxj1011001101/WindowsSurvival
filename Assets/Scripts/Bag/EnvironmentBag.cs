@@ -26,7 +26,7 @@ public class EnvironmentBag : BagBase
     // 是否铺设电缆
     public bool HasCable => hasCable;
 
-    public PressureLevel PressureLevel => PressureLevel;
+    public PressureLevel PressureLevel => pressureLevel;
 
     public PlaceData PlaceData => placeData;
 
@@ -37,11 +37,12 @@ public class EnvironmentBag : BagBase
         // 如果是飞船环境，要考虑水平面变化
         if (placeData.isInSpacecraft)
             EventManager.Instance.AddListener<float>(EventType.ChangeWaterLevel, OnWaterLevelChanged);
+
+        InitBag(GameDataManager.Instance.GetEnvironmentBagDataByPlace(placeData.placeType));
     }
 
     protected override void Init()
     {
-        InitBag(GameDataManager.Instance.GetEnvironmentBagDataByPlace(placeData.placeType));
     }
 
     private void OnDestroy()
@@ -90,7 +91,10 @@ public class EnvironmentBag : BagBase
             StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(UnityEngine.Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
 
         // 压强都显示
+        pressureLevel = PressureLevel.Standard;
+
         // 是否铺设电缆都显示
+        hasCable = true;
     }
 
     /// <summary>
