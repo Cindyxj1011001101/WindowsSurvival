@@ -155,7 +155,7 @@ public class EnvironmentBag : BagBase
         int leftCount = count; // 剩余要添加的数量
 
         // 优先堆叠，卡牌格按照已堆叠数量降序排序，即优先堆满
-        foreach (var slot in GetSlotsByCardId(card.cardId, false))
+        foreach (var slot in GetSlotsByCardId(card.CardId, false))
         {
             if (leftCount <= 0) return result;
 
@@ -176,8 +176,8 @@ public class EnvironmentBag : BagBase
             {
                 if (slot.IsEmpty)
                 {
-                    result.Add((slot, Mathf.Min(card.maxStackNum, leftCount)));
-                    leftCount -= card.maxStackNum;
+                    result.Add((slot, Mathf.Min(card.MaxStackNum, leftCount)));
+                    leftCount -= card.MaxStackNum;
                 }
 
                 if (leftCount <= 0) return result;

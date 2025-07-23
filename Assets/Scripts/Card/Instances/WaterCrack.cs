@@ -5,7 +5,7 @@ public class WaterCrack : Card
 {
     private WaterCrack()
     {
-        events = new()
+        Events = new()
         {
             new Event("堵住", "堵住渗水裂缝", Event_Fix, Jugde_Fix),
         };
@@ -25,7 +25,7 @@ public class WaterCrack : Card
 
     protected override System.Action OnUpdate => () =>
     {
-        var bag = slot.Bag as EnvironmentBag;
+        var bag = Slot.Bag as EnvironmentBag;
         // 渗水裂缝所在的地点每回合-8氧气
         bag.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -8);
         // 每个渗水裂缝每回合会使飞船水平面高度+0.3

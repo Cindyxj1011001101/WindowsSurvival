@@ -5,7 +5,7 @@ public class CompactBiscuit : Card
 {
     private CompactBiscuit()
     {
-        events = new()
+        Events = new()
         {
             new Event("食用", "食用压缩饼干", Event_Eat, null)
         };

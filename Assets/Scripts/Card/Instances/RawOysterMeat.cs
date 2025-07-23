@@ -5,7 +5,7 @@ public class RawOysterMeat : Card
 {
     private RawOysterMeat()
     {
-        events = new()
+        Events = new()
         {
             new Event("食用", "食用生贝肉", Event_Eat, null),
         };

@@ -5,7 +5,7 @@ public class AirtightDoor : Card
 {
     private AirtightDoor()
     {
-        events = new()
+        Events = new()
         {
             new Event("进入飞船", "进入飞船", Event_Enter, Judge_Enter),
             new Event("离开飞船", "离开飞船", Event_Leave, Judge_Leave)

@@ -84,7 +84,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 }
             }
             // 跨背包放置
-            else if (sourceSlot.PeekCard().moveable)
+            else if (sourceSlot.PeekCard().Moveable)
             {
                 PlaceCardInDifferentBag(targetBag, pickedCount, dragEndPosition);
             }
@@ -107,7 +107,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Right && sourceSlot.PeekCard().moveable)
+        if (eventData.button == PointerEventData.InputButton.Right && sourceSlot.PeekCard().Moveable)
         {
             if (SoundManager.Instance != null)
             {
