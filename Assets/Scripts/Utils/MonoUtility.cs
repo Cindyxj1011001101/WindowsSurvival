@@ -42,4 +42,9 @@ public static class MonoUtility
         // 立刻更新布局
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
     }
+
+    public static void UpdateContainerHeight(VerticalLayoutGroup layout)
+    {
+        int elementCount = layout.transform.childCount;
+    }
 }

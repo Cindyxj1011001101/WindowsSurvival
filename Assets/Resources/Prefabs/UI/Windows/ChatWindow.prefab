@@ -276,8 +276,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 10}
+  m_SizeDelta: {x: 0, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4705955590667318934
 MonoBehaviour:
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 6021788566340254513}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.97361475
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1002,6 +1002,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CloseButton
       objectReference: {fileID: 0}
+    - target: {fileID: 4002152017923950925, guid: baa57fb29dce24b4a97fcbd2043a84de, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1634247039, guid: 463677557ce92964a8482ac800b7428d, type: 3}
     - target: {fileID: 7252790447278376052, guid: baa57fb29dce24b4a97fcbd2043a84de, type: 3}
       propertyPath: m_Pivot.x
       value: 1

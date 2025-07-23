@@ -59,26 +59,26 @@ public class EnvironmentBagWindow : BagWindow
         MonoUtility.DestroyAllChildren(stateLayout);
 
         // 是否铺设电缆都显示
-        hasCabbleToggle = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/ToggleState"), stateLayout).GetComponent<StateToggle>();
+        hasCabbleToggle = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/ToggleState"), stateLayout).GetComponent<StateToggle>();
         hasCabbleToggle.SetStateName("铺设电缆");
         hasCabbleToggle.SetValue(curEnvironmentBag.HasCable);
 
         // 电力都显示
-        var slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/SliderState"), stateLayout).GetComponent<StateSlider>();
+        var slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/SliderState"), stateLayout).GetComponent<StateSlider>();
         slider.SetStateName("电力");
         slider.displayPercentage = false;
         slider.SetValue(StateManager.Instance.Electricity);
         stateSliders.Add(EnvironmentStateEnum.Electricity, slider);
 
         // 压强都显示
-        pressureLevelText = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/TextState"), stateLayout).GetComponent<StateText>();
+        pressureLevelText = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/TextState"), stateLayout).GetComponent<StateText>();
         pressureLevelText.SetStateName("压强");
         pressureLevelText.SetValue(ParsePressureLevel(curEnvironmentBag.PressureLevel));
 
         // 在飞船内显示水平面高度
         if (curEnvironmentBag.StateDict.ContainsKey(EnvironmentStateEnum.WaterLevel))
         {
-            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/SliderState"), stateLayout).GetComponent<StateSlider>();
+            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/SliderState"), stateLayout).GetComponent<StateSlider>();
             slider.SetStateName("水平面");
             slider.displayPercentage = true;
             slider.SetValue(StateManager.Instance.WaterLevel);
@@ -88,7 +88,7 @@ public class EnvironmentBagWindow : BagWindow
         // 在室内显示氧气
         if (curEnvironmentBag.StateDict.ContainsKey(EnvironmentStateEnum.Oxygen))
         {
-            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/SliderState"), stateLayout).GetComponent<StateSlider>();
+            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/SliderState"), stateLayout).GetComponent<StateSlider>();
             slider.SetStateName("氧气");
             slider.displayPercentage = false;
             slider.SetValue(curEnvironmentBag.StateDict[EnvironmentStateEnum.Oxygen]);

@@ -32,8 +32,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7604280056866953760}
   - {fileID: 165293994145883850}
+  - {fileID: 7604280056866953760}
   - {fileID: 4249159618800918686}
   - {fileID: 1005503841418969572}
   m_Father: {fileID: 0}
@@ -93,9 +93,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  normalImage: {fileID: 7750718355059619663}
   hoveredImage: {fileID: 7827004628106925074}
   fadeDuration: 0.1
+  textsNeedToReverseColor: []
+  imagseNeedToReverseColor:
+  - {fileID: 7750718355059619663}
+  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 255}
 --- !u!114 &7510080309559268513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,8 +181,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1242553631, guid: 463677557ce92964a8482ac800b7428d, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 853517195, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
