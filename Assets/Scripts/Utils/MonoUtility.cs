@@ -45,6 +45,17 @@ public static class MonoUtility
 
     public static void UpdateContainerHeight(VerticalLayoutGroup layout)
     {
-        int elementCount = layout.transform.childCount;
+        RectTransform layoutTransform = layout.transform as RectTransform;
+
+        float containerHeight = layout.spacing + layout.padding.top + layout.padding.bottom;
+        for (int i = 0; i < layout.transform.childCount; i++)
+        {
+            containerHeight += layout.transform.GetChild(i).GetComponent<RectTransform>().sizeDelta.y;
+        }
+
+        layoutTransform.sizeDelta = new Vector2(layoutTransform.sizeDelta.x, containerHeight);
+
+        // 立刻更新布局
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
     }
 }

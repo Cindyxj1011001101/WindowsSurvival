@@ -95,6 +95,8 @@ public class EnvironmentBagWindow : BagWindow
             stateSliders.Add(EnvironmentStateEnum.Oxygen, slider);
         }
 
+       MonoUtility.UpdateContainerHeight(stateLayout.GetComponent<VerticalLayoutGroup>());
+
         // 显示探索度
         discoveryDegreeSlider.SetValue(curEnvironmentBag.DiscoveryDegree, 100);
         // 显示环境名称
