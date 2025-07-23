@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +8,12 @@ public class ChatWindow : WindowBase
 {
     private GameObject layout;
     private ScrollRect scroll;
+    private GameObject messageSpace;
+    private GameObject ConfirmButton;
+    private GameObject InputText;
     private bool inParagraph = false;
+    private GameObject body;
+    public ParagraphData InterruptParagraphData = null;//打断的段落数据
     protected override void Start()
     {
         base.Start();
@@ -20,8 +24,13 @@ public class ChatWindow : WindowBase
     {
         layout = transform.Find("Body/Scroll View/Viewport/Content").gameObject;
         scroll = transform.Find("Body/Scroll View").GetComponent<ScrollRect>();
-
-        TriggerParagraph(1);
+        messageSpace = transform.Find("Body/MessageSpace").gameObject;
+        ConfirmButton = transform.Find("Body/InputLine/Confirm").gameObject;
+        InputText = transform.Find("Body/InputLine/InputBG/InputText").gameObject;
+        body = transform.Find("Body").gameObject;
+        body.GetComponent<CustomMessageLayout>().Refresh();
+        ConfirmButton.GetComponent<Button>().onClick.RemoveAllListeners();
+        ConfirmButton.GetComponent<Button>().onClick.AddListener(Confirm);
     }
 
     public void OnDestroy()
@@ -34,8 +43,29 @@ public class ChatWindow : WindowBase
     {
         if (!inParagraph && ChatManager.Instance.ParagraphToTriggeer.Count > 0)
         {
-            TriggerParagraph(ChatManager.Instance.ParagraphToTriggeer[0]);
-            ChatManager.Instance.ParagraphToTriggeer.RemoveAt(0);
+            //遍历可触发段落，判断是否可以触发
+            foreach (var paragraph in ChatManager.Instance.ParagraphToTriggeer)
+            {
+
+                if (ChatManager.Instance.CurrentParagraphData == null)
+                {
+                    TriggerParagraph(paragraph);
+                    ChatManager.Instance.ParagraphToTriggeer.Remove(paragraph);
+                    break;
+                }
+                //判断段落优先级,优先度高则打断当前段落
+                else if (paragraph.ParagraphPriority > ChatManager.Instance.CurrentParagraphData.ParagraphPriority)
+                {
+                    InterruptParagraphData = paragraph;
+                    ChatManager.Instance.ParagraphToTriggeer.Remove(paragraph);
+                    break;
+                }
+            }
+        }
+        if (ChatManager.Instance.NextMessage != null)
+        {
+            StartCoroutine(CreateMessage(ChatManager.Instance.NextMessage));
+            ChatManager.Instance.NextMessage = null;
         }
     }
     public void LoadGeneratedChatData()
@@ -48,39 +78,47 @@ public class ChatWindow : WindowBase
         TriggerMessage(ChatManager.Instance.GeneratedChatDataList[ChatManager.Instance.GeneratedChatDataList.Count - 1]);
     }
 
-    public void TriggerParagraph(int paragraphIndex)
+    public void TriggerParagraph(ParagraphData paragraphData)
     {
-        foreach (var paragraphData in ChatManager.Instance.ParagraphDataList)
-        {
-            if (paragraphData.ParagraphID == paragraphIndex)
-            {
-                inParagraph = true;
-                TriggerMessage(paragraphData.ChatDataList[0]);
-            }
-        }
+        ChatManager.Instance.CurrentParagraphData = paragraphData;
+        inParagraph = true;
+        TriggerMessage(paragraphData.ChatDataList[0]);
 
     }
 
     //根据下一条消息的类型决定触发消息类型为选项还是消息
     public void TriggerMessage(ChatData chatData)
     {
+        if (InterruptParagraphData != null)
+        {
+            TriggerParagraph(InterruptParagraphData);
+            InterruptParagraphData = null;
+        }
+        if (chatData.MessageCondition != "" && chatData.MessageType != "分支对话")
+        {
+            ChatConditionManager.Instance.StartChatConditionDetection(chatData);
+            return;
+        }
         switch (chatData.MessageType)
         {
-            case 1://对话
+            case "对话":
                 StartCoroutine(CreateMessage(chatData));
                 break;
-            case 2://选项
-                   // 先收集所有选项消息
+            case "选项":
+                // 先收集所有选项消息
                 List<ChatData> optionsList = new List<ChatData>();
                 for (int i = chatData.MessageID - 1; i < ChatManager.Instance.ParagraphDataList[chatData.ParagraphID - 1].ChatDataList.Count; i++)
                 {
-                    if (ChatManager.Instance.ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[i].MessageType == 2)
+                    if (ChatManager.Instance.ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[i].MessageType == "选项")
                     {
                         optionsList.Add(ChatManager.Instance.ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[i]);
                     }
                     else break;
                 }
-                StartCoroutine(CreateChooseMessagesSequentially(optionsList));
+                CreateChooseMessagesSequentially(optionsList);
+                break;
+            case "提示":
+                StartCoroutine(CreateMessage(chatData));
                 break;
         }
     }
@@ -97,7 +135,8 @@ public class ChatWindow : WindowBase
         StartCoroutine(WaitBeforeMessage(chatData.WaitTime));
         ChatManager.Instance.GeneratedChatDataList.Add(chatData);
         GameObject MessageObject = CreateNewMessage(chatData);
-        yield return new WaitForSeconds(1f);
+
+        yield return new WaitForSeconds(0.5f);
         if (chatData.NextMessageID != -1)
         {
             TriggerMessage(ChatManager.Instance.ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[chatData.NextMessageID - 1]);
@@ -108,8 +147,11 @@ public class ChatWindow : WindowBase
         }
     }
 
+    //
+
     public GameObject CreateNewMessage(ChatData chatData)
     {
+        body.GetComponent<CustomMessageLayout>().Refresh();
         //根据消息发送者选择对应的预制体
         GameObject MessagePrefab = null;
         switch (chatData.MessageSender)
@@ -126,7 +168,7 @@ public class ChatWindow : WindowBase
         }
         //根据消息进行实例化
         GameObject MessageObject = Instantiate(MessagePrefab, layout.transform);
-        MessageObject.GetComponentInChildren<TMP_Text>().text = chatData.Message;
+        MessageObject.GetComponentInChildren<Text>().text = chatData.Message;
 
         StartCoroutine(ScrollToBottomNextFrame());
         return MessageObject;
@@ -140,41 +182,63 @@ public class ChatWindow : WindowBase
         if (scroll != null) scroll.verticalNormalizedPosition = 0;
     }
 
-    public IEnumerator CreateChooseMessagesSequentially(List<ChatData> options)
+    public void CreateChooseMessagesSequentially(List<ChatData> options)
     {
         foreach (var option in options)
         {
-            GameObject MessageObject = CreateNewMessage(option);
+            //根据消息进行实例化
+            GameObject MessageObject = Instantiate(ChatManager.Instance.MessagePrefab, messageSpace.transform);
+            MessageObject.GetComponentInChildren<Text>().text = option.Message;
 
             //设置按钮事件
             Button button = MessageObject.AddComponent<Button>();
-            button.transition = Button.Transition.None;
             if (button)
             {
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() =>
                 {
                     //添加选项按钮监听
-                    DelayedChoose(option);
+                    Choose(button, option);
                 });
             }
-            yield return new WaitForSeconds(1f);
         }
+        body.GetComponent<CustomMessageLayout>().Refresh();
     }
-
-    /// <summary>
-    /// 延迟处理选项选择，销毁所有选项消息后生成新消息
-    /// </summary>
-    private void DelayedChoose(ChatData chatData)
+    private void Choose(Button aimbutton, ChatData chatData)
     {
-        foreach (var button in layout.GetComponentsInChildren<Button>())
+        //被点击的按钮变化状态，其余所有按钮恢复默认
+        //输入框显示被点击按钮的文字
+        //发送按钮可被点击
+        if (ChatManager.Instance.ChoosedChatData == chatData) return;
+        foreach (var button in messageSpace.GetComponentsInChildren<Button>())
         {
-            button.gameObject.SetActive(false);
-            Destroy(button.gameObject);
+            button.GetComponent<Image>().color = Color.blue;
         }
-        StartCoroutine(CreateMessage(chatData));//生成被选择的消息    
+        aimbutton.GetComponent<Image>().color = Color.red;
+        InputText.GetComponent<Text>().text = chatData.Message;
+        ChatManager.Instance.ChoosedChatData = chatData;
+        ChatManager.Instance.canConfirm = true;
     }
 
+    public void Confirm()
+    {
+        if (ChatManager.Instance.canConfirm)
+        {
+            //销毁所有选项消息
+            foreach (var button in messageSpace.GetComponentsInChildren<Button>())
+            {
+                Destroy(button.gameObject);
+            }
+            InputText.GetComponent<Text>().text = "";
+            //刷新界面显示
+            body.GetComponent<CustomMessageLayout>().Refresh();
+            //生成选中的消息
+            StartCoroutine(CreateMessage(ChatManager.Instance.ChoosedChatData));
+            //刷新数据存储
+            ChatManager.Instance.canConfirm = false;
+            ChatManager.Instance.ChoosedChatData = null;
+        }
+    }
     private IEnumerator WaitSeconds(float seconds)
     {
         yield return new WaitForSeconds(seconds);

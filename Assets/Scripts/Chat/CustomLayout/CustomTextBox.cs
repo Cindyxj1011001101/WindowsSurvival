@@ -1,7 +1,5 @@
 using UnityEngine;
-using TMPro;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
 using DG.Tweening;
 
 // 允许在编辑器模式下执行脚本
@@ -18,7 +16,7 @@ public class CustomTextBox : MonoBehaviour
     public float maxWidth;   // 最大宽度
 
     private RectTransform TextRect; // 文本组件的RectTransform
-    private TMP_Text text;     // 文本组件
+    private Text text;     // 文本组件
     private RectTransform ImageRect;    // 图片物体的RectTransform
     private RectTransform parentRect;    // 父物体的RectTransform
 
@@ -33,7 +31,12 @@ public class CustomTextBox : MonoBehaviour
         if(parentRect == null && transform.parent != null) parentRect = transform.parent.GetComponent<RectTransform>();
         //获取当前对象的RectTransform和TMP_Text
         TextRect =this.transform.GetComponent<RectTransform>();
-        text = this.transform.GetComponent<TMP_Text>();
+        text = this.transform.GetComponent<Text>();
+        RefreshSizeIfNeeded();
+    }
+
+    public void Update()
+    {
         RefreshSizeIfNeeded();
     }
 

@@ -199,7 +199,7 @@ public static class ExcelReader
             int sizeChangeOnNotCaught = int.Parse(emptyPopulationConfig[6].ToString());
 
             // 假设每个表都是重复掉落列表
-            List <Population> populationList = new();
+            List<Population> populationList = new();
             DataRow row;
             for (int i = 2; i < table.Rows.Count; i++) // 从2开始跳过表头个空种群配置
             {
@@ -267,6 +267,31 @@ public static class ExcelReader
         }
         Debug.Log("Repeatable drop list generated successfully!");
     }
+
+    #region 读取对话配置
+    public static void ReadChat(string filename)
+    {
+        // 打开Excel文件
+        using FileStream fs = File.Open(Application.dataPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
+        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+        DataSet result = excelReader.AsDataSet();
+
+        foreach (DataTable table in result.Tables)
+        {
+            DataRow row;
+            //读取第一行段落信息
+            ParagraphData paragraphData = new ParagraphData(ChatManager.Instance.ParagraphDataList.Count+1, int.Parse(table.Rows[1][6].ToString()), new List<ChatData>(), table.Rows[1][4].ToString());
+            List<ChatData> chatDataList = new List<ChatData>();
+            for (int i = 2; i < table.Rows.Count; i++) 
+            {
+                row = table.Rows[i];
+                chatDataList.Add(new ChatData(paragraphData.ParagraphID,row));
+            }
+            paragraphData.ChatDataList = chatDataList;
+            ChatManager.Instance.ParagraphDataList.Add(paragraphData);
+        }
+    }
+    #endregion
 }
 public class CardConfig
 {

@@ -57,6 +57,7 @@ public class DetailsWindow : WindowBase
         // 显示卡牌
         slot.DisplayCard(currentDisplayedCard, 1);
 
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.cardName));
         //// 显示卡牌标签
         //foreach (var tag in currentDisplayedCard.tags)
         //{
