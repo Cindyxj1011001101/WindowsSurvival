@@ -2,8 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-// 允许在编辑器模式下执行脚本
-[ExecuteAlways]
 // 挂载在文本和图片的父对象下，用于自动调整大小
 public class CustomTextBox : MonoBehaviour
 {
@@ -17,26 +15,13 @@ public class CustomTextBox : MonoBehaviour
 
     private RectTransform TextRect; // 文本组件的RectTransform
     private Text text;     // 文本组件
-    private RectTransform ImageRect;    // 图片物体的RectTransform
-    private RectTransform parentRect;    // 父物体的RectTransform
-
-    private float lastParentWidth = -1f; // 上一次父物体宽度
-    private float lastWidth = -1f;       // 上一次设置的宽度
-
-    public System.Action OnSizeChanged;  // 尺寸变化时的回调
 
 
     public void Awake()
     {
-        if(parentRect == null && transform.parent != null) parentRect = transform.parent.GetComponent<RectTransform>();
         //获取当前对象的RectTransform和TMP_Text
         TextRect =this.transform.GetComponent<RectTransform>();
         text = this.transform.GetComponent<Text>();
-        RefreshSizeIfNeeded();
-    }
-
-    public void Update()
-    {
         RefreshSizeIfNeeded();
     }
 
@@ -47,8 +32,9 @@ public class CustomTextBox : MonoBehaviour
         float preferredWidth=text.preferredWidth;
         //限制宽度在最大/父对象和最小之间
         preferredWidth=Mathf.Clamp(preferredWidth,minWidth,maxWidth);
-        //设置当前宽高
-        TextRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, preferredWidth);
+        //设置当前宽度
+        TextRect.GetComponent<RectTransform>().sizeDelta = new Vector2(preferredWidth,TextRect.sizeDelta.y);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(TextRect.GetComponent<RectTransform>());
     }
 
 }

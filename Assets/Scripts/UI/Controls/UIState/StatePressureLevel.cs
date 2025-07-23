@@ -24,7 +24,7 @@ public class StatePressureLevel : MonoBehaviour
 
         pressureLevelText.text = ParsePressureLevel(level);
 
-        pressureLevelText.color = colors[(int)level - 1];
+        pressureLevelText.color = colors[(int)level];
     }
 
     private string ParsePressureLevel(PressureLevel level)

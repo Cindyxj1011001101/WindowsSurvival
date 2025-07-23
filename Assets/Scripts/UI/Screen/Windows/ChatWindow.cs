@@ -48,7 +48,7 @@ public class ChatWindow : WindowBase
             foreach (var paragraph in ChatManager.Instance.ParagraphToTriggeer)
             {
                 //优先级高时打断当前段落，并触发新段落
-                if (ChatManager.Instance.CurrentParagraphData!=null&&paragraph.ParagraphPriority > ChatManager.Instance.CurrentParagraphData.ParagraphPriority)
+                if (ChatManager.Instance.CurrentParagraphData != null && paragraph.ParagraphPriority > ChatManager.Instance.CurrentParagraphData.ParagraphPriority)
                 {
                     InterruptParagraphData = paragraph;
                     ChatManager.Instance.ParagraphToTriggeer.Remove(paragraph);
@@ -170,17 +170,9 @@ public class ChatWindow : WindowBase
         //根据消息进行实例化
         GameObject MessageObject = Instantiate(MessagePrefab, layout.transform);
         MessageObject.GetComponentInChildren<Text>().text = chatData.Message;
-
-        StartCoroutine(ScrollToBottomNextFrame());
-        return MessageObject;
-    }
-
-    private IEnumerator ScrollToBottomNextFrame()
-    {
-        for (int i = 0; i < 2; i++)
-            yield return null;
         layout.GetComponent<CustomVerticalLayout>().RefreshAllChildren();
         if (scroll != null) scroll.verticalNormalizedPosition = 0;
+        return MessageObject;
     }
 
     public void CreateChooseMessagesSequentially(List<ChatData> options)
