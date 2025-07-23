@@ -177,14 +177,14 @@ public class StateManager : MonoBehaviour
     /// <summary>
     /// 改变玩家状态
     /// </summary>
-    /// <param name="state"></param>
+    /// <param name="stateEnum"></param>
     /// <param name="delta"></param>
-    public void ChangePlayerState(PlayerStateEnum state, float delta)
+    public void ChangePlayerState(PlayerStateEnum stateEnum, float delta)
     {
-        if (!PlayerStateDict.ContainsKey(state)) return;
+        if (!PlayerStateDict.ContainsKey(stateEnum)) return;
 
         // 氧气特殊处理
-        if (state == PlayerStateEnum.Oxygen)
+        if (stateEnum == PlayerStateEnum.Oxygen)
         {
             var env = GameManager.Instance.CurEnvironmentBag;
             // 如果获取氧气时在室内环境
@@ -206,14 +206,15 @@ public class StateManager : MonoBehaviour
             }
         }
 
-        PlayerStateDict[state].AddCurValue(delta);
+        PlayerStateDict[stateEnum].AddCurValue(delta);
 
-        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, state);
+        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
     }
 
     public void ChangePlayerExtraState(PlayerStateEnum stateEnum, float delta)
     {
         PlayerStateDict[stateEnum].AddExtraValue(delta);
+        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
     }
     #endregion
 
