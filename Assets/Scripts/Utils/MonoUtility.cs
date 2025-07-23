@@ -47,11 +47,13 @@ public static class MonoUtility
     {
         RectTransform layoutTransform = layout.transform as RectTransform;
 
-        float containerHeight = layout.spacing + layout.padding.top + layout.padding.bottom;
+        float containerHeight = layout.padding.top + layout.padding.bottom;
         for (int i = 0; i < layout.transform.childCount; i++)
         {
             containerHeight += layout.transform.GetChild(i).GetComponent<RectTransform>().sizeDelta.y;
         }
+
+        containerHeight += (layout.transform.childCount - 1) * layout.spacing;
 
         layoutTransform.sizeDelta = new Vector2(layoutTransform.sizeDelta.x, containerHeight);
 

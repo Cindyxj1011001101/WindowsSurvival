@@ -1167,6 +1167,69 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: UI_checkbox_checked_hovered
+      rect:
+        serializedVersion: 2
+        x: 240
+        y: 502
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d1a3f8c073bf67449e6113f1dd92c11
+      internalID: -420838126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_checkbox_default_hovered
+      rect:
+        serializedVersion: 2
+        x: 251
+        y: 502
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1c818807cb4fb7040810b1d769d84bb1
+      internalID: 1419871759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Locked_hovered
+      rect:
+        serializedVersion: 2
+        x: 263
+        y: 502
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 725bb9841a4c3344486210952f128c56
+      internalID: -1122691988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1198,6 +1261,7 @@ TextureImporter:
       UI_CardSlot: -1859285613
       UI_HoveredFrame: 1242553631
       UI_Locked: -758408193
+      UI_Locked_hovered: -1122691988
       UI_MaximumNumber: -1474591250
       UI_NameTooltip: -1275816256
       UI_Number: -841556680
@@ -1228,7 +1292,9 @@ TextureImporter:
       UI_btn_Up_defult: -1508199800
       UI_btn_Up_hovered: 2045139253
       UI_checkbox_checked: -736511663
+      UI_checkbox_checked_hovered: -420838126
       UI_checkbox_default: 1879455347
+      UI_checkbox_default_hovered: 1419871759
   mipmapLimitGroupName: 
   pSDRemoveMatte: 1
   userData: 
