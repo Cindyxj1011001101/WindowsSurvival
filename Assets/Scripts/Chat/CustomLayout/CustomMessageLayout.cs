@@ -43,7 +43,8 @@ public class CustomMessageLayout : MonoBehaviour
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(MessageSpace.GetComponent<RectTransform>());
-        float height = MessageSpace.GetComponent<RectTransform>().rect.height;
+        float height = MessageSpace.GetComponent<RectTransform>().rect.height;  
+
         InputLine.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, height);
         float ScrollViewheight = this.transform.GetComponent<RectTransform>().rect.height - height - InputLine.GetComponent<RectTransform>().rect.height;
         ScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(ScrollView.GetComponent<RectTransform>().sizeDelta.x, ScrollViewheight);

@@ -41,22 +41,23 @@ public class ChatWindow : WindowBase
 
     public void Update()
     {
-        if (!inParagraph && ChatManager.Instance.ParagraphToTriggeer.Count > 0)
+        //检测是否有待触发段落
+        if (ChatManager.Instance.ParagraphToTriggeer.Count > 0)
         {
-            //遍历可触发段落，判断是否可以触发
+            //遍历可触发段落
             foreach (var paragraph in ChatManager.Instance.ParagraphToTriggeer)
             {
-
-                if (ChatManager.Instance.CurrentParagraphData == null)
+                //优先级高时打断当前段落，并触发新段落
+                if (ChatManager.Instance.CurrentParagraphData!=null&&paragraph.ParagraphPriority > ChatManager.Instance.CurrentParagraphData.ParagraphPriority)
                 {
-                    TriggerParagraph(paragraph);
+                    InterruptParagraphData = paragraph;
                     ChatManager.Instance.ParagraphToTriggeer.Remove(paragraph);
                     break;
                 }
-                //判断段落优先级,优先度高则打断当前段落
-                else if (paragraph.ParagraphPriority > ChatManager.Instance.CurrentParagraphData.ParagraphPriority)
+                //当前不在段落中且段落为空时直接触发
+                else if (!inParagraph && ChatManager.Instance.CurrentParagraphData == null)
                 {
-                    InterruptParagraphData = paragraph;
+                    TriggerParagraph(paragraph);
                     ChatManager.Instance.ParagraphToTriggeer.Remove(paragraph);
                     break;
                 }

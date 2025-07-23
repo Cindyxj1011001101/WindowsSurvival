@@ -45,6 +45,7 @@ public class CustomVerticalLayout : MonoBehaviour
         foreach (var child in children)
         {
             child.GetComponentInChildren<CustomTextBox>().RefreshSizeIfNeeded();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(child);
         }
         float currentY = topSpacing;
         foreach (var child in children)
