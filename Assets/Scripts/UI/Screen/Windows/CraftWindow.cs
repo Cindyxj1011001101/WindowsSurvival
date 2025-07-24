@@ -146,7 +146,10 @@ public class CraftWindow : WindowBase
         if (isRefresh)
             DisplayRecipeDetails(currentSelectedRecipe);
         else if (currentSelectedRecipe == null)
+        {
+            currentSelectedRecipe = sortedRecipes[0];
             DisplayRecipeDetails(sortedRecipes[0]);
+        }
 
         // 播放选择动效
         SelectRecipeLibraryWithTween(recipeType);

@@ -108,7 +108,10 @@ public class StudyWindow : WindowBase
         if (isRefresh)
             DisplayTechNodeDetails(curSelectedTechNode);
         else if (curSelectedTechNode == null)
-            DisplayTechNodeDetails(Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techNodes[0].name));
+        {
+            curSelectedTechNode = Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techNodes[0].name);
+            DisplayTechNodeDetails(curSelectedTechNode);
+        }
 
         SelectTechTreeWithTween(type);
     }
