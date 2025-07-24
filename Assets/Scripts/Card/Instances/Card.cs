@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -236,6 +237,7 @@ public class Event
     public void Inovke()
     {
         action?.Invoke();
+        StateManager.Instance.EndEventMusic();
     }
 
     public bool Judge()
