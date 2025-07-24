@@ -26,7 +26,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnBeginDrag(PointerEventData eventData)
     {
         // 在鼠标位置创建图标
-        cursorSlot = CardMoveTween.CreateSlot(eventData.position);
+        var screenPosition = CardMoveTween.ScreenPointToLocalPointInRectangle(eventData.position);
+        cursorSlot = CardMoveTween.CreateSlot(screenPosition);
 
         if (eventData.button == PointerEventData.InputButton.Left)
             // 左键拖拽
@@ -47,7 +48,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        dragEndPosition = eventData.position;
+        dragEndPosition = CardMoveTween.ScreenPointToLocalPointInRectangle(eventData.position);
         Destroy(cursorSlot.gameObject);
 
         if (SoundManager.Instance != null)
