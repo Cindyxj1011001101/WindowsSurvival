@@ -48,17 +48,15 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
         // 添加拖拽支持
         Transform topBar = transform.Find("TopBar");
-        dragMoveHandler = topBar.GetComponent<DragMoveHandler>();
-        if (dragMoveHandler == null)
-            dragMoveHandler = topBar.gameObject.AddComponent<DragMoveHandler>();
-        dragMoveHandler.targetToMove = transform as RectTransform;
-        dragMoveHandler.onPointerDown.AddListener(Focus);
+        if (topBar.TryGetComponent(out dragMoveHandler))
+        {
+            dragMoveHandler.targetToMove = transform as RectTransform;
+            dragMoveHandler.onPointerDown.AddListener(Focus);
+        }
 
         // 添加双击支持
-        DoubleClickHandler doubleClickHandler = topBar.GetComponent<DoubleClickHandler>();
-        if (doubleClickHandler == null)
-            doubleClickHandler = topBar.gameObject.AddComponent<DoubleClickHandler>();
-        doubleClickHandler.onDoubleClick.AddListener(MaximizeOrRestore);
+        if (topBar.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
+            doubleClickHandler.onDoubleClick.AddListener(MaximizeOrRestore);
 
         closeButton = transform.Find("TopBar/CloseButton").GetComponent<HoverableButton>();
         maximizeButton = transform.Find("TopBar/MaximizeButton").GetComponent<HoverableButton>();
@@ -128,7 +126,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         }
 
         // 启用窗口拖拽
-        dragMoveHandler.enabled = true;
+        if (dragMoveHandler != null)
+            dragMoveHandler.enabled = true;
         // 最大化按钮图标改变
         maximizeButton.normalImage.sprite = maximize_default;
         maximizeButton.hoveredImage.sprite = maximize_hovered;
@@ -201,7 +200,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         if (state == WindowState.Maximized) return;
 
         // 禁止拖拽窗口
-        dragMoveHandler.enabled = false;
+        if (dragMoveHandler != null)
+            dragMoveHandler.enabled = false;
         // 最大化按钮图标改变
         maximizeButton.normalImage.sprite = restore_default;
         maximizeButton.hoveredImage.sprite = restore_hovered;

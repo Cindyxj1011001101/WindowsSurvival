@@ -1,0 +1,109 @@
+﻿using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+public class StudyButton : HoverableButton
+{
+    public Text text;
+    public GameObject iconObject;
+    public Color lockedColor;
+    public Color complishedColor;
+
+    public float textAnimDuration = 2f;
+
+    private bool beingStudied = false;
+
+    public Animator studyingAnim;
+    
+    public void DisplayButton(ScriptableTechnologyNode techNode, UnityAction startStuyding, UnityAction stopStudying)
+    {
+        beingStudied = TechnologyManager.Instance.IsTechNodeBeingStudied(techNode);
+
+        if (!beingStudied)
+            KillAnim();
+
+        // 研究已完成
+        if (TechnologyManager.Instance.IsTechNodeComplished(techNode))
+        {
+            iconObject.SetActive(false);
+            enabled = false;
+            text.text = "已完成";
+            text.color = complishedColor;
+        }
+        // 研究正在进行
+        else if (beingStudied)
+        {
+            iconObject.SetActive(true);
+            enabled = true;
+            text.text = "研究中";
+            text.color = Color.white;
+            // 播放动效
+            PlayAnim();
+
+            // 点击暂停研究
+            onClick.RemoveAllListeners();
+            onClick.AddListener(() =>
+            {
+                stopStudying?.Invoke();
+                text.color = reversedColor;
+            });
+        }
+        // 研究未解锁
+        else if (TechnologyManager.Instance.IsTechNodeLocked(techNode))
+        {
+            iconObject.SetActive(false);
+            enabled = false;
+            text.text = "未解锁";
+            text.color = lockedColor;
+        }
+        // 可以进行研究
+        else
+        {
+            iconObject.SetActive(true);
+            enabled = true;
+            text.text = "开始研究";
+            text.color = Color.white;
+
+            // 点击开始研究
+            onClick.RemoveAllListeners();
+            onClick.AddListener(() =>
+            {
+                startStuyding?.Invoke();
+                text.color = reversedColor;
+            });
+        }
+    }
+
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        base.OnPointerEnter(eventData);
+        if (beingStudied)
+        {
+            KillAnim();
+            text.text = "暂停研究";
+        }
+    }
+
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        base.OnPointerExit(eventData);
+        if (beingStudied)
+        {
+            text.text = "研究中";
+            PlayAnim();
+        }
+    }
+
+    private void PlayAnim()
+    {
+        studyingAnim.ResetTrigger("Stop");
+        studyingAnim.SetTrigger("Play");
+    }
+
+    private void KillAnim()
+    {
+        studyingAnim.ResetTrigger("Play");
+        studyingAnim.SetTrigger("Stop");
+    }
+}

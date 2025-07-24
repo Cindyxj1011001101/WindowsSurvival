@@ -862,6 +862,8 @@ GameObject:
   - component: {fileID: 815469033647639686}
   - component: {fileID: 7113258066869739837}
   - component: {fileID: 3253440788602761270}
+  - component: {fileID: 8282762384043523530}
+  - component: {fileID: 1214525979115264105}
   m_Layer: 5
   m_Name: TopBar
   m_TagString: Untagged
@@ -932,6 +934,38 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &8282762384043523530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514480702320513607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eefec68fc3292944bf54802c7841d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetToMove: {fileID: 0}
+  onPointerDown:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1214525979115264105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514480702320513607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b2068d30dc5594d97e907c2f78e721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doubleClickInterval: 0.3
+  onDoubleClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &561584362349988068
 GameObject:
   m_ObjectHideFlags: 0

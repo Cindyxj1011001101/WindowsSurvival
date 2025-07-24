@@ -140,10 +140,10 @@ public class StateManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
-        EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
         InitPlayerState();
         InitElectricity();
         InitWaterLevel();
+        EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
     }
 
     private void OnDestroy()
@@ -192,19 +192,27 @@ public class StateManager : MonoBehaviour
             // 如果获取氧气时在室内环境
             if (env.PlaceData.isIndoor)
             {
-                // 优先释放到环境
-                // 计算能释放多少
-                var toRelease = Mathf.Min(env.StateDict[EnvironmentStateEnum.Oxygen].RemainingCapacity, delta);
-                if (toRelease > 0)
-                    // 释放到环境
-                    env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, toRelease);
+                // 如果是消耗氧气，优先消耗环境
+                if (delta < 0)
+                {
 
-                // 计算释放到环境之后还剩多少
-                var left = delta - toRelease;
-                // 加入玩家的氧气
-                if (left > 0)
-                    PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(left);
-                return;
+                }
+                // 如果是补充氧气，优先补充到玩家
+                if (delta > 0)
+                {
+                    // 计算能释放多少
+                    var toRelease = Mathf.Min(env.StateDict[EnvironmentStateEnum.Oxygen].RemainingCapacity, delta);
+                    if (toRelease > 0)
+                        // 释放到环境
+                        env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, toRelease);
+
+                    // 计算释放到环境之后还剩多少
+                    var left = delta - toRelease;
+                    // 加入玩家的氧气
+                    if (left > 0)
+                        PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(left);
+                    return;
+                }
             }
         }
 
