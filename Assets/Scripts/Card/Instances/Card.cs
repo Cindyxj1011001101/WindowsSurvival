@@ -237,38 +237,7 @@ public class Event
     public void Inovke()
     {
         action?.Invoke();
-        EndEvent();
-    }
-
-    // 添加这个字段来缓存上次的危险状态
-    private DangerLevelEnum _lastDangerLevel = DangerLevelEnum.None;
-
-    public void EndEvent()
-    {
-        // 获取当前危险状态
-        var currentLevel = StateManager.Instance.DangerLevel;
-        
-        // 如果状态没有变化，直接返回
-        if (currentLevel == _lastDangerLevel) return;
-        
-        // 更新缓存的状态
-        _lastDangerLevel = currentLevel;
-        
-        // 根据新状态处理音乐
-        switch (currentLevel)
-        {
-            case DangerLevelEnum.None:
-                SoundManager.Instance.PlayCurEnvironmentMusic();
-                break;
-                
-            case DangerLevelEnum.Low:
-                SoundManager.Instance.PlayBGM("心跳_01", true, 1f, 1f);
-                break;
-                
-            case DangerLevelEnum.High:
-                SoundManager.Instance.PlayBGM("心跳_01", true, 1f, 1.5f);
-                break;
-        }
+        StateManager.Instance.EndEventMusic();
     }
 
     public bool Judge()
