@@ -1176,7 +1176,7 @@ TextureImporter:
         width: 10
         height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1197,7 +1197,7 @@ TextureImporter:
         width: 10
         height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1218,7 +1218,7 @@ TextureImporter:
         width: 9
         height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1226,6 +1226,48 @@ TextureImporter:
       bones: []
       spriteID: 725bb9841a4c3344486210952f128c56
       internalID: -1122691988
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_2
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 410
+        width: 80
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 6, z: 0, w: 6}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c572daa9cb207446b806944d1421a37
+      internalID: 1505840638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_3
+      rect:
+        serializedVersion: 2
+        x: 210
+        y: 403
+        width: 80
+        height: 3
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ef89b1c5a29e2b4f9f6b2b2db948728
+      internalID: 488781603
       vertices: []
       indices: 
       edges: []
@@ -1244,6 +1286,7 @@ TextureImporter:
       UI_0: 940146804
       UI_1: -393629588
       UI_19: -1067156244
+      UI_2: 1505840638
       UI_20: 1605050901
       UI_21: 688397521
       UI_22: -561198943
@@ -1254,6 +1297,7 @@ TextureImporter:
       UI_27: 1579222815
       UI_28: -819797999
       UI_29: -150795827
+      UI_3: 488781603
       UI_30: -704582210
       UI_Arrow: -817005766
       UI_Card: 470443997
