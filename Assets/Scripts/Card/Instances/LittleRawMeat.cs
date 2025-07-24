@@ -7,7 +7,7 @@ public class LittleRawMeat : Card
 {
     private LittleRawMeat()
     {
-        events = new()
+        Events = new()
         {
             new Event("食用", "食用小块生肉", Event_Eat, null)
         };

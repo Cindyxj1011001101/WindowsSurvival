@@ -30,7 +30,7 @@ public class ChatConditionManager : MonoBehaviour
         foreach (var paragraph in ChatManager.Instance.ParagraphDataList)
         {
             AddParagraphCondition(paragraph);
-            Debug.Log($"开始检测段落条件: {paragraph.TriggerParagraphCondition}");
+            //Debug.Log($"开始检测段落条件: {paragraph.TriggerParagraphCondition}");
         }
     }
     public void DetectChatCondition(ChatData chatData)
@@ -52,7 +52,7 @@ public class ChatConditionManager : MonoBehaviour
     #region 触发行为
     public void TriggerAction(SubscribeActionArgs args)
     {
-        Debug.Log($"触发行为: {args.type} {args.value}");
+        //Debug.Log($"触发行为: {args.type} {args.value}");
         Dictionary<string, Condition> tmpDic=new Dictionary<string, Condition>(DetectedConditions);
         foreach (var condition in tmpDic.Values)
         {
@@ -66,7 +66,7 @@ public class ChatConditionManager : MonoBehaviour
     public void StartChatConditionDetection(ChatData chatData)
     {
         AddChatCondition(chatData);
-        Debug.Log($"开始检测对话条件: {chatData.MessageCondition}");
+        //Debug.Log($"开始检测对话条件: {chatData.MessageCondition}");
     }
     public void AddParagraphCondition(ParagraphData paragraphData)
     {

@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -27,36 +28,69 @@ public enum CardType
 //卡牌基类
 public abstract class Card : IComparable<Card>
 {
-    public string cardId; // 卡牌ID
-    public string cardName; // 显示名称
-    public string cardDesc; // 描述
-    public CardType cardType; // 卡牌类型
-    public int maxStackNum; // 最大堆叠数
-    public bool moveable; // 能否移动
-    public float weight; // 重量
-    public List<CardTag> tags = new(); // 标签
-    public Dictionary<Type, ICardComponent> components = new();
+    #region 属性
+    [JsonProperty]
+    public string CardId { get; private set; } // 卡牌ID
+    //public string CardName; // 显示名称
+    //public string CardDesc; // 描述
+    //public CardType CardType; // 卡牌类型
+    //public int MaxStackNum; // 最大堆叠数
+    //public bool Moveable; // 能否移动
+    //public float Weight; // 重量
+    //public List<CardTag> Tags = new(); // 标签
+    [JsonProperty]
+    protected Dictionary<Type, ICardComponent> components = new();
 
     [JsonIgnore]
-    public List<Event> events = new(); // 可交互事件
+    public List<Event> Events { get; protected set; } = new(); // 可交互事件
 
     [JsonIgnore]
-    public CardSlot slot;
+    public CardSlot Slot { get; private set; }
 
     [JsonIgnore]
-    public Sprite CardImage => CardFactory.GetCardImage(cardId);
+    public string CardName => CardFactory.GetCardName(CardId);
 
     [JsonIgnore]
-    public bool IsBigIcon => CardFactory.GetIsBigIcon(cardId);
+    public string ExtraInfo => CardFactory.GetExtraInfo(CardId);
+
+    [JsonIgnore]
+    public string CardDesc => CardFactory.GetCardDesc(CardId);
+
+    [JsonIgnore]
+    public CardType CardType => CardFactory.GetCardType(CardId);
+
+    [JsonIgnore]
+    public int MaxStackNum => CardFactory.GetMaxStackNum(CardId);
+
+    [JsonIgnore]
+    public bool Moveable => CardFactory.GetMoveable(CardId);
+
+    [JsonIgnore]
+    public float Weight => CardFactory.GetWeight(CardId);
+
+    [JsonIgnore]
+    public List<CardTag> Tags => CardFactory.GetTags(CardId);
+
+    [JsonIgnore]
+    public Sprite CardImage => CardFactory.GetCardImage(CardId);
+
+    [JsonIgnore]
+    public bool IsBigIcon => CardFactory.GetIsBigIcon(CardId);
+    #endregion
 
     /// <summary>
     /// 每回合结算时执行
     /// </summary>
     protected virtual Action OnUpdate { get; } = null;
 
+    public void SetCardId(string cardId)
+    {
+        CardId = cardId;
+    }
+
     public void SetCardSlot(CardSlot slot)
     {
-        this.slot = slot;
+        Slot = slot;
     }
 
     /// <summary>
@@ -86,13 +120,13 @@ public abstract class Card : IComparable<Card>
             if (component.durability <= 0)
                 DestroyThis();
             else
-                slot.RefreshCurrentDisplay();
+                Slot.RefreshCurrentDisplay();
         }
     }
 
     public virtual void DestroyThis()
     {
-        slot.RemoveCard(this);
+        Slot.RemoveCard(this);
         StopUpdating();
     }
 
@@ -112,6 +146,13 @@ public abstract class Card : IComparable<Card>
 
         component = default;
         return false;
+    }
+
+    public void AddComponent(Type type, ICardComponent component)
+    {
+        if (components.ContainsKey(type)) return;
+
+        components.Add(type, component);
     }
 
     /// <summary>
@@ -156,15 +197,15 @@ public abstract class Card : IComparable<Card>
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine($"卡牌名称: {cardName}");
-        sb.AppendLine($"卡牌描述: {cardDesc}");
-        sb.AppendLine($"卡牌类型: {cardType}");
-        sb.AppendLine($"最大堆叠数: {maxStackNum}");
-        sb.AppendLine($"可移动: {moveable}");
-        sb.AppendLine($"重量: {weight}");
-        sb.AppendLine($"标签: {string.Join(", ", tags)}");
-        sb.AppendLine($"事件数量: {events.Count}");
-        foreach (var ev in events)
+        sb.AppendLine($"卡牌名称: {CardName}");
+        sb.AppendLine($"卡牌描述: {CardDesc}");
+        sb.AppendLine($"卡牌类型: {CardType}");
+        sb.AppendLine($"最大堆叠数: {MaxStackNum}");
+        sb.AppendLine($"可移动: {Moveable}");
+        sb.AppendLine($"重量: {Weight}");
+        sb.AppendLine($"标签: {string.Join(", ", Tags)}");
+        sb.AppendLine($"事件数量: {Events.Count}");
+        foreach (var ev in Events)
         {
             sb.AppendLine($"  - 事件名称: {ev.name}, 描述: {ev.description}");
         }
@@ -196,6 +237,7 @@ public class Event
     public void Inovke()
     {
         action?.Invoke();
+        StateManager.Instance.EndEventMusic();
     }
 
     public bool Judge()

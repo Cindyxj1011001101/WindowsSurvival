@@ -38,6 +38,10 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     private bool focused = false;
 
+    private Sequence anim;
+
+    public bool IsPlayingAnim => anim != null && anim.IsActive();
+
     protected override void Awake()
     {
         base.Awake();
@@ -134,18 +138,21 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = true;
 
-        Sequence restoreSequence = DOTween.Sequence();
+        if (IsPlayingAnim)
+            anim.Kill();
 
-        restoreSequence.Join(transform.DOMove(lastPosition, animDuration));
-        restoreSequence.Join(transform.DOScale(lastScale, animDuration));
-        restoreSequence.Join(GetComponent<RectTransform>().DOSizeDelta(lastSizeDelta, animDuration));
+        anim = DOTween.Sequence();
 
-        restoreSequence.OnComplete(() =>
+        anim.Join(transform.DOMove(lastPosition, animDuration));
+        anim.Join(transform.DOScale(lastScale, animDuration));
+        anim.Join(GetComponent<RectTransform>().DOSizeDelta(lastSizeDelta, animDuration));
+
+        anim.OnComplete(() =>
         {
             canvasGroup.interactable = true;
         });
 
-        restoreSequence.Play();
+        anim.Play();
     }
 
     public void Close()
@@ -174,16 +181,19 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         canvasGroup.blocksRaycasts = true;
 
         // 使用DOTween创建动画序列
-        Sequence minimizeSequence = DOTween.Sequence();
+        if (IsPlayingAnim)
+            anim.Kill();
+
+        anim = DOTween.Sequence();
 
         // 同时执行缩小和移动动画
-        minimizeSequence.Join(transform.DOScale(Vector3.one * .1f, animDuration));
-        minimizeSequence.Join(transform.DOMove(shortcut.position, animDuration));
+        anim.Join(transform.DOScale(Vector3.one * .01f, animDuration));
+        anim.Join(transform.DOMove(shortcut.position, animDuration));
 
-        minimizeSequence.OnComplete(() => { canvasGroup.blocksRaycasts = false; });
+        anim.OnComplete(() => { canvasGroup.blocksRaycasts = false; });
 
         // 播放动画
-        minimizeSequence.Play();
+        anim.Play();
     }
 
     public void Maximize()
@@ -209,19 +219,22 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         canvasGroup.blocksRaycasts = true;
 
         // 使用DOTween创建动画序列
-        Sequence maximizeSequence = DOTween.Sequence();
+        if (IsPlayingAnim)
+            anim.Kill();
+
+        anim = DOTween.Sequence();
 
         // 同时执行移动和缩放动画
-        maximizeSequence.Join(transform.DOMove(targetRect.position, animDuration));
-        maximizeSequence.Join(transform.DOScale(Vector3.one, animDuration));
-        maximizeSequence.Join(GetComponent<RectTransform>().DOSizeDelta(targetRect.rect.size, animDuration));
-        maximizeSequence.OnComplete(() =>
+        anim.Join(transform.DOMove(targetRect.position, animDuration));
+        anim.Join(transform.DOScale(Vector3.one, animDuration));
+        anim.Join(GetComponent<RectTransform>().DOSizeDelta(targetRect.rect.size, animDuration));
+        anim.OnComplete(() =>
         {
             canvasGroup.interactable = true;
         });
 
         // 播放动画
-        maximizeSequence.Play();
+        anim.Play();
     }
 
     private void MaximizeOrRestore()

@@ -5,7 +5,7 @@ public class DoorToCockpit : Card
 {
     private DoorToCockpit()
     {
-        events = new()
+        Events = new()
         {
             new Event("前往", "前往驾驶室", Event_Move, null)
         };

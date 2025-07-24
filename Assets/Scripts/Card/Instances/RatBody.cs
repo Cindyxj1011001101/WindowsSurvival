@@ -7,7 +7,7 @@ public class RatBody : Card
 {
     private RatBody()
     {
-        events = new()
+        Events = new()
         {
             new Event("食用", "食用老鼠尸体", Event_Eat, null),
             new Event("用手剥", "用手剥老鼠尸体", Event_PeelByHand, null),

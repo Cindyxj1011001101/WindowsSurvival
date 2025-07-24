@@ -62,10 +62,10 @@ public class BottomBar : MonoBehaviour
         selectRect.anchoredPosition = startPos;
 
         Vector2 targetPos = (shortcuts[appName].transform as RectTransform).anchoredPosition;
-        Vector2 targetSize = selectRect.sizeDelta;
-        Vector2 stretchedSize = new Vector2(
-            targetSize.x * 1.2f, // 拉伸比例
-            targetSize.y);
+        //Vector2 targetSize = selectRect.sizeDelta;
+        //Vector2 stretchedSize = new Vector2(
+        //    targetSize.x * 1.2f, // 拉伸比例
+        //    targetSize.y);
 
         // 显示选中框
         selectRect.gameObject.SetActive(true);
@@ -74,11 +74,11 @@ public class BottomBar : MonoBehaviour
         currentAnimation = DOTween.Sequence();
 
         // 第一步：移动到目标位置并拉伸
-        currentAnimation.Append(selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad));
-        currentAnimation.Join(selectRect.DOSizeDelta(stretchedSize, 0.2f).SetEase(Ease.OutQuad));
+        currentAnimation.Append(selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutBack));
+        //currentAnimation.Join(selectRect.DOSizeDelta(stretchedSize, 0.2f).SetEase(Ease.OutQuad));
 
         // 第二步：收缩回正常大小
-        currentAnimation.Append(selectRect.DOSizeDelta(targetSize, 0.15f).SetEase(Ease.OutBack));
+        //currentAnimation.Append(selectRect.DOSizeDelta(targetSize, 0.15f).SetEase(Ease.OutBack));
 
         selectedAppName = appName;
     }

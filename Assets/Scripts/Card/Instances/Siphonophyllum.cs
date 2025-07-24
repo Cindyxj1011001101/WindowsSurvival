@@ -7,7 +7,7 @@ public class Siphonophyllum : Card
 {
     private Siphonophyllum()
     {
-        events = new()
+        Events = new()
         {
             new Event("切割", "切割虹吸海葵", Event_Cut, Judge_Cut)
         };

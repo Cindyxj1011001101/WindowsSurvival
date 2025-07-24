@@ -7,7 +7,7 @@ public class SiphonophyllumWithProduct : Card
 {
     private SiphonophyllumWithProduct()
     {
-        events = new()
+        Events = new()
         {
             new Event("切割", "切割虹吸海葵", Event_Cut, Judge_Cut),
             new Event("采集", "采集虹吸海葵", Event_Collect, null)
@@ -32,7 +32,7 @@ public class SiphonophyllumWithProduct : Card
 
     public void Event_Collect()
     {
-        var sourceBag = slot.Bag;
+        var sourceBag = Slot.Bag;
         DestroyThis();
         // 变回虹吸海葵
         GameManager.Instance.AddCard("虹吸海葵", sourceBag is PlayerBag);

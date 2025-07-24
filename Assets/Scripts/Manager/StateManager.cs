@@ -26,6 +26,15 @@ public enum EnvironmentStateEnum
     HasCable,
     PressureLevel
 }
+/// <summary>
+/// 当前危险程度
+/// </summary>
+public enum DangerLevelEnum
+{
+    None,
+    Low,
+    High
+}
 
 /// <summary>
 /// 玩家状态类
@@ -61,6 +70,7 @@ public class PlayerState
         this.extraValue = extraValue;
         stateEnum = state;
     }
+    
 }
 
 /// <summary>
@@ -106,6 +116,7 @@ public class StateManager : MonoBehaviour
     /// 飞船水平面高度
     /// </summary>
     public EnvironmentState WaterLevel { get; set; }
+    public DangerLevelEnum DangerLevel => StateManager.Evaluate(PlayerStateDict);
 
     #region 单例
     private static StateManager instance;
@@ -289,13 +300,13 @@ public class StateManager : MonoBehaviour
 
     /// <summary>
     /// 饥饿导致的额外变化结算
-    /// 饱食低于20，每回合-0.3精神
+    /// 饱食低于30，每回合-0.3精神
     /// 饱食低于10，每回合-0.7精神
     /// 饱食为0时，每回合-1精神，-8 健康
     /// </summary>
     private void ExtraFullnessChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 20)
+        if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 30)
         {
             ChangePlayerState(PlayerStateEnum.San, -0.3f);
         }
@@ -323,13 +334,13 @@ public class StateManager : MonoBehaviour
 
     /// <summary>
     /// 口渴导致的额外变化结算
-    /// 水分低于20，每回合-0.3精神
+    /// 水分低于30，每回合-0.3精神
     /// 水分低于10，每回合-0.7精神
     /// 口渴为0时，每回合-1精神，-8健康
     /// </summary>
     private void ExtraThirstChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 20)
+        if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 30)
         {
             ChangePlayerState(PlayerStateEnum.San, -0.3f);
         }
@@ -364,9 +375,9 @@ public class StateManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 疲劳导致的额外变化结算
-    /// 困倦大于70每回合-0.5精神
-    /// 困倦大于90后每回合-1.5精神，-2健康
+    /// 清醒度导致的额外变化结算
+    /// 清醒度小于等于30每回合-0.5精神
+    /// 清醒度小于等于10后每回合-1.5精神，-2健康
     /// </summary>
     private void ExtraSobrietyChange()
     {
@@ -383,6 +394,66 @@ public class StateManager : MonoBehaviour
         {
             ChangePlayerState(PlayerStateEnum.San, -6f);
             ChangePlayerState(PlayerStateEnum.Health, -4f);
+        }
+    }
+    
+    // 危险阈值配置
+    private static readonly Dictionary<PlayerStateEnum, (float high, float low)> _thresholds = new()
+    {
+        { PlayerStateEnum.Health, (10f, 30f) },//健康
+        { PlayerStateEnum.Fullness, (10f, 30f) },//饱食
+        { PlayerStateEnum.Thirst, (10f, 30f) },//水分
+        { PlayerStateEnum.Sobriety, (10f, 30f) },//清醒度
+        { PlayerStateEnum.San, (10f, 30f) },//精神
+        { PlayerStateEnum.Oxygen, (10f, 25f) },//氧气
+    };
+    //一个用于判断危险状态的静态方法，会根据之前的危险阈值配置和当前状态值，来评估当前的危险等级
+    public static DangerLevelEnum Evaluate(Dictionary<PlayerStateEnum, PlayerState> states)
+    {
+        bool hasHigh = false, hasLow = false;
+        
+        foreach (var (state, (high, low)) in _thresholds)
+        {
+            if (!states.TryGetValue(state, out var s)) continue;
+            
+            float value = s.CurValue;
+            if (value <= high) return DangerLevelEnum.High; // 发现高危立即返回
+            if (value <= low) hasLow = true;
+        }
+
+        return hasLow ? DangerLevelEnum.Low : DangerLevelEnum.None;
+    }
+    // 缓存上次的危险状态
+    public DangerLevelEnum _lastDangerLevel = DangerLevelEnum.None;
+    //处于危险状态时，就播放心跳声，离开就播放环境音乐
+    //如果上次的状态和这次一致，就不切音乐
+    public void EndEventMusic()
+    {
+        // 获取当前危险状态
+        var currentLevel = StateManager.Instance.DangerLevel;
+
+        // 如果状态没有变化，直接返回
+        if (currentLevel == StateManager.Instance._lastDangerLevel) return;
+
+        // 更新缓存的状态
+        StateManager.Instance._lastDangerLevel = currentLevel;
+        // 应用低通滤波等音效变化
+        SoundManager.Instance.ApplyDangerEffects(currentLevel);
+
+        // 根据新状态处理音乐
+        switch (currentLevel)
+        {
+            case DangerLevelEnum.None:
+                SoundManager.Instance.PlayCurEnvironmentMusic();
+                break;
+
+            case DangerLevelEnum.Low:
+                SoundManager.Instance.PlayBGM("心跳_01", true, 1f, 1f);
+                break;
+
+            case DangerLevelEnum.High:
+                SoundManager.Instance.PlayBGM("心跳_01", true, 1f, 1.5f);
+                break;
         }
     }
 

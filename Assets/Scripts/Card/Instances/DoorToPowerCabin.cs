@@ -5,7 +5,7 @@ public class DoorToPowerCabin : Card
 {
     private DoorToPowerCabin()
     {
-        events = new()
+        Events = new()
         {
             new Event("前往", "前往动力舱", Event_Move, null)
         };

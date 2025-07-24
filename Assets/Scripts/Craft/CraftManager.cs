@@ -85,9 +85,9 @@ public class CraftManager
 
         // 掉落制作出的卡牌
         // 如果是建筑卡牌，则优先掉落到环境里
-        GameManager.Instance.AddCard(card, card.cardType != CardType.Construction);
+        GameManager.Instance.AddCard(card, card.CardType != CardType.Construction);
 
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", card.cardName));
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", card.CardName));
 
         // 消耗时间
         TimeManager.Instance.AddTime(recipe.craftTime);
