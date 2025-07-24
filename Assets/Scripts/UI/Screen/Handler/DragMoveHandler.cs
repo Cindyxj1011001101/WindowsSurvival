@@ -57,8 +57,8 @@ public class DragMoveHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
 
         // 限制 newPosition 在 Canvas 范围内
         newPosition.x = Mathf.Clamp(newPosition.x, -canvasSize.x / 2, canvasSize.x / 2);
-        // 82 = 屏幕可视范围距离顶端的距离，60 = 顶边栏的高度，62 = 屏幕可视范围距离底端的距离，8 = 微调
-        newPosition.y = Mathf.Clamp(newPosition.y, -canvasSize.y / 2 - halfHeight + 82 + 60 - 8, canvasSize.y / 2 - halfHeight - 62 - 8);
+        // 70 = 屏幕可视范围距离顶端的距离，60 = 顶边栏的高度，74 = 屏幕可视范围距离底端的距离，2 = 微调
+        newPosition.y = Mathf.Clamp(newPosition.y, -canvasSize.y / 2 - halfHeight + 70 + 60 + 2, canvasSize.y / 2 - halfHeight - 74 + 2);
 
         // 设置新的锚点位置
         targetToMove.anchoredPosition = newPosition;
