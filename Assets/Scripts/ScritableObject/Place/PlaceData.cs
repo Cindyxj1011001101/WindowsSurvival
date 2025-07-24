@@ -9,6 +9,7 @@ public class PlaceData : ScriptableObject
     public bool isIndoor;
     public bool isInWater;
     public bool isInSpacecraft;
+    public Sprite placeImage;
 
     private void OnValidate()
     {

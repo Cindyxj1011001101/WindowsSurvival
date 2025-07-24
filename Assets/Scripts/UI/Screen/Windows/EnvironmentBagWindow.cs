@@ -14,10 +14,9 @@ public enum PressureLevel
 
 public class EnvironmentBagWindow : BagWindow
 {
-    //[SerializeField] private Text discoveryDegreeText; // 探索度显示
     [SerializeField] private StateSlider discoveryDegreeSlider; // 探索度显示
     [SerializeField] private Text placeNameText; // 环境名称
-    //[SerializeField] private Text placeDetailsText; // 环境详情
+    [SerializeField] private Image environmentImage; // 环境图片
     [SerializeField] private HoverableButton discoverButton; // 探索按钮
     [SerializeField] private RectTransform stateLayout;
 
@@ -51,7 +50,7 @@ public class EnvironmentBagWindow : BagWindow
     }
 
     /// <summary>
-    /// 移动到指定环境袋
+    /// 移动到指定环境
     /// </summary>
     private void OnMove(EnvironmentBag curEnvironmentBag)
     {
@@ -68,12 +67,16 @@ public class EnvironmentBagWindow : BagWindow
         hasCabbleToggle.SetStateName("铺设电缆");
         hasCabbleToggle.SetValue(curEnvironmentBag.HasCable);
 
-        // 电力都显示
-        var slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/SliderState"), stateLayout).GetComponent<StateSlider>();
-        slider.SetStateName("电力");
-        slider.displayPercentage = false;
-        slider.SetValue(StateManager.Instance.Electricity);
-        stateSliders.Add(EnvironmentStateEnum.Electricity, slider);
+        // 铺设电缆才显示电力
+        StateSlider slider;
+        if (curEnvironmentBag.HasCable)
+        {
+            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/SliderState"), stateLayout).GetComponent<StateSlider>();
+            slider.SetStateName("电力");
+            slider.displayPercentage = false;
+            slider.SetValue(StateManager.Instance.Electricity);
+            stateSliders.Add(EnvironmentStateEnum.Electricity, slider);
+        }
 
         // 在飞船内显示水平面高度
         if (curEnvironmentBag.StateDict.ContainsKey(EnvironmentStateEnum.WaterLevel))
@@ -105,10 +108,11 @@ public class EnvironmentBagWindow : BagWindow
         // 探索事件
         discoverButton.onClick.RemoveAllListeners();
         discoverButton.onClick.AddListener(GameManager.Instance.HandleExplore);
+
+        // 显示图片
+        environmentImage.sprite = curEnvironmentBag.PlaceData.placeImage;
+        environmentImage.SetNativeSize();
     }
-
-    
-
 
     /// <summary>
     /// 单个环境状态变化UI刷新
