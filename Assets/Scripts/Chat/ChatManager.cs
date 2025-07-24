@@ -65,7 +65,7 @@ public class ChatManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
         EventManager.Instance.AddListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
         ExcelReader.ReadChat("test");
-        //GameDataManager.Instance.LoadGeneratedChatData();
+        GameDataManager.Instance.LoadGeneratedChatData();
         if (GeneratedChatDataList.Count == 0)//没有生成过对话时
         {
             ParagraphToTriggeer.Add(ParagraphDataList[0]);//添加新手引导

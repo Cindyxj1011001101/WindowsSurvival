@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
@@ -7,7 +8,6 @@ public enum MessageSenderEnum
     Player,//玩家
     Aside//旁白
 }
-
 public class ChatData
 {
     public int MessageID;//消息ID
@@ -20,8 +20,11 @@ public class ChatData
     public int WaitTime;//播放本句后的等待时间
     public string TriggerMessageEffect;//消息触发时效果
 
+    public ChatData(){}
+
     public ChatData(int paragraphID,DataRow row)
     {
+        if(row==null)return;
         MessageID = int.Parse(row[0].ToString());
         ParagraphID = paragraphID;
         switch(row[2].ToString())

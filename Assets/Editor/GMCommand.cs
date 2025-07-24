@@ -145,6 +145,13 @@ public class GMCommand
         GameDataManager.Instance.SaveEquipmentData();
     }
 
+    [MenuItem("Command/保存/所有数据存档")]
+    public static void SaveAllData()
+    {
+        GameDataManager.Instance.SaveAllData();
+    }
+
+
     [MenuItem("Command/时间+50min")]
     public static void L()
     {

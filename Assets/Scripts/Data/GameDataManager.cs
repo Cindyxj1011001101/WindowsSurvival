@@ -2,36 +2,82 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class GameDataManager
 {
     private static GameDataManager instance = new();
     public static GameDataManager Instance => instance;
 
-    private GameDataManager()
+    public string CurLoadName;
+
+    public void LoadAllData(int index)
     {
+        CurLoadName = "GameData" + index;
+        loadData.loads[index] = new Load(new DateTime(2020, 1, 1, 0, 0, 0)); ;
         // 玩家背包
-        playerBagData = JsonManager.LoadData<BagRuntimeData>("PlayerBag");
+        playerBagData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "PlayerBag");
         // 上次地点
-        lastPlace = JsonManager.LoadData<int>("LastPlace");
+        lastPlace = JsonManager.LoadData<int>(CurLoadName, "LastPlace");
         // 环境
         environmentBagDataDict = new();
         foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
         {
-            environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(place.ToString() + "Bag"));
+            environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
         }
         // 音频数据
-        audioData = JsonManager.LoadData<AudioData>("Audio");
+        audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
         // 已解锁的配方
-        unlockedRecipes = JsonManager.LoadData<List<string>>("UnlockedRecipes");
+        unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
         // 科技数据
-        technologyData = JsonManager.LoadData<TechnologyData>("Technology");
+        technologyData = JsonManager.LoadData<TechnologyData>(CurLoadName, "Technology");
         // 装备数据
-        equipmentData = JsonManager.LoadData<BagRuntimeData>("Equipment");
+        equipmentData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "Equipment");
+        // 已生成的对话
+        generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
         // 其他数据
-        gameRuntimeData = JsonManager.LoadData<GameRuntimeData>("GameRuntimeData");
+        gameRuntimeData = JsonManager.LoadData<GameRuntimeData>(CurLoadName, "GameRuntimeData");
     }
+    public void SaveAllData()
+    {
 
+        // 玩家背包
+        SavePlayerBagRuntimeData();
+        // 上次地点
+        SaveLastPlace();
+        // 环境
+        SaveEnvironmentBagRuntimeData();
+        // 音频数据
+        SaveAudioData();
+        // 已解锁的配方
+        SaveUnlockedRecipes();
+        // 科技数据
+        SaveTechnologyData();
+        // 装备数据
+        SaveEquipmentData();
+        // 已生成的对话
+        SaveGeneratedChatData();
+        // 其他数据
+        SaveGameRuntimeData();
+        int index = int.Parse(CurLoadName[CurLoadName.Length - 1].ToString());
+        loadData.loads[index].GameTime = gameRuntimeData.CurTime;
+        SaveLoadData();
+        SceneManager.LoadScene(0);
+
+    }
+    #region 存档数据
+    private LoadData loadData;
+
+    public LoadData LoadData => loadData;
+    public void SaveLoadData()
+    {
+        JsonManager.SaveData(loadData, "LoadData", "LoadData");
+    }
+    public void LoadLoadData()
+    {
+        loadData = JsonManager.LoadData<LoadData>("LoadData", "LoadData");
+    }
+    #endregion
     #region 玩家背包
     private BagRuntimeData playerBagData;
 
@@ -46,7 +92,12 @@ public class GameDataManager
         {
             playerBagData.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
         }
-        JsonManager.SaveData(playerBagData, "PlayerBag");
+        JsonManager.SaveData(playerBagData, CurLoadName, "PlayerBag");
+    }
+
+    public void LoadPlayerBagRuntimeData()
+    {
+        playerBagData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "PlayerBag");
     }
     #endregion
 
@@ -59,7 +110,12 @@ public class GameDataManager
 
     public void SaveLastPlace()
     {
-        JsonManager.SaveData(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, "LastPlace");
+        JsonManager.SaveData(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType, CurLoadName, "LastPlace");
+    }
+
+    public void LoadLastPlace()
+    {
+        lastPlace = JsonManager.LoadData<int>(CurLoadName, "LastPlace");
     }
     #endregion
 
@@ -70,6 +126,14 @@ public class GameDataManager
     public EnvironmentBagRuntimeData GetEnvironmentBagDataByPlace(PlaceEnum place)
     {
         return environmentBagDataDict[place];
+    }
+
+    public void LoadEnvironmentBagRuntimeData()
+    {
+        foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
+        {
+            environmentBagDataDict[place] = JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag");
+        }
     }
 
     /// <summary>
@@ -89,9 +153,10 @@ public class GameDataManager
             {
                 data.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
             }
-            JsonManager.SaveData(data, place.ToString() + "Bag");
+            JsonManager.SaveData(data, CurLoadName, place.ToString() + "Bag");
         }
     }
+
     #endregion
 
     #region 音频
@@ -117,7 +182,12 @@ public class GameDataManager
 
     public void SaveAudioData()
     {
-        JsonManager.SaveData(audioData, "Audio");
+        JsonManager.SaveData(audioData, CurLoadName, "Audio");
+    }
+
+    public void LoadAudioData()
+    {
+        audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
     }
 
     #endregion
@@ -129,7 +199,12 @@ public class GameDataManager
 
     public void SaveUnlockedRecipes()
     {
-        JsonManager.SaveData(unlockedRecipes, "UnlockedRecipes");
+        JsonManager.SaveData(unlockedRecipes, CurLoadName, "UnlockedRecipes");
+    }
+
+    public void LoadUnlockedRecipes()
+    {
+        unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
     }
     #endregion
 
@@ -140,7 +215,12 @@ public class GameDataManager
 
     public void SaveTechnologyData()
     {
-        JsonManager.SaveData(technologyData, "Technology");
+        JsonManager.SaveData(technologyData, CurLoadName, "Technology");
+    }
+
+    public void LoadTechnologyData()
+    {
+        technologyData = JsonManager.LoadData<TechnologyData>(CurLoadName, "Technology");
     }
     #endregion
 
@@ -159,7 +239,12 @@ public class GameDataManager
             new() { cardList = bag.backSlot.Cards },
             new() { cardList = bag.legSlot.Cards }
         };
-        JsonManager.SaveData(equipmentData, "Equipment");
+        JsonManager.SaveData(equipmentData, CurLoadName, "Equipment");
+    }
+
+    public void LoadEquipmentData()
+    {
+        equipmentData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "Equipment");
     }
     #endregion
 
@@ -169,14 +254,14 @@ public class GameDataManager
 
     public void SaveGeneratedChatData()
     {
-        generatedChatData = new GeneratedChatData();
-        generatedChatData.GeneratedChatDataList = ChatManager.Instance.GeneratedChatDataList;
-        JsonManager.SaveData(generatedChatData, "GeneratedChatData");
+        generatedChatData.GeneratedChatDataList = new List<ChatData>(ChatManager.Instance.GeneratedChatDataList);
+        JsonManager.SaveData(generatedChatData, CurLoadName, "GeneratedChatData");
     }
 
     public void LoadGeneratedChatData()
     {
-        generatedChatData = JsonManager.LoadData<GeneratedChatData>("GeneratedChatData");
+        generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
+        ChatManager.Instance.GeneratedChatDataList=generatedChatData.GeneratedChatDataList;
     }
     #endregion
 
@@ -186,7 +271,15 @@ public class GameDataManager
 
     public void SaveGameRuntimeData()
     {
-        JsonManager.SaveData(GameRuntimeData, "GameRuntimeData");
+        gameRuntimeData.CurTime = TimeManager.Instance.curTime;
+        gameRuntimeData.CurInterval = TimeManager.Instance.curInterval;
+        gameRuntimeData.PlayerStateDict = new(StateManager.Instance.PlayerStateDict);
+        JsonManager.SaveData(gameRuntimeData, CurLoadName, "GameRuntimeData");
+    }
+
+    public void LoadGameRuntimeData()
+    {
+        gameRuntimeData = JsonManager.LoadData<GameRuntimeData>(CurLoadName, "GameRuntimeData");
     }
     #endregion
 }

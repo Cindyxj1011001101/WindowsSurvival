@@ -50,6 +50,7 @@ public class EnvironmentBag : BagBase
         // 如果是飞船环境，要考虑水平面变化
         if (placeData.isInSpacecraft)
             EventManager.Instance.RemoveListener<float>(EventType.ChangeWaterLevel, OnWaterLevelChanged);
+        
     }
 
     protected override void InitBag(BagRuntimeData runtimeData)
