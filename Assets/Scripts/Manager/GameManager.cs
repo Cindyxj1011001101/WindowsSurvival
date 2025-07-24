@@ -60,23 +60,8 @@ public class GameManager : MonoBehaviour
     private void Init()
     {
         Move(GameDataManager.Instance.LastPlace);
-        // 播放环境音乐
-        switch(GameDataManager.Instance.LastPlace)
-        {
-            case PlaceEnum.PowerCabin:
-                SoundManager.Instance.PlayBGM("飞船内_01", true);
-                break;
-            case PlaceEnum.Cockpit:
-                SoundManager.Instance.PlayBGM("飞船内_01", true);
-                break;
-            case PlaceEnum.LifeSupportCabin:
-                SoundManager.Instance.PlayBGM("飞船内_01", true);
-                break;
-            case PlaceEnum.CoralCoast:
-                //珊瑚礁海域的音乐还没制作
-                //SoundManager.Instance.PlayBGM("珊瑚礁海域_01, true);
-                break;
-        }
+        SoundManager.Instance.PlayCurEnvironmentMusic();
+        
 
     }
 
@@ -201,7 +186,7 @@ public class GameManager : MonoBehaviour
             bag.gameObject.SetActive(place == targetPlace);
         }
 
-        PlayPlaceMusic(environmentBags[targetPlace]);
+        SoundManager.Instance.PlayPlaceMusic(environmentBags[targetPlace]);
 
 
         curEnvironmentBag = environmentBags[targetPlace];
@@ -225,42 +210,6 @@ public class GameManager : MonoBehaviour
             _ => null,
         };
     }
-    public void PlayPlaceMusic(EnvironmentBag nextEnvironmentBag)
-    {
-        switch (nextEnvironmentBag.PlaceData.placeType)
-        {
-        
-            case PlaceEnum.PowerCabin:
-                if (curEnvironmentBag.PlaceData.isInSpacecraft)
-                    //无事发生
-                    break;
-                else
-                    SoundManager.Instance.StopBGM();
-                    SoundManager.Instance.PlayBGM("飞船内_01", true);
-                break;
-            case PlaceEnum.Cockpit:
-                if (curEnvironmentBag.PlaceData.isInSpacecraft)
-                    //无事发生
-                    break;
-                else
-                    SoundManager.Instance.StopBGM();
-                    SoundManager.Instance.PlayBGM("飞船内_01", true);
-                break;
-            case PlaceEnum.LifeSupportCabin:
-                if (curEnvironmentBag.PlaceData.isInSpacecraft)
-                    //无事发生
-                    break;
-                else
-                    SoundManager.Instance.StopBGM();
-                    SoundManager.Instance.PlayBGM("飞船内_01", true);
-                break;
-            case PlaceEnum.CoralCoast:
-                SoundManager.Instance.StopBGM();
-                //珊瑚礁海域的音乐还没制作
-                //SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
-                break;
-        };   
-        
-
-    }
+    
+    
 }

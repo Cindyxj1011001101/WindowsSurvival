@@ -36,7 +36,7 @@ public class SoundManager : MonoBehaviour
     private void OnBGMVolumeChanged()
     {
         float newVolume = GetNormalizedBGMVolume();
-    
+
         if (fadeCoroutine != null)
         {
             // 渐进式调整目标值（保持当前渐变进度）
@@ -48,71 +48,71 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlayBGM(AudioClip clip, bool loop = true, float fadeDuration = 1f)
+
+
+
+
+    public void PlayBGM(string clipName, bool loop = true, float fadeDuration = 1f, float volumeMultiplier = 1f)
     {
+        var clip = GetClip(clipName, "Music");
+
         if (fadeCoroutine != null)
         {
             StopCoroutine(fadeCoroutine);
         }
-        
-        fadeCoroutine = StartCoroutine(FadeSwitchBGM(clip, loop, fadeDuration));
+
+        fadeCoroutine = StartCoroutine(FadeSwitchBGM(clip, loop, fadeDuration, volumeMultiplier));
     }
 
-    public void PlayBGM(string clipName, bool loop = true, float fadeDuration = 1f)
-    {
-        var clip = GetClip(clipName, "Music");
-        PlayBGM(clip, loop, fadeDuration);
-    }
-
-    private IEnumerator FadeSwitchBGM(AudioClip clip, bool loop, float fadeDuration)
+    private IEnumerator FadeSwitchBGM(AudioClip clip, bool loop, float fadeDuration, float volumeMultiplier)
     {
         targetVolume = GetNormalizedBGMVolume();
-        
+
         // 如果当前没有播放音乐，直接淡入新音乐
         if (!audioSource.isPlaying)
         {
             audioSource.clip = clip;
             audioSource.loop = loop;
             audioSource.Play();
-            
+
             // 淡入
             float timer = 0f;
             while (timer < fadeDuration)
             {
                 timer += Time.deltaTime;
-                audioSource.volume = Mathf.Lerp(0f, targetVolume, timer / fadeDuration);
+                audioSource.volume = Mathf.Lerp(0f, targetVolume * volumeMultiplier, timer / fadeDuration);
                 yield return null;
             }
-            audioSource.volume = targetVolume;
+            audioSource.volume = targetVolume * volumeMultiplier;
         }
         else
         {
             // 先淡出当前音乐
             float startVolume = audioSource.volume;
             float timer = 0f;
-            
+
             while (timer < fadeDuration / 2f)
             {
                 timer += Time.deltaTime;
                 audioSource.volume = Mathf.Lerp(startVolume, 0f, timer / (fadeDuration / 2f));
                 yield return null;
             }
-            
+
             // 切换音乐并淡入
             audioSource.clip = clip;
             audioSource.loop = loop;
             audioSource.Play();
-            
+
             timer = 0f;
             while (timer < fadeDuration / 2f)
             {
                 timer += Time.deltaTime;
-                audioSource.volume = Mathf.Lerp(0f, targetVolume, timer / (fadeDuration / 2f));
+                audioSource.volume = Mathf.Lerp(0f, targetVolume * volumeMultiplier, timer / (fadeDuration / 2f));
                 yield return null;
             }
-            audioSource.volume = targetVolume;
+            audioSource.volume = targetVolume * volumeMultiplier;
         }
-        
+
         fadeCoroutine = null;
     }
 
@@ -122,7 +122,7 @@ public class SoundManager : MonoBehaviour
         {
             StopCoroutine(fadeCoroutine);
         }
-        
+
         fadeCoroutine = StartCoroutine(FadeOutBGM(fadeDuration));
     }
     private IEnumerator FadeOutBGM(float fadeDuration)
@@ -167,7 +167,7 @@ public class SoundManager : MonoBehaviour
         }
 
     }
-   
+
 
     public void PlaySound(string clipName, bool isRandom = false)
     {
@@ -191,5 +191,68 @@ public class SoundManager : MonoBehaviour
     private float GetNormalizedSFXVolume()
     {
         return GameDataManager.Instance.AudioData.masterVolume * GameDataManager.Instance.AudioData.sfxVolume;
+    }
+    /// <summary>
+    /// 在考虑上一个地点的情况下播放当前环境的背景音乐
+    /// </summary>
+    public void PlayPlaceMusic(EnvironmentBag nextEnvironmentBag)
+    {
+        switch (nextEnvironmentBag.PlaceData.placeType)
+        {
+
+            case PlaceEnum.PowerCabin:
+                if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
+                    //无事发生
+                    break;
+                else
+                    SoundManager.Instance.StopBGM();
+                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.Cockpit:
+                if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
+                    //无事发生
+                    break;
+                else
+                    SoundManager.Instance.StopBGM();
+                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.LifeSupportCabin:
+                if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
+                    //无事发生
+                    break;
+                else
+                    SoundManager.Instance.StopBGM();
+                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.CoralCoast:
+                SoundManager.Instance.StopBGM();
+                //珊瑚礁海域的音乐还没制作
+                //SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
+                break;
+        };
+    }
+    
+    /// <summary>
+    /// 不考虑上一个场景，直接播当前地点音乐
+    /// </summary>
+    public void PlayCurEnvironmentMusic()
+    {
+        // 播放环境音乐
+        switch (GameDataManager.Instance.LastPlace)
+        {
+            case PlaceEnum.PowerCabin:
+                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.Cockpit:
+                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.LifeSupportCabin:
+                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                break;
+            case PlaceEnum.CoralCoast:
+                //珊瑚礁海域的音乐还没制作
+                //SoundManager.Instance.PlayBGM("珊瑚礁海域_01, true);
+                break;
+        }
     }
 }
