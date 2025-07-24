@@ -28,6 +28,8 @@ public class ChatWindow : WindowBase
         ConfirmButton = transform.Find("Body/InputLine/Confirm").gameObject;
         InputText = transform.Find("Body/InputLine/InputBG/InputText").gameObject;
         body = transform.Find("Body").gameObject;
+        GameDataManager.Instance.LoadGeneratedChatData();
+        LoadGeneratedChatData();
         body.GetComponent<CustomMessageLayout>().Refresh();
         ConfirmButton.GetComponent<Button>().onClick.RemoveAllListeners();
         ConfirmButton.GetComponent<Button>().onClick.AddListener(Confirm);
@@ -71,6 +73,7 @@ public class ChatWindow : WindowBase
     }
     public void LoadGeneratedChatData()
     {
+        inParagraph=true;
         //从GeneratedChatDataList中加载已触发的对话数据(一次性)
         for (int i = 0; i < ChatManager.Instance.GeneratedChatDataList.Count - 1; i++)
         {

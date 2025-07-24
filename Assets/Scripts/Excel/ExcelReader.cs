@@ -66,7 +66,7 @@ public static class ExcelReader
             {
                 cardConfig.ToolTypes = ParseToolTypes(row[21].ToString());
             }
-            Debug.Log($"读取卡牌配置: {cardConfig.CardName}");
+            //Debug.Log($"读取卡牌配置: {cardConfig.CardName}");
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
 
@@ -174,7 +174,7 @@ public static class ExcelReader
             }
             // 保存为Json
             DisposableDropList disposableDropList = new() { maxCount = dropList.Count, dropList = dropList };
-            JsonManager.SaveData(disposableDropList, table.TableName + "一次性掉落列表");
+            JsonManager.SaveData(disposableDropList, "Excel", table.TableName + "一次性掉落列表");
         }
         Debug.Log("Disposable drop list generated successfully!");
     }
@@ -264,7 +264,7 @@ public static class ExcelReader
                 emptyPopulationSizeChangeOnNotCaught = sizeChangeOnNotCaught,
                 populationList = populationList
             };
-            JsonManager.SaveData(repeatableDropList, table.TableName + "重复掉落列表");
+            JsonManager.SaveData(repeatableDropList, "Excel", table.TableName + "重复掉落列表");
         }
         Debug.Log("Repeatable drop list generated successfully!");
     }
