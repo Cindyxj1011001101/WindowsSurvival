@@ -150,20 +150,27 @@ public class StateManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
+        // 初始化
+        InitPlayerState();
+        InitElectricity();
+        InitWaterLevel();
+
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
+        // 当环境改变时尝试获取氧气
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
     }
 
     private void Start()
     {
-        InitPlayerState();
-        InitElectricity();
-        InitWaterLevel();
+        // 评估危险状态，播放音乐
         _lastDangerLevel = EvaluateDangerLevel();
+        PlayDangerLevelMusic(_lastDangerLevel);
     }
 
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
     }
 
     private void InitPlayerState()
@@ -202,37 +209,11 @@ public class StateManager : MonoBehaviour
 
         // 氧气特殊处理
         if (stateEnum == PlayerStateEnum.Oxygen)
-        {
-            var env = GameManager.Instance.CurEnvironmentBag;
-            // 如果获取氧气时在室内环境
-            if (env.PlaceData.isIndoor)
-            {
-                // 如果是消耗氧气，优先消耗环境
-                if (delta < 0)
-                {
+            HandlePlayerOxygenChange(delta);
+        else
+            PlayerStateDict[stateEnum].AddCurValue(delta);
 
-                }
-                // 如果是补充氧气，优先补充到玩家
-                if (delta > 0)
-                {
-                    // 计算能释放多少
-                    var toRelease = Mathf.Min(env.StateDict[EnvironmentStateEnum.Oxygen].RemainingCapacity, delta);
-                    if (toRelease > 0)
-                        // 释放到环境
-                        env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, toRelease);
-
-                    // 计算释放到环境之后还剩多少
-                    var left = delta - toRelease;
-                    // 加入玩家的氧气
-                    if (left > 0)
-                        PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(left);
-                    return;
-                }
-            }
-        }
-
-        PlayerStateDict[stateEnum].AddCurValue(delta);
-
+        // 刷新前端显示
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
 
         // 判断危险等级，播放音乐
@@ -247,6 +228,79 @@ public class StateManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 尝试从环境中获取氧气
+    /// </summary>
+    private void TryGainOxygenFromEnvironment(EnvironmentBag env)
+    {
+        // 室外环境里没有氧气
+        if (!env.PlaceData.isIndoor) return;
+
+        var gain = Mathf.Min(PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity, env.StateDict[EnvironmentStateEnum.Oxygen].CurValue);
+        if (gain > 0)
+        {
+            PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(gain);
+            env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -gain);
+        }
+
+        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, PlayerStateEnum.Oxygen);
+    }
+
+    private void HandlePlayerOxygenChange(float delta)
+    {
+        var env = GameManager.Instance.CurEnvironmentBag;
+        // 室外环境直接改变玩家氧气，多余的就浪费
+        if (!env.PlaceData.isIndoor)
+        {
+            PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(delta);
+            return;
+        }
+
+        // 每次玩家的氧气变化之前，都先尝试从环境中获取氧气
+        TryGainOxygenFromEnvironment(env);
+
+        // 室内环境
+        // 如果是消耗氧气，优先消耗环境
+        if (delta < 0)
+        {
+            delta = -delta;
+            // 环境氧气剩余量
+            var envOxygen = env.StateDict[EnvironmentStateEnum.Oxygen].CurValue;
+            // 要消耗的环境氧气量
+            var envConsume = Mathf.Min(envOxygen, delta);
+            if (envConsume > 0)
+            {
+                // 消耗环境氧气
+                env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -envConsume);
+            }
+            var playerConsume = delta - envConsume;
+            if (playerConsume > 0)
+            {
+                // 消耗玩家氧气
+                PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(-playerConsume);
+            }
+        }
+        // 如果是补充氧气，优先补充到玩家
+        else if (delta > 0)
+        {
+            // 计算玩家能补充多少
+            var playerGain = Mathf.Min(PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity, delta);
+            if (playerGain > 0)
+                // 补充玩家氧气
+                PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(playerGain);
+            // 计算环境能补充多少
+            var envGain = delta - playerGain;
+            if (envGain > 0)
+                // 补充环境氧气
+                env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, envGain);
+        }
+    }
+
+    /// <summary>
+    /// 改变玩家的额外状态
+    /// </summary>
+    /// <param name="stateEnum"></param>
+    /// <param name="delta"></param>
     public void ChangePlayerExtraState(PlayerStateEnum stateEnum, float delta)
     {
         PlayerStateDict[stateEnum].AddExtraValue(delta);
@@ -255,6 +309,10 @@ public class StateManager : MonoBehaviour
     #endregion
 
     #region 电力和水平面相关
+    /// <summary>
+    /// 改变全局电力
+    /// </summary>
+    /// <param name="delta"></param>
     public void ChangeElectricity(float delta)
     {
         Electricity.CurValue += delta;
@@ -266,6 +324,10 @@ public class StateManager : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// 改变水平面
+    /// </summary>
+    /// <param name="delta"></param>
     public void ChangeWaterLevel(float delta)
     {
         WaterLevel.CurValue += delta;
