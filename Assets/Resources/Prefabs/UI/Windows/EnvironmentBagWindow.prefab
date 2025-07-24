@@ -100,6 +100,7 @@ MonoBehaviour:
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   discoveryDegreeSlider: {fileID: 5093666953090071289}
   placeNameText: {fileID: 8591096256896571305}
+  environmentImage: {fileID: 7258778455591954335}
   discoverButton: {fileID: 8812851150234041334}
   stateLayout: {fileID: 3260862747197946654}
 --- !u!1 &113395388788033127
@@ -3843,7 +3844,7 @@ MonoBehaviour:
   explorationTime: 15
   placeData: {fileID: 11400000, guid: c550a8b0e4ce7474e940b4db16893b49, type: 2}
   hasCable: 0
-  pressureLevel: 0
+  pressureLevel: 3
 --- !u!1 &3046288353500816885
 GameObject:
   m_ObjectHideFlags: 0

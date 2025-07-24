@@ -9,12 +9,13 @@ public class GameDataManager
     private static GameDataManager instance = new();
     public static GameDataManager Instance => instance;
 
-    public string CurLoadName;
+    public int curLoadIndex; // 当前存档索引
 
-    public void LoadAllData(int index)
+    public string CurLoadName => "GameData" + curLoadIndex.ToString(); // 当前存档名称
+
+    private GameDataManager()
     {
-        CurLoadName = "GameData" + index;
-        loadData.loads[index] = new Load(new DateTime(2020, 1, 1, 0, 0, 0)); ;
+        curLoadIndex = 0;
         // 玩家背包
         playerBagData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "PlayerBag");
         // 上次地点
@@ -38,9 +39,37 @@ public class GameDataManager
         // 其他数据
         gameRuntimeData = JsonManager.LoadData<GameRuntimeData>(CurLoadName, "GameRuntimeData");
     }
+
+    public void LoadAllData(int index)
+    {
+        curLoadIndex = index;
+        loadData.loads[index] = new Load(new DateTime(2020, 1, 1, 0, 0, 0));
+        // 玩家背包
+        playerBagData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "PlayerBag");
+        // 上次地点
+        lastPlace = JsonManager.LoadData<int>(CurLoadName, "LastPlace");
+        // 环境
+        environmentBagDataDict = new();
+        foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
+        {
+            environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
+        }
+        // 音频数据
+        audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
+        // 已解锁的配方
+        unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
+        // 科技数据
+        technologyData = JsonManager.LoadData<TechnologyData>(CurLoadName, "Technology");
+        // 装备数据
+        equipmentData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "Equipment");
+        // 已生成的对话
+        generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
+        // 其他数据
+        gameRuntimeData = JsonManager.LoadData<GameRuntimeData>(CurLoadName, "GameRuntimeData");
+    }
+
     public void SaveAllData()
     {
-
         // 玩家背包
         SavePlayerBagRuntimeData();
         // 上次地点
@@ -59,12 +88,13 @@ public class GameDataManager
         SaveGeneratedChatData();
         // 其他数据
         SaveGameRuntimeData();
-        int index = int.Parse(CurLoadName[CurLoadName.Length - 1].ToString());
-        loadData.loads[index].GameTime = gameRuntimeData.CurTime;
+        // 保存时间
+        loadData.loads[curLoadIndex].GameTime = gameRuntimeData.CurTime;
+        // 保存存档数据
         SaveLoadData();
         SceneManager.LoadScene(0);
-
     }
+
     #region 存档数据
     private LoadData loadData;
 
@@ -78,6 +108,7 @@ public class GameDataManager
         loadData = JsonManager.LoadData<LoadData>("LoadData", "LoadData");
     }
     #endregion
+
     #region 玩家背包
     private BagRuntimeData playerBagData;
 
@@ -128,13 +159,13 @@ public class GameDataManager
         return environmentBagDataDict[place];
     }
 
-    public void LoadEnvironmentBagRuntimeData()
-    {
-        foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
-        {
-            environmentBagDataDict[place] = JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag");
-        }
-    }
+    //public void LoadEnvironmentBagRuntimeData()
+    //{
+    //    foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
+    //    {
+    //        environmentBagDataDict[place] = JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag");
+    //    }
+    //}
 
     /// <summary>
     /// 保存所有环境背包的数据
@@ -149,6 +180,12 @@ public class GameDataManager
             data.repeatableDropList = bag.RepeatableDropList;
             // 保存背包中的卡牌
             data.cardSlotsRuntimeData = new();
+            // 保存铺设电缆状态
+            data.hasCable = bag.HasCable;
+            // 保存压强状态
+            data.pressureLevel = bag.PressureLevel;
+            // 保存其他状态
+            data.environmentStateDict = bag.StateDict;
             foreach (var slot in bag.Slots)
             {
                 data.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
