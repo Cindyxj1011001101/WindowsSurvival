@@ -236,6 +236,12 @@ public class Event
     public void Inovke()
     {
         action?.Invoke();
+        EndEvent();
+    }
+
+    public void EndEvent()
+    {
+        //根据当前状态切换心跳音效
     }
 
     public bool Judge()
