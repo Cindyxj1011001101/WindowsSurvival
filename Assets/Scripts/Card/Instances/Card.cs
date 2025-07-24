@@ -237,7 +237,6 @@ public class Event
     public void Inovke()
     {
         action?.Invoke();
-        StateManager.Instance.EndEventMusic();
     }
 
     public bool Judge()

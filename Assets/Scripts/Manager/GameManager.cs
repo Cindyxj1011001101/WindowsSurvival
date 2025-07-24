@@ -131,7 +131,6 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.AddTime((int)explorationTime);
 
         HandeleExploreDrop();
-        StateManager.Instance.EndEventMusic();
     }
 
 

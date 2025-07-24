@@ -70,7 +70,7 @@ public class PlayerState
         this.extraValue = extraValue;
         stateEnum = state;
     }
-    
+
 }
 
 /// <summary>
@@ -116,7 +116,6 @@ public class StateManager : MonoBehaviour
     /// 飞船水平面高度
     /// </summary>
     public EnvironmentState WaterLevel { get; set; }
-    public DangerLevelEnum DangerLevel => StateManager.Evaluate(PlayerStateDict);
 
     #region 单例
     private static StateManager instance;
@@ -151,10 +150,15 @@ public class StateManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
+        EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
+    }
+
+    private void Start()
+    {
         InitPlayerState();
         InitElectricity();
         InitWaterLevel();
-        EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
+        _lastDangerLevel = EvaluateDangerLevel();
     }
 
     private void OnDestroy()
@@ -230,6 +234,17 @@ public class StateManager : MonoBehaviour
         PlayerStateDict[stateEnum].AddCurValue(delta);
 
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
+
+        // 判断危险等级，播放音乐
+        DangerLevelEnum dangerLevel = EvaluateDangerLevel();
+
+        // 如果状态没有变化，直接返回
+        if (dangerLevel != _lastDangerLevel)
+        {
+            // 更新缓存的状态
+            _lastDangerLevel = dangerLevel;
+            PlayDangerLevelMusic(dangerLevel);
+        }
     }
 
     public void ChangePlayerExtraState(PlayerStateEnum stateEnum, float delta)
@@ -404,9 +419,21 @@ public class StateManager : MonoBehaviour
             ChangePlayerState(PlayerStateEnum.Health, -4f);
         }
     }
-    
+
+    #endregion
+
+    #region 危险状态
+
+    /// <summary>
+    /// 危险等级
+    /// </summary>
+    public DangerLevelEnum DangerLevel => _lastDangerLevel;
+
+    // 缓存上次的危险状态
+    private DangerLevelEnum _lastDangerLevel = DangerLevelEnum.None;
+
     // 危险阈值配置
-    private static readonly Dictionary<PlayerStateEnum, (float high, float low)> _thresholds = new()
+    private readonly Dictionary<PlayerStateEnum, (float high, float low)> _thresholds = new()
     {
         { PlayerStateEnum.Health, (10f, 30f) },//健康
         { PlayerStateEnum.Fullness, (10f, 30f) },//饱食
@@ -415,15 +442,16 @@ public class StateManager : MonoBehaviour
         { PlayerStateEnum.San, (10f, 30f) },//精神
         { PlayerStateEnum.Oxygen, (10f, 25f) },//氧气
     };
+
     //一个用于判断危险状态的静态方法，会根据之前的危险阈值配置和当前状态值，来评估当前的危险等级
-    public static DangerLevelEnum Evaluate(Dictionary<PlayerStateEnum, PlayerState> states)
+    private DangerLevelEnum EvaluateDangerLevel()
     {
-        bool hasHigh = false, hasLow = false;
-        
+        bool /*hasHigh = false, */hasLow = false;
+
         foreach (var (state, (high, low)) in _thresholds)
         {
-            if (!states.TryGetValue(state, out var s)) continue;
-            
+            if (!PlayerStateDict.TryGetValue(state, out var s)) continue;
+
             float value = s.CurValue;
             if (value <= high) return DangerLevelEnum.High; // 发现高危立即返回
             if (value <= low) hasLow = true;
@@ -431,20 +459,11 @@ public class StateManager : MonoBehaviour
 
         return hasLow ? DangerLevelEnum.Low : DangerLevelEnum.None;
     }
-    // 缓存上次的危险状态
-    public DangerLevelEnum _lastDangerLevel = DangerLevelEnum.None;
+
     //处于危险状态时，就播放心跳声，离开就播放环境音乐
     //如果上次的状态和这次一致，就不切音乐
-    public void EndEventMusic()
+    private void PlayDangerLevelMusic(DangerLevelEnum currentLevel)
     {
-        // 获取当前危险状态
-        var currentLevel = StateManager.Instance.DangerLevel;
-
-        // 如果状态没有变化，直接返回
-        if (currentLevel == StateManager.Instance._lastDangerLevel) return;
-
-        // 更新缓存的状态
-        StateManager.Instance._lastDangerLevel = currentLevel;
         // 应用低通滤波等音效变化
         SoundManager.Instance.ApplyDangerEffects(currentLevel);
 
