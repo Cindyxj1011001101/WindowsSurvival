@@ -166,7 +166,7 @@ public class StudyWindow : WindowBase
         {
             var button = Instantiate(recipeItem, detailLayout).GetComponent<HoverableButton>();
             button.normalImage.sprite = recipe.CardImage;
-            button.GetComponentInChildren<Text>().text = recipe.cardId;
+            button.GetComponentsInChildren<Text>()[1].text = recipe.cardId;
             temp.Add(button.gameObject);
         }
 

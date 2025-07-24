@@ -285,6 +285,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8725556472364614564, guid: 20c8c7ad2a946194dacff54a01298842, type: 3}
   m_PrefabInstance: {fileID: 924965270}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &525086894 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7258778455591954335, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
+  m_PrefabInstance: {fileID: 6648016281679468549}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &729727752 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 278888269629347900, guid: 35a1e69da327ef34b9028ab27b444d65, type: 3}
@@ -1171,6 +1182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 332ec90db1e253e409fffba912d7becc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _lastDangerLevel: 0
 --- !u!114 &1720048210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2105,10 +2117,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6816300620845605854, guid: aeb59a11f1ebe3149b9088c87f1a0362, type: 3}
-      propertyPath: studyingAnim
-      value: 
-      objectReference: {fileID: 1748320335}
     - target: {fileID: 6828005497558418867, guid: aeb59a11f1ebe3149b9088c87f1a0362, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2460,42 +2468,13 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3132186631542892690, guid: aeb59a11f1ebe3149b9088c87f1a0362, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1748320335}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aeb59a11f1ebe3149b9088c87f1a0362, type: 3}
 --- !u!224 &1748320333 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1928337914428598430, guid: aeb59a11f1ebe3149b9088c87f1a0362, type: 3}
   m_PrefabInstance: {fileID: 1748320332}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1748320334 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3132186631542892690, guid: aeb59a11f1ebe3149b9088c87f1a0362, type: 3}
-  m_PrefabInstance: {fileID: 1748320332}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1748320335
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1748320334}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 46fef6b31872efe4794fb1c8b7f41968, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1809330661
 GameObject:
   m_ObjectHideFlags: 0
@@ -3753,6 +3732,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnvironmentBagWindow
       objectReference: {fileID: 0}
+    - target: {fileID: 617653233788211925, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
+      propertyPath: environmentImage
+      value: 
+      objectReference: {fileID: 525086894}
     - target: {fileID: 686229522281716730, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
