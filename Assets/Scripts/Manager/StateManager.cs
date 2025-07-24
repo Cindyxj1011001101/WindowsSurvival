@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -51,6 +52,7 @@ public class PlayerState
     public float ExtraValue => extraValue;
 
     public float MaxValue => maxValue + extraValue;
+    
     public float RemainingCapacity => MaxValue - CurValue;
 
     public void AddCurValue(float delta)
@@ -259,6 +261,9 @@ public class StateManager : MonoBehaviour
         // 每次玩家的氧气变化之前，都先尝试从环境中获取氧气
         TryGainOxygenFromEnvironment(env);
 
+        // 玩家氧气
+        var playerOxygen = PlayerStateDict[PlayerStateEnum.Oxygen];
+
         // 室内环境
         // 如果是消耗氧气，优先消耗环境
         if (delta < 0)
@@ -277,17 +282,17 @@ public class StateManager : MonoBehaviour
             if (playerConsume > 0)
             {
                 // 消耗玩家氧气
-                PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(-playerConsume);
+                playerOxygen.AddCurValue(-playerConsume);
             }
         }
         // 如果是补充氧气，优先补充到玩家
         else if (delta > 0)
         {
             // 计算玩家能补充多少
-            var playerGain = Mathf.Min(PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity, delta);
+            var playerGain = Mathf.Min(playerOxygen.RemainingCapacity, delta);
             if (playerGain > 0)
                 // 补充玩家氧气
-                PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(playerGain);
+                playerOxygen.AddCurValue(playerGain);
             // 计算环境能补充多少
             var envGain = delta - playerGain;
             if (envGain > 0)
@@ -303,8 +308,53 @@ public class StateManager : MonoBehaviour
     /// <param name="delta"></param>
     public void ChangePlayerExtraState(PlayerStateEnum stateEnum, float delta)
     {
-        PlayerStateDict[stateEnum].AddExtraValue(delta);
+        if (stateEnum == PlayerStateEnum.Oxygen)
+            HandleExtraOxygenChange(delta);
+        else
+            PlayerStateDict[stateEnum].AddExtraValue(delta);
+
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
+    }
+
+    /// <summary>
+    /// 处理额外氧气变化
+    /// </summary>
+    /// <param name="delta"></param>
+    private void HandleExtraOxygenChange(float delta)
+    {
+        var env = GameManager.Instance.CurEnvironmentBag;
+
+        var playerOxygen = PlayerStateDict[PlayerStateEnum.Oxygen];
+        // 增加额外氧气
+        if (delta > 0)
+        {
+            // 氧气上限增加
+            playerOxygen.AddExtraValue(delta);
+            // 尝试从当前环境中补满氧气
+            TryGainOxygenFromEnvironment(env);
+        }
+        // 减少额外氧气
+        else
+        {
+            // 记录原始氧气值
+            var value1 = playerOxygen.CurValue;
+
+            // 氧气上限减少
+            PlayerStateDict[PlayerStateEnum.Oxygen].AddExtraValue(delta);
+
+            // 记录当前氧气值
+            var value2 = playerOxygen.CurValue;
+
+            // 计算额外储存的氧气
+            var extraOxygen = value1 - value2;
+
+            // 额外储存氧气大于0
+            if (extraOxygen > 0)
+            {
+                // 释放到环境里
+                env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, extraOxygen);
+            }
+        }
     }
     #endregion
 
