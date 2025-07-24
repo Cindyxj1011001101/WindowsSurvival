@@ -448,11 +448,11 @@ public class StateManager : MonoBehaviour
                 break;
 
             case DangerLevelEnum.Low:
-                SoundManager.Instance.PlayBGM("心跳_01", true, 1f, 1f);
+                SoundManager.Instance.PlayBGM("心跳_01", true, 2f, 1f);
                 break;
 
             case DangerLevelEnum.High:
-                SoundManager.Instance.PlayBGM("心跳_01", true, 1f, 1.5f);
+                SoundManager.Instance.PlayBGM("心跳_01", true, 2f, 1.5f);
                 break;
         }
     }

@@ -194,6 +194,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
         // 播放动画
         anim.Play();
+        
     }
 
     public void Maximize()
@@ -235,6 +236,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
         // 播放动画
         anim.Play();
+        SoundManager.Instance.PlaySound("低沉泡泡音", true);
     }
 
     private void MaximizeOrRestore()

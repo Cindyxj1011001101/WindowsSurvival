@@ -66,8 +66,8 @@ public class SoundManager : MonoBehaviour
         }
     }
     //根据危险等级应用音频效果
-    //高危险时，低通滤波器和失真效果开启，音调降低
-    //低危险时，低通滤波器和失真效果开启，音调轻微降低
+    //高危险时，低通滤波器和失真效果开启，影响更强
+    //低危险时，低通滤波器和失真效果开启
     //无危险时，低通滤波器和失真效果关闭，音调恢复正常
     public void ApplyDangerEffects(DangerLevelEnum dangerLevel)
     {
@@ -75,10 +75,10 @@ public class SoundManager : MonoBehaviour
         {
             case DangerLevelEnum.High:
                 _lowPassFilter.enabled = true;
-                _lowPassFilter.cutoffFrequency = 1200f; // 低沉闷响
+                _lowPassFilter.cutoffFrequency = 1000f; // 低沉闷响
                 _distortionFilter.enabled = true;
                 _distortionFilter.distortionLevel = 0.8f; // 高失真
-                sfxSource.pitch = 0.9f; // 轻微降调
+                sfxSource.pitch = 0.85f; // 轻微降调
                 
                 HrartbeatVolumeMultiplier = 0.25f; // 心跳时音效音量大幅降低
                 
@@ -86,10 +86,10 @@ public class SoundManager : MonoBehaviour
 
             case DangerLevelEnum.Low:
                 _lowPassFilter.enabled = true;
-                _lowPassFilter.cutoffFrequency = 3000f; // 中等闷响
+                _lowPassFilter.cutoffFrequency = 2200f; // 中等闷响
                 _distortionFilter.enabled = true;
-                _distortionFilter.distortionLevel = 0.4f; // 轻微失真
-                sfxSource.pitch = 0.95f; // 轻微降调
+                _distortionFilter.distortionLevel = 0.55f; // 轻微失真
+                sfxSource.pitch = 0.9f; // 轻微降调
                 HrartbeatVolumeMultiplier = 0.55f; // 心跳时音效音量降低
                 break;
 
@@ -193,7 +193,7 @@ public class SoundManager : MonoBehaviour
     }
 
     
-    public void PlaySound(string clipName, bool isRandom = false)
+    public void PlaySound(string clipName, bool isRandom = false,float volumeMultiplier = 1f)
     {
         var clip = GetClip(clipName, "SFX");
         
@@ -209,14 +209,14 @@ public class SoundManager : MonoBehaviour
             sfxSource.pitch = 1f + UnityEngine.Random.Range(-0.1f, 0.1f);
 
             // 播放音效
-            sfxSource.PlayOneShot(clip, finalVolume* HrartbeatVolumeMultiplier);
+            sfxSource.PlayOneShot(clip, finalVolume* HrartbeatVolumeMultiplier*volumeMultiplier);
 
 
         }
         else
         {
             sfxSource.pitch = 1f;
-            sfxSource.PlayOneShot(clip, baseVolume* HrartbeatVolumeMultiplier);
+            sfxSource.PlayOneShot(clip, baseVolume* HrartbeatVolumeMultiplier*volumeMultiplier);
         }
     }
 

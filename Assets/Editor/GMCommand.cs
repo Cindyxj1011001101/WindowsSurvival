@@ -37,6 +37,7 @@ public class GMCommand
     {
         AddCard("废金属");
     }
+    
 
     [MenuItem("Command/添加/瓶装水")]
     public static void C()
@@ -90,6 +91,11 @@ public class GMCommand
     public static void K()
     {
         AddCard("腐烂物");
+    }
+    [MenuItem("Command/添加/氧烛")]
+    public static void GetOxygenCandle()
+    {
+        AddCard("氧烛");
     }
     [MenuItem("Command/播放/心跳_01")]
     public static void PlayHeart()
