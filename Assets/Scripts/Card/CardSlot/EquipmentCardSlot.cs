@@ -5,9 +5,9 @@ public class EquipmentCardSlot : CardSlot
 {
     public EquipmentType equipmentType;
 
-    public override void AddCard(Card card)
+    public override void AddCard(Card card, bool refreshImmediately = true)
     {
-        base.AddCard(card);
+        base.AddCard(card, refreshImmediately);
         EventManager.Instance.TriggerEvent(EventType.Equip, card);
     }
 
@@ -20,9 +20,9 @@ public class EquipmentCardSlot : CardSlot
         return component.equipmentType == equipmentType;
     }
 
-    public override void RemoveCard(Card card)
+    public override void RemoveCard(Card card, bool refreshImmediately = true)
     {
-        base.RemoveCard(card);
+        base.RemoveCard(card, refreshImmediately);
         EventManager.Instance.TriggerEvent(EventType.Unequip, card);
     }
 }

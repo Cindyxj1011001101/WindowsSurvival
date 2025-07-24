@@ -62,7 +62,11 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     public void RefreshCurrentDisplay()
     {
-        if (IsEmpty) return;
+        if (IsEmpty)
+        {
+            ClearSlot();
+            return;
+        }
 
         DisplayCard(PeekCard(), StackNum);
     }
@@ -224,12 +228,11 @@ public class CardSlot : MonoBehaviour
     /// 添加一张卡牌
     /// </summary>
     /// <param name="card"></param>
-    public virtual void AddCard(Card card)
+    /// <param name="refreshImmediately">是否立刻刷新显示</param>
+    public virtual void AddCard(Card card, bool refreshImmediately = true)
     {
         cards.Add(card);
         cards.Sort((a, b) => a.CompareTo(b));
-
-        RefreshCurrentDisplay();
 
         // 当卡牌添加到玩家背包时
         if (bag is PlayerBag)
@@ -237,39 +240,40 @@ public class CardSlot : MonoBehaviour
                 new ChangePlayerBagCardsArgs { card = card, add = 1 });
 
         card.SetCardSlot(this);
+
+        if (refreshImmediately)
+            RefreshCurrentDisplay();
     }
 
     /// <summary>
     /// 移除指定的一张卡牌
     /// </summary>
     /// <param name="card"></param>
-    public virtual void RemoveCard(Card card)
+    public virtual void RemoveCard(Card card, bool refreshImmediately = true)
     {
         if (!cards.Contains(card)) return;
 
         cards.Remove(card);
         card.SetCardSlot(null);
 
-        if (StackNum == 0)
-            ClearSlot();
-        else
-            RefreshCurrentDisplay();
-
         // 当卡牌从玩家背包移除时
         if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = -1 });
+
+        if (refreshImmediately)
+            RefreshCurrentDisplay();
     }
 
     /// <summary>
     /// 移除最优先显示的卡牌
     /// </summary>
     /// <returns></returns>
-    public Card RemoveCard()
+    public Card RemoveCard(bool refreshImmediately = true)
     {
         var cardToRemove = cards[0];
 
-        RemoveCard(cardToRemove);
+        RemoveCard(cardToRemove, refreshImmediately);
 
         return cardToRemove;
     }
@@ -278,17 +282,17 @@ public class CardSlot : MonoBehaviour
     /// 移除指定数量的卡牌
     /// </summary>
     /// <param name="amount"></param>
-    public void RemoveCards(int amount)
+    public void RemoveCards(int amount, bool refreshImmediately = true)
     {
         for (int i = 0; i < amount; i++)
-            RemoveCard();
+            RemoveCard(refreshImmediately);
     }
 
-    public void TransferCardsTo(CardSlot other, int count)
+    public void TransferCardsTo(CardSlot other, int count, bool refreshImmediately)
     {
         for (int i = 0; i < count; i++)
         {
-            other.AddCard(RemoveCard());
+            other.AddCard(RemoveCard(refreshImmediately), refreshImmediately);
         }
     }
 

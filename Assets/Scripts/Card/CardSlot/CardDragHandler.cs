@@ -39,6 +39,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // 更新源卡槽显示
         sourceSlot.DisplayCard(sourceSlot.PeekCard(), sourceSlot.StackNum - pickedCount);
         cursorSlot.DisplayCard(sourceSlot.PeekCard(), pickedCount);
+
         SoundManager.Instance.PlaySound("拿起卡牌", true);
     }
 
@@ -51,11 +52,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         dragEndPosition = CardMoveTween.ScreenPointToLocalPointInRectangle(eventData.position);
         Destroy(cursorSlot.gameObject);
-
-        if (SoundManager.Instance != null)
-        {
-            SoundManager.Instance.PlaySound("放置卡牌", true);
-        }
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
         if (currentObject == null)
@@ -111,11 +107,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         if (eventData.button == PointerEventData.InputButton.Right && sourceSlot.PeekCard().Moveable)
         {
-            if (SoundManager.Instance != null)
-            {
-                SoundManager.Instance.PlaySound("放置卡牌", true);
-            }
-
             BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
             BagBase targetBag = null;
 
@@ -156,6 +147,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 placementAction.Invoke();
                 sourceSlot.RefreshCurrentDisplay();
+                SoundManager.Instance.PlaySound("放置卡牌", true);
             }
         );
     }
@@ -195,12 +187,14 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         int moveCount = Mathf.Min(remainingCapacity, count);
         if (moveCount > 0)
         {
-            // 动画结束时将卡牌转移到targetSlot
+            // 先把数据转移了
+            sourceSlot.TransferCardsTo(targetSlot, moveCount, false);
             AnimateCardPlacement(
                 card,
                 () =>
                 {
-                    sourceSlot.TransferCardsTo(targetSlot, moveCount);
+                    // 再刷新显示
+                    targetSlot.RefreshCurrentDisplay();
                 },
                 dragEndPosition,
                 targetSlot.transform.position,
@@ -236,11 +230,14 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             // 这里targetBag.GetSlotsCanAddCard方法确保leftCount不会是负数
             leftCount -= moveCount;
+            // 先把数据转移了
+            sourceSlot.TransferCardsTo(targetSlot, moveCount, false);
             AnimateCardPlacement(
                 card,
                 () =>
                 {
-                    sourceSlot.TransferCardsTo(targetSlot, moveCount);
+                    // 再刷新显示
+                    targetSlot.RefreshCurrentDisplay();
                 },
                 startPos,
                 targetSlot.transform.position,
