@@ -9,9 +9,17 @@ public static class MonoUtility
     /// <param name="parent"></param>
     public static void DestroyAllChildren(Transform parent)
     {
-        for (int i = 0; i < parent.childCount; i++)
+        // 解除父子关系并批量销毁
+        Transform[] children = new Transform[parent.transform.childCount];
+        for (int i = 0; i < children.Length; i++)
         {
-            Object.Destroy(parent.GetChild(i).gameObject);
+            children[i] = parent.transform.GetChild(i);
+        }
+        parent.transform.DetachChildren(); // 解除所有父子关系
+
+        foreach (Transform child in children)
+        {
+            Object.Destroy(child.gameObject);
         }
     }
 

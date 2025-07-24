@@ -14,14 +14,17 @@ public class CraftWindow : WindowBase
     [SerializeField] private CardSlot slot;
     [SerializeField] private Text craftTimeText;
     [SerializeField] private CraftButton craftButton;
-    [SerializeField] private RectTransform selectRect;
+    [SerializeField] private RectTransform recipeLibrarySelectRect; // 配方库选择框
+    [SerializeField] private RectTransform recipeItemSelectRect; // 配方选择框
 
-    private RecipeType currentRecipeType;
+    private RecipeType currentRecipeType; // 记录当前选择的配方库
     private ScriptableRecipe currentSelectedRecipe; // 记录当前选中的配方
 
-    private Sequence currentAnimation;
+    private Sequence recipeLibraryAnim; // 配方库选择框动画
+    private Sequence recipeItemAnim; // 配方选择框动画
 
-    private Dictionary<RecipeType, RectTransform> recipeLibraryItemTransforms = new();
+    private Dictionary<RecipeType, RectTransform> recipeLibraryItemTransforms = new(); // 记录配方库图标的位置
+    private Dictionary<string, RectTransform> recipeItemTransforms = new(); // 记录配方图标的位置
 
     protected override void Awake()
     {
@@ -34,9 +37,7 @@ public class CraftWindow : WindowBase
 
     protected override void Init()
     {
-        var firstChild = recipeLibraryLayout.GetChild(0);
-        //selectRect.anchoredPosition = new(selectRect.anchoredPosition.x, (firstChild.transform as RectTransform).anchoredPosition.y);
-        currentRecipeType = (RecipeType)Enum.Parse(typeof(RecipeType), firstChild.name);
+        currentRecipeType = (RecipeType)Enum.Parse(typeof(RecipeType), recipeLibraryLayout.GetChild(0).name);
         DisplayRecipeLibraries();
     }
 
@@ -68,32 +69,19 @@ public class CraftWindow : WindowBase
             var button = recipeLibraryLayout.GetChild(i).GetComponent<HoverableButton>();
             button.onClick.RemoveAllListeners();
             RecipeType type = (RecipeType)Enum.Parse(typeof(RecipeType), button.name);
+
+            // 记录配方库图标的位置
+            recipeLibraryItemTransforms.Add(type, button.transform as RectTransform);
+
             button.onClick.AddListener(() =>
             {
                 currentRecipeType = type;
                 currentSelectedRecipe = null; // 切换类型时清空选中记录
                 DisplayRecipesByType(type);
             });
-            recipeLibraryItemTransforms.Add(type, button.transform as RectTransform);
         }
 
         DisplayRecipesByType(currentRecipeType);
-    }
-
-    private void SelectRecipeLibraryWithTween(RecipeType type)
-    {
-        // 停止当前动画
-        if (currentAnimation != null && currentAnimation.IsActive())
-        {
-            currentAnimation.Kill();
-        }
-
-        Vector2 targetPos = new(selectRect.anchoredPosition.x, recipeLibraryItemTransforms[type].anchoredPosition.y);
-
-        // 创建动画序列
-        currentAnimation = DOTween.Sequence();
-
-        currentAnimation.Append(selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad));
     }
 
     /// <summary>
@@ -103,6 +91,9 @@ public class CraftWindow : WindowBase
     /// <param name="isRefresh"></param>
     private void DisplayRecipesByType(RecipeType recipeType, bool isRefresh = false)
     {
+        // 清空位置记录字典
+        recipeItemTransforms.Clear();
+
         var recipeButtonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Craft/RecipeItem");
 
         MonoUtility.DestroyAllChildren(recipieLayout);
@@ -131,6 +122,10 @@ public class CraftWindow : WindowBase
         foreach (var recipe in sortedRecipes)
         {
             var recipeItemObj = Instantiate(recipeButtonPrefab, recipieLayout);
+
+            // 记录配方的位置
+            recipeItemTransforms.Add(recipe.cardId, recipeItemObj.transform as RectTransform);
+
             var button = recipeItemObj.GetComponent<HoverableButton>();
             var recipeItem = recipeItemObj.GetComponent<UIRecipeItem>();
             recipeItem.DisplayRecipe(
@@ -143,19 +138,34 @@ public class CraftWindow : WindowBase
                 currentSelectedRecipe = recipe; // 记录选中的配方
                 DisplayRecipeDetails(recipe);
             });
-
-            // 如果是刷新，继续选中上一个选中的配方
-            if (isRefresh && recipe == currentSelectedRecipe)
-                DisplayRecipeDetails(recipe);
         }
-
-        if (currentSelectedRecipe == null)
-            DisplayRecipeDetails(sortedRecipes[0]);
 
         MonoUtility.UpdateContainerHeight(recipieLayout.GetComponent<GridLayoutGroup>(), recipes.Count);
 
+        // 如果是刷新，继续选中上一个选中的配方
+        if (isRefresh)
+            DisplayRecipeDetails(currentSelectedRecipe);
+        else if (currentSelectedRecipe == null)
+            DisplayRecipeDetails(sortedRecipes[0]);
+
         // 播放选择动效
         SelectRecipeLibraryWithTween(recipeType);
+    }
+
+    private void SelectRecipeLibraryWithTween(RecipeType type)
+    {
+        // 停止当前动画
+        if (recipeLibraryAnim != null && recipeLibraryAnim.IsActive())
+        {
+            recipeLibraryAnim.Kill();
+        }
+
+        Vector2 targetPos = new(recipeLibrarySelectRect.anchoredPosition.x, recipeLibraryItemTransforms[type].anchoredPosition.y);
+
+        // 创建动画序列
+        recipeLibraryAnim = DOTween.Sequence();
+
+        recipeLibraryAnim.Append(recipeLibrarySelectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad));
     }
 
     /// <summary>
@@ -204,5 +214,24 @@ public class CraftWindow : WindowBase
             // 刷新显示
             RefreshCurrentDisplay();
         });
+
+        // 播放选择动效
+        SelectRecipeWithTween(recipe.cardId);
+    }
+
+    private void SelectRecipeWithTween(string cardId)
+    {
+        // 停止当前动画
+        if (recipeItemAnim != null && recipeItemAnim.IsActive())
+        {
+            recipeItemAnim.Kill();
+        }
+
+        Vector2 targetPos = recipeItemTransforms[cardId].anchoredPosition;
+
+        // 创建动画序列
+        recipeItemAnim = DOTween.Sequence();
+
+        recipeItemAnim.Append(recipeItemSelectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutBack));
     }
 }
