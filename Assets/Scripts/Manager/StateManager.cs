@@ -437,6 +437,8 @@ public class StateManager : MonoBehaviour
 
         // 更新缓存的状态
         StateManager.Instance._lastDangerLevel = currentLevel;
+        // 应用低通滤波等音效变化
+        SoundManager.Instance.ApplyDangerEffects(currentLevel);
 
         // 根据新状态处理音乐
         switch (currentLevel)

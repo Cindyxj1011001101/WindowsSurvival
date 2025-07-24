@@ -11,6 +11,14 @@ public class SoundManager : MonoBehaviour
     private AudioSource sfxSource; // 专用于音效
     private Coroutine fadeCoroutine;// 用于淡入淡出音频
     private float targetVolume;// 目标音量，用于淡入淡出
+    // 心跳时音量倍率
+    private float HrartbeatVolumeMultiplier = 1f;
+
+    // 音频效果组件
+    // 低通滤波器和失真效果
+    private AudioLowPassFilter _lowPassFilter;
+    private AudioDistortionFilter _distortionFilter;
+    private float _defaultCutoffFrequency = 5000f; // 可根据需要调整默认值
 
     private void Awake()
     {
@@ -23,6 +31,16 @@ public class SoundManager : MonoBehaviour
 
         sfxSource = gameObject.AddComponent<AudioSource>();
         sfxSource.playOnAwake = false;
+
+        // 添加音频效果组件 
+        // 低通滤波器和失真效果
+        _lowPassFilter = gameObject.AddComponent<AudioLowPassFilter>();
+        _distortionFilter = gameObject.AddComponent<AudioDistortionFilter>();
+        
+        // 低通滤波器和失真效果de1初始化默认值
+        _lowPassFilter.cutoffFrequency = _defaultCutoffFrequency;
+        _lowPassFilter.enabled = false;
+        _distortionFilter.enabled = false;
 
         GameDataManager.Instance.onBGMVolumeChanged.AddListener(OnBGMVolumeChanged);
         DontDestroyOnLoad(gameObject);
@@ -47,10 +65,42 @@ public class SoundManager : MonoBehaviour
             audioSource.volume = targetVolume = newVolume;
         }
     }
+    //根据危险等级应用音频效果
+    //高危险时，低通滤波器和失真效果开启，音调降低
+    //低危险时，低通滤波器和失真效果开启，音调轻微降低
+    //无危险时，低通滤波器和失真效果关闭，音调恢复正常
+    public void ApplyDangerEffects(DangerLevelEnum dangerLevel)
+    {
+        switch (dangerLevel)
+        {
+            case DangerLevelEnum.High:
+                _lowPassFilter.enabled = true;
+                _lowPassFilter.cutoffFrequency = 1200f; // 低沉闷响
+                _distortionFilter.enabled = true;
+                _distortionFilter.distortionLevel = 0.8f; // 高失真
+                sfxSource.pitch = 0.9f; // 轻微降调
+                
+                HrartbeatVolumeMultiplier = 0.25f; // 心跳时音效音量大幅降低
+                
+                break;
 
+            case DangerLevelEnum.Low:
+                _lowPassFilter.enabled = true;
+                _lowPassFilter.cutoffFrequency = 3000f; // 中等闷响
+                _distortionFilter.enabled = true;
+                _distortionFilter.distortionLevel = 0.4f; // 轻微失真
+                sfxSource.pitch = 0.95f; // 轻微降调
+                HrartbeatVolumeMultiplier = 0.55f; // 心跳时音效音量降低
+                break;
 
-
-
+            case DangerLevelEnum.None:
+                _lowPassFilter.enabled = false;
+                _distortionFilter.enabled = false;
+                sfxSource.pitch = 1f; // 恢复正常
+                HrartbeatVolumeMultiplier =1f; // 音效音量恢复正常·
+                break;
+        }
+    }
 
     public void PlayBGM(string clipName, bool loop = true, float fadeDuration = 1f, float volumeMultiplier = 1f)
     {
@@ -142,8 +192,11 @@ public class SoundManager : MonoBehaviour
         fadeCoroutine = null;
     }
 
-    public void PlaySound(AudioClip clip, bool isRandom)
+    
+    public void PlaySound(string clipName, bool isRandom = false)
     {
+        var clip = GetClip(clipName, "SFX");
+        
         // 获取基础音量
         float baseVolume = GetNormalizedSFXVolume();
         if (isRandom == true)
@@ -156,23 +209,15 @@ public class SoundManager : MonoBehaviour
             sfxSource.pitch = 1f + UnityEngine.Random.Range(-0.1f, 0.1f);
 
             // 播放音效
-            sfxSource.PlayOneShot(clip, finalVolume);
+            sfxSource.PlayOneShot(clip, finalVolume* HrartbeatVolumeMultiplier);
 
 
         }
         else
         {
             sfxSource.pitch = 1f;
-            sfxSource.PlayOneShot(clip, baseVolume);
+            sfxSource.PlayOneShot(clip, baseVolume* HrartbeatVolumeMultiplier);
         }
-
-    }
-
-
-    public void PlaySound(string clipName, bool isRandom = false)
-    {
-        var clip = GetClip(clipName, "SFX");
-        PlaySound(clip, isRandom);
     }
 
     private AudioClip GetClip(string clipName, string type)
@@ -190,7 +235,7 @@ public class SoundManager : MonoBehaviour
 
     private float GetNormalizedSFXVolume()
     {
-        return GameDataManager.Instance.AudioData.masterVolume * GameDataManager.Instance.AudioData.sfxVolume;
+        return GameDataManager.Instance.AudioData.masterVolume * GameDataManager.Instance.AudioData.sfxVolume ;
     }
     /// <summary>
     /// 在考虑上一个地点的情况下播放当前环境的背景音乐
