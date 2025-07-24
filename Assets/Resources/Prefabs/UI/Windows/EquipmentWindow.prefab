@@ -784,7 +784,6 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
   reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &3775747489731615872
 GameObject:
@@ -1457,7 +1456,6 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
   reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &8327907731929548650
 GameObject:
@@ -1470,6 +1468,8 @@ GameObject:
   - component: {fileID: 5800184317556913934}
   - component: {fileID: 1292153763903826624}
   - component: {fileID: 3445815490007568669}
+  - component: {fileID: 4517189856181353258}
+  - component: {fileID: 4561403736507329983}
   m_Layer: 5
   m_Name: TopBar
   m_TagString: Untagged
@@ -1539,6 +1539,38 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4517189856181353258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8327907731929548650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b2068d30dc5594d97e907c2f78e721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  doubleClickInterval: 0.3
+  onDoubleClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4561403736507329983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8327907731929548650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eefec68fc3292944bf54802c7841d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetToMove: {fileID: 0}
+  onPointerDown:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8467947501968293415
 GameObject:
   m_ObjectHideFlags: 0
@@ -1634,7 +1666,6 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
   reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1001 &1906624893956004293
 PrefabInstance:

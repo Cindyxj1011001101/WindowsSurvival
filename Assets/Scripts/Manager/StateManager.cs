@@ -26,6 +26,15 @@ public enum EnvironmentStateEnum
     HasCable,
     PressureLevel
 }
+/// <summary>
+/// 当前危险程度
+/// </summary>
+public enum DangerLevelEnum
+{
+    None,
+    Low,
+    High
+}
 
 /// <summary>
 /// 玩家状态类
@@ -61,6 +70,7 @@ public class PlayerState
         this.extraValue = extraValue;
         stateEnum = state;
     }
+
 }
 
 /// <summary>
@@ -140,15 +150,27 @@ public class StateManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
-        EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
+        // 初始化
         InitPlayerState();
         InitElectricity();
         InitWaterLevel();
+
+        EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
+        // 当环境改变时尝试获取氧气
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
+    }
+
+    private void Start()
+    {
+        // 评估危险状态，播放音乐
+        _lastDangerLevel = EvaluateDangerLevel();
+        PlayDangerLevelMusic(_lastDangerLevel);
     }
 
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
     }
 
     private void InitPlayerState()
@@ -187,32 +209,98 @@ public class StateManager : MonoBehaviour
 
         // 氧气特殊处理
         if (stateEnum == PlayerStateEnum.Oxygen)
-        {
-            var env = GameManager.Instance.CurEnvironmentBag;
-            // 如果获取氧气时在室内环境
-            if (env.PlaceData.isIndoor)
-            {
-                // 优先释放到环境
-                // 计算能释放多少
-                var toRelease = Mathf.Min(env.StateDict[EnvironmentStateEnum.Oxygen].RemainingCapacity, delta);
-                if (toRelease > 0)
-                    // 释放到环境
-                    env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, toRelease);
+            HandlePlayerOxygenChange(delta);
+        else
+            PlayerStateDict[stateEnum].AddCurValue(delta);
 
-                // 计算释放到环境之后还剩多少
-                var left = delta - toRelease;
-                // 加入玩家的氧气
-                if (left > 0)
-                    PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(left);
-                return;
-            }
-        }
-
-        PlayerStateDict[stateEnum].AddCurValue(delta);
-
+        // 刷新前端显示
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
+
+        // 判断危险等级，播放音乐
+        DangerLevelEnum dangerLevel = EvaluateDangerLevel();
+
+        // 如果状态没有变化，直接返回
+        if (dangerLevel != _lastDangerLevel)
+        {
+            // 更新缓存的状态
+            _lastDangerLevel = dangerLevel;
+            PlayDangerLevelMusic(dangerLevel);
+        }
     }
 
+    /// <summary>
+    /// 尝试从环境中获取氧气
+    /// </summary>
+    private void TryGainOxygenFromEnvironment(EnvironmentBag env)
+    {
+        // 室外环境里没有氧气
+        if (!env.PlaceData.isIndoor) return;
+
+        var gain = Mathf.Min(PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity, env.StateDict[EnvironmentStateEnum.Oxygen].CurValue);
+        if (gain > 0)
+        {
+            PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(gain);
+            env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -gain);
+        }
+
+        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, PlayerStateEnum.Oxygen);
+    }
+
+    private void HandlePlayerOxygenChange(float delta)
+    {
+        var env = GameManager.Instance.CurEnvironmentBag;
+        // 室外环境直接改变玩家氧气，多余的就浪费
+        if (!env.PlaceData.isIndoor)
+        {
+            PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(delta);
+            return;
+        }
+
+        // 每次玩家的氧气变化之前，都先尝试从环境中获取氧气
+        TryGainOxygenFromEnvironment(env);
+
+        // 室内环境
+        // 如果是消耗氧气，优先消耗环境
+        if (delta < 0)
+        {
+            delta = -delta;
+            // 环境氧气剩余量
+            var envOxygen = env.StateDict[EnvironmentStateEnum.Oxygen].CurValue;
+            // 要消耗的环境氧气量
+            var envConsume = Mathf.Min(envOxygen, delta);
+            if (envConsume > 0)
+            {
+                // 消耗环境氧气
+                env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -envConsume);
+            }
+            var playerConsume = delta - envConsume;
+            if (playerConsume > 0)
+            {
+                // 消耗玩家氧气
+                PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(-playerConsume);
+            }
+        }
+        // 如果是补充氧气，优先补充到玩家
+        else if (delta > 0)
+        {
+            // 计算玩家能补充多少
+            var playerGain = Mathf.Min(PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity, delta);
+            if (playerGain > 0)
+                // 补充玩家氧气
+                PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(playerGain);
+            // 计算环境能补充多少
+            var envGain = delta - playerGain;
+            if (envGain > 0)
+                // 补充环境氧气
+                env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, envGain);
+        }
+    }
+
+    /// <summary>
+    /// 改变玩家的额外状态
+    /// </summary>
+    /// <param name="stateEnum"></param>
+    /// <param name="delta"></param>
     public void ChangePlayerExtraState(PlayerStateEnum stateEnum, float delta)
     {
         PlayerStateDict[stateEnum].AddExtraValue(delta);
@@ -221,6 +309,10 @@ public class StateManager : MonoBehaviour
     #endregion
 
     #region 电力和水平面相关
+    /// <summary>
+    /// 改变全局电力
+    /// </summary>
+    /// <param name="delta"></param>
     public void ChangeElectricity(float delta)
     {
         Electricity.CurValue += delta;
@@ -232,6 +324,10 @@ public class StateManager : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// 改变水平面
+    /// </summary>
+    /// <param name="delta"></param>
     public void ChangeWaterLevel(float delta)
     {
         WaterLevel.CurValue += delta;
@@ -289,13 +385,13 @@ public class StateManager : MonoBehaviour
 
     /// <summary>
     /// 饥饿导致的额外变化结算
-    /// 饱食低于20，每回合-0.3精神
+    /// 饱食低于30，每回合-0.3精神
     /// 饱食低于10，每回合-0.7精神
     /// 饱食为0时，每回合-1精神，-8 健康
     /// </summary>
     private void ExtraFullnessChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 20)
+        if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 30)
         {
             ChangePlayerState(PlayerStateEnum.San, -0.3f);
         }
@@ -323,13 +419,13 @@ public class StateManager : MonoBehaviour
 
     /// <summary>
     /// 口渴导致的额外变化结算
-    /// 水分低于20，每回合-0.3精神
+    /// 水分低于30，每回合-0.3精神
     /// 水分低于10，每回合-0.7精神
     /// 口渴为0时，每回合-1精神，-8健康
     /// </summary>
     private void ExtraThirstChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 20)
+        if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 30)
         {
             ChangePlayerState(PlayerStateEnum.San, -0.3f);
         }
@@ -364,9 +460,9 @@ public class StateManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 疲劳导致的额外变化结算
-    /// 困倦大于70每回合-0.5精神
-    /// 困倦大于90后每回合-1.5精神，-2健康
+    /// 清醒度导致的额外变化结算
+    /// 清醒度小于等于30每回合-0.5精神
+    /// 清醒度小于等于10后每回合-1.5精神，-2健康
     /// </summary>
     private void ExtraSobrietyChange()
     {
@@ -383,6 +479,70 @@ public class StateManager : MonoBehaviour
         {
             ChangePlayerState(PlayerStateEnum.San, -6f);
             ChangePlayerState(PlayerStateEnum.Health, -4f);
+        }
+    }
+
+    #endregion
+
+    #region 危险状态
+
+    /// <summary>
+    /// 危险等级
+    /// </summary>
+    public DangerLevelEnum DangerLevel => _lastDangerLevel;
+
+    // 缓存上次的危险状态
+    private DangerLevelEnum _lastDangerLevel = DangerLevelEnum.None;
+
+    // 危险阈值配置
+    private readonly Dictionary<PlayerStateEnum, (float high, float low)> _thresholds = new()
+    {
+        { PlayerStateEnum.Health, (10f, 30f) },//健康
+        { PlayerStateEnum.Fullness, (10f, 30f) },//饱食
+        { PlayerStateEnum.Thirst, (10f, 30f) },//水分
+        { PlayerStateEnum.Sobriety, (10f, 30f) },//清醒度
+        { PlayerStateEnum.San, (10f, 30f) },//精神
+        { PlayerStateEnum.Oxygen, (10f, 25f) },//氧气
+    };
+
+    //一个用于判断危险状态的静态方法，会根据之前的危险阈值配置和当前状态值，来评估当前的危险等级
+    private DangerLevelEnum EvaluateDangerLevel()
+    {
+        bool /*hasHigh = false, */hasLow = false;
+
+        foreach (var (state, (high, low)) in _thresholds)
+        {
+            if (!PlayerStateDict.TryGetValue(state, out var s)) continue;
+
+            float value = s.CurValue;
+            if (value <= high) return DangerLevelEnum.High; // 发现高危立即返回
+            if (value <= low) hasLow = true;
+        }
+
+        return hasLow ? DangerLevelEnum.Low : DangerLevelEnum.None;
+    }
+
+    //处于危险状态时，就播放心跳声，离开就播放环境音乐
+    //如果上次的状态和这次一致，就不切音乐
+    private void PlayDangerLevelMusic(DangerLevelEnum currentLevel)
+    {
+        // 应用低通滤波等音效变化
+        SoundManager.Instance.ApplyDangerEffects(currentLevel);
+
+        // 根据新状态处理音乐
+        switch (currentLevel)
+        {
+            case DangerLevelEnum.None:
+                SoundManager.Instance.PlayCurEnvironmentMusic();
+                break;
+
+            case DangerLevelEnum.Low:
+                SoundManager.Instance.PlayBGM("心跳_01", true, 2f, 1f);
+                break;
+
+            case DangerLevelEnum.High:
+                SoundManager.Instance.PlayBGM("心跳_01", true, 2f, 1.5f);
+                break;
         }
     }
 

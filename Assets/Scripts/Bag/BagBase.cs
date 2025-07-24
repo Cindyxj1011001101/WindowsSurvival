@@ -378,14 +378,50 @@ public abstract class BagBase : MonoBehaviour
     /// </summary>
     public void CompactCards()
     {
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("万能泡泡音", true);
-
+        // 记录整理前的卡牌位置和堆叠数量
+        Dictionary<CardSlot, (int index, int stackNum)> originalStates = new();
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (!slots[i].IsEmpty)
+            {
+                originalStates[slots[i]] = (i, slots[i].StackNum);
+            }
+        }
         // 第一步：尝试合并相同类型的卡牌
         TryMergeSameCards();
 
         // 第二步：紧凑排列剩余的卡牌
         CompactRemainingCards();
+
+        // 检查是否有卡牌位置或堆叠数量变化
+        bool hasChanged = false;
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (!slots[i].IsEmpty && originalStates.TryGetValue(slots[i], out var originalState))
+            {
+                // 检查位置或堆叠数量是否变化
+                if (originalState.index != i || originalState.stackNum != slots[i].StackNum)
+                {
+                    hasChanged = true;
+                    break; // 发现变化立即退出循环
+                }
+            }
+            else if (!slots[i].IsEmpty) // 新出现的非空槽位（可能是合并后移动过来的）
+            {
+                hasChanged = true;
+                break;
+            }
+        }
+
+        // 播放相应音效
+        if (hasChanged)
+        {
+            SoundManager.Instance.PlaySound("整理", true);
+        }
+        else
+        {
+            SoundManager.Instance.PlaySound("低沉泡泡音", true, 1.3f);
+        }
     }
 
     /// <summary>
@@ -503,8 +539,7 @@ public abstract class BagBase : MonoBehaviour
             }
         }
 
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("整理", true);
+        
     }
     #endregion
 }

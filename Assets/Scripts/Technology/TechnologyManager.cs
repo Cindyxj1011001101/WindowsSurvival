@@ -110,7 +110,7 @@ public class TechnologyManager
     /// </summary>
     /// <param name="techNode"></param>
     /// <returns></returns>
-    public bool IsTechNodeStudied(ScriptableTechnologyNode techNode)
+    public bool IsTechNodeComplished(ScriptableTechnologyNode techNode)
     {
         return techData.studiedTechNodes.Contains(techNode.techName);
     }

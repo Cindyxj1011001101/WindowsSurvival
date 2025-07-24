@@ -90,6 +90,7 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         // 设置获得焦点的窗口是渲染层级最靠前的窗口
         // 或者是null
         FocusWindow(windowGroup.GetTheFrontWindow());
+        
     }
 
     //public void MaximizeWindow(string appName)

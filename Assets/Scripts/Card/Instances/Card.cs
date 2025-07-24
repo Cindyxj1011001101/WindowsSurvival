@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -236,12 +237,6 @@ public class Event
     public void Inovke()
     {
         action?.Invoke();
-        EndEvent();
-    }
-
-    public void EndEvent()
-    {
-        //根据当前状态切换心跳音效
     }
 
     public bool Judge()

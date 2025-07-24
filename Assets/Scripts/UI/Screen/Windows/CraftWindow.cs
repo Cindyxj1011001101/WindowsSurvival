@@ -62,7 +62,7 @@ public class CraftWindow : WindowBase
     /// </summary>
     private void DisplayRecipeLibraries()
     {
-        LayoutRebuilder.ForceRebuildLayoutImmediate(recipeLibraryLayout.transform as RectTransform);
+        LayoutRebuilder.ForceRebuildLayoutImmediate(recipeLibraryLayout as RectTransform);
 
         for (int i = 0; i < recipeLibraryLayout.childCount; i++)
         {

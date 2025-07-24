@@ -39,6 +39,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // 更新源卡槽显示
         sourceSlot.DisplayCard(sourceSlot.PeekCard(), sourceSlot.StackNum - pickedCount);
         cursorSlot.DisplayCard(sourceSlot.PeekCard(), pickedCount);
+        SoundManager.Instance.PlaySound("拿起卡牌", true);
     }
 
     public void OnDrag(PointerEventData eventData)

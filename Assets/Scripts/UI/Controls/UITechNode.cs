@@ -1,49 +1,107 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
-public class UITechNode : MonoBehaviour
+public class UITechNode : HoverableButton
 {
-    [SerializeField] private Text techName;
-    [SerializeField] private Transform recipeLayout;
-    [SerializeField] private Slider progressSlider;
-    [SerializeField] private Image lockImage;
-    [SerializeField] private Image background;
+    public Text techName;
+    public Transform recipeLayout;
+    public StateSlider progressSlider;
+    public GameObject background;
+    public GameObject foreground_inProgress;
+    public GameObject foreground_complished;
+    public Text costText;
+    public GameObject gifObject;
+
+    public Color complishedColor;
+    public Color lockedColor;
+    public Color normalColor;
+
+    private List<Image> recipeImages = new();
+
+    private ScriptableTechnologyNode techNode;
+
+    public void RefreshDiplay()
+    {
+        if (this.techNode != null)
+            DisplayTechNode(this.techNode);
+    }
 
     public void DisplayTechNode(ScriptableTechnologyNode techNode)
     {
-        // 显示解锁情况
-        lockImage.gameObject.SetActive(TechnologyManager.Instance.IsTechNodeLocked(techNode));
+        this.techNode = techNode;
 
-        if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
-            background.color = Color.cyan;
-        else
-            background.color = Color.white;
-
-            // 显示科技名称
-            techName.text = techNode.techName;
+        // 显示必要信息
+        techName.text = techNode.techName;
+        costText.text = $"{techNode.cost}科技点";
+        progressSlider.displayPercentage = false;
+        progressSlider.SetValue(TechnologyManager.Instance.GetStudyProgress(techNode), techNode.cost);
 
         // 显示解锁配方
         MonoUtility.DestroyAllChildren(recipeLayout);
-        var recipeEntry = Resources.Load<GameObject>("Prefabs/UI/Controls/CardImage");
+        recipeImages.Clear();
+        var recipeItem = Resources.Load<GameObject>("Prefabs/UI/Controls/Study/RecipeItem_TechNode");
         foreach (var recipe in techNode.recipes)
         {
-            var obj = Instantiate(recipeEntry, recipeLayout);
-            obj.transform.Find("Icon").GetComponent<Image>().sprite = recipe.CardImage;
+            var obj = Instantiate(recipeItem, recipeLayout);
+            var button = obj.GetComponent<HoverableButton>();
+            button.normalImage.sprite = recipe.CardImage;
+            recipeImages.Add(button.normalImage);
         }
 
-        // 显示研究进度和研究速度
-        // 研究已完成
-        if (TechnologyManager.Instance.IsTechNodeStudied(techNode))
+        // 已完成
+        if (TechnologyManager.Instance.IsTechNodeComplished(techNode))
         {
-            progressSlider.value = 1;
-            progressSlider.GetComponentInChildren<Text>().text = $"已完成";
+            background.SetActive(false);
+            foreground_inProgress.SetActive(false);
+            foreground_complished.SetActive(true);
+            // 设置颜色
+            foreach (var img in recipeImages)
+            {
+                img.color = complishedColor;
+            }
         }
-        // 其他情况
+        // 未解锁
+        else if (TechnologyManager.Instance.IsTechNodeLocked(techNode))
+        {
+            background.SetActive(true);
+            foreground_inProgress.SetActive(false);
+            foreground_complished.SetActive(false);
+            // 设置颜色
+            foreach (var img in recipeImages)
+            {
+                img.color = lockedColor;
+            }
+            techName.color = lockedColor;
+        }
+        // 正在研究
+        else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
+        {
+            background.SetActive(false);
+            foreground_inProgress.SetActive(true);
+            foreground_complished.SetActive(false);
+            // 设置颜色
+            foreach (var img in recipeImages)
+            {
+                img.color = normalColor;
+            }
+            foreground_inProgress.GetComponent<Image>().color = Color.white;
+            gifObject.SetActive(true);
+            gifObject.GetComponent<Animator>().SetTrigger("Play");
+        }
+        // 待研究
         else
         {
-            var progress = TechnologyManager.Instance.GetStudyProgress(techNode);
-            progressSlider.value = progress / techNode.cost;
-            progressSlider.GetComponentInChildren<Text>().text = $"{progress} / {techNode.cost}";
+            background.SetActive(false);
+            foreground_inProgress.SetActive(true);
+            foreground_complished.SetActive(false);
+            // 设置颜色
+            foreach (var img in recipeImages)
+            {
+                img.color = normalColor;
+            }
+            foreground_inProgress.GetComponent<Image>().color = normalColor;
+            gifObject.SetActive(false);
         }
     }
 }
