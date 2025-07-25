@@ -62,7 +62,6 @@ public class ChatManager : MonoBehaviour
             return;
         }
         instance = this;
-        DontDestroyOnLoad(gameObject);
         EventManager.Instance.AddListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
         ExcelReader.ReadChat("test");
         GameDataManager.Instance.LoadGeneratedChatData();
@@ -74,7 +73,7 @@ public class ChatManager : MonoBehaviour
     }
     public void OnDestroy()
     {
-        //GameDataManager.Instance.SaveGeneratedChatData();
+        GameDataManager.Instance.SaveGeneratedChatData();
         EventManager.Instance.RemoveListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
     }
     public void TriggerParagraph(ParagraphData paragraphData)

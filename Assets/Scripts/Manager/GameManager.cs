@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        DontDestroyOnLoad(gameObject);
         // 玩家背包
         playerBag = FindObjectOfType<PlayerBag>(true);
         // 所有环境背包

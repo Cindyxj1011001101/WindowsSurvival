@@ -21,7 +21,6 @@ public class TimeManager : MonoBehaviour
                 {
                     GameObject managerObj = new GameObject("TimeManager");
                     instance = managerObj.AddComponent<TimeManager>();
-                    DontDestroyOnLoad(managerObj);
                 }
             }
             return instance;
@@ -37,14 +36,18 @@ public class TimeManager : MonoBehaviour
         }
 
         instance = this;
-        DontDestroyOnLoad(gameObject);
         Init();
     }
 
     public void Init()
     {
+        //默认初始化
         curTime = StartDateTime;
         curInterval = SettleInterval;
+
+        //从存档初始化
+        curTime=GameDataManager.Instance.GameRuntimeData.CurTime;
+        curInterval=GameDataManager.Instance.GameRuntimeData.CurInterval;
     }
 
     private void Start()
