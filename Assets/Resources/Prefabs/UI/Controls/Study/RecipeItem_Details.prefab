@@ -246,11 +246,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   normalImage: {fileID: 5338849676551946250}
-  hoveredImage: {fileID: 7931913765161978511}
+  hoveredGraphics: []
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 5338849676551946250}
+  currentColor: {r: 0.90588236, g: 0.90588236, b: 0.90588236, a: 255}
   reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 255}
 --- !u!1 &9011149717776577559
 GameObject:

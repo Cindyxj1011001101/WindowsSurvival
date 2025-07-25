@@ -17,7 +17,7 @@ public class UITechNode : HoverableButton
     public Color lockedColor;
     public Color normalColor;
 
-    private List<Image> recipeImages = new();
+    private List<HoverableButton> recipeButtons = new();
 
     private ScriptableTechnologyNode techNode;
 
@@ -39,14 +39,14 @@ public class UITechNode : HoverableButton
 
         // 显示解锁配方
         MonoUtility.DestroyAllChildren(recipeLayout);
-        recipeImages.Clear();
+        recipeButtons.Clear();
         var recipeItem = Resources.Load<GameObject>("Prefabs/UI/Controls/Study/RecipeItem_TechNode");
         foreach (var recipe in techNode.recipes)
         {
             var obj = Instantiate(recipeItem, recipeLayout);
             var button = obj.GetComponent<HoverableButton>();
             button.normalImage.sprite = recipe.CardImage;
-            recipeImages.Add(button.normalImage);
+            recipeButtons.Add(button);
         }
 
         // 已完成
@@ -56,9 +56,9 @@ public class UITechNode : HoverableButton
             foreground_inProgress.SetActive(false);
             foreground_complished.SetActive(true);
             // 设置颜色
-            foreach (var img in recipeImages)
+            foreach (var btn in recipeButtons)
             {
-                img.color = complishedColor;
+                btn.currentColor = btn.normalImage.color = complishedColor;
             }
         }
         // 未解锁
@@ -68,9 +68,9 @@ public class UITechNode : HoverableButton
             foreground_inProgress.SetActive(false);
             foreground_complished.SetActive(false);
             // 设置颜色
-            foreach (var img in recipeImages)
+            foreach (var btn in recipeButtons)
             {
-                img.color = lockedColor;
+                btn.currentColor = btn.normalImage.color = lockedColor;
             }
             techName.color = lockedColor;
         }
@@ -81,9 +81,9 @@ public class UITechNode : HoverableButton
             foreground_inProgress.SetActive(true);
             foreground_complished.SetActive(false);
             // 设置颜色
-            foreach (var img in recipeImages)
+            foreach (var btn in recipeButtons)
             {
-                img.color = normalColor;
+                btn.currentColor = btn.normalImage.color = normalColor;
             }
             foreground_inProgress.GetComponent<Image>().color = Color.white;
             gifObject.SetActive(true);
@@ -96,9 +96,9 @@ public class UITechNode : HoverableButton
             foreground_inProgress.SetActive(true);
             foreground_complished.SetActive(false);
             // 设置颜色
-            foreach (var img in recipeImages)
+            foreach (var btn in recipeButtons)
             {
-                img.color = normalColor;
+                btn.currentColor = btn.normalImage.color = normalColor;
             }
             foreground_inProgress.GetComponent<Image>().color = normalColor;
             gifObject.SetActive(false);

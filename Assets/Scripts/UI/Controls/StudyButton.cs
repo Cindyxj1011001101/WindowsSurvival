@@ -10,8 +10,6 @@ public class StudyButton : HoverableButton
     public Color lockedColor;
     public Color complishedColor;
 
-    public float textAnimDuration = 2f;
-
     private bool beingStudied = false;
 
     public Animator studyingAnim;
