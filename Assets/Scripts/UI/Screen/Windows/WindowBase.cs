@@ -69,9 +69,9 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         minimizeButton.onClick.AddListener(OnMinimizeButtonClicked);
 
         // 将聚焦框设置为不可见
-        var c = focusImage.color;
-        c.a = 0;
-        focusImage.color = c;
+        //var c = focusImage.color;
+        //c.a = 0;
+        //focusImage.color = c;
     }
 
     private void OnCloseButtonClicked()
