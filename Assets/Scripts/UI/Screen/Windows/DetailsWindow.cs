@@ -5,7 +5,6 @@ public class DetailsWindow : WindowBase
 {
     [SerializeField] private Text detailsText;
     [SerializeField] private Transform buttonLayout;
-    //[SerializeField] private Transform tagLayout;
     [SerializeField] private CardSlot slot;
     private Card currentDisplayedCard;
 
@@ -24,6 +23,7 @@ public class DetailsWindow : WindowBase
 
     protected override void Init()
     {
+        Clear();
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public class DetailsWindow : WindowBase
             else
             {
                 button.Interactable = false;
-                //btnText.color = new Color(89, 89, 89, 255);
+                btnText.color = ColorManager.Instance.darkGrey;
             }
         }
     }
@@ -103,6 +103,5 @@ public class DetailsWindow : WindowBase
         currentDisplayedCard = null;
         detailsText.text = "";
         MonoUtility.DestroyAllChildren(buttonLayout);
-        //MonoUtility.DestroyAllChildren(tagLayout);
     }
 }

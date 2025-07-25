@@ -7,8 +7,6 @@ public class StudyButton : HoverableButton
 {
     public Text text;
     public GameObject iconObject;
-    public Color lockedColor;
-    public Color complishedColor;
 
     private bool beingStudied = false;
 
@@ -27,7 +25,7 @@ public class StudyButton : HoverableButton
             iconObject.SetActive(false);
             Interactable = false;
             text.text = "已完成";
-            text.color = complishedColor;
+            text.color = ColorManager.Instance.cyan;
         }
         // 研究正在进行
         else if (beingStudied)
@@ -35,7 +33,7 @@ public class StudyButton : HoverableButton
             iconObject.SetActive(true);
             Interactable = true;
             text.text = "研究中";
-            text.color = Color.white;
+            text.color = ColorManager.Instance.white;
             // 播放动效
             PlayAnim();
 
@@ -44,7 +42,7 @@ public class StudyButton : HoverableButton
             onClick.AddListener(() =>
             {
                 stopStudying?.Invoke();
-                text.color = reversedColor;
+                text.color = ColorManager.Instance.black;
             });
         }
         // 研究未解锁
@@ -53,7 +51,7 @@ public class StudyButton : HoverableButton
             iconObject.SetActive(false);
             Interactable = false;
             text.text = "未解锁";
-            text.color = lockedColor;
+            text.color = ColorManager.Instance.darkGrey;
         }
         // 可以进行研究
         else
@@ -61,14 +59,14 @@ public class StudyButton : HoverableButton
             iconObject.SetActive(true);
             Interactable = true;
             text.text = "开始研究";
-            text.color = Color.white;
+            text.color = ColorManager.Instance.white;
 
             // 点击开始研究
             onClick.RemoveAllListeners();
             onClick.AddListener(() =>
             {
                 startStuyding?.Invoke();
-                text.color = reversedColor;
+                text.color = ColorManager.Instance.black;
             });
         }
     }

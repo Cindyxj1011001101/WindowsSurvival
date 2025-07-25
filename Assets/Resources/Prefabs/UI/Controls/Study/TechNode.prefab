@@ -1198,11 +1198,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   normalImage: {fileID: 0}
-  hoveredImage: {fileID: 0}
+  hoveredGraphics: []
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
-  reversedColor: {r: 17, g: 17, b: 17, a: 255}
+  currentColor: {r: 0, g: 0, b: 0, a: 0}
   techName: {fileID: 986151656385515189}
   recipeLayout: {fileID: 5906836050503831739}
   progressSlider: {fileID: 3347910298658397897}
@@ -1211,9 +1211,6 @@ MonoBehaviour:
   foreground_complished: {fileID: 29967084408563408}
   costText: {fileID: 5764071431035471168}
   gifObject: {fileID: 2291946235173391245}
-  complishedColor: {r: 0, g: 1, b: 0.76470596, a: 1}
-  lockedColor: {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 1}
-  normalColor: {r: 0.6784314, g: 0.6784314, b: 0.6784314, a: 1}
 --- !u!222 &7646256635481834154
 CanvasRenderer:
   m_ObjectHideFlags: 0

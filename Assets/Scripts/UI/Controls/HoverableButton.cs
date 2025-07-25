@@ -14,9 +14,9 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public Text[] textsNeedToReverseColor;
     public Image[] imagseNeedToReverseColor;
 
-    public Color currentColor = new Color(231, 231, 231, 255);
-    [SerializeField]
-    protected Color reversedColor = new Color(17, 17, 17, 255);
+    public Color currentColor;
+    //[SerializeField]
+    //protected Color reversedColor = new Color(17, 17, 17, 255);
 
     public UnityEvent onClick { get; set; } = new UnityEvent();
     public UnityEvent onPointerEnter { get; set; } = new UnityEvent();
@@ -48,6 +48,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
         if (normalImage != null)
             currentColor = normalImage.color;
+        else
+            currentColor = ColorManager.Instance.white;
 
         // 初始化时确保hoveredImage是透明的
         foreach (var graphic in hoveredGraphics)
@@ -80,7 +82,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             graphic.DOKill(); // 停止所有正在进行的动画
             graphic.DOFade(1f, fadeDuration)
                 .SetEase(Ease.OutQuad)
-                .OnStart(() => ChangeColor(reversedColor)); // 在动画开始时改变颜色
+                .OnStart(() => ChangeColor(ColorManager.Instance.black)); // 在动画开始时改变颜色
         }
     }
 

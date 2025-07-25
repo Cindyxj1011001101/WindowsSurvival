@@ -1127,9 +1127,11 @@ MonoBehaviour:
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: -1399726919, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_hovered: {fileID: -416697522, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  focusImage: {fileID: 0}
   detailsText: {fileID: 3688787496984217104}
   buttonLayout: {fileID: 5999479947138994050}
   slot: {fileID: 7727556266791660350}
+  notInteractableColor: {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 1}
 --- !u!1 &8367137605979994741
 GameObject:
   m_ObjectHideFlags: 0
