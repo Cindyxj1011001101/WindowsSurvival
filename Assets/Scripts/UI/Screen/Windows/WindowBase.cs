@@ -130,8 +130,11 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         if (dragMoveHandler != null)
             dragMoveHandler.enabled = true;
         // 最大化按钮图标改变
-        maximizeButton.normalImage.sprite = maximize_default;
-        (maximizeButton.hoveredGraphics[0] as Image).sprite = maximize_hovered;
+        if (maximizeButton.gameObject.activeSelf)
+        {
+            maximizeButton.normalImage.sprite = maximize_default;
+            (maximizeButton.hoveredGraphics[0] as Image).sprite = maximize_hovered;
+        }
 
         SetState(WindowState.Normal);
 
@@ -205,8 +208,11 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         if (dragMoveHandler != null)
             dragMoveHandler.enabled = false;
         // 最大化按钮图标改变
-        maximizeButton.normalImage.sprite = restore_default;
-        (maximizeButton.hoveredGraphics[0] as Image).sprite = restore_hovered;
+        if (maximizeButton.gameObject.activeSelf)
+        {
+            maximizeButton.normalImage.sprite = restore_default;
+            (maximizeButton.hoveredGraphics[0] as Image).sprite = restore_hovered;
+        }
 
         // 保存当前状态以便恢复
         RecordLastTransformInfo();

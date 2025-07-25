@@ -62,10 +62,6 @@ public class BottomBar : MonoBehaviour
         selectRect.anchoredPosition = startPos;
 
         Vector2 targetPos = (shortcuts[appName].transform as RectTransform).anchoredPosition;
-        //Vector2 targetSize = selectRect.sizeDelta;
-        //Vector2 stretchedSize = new Vector2(
-        //    targetSize.x * 1.2f, // 拉伸比例
-        //    targetSize.y);
 
         // 显示选中框
         selectRect.gameObject.SetActive(true);
@@ -73,12 +69,7 @@ public class BottomBar : MonoBehaviour
         // 创建动画序列
         currentAnimation = DOTween.Sequence();
 
-        // 第一步：移动到目标位置并拉伸
         currentAnimation.Append(selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutBack));
-        //currentAnimation.Join(selectRect.DOSizeDelta(stretchedSize, 0.2f).SetEase(Ease.OutQuad));
-
-        // 第二步：收缩回正常大小
-        //currentAnimation.Append(selectRect.DOSizeDelta(targetSize, 0.15f).SetEase(Ease.OutBack));
 
         selectedAppName = appName;
     }
@@ -96,6 +87,9 @@ public class BottomBar : MonoBehaviour
 
     private void SetOpened(HoverableButton shortcut, bool value)
     {
-        shortcut.normalImage.color = value ? Color.white : closedColor;
+        //shortcut.normalImage.color = value ? Color.white : closedColor;
+        shortcut.currentColor = value ? Color.white : closedColor;
+        if (!value)
+            shortcut.ChangeColor(closedColor);
     }
 }

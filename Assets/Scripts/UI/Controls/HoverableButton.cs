@@ -14,7 +14,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public Text[] textsNeedToReverseColor;
     public Image[] imagseNeedToReverseColor;
 
-    protected Color currentColor;
+    [HideInInspector]
+    public Color currentColor;
     [SerializeField]
     protected Color reversedColor = new Color(17, 17, 17, 255);
 
@@ -48,8 +49,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     {
         onPointerEnter?.Invoke();
 
-        if (normalImage != null)
-            currentColor = normalImage.color;
+        //if (normalImage != null)
+        //    currentColor = normalImage.color;
 
         // 激活图像并开始淡入动画
         foreach (var graphic in hoveredGraphics)
@@ -86,7 +87,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         }
     }
 
-    private void ChangeColor(Color color)
+    public void ChangeColor(Color color)
     {
         foreach (var text in textsNeedToReverseColor)
         {
