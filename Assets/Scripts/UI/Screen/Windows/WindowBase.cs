@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public enum WindowState
 {
@@ -130,7 +131,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
             dragMoveHandler.enabled = true;
         // 最大化按钮图标改变
         maximizeButton.normalImage.sprite = maximize_default;
-        maximizeButton.hoveredImage.sprite = maximize_hovered;
+        (maximizeButton.hoveredGraphics[0] as Image).sprite = maximize_hovered;
 
         SetState(WindowState.Normal);
 
@@ -205,7 +206,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
             dragMoveHandler.enabled = false;
         // 最大化按钮图标改变
         maximizeButton.normalImage.sprite = restore_default;
-        maximizeButton.hoveredImage.sprite = restore_hovered;
+        (maximizeButton.hoveredGraphics[0] as Image).sprite = restore_hovered;
 
         // 保存当前状态以便恢复
         RecordLastTransformInfo();
