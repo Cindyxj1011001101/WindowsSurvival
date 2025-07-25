@@ -35,6 +35,7 @@ RectTransform:
   - {fileID: 1852791440831123874}
   - {fileID: 4206165843465290406}
   - {fileID: 8074672937073413252}
+  - {fileID: 8519623461756875854}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -98,7 +99,7 @@ MonoBehaviour:
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: 154959178, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
-  focusImage: {fileID: 0}
+  focusFrameImage: {fileID: 0}
   discoveryDegreeSlider: {fileID: 5093666953090071289}
   placeNameText: {fileID: 8591096256896571305}
   environmentImage: {fileID: 7258778455591954335}
@@ -275,7 +276,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &249765370088593045
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,7 +1063,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &1066531500792619717
 GameObject:
   m_ObjectHideFlags: 0
@@ -1325,7 +1324,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &1377641854807241709
 GameObject:
   m_ObjectHideFlags: 0
@@ -1791,7 +1789,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &1585084428795192449
 GameObject:
   m_ObjectHideFlags: 0
@@ -2057,7 +2054,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &1983286625436528238
 GameObject:
   m_ObjectHideFlags: 0
@@ -2144,6 +2140,7 @@ GameObject:
   - component: {fileID: 8372862363259594263}
   - component: {fileID: 5978639822580040359}
   - component: {fileID: 8591096256896571305}
+  - component: {fileID: 6943860680573452176}
   m_Layer: 5
   m_Name: Name
   m_TagString: Untagged
@@ -2212,6 +2209,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "\u7EF4\u751F\u8231"
+--- !u!114 &6943860680573452176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031582418010960930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcbdd3064bcedf24f9f18cc8a1216f79, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spacing_x: -4
+  spacing_y: 0
+  alignment: 1
 --- !u!1 &2042388072198600721
 GameObject:
   m_ObjectHideFlags: 0
@@ -2688,7 +2700,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &2424522390029364682
 GameObject:
   m_ObjectHideFlags: 0
@@ -3551,7 +3562,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &3754722094410957979
 GameObject:
   m_ObjectHideFlags: 0
@@ -3757,7 +3767,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &4260604441359877625
 GameObject:
   m_ObjectHideFlags: 0
@@ -4073,7 +4082,6 @@ MonoBehaviour:
   imagseNeedToReverseColor:
   - {fileID: 4567127615776284085}
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &4545059692613510907
 GameObject:
   m_ObjectHideFlags: 0
@@ -4281,7 +4289,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &5125253369478390303
 GameObject:
   m_ObjectHideFlags: 0
@@ -4543,7 +4550,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &5154602350777489038
 GameObject:
   m_ObjectHideFlags: 0
@@ -5128,7 +5134,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &6205940378059617776
 GameObject:
   m_ObjectHideFlags: 0
@@ -5225,7 +5230,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &6351951290710347037
 GameObject:
   m_ObjectHideFlags: 0
@@ -6343,7 +6347,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &8004706778210735753
 GameObject:
   m_ObjectHideFlags: 0
@@ -6793,7 +6796,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &8414040559134189478
 GameObject:
   m_ObjectHideFlags: 0
@@ -7011,6 +7013,81 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 2045139253, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!1 &8512288579690011948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8519623461756875854}
+  - component: {fileID: 3533794122271589624}
+  - component: {fileID: 3390089626163084646}
+  m_Layer: 5
+  m_Name: Frame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8519623461756875854
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8512288579690011948}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.0000798, y: 1.0000798, z: 1.0000798}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3788474116430189270}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -4, y: -4}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &3533794122271589624
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8512288579690011948}
+  m_CullTransparentMesh: 1
+--- !u!114 &3390089626163084646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8512288579690011948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 1242553631, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -7543,7 +7620,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   currentColor: {r: 0, g: 0, b: 0, a: 0}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
 --- !u!1 &9137890248894862528
 GameObject:
   m_ObjectHideFlags: 0

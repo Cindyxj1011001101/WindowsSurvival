@@ -7,7 +7,6 @@ public class BottomBar : MonoBehaviour
 {
     private Transform layoutTransform;
     [SerializeField] RectTransform selectRect;
-    [SerializeField] Color closedColor;
 
     private Dictionary<string, HoverableButton> shortcuts = new();
 
@@ -89,6 +88,6 @@ public class BottomBar : MonoBehaviour
     {
         shortcut.currentColor = value ? ColorManager.Instance.white : ColorManager.Instance.darkGrey;
         if (!value)
-            shortcut.ChangeColor(closedColor);
+            shortcut.ChangeColor(ColorManager.Instance.darkGrey);
     }
 }

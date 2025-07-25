@@ -27,7 +27,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     [SerializeField] private Sprite maximize_hovered;
     [SerializeField] private Sprite restore_default;
     [SerializeField] private Sprite restore_hovered;
-    [SerializeField] private Image focusImage;
+    private Image focusFrameImage;
 
     private DragMoveHandler dragMoveHandler;
 
@@ -69,9 +69,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         minimizeButton.onClick.AddListener(OnMinimizeButtonClicked);
 
         // 将聚焦框设置为不可见
-        //var c = focusImage.color;
-        //c.a = 0;
-        //focusImage.color = c;
+        focusFrameImage = transform.Find("Frame").GetComponent<Image>();
+        focusFrameImage.gameObject.SetActive(false);
     }
 
     private void OnCloseButtonClicked()
@@ -287,23 +286,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     {
         if (this.focused == focused) return;
 
-        if (focused)
-        {
-            FrameShowTween();
-        }
-        else
-        {
-            FrameHideTween();
-        }
-    }
-
-    private void FrameShowTween()
-    {
-        //focusImage.DOFade(1, .1f).SetEase(Ease.OutQuad);
-    }
-
-    private void FrameHideTween()
-    {
-        //focusImage.DOFade(0, .1f).SetEase(Ease.OutQuad);
+        this.focused = focused;
+        focusFrameImage.gameObject.SetActive(focused);
     }
 }
