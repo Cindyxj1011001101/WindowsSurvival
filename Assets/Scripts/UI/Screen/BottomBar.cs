@@ -29,7 +29,7 @@ public class BottomBar : MonoBehaviour
         layoutTransform = GetComponentInChildren<GridLayoutGroup>().transform;
         for (int i = 0; i < layoutTransform.childCount; i++)
         {
-            if (layoutTransform.GetChild(i).TryGetComponent<HoverableButton>(out var shortcut))
+            if (layoutTransform.GetChild(i).TryGetComponent<BottomBarShortcut>(out var shortcut))
             {
                 shortcuts.Add(shortcut.name, shortcut);
                 SetOpened(shortcut, false);
