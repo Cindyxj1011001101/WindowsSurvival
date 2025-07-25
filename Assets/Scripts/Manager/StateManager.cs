@@ -1,6 +1,6 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -42,17 +42,25 @@ public enum DangerLevelEnum
 /// </summary>
 public class PlayerState
 {
+    [JsonProperty]
     private float curValue;
+    [JsonProperty]
     private float extraValue;
+    [JsonProperty]
     private float maxValue;
+    [JsonProperty]
     public PlayerStateEnum stateEnum;
 
+    [JsonIgnore]
     public float CurValue => curValue;
 
+    [JsonIgnore]
     public float ExtraValue => extraValue;
 
+    [JsonIgnore]
     public float MaxValue => maxValue + extraValue;
-    
+
+    [JsonIgnore]
     public float RemainingCapacity => MaxValue - CurValue;
 
     public void AddCurValue(float delta)
@@ -74,7 +82,6 @@ public class PlayerState
         this.extraValue = extraValue;
         stateEnum = state;
     }
-
 }
 
 /// <summary>
@@ -82,11 +89,16 @@ public class PlayerState
 /// </summary>
 public class EnvironmentState
 {
+    [JsonProperty]
     private float curValue;
+    [JsonProperty]
     public float MaxValue { get; set; }
-    public float RemainingCapacity => MaxValue - CurValue;
+    [JsonProperty]
     public EnvironmentStateEnum stateEnum;
+    [JsonIgnore]
+    public float RemainingCapacity => MaxValue - CurValue;
 
+    [JsonIgnore]
     public float CurValue
     {
         get => curValue;
@@ -153,10 +165,25 @@ public class StateManager : MonoBehaviour
         instance = this;
 
         // 初始化
-        InitPlayerState();
-        InitElectricity();
-        InitWaterLevel();
+        var stateData = GameDataManager.Instance.StateData;
+        if (!stateData.init)
+        {
+            InitPlayerState();
+            InitElectricity();
+            InitWaterLevel();
+            InitLoad();
+            //GameDataManager.Instance.SaveStateData();
+        }
+        else
+        {
+            Electricity = stateData.electricity;
+            WaterLevel = stateData.waterLevel;
+            PlayerStateDict = stateData.playerState;
+            CurLoad = stateData.curLoad;
+            MaxLoad = stateData.maxLoad;
+        }
 
+        // 监听回合结算
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
         // 当环境改变时尝试获取氧气
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
@@ -194,6 +221,12 @@ public class StateManager : MonoBehaviour
     private void InitWaterLevel()
     {
         WaterLevel = new EnvironmentState(0, 100, EnvironmentStateEnum.WaterLevel);
+    }
+
+    private void InitLoad()
+    {
+        MaxLoad = 15;
+        CurLoad = 0;
     }
     #endregion
 
@@ -603,11 +636,11 @@ public class StateManager : MonoBehaviour
     /// <summary>
     /// 最大负重
     /// </summary>
-    public float MaxLoad { get; set; } = 15;
+    public float MaxLoad { get; set; }
     /// <summary>
     /// 当前负重
     /// </summary>
-    public float CurLoad { get; set; } = 0;
+    public float CurLoad { get; set; }
 
     public void AddLoad(float weight)
     {

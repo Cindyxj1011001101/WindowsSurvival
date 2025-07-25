@@ -64,21 +64,25 @@ public class EnvironmentBag : BagBase
         RepeatableDropList.StartUpdating();
 
         // 读取环境状态
-        StateDict = data.environmentStateDict;
-
-        //如果是开局进入，则初始化环境状态
-        if (StateDict.Count == 0)
+        if (!data.init)
+        {
             InitState();
+            //GameDataManager.Instance.SaveEnvironmentBagRuntimeData();
+        }
+        else
+        {
+            StateDict = data.environmentStateDict;
+        }
     }
 
     private void InitState()
     {
         // 电力都显示
-        StateDict.Add(EnvironmentStateEnum.Electricity, StateManager.Instance.Electricity);
+        //StateDict.Add(EnvironmentStateEnum.Electricity, StateManager.Instance.Electricity);
 
-        // 在飞船内显示水平面高度
-        if (placeData.isInSpacecraft)
-            StateDict.Add(EnvironmentStateEnum.WaterLevel, StateManager.Instance.WaterLevel);
+        //// 在飞船内显示水平面高度
+        //if (placeData.isInSpacecraft)
+        //    StateDict.Add(EnvironmentStateEnum.WaterLevel, StateManager.Instance.WaterLevel);
 
         // 在室内显示氧气
         if (placeData.isIndoor)

@@ -1,0 +1,53 @@
+{
+  "init": false,
+  "electricity": {
+    "curValue": 32.0,
+    "stateEnum": 0,
+    "MaxValue": 50.0
+  },
+  "waterLevel": {
+    "curValue": 0.0,
+    "stateEnum": 2,
+    "MaxValue": 100.0
+  },
+  "playerState": {
+    "Health": {
+      "curValue": 100.0,
+      "extraValue": 0.0,
+      "maxValue": 100.0,
+      "stateEnum": 0
+    },
+    "Fullness": {
+      "curValue": 100.0,
+      "extraValue": 0.0,
+      "maxValue": 100.0,
+      "stateEnum": 1
+    },
+    "Thirst": {
+      "curValue": 100.0,
+      "extraValue": 0.0,
+      "maxValue": 100.0,
+      "stateEnum": 2
+    },
+    "San": {
+      "curValue": 100.0,
+      "extraValue": 0.0,
+      "maxValue": 100.0,
+      "stateEnum": 3
+    },
+    "Oxygen": {
+      "curValue": 60.0,
+      "extraValue": 0.0,
+      "maxValue": 60.0,
+      "stateEnum": 4
+    },
+    "Sobriety": {
+      "curValue": 100.0,
+      "extraValue": 0.0,
+      "maxValue": 100.0,
+      "stateEnum": 5
+    }
+  },
+  "maxLoad": 15.0,
+  "curLoad": 0.0
+}

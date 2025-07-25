@@ -26,6 +26,8 @@ public class GameDataManager
         {
             environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
         }
+        // 状态数据
+        stateData = JsonManager.LoadData<StateData>(CurLoadName, "StateData");
         // 音频数据
         audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
         // 已解锁的配方
@@ -37,7 +39,7 @@ public class GameDataManager
         // 已生成的对话
         generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
         // 其他数据
-        gameRuntimeData = JsonManager.LoadData<GameRuntimeData>(CurLoadName, "GameRuntimeData");
+        timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
     }
 
     public void LoadAllData(int index)
@@ -54,6 +56,8 @@ public class GameDataManager
         {
             environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
         }
+        // 状态数据
+        stateData = JsonManager.LoadData<StateData>(CurLoadName, "StateData");
         // 音频数据
         audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
         // 已解锁的配方
@@ -64,8 +68,8 @@ public class GameDataManager
         equipmentData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "Equipment");
         // 已生成的对话
         generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
-        // 其他数据
-        gameRuntimeData = JsonManager.LoadData<GameRuntimeData>(CurLoadName, "GameRuntimeData");
+        // 时间数据
+        timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
     }
 
     public void SaveAllData()
@@ -76,6 +80,8 @@ public class GameDataManager
         SaveLastPlace();
         // 环境
         SaveEnvironmentBagRuntimeData();
+        // 状态
+        SaveStateData();
         // 音频数据
         SaveAudioData();
         // 已解锁的配方
@@ -86,8 +92,8 @@ public class GameDataManager
         SaveEquipmentData();
         // 已生成的对话
         SaveGeneratedChatData();
-        // 其他数据
-        SaveGameRuntimeData();
+        // 时间数据
+        SaveTimeData();
 
         if (loadData == null)
         {
@@ -98,7 +104,7 @@ public class GameDataManager
             }
         }
         // 保存时间
-        loadData.loads[curLoadIndex].GameTime = gameRuntimeData.CurTime;
+        loadData.loads[curLoadIndex].GameTime = timeData.curTime;
         // 保存存档数据
         SaveLoadData();
         SceneManager.LoadScene(0);
@@ -184,6 +190,7 @@ public class GameDataManager
         foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
         {
             EnvironmentBagRuntimeData data = new();
+            data.init = true;
             // 保存掉落列表
             data.disposableDropList = bag.DisposableDropList;
             data.repeatableDropList = bag.RepeatableDropList;
@@ -311,21 +318,41 @@ public class GameDataManager
     }
     #endregion
 
-    #region 游戏运行时数据
-    private GameRuntimeData gameRuntimeData;
-    public GameRuntimeData GameRuntimeData => gameRuntimeData;
+    #region 游戏时间数据
+    private TimeData timeData;
+    public TimeData TimeData => timeData;
 
-    public void SaveGameRuntimeData()
+    public void SaveTimeData()
     {
-        gameRuntimeData.CurTime = TimeManager.Instance.curTime;
-        gameRuntimeData.CurInterval = TimeManager.Instance.curInterval;
-        gameRuntimeData.PlayerStateDict = new(StateManager.Instance.PlayerStateDict);
-        JsonManager.SaveData(gameRuntimeData, CurLoadName, "GameRuntimeData");
+        timeData.init = true;
+        timeData.curTime = TimeManager.Instance.curTime;
+        timeData.curIntervel = TimeManager.Instance.curInterval;
+        JsonManager.SaveData(timeData, CurLoadName, "TimeData");
     }
 
     public void LoadGameRuntimeData()
     {
-        gameRuntimeData = JsonManager.LoadData<GameRuntimeData>(CurLoadName, "GameRuntimeData");
+        timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
+    }
+    #endregion
+
+
+    #region 状态数据
+    private StateData stateData;
+    public StateData StateData => stateData;
+
+    public void SaveStateData()
+    {
+        stateData = new StateData
+        {
+            init = true,
+            electricity = StateManager.Instance.Electricity,
+            waterLevel = StateManager.Instance.WaterLevel,
+            playerState = StateManager.Instance.PlayerStateDict,
+            maxLoad = StateManager.Instance.MaxLoad,
+            curLoad = StateManager.Instance.CurLoad
+        };
+        JsonManager.SaveData(stateData, CurLoadName, "StateData");
     }
     #endregion
 }

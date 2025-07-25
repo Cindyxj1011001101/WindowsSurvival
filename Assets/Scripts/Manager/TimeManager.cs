@@ -4,7 +4,7 @@ using TMPro;
 
 public class TimeManager : MonoBehaviour
 {
-    public DateTime StartDateTime { get; private set; } = new (2020, 1, 1, 0, 0, 0);
+    public DateTime StartDateTime { get; private set; } = new(2020, 1, 1, 0, 0, 0);
     public DateTime curTime;
     public int SettleInterval;
     public int curInterval;
@@ -41,13 +41,20 @@ public class TimeManager : MonoBehaviour
 
     public void Init()
     {
-        //默认初始化
-        curTime = StartDateTime;
-        curInterval = SettleInterval;
+        var timeData = GameDataManager.Instance.TimeData;
 
-        //从存档初始化
-        curTime=GameDataManager.Instance.GameRuntimeData.CurTime;
-        curInterval=GameDataManager.Instance.GameRuntimeData.CurInterval;
+        if (!timeData.init)
+        {
+            //默认初始化
+            curTime = StartDateTime;
+            curInterval = SettleInterval;
+        }
+        else
+        {
+            //从存档初始化
+            curTime = GameDataManager.Instance.TimeData.curTime;
+            curInterval = GameDataManager.Instance.TimeData.curIntervel;
+        }
     }
 
     private void Start()

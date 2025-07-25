@@ -1,138 +1,139 @@
 {
+  "init": false,
   "disposableDropList": {
-  "maxCount": 13,
-  "dropList": [
-    {
-      "card": {
-        "$type": "CompactBiscuit, Assembly-CSharp",
-        "components": {},
-        "CardId": "压缩饼干"
-      },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "ScrapMetal, Assembly-CSharp",
-        "components": {},
-        "CardId": "废金属"
-      },
-      "dropNum": 2,
-      "dropProb": 2
-    },
-    {
-      "card": {
-        "$type": "ScrapMetal, Assembly-CSharp",
-        "components": {},
-        "CardId": "废金属"
-      },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "ScrapMetal, Assembly-CSharp",
-        "components": {},
-        "CardId": "废金属"
-      },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "HardFiber, Assembly-CSharp",
-        "components": {},
-        "CardId": "硬质纤维"
-      },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "HardFiber, Assembly-CSharp",
-        "components": {},
-        "CardId": "硬质纤维"
-      },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "DoorToCockpit, Assembly-CSharp",
-        "components": {},
-        "CardId": "通往驾驶室的门"
-      },
-      "dropNum": 1,
-      "dropProb": 2
-    },
-    {
-      "card": {
-        "$type": "WasteHeap, Assembly-CSharp",
-        "components": {
-          "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-            "$type": "DurabilityComponent, Assembly-CSharp",
-            "durability": 5,
-            "maxDurability": 5
-          }
+    "maxCount": 13,
+    "dropList": [
+      {
+        "card": {
+          "$type": "CompactBiscuit, Assembly-CSharp",
+          "components": {},
+          "CardId": "压缩饼干"
         },
-        "CardId": "废料堆"
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "WasteHeap, Assembly-CSharp",
-        "components": {
-          "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
-            "$type": "DurabilityComponent, Assembly-CSharp",
-            "durability": 5,
-            "maxDurability": 5
-          }
+      {
+        "card": {
+          "$type": "ScrapMetal, Assembly-CSharp",
+          "components": {},
+          "CardId": "废金属"
         },
-        "CardId": "废料堆"
+        "dropNum": 2,
+        "dropProb": 2
       },
-      "dropNum": 1,
-      "dropProb": 3
-    },
-    {
-      "card": {
-        "$type": "BottledWater, Assembly-CSharp",
-        "components": {},
-        "CardId": "瓶装水"
+      {
+        "card": {
+          "$type": "ScrapMetal, Assembly-CSharp",
+          "components": {},
+          "CardId": "废金属"
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 4
-    },
-    {
-      "card": {
-        "$type": "BottledWater, Assembly-CSharp",
-        "components": {},
-        "CardId": "瓶装水"
+      {
+        "card": {
+          "$type": "ScrapMetal, Assembly-CSharp",
+          "components": {},
+          "CardId": "废金属"
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 4
-    },
-    {
-      "card": {
-        "$type": "Glass, Assembly-CSharp",
-        "components": {},
-        "CardId": "玻璃"
+      {
+        "card": {
+          "$type": "HardFiber, Assembly-CSharp",
+          "components": {},
+          "CardId": "硬质纤维"
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 2
-    },
-    {
-      "card": {
-        "$type": "Glass, Assembly-CSharp",
-        "components": {},
-        "CardId": "玻璃"
+      {
+        "card": {
+          "$type": "HardFiber, Assembly-CSharp",
+          "components": {},
+          "CardId": "硬质纤维"
+        },
+        "dropNum": 1,
+        "dropProb": 3
       },
-      "dropNum": 1,
-      "dropProb": 2
-    }
-  ]
-},
+      {
+        "card": {
+          "$type": "DoorToCockpit, Assembly-CSharp",
+          "components": {},
+          "CardId": "通往驾驶室的门"
+        },
+        "dropNum": 1,
+        "dropProb": 2
+      },
+      {
+        "card": {
+          "$type": "WasteHeap, Assembly-CSharp",
+          "components": {
+            "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+              "$type": "DurabilityComponent, Assembly-CSharp",
+              "durability": 5,
+              "maxDurability": 5
+            }
+          },
+          "CardId": "废料堆"
+        },
+        "dropNum": 1,
+        "dropProb": 3
+      },
+      {
+        "card": {
+          "$type": "WasteHeap, Assembly-CSharp",
+          "components": {
+            "DurabilityComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null": {
+              "$type": "DurabilityComponent, Assembly-CSharp",
+              "durability": 5,
+              "maxDurability": 5
+            }
+          },
+          "CardId": "废料堆"
+        },
+        "dropNum": 1,
+        "dropProb": 3
+      },
+      {
+        "card": {
+          "$type": "BottledWater, Assembly-CSharp",
+          "components": {},
+          "CardId": "瓶装水"
+        },
+        "dropNum": 1,
+        "dropProb": 4
+      },
+      {
+        "card": {
+          "$type": "BottledWater, Assembly-CSharp",
+          "components": {},
+          "CardId": "瓶装水"
+        },
+        "dropNum": 1,
+        "dropProb": 4
+      },
+      {
+        "card": {
+          "$type": "Glass, Assembly-CSharp",
+          "components": {},
+          "CardId": "玻璃"
+        },
+        "dropNum": 1,
+        "dropProb": 2
+      },
+      {
+        "card": {
+          "$type": "Glass, Assembly-CSharp",
+          "components": {},
+          "CardId": "玻璃"
+        },
+        "dropNum": 1,
+        "dropProb": 2
+      }
+    ]
+  },
   "repeatableDropList": {
     "emptyPopulationSizeChangeOnNotCaught": 0,
     "emptyPopulation": {
@@ -146,7 +147,15 @@
     },
     "populationList": []
   },
-  "environmentStateDict": {},
+  "hasCable": true,
+  "pressureLevel": 3,
+  "environmentStateDict": {
+    "Oxygen": {
+      "curValue": 509.0,
+      "stateEnum": 1,
+      "MaxValue": 1000.0
+    }
+  },
   "cardSlotsRuntimeData": [
     {
       "cardList": [
