@@ -27,7 +27,7 @@ public class GameDataManager
             environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
         }
         // 状态数据
-        stateData = JsonManager.LoadData<StateData>(CurLoadName, "StateData");
+        LoadStateData(curLoadIndex);
         // 音频数据
         audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
         // 已解锁的配方
@@ -176,10 +176,10 @@ public class GameDataManager
 
     public void LoadEnvironmentBagRuntimeData()
     {
-       foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
-       {
-           environmentBagDataDict[place] = JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag");
-       }
+        foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
+        {
+            environmentBagDataDict[place] = JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag");
+        }
     }
 
     /// <summary>
@@ -341,6 +341,10 @@ public class GameDataManager
     private StateData stateData;
     public StateData StateData => stateData;
 
+    public void LoadStateData(int index)
+    {
+        stateData = JsonManager.LoadData<StateData>(CurLoadName, "StateData");
+    }
     public void SaveStateData()
     {
         stateData = new StateData
