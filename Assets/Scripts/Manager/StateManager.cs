@@ -47,7 +47,7 @@ public class PlayerState
     private float maxValue;
     public PlayerStateEnum stateEnum;
 
-    public float CurValue => Mathf.Clamp(curValue, 0, MaxValue);
+    public float CurValue => curValue;
 
     public float ExtraValue => extraValue;
 
@@ -58,6 +58,7 @@ public class PlayerState
     public void AddCurValue(float delta)
     {
         curValue += delta;
+        curValue = Mathf.Clamp(curValue, 0, MaxValue);
     }
 
     public void AddExtraValue(float delta)
@@ -180,7 +181,7 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.Fullness, new PlayerState(InitPlayerStateData.Instance.Fullness, 100, 0, PlayerStateEnum.Fullness));
         PlayerStateDict.Add(PlayerStateEnum.Thirst, new PlayerState(InitPlayerStateData.Instance.Thirst, 100, 0, PlayerStateEnum.Thirst));
         PlayerStateDict.Add(PlayerStateEnum.San, new PlayerState(InitPlayerStateData.Instance.San, 100, 0, PlayerStateEnum.San));
-        PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 30, 0, PlayerStateEnum.Oxygen));
+        PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 60, 0, PlayerStateEnum.Oxygen));
         PlayerStateDict.Add(PlayerStateEnum.Sobriety, new PlayerState(InitPlayerStateData.Instance.Sobriety, 100, 0, PlayerStateEnum.Sobriety));
     }
 

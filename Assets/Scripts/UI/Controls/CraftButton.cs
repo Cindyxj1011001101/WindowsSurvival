@@ -1,17 +1,15 @@
-﻿using DG.Tweening;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public  class CraftButton : HoverableButton
 {
-    [SerializeField] GameObject craftObject;
+    [SerializeField] private GameObject craftObject;
     [SerializeField] private Text craftText;
     [SerializeField] private Text lockText;
 
     public void DisplayButton(bool isLocked, bool canCraft)
     {
-        craftText.color = Color.white;
+        craftText.color = currentColor;
         if (isLocked)
         {
             enabled = false;

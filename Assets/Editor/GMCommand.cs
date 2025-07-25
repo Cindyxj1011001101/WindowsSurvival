@@ -188,8 +188,14 @@ public class GMCommand
         AddCard("渗水裂缝");
     }
 
-    [MenuItem("Command/生成掉落列表的Json文件")]
+    [MenuItem("Command/添加/气密舱门")]
     public static void P()
+    {
+        AddCard("气密舱门");
+    }
+
+    [MenuItem("Command/生成掉落列表的Json文件")]
+    public static void Q()
     {
         ExcelReader.GenerateDisposableDropListJson("DisposableDropListConfig");
         ExcelReader.GenerateRepeatableDropListJson("RepeatableDropListConfig");
