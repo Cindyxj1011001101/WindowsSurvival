@@ -220,11 +220,9 @@ public class CardSlot : MonoBehaviour
     /// <returns></returns>
     public int GetRemainingCapacity(Card card)
     {
-        // 如果当前slot为空，剩余容量为card的最大堆叠数量
-        if (IsEmpty) return card.MaxStackNum;
-        // 如果当前slot不为空，并且不可以堆叠该卡牌，则剩余容量为0
+        // 如果不可以堆叠该卡牌，则剩余容量为0
         if (!CanAddCard(card)) return 0;
-        // 剩余容量为最大堆叠数 - 当前堆叠数
+        // 否则返回剩余容量
         return card.MaxStackNum - StackNum;
     }
 

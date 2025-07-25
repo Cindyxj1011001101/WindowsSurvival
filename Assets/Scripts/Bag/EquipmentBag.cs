@@ -124,6 +124,14 @@ public class EquipmentBag : BagBase
 
     public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)
     {
-        throw new System.NotImplementedException();
+        List<(CardSlot, int)> result = new();
+
+        if (!card.TryGetComponent<EquipmentComponent>(out var component)) return result;
+
+        if (!equipmentSlotDict[component.equipmentType].IsEmpty) return result;
+
+        result.Add((equipmentSlotDict[component.equipmentType], 1));
+
+        return result;
     }
 }
