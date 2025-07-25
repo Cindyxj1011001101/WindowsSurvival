@@ -93,12 +93,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 7750718355059619663}
-  hoveredImage: {fileID: 7827004628106925074}
+  normalImage: {fileID: 0}
+  hoveredGraphics: []
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 7750718355059619663}
+  currentColor: {r: 0.90588236, g: 0.90588236, b: 0.90588236, a: 255}
   reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 255}
 --- !u!114 &7510080309559268513
 MonoBehaviour:
