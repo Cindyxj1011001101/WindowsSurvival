@@ -132,7 +132,6 @@ public class StateManager : MonoBehaviour
                 {
                     GameObject managerObj = new GameObject("StateManager");
                     instance = managerObj.AddComponent<StateManager>();
-                    DontDestroyOnLoad(managerObj);
                 }
             }
             return instance;
@@ -150,7 +149,6 @@ public class StateManager : MonoBehaviour
         }
 
         instance = this;
-        DontDestroyOnLoad(gameObject);
 
         // 初始化
         InitPlayerState();

@@ -37,12 +37,11 @@ public class EnvironmentBag : BagBase
         // 如果是飞船环境，要考虑水平面变化
         if (placeData.isInSpacecraft)
             EventManager.Instance.AddListener<float>(EventType.ChangeWaterLevel, OnWaterLevelChanged);
-
-        InitBag(GameDataManager.Instance.GetEnvironmentBagDataByPlace(placeData.placeType));
     }
 
     protected override void Init()
     {
+        InitBag(GameDataManager.Instance.GetEnvironmentBagDataByPlace(placeData.placeType));
     }
 
     private void OnDestroy()
