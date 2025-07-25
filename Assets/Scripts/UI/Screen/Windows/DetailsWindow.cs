@@ -67,7 +67,7 @@ public class DetailsWindow : WindowBase
         {
             GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/CardEventButton");
             var button = Instantiate(buttonPrefab, buttonLayout).GetComponent<HoverableButton>();
-            button.enabled = false;
+            button.Interactable = false;
             button.GetComponentInChildren<Text>().text = e.name;
 
             // 判断cardEvent是否满足条件

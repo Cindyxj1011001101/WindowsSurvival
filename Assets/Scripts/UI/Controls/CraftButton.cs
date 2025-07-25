@@ -3,30 +3,34 @@ using UnityEngine.UI;
 
 public  class CraftButton : HoverableButton
 {
-    [SerializeField] private GameObject craftObject;
-    [SerializeField] private Text craftText;
-    [SerializeField] private Text lockText;
+    public Text text;
+    public GameObject iconObject;
+    public Color normalColor;
+    public Color cannotCraftColor;
+    public Color lockedColor;
 
     public void DisplayButton(bool isLocked, bool canCraft)
     {
-        craftText.color = currentColor;
         if (isLocked)
         {
-            enabled = false;
-            craftObject.SetActive(false);
-            lockText.gameObject.SetActive(true);
+            Interactable = false;
+            iconObject.SetActive(false);
+            text.text = "未解锁";
+            text.color = lockedColor;
         }
         else if (canCraft)
         {
-            enabled = true;
-            craftObject.SetActive(true);
-            lockText.gameObject.SetActive(false);
+            Interactable = true;
+            iconObject.SetActive(true);
+            text.text = "开始制作";
+            text.color = normalColor;
         }
         else
         {
-            enabled = false;
-            craftObject.SetActive(true);
-            lockText.gameObject.SetActive(false);
+            Interactable = false;
+            iconObject.SetActive(false);
+            text.text = "缺少材料";
+            text.color = cannotCraftColor;
         }
     }
 }

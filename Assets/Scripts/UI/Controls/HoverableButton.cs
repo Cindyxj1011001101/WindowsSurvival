@@ -22,6 +22,24 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public UnityEvent onPointerEnter { get; set; } = new UnityEvent();
     public UnityEvent onPointerExit { get; set; } = new UnityEvent();
 
+    public bool Interactable
+    {
+        get => interactable;
+        set
+        {
+            if (!value)
+                foreach (var graphic in hoveredGraphics)
+                {
+                    graphic.DOKill();
+                    graphic.gameObject.SetActive(false); // 确保初始状态下图像不可见
+                    graphic.color = new Color(graphic.color.r, graphic.color.g, graphic.color.b, 0f); // 设置透明度为0
+                }
+            interactable = value;
+        }
+    }
+
+    private bool interactable = true;
+
     protected virtual void Awake()
     {
         var hoveredGraphic = transform.Find("Hovered");
@@ -41,11 +59,15 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public virtual void OnPointerClick(PointerEventData eventData)
     {
+        if (!interactable) return; // 如果不可交互，则不处理点击事件
+
         onClick?.Invoke();
     }
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
+        if (!interactable) return;
+
         onPointerEnter?.Invoke();
 
         //if (normalImage != null)
@@ -64,6 +86,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public virtual void OnPointerExit(PointerEventData eventData)
     {
+        if (!interactable) return;
+
         onPointerExit?.Invoke();
 
         // 开始淡出动画，完成后禁用图像

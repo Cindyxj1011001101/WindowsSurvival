@@ -25,7 +25,7 @@ public class StudyButton : HoverableButton
         if (TechnologyManager.Instance.IsTechNodeComplished(techNode))
         {
             iconObject.SetActive(false);
-            enabled = false;
+            Interactable = false;
             text.text = "已完成";
             text.color = complishedColor;
         }
@@ -33,7 +33,7 @@ public class StudyButton : HoverableButton
         else if (beingStudied)
         {
             iconObject.SetActive(true);
-            enabled = true;
+            Interactable = true;
             text.text = "研究中";
             text.color = Color.white;
             // 播放动效
@@ -51,7 +51,7 @@ public class StudyButton : HoverableButton
         else if (TechnologyManager.Instance.IsTechNodeLocked(techNode))
         {
             iconObject.SetActive(false);
-            enabled = false;
+            Interactable = false;
             text.text = "未解锁";
             text.color = lockedColor;
         }
@@ -59,7 +59,7 @@ public class StudyButton : HoverableButton
         else
         {
             iconObject.SetActive(true);
-            enabled = true;
+            Interactable = true;
             text.text = "开始研究";
             text.color = Color.white;
 

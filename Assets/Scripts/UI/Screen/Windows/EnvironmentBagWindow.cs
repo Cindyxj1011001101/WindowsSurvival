@@ -107,7 +107,16 @@ public class EnvironmentBagWindow : BagWindow
 
         // 探索事件
         discoverButton.onClick.RemoveAllListeners();
-        discoverButton.onClick.AddListener(GameManager.Instance.HandleExplore);
+        discoverButton.Interactable = curEnvironmentBag.DiscoveryDegree < 1; // 如果探索度未满则可探索
+        if (discoverButton.Interactable)
+        {
+            discoverButton.GetComponentInChildren<Text>().text = "开始探索";
+            discoverButton.onClick.AddListener(GameManager.Instance.HandleExplore);
+        }
+        else
+        {
+            discoverButton.GetComponentInChildren<Text>().text = "探索完成";
+        }
 
         // 显示图片
         environmentImage.sprite = curEnvironmentBag.PlaceData.placeImage;
