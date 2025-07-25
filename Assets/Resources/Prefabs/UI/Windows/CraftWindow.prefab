@@ -1660,13 +1660,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   normalImage: {fileID: 546453413004391958}
-  hoveredGraphics: []
+  hoveredGraphics:
+  - {fileID: 6220007422192711313}
   fadeDuration: 0.1
   textsNeedToReverseColor:
   - {fileID: 3098472605137591758}
   imagseNeedToReverseColor:
   - {fileID: 546453413004391958}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
+  currentColor: {r: 0.90588236, g: 0.90588236, b: 0.90588236, a: 1}
   reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
   craftObject: {fileID: 3768058189875770683}
   craftText: {fileID: 3098472605137591758}

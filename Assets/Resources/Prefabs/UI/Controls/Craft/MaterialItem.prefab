@@ -139,6 +139,7 @@ MonoBehaviour:
   icon: {fileID: 1703501114179676635}
   requiredNumText: {fileID: 5012085251614484177}
   notAdequateColor: {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 1}
+  button: {fileID: 5646945572789281356}
 --- !u!114 &5646945572789281356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,11 +153,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   normalImage: {fileID: 1703501114179676635}
-  hoveredImage: {fileID: 884421949287839615}
+  hoveredGraphics: []
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 1703501114179676635}
+  currentColor: {r: 0.90588236, g: 0.90588236, b: 0.90588236, a: 255}
   reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 255}
 --- !u!1 &8277805548770378705
 GameObject:
