@@ -14,8 +14,14 @@ public class TopBar : MonoBehaviour
 
     private void OnTimeChanged(DateTime dateTime)
     {
-        dateText.text = CalculateDate(dateTime);
-        timeText.text = CalculateTime(dateTime);
+        if (dateText != null)
+        {
+            dateText.text = CalculateDate(dateTime);
+        }
+        if (timeText != null)
+        {
+            timeText.text = CalculateTime(dateTime);
+        }
     }
 
     public string CalculateDate(DateTime curTime)

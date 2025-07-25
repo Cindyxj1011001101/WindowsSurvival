@@ -26,10 +26,10 @@ public class DragScaleHandler : MonoBehaviour,
 
     private bool isDragging = false;
 
-
     public void Awake()
     {
-        canvasRect=FindObjectOfType<Canvas>().GetComponent<RectTransform>();
+        targetRect = transform.parent.parent.GetComponent<RectTransform>();
+        canvasRect = FindObjectOfType<Canvas>().GetComponent<RectTransform>();
     }
 
     public void OnPointerDown(PointerEventData eventData)

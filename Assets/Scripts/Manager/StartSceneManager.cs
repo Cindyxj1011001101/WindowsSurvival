@@ -98,7 +98,8 @@ public class StartSceneManager : MonoBehaviour
         for (int i = 0; i < LoadButton.transform.childCount; i++)
         {
             GameObject button = LoadButton.transform.GetChild(i).gameObject;
-            button.GetComponent<Button>().onClick.AddListener(() => ClickLoad(button.name));
+            string btnName = button.name; // 局部变量
+            button.GetComponent<Button>().onClick.AddListener(() => ClickLoad(btnName));
         }
     }
 
