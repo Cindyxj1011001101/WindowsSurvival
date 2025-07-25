@@ -88,6 +88,15 @@ public class GameDataManager
         SaveGeneratedChatData();
         // 其他数据
         SaveGameRuntimeData();
+
+        if (loadData == null)
+        {
+            loadData = new LoadData();
+            for (int i = 0; i < loadData.loads.Length; i++)
+            {
+                loadData.loads[i] = new Load();
+            }
+        }
         // 保存时间
         loadData.loads[curLoadIndex].GameTime = gameRuntimeData.CurTime;
         // 保存存档数据
@@ -159,13 +168,13 @@ public class GameDataManager
         return environmentBagDataDict[place];
     }
 
-    //public void LoadEnvironmentBagRuntimeData()
-    //{
-    //    foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
-    //    {
-    //        environmentBagDataDict[place] = JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag");
-    //    }
-    //}
+    public void LoadEnvironmentBagRuntimeData()
+    {
+       foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
+       {
+           environmentBagDataDict[place] = JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag");
+       }
+    }
 
     /// <summary>
     /// 保存所有环境背包的数据
@@ -298,7 +307,7 @@ public class GameDataManager
     public void LoadGeneratedChatData()
     {
         generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
-        ChatManager.Instance.GeneratedChatDataList=generatedChatData.GeneratedChatDataList;
+        ChatManager.Instance.GeneratedChatDataList = generatedChatData.GeneratedChatDataList;
     }
     #endregion
 

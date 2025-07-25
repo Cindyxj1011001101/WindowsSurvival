@@ -43,7 +43,6 @@ public class SoundManager : MonoBehaviour
         _distortionFilter.enabled = false;
 
         GameDataManager.Instance.onBGMVolumeChanged.AddListener(OnBGMVolumeChanged);
-        DontDestroyOnLoad(gameObject);
     }
 
     private void OnDestroy()
