@@ -145,6 +145,10 @@ public class CardSlot : MonoBehaviour
         DisplayCardImage(card.CardImage, card.IsBigIcon);
         nameText.text = card.CardName;
 
+        // 销毁旧的组件显示
+        MonoUtility.DestroyAllChildren(componentLayout.transform);
+        componentSliders.Clear();
+
         // 显示堆叠数量
         DisplayStackNum(stackCount, card.MaxStackNum, displayStack);
 
