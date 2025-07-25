@@ -67,8 +67,8 @@ public class DetailsWindow : WindowBase
         {
             GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/CardEventButton");
             var button = Instantiate(buttonPrefab, buttonLayout).GetComponent<HoverableButton>();
-            button.Interactable = false;
-            button.GetComponentInChildren<Text>().text = e.name;
+            var btnText = button.GetComponentInChildren<Text>();
+            btnText.text = e.name;
 
             // 判断cardEvent是否满足条件
             if (e.Judge())
@@ -87,7 +87,12 @@ public class DetailsWindow : WindowBase
                         moved = false;
                     }
                 });
-                button.enabled = true;
+                button.Interactable = true;
+            }
+            else
+            {
+                button.Interactable = false;
+                //btnText.color = new Color(89, 89, 89, 255);
             }
         }
     }
