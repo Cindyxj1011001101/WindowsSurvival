@@ -58,12 +58,6 @@ public class DetailsWindow : WindowBase
         slot.DisplayCard(currentDisplayedCard, 1);
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
-        //// 显示卡牌标签
-        //foreach (var tag in currentDisplayedCard.tags)
-        //{
-        //    GameObject tagPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tags/" + tag.ToString());
-        //    Instantiate(tagPrefab, tagLayout);
-        //}
 
         // 显示卡牌详细信息
         detailsText.text = currentDisplayedCard.CardDesc;
@@ -72,8 +66,8 @@ public class DetailsWindow : WindowBase
         foreach (var e in currentDisplayedCard.Events)
         {
             GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/CardEventButton");
-            Button button = Instantiate(buttonPrefab, buttonLayout).GetComponent<Button>();
-            button.interactable = false;
+            var button = Instantiate(buttonPrefab, buttonLayout).GetComponent<HoverableButton>();
+            button.enabled = false;
             button.GetComponentInChildren<Text>().text = e.name;
 
             // 判断cardEvent是否满足条件
@@ -93,7 +87,7 @@ public class DetailsWindow : WindowBase
                         moved = false;
                     }
                 });
-                button.interactable = true;
+                button.enabled = true;
             }
         }
     }

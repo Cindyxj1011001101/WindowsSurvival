@@ -14,8 +14,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public Text[] textsNeedToReverseColor;
     public Image[] imagseNeedToReverseColor;
 
-    [HideInInspector]
-    public Color currentColor;
+    public Color currentColor = new Color(231, 231, 231, 255);
     [SerializeField]
     protected Color reversedColor = new Color(17, 17, 17, 255);
 

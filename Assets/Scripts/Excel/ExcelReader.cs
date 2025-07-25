@@ -66,7 +66,7 @@ public static class ExcelReader
             {
                 cardConfig.ToolTypes = ParseToolTypes(row[21].ToString());
             }
-            //Debug.Log($"读取卡牌配置: {cardConfig.CardName}");
+            Debug.Log($"读取卡牌配置: {cardConfig.CardName}");
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
 
