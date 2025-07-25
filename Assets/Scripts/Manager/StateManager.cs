@@ -47,7 +47,7 @@ public class PlayerState
     private float maxValue;
     public PlayerStateEnum stateEnum;
 
-    public float CurValue => Mathf.Clamp(curValue, 0, MaxValue);
+    public float CurValue => curValue;
 
     public float ExtraValue => extraValue;
 
@@ -58,6 +58,7 @@ public class PlayerState
     public void AddCurValue(float delta)
     {
         curValue += delta;
+        curValue = Mathf.Clamp(curValue, 0, MaxValue);
     }
 
     public void AddExtraValue(float delta)
