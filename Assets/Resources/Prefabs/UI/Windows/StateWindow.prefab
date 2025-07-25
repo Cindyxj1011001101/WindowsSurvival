@@ -243,6 +243,7 @@ MonoBehaviour:
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: 154959178, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  focusImage: {fileID: 0}
   stateLayout: {fileID: 1167388805989051599}
   buffLayout: {fileID: 8964040245426322731}
 --- !u!1 &850577928097488924
@@ -5585,7 +5586,8 @@ PrefabInstance:
       value: "\u72B6\u6001"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1966078076265591859, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
