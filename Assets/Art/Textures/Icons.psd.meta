@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Icons_Settings_default
+      name: Icons_Settings
       rect:
         serializedVersion: 2
         x: 0
@@ -118,7 +118,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_EnvironmentBag_default
+      name: Icons_EnvironmentBag
       rect:
         serializedVersion: 2
         x: 20
@@ -139,7 +139,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_Details_default
+      name: Icons_Details
       rect:
         serializedVersion: 2
         x: 40
@@ -160,7 +160,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_State_default
+      name: Icons_State
       rect:
         serializedVersion: 2
         x: 60
@@ -181,7 +181,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_Map_default
+      name: Icons_Map
       rect:
         serializedVersion: 2
         x: 80
@@ -202,7 +202,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_PlayerBag_default
+      name: Icons_PlayerBag
       rect:
         serializedVersion: 2
         x: 100
@@ -223,7 +223,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_Camera_default
+      name: Icons_Camera
       rect:
         serializedVersion: 2
         x: 120
@@ -244,7 +244,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_Craft_default
+      name: Icons_Craft
       rect:
         serializedVersion: 2
         x: 140
@@ -265,7 +265,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_Study_default
+      name: Icons_Study
       rect:
         serializedVersion: 2
         x: 160
@@ -286,7 +286,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_Wiki_default
+      name: Icons_Wiki
       rect:
         serializedVersion: 2
         x: 180
@@ -307,7 +307,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_Chat_default
+      name: Icons_Chat
       rect:
         serializedVersion: 2
         x: 200
@@ -328,7 +328,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_Equipment_default
+      name: Icons_Equipment
       rect:
         serializedVersion: 2
         x: 220
@@ -370,7 +370,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_Settings_hovered
+      name: Icons_File
       rect:
         serializedVersion: 2
         x: 0
@@ -391,259 +391,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_EnvironmentBag_hovered
-      rect:
-        serializedVersion: 2
-        x: 20
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ba464dde583e8eb4094ce8313aaef443
-      internalID: 1027868713
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_Details_hovered
-      rect:
-        serializedVersion: 2
-        x: 40
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e8a0beebf1468e84da281449f3495074
-      internalID: -1106478617
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_State_hovered
-      rect:
-        serializedVersion: 2
-        x: 60
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1c85e4cc1752c0f4788d79a265b16408
-      internalID: -181422631
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_Map_hovered
-      rect:
-        serializedVersion: 2
-        x: 80
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 31f4ed69a6257cf47aa2ba3288804da4
-      internalID: 1717581134
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_PlayerBag_hovered
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: acaa68b66fb4c9f4aac6c86d11b163fc
-      internalID: 2001858599
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_Camera_hovered
-      rect:
-        serializedVersion: 2
-        x: 120
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4bdb62b89e8953345928be168be56d1f
-      internalID: -668629516
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_Craft_hovered
-      rect:
-        serializedVersion: 2
-        x: 140
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 08c9a57fb5c86254c9bae2abb029f0ae
-      internalID: -956744532
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_Study_hovered
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1eb469623f888e84fa082805bb19f84c
-      internalID: -334978770
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_Wiki_hovered
-      rect:
-        serializedVersion: 2
-        x: 180
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fb5701ced175db843b3ba4b120459780
-      internalID: -1207808733
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_Chat_hovered
-      rect:
-        serializedVersion: 2
-        x: 200
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d1d2dd7a078506a4a91a84c2472de601
-      internalID: -1557320489
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_Equipment_hovered
-      rect:
-        serializedVersion: 2
-        x: 220
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: aecce6d5f14a6e24a906af43b83cdb07
-      internalID: -546149396
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_25
-      rect:
-        serializedVersion: 2
-        x: 240
-        y: 220
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b0d752ddd78f8dd4a90dc23df000705b
-      internalID: -1511375329
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_hunger_default
+      name: Icons_hunger
       rect:
         serializedVersion: 2
         x: 0
@@ -664,7 +412,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_thirst_default
+      name: Icons_thirst
       rect:
         serializedVersion: 2
         x: 20
@@ -685,7 +433,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_oxygen_default
+      name: Icons_oxygen
       rect:
         serializedVersion: 2
         x: 40
@@ -706,7 +454,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_medic_default
+      name: Icons_medic
       rect:
         serializedVersion: 2
         x: 60
@@ -727,7 +475,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_sobriety_default
+      name: Icons_sobriety
       rect:
         serializedVersion: 2
         x: 80
@@ -748,7 +496,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_san_default
+      name: Icons_san
       rect:
         serializedVersion: 2
         x: 100
@@ -769,7 +517,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_tool_default
+      name: Icons_tool
       rect:
         serializedVersion: 2
         x: 120
@@ -790,7 +538,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_material_default
+      name: Icons_material
       rect:
         serializedVersion: 2
         x: 140
@@ -811,7 +559,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_state_default
+      name: Icons_time
       rect:
         serializedVersion: 2
         x: 160
@@ -832,7 +580,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_StartStudy_default
+      name: Icons_StartStudy
       rect:
         serializedVersion: 2
         x: 180
@@ -853,7 +601,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_StartExplore_default
+      name: Icons_StartExplore
       rect:
         serializedVersion: 2
         x: 200
@@ -874,7 +622,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_StartCraft_default
+      name: Icons_StartCraft
       rect:
         serializedVersion: 2
         x: 220
@@ -890,300 +638,6 @@ TextureImporter:
       bones: []
       spriteID: 33ff82e29e837dc4882f2dbdd275be8d
       internalID: 1057753275
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_38
-      rect:
-        serializedVersion: 2
-        x: 240
-        y: 200
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 023ececae39e7374c8841836c048d8ec
-      internalID: -1750012914
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_39
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 85056500bfad3a141adfcd33afd06880
-      internalID: 1650051636
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_40
-      rect:
-        serializedVersion: 2
-        x: 20
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f294ce6b04fe60e4283af6b31836ba37
-      internalID: 1994493824
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_41
-      rect:
-        serializedVersion: 2
-        x: 40
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 20383ad7bbcd1c948a34c637e016a01b
-      internalID: 157272783
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_42
-      rect:
-        serializedVersion: 2
-        x: 60
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 011d1447c3cfcd74b809bddd41add6a3
-      internalID: 240392351
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_43
-      rect:
-        serializedVersion: 2
-        x: 80
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 506d857b88fcfa5478b2c7d30a8009d1
-      internalID: -1929681750
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_44
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 058eedda32875984388746e4c422fdb5
-      internalID: 793775816
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_45
-      rect:
-        serializedVersion: 2
-        x: 120
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 5aa92b4c1001d4f45b17bf2d54d70981
-      internalID: -284118508
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_46
-      rect:
-        serializedVersion: 2
-        x: 140
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 104f32f815bbf4246b749e10a95e7e09
-      internalID: -748421304
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_47
-      rect:
-        serializedVersion: 2
-        x: 160
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b1cf487b16e668249bcfa2b5a9048dd0
-      internalID: 847156617
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_StartStudy_hovered
-      rect:
-        serializedVersion: 2
-        x: 180
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 813057ae6c141984c830a22dbdf417d0
-      internalID: -877662535
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_StartExplore_hovered
-      rect:
-        serializedVersion: 2
-        x: 200
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9cae2ec8f95ea514c8787daa01ab25ff
-      internalID: -1231440442
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_StartCraft_hovered
-      rect:
-        serializedVersion: 2
-        x: 220
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8d1d70b966958074382929e8e54796e6
-      internalID: -83025121
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Icons_51
-      rect:
-        serializedVersion: 2
-        x: 240
-        y: 180
-        width: 20
-        height: 20
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 292531c11f4d94147b2ffcf525d4a5e9
-      internalID: -1270745958
       vertices: []
       indices: 
       edges: []
@@ -1336,7 +790,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Icons_study_Resource
+      name: Icons_study
       rect:
         serializedVersion: 2
         x: 140
@@ -3656,6 +3110,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Icons_0: -1467137772
       Icons_100: -2024386171
       Icons_101: -1595973571
       Icons_102: -2062571100
@@ -3777,54 +3232,54 @@ TextureImporter:
       Icons_97: 1445109940
       Icons_98: 1877790573
       Icons_99: -1211492024
-      Icons_Camera_default: -397598016
+      Icons_Camera: -397598016
       Icons_Camera_hovered: -668629516
-      Icons_Chat_default: -1165773341
+      Icons_Chat: -1165773341
       Icons_Chat_hovered: -1557320489
-      Icons_Craft_default: 427892567
+      Icons_Craft: 427892567
       Icons_Craft_hovered: -956744532
-      Icons_Details_default: -448178687
+      Icons_Details: -448178687
       Icons_Details_hovered: -1106478617
-      Icons_EnvironmentBag_default: 1890263839
+      Icons_EnvironmentBag: 1890263839
       Icons_EnvironmentBag_hovered: 1027868713
-      Icons_Equipment_default: 221946525
+      Icons_Equipment: 221946525
       Icons_Equipment_hovered: -546149396
+      Icons_File: -861213556
       Icons_FrozenSeason: -44677901
-      Icons_Map_default: 2004645502
+      Icons_Map: 2004645502
       Icons_Map_hovered: 1717581134
-      Icons_PlayerBag_default: -379849116
+      Icons_PlayerBag: -379849116
       Icons_PlayerBag_hovered: 2001858599
-      Icons_Settings_default: -1166491781
-      Icons_Settings_hovered: -861213556
+      Icons_Settings: -1166491781
       Icons_SourSeason: -2074101201
-      Icons_StartCraft_default: 1057753275
+      Icons_StartCraft: 1057753275
       Icons_StartCraft_hovered: -83025121
-      Icons_StartExplore_default: -699355971
+      Icons_StartExplore: -699355971
       Icons_StartExplore_hovered: -1231440442
-      Icons_StartStudy_default: -992845787
+      Icons_StartStudy: -992845787
       Icons_StartStudy_hovered: -877662535
-      Icons_State_default: 956616765
+      Icons_State: 956616765
       Icons_State_hovered: -181422631
-      Icons_Study_default: 2032828504
+      Icons_Study: 2032828504
       Icons_Study_hovered: -334978770
       Icons_Time: -1820033574
       Icons_WarmSeason: -1018883492
-      Icons_Wiki_default: 1838532155
+      Icons_Wiki: 1838532155
       Icons_Wiki_hovered: -1207808733
-      Icons_hunger_default: -271464982
-      Icons_material_default: -1975817046
-      Icons_medic_default: 762496213
-      Icons_oxygen_default: 1239957045
-      Icons_san_default: -1119195407
-      Icons_sobriety_default: 1716143141
-      Icons_state_default: -2019870134
+      Icons_hunger: -271464982
+      Icons_material: -1975817046
+      Icons_medic: 762496213
+      Icons_oxygen: 1239957045
+      Icons_san: -1119195407
+      Icons_sobriety: 1716143141
+      Icons_study: -2142871442
       Icons_study_Construction: -1827192843
       Icons_study_Equipment: -1193462542
       Icons_study_Food: -943130154
       Icons_study_O2: -1310189505
-      Icons_study_Resource: -2142871442
-      Icons_thirst_default: -1514154100
-      Icons_tool_default: 246742835
+      Icons_thirst: -1514154100
+      Icons_time: -2019870134
+      Icons_tool: 246742835
   mipmapLimitGroupName: 
   pSDRemoveMatte: 1
   userData: 
