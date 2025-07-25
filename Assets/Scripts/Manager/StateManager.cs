@@ -461,6 +461,7 @@ public class StateManager : MonoBehaviour
     {
         if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0)
         {
+            Debug.Log("游戏结束");
             EventManager.Instance.TriggerEvent(EventType.GameOver);
         }
     }
