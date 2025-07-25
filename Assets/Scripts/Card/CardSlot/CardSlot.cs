@@ -74,10 +74,10 @@ public class CardSlot : MonoBehaviour
     private void DisplayCardImage(Sprite sprite, bool isBigIcon)
     {
         iconImage.sprite = sprite;
-        // 设置原始大小
-        iconImage.SetNativeSize();
         Vector2 offset = isBigIcon ? new Vector2(16, -16) : new Vector2(30, -30);
         (iconImage.transform as RectTransform).anchoredPosition = offset;
+        // 设置原始大小
+        iconImage.SetNativeSize();
     }
 
     private void DisplayStackNum(int stackNum, int maxStackNum, bool displayStack)
