@@ -27,7 +27,7 @@ public class WaterCrack : Card
     {
         var bag = Slot.Bag as EnvironmentBag;
         // 渗水裂缝所在的地点每回合-8氧气
-        bag.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -8);
+        bag.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -3);
         // 每个渗水裂缝每回合会使飞船水平面高度+0.3
         StateManager.Instance.ChangeWaterLevel(+0.3f);
     };

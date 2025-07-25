@@ -22,7 +22,7 @@ public class OxygenMask : Card
             TryGetComponent<EquipmentComponent>(out var component);
             component.isEquipped = true;
             // 当穿上装备时，额外氧气增加
-            StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, 30);
+            StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, 60);
         }
     }
 
@@ -34,7 +34,7 @@ public class OxygenMask : Card
             component.isEquipped = false;
 
             // 当卸下装备时，额外氧气减少
-            StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, -30);
+            StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, -60);
         }
     }
 
