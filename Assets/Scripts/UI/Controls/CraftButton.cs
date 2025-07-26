@@ -13,21 +13,21 @@ public  class CraftButton : HoverableButton
             Interactable = false;
             iconObject.SetActive(false);
             text.text = "未解锁";
-            text.color = ColorManager.Instance.darkGrey;
+            text.color = ColorManager.darkGrey;
         }
         else if (canCraft)
         {
             Interactable = true;
             iconObject.SetActive(true);
             text.text = "开始制作";
-            text.color = ColorManager.Instance.white;
+            text.color = ColorManager.white;
         }
         else
         {
             Interactable = false;
             iconObject.SetActive(false);
             text.text = "缺少材料";
-            text.color = ColorManager.Instance.lightGrey;
+            text.color = ColorManager.lightGrey;
         }
     }
 }

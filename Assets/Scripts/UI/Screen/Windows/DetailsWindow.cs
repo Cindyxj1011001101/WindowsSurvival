@@ -93,7 +93,7 @@ public class DetailsWindow : WindowBase
             else
             {
                 button.Interactable = false;
-                btnText.color = ColorManager.Instance.darkGrey;
+                btnText.color = ColorManager.darkGrey;
             }
         }
     }

@@ -157,7 +157,7 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.normalImage.gameObject.SetActive(false);
             exploreButton.Interactable = false;
             text.text = "探索完成";
-            text.color = ColorManager.Instance.cyan;
+            text.color = ColorManager.cyan;
         }
         else if (args.degree == 1)
         {
@@ -166,7 +166,7 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.Interactable = true;
             exploreButton.onClick.AddListener(GameManager.Instance.HandleExplore);
             text.text = "深入探索";
-            text.color = ColorManager.Instance.white;
+            text.color = ColorManager.white;
         }
         else
         {
@@ -174,7 +174,7 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.Interactable = true;
             exploreButton.onClick.AddListener(GameManager.Instance.HandleExplore);
             text.text = "开始探索";
-            text.color = ColorManager.Instance.white;
+            text.color = ColorManager.white;
         }
 
         // 显示牌堆数量

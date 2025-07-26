@@ -581,7 +581,6 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1411051355173559240
 GameObject:
   m_ObjectHideFlags: 0
@@ -1226,7 +1225,6 @@ MonoBehaviour:
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: 154959178, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
-  focusFrameImage: {fileID: 0}
   recipeLibraryLayout: {fileID: 5908427659633183746}
   recipieLayout: {fileID: 2370905419753959129}
   materialLayout: {fileID: 5122654962199089997}
@@ -1707,7 +1705,6 @@ MonoBehaviour:
   - {fileID: 3802741928739035353}
   imagseNeedToReverseColor:
   - {fileID: 68110327763475732}
-  currentColor: {r: 0.90588236, g: 0.90588236, b: 0.90588236, a: 1}
   text: {fileID: 3802741928739035353}
   iconObject: {fileID: 8513981697147569867}
 --- !u!1 &4338732234570636371
@@ -1805,7 +1802,6 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &4863367051182389601
 GameObject:
   m_ObjectHideFlags: 0
@@ -2270,7 +2266,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 8632300466603767694}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &6796499857194011663
 GameObject:
   m_ObjectHideFlags: 0
@@ -2367,7 +2362,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 8098136642972914118}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &7555619976321503684
 GameObject:
   m_ObjectHideFlags: 0
@@ -2539,7 +2533,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 5014232477503855193}
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &8411572575895466373
 GameObject:
   m_ObjectHideFlags: 0
@@ -2710,7 +2703,6 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
-  currentColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &8513981697147569867
 GameObject:
   m_ObjectHideFlags: 0
@@ -3187,7 +3179,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3926471961650878334, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
       propertyPath: m_Pivot.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3926471961650878334, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3207,11 +3199,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3926471961650878334, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 124
+      value: 132
       objectReference: {fileID: 0}
     - target: {fileID: 3926471961650878334, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 186
+      value: 194
       objectReference: {fileID: 0}
     - target: {fileID: 3926471961650878334, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3247,7 +3239,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3926471961650878334, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 208
+      value: 115
       objectReference: {fileID: 0}
     - target: {fileID: 3926471961650878334, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

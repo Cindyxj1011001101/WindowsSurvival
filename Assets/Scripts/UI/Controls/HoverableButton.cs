@@ -42,6 +42,11 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     protected virtual void Awake()
     {
+        if (normalImage != null)
+            currentColor = normalImage.color;
+        else
+            currentColor = ColorManager.white;
+
         var hoveredGraphic = transform.Find("Hovered");
         if (hoveredGraphic != null)
             hoveredGraphics.AddRange(hoveredGraphic.GetComponentsInChildren<Graphic>());
@@ -49,10 +54,6 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     protected virtual void Start()
     {
-        if (normalImage != null)
-            currentColor = normalImage.color;
-        else
-            currentColor = ColorManager.Instance.white;
         // 初始化时确保hoveredImage是透明的
         foreach (var graphic in hoveredGraphics)
         {
@@ -82,7 +83,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             graphic.DOKill(); // 停止所有正在进行的动画
             graphic.DOFade(1f, fadeDuration)
                 .SetEase(Ease.OutQuad)
-                .OnStart(() => ChangeColor(ColorManager.Instance.black)); // 在动画开始时改变颜色
+                .OnStart(() => ChangeColor(ColorManager.black)); // 在动画开始时改变颜色
         }
     }
 
