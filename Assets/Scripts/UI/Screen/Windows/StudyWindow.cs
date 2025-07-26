@@ -190,17 +190,30 @@ public class StudyWindow : WindowBase
             RefreshCurrentDisplay();
         });
 
-        // 显示研究进度和研究速度
+        // 显示研究进度和研究时间
         // 研究已完成
         if (TechnologyManager.Instance.IsTechNodeComplished(techNode))
         {
-            progressSlider.SetValue(techNode.cost, techNode.cost);
+            progressSlider.gameObject.SetActive(false);
+            studyTime.transform.parent.gameObject.SetActive(false);
+            //progressSlider.SetValue(techNode.cost, techNode.cost);
         }
         // 其他情况
         else
         {
+            progressSlider.gameObject.SetActive(true);
             var progress = TechnologyManager.Instance.GetStudyProgress(techNode);
             progressSlider.SetValue(progress, techNode.cost);
+
+            // 显示研究时间
+            studyTime.transform.parent.gameObject.SetActive(true);
+            var time = techNode.cost * 15;
+            int hour = time / 60;
+            int minute = time % 60;
+            StringBuilder sb = new();
+            sb.Append(hour > 0 ? $"{hour}h" : "");
+            sb.Append(minute > 0 ? $"{minute}min" : "");
+            studyTime.text = sb.ToString();
         }
 
         // 显示研究速度
@@ -213,14 +226,5 @@ public class StudyWindow : WindowBase
         {
             studyRate.gameObject.SetActive(false);
         }
-
-        // 显示研究时间
-        var time = techNode.cost * 15;
-        int hour = time / 60;
-        int minute = time % 60;
-        StringBuilder sb = new();
-        sb.Append(hour > 0 ? $"{hour}h" : "");
-        sb.Append(minute > 0 ? $"{minute}min" : "");
-        studyTime.text = sb.ToString();
     }
 }
