@@ -193,9 +193,12 @@ public class GameManager : MonoBehaviour
 
         SoundManager.Instance.PlayPlaceMusic(environmentBags[targetPlace]);
 
+        // 更新当前场景背包
+        curEnvironmentBag = environmentBags[targetPlace];
+        curEnvironmentBag.DisposableDropList = GameDataManager.Instance.GetEnvironmentBagDataByPlace(targetPlace).disposableDropList;
+        curEnvironmentBag.RepeatableDropList = GameDataManager.Instance.GetEnvironmentBagDataByPlace(targetPlace).repeatableDropList;
 
         curEnvironmentBag = environmentBags[targetPlace];
-
         //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
         var door = curEnvironmentBag.DisposableDropList.CertainDrop($"通往{ParsePlaceEnum(lastPlace)}的门");
         if (door != null)

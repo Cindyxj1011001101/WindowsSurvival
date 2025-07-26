@@ -4,9 +4,8 @@ using System;
 
 public class EnvironmentBag : BagBase
 {
-    public DisposableDropList DisposableDropList { get; private set; } = new();
-
-    public RepeatableDropList RepeatableDropList { get; private set; } = new();
+    public DisposableDropList DisposableDropList { get; set; } = new();
+    public RepeatableDropList RepeatableDropList { get; set; } = new();
 
     [Header("探索用时")]
     public int explorationTime;
