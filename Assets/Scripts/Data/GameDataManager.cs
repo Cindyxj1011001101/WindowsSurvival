@@ -27,7 +27,7 @@ public class GameDataManager
             environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
         }
         // 状态数据
-        LoadStateData(curLoadIndex);
+        stateData = JsonManager.LoadData<StateData>(CurLoadName, "State");
         // 音频数据
         audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
         // 已解锁的配方
@@ -57,7 +57,7 @@ public class GameDataManager
             environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
         }
         // 状态数据
-        stateData = JsonManager.LoadData<StateData>(CurLoadName, "StateData");
+        stateData = JsonManager.LoadData<StateData>(CurLoadName, "State");
         // 音频数据
         audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
         // 已解锁的配方
@@ -176,9 +176,10 @@ public class GameDataManager
 
     public void LoadEnvironmentBagRuntimeData()
     {
-        foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
+        environmentBagDataDict = new();
+        foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
         {
-            environmentBagDataDict[place] = JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag");
+            environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
         }
     }
 
@@ -336,15 +337,15 @@ public class GameDataManager
     }
     #endregion
 
-
     #region 状态数据
     private StateData stateData;
     public StateData StateData => stateData;
 
-    public void LoadStateData(int index)
+    public void LoadStateData()
     {
-        stateData = JsonManager.LoadData<StateData>(CurLoadName, "StateData");
+        stateData = JsonManager.LoadData<StateData>(CurLoadName, "State");
     }
+
     public void SaveStateData()
     {
         stateData = new StateData
@@ -356,7 +357,7 @@ public class GameDataManager
             maxLoad = StateManager.Instance.MaxLoad,
             curLoad = StateManager.Instance.CurLoad
         };
-        JsonManager.SaveData(stateData, CurLoadName, "StateData");
+        JsonManager.SaveData(stateData, CurLoadName, "State");
     }
     #endregion
 }
