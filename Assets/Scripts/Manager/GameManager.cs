@@ -60,34 +60,30 @@ public class GameManager : MonoBehaviour
     {
         Move(GameDataManager.Instance.LastPlace);
         SoundManager.Instance.PlayCurEnvironmentMusic();
-        
-
     }
 
-    public void AddCard(Card card, bool toPlayerBag)
+    public void AddCard(Card card, bool toPlayerBag, bool refreshImmediately = true)
     {
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("抽卡", true);
 
         // 卡牌的属性开始随时间变化
         card.StartUpdating();
-        if (toPlayerBag)
+
+        if (toPlayerBag && WindowsManager.Instance.IsWindowOpen("PlayerBag") && playerBag.CanAddCard(card))
         {
-            if (playerBag.CanAddCard(card))
-                playerBag.AddCard(card);
-            else
-                curEnvironmentBag.AddCard(card);
+            playerBag.AddCard(card, refreshImmediately);
         }
         else
         {
-            curEnvironmentBag.AddCard(card);
+            curEnvironmentBag.AddCard(card, refreshImmediately);
         }
     }
 
-    public Card AddCard(string cardId, bool toPlayerBag)
+    public Card AddCard(string cardId, bool toPlayerBag, bool refreshImmediately = true)
     {
         var card = CardFactory.CreateCard(cardId);
-        AddCard(card, toPlayerBag);
+        AddCard(card, toPlayerBag, refreshImmediately);
         return card;
     }
 
@@ -129,10 +125,9 @@ public class GameManager : MonoBehaviour
         // 消耗时间
         TimeManager.Instance.AddTime((int)explorationTime);
 
+        // 掉落卡牌
         HandeleExploreDrop();
-        
     }
-
 
     private void HandeleExploreDrop()
     {
@@ -143,18 +138,27 @@ public class GameManager : MonoBehaviour
         if (!disposableDropList.IsEmpty)
         {
             // 掉落卡牌
-            foreach (var card in disposableDropList.RandomDrop())
+            var droppedCards = disposableDropList.RandomDrop();
+            if (droppedCards == null || droppedCards.Count == 0)
+            {
+                Debug.Log("什么也没有捞到");
+                return;
+            }
+
+            foreach (var card in droppedCards)
             {
                 // 掉落到环境里
-                AddCard(card, false);
+                AddCard(card, false, false);
             }
+            // 掉落卡牌动效
+            EventManager.Instance.TriggerEvent(EventType.ExploreDropCards, droppedCards);
 
             // 探索完成后让环境生态开始更新
             if (disposableDropList.IsEmpty)
                 repeatableDropList.StartUpdating();
 
             // 探索度变化
-            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, curEnvironmentBag.DiscoveryDegree);
+            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, (curEnvironmentBag.DiscoveryDegree, curEnvironmentBag.ExploreCompleted));
         }
         // 如果还可以重复探索
         else if (!repeatableDropList.IsEmpty)
@@ -170,8 +174,9 @@ public class GameManager : MonoBehaviour
             foreach (var card in droppedCards)
             {
                 // 掉落到环境里
-                AddCard(card, false);
+                AddCard(card, false, false);
             }
+            EventManager.Instance.TriggerEvent(EventType.ExploreDropCards, droppedCards);
         }
     }
 
@@ -210,6 +215,4 @@ public class GameManager : MonoBehaviour
             _ => null,
         };
     }
-    
-    
 }

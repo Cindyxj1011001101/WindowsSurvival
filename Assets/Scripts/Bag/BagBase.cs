@@ -10,8 +10,6 @@ public abstract class BagBase : MonoBehaviour
     [SerializeField] private GridLayoutGroup slotLayout; // 格子布局
     [SerializeField] private HoverableButton organizeButton; // 整理背包按钮
 
-
-
     protected List<CardSlot> slots = new();
 
     public List<CardSlot> Slots => slots;
@@ -142,7 +140,7 @@ public abstract class BagBase : MonoBehaviour
     /// 添加一张卡牌
     /// </summary>
     /// <param name="card"></param>
-    public virtual void AddCard(Card card)
+    public virtual void AddCard(Card card, bool refreshImmediately = true)
     {
         // 尝试堆叠同类卡牌
         // 优先堆叠到当前堆叠数多的格子
@@ -150,7 +148,7 @@ public abstract class BagBase : MonoBehaviour
         {
             if (slot.CanAddCard(card))
             {
-                slot.AddCard(card);
+                slot.AddCard(card, refreshImmediately);
                 return;
             }
         }
@@ -160,7 +158,7 @@ public abstract class BagBase : MonoBehaviour
         {
             if (slot.IsEmpty)
             {
-                slot.AddCard(card);
+                slot.AddCard(card, refreshImmediately);
                 return;
             }
         }

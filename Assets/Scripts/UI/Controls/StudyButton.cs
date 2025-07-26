@@ -32,18 +32,15 @@ public class StudyButton : HoverableButton
         {
             iconObject.SetActive(true);
             Interactable = true;
-            text.text = "研究中";
-            text.color = ColorManager.Instance.white;
             // 播放动效
             PlayAnim();
 
             // 点击暂停研究
             onClick.RemoveAllListeners();
-            onClick.AddListener(() =>
-            {
-                stopStudying?.Invoke();
-                text.color = ColorManager.Instance.black;
-            });
+            onClick.AddListener(stopStudying);
+
+            text.text = "研究中";
+            text.color = ColorManager.Instance.white;
         }
         // 研究未解锁
         else if (TechnologyManager.Instance.IsTechNodeLocked(techNode))
@@ -58,16 +55,13 @@ public class StudyButton : HoverableButton
         {
             iconObject.SetActive(true);
             Interactable = true;
-            text.text = "开始研究";
-            text.color = ColorManager.Instance.white;
 
             // 点击开始研究
             onClick.RemoveAllListeners();
-            onClick.AddListener(() =>
-            {
-                startStuyding?.Invoke();
-                text.color = ColorManager.Instance.black;
-            });
+            onClick.AddListener(startStuyding);
+
+            text.text = "开始研究";
+            text.color = ColorManager.Instance.white;
         }
     }
 

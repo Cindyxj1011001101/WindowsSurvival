@@ -168,6 +168,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 {
                     // 刷新源卡槽显示
                     sourceSlot.RefreshCurrentDisplay();
+                    SoundManager.Instance.PlaySound("放置卡牌", true);
                 }
             );
     }

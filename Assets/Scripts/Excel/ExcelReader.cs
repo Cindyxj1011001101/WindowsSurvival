@@ -19,10 +19,12 @@ public static class ExcelReader
         Dictionary<string, CardConfig> cardConfigs = new();
 
         DataRow row;
+        int count = 0;
         for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
         {
             row = table.Rows[i];
             if (string.IsNullOrEmpty(row[0].ToString())) continue; // 如果卡牌ID为空，跳过读取
+            count++;
             CardConfig cardConfig = new()
             {
                 CardId = row[0].ToString(),
@@ -67,9 +69,9 @@ public static class ExcelReader
             {
                 cardConfig.ToolTypes = ParseToolTypes(row[21].ToString());
             }
-            Debug.Log($"读取卡牌配置: {cardConfig.CardName}");
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
+        Debug.Log($"卡牌配置读取完成。读取数量：{count}");
 
         fs.Close();
 
@@ -295,6 +297,7 @@ public static class ExcelReader
     }
     #endregion
 }
+
 public class CardConfig
 {
     public string CardId; // 卡牌ID

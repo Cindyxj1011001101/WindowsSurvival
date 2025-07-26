@@ -101,11 +101,11 @@ public class EquipmentBag : BagBase
         return CanAddCard(equipment);
     }
 
-    public override void AddCard(Card card)
+    public override void AddCard(Card card, bool refreshImmediately = true)
     {
         // 在对应装备位置上添加装备卡
         card.TryGetComponent<EquipmentComponent>(out var component);
-        equipmentSlotDict[component.equipmentType].AddCard(card);
+        equipmentSlotDict[component.equipmentType].AddCard(card, refreshImmediately);
     }
 
     public override bool CanAddCard(Card card)

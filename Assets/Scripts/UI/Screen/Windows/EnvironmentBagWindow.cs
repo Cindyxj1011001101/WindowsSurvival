@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,8 +18,9 @@ public class EnvironmentBagWindow : BagWindow
     [SerializeField] private StateSlider discoveryDegreeSlider; // 探索度显示
     [SerializeField] private Text placeNameText; // 环境名称
     [SerializeField] private Image environmentImage; // 环境图片
-    [SerializeField] private HoverableButton discoverButton; // 探索按钮
+    [SerializeField] private HoverableButton exploreButton; // 探索按钮
     [SerializeField] private RectTransform stateLayout;
+    [SerializeField] private RectTransform dropCardLayout;
 
     private StateToggle hasCabbleToggle; // 是否铺设电缆
     private StatePressureLevel pressureLevel; // 压强等级
@@ -29,24 +31,27 @@ public class EnvironmentBagWindow : BagWindow
         base.Awake();
 
         // 注册探索度变化事件
-        EventManager.Instance.AddListener<float>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
+        EventManager.Instance.AddListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         // 注册环境移动事件
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
+        // 注册探索掉落卡牌事件
+        EventManager.Instance.AddListener<List<Card>>(EventType.ExploreDropCards, OnExploreDropCards);
     }
 
     private void OnDestroy()
     {
         // 移除事件
-        EventManager.Instance.RemoveListener<float>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
+        EventManager.Instance.RemoveListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
+        EventManager.Instance.RemoveListener<List<Card>>(EventType.ExploreDropCards, OnExploreDropCards);
     }
 
     protected override void Init()
     {
-        
+
     }
 
     /// <summary>
@@ -79,7 +84,7 @@ public class EnvironmentBagWindow : BagWindow
         }
 
         // 在飞船内显示水平面高度
-        if (curEnvironmentBag.StateDict.ContainsKey(EnvironmentStateEnum.WaterLevel))
+        if (curEnvironmentBag.PlaceData.isInSpacecraft)
         {
             slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/SliderState"), stateLayout).GetComponent<StateSlider>();
             slider.SetStateName("水平面");
@@ -100,23 +105,11 @@ public class EnvironmentBagWindow : BagWindow
 
         MonoUtility.UpdateContainerHeight(stateLayout.GetComponent<VerticalLayoutGroup>());
 
-        // 显示探索度
-        discoveryDegreeSlider.SetValue(curEnvironmentBag.DiscoveryDegree, 1);
         // 显示环境名称
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
 
         // 探索事件
-        discoverButton.onClick.RemoveAllListeners();
-        discoverButton.Interactable = curEnvironmentBag.DiscoveryDegree < 1; // 如果探索度未满则可探索
-        if (discoverButton.Interactable)
-        {
-            discoverButton.GetComponentInChildren<Text>().text = "开始探索";
-            discoverButton.onClick.AddListener(GameManager.Instance.HandleExplore);
-        }
-        else
-        {
-            discoverButton.GetComponentInChildren<Text>().text = "探索完成";
-        }
+        DisplayDiscoveryDegree((curEnvironmentBag.DiscoveryDegree, curEnvironmentBag.ExploreCompleted));
 
         // 显示图片
         environmentImage.sprite = curEnvironmentBag.PlaceData.placeImage;
@@ -151,8 +144,100 @@ public class EnvironmentBagWindow : BagWindow
         }
     }
 
-    private void DisplayDiscoveryDegree(float degree)
+    private void DisplayDiscoveryDegree((float degree, bool completed) args)
     {
-        discoveryDegreeSlider.SetValue(degree, 1);
+        // 显示探索度
+        discoveryDegreeSlider.SetValue(args.degree, 1);
+
+        // 显示探索按钮
+        exploreButton.onClick.RemoveAllListeners(); // 清除之前的监听器
+        var text = exploreButton.GetComponentInChildren<Text>();
+        if (args.completed)
+        {
+            exploreButton.normalImage.gameObject.SetActive(false);
+            exploreButton.Interactable = false;
+            text.text = "探索完成";
+            text.color = ColorManager.Instance.cyan;
+        }
+        else if (args.degree == 1)
+        {
+            // 深入探索
+            exploreButton.normalImage.gameObject.SetActive(true);
+            exploreButton.Interactable = true;
+            exploreButton.onClick.AddListener(GameManager.Instance.HandleExplore);
+            text.text = "深入探索";
+            text.color = ColorManager.Instance.white;
+        }
+        else
+        {
+            exploreButton.normalImage.gameObject.SetActive(true);
+            exploreButton.Interactable = true;
+            exploreButton.onClick.AddListener(GameManager.Instance.HandleExplore);
+            text.text = "开始探索";
+            text.color = ColorManager.Instance.white;
+        }
+
+        // 显示牌堆数量
+        int toDisplayCount = Mathf.CeilToInt((1 - args.degree) * dropCardLayout.childCount);
+        for (int i = 0; i < dropCardLayout.childCount; i++)
+        {
+            dropCardLayout.GetChild(i).gameObject.SetActive(i < toDisplayCount);
+        }
+    }
+
+    private async void OnExploreDropCards(List<Card> cards)
+    {
+        foreach (var card in cards)
+        {
+            CardMoveTween.MoveCard(
+               card,
+               1,
+               dropCardLayout.transform.position,
+               card.Slot.transform.position,
+               0.2f,
+               null,
+               () =>
+               {
+                   // 再刷新显示
+                   card.Slot.RefreshCurrentDisplay();
+               });
+            await Task.Delay(100); // 等待100毫秒，避免卡牌移动过快
+        }
+    }
+
+    /// <summary>
+    /// 动画添加卡牌到目标背包
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="targetBag"></param>
+    /// <param name="startPos"></param>
+    public void AddCardWithAnim(Card card, BagBase targetBag, Vector3 startPos)
+    {
+        // 得到targetBag中所有可以放置卡牌的格子以及可以放置的数量
+        List<(CardSlot, int)> list = targetBag.GetSlotsCanAddCard(card, 1);
+
+        int leftCount = 1; // 剩余待移动卡牌的数量
+
+        // 将卡牌放入目标背包的目标格子里
+        foreach (var (targetSlot, moveCount) in list)
+        {
+            // 这里targetBag.GetSlotsCanAddCard方法确保leftCount不会是负数
+            leftCount -= moveCount;
+            // 先把数据转移了
+            targetSlot.AddCard(card, false);
+            CardMoveTween.MoveCard(
+                card,
+                moveCount,
+                startPos,
+                targetSlot.transform.position,
+                0.2f,
+                null,
+                () =>
+                {
+                    // 再刷新显示
+                    targetSlot.RefreshCurrentDisplay();
+                }
+            );
+        }
     }
 }

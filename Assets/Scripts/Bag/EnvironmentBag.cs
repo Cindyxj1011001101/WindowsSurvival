@@ -32,6 +32,8 @@ public class EnvironmentBag : BagBase
 
     public float DiscoveryDegree => 1 - DisposableDropList.RemainingDropsRate;
 
+    public bool ExploreCompleted => DisposableDropList.IsEmpty && RepeatableDropList.IsEmpty;
+
     private void Awake()
     {
         // 如果是飞船环境，要考虑水平面变化
@@ -49,7 +51,6 @@ public class EnvironmentBag : BagBase
         // 如果是飞船环境，要考虑水平面变化
         if (placeData.isInSpacecraft)
             EventManager.Instance.RemoveListener<float>(EventType.ChangeWaterLevel, OnWaterLevelChanged);
-        
     }
 
     protected override void InitBag(BagRuntimeData runtimeData)
@@ -141,7 +142,7 @@ public class EnvironmentBag : BagBase
         return true;
     }
 
-    public override void AddCard(Card card)
+    public override void AddCard(Card card, bool refreshImmediately)
     {
         // 如果放不下，就新增格子
         if (!base.CanAddCard(card))
@@ -149,7 +150,7 @@ public class EnvironmentBag : BagBase
             // 暂定每次新增3个格子
             AddSlot(3);
         }
-        base.AddCard(card);
+        base.AddCard(card, refreshImmediately);
     }
 
     public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)

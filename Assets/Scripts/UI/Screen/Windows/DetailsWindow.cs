@@ -23,7 +23,8 @@ public class DetailsWindow : WindowBase
 
     protected override void Init()
     {
-        Clear();
+        if (currentDisplayedCard == null)
+            Clear();
     }
 
     /// <summary>

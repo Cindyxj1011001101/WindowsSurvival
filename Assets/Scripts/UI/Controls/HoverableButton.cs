@@ -14,7 +14,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public Text[] textsNeedToReverseColor;
     public Image[] imagseNeedToReverseColor;
 
-    public Color currentColor;
+    public Color currentColor { get; set; }
 
     public UnityEvent onClick { get; set; } = new UnityEvent();
     public UnityEvent onPointerEnter { get; set; } = new UnityEvent();
@@ -25,14 +25,16 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         get => interactable;
         set
         {
+            interactable = value;
             if (!value)
+            {
                 foreach (var graphic in hoveredGraphics)
                 {
                     graphic.DOKill();
                     graphic.gameObject.SetActive(false); // 确保初始状态下图像不可见
                     graphic.color = new Color(graphic.color.r, graphic.color.g, graphic.color.b, 0f); // 设置透明度为0
                 }
-            interactable = value;
+            }
         }
     }
 
@@ -64,6 +66,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         if (!interactable) return; // 如果不可交互，则不处理点击事件
 
         onClick?.Invoke();
+        OnPointerEnter(eventData); // 点击时触发鼠标悬停事件
     }
 
     public virtual void OnPointerEnter(PointerEventData eventData)
