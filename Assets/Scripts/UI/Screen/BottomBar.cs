@@ -86,8 +86,8 @@ public class BottomBar : MonoBehaviour
 
     private void SetOpened(HoverableButton shortcut, bool value)
     {
-        shortcut.currentColor = value ? ColorManager.white : ColorManager.darkGrey;
-        if (!value)
-            shortcut.ChangeColor(ColorManager.darkGrey);
+        var color = value? ColorManager.white: ColorManager.darkGrey;
+        shortcut.currentColor = color;
+        shortcut.ChangeColor(color);
     }
 }
