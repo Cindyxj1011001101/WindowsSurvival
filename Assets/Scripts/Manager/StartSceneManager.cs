@@ -9,9 +9,7 @@ public class StartSceneManager : MonoBehaviour
 {
     public GameObject StartButton;
     public GameObject LoadButton;
-    public GameObject[] LoadButtonChild;
     private Button EnterGame;
-    private Button LoadGame;
     private Button Setting;
     private Button Exit;
     private void Awake()
@@ -37,7 +35,7 @@ public class StartSceneManager : MonoBehaviour
         {
             GameObject button = LoadButton.transform.GetChild(i).gameObject;
             //显示存档名（存档1，存档2，存档3，存档4，无）
-            if (GameDataManager.Instance.LoadData.loads[i] != null)
+            if (GameDataManager.Instance.LoadData.loads[i] != null && GameDataManager.Instance.LoadData.loads[i].GameTime != DateTime.MinValue)
             {
                 button.transform.Find("Name").GetComponent<Text>().text = "存档" + (i + 1);
                 //显示存档时间
@@ -125,7 +123,7 @@ public class StartSceneManager : MonoBehaviour
     void CreateNewLoad(int Index)
     {
         //源路径
-        string sourcePath = Application.dataPath + "/StreamingAssets";
+        string sourcePath = Path.Combine(Application.streamingAssetsPath, "GameData0");
         //目标路径
         string targetFolder = Application.persistentDataPath + "/GameData" + Index + "/";
         // 如果目标文件夹不存在，先创建

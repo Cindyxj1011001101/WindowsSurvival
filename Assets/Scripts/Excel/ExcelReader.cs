@@ -1,7 +1,7 @@
-﻿using Excel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using Excel;
 using UnityEngine;
 
 public static class ExcelReader
@@ -9,9 +9,10 @@ public static class ExcelReader
     public static Dictionary<string, CardConfig> ReadCardConfig(string fileName)
     {
         // 打开Excel文件
-        using FileStream fs = File.Open(Application.dataPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
-        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
-        DataSet result = excelReader.AsDataSet();
+        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
+        var excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+        var result = excelReader.AsDataSet();
+        Debug.Log("result:" + result);
         DataTable table = result.Tables[0]; // 假设配置在第一张表中
 
         // 存储卡牌配置的字典
@@ -114,7 +115,7 @@ public static class ExcelReader
     public static void GenerateDisposableDropListJson(string fileName)
     {
         // 打开Excel文件
-        using FileStream fs = File.Open(Application.dataPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
+        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
 
@@ -182,7 +183,7 @@ public static class ExcelReader
     public static void GenerateRepeatableDropListJson(string fileName)
     {
         // 打开Excel文件
-        using FileStream fs = File.Open(Application.dataPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
+        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
 
@@ -273,20 +274,20 @@ public static class ExcelReader
     public static void ReadChat(string filename)
     {
         // 打开Excel文件
-        using FileStream fs = File.Open(Application.dataPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
+        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
-
+        Debug.Log("result:" + result);
         foreach (DataTable table in result.Tables)
         {
             DataRow row;
             //读取第一行段落信息
-            ParagraphData paragraphData = new ParagraphData(ChatManager.Instance.ParagraphDataList.Count+1, int.Parse(table.Rows[1][6].ToString()), new List<ChatData>(), table.Rows[1][4].ToString());
+            ParagraphData paragraphData = new ParagraphData(ChatManager.Instance.ParagraphDataList.Count + 1, int.Parse(table.Rows[1][6].ToString()), new List<ChatData>(), table.Rows[1][4].ToString());
             List<ChatData> chatDataList = new List<ChatData>();
-            for (int i = 2; i < table.Rows.Count; i++) 
+            for (int i = 2; i < table.Rows.Count; i++)
             {
                 row = table.Rows[i];
-                chatDataList.Add(new ChatData(paragraphData.ParagraphID,row));
+                chatDataList.Add(new ChatData(paragraphData.ParagraphID, row));
             }
             paragraphData.ChatDataList = chatDataList;
             ChatManager.Instance.ParagraphDataList.Add(paragraphData);

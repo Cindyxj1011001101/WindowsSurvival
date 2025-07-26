@@ -270,7 +270,7 @@ public class StateManager : MonoBehaviour
     {
         // 室外环境里没有氧气
         if (!env.PlaceData.isIndoor) return;
-
+        if (!env.StateDict.TryGetValue(EnvironmentStateEnum.Oxygen, out var oxygen)) return;
         var gain = Mathf.Min(PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity, env.StateDict[EnvironmentStateEnum.Oxygen].CurValue);
         if (gain > 0)
         {
