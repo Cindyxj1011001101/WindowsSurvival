@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class DragScaleHandler : MonoBehaviour,
     IPointerDownHandler, IDragHandler
@@ -12,8 +13,9 @@ public class DragScaleHandler : MonoBehaviour,
     }
 
     public ScaleDirection direction;
-    public RectTransform targetRect;
-    public RectTransform canvasRect;
+    private RectTransform targetRect;
+    private RectTransform canvasRect;
+    private RectTransform rectMask;
 
     public float minWidth = 300f;
     public float minHeight = 200f;
@@ -30,6 +32,7 @@ public class DragScaleHandler : MonoBehaviour,
     {
         targetRect = transform.parent.parent.GetComponent<RectTransform>();
         canvasRect = FindObjectOfType<Canvas>().GetComponent<RectTransform>();
+        rectMask = FindObjectOfType<RectMask2D>().GetComponent<RectTransform>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -114,5 +117,14 @@ public class DragScaleHandler : MonoBehaviour,
 
         targetRect.offsetMin = newOffsetMin;
         targetRect.offsetMax = newOffsetMax;
+
+        targetRect.offsetMin = new Vector2(
+            Mathf.Clamp(targetRect.offsetMin.x, rectMask.rect.xMin, rectMask.rect.xMax),
+            Mathf.Clamp(targetRect.offsetMin.y, rectMask.rect.yMin, rectMask.rect.yMax)
+        );
+        targetRect.offsetMax = new Vector2(
+            Mathf.Clamp(targetRect.offsetMax.x, rectMask.rect.xMin, rectMask.rect.xMax),
+            Mathf.Clamp(targetRect.offsetMax.y, rectMask.rect.yMin, rectMask.rect.yMax)
+        );
     }
 }
