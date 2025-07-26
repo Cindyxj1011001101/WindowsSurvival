@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -55,6 +54,17 @@ public class CardSlot : MonoBehaviour
         }
     }
 
+    public void InitFromCardList(List<Card> cardList)
+    {
+        cards = cardList;
+        foreach (var card in cards)
+        {
+            card.SetCardSlot(this);
+            card.StartUpdating();
+        }
+        RefreshCurrentDisplay();
+    }
+
     #region 显示
 
     /// <summary>
@@ -64,7 +74,8 @@ public class CardSlot : MonoBehaviour
     {
         if (IsEmpty)
         {
-            ClearSlot();
+            //ClearSlot();
+            DisableDisplay();
             return;
         }
 
@@ -302,7 +313,12 @@ public class CardSlot : MonoBehaviour
 
     public void ClearSlot()
     {
-        cards.Clear();
+        //cards.Clear();
+        foreach (var card in cards)
+        {
+            card.SetCardSlot(null);
+        }
+        cards = new List<Card>(); // 避免影响其他引用
         componentSliders.Clear();
         MonoUtility.DestroyAllChildren(componentLayout.transform);
         DisableDisplay();

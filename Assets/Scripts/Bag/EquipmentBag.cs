@@ -20,6 +20,7 @@ public class EquipmentBag : BagBase
         foreach (var slot in equipmentSlotDict.Values)
         {
             slot.ClearSlot();
+            slot.SetBag(this);
         }
         EventManager.Instance.AddListener<Card>(EventType.Equip, OnCardEquipped);
         EventManager.Instance.AddListener<Card>(EventType.Unequip, OnCardUnequipped);

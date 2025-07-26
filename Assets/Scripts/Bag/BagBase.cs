@@ -6,9 +6,9 @@ using UnityEngine.UI;
 
 public abstract class BagBase : MonoBehaviour
 {
-    [SerializeField] private GameObject slotPrefab; // 格子预制体
-    [SerializeField] private GridLayoutGroup slotLayout; // 格子布局
-    [SerializeField] private HoverableButton organizeButton; // 整理背包按钮
+    [SerializeField] protected GameObject slotPrefab; // 格子预制体
+    [SerializeField] protected GridLayoutGroup slotLayout; // 格子布局
+    [SerializeField] protected HoverableButton organizeButton; // 整理背包按钮
 
     protected List<CardSlot> slots = new();
 
@@ -310,6 +310,8 @@ public abstract class BagBase : MonoBehaviour
         {
             slot.ClearSlot();
         }
+        slots.Clear();
+        MonoUtility.DestroyAllChildren(slotLayout.GetComponent<RectTransform>());
     }
 
     #region 紧凑排列（旧）

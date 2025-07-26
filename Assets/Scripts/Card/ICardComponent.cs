@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine.Events;
 
@@ -200,6 +202,53 @@ public class DurabilityComponent : ICardComponent
     {
         StringBuilder sb = new StringBuilder();
         sb.Append($"耐久度: {durability}/{maxDurability}");
+        return sb.ToString();
+    }
+}
+#endregion
+
+#region 内容物组件
+public class InnerContentComponent : ICardComponent
+{
+    //public List<Card> innerContents;
+    public List<List<Card>> innerContents = new();
+
+    public int slotCount;
+
+    [JsonIgnore]
+    public Func<Card, bool> canAddContent;
+
+    public InnerContentComponent(int slotCount)
+    {
+        this.slotCount = slotCount;
+        innerContents = new();
+        for (int i = 0; i < slotCount; i++)
+        {
+            innerContents.Add(new List<Card>());
+        }
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append($"内容物槽位数: {slotCount}\t");
+        sb.Append("内容物: \n");
+        for (int i = 0; i < innerContents.Count; i++)
+        {
+            sb.Append($"槽位 {i}: ");
+            if (innerContents[i].Count == 0)
+            {
+                sb.Append("空");
+            }
+            else
+            {
+                foreach (var card in innerContents[i])
+                {
+                    sb.Append($"{card.CardId} ");
+                }
+            }
+            sb.Append("\n");
+        }
         return sb.ToString();
     }
 }

@@ -6,6 +6,7 @@ public class DetailsWindow : WindowBase
     [SerializeField] private Text detailsText;
     [SerializeField] private Transform buttonLayout;
     [SerializeField] private CardSlot slot;
+    [SerializeField] private InnerBag innerBag;
     private Card currentDisplayedCard;
 
     protected override void Awake()
@@ -24,7 +25,10 @@ public class DetailsWindow : WindowBase
     protected override void Init()
     {
         if (currentDisplayedCard == null)
+        {
             Clear();
+            innerBag.Clear();
+        }
     }
 
     /// <summary>
@@ -95,6 +99,12 @@ public class DetailsWindow : WindowBase
                 button.Interactable = false;
                 btnText.color = ColorManager.darkGrey;
             }
+        }
+
+        if (currentDisplayedCard.TryGetComponent<InnerContentComponent>(out var component))
+        {
+            innerBag.InitFromInnerContentComponent(component);
+            innerBag.gameObject.SetActive(true);
         }
     }
 

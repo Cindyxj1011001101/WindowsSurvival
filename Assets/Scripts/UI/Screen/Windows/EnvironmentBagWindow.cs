@@ -204,40 +204,4 @@ public class EnvironmentBagWindow : BagWindow
             await Task.Delay(100); // 等待100毫秒，避免卡牌移动过快
         }
     }
-
-    /// <summary>
-    /// 动画添加卡牌到目标背包
-    /// </summary>
-    /// <param name="card"></param>
-    /// <param name="targetBag"></param>
-    /// <param name="startPos"></param>
-    public void AddCardWithAnim(Card card, BagBase targetBag, Vector3 startPos)
-    {
-        // 得到targetBag中所有可以放置卡牌的格子以及可以放置的数量
-        List<(CardSlot, int)> list = targetBag.GetSlotsCanAddCard(card, 1);
-
-        int leftCount = 1; // 剩余待移动卡牌的数量
-
-        // 将卡牌放入目标背包的目标格子里
-        foreach (var (targetSlot, moveCount) in list)
-        {
-            // 这里targetBag.GetSlotsCanAddCard方法确保leftCount不会是负数
-            leftCount -= moveCount;
-            // 先把数据转移了
-            targetSlot.AddCard(card, false);
-            CardMoveTween.MoveCard(
-                card,
-                moveCount,
-                startPos,
-                targetSlot.transform.position,
-                0.2f,
-                null,
-                () =>
-                {
-                    // 再刷新显示
-                    targetSlot.RefreshCurrentDisplay();
-                }
-            );
-        }
-    }
 }
