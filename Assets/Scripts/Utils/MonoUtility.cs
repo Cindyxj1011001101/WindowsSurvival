@@ -28,8 +28,29 @@ public static class MonoUtility
     /// </summary>
     /// <param name="layout"></param>
     /// <param name="elementCount"></param>
-    public static void UpdateContainerHeight(GridLayoutGroup layout, int elementCount)
+    public static void UpdateLayoutSize(ILayoutGroup layout)
     {
+        switch (layout)
+        {
+            case GridLayoutGroup gridLayout:
+                UpdateGridLayoutSize(gridLayout);
+                break;
+            case VerticalLayoutGroup verticalLayout:
+                UpdateVerticalLayoutSize(verticalLayout);
+                break;
+            case HorizontalLayoutGroup horizontalLayout:
+                UpdateHorizontalLayoutSize(horizontalLayout);
+                break;
+            default:
+                Debug.LogWarning("Unsupported layout type: " + layout.GetType().Name);
+                break;
+        }
+    }
+
+    public static void UpdateGridLayoutSize(GridLayoutGroup layout)
+    {
+        int elementCount = layout.transform.childCount;
+
         RectTransform layoutTransform = layout.transform as RectTransform;
 
         float containerWidth = layoutTransform.rect.width;
@@ -51,7 +72,8 @@ public static class MonoUtility
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
     }
 
-    public static void UpdateContainerHeight(VerticalLayoutGroup layout)
+
+    public static void UpdateVerticalLayoutSize(VerticalLayoutGroup layout)
     {
         RectTransform layoutTransform = layout.transform as RectTransform;
 
@@ -65,6 +87,24 @@ public static class MonoUtility
 
         layoutTransform.sizeDelta = new Vector2(layoutTransform.sizeDelta.x, containerHeight);
 
+        // 立刻更新布局
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
+    }
+
+    public static void UpdateHorizontalLayoutSize(HorizontalLayoutGroup layout)
+    {
+        RectTransform layoutTransform = layout.transform as RectTransform;
+
+        float containerWidth = layout.padding.left + layout.padding.right;
+
+        for (int i = 0; i < layout.transform.childCount; i++)
+        {
+            containerWidth += layout.transform.GetChild(i).GetComponent<RectTransform>().sizeDelta.x;
+        }
+
+        containerWidth += (layout.transform.childCount - 1) * layout.spacing;
+
+        layoutTransform.sizeDelta = new Vector2(containerWidth, layoutTransform.sizeDelta.y);
         // 立刻更新布局
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
     }

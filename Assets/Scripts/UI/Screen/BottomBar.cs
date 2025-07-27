@@ -11,7 +11,6 @@ public class BottomBar : MonoBehaviour
     private Dictionary<string, HoverableButton> shortcuts = new();
 
     private string selectedAppName;
-    private Sequence currentAnimation;
 
     public HoverableButton this[string appName]
     {
@@ -48,12 +47,6 @@ public class BottomBar : MonoBehaviour
     {
         if (selectedAppName == appName) return;
 
-        // 停止当前动画
-        if (currentAnimation != null && currentAnimation.IsActive())
-        {
-            currentAnimation.Kill();
-        }
-
         Vector2 startPos = string.IsNullOrEmpty(selectedAppName) ?
             selectRect.anchoredPosition :
             (shortcuts[selectedAppName].transform as RectTransform).anchoredPosition;
@@ -66,9 +59,8 @@ public class BottomBar : MonoBehaviour
         selectRect.gameObject.SetActive(true);
 
         // 创建动画序列
-        currentAnimation = DOTween.Sequence();
-
-        currentAnimation.Append(selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutBack));
+        selectRect.DOKill();
+        selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutBack);
 
         selectedAppName = appName;
     }

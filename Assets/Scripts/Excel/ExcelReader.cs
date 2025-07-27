@@ -323,6 +323,8 @@ public class CardConfig
     public bool IsTool; // 是否是工具
     public List<ToolType> ToolTypes; // 工具类型
     public bool IsBigIcon; // 是否是大图标
+    public bool HasInnerContents; // 是否有内部内容（如生物、建筑等）
+    public int InnerContentSlotCount; // 内部内容槽位数量
 }
 
 public class DropConfig

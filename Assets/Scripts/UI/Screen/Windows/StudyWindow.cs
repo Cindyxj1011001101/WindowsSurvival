@@ -28,8 +28,6 @@ public class StudyWindow : WindowBase
 
     private List<GameObject> temp = new();
 
-    private Sequence curAnim;
-
     private Dictionary<string, RectTransform> menuItemTransforms = new();
 
     protected override void Awake()
@@ -118,18 +116,10 @@ public class StudyWindow : WindowBase
 
     private void SelectTechTreeWithTween(string type)
     {
-        // 停止当前动画
-        if (curAnim != null && curAnim.IsActive())
-        {
-            curAnim.Kill();
-        }
-
         Vector2 targetPos = new(menuItemTransforms[type].anchoredPosition.x, selectRect.anchoredPosition.y);
 
-        // 创建动画序列
-        curAnim = DOTween.Sequence();
-
-        curAnim.Append(selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad));
+        selectRect.DOKill();
+        selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad);
     }
 
     private void RefreshCurrentDisplay()

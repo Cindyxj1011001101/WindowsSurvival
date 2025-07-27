@@ -20,9 +20,6 @@ public class CraftWindow : WindowBase
     private RecipeType currentRecipeType; // 记录当前选择的配方库
     private ScriptableRecipe currentSelectedRecipe; // 记录当前选中的配方
 
-    private Sequence recipeLibraryAnim; // 配方库选择框动画
-    private Sequence recipeItemAnim; // 配方选择框动画
-
     private Dictionary<RecipeType, RectTransform> recipeLibraryItemTransforms = new(); // 记录配方库图标的位置
     private Dictionary<string, RectTransform> recipeItemTransforms = new(); // 记录配方图标的位置
 
@@ -140,7 +137,7 @@ public class CraftWindow : WindowBase
             });
         }
 
-        MonoUtility.UpdateContainerHeight(recipieLayout.GetComponent<GridLayoutGroup>(), recipes.Count);
+        MonoUtility.UpdateLayoutSize(recipieLayout.GetComponent<GridLayoutGroup>());
 
         // 如果是刷新，继续选中上一个选中的配方
         if (isRefresh)
@@ -157,18 +154,12 @@ public class CraftWindow : WindowBase
 
     private void SelectRecipeLibraryWithTween(RecipeType type)
     {
-        // 停止当前动画
-        if (recipeLibraryAnim != null && recipeLibraryAnim.IsActive())
-        {
-            recipeLibraryAnim.Kill();
-        }
 
         Vector2 targetPos = new(recipeLibrarySelectRect.anchoredPosition.x, recipeLibraryItemTransforms[type].anchoredPosition.y);
 
         // 创建动画序列
-        recipeLibraryAnim = DOTween.Sequence();
-
-        recipeLibraryAnim.Append(recipeLibrarySelectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad));
+        recipeLibrarySelectRect.DOKill();
+        recipeLibrarySelectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad);
     }
 
     /// <summary>
@@ -224,17 +215,10 @@ public class CraftWindow : WindowBase
 
     private void SelectRecipeWithTween(string cardId)
     {
-        // 停止当前动画
-        if (recipeItemAnim != null && recipeItemAnim.IsActive())
-        {
-            recipeItemAnim.Kill();
-        }
-
         Vector2 targetPos = recipeItemTransforms[cardId].anchoredPosition;
 
         // 创建动画序列
-        recipeItemAnim = DOTween.Sequence();
-
-        recipeItemAnim.Append(recipeItemSelectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutBack));
+        recipeItemSelectRect.DOKill();
+        recipeItemSelectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutBack);
     }
 }

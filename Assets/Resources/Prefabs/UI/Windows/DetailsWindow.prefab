@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2499839690722491007}
   - component: {fileID: 1786074598689695369}
   m_Layer: 5
-  m_Name: Info
+  m_Name: DetailsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 4234809869293603115}
   - component: {fileID: 3962162857766412801}
   m_Layer: 5
-  m_Name: Inner
+  m_Name: InnerContentsButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1766,7 +1766,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8798695203587553633}
-  - component: {fileID: 4056006483417126116}
+  - component: {fileID: 2243423196136281291}
   m_Layer: 5
   m_Name: Layout
   m_TagString: Untagged
@@ -1793,7 +1793,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 17}
   m_SizeDelta: {x: 440, y: -34}
   m_Pivot: {x: 0, y: 0.5}
---- !u!114 &4056006483417126116
+--- !u!114 &2243423196136281291
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1802,21 +1802,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 7574323191942818059}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
     m_Left: 8
     m_Right: 0
-    m_Top: 8
+    m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
-  m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 132, y: 194}
-  m_Spacing: {x: 14, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_ChildAlignment: 3
+  m_Spacing: 14
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &7705174201686691239
 GameObject:
   m_ObjectHideFlags: 0
@@ -1908,7 +1910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotPrefab: {fileID: 8250425150690940461, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
-  slotLayout: {fileID: 4056006483417126116}
+  slotLayout: {fileID: 8798695203587553633}
   organizeButton: {fileID: 0}
 --- !u!1 &7827913273519299295
 GameObject:
@@ -2170,6 +2172,9 @@ MonoBehaviour:
   buttonLayout: {fileID: 5999479947138994050}
   slot: {fileID: 7727556266791660350}
   innerBag: {fileID: 15495959984309669}
+  detailsButton: {fileID: 1786074598689695369}
+  innerContentsButton: {fileID: 3962162857766412801}
+  selectRect: {fileID: 1574389996595824731}
 --- !u!1 &8367137605979994741
 GameObject:
   m_ObjectHideFlags: 0

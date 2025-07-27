@@ -103,7 +103,7 @@ public class EnvironmentBagWindow : BagWindow
             stateSliders.Add(EnvironmentStateEnum.Oxygen, slider);
         }
 
-        MonoUtility.UpdateContainerHeight(stateLayout.GetComponent<VerticalLayoutGroup>());
+        MonoUtility.UpdateLayoutSize(stateLayout.GetComponent<VerticalLayoutGroup>());
 
         // 显示环境名称
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";

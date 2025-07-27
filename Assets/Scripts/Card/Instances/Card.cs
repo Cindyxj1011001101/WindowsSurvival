@@ -30,13 +30,7 @@ public abstract class Card : IComparable<Card>
     #region 属性
     [JsonProperty]
     public string CardId { get; private set; } // 卡牌ID
-    //public string CardName; // 显示名称
-    //public string CardDesc; // 描述
-    //public CardType CardType; // 卡牌类型
-    //public int MaxStackNum; // 最大堆叠数
-    //public bool Moveable; // 能否移动
-    //public float Weight; // 重量
-    //public List<CardTag> Tags = new(); // 标签
+
     [JsonProperty]
     protected Dictionary<Type, ICardComponent> components = new();
 
@@ -92,13 +86,27 @@ public abstract class Card : IComparable<Card>
         Slot = slot;
     }
 
+    protected virtual void LateInit() { } // 用于在卡牌实例化后进行额外的初始化操作
+
     /// <summary>
     /// 开始监听每回合的结算
     /// </summary>
     public void StartUpdating()
     {
+        LateInit();
+
         if (OnUpdate != null)
             EventManager.Instance.AddListener(EventType.IntervalSettle, OnUpdate);
+
+        // 如果有内部内容组件，则开始监听内部内容的更新
+        if (TryGetComponent<InnerContentsComponent>(out var component))
+        {
+            foreach (var list in component.innerContents)
+            {
+                foreach (var c in list)
+                    c.StartUpdating();
+            }
+        }
     }
 
     /// <summary>

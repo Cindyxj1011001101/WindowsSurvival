@@ -208,17 +208,18 @@ public class DurabilityComponent : ICardComponent
 #endregion
 
 #region 内容物组件
-public class InnerContentComponent : ICardComponent
+public class InnerContentsComponent : ICardComponent
 {
-    //public List<Card> innerContents;
+    public string belongedCardId; // 所属卡牌ID
+
     public List<List<Card>> innerContents = new();
 
     public int slotCount;
 
     [JsonIgnore]
-    public Func<Card, bool> canAddContent;
+    public Func<Card, bool> contentFilter;
 
-    public InnerContentComponent(int slotCount)
+    public InnerContentsComponent(int slotCount, string belongedCardId)
     {
         this.slotCount = slotCount;
         innerContents = new();
@@ -226,6 +227,7 @@ public class InnerContentComponent : ICardComponent
         {
             innerContents.Add(new List<Card>());
         }
+        this.belongedCardId = belongedCardId;
     }
 
     public override string ToString()

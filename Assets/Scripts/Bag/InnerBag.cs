@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class InnerBag : BagBase
 {
-    private InnerContentComponent component;
+    private InnerContentsComponent component;
 
-    public void InitFromInnerContentComponent(InnerContentComponent component)
+    public void InitFromInnerContentComponent(InnerContentsComponent component)
     {
         this.component = component;
         // 清除原来的信息
@@ -24,8 +24,11 @@ public class InnerBag : BagBase
     {
         var result = new List<(CardSlot, int)>();
 
+        // 不能嵌套放置
+        if (card.CardId == component.belongedCardId) return result;
+
         // 不能放置这种卡牌，直接返回空列表
-        if (component.canAddContent != null && !component.canAddContent(card)) return result;
+        if (component.contentFilter != null && !component.contentFilter(card)) return result;
 
         int leftCount = count; // 剩余要添加的数量
 

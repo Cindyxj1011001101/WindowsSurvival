@@ -210,6 +210,10 @@ public static class CardFactory
         {
             card.AddComponent(typeof(ToolComponent), new ToolComponent(config.ToolTypes));
         }
+        if (config.HasInnerContents)
+        {
+            card.AddComponent(typeof(InnerContentsComponent), new InnerContentsComponent(config.InnerContentSlotCount, cardId));
+        }
 
         return card;
     }

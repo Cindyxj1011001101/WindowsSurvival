@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public abstract class BagBase : MonoBehaviour
 {
     [SerializeField] protected GameObject slotPrefab; // 格子预制体
-    [SerializeField] protected GridLayoutGroup slotLayout; // 格子布局
+    [SerializeField] protected Transform slotLayout; // 格子布局
     [SerializeField] protected HoverableButton organizeButton; // 整理背包按钮
 
     protected List<CardSlot> slots = new();
@@ -74,7 +74,7 @@ public abstract class BagBase : MonoBehaviour
         }
 
         // 添加格子后更新容器高度
-        MonoUtility.UpdateContainerHeight(slotLayout, slots.Count);
+        MonoUtility.UpdateLayoutSize(slotLayout.GetComponent<ILayoutGroup>());
     }
 
     /// <summary>
