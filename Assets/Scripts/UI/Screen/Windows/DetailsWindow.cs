@@ -85,7 +85,7 @@ public class DetailsWindow : WindowBase
         currentDisplayedCard = sourceSlot.PeekCard();
 
         // 显示卡牌
-        slot.DisplayCard(currentDisplayedCard, 1);
+        slot.DisplayCard(currentDisplayedCard, sourceSlot.StackNum);
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 

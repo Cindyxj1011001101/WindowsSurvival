@@ -132,11 +132,11 @@ public class CardSlot : MonoBehaviour
     /// 显示指定数量的卡牌
     /// </summary>
     /// <param name="card"></param>
-    /// <param name="stackCount"></param>
-    public void DisplayCard(Card card, int stackCount, bool displayStack = true)
+    /// <param name="stackNum"></param>
+    public void DisplayCard(Card card, int stackNum, bool displayStack = true)
     {
         // 如果要显示的数量小于等于零，则什么也不显示
-        if (stackCount <= 0)
+        if (stackNum <= 0)
         {
             DisableDisplay();
             return;
@@ -152,7 +152,7 @@ public class CardSlot : MonoBehaviour
         componentSliders.Clear();
 
         // 显示堆叠数量
-        DisplayStackNum(stackCount, card.MaxStackNum, displayStack);
+        DisplayStackNum(stackNum, card.MaxStackNum, displayStack);
 
         // 显示耐久
         if (card.TryGetComponent<DurabilityComponent>(out var d))
