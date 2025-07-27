@@ -55,12 +55,6 @@ public class EnvironmentBagWindow : BagWindow
 
     }
 
-    public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
-    {
-        base.Show(showMode, onFinished);
-        OnMove(GameManager.Instance.CurEnvironmentBag);
-    }
-
     /// <summary>
     /// 移动到指定环境
     /// </summary>

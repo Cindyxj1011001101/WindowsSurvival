@@ -188,7 +188,12 @@ public class GameManager : MonoBehaviour
 
         foreach (var (place, bag) in environmentBags)
         {
-            bag.gameObject.SetActive(place == targetPlace);
+            var canvasGroup = bag.GetComponent<CanvasGroup>();
+            var value = place == targetPlace;
+            //bag.gameObject.SetActive(place == targetPlace);
+            canvasGroup.alpha = value ? 1f : 0f;
+            canvasGroup.blocksRaycasts = value;
+            canvasGroup.interactable = value;
         }
 
         SoundManager.Instance.PlayPlaceMusic(environmentBags[targetPlace]);
