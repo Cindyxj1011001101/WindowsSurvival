@@ -21,7 +21,7 @@ public class EnvironmentBagWindow : BagWindow
     [SerializeField] private Image environmentImage; // 环境图片
     [SerializeField] private HoverableButton exploreButton; // 探索按钮
     [SerializeField] private RectTransform stateLayout;
-    [SerializeField] private RectTransform dropCardLayout;
+    [SerializeField] private RectTransform frontCard;
 
     private StateToggle hasCabbleToggle; // 是否铺设电缆
     private StatePressureLevel pressureLevel; // 压强等级
@@ -179,11 +179,7 @@ public class EnvironmentBagWindow : BagWindow
         }
 
         // 显示牌堆数量
-        int toDisplayCount = Mathf.CeilToInt((1 - args.degree) * dropCardLayout.childCount);
-        for (int i = 0; i < dropCardLayout.childCount; i++)
-        {
-            dropCardLayout.GetChild(i).gameObject.SetActive(i < toDisplayCount);
-        }
+        frontCard.anchoredPosition = new Vector2(frontCard.anchoredPosition.x, -Mathf.FloorToInt(args.degree * 4) * 4);
     }
 
     private async void OnExploreDropCards(List<Card> cards)
@@ -193,7 +189,7 @@ public class EnvironmentBagWindow : BagWindow
             CardMoveTween.MoveCard(
                card,
                1,
-               dropCardLayout.transform.position,
+               frontCard.position,
                card.Slot.transform.position,
                0.2f,
                null,
