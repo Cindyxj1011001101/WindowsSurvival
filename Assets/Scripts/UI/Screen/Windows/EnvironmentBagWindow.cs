@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public enum PressureLevel
@@ -52,6 +53,12 @@ public class EnvironmentBagWindow : BagWindow
     protected override void Init()
     {
 
+    }
+
+    public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
+    {
+        base.Show(showMode, onFinished);
+        OnMove(GameManager.Instance.CurEnvironmentBag);
     }
 
     /// <summary>
