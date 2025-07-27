@@ -42,7 +42,6 @@ public static class MonoUtility
                 UpdateHorizontalLayoutSize(horizontalLayout);
                 break;
             default:
-                Debug.LogWarning("Unsupported layout type: " + layout.GetType().Name);
                 break;
         }
     }

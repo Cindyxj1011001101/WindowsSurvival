@@ -43,6 +43,7 @@ public static class ExcelReader
                 IsEquipment = bool.Parse(row[18].ToString()),
                 IsTool = bool.Parse(row[20].ToString()),
                 IsBigIcon = bool.Parse(row[22].ToString()),
+                HasInnerContents = bool.Parse(row[23].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
@@ -68,8 +69,13 @@ public static class ExcelReader
             {
                 cardConfig.ToolTypes = ParseToolTypes(row[21].ToString());
             }
+            if (cardConfig.HasInnerContents)
+            {
+                cardConfig.InnerContentSlotCount = int.Parse(row[24].ToString());
+            }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
+
         Debug.Log($"卡牌配置读取完成。读取数量：{count}");
 
         fs.Close();
