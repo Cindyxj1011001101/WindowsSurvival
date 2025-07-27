@@ -187,6 +187,7 @@ public class StateManager : MonoBehaviour
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
         // 当环境改变时尝试获取氧气
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnPlayerHealthChanged);
     }
 
     private void Start()
@@ -200,6 +201,18 @@ public class StateManager : MonoBehaviour
     {
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
+        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnPlayerHealthChanged);
+    }
+
+    private void OnPlayerHealthChanged(PlayerStateEnum state)
+    {
+        if (state != PlayerStateEnum.Health) return;
+
+        if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0)
+        {
+            Debug.Log("游戏结束");
+            Die();
+        }
     }
 
     private void InitPlayerState()
@@ -459,11 +472,11 @@ public class StateManager : MonoBehaviour
     public void ExtraPlayerIntervalSettle()
     {
         ExtraFullnessChange();
-        ExtraHealthChange();
         ExtraThirstChange();
         ExtraSanChange();
         ExtraOxygenChange();
         ExtraSobrietyChange();
+        ExtraHealthChange();
     }
 
     /// <summary>
@@ -487,8 +500,6 @@ public class StateManager : MonoBehaviour
         {
             ChangePlayerState(PlayerStateEnum.San, -0.3f);
         }
-
-
     }
 
     /// <summary>
@@ -496,13 +507,7 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraHealthChange()
     {
-        // Debug.Log(PlayerStateDict[PlayerStateEnum.Health].CurValue);
-        if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0)
-        {
-            Debug.Log("游戏结束");
-            //EventManager.Instance.TriggerEvent(EventType.GameOver);
-            Die();
-        }
+        
     }
 
     /// <summary>
