@@ -96,12 +96,14 @@ public class DetailsWindow : WindowBase
         // 初始化内容物
         if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component))
         {
+            innerContentsButton.gameObject.SetActive(true);
             innerBag.InitFromInnerContentComponent(component);
             innerContentsButton.Interactable = true;
         }
         else
         {
-            innerContentsButton.ChangeColor(ColorManager.darkGrey);
+            innerContentsButton.gameObject.SetActive(false);
+            //innerContentsButton.ChangeColor(ColorManager.darkGrey);
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
