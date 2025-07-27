@@ -44,8 +44,10 @@ public class GameDataManager
 
     public void LoadAllData(int index)
     {
+        LoadLoadData();
         curLoadIndex = index;
         loadData.loads[index] = new Load(new DateTime(2020, 1, 1, 0, 0, 0));
+
         // 玩家背包
         playerBagData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "PlayerBag");
         // 上次地点
