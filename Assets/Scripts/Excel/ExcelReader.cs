@@ -12,7 +12,6 @@ public static class ExcelReader
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
         var excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         var result = excelReader.AsDataSet();
-        Debug.Log("result:" + result);
         DataTable table = result.Tables[0]; // 假设配置在第一张表中
 
         // 存储卡牌配置的字典
@@ -285,7 +284,6 @@ public static class ExcelReader
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
-        Debug.Log("result:" + result);
         foreach (DataTable table in result.Tables)
         {
             DataRow row;

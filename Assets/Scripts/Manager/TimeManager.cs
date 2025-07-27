@@ -51,6 +51,7 @@ public class TimeManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("从存档初始化");
             //从存档初始化
             curTime = GameDataManager.Instance.TimeData.curTime;
             curInterval = GameDataManager.Instance.TimeData.curIntervel;

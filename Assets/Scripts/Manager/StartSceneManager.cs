@@ -30,6 +30,7 @@ public class StartSceneManager : MonoBehaviour
     #region 存档按钮刷新    
     private void RefreshLoadButton()
     {
+
         //显示现在的存档情况
         for (int i = 0; i < LoadButton.transform.childCount; i++)
         {
@@ -37,7 +38,7 @@ public class StartSceneManager : MonoBehaviour
             //显示存档名（存档1，存档2，存档3，存档4，无）
             if (GameDataManager.Instance.LoadData.loads[i] != null && GameDataManager.Instance.LoadData.loads[i].GameTime != DateTime.MinValue)
             {
-                button.transform.Find("Name").GetComponent<Text>().text = "存档" + (i + 1);
+                button.transform.GetChild(0).transform.Find("Name").GetComponent<Text>().text = "存档" + (i + 1);
                 //显示存档时间
                 DateTime now = GameDataManager.Instance.LoadData.loads[i].GameTime;
                 DateTime target = new DateTime(2020, 1, 1, 0, 0, 0);
@@ -45,12 +46,19 @@ public class StartSceneManager : MonoBehaviour
                 int days = span.Days;
                 int hours = now.Hour;
                 int minutes = now.Minute;
-                button.transform.Find("Time").GetComponent<Text>().text = days + "天" + hours.ToString("D2") + ":" + minutes.ToString("D2");
+                button.transform.GetChild(0).transform.Find("Time").GetComponent<Text>().text = days + "天" + hours.ToString("D2") + ":" + minutes.ToString("D2");
+                button.transform.GetChild(0).GetComponent<Button>().onClick.RemoveAllListeners();
+                string btnName = button.name; // 局部变量
+                button.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() => ClickLoad(btnName));
+                button.transform.GetChild(1).GetComponent<Button>().onClick.AddListener(() => DeleteLoad(btnName));
             }
             else
             {
-                button.transform.Find("Name").GetComponent<Text>().text = "（空）";
-                button.transform.Find("Time").GetComponent<Text>().text = "00:00";
+                button.transform.GetChild(0).transform.Find("Name").GetComponent<Text>().text = "（空）";
+                button.transform.GetChild(0).transform.Find("Time").GetComponent<Text>().text = "00:00";
+                string btnName = button.name; // 局部变量
+                button.transform.GetChild(0).GetComponent<Button>().onClick.AddListener(() => ClickLoad(btnName));
+                button.transform.GetChild(1).gameObject.SetActive(false);
             }
         }
     }
@@ -93,12 +101,28 @@ public class StartSceneManager : MonoBehaviour
         //显示现在的存档情况
         RefreshLoadButton();
         //添加按钮事件
-        for (int i = 0; i < LoadButton.transform.childCount; i++)
+    }
+
+    //删除存档
+    public void DeleteLoad(string name)
+    {
+        int index = int.Parse(name.Substring(name.Length - 1, 1)) - 1;
+        GameDataManager.Instance.LoadData.loads[index] = null;
+        GameDataManager.Instance.SaveLoadData();
+        //目标路径
+        string targetFolder = Application.persistentDataPath + "/GameData" + index + "/";
+        // 如果目标文件夹不存在，先创建
+        if (Directory.Exists(targetFolder))
         {
-            GameObject button = LoadButton.transform.GetChild(i).gameObject;
-            string btnName = button.name; // 局部变量
-            button.GetComponent<Button>().onClick.AddListener(() => ClickLoad(btnName));
+            Directory.Delete(targetFolder, true);
         }
+        else
+        {
+            Debug.Log("存档不存在");
+            return;
+        }
+        //刷新存档按钮
+        RefreshLoadButton();
     }
 
     private void OnSettingClick()
