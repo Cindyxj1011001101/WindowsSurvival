@@ -33,7 +33,7 @@ public class CardSlot : MonoBehaviour
         {
             doubleClickHandler.onDoubleClick.AddListener(() =>
             {
-                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Refresh(this);
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(this);
             });
         }
 
@@ -238,12 +238,12 @@ public class CardSlot : MonoBehaviour
         cards.Add(card);
         cards.Sort((a, b) => a.CompareTo(b));
 
+        card.SetCardSlot(this);
+
         // 当卡牌添加到玩家背包时
         if (bag is PlayerBag)
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = 1 });
-
-        card.SetCardSlot(this);
 
         if (refreshImmediately)
             RefreshCurrentDisplay();
