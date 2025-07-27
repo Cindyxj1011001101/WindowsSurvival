@@ -156,39 +156,21 @@
       "MaxValue": 1000.0
     }
   },
-  "cardSlotsRuntimeData": [
-    {
-      "cardList": [
-        {
-          "$type": "WaterCrack, Assembly-CSharp",
-          "components": {},
-          "CardId": "渗水裂缝"
-        }
-      ]
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    }
+  "cardSlots": [
+    [
+      {
+        "$type": "WaterCrack, Assembly-CSharp",
+        "components": {},
+        "CardId": "渗水裂缝"
+      }
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
   ]
 }

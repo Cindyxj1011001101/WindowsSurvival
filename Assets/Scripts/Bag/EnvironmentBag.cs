@@ -4,8 +4,8 @@ using System;
 
 public class EnvironmentBag : BagBase
 {
-    public DisposableDropList DisposableDropList { get; set; } = new();
-    public RepeatableDropList RepeatableDropList { get; set; } = new();
+    public DisposableDropList DisposableDropList { get; private set; } = new();
+    public RepeatableDropList RepeatableDropList { get; private set; } = new();
 
     [Header("探索用时")]
     public int explorationTime;
@@ -67,7 +67,6 @@ public class EnvironmentBag : BagBase
         if (!data.init)
         {
             InitState();
-            //GameDataManager.Instance.SaveEnvironmentBagRuntimeData();
         }
         else
         {
@@ -77,13 +76,6 @@ public class EnvironmentBag : BagBase
 
     private void InitState()
     {
-        // 电力都显示
-        //StateDict.Add(EnvironmentStateEnum.Electricity, StateManager.Instance.Electricity);
-
-        //// 在飞船内显示水平面高度
-        //if (placeData.isInSpacecraft)
-        //    StateDict.Add(EnvironmentStateEnum.WaterLevel, StateManager.Instance.WaterLevel);
-
         // 在室内显示氧气
         if (placeData.isIndoor)
             StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(UnityEngine.Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));

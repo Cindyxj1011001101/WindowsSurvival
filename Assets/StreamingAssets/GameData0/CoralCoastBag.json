@@ -449,39 +449,21 @@
   "hasCable": false,
   "pressureLevel": 3,
   "environmentStateDict": {},
-  "cardSlotsRuntimeData": [
-    {
-      "cardList": [
-        {
-          "$type": "AirtightDoor, Assembly-CSharp",
-          "components": {},
-          "CardId": "气密舱门"
-        }
-      ]
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    },
-    {
-      "cardList": []
-    }
+  "cardSlots": [
+    [
+      {
+        "$type": "WaterCrack, Assembly-CSharp",
+        "components": {},
+        "CardId": "渗水裂缝"
+      }
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
   ]
 }

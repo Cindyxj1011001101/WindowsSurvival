@@ -16,7 +16,7 @@ public class InnerBag : BagBase
         for (int i = 0; i < component.slotCount; i++)
         {
             var cardList = component.innerContents[i];
-            slots[i].InitFromCardList(cardList);
+            slots[i].Init(cardList);
         }
     }
 

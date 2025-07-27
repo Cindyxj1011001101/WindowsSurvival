@@ -39,11 +39,12 @@ public class EquipmentBag : BagBase
 
     protected override void InitBag(BagRuntimeData runtimeData)
     {
-        if(runtimeData.cardSlotsRuntimeData.Count == 0)return;
-        headSlot.InitFromRuntimeData(runtimeData.cardSlotsRuntimeData[0]);
-        bodySlot.InitFromRuntimeData(runtimeData.cardSlotsRuntimeData[1]);
-        backSlot.InitFromRuntimeData(runtimeData.cardSlotsRuntimeData[2]);
-        legSlot.InitFromRuntimeData(runtimeData.cardSlotsRuntimeData[3]);
+        if (runtimeData.cardSlots.Count == 0) return;
+
+        headSlot.Init(runtimeData.cardSlots[0]);
+        bodySlot.Init(runtimeData.cardSlots[1]);
+        backSlot.Init(runtimeData.cardSlots[2]);
+        legSlot.Init(runtimeData.cardSlots[3]);
     }
 
     /// <summary>

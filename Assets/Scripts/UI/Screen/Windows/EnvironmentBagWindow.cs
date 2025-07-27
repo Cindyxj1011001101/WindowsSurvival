@@ -107,6 +107,7 @@ public class EnvironmentBagWindow : BagWindow
 
         // 显示环境名称
         placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
+
         // 探索事件
         DisplayDiscoveryDegree((curEnvironmentBag.DiscoveryDegree, curEnvironmentBag.ExploreCompleted));
 

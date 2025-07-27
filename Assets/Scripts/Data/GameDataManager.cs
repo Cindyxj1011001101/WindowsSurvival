@@ -132,11 +132,13 @@ public class GameDataManager
     public void SavePlayerBagRuntimeData()
     {
         PlayerBag bag = GameManager.Instance.PlayerBag;
-        playerBagData = new();
-        playerBagData.cardSlotsRuntimeData = new();
+        playerBagData = new()
+        {
+            cardSlots = new()
+        };
         foreach (var slot in bag.Slots)
         {
-            playerBagData.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
+            playerBagData.cardSlots.Add(new List<Card>(slot.Cards));
         }
         JsonManager.SaveData(playerBagData, CurLoadName, "PlayerBag");
     }
@@ -190,22 +192,25 @@ public class GameDataManager
     {
         foreach (var (place, bag) in GameManager.Instance.EnvironmentBags)
         {
-            EnvironmentBagRuntimeData data = new();
-            data.init = true;
-            // 保存掉落列表
-            data.disposableDropList = bag.DisposableDropList;
-            data.repeatableDropList = bag.RepeatableDropList;
-            // 保存背包中的卡牌
-            data.cardSlotsRuntimeData = new();
-            // 保存铺设电缆状态
-            data.hasCable = bag.HasCable;
-            // 保存压强状态
-            data.pressureLevel = bag.PressureLevel;
-            // 保存其他状态
-            data.environmentStateDict = bag.StateDict;
+            EnvironmentBagRuntimeData data = new()
+            {
+                init = true,
+                // 保存掉落列表
+                disposableDropList = bag.DisposableDropList,
+                repeatableDropList = bag.RepeatableDropList,
+                // 保存背包中的卡牌
+                cardSlots = new(),
+                // 保存铺设电缆状态
+                hasCable = bag.HasCable,
+                // 保存压强状态
+                pressureLevel = bag.PressureLevel,
+                // 保存其他状态
+                environmentStateDict = bag.StateDict
+            };
             foreach (var slot in bag.Slots)
             {
-                data.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
+                //data.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
+                data.cardSlots.Add(new List<Card>(slot.Cards));
             }
             JsonManager.SaveData(data, CurLoadName, place.ToString() + "Bag");
         }
@@ -285,13 +290,15 @@ public class GameDataManager
     public void SaveEquipmentData()
     {
         EquipmentBag bag = GameManager.Instance.EquipmentBag;
-        equipmentData = new();
-        equipmentData.cardSlotsRuntimeData = new()
+        equipmentData = new()
         {
-            new() { cardList = bag.headSlot.Cards },
-            new() { cardList = bag.bodySlot.Cards },
-            new() { cardList = bag.backSlot.Cards },
-            new() { cardList = bag.legSlot.Cards }
+            cardSlots = new()
+            {
+                new(bag.headSlot.Cards),
+                new(bag.bodySlot.Cards),
+                new(bag.backSlot.Cards),
+                new(bag.legSlot.Cards)
+            }
         };
         JsonManager.SaveData(equipmentData, CurLoadName, "Equipment");
     }

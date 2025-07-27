@@ -45,16 +45,7 @@ public class CardSlot : MonoBehaviour
         this.bag = bag;
     }
 
-    public void InitFromRuntimeData(CardSlotRuntimeData cardSlotRuntimeData)
-    {
-        foreach (var card in cardSlotRuntimeData.cardList)
-        {
-            AddCard(card);
-            card.StartUpdating();
-        }
-    }
-
-    public void InitFromCardList(List<Card> cardList)
+    public void Init(List<Card> cardList)
     {
         cards = cardList;
         foreach (var card in cards)

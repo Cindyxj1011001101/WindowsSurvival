@@ -51,12 +51,10 @@ public abstract class BagBase : MonoBehaviour
     protected virtual void InitBag(BagRuntimeData runtimeData)
     {
         slots = new();
-        AddSlot(runtimeData.cardSlotsRuntimeData.Count);
-        CardSlotRuntimeData cardSlotData;
-        for (int i = 0; i < runtimeData.cardSlotsRuntimeData.Count; i++)
+        AddSlot(runtimeData.cardSlots.Count);
+        for (int i = 0; i < runtimeData.cardSlots.Count; i++)
         {
-            cardSlotData = runtimeData.cardSlotsRuntimeData[i];
-            slots[i].InitFromRuntimeData(cardSlotData);
+            slots[i].Init(runtimeData.cardSlots[i]);
         }
     }
 

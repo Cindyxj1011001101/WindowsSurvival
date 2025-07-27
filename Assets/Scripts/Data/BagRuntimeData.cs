@@ -8,5 +8,5 @@ public class BagRuntimeData
     /// <summary>
     /// 列表的长度代表了背包当前的格子数量，每一项代表这一格里的卡牌内容
     /// </summary>
-    public List<CardSlotRuntimeData> cardSlotsRuntimeData = new();
+    public List<List<Card>> cardSlots = new();
 }

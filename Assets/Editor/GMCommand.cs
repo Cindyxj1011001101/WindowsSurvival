@@ -25,6 +25,13 @@ public class GMCommand
         if (bag != null) bag.AddSlot();
     }
 
+    [MenuItem("Command/添加/9个格子")]
+    public static void AddNineSlots()
+    {
+        var bag = GetFocusedBag();
+        if (bag != null) bag.AddSlot(9);
+    }
+
     [MenuItem("Command/添加/压缩饼干")]
     public static void A()
     {
@@ -112,7 +119,8 @@ public class GMCommand
     {
         SoundManager.Instance.PlayBGM("飞船内_01", true, 1f);
     }
-    
+
+    #region 保存
 
     [MenuItem("Command/保存/玩家背包")]
     public static void SavePlayerBag()
@@ -162,6 +170,14 @@ public class GMCommand
     {
         GameDataManager.Instance.SaveAllData();
     }
+
+
+    [MenuItem("Command/保存/状态数据")]
+    public static void SaveStateData()
+    {
+        GameDataManager.Instance.SaveStateData();
+    }
+    #endregion
 
 
     [MenuItem("Command/时间+50min")]
