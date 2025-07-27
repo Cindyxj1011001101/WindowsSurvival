@@ -219,6 +219,9 @@ public class InnerContentsComponent : ICardComponent
     [JsonIgnore]
     public Func<Card, bool> contentFilter;
 
+    [JsonIgnore]
+    public UnityAction onContentsRemoved;
+
     public InnerContentsComponent(int slotCount, string belongedCardId)
     {
         this.slotCount = slotCount;
@@ -228,6 +231,39 @@ public class InnerContentsComponent : ICardComponent
             innerContents.Add(new List<Card>());
         }
         this.belongedCardId = belongedCardId;
+    }
+
+    public int GetTotalCountByCardId(string cardId)
+    {
+        int totalCount = 0;
+        foreach (var slot in innerContents)
+        {
+            foreach (var card in slot)
+            {
+                if (card.CardId == cardId)
+                    totalCount++;
+            }
+        }
+        return totalCount;
+    }
+
+    public int RemoveContentsByCardId(string cardId, int count)
+    {
+        int removedCount = 0;
+        for (int i = 0; i < innerContents.Count && removedCount < count; i++)
+        {
+            var slot = innerContents[i];
+            for (int j = slot.Count - 1; j >= 0 && removedCount < count; j--)
+            {
+                if (slot[j].CardId == cardId)
+                {
+                    slot.RemoveAt(j);
+                    removedCount++;
+                }
+            }
+        }
+        if (removedCount > 0) onContentsRemoved?.Invoke();
+        return removedCount;
     }
 
     public override string ToString()

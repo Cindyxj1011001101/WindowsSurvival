@@ -7,9 +7,10 @@ public class InnerBag : BagBase
 
     public void InitFromInnerContentComponent(InnerContentsComponent component)
     {
-        this.component = component;
         // 清除原来的信息
         Clear();
+
+        this.component = component;
 
         // 初始化新的信息
         AddSlot(component.slotCount);
@@ -18,6 +19,15 @@ public class InnerBag : BagBase
             var cardList = component.innerContents[i];
             slots[i].Init(cardList);
         }
+
+        // 当内容物被移除时，刷新所有卡牌格的显示
+        component.onContentsRemoved = () =>
+        {
+            foreach (var slot in slots)
+            {
+                slot.RefreshCurrentDisplay();
+            }
+        };
     }
 
     public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)
@@ -68,5 +78,15 @@ public class InnerBag : BagBase
     public override void Init()
     {
         
+    }
+
+    public override void Clear()
+    {
+        base.Clear();
+        if (component != null)
+        {
+            component.onContentsRemoved = null;
+            component = null;
+        }
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -12,7 +11,7 @@ public class OreReleaseOxygenMachine : Card
     public int maxTimeProgress; // 最大时间进度
     public int curTimeProgress; // 当前时间进度
     public float oxygenRelease; // 氧气释放量
-    public int curOreNum; // 白爆矿数量
+    //public int curOreNum; // 白爆矿数量
     public int oreConsumption; // 白爆矿消耗量
     public float electricityConsumption; // 电力消耗量
 
@@ -23,15 +22,27 @@ public class OreReleaseOxygenMachine : Card
         maxTimeProgress = 360;
         curTimeProgress = 0;
         oxygenRelease = 180;
-        curOreNum = 0;
+        //curOreNum = 0;
         oreConsumption = 1;
         electricityConsumption = 1;
         Events = new()
         {
             new Event("打开", "打开矿石释氧机", Event_Open, Judge_Open),
             new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
-            new Event("获取氧气", "获取氧气", Event_GetOxygen, Judge_GetOxygen)
+            new Event("获取氧气", "获取氧气", Event_GetOxygen, null)
         };
+    }
+
+    protected override void LateInit()
+    {
+        base.LateInit();
+        if (TryGetComponent<InnerContentsComponent>(out var component))
+        {
+            component.contentFilter = (c) =>
+            {
+                return c.CardId == "白爆矿";
+            };
+        }
     }
 
     #region 开关
@@ -59,43 +70,16 @@ public class OreReleaseOxygenMachine : Card
     #region 获取氧气
     public void Event_GetOxygen()
     {
-        //if (GameManager.Instance.EquipmentBag.FindCardOfName("氧气罐") == null) return;
+        // 玩家氧气剩余容量
+        var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
+        // 计算释放量
+        var toRelease = Mathf.Min(curOxygenStorage, remainingCapacity);
+        if (toRelease > 0)
+            // 释放氧气
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, toRelease);
 
-        //Dictionary<PlayerStateEnum, PlayerState> playerStateDict = StateManager.Instance.PlayerStateDict;
-
-        
-
-        //if (playerStateDict[PlayerStateEnum.Oxygen].CurValue < playerStateDict[PlayerStateEnum.Oxygen].MaxValue + StateManager.Instance.PlayerExtraStateDict[PlayerStateEnum.Oxygen])
-        //{
-        //    //判断氧气罐是否能装下，装不下保留，装下则全装
-        //    float canGet = playerStateDict[PlayerStateEnum.Oxygen].MaxValue + StateManager.Instance.PlayerExtraStateDict[PlayerStateEnum.Oxygen] - playerStateDict[PlayerStateEnum.Oxygen].CurValue;
-        //    if (canGet > oxygenRelease)
-        //    {
-        //        playerStateDict[PlayerStateEnum.Oxygen].CurValue += oxygenRelease;
-        //        StateManager.Instance.PlayerExtraStateDict[PlayerStateEnum.Oxygen] -= oxygenRelease;
-        //        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, PlayerStateEnum.Oxygen);
-        //    }
-        //    else
-        //    {
-        //        playerStateDict[PlayerStateEnum.Oxygen].CurValue += canGet;
-        //        StateManager.Instance.PlayerExtraStateDict[PlayerStateEnum.Oxygen] -= canGet;
-        //        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, PlayerStateEnum.Oxygen);
-        //    }
-        //}
-    }
-
-    public bool Judge_GetOxygen()
-    {
-        ////TODO:判断是否装备氧气罐，氧气是否已满
-        //if (GameManager.Instance.EquipmentBag.FindCardOfName("氧气罐") == null) return false;
-
-        //Dictionary<PlayerStateEnum, PlayerState> playerStateDict = StateManager.Instance.PlayerStateDict;
-        //if (playerStateDict[PlayerStateEnum.Oxygen].CurValue < playerStateDict[PlayerStateEnum.Oxygen].MaxValue + StateManager.Instance.PlayerExtraStateDict[PlayerStateEnum.Oxygen])
-        //{
-        //    return true;
-        //}
-
-        return false;
+        // 氧气存量减少
+        curOxygenStorage -= toRelease;
     }
     #endregion
 
@@ -143,12 +127,9 @@ public class OreReleaseOxygenMachine : Card
         // 氧气存储要超了不制氧
         if (curOxygenStorage + oxygenRelease > maxOxygenStorage)
         {
-            Debug.Log("氧气储存已满");
+            Debug.Log("氧气储存剩余空间不足");
             return;
         }
-
-        // 白爆矿不够不制氧
-        if (curOreNum < oreConsumption) return;
 
         // 没连接到电网不制氧
         var env = Slot.Bag as EnvironmentBag;
@@ -157,16 +138,29 @@ public class OreReleaseOxygenMachine : Card
         // 电力不足不制氧
         if (StateManager.Instance.Electricity.CurValue < electricityConsumption) return;
 
+        // 白爆矿不够不制氧
+        if (!TryConsumeOre(oreConsumption)) return;
+        
         //归零生产进度
         curTimeProgress = 0;
 
-        //消耗白爆矿和电力
-        curOreNum -= oreConsumption;
-
         // 消耗电力
-        StateManager.Instance.ChangeElectricity(electricityConsumption);
+        StateManager.Instance.ChangeElectricity(-electricityConsumption);
 
         // 氧气存量增加
         curOxygenStorage += oxygenRelease;
+    }
+
+    private bool TryConsumeOre(int amount)
+    {
+        TryGetComponent<InnerContentsComponent>(out var component);
+        int oreCount = component.GetTotalCountByCardId("白爆矿");
+        // 白爆矿的数量多余消耗量
+        if (oreCount > amount)
+        {
+            component.RemoveContentsByCardId("白爆矿", amount);
+            return true;
+        }
+        return false;
     }
 }
