@@ -497,7 +497,8 @@ public class StateManager : MonoBehaviour
         if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0)
         {
             Debug.Log("游戏结束");
-            EventManager.Instance.TriggerEvent(EventType.GameOver);
+            //EventManager.Instance.TriggerEvent(EventType.GameOver);
+            Die();
         }
     }
 
@@ -630,6 +631,14 @@ public class StateManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region 临时死亡逻辑
+
+    private void Die()
+    {
+        FindObjectOfType<Canvas>().transform.Find("Die").gameObject.SetActive(true);
+    }
     #endregion
 
     #region 载重
