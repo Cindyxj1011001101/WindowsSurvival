@@ -9,6 +9,7 @@ public class DetailsWindow : WindowBase
     [SerializeField] private CardSlot slot;
     [SerializeField] private InnerBag innerBag;
 
+    [SerializeField] private Transform menuLayout; // 菜单布局
     [SerializeField] private HoverableButton detailsButton; // 显示详细信息按钮
     [SerializeField] private HoverableButton innerContentsButton; // 显示内部内容按钮
 
@@ -42,7 +43,6 @@ public class DetailsWindow : WindowBase
             if (currentDisplayedCard != null)
             {
                 DisplayDetails();
-                SelectWithTween(detailsButton.GetComponent<RectTransform>());
             }
         });
 
@@ -51,7 +51,6 @@ public class DetailsWindow : WindowBase
             if (currentDisplayedCard != null)
             {
                 DisplayInnerContents();
-                SelectWithTween(innerContentsButton.GetComponent<RectTransform>());
             }
         });
     }
@@ -63,7 +62,7 @@ public class DetailsWindow : WindowBase
     private void OnPlayerCardsChanged(ChangePlayerBagCardsArgs args)
     {
         if (currentDisplayedCard != null)
-            Refresh(currentDisplayedCard.Slot);
+            DisplayEventButtons();
     }
 
     bool moved = false;
@@ -74,7 +73,7 @@ public class DetailsWindow : WindowBase
         moved = true;
     }
 
-    public void Refresh(CardSlot sourceSlot)
+    public void DisplayCardDetails(CardSlot sourceSlot)
     {
         // 清除原数据
         Clear();
@@ -90,6 +89,46 @@ public class DetailsWindow : WindowBase
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 
         // 显示可选择按钮
+        DisplayEventButtons();
+
+        innerContentsButton.Interactable = false;
+
+        // 初始化内容物
+        if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component))
+        {
+            innerBag.InitFromInnerContentComponent(component);
+            innerContentsButton.Interactable = true;
+        }
+        else
+        {
+            innerContentsButton.ChangeColor(ColorManager.darkGrey);
+        }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
+        DisplayDetails();
+    }
+
+    private void DisplayDetails()
+    {
+        detailsText.gameObject.SetActive(true);
+        innerBag.gameObject.SetActive(false);
+        // 显示卡牌详细信息
+        detailsText.text = currentDisplayedCard.CardDesc;
+        SelectWithTween(detailsButton.GetComponent<RectTransform>());
+    }
+
+    private void DisplayInnerContents()
+    {
+        detailsText.gameObject.SetActive(false);
+        innerBag.gameObject.SetActive(true);
+        SelectWithTween(innerContentsButton.GetComponent<RectTransform>());
+    }
+
+    private void DisplayEventButtons()
+    {
+        if (currentDisplayedCard == null) return;
+
+        MonoUtility.DestroyAllChildren(buttonLayout);
         foreach (var e in currentDisplayedCard.Events)
         {
             GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/CardEventButton");
@@ -110,7 +149,7 @@ public class DetailsWindow : WindowBase
                     if (!moved)
                     {
                         // 再刷新
-                        Refresh(sourceSlot);
+                        DisplayCardDetails(sourceSlot);
                         moved = false;
                     }
                 });
@@ -122,35 +161,6 @@ public class DetailsWindow : WindowBase
                 btnText.color = ColorManager.darkGrey;
             }
         }
-
-        DisplayDetails();
-
-        innerContentsButton.Interactable = false;
-
-        // 初始化内容物
-        if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component))
-        {
-            innerBag.InitFromInnerContentComponent(component);
-            innerContentsButton.Interactable = true;
-        }
-        else
-        {
-            innerContentsButton.ChangeColor(ColorManager.darkGrey);
-        }
-    }
-
-    private void DisplayDetails()
-    {
-        detailsText.gameObject.SetActive(true);
-        innerBag.gameObject.SetActive(false);
-        // 显示卡牌详细信息
-        detailsText.text = currentDisplayedCard.CardDesc;
-    }
-
-    private void DisplayInnerContents()
-    {
-        detailsText.gameObject.SetActive(false);
-        innerBag.gameObject.SetActive(true);
     }
 
     private void Clear()
@@ -164,7 +174,7 @@ public class DetailsWindow : WindowBase
 
     private void SelectWithTween(RectTransform target)
     {
-        Vector2 targetPos = new (target.anchoredPosition.x, selectRect.anchoredPosition.y);
+        Vector2 targetPos = new(target.anchoredPosition.x, selectRect.anchoredPosition.y);
 
         selectRect.DOKill();
         selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad);
