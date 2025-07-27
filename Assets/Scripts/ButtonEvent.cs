@@ -18,6 +18,7 @@ public class LoadButton : MonoBehaviour
     {
         int index = GameDataManager.Instance.curLoadIndex;
         //删除本存档
+        Debug.Log(GameDataManager.Instance.LoadData);
         GameDataManager.Instance.LoadData.loads[index] = null;
         GameDataManager.Instance.SaveLoadData();
         //目标路径

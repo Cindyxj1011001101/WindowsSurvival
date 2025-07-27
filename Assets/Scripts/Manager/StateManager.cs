@@ -474,19 +474,21 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraFullnessChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 30)
+        if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 0)
         {
-            ChangePlayerState(PlayerStateEnum.San, -0.3f);
+            ChangePlayerState(PlayerStateEnum.San, -1f);
+            ChangePlayerState(PlayerStateEnum.Health, -8f);
         }
         else if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 10)
         {
             ChangePlayerState(PlayerStateEnum.San, -0.7f);
         }
-        else if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 0)
+        else if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 30)
         {
-            ChangePlayerState(PlayerStateEnum.San, -1f);
-            ChangePlayerState(PlayerStateEnum.Health, -8f);
+            ChangePlayerState(PlayerStateEnum.San, -0.3f);
         }
+
+
     }
 
     /// <summary>
@@ -494,6 +496,7 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraHealthChange()
     {
+        // Debug.Log(PlayerStateDict[PlayerStateEnum.Health].CurValue);
         if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0)
         {
             Debug.Log("游戏结束");
@@ -510,19 +513,20 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraThirstChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 30)
+        if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 0)
         {
-            ChangePlayerState(PlayerStateEnum.San, -0.3f);
+            ChangePlayerState(PlayerStateEnum.San, -1f);
+            ChangePlayerState(PlayerStateEnum.Health, -8f);
         }
         else if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 10)
         {
             ChangePlayerState(PlayerStateEnum.San, -0.7f);
         }
-        else if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 0)
+        else if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 30)
         {
-            ChangePlayerState(PlayerStateEnum.San, -1f);
-            ChangePlayerState(PlayerStateEnum.Health, -8f);
+            ChangePlayerState(PlayerStateEnum.San, -0.3f);
         }
+
     }
 
     /// <summary>
@@ -551,19 +555,20 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraSobrietyChange()
     {
-        if (PlayerStateDict[PlayerStateEnum.Sobriety].CurValue <= 30)
+        if (PlayerStateDict[PlayerStateEnum.Sobriety].CurValue == 0)
         {
-            ChangePlayerState(PlayerStateEnum.San, -0.3f);
+            ChangePlayerState(PlayerStateEnum.San, -6f);
+            ChangePlayerState(PlayerStateEnum.Health, -4f);
         }
+
         else if (PlayerStateDict[PlayerStateEnum.Sobriety].CurValue <= 10)
         {
             ChangePlayerState(PlayerStateEnum.San, -1.5f);
             ChangePlayerState(PlayerStateEnum.Health, -2f);
         }
-        else if (PlayerStateDict[PlayerStateEnum.Sobriety].CurValue == 0)
+        else if (PlayerStateDict[PlayerStateEnum.Sobriety].CurValue <= 30)
         {
-            ChangePlayerState(PlayerStateEnum.San, -6f);
-            ChangePlayerState(PlayerStateEnum.Health, -4f);
+            ChangePlayerState(PlayerStateEnum.San, -0.3f);
         }
     }
 
@@ -637,6 +642,7 @@ public class StateManager : MonoBehaviour
 
     private void Die()
     {
+        Debug.Log(FindObjectOfType<Canvas>().transform.Find("Die").name);
         FindObjectOfType<Canvas>().transform.Find("Die").gameObject.SetActive(true);
     }
     #endregion
