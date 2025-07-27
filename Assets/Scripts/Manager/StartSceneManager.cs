@@ -42,7 +42,7 @@ public class StartSceneManager : MonoBehaviour
                 //显示存档时间
                 DateTime now = GameDataManager.Instance.LoadData.loads[i].GameTime;
                 DateTime target = new DateTime(2020, 1, 1, 0, 0, 0);
-                TimeSpan span = target - now;
+                TimeSpan span = now-target;
                 int days = span.Days;
                 int hours = now.Hour;
                 int minutes = now.Minute;
