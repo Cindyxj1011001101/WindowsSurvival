@@ -41,12 +41,14 @@ public abstract class BagBase : MonoBehaviour
             organizeButton.onClick.RemoveListener(CompactCards);
     }
 
-    protected virtual void Start()
-    {
-        Init();
-    }
+    //protected virtual void Start()
+    //{
+    //    Init();
+    //}
 
-    protected abstract void Init();
+    //protected abstract void Init();
+
+    public abstract void Init();
 
     protected virtual void InitBag(BagRuntimeData runtimeData)
     {

@@ -40,7 +40,7 @@ public class EnvironmentBag : BagBase
             EventManager.Instance.AddListener<float>(EventType.ChangeWaterLevel, OnWaterLevelChanged);
     }
 
-    protected override void Init()
+    public override void Init()
     {
         InitBag(GameDataManager.Instance.GetEnvironmentBagDataByPlace(placeData.placeType));
     }

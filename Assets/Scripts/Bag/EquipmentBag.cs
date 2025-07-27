@@ -32,7 +32,7 @@ public class EquipmentBag : BagBase
         EventManager.Instance.RemoveListener<Card>(EventType.Unequip, OnCardUnequipped);
     }
 
-    protected override void Init()
+    public override void Init()
     {
         InitBag(GameDataManager.Instance.EquipmentData);
     }

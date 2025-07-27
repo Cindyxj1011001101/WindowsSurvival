@@ -17,7 +17,7 @@ public class PlayerBag : BagBase
         StateManager.Instance.AddLoad(args.card.Weight * args.add);
     }
 
-    protected override void Init()
+    public override void Init()
     {
         InitBag(GameDataManager.Instance.PlayerBagData);
     }

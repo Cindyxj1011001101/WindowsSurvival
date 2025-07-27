@@ -58,6 +58,12 @@ public class GameManager : MonoBehaviour
 
     private void Init()
     {
+        playerBag.Init();
+        equipmentBag.Init();
+        foreach (var bag in environmentBags.Values)
+        {
+            bag.Init();
+        }
         Move(GameDataManager.Instance.LastPlace);
         SoundManager.Instance.PlayCurEnvironmentMusic();
     }
@@ -188,12 +194,7 @@ public class GameManager : MonoBehaviour
 
         foreach (var (place, bag) in environmentBags)
         {
-            var canvasGroup = bag.GetComponent<CanvasGroup>();
-            var value = place == targetPlace;
-            //bag.gameObject.SetActive(place == targetPlace);
-            canvasGroup.alpha = value ? 1f : 0f;
-            canvasGroup.blocksRaycasts = value;
-            canvasGroup.interactable = value;
+            bag.gameObject.SetActive(place == targetPlace);
         }
 
         SoundManager.Instance.PlayPlaceMusic(environmentBags[targetPlace]);

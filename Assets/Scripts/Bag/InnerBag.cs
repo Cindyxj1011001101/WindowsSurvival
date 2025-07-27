@@ -65,7 +65,7 @@ public class InnerBag : BagBase
         return result;
     }
 
-    protected override void Init()
+    public override void Init()
     {
         
     }
