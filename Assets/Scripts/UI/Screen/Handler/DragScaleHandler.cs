@@ -130,10 +130,10 @@ public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
     public void OnEndDrag(PointerEventData eventData)
     {
         var window = GetComponentInParent<WindowBase>();
-        var layouts = window.transform.GetComponentsInChildren<ILayoutGroup>();
-        foreach (var layout in layouts)
+        var scrollRects = window.transform.GetComponentsInChildren<ScrollRect>();
+        foreach (var s in scrollRects)
         {
-            MonoUtility.UpdateLayoutSize(layout);
+            MonoUtility.UpdateLayoutSize(s.content.GetComponent<ILayoutGroup>());
         }
     }
 }
