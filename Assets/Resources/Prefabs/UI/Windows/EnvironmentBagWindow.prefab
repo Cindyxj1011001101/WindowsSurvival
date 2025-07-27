@@ -2704,6 +2704,7 @@ GameObject:
   - component: {fileID: 85286222094138686}
   - component: {fileID: 1421181380302484141}
   - component: {fileID: 8139940960780631040}
+  - component: {fileID: 8344148300566266085}
   m_Layer: 5
   m_Name: Cockpit
   m_TagString: Untagged
@@ -2819,6 +2820,18 @@ MonoBehaviour:
   placeData: {fileID: 11400000, guid: b416e26146f51dc4082c8a8ffbcef356, type: 2}
   hasCable: 1
   pressureLevel: 3
+--- !u!225 &8344148300566266085
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2618964389397854021}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2799075118470700743
 GameObject:
   m_ObjectHideFlags: 0
@@ -2907,6 +2920,7 @@ GameObject:
   - component: {fileID: 5797694233100181125}
   - component: {fileID: 1389736715078146902}
   - component: {fileID: 2154162475681434132}
+  - component: {fileID: 2128917741212970395}
   m_Layer: 5
   m_Name: CoralCoast
   m_TagString: Untagged
@@ -3022,6 +3036,18 @@ MonoBehaviour:
   placeData: {fileID: 11400000, guid: c550a8b0e4ce7474e940b4db16893b49, type: 2}
   hasCable: 0
   pressureLevel: 3
+--- !u!225 &2128917741212970395
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3044360076949022037}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3046288353500816885
 GameObject:
   m_ObjectHideFlags: 0
@@ -5797,6 +5823,7 @@ GameObject:
   - component: {fileID: 4122868708276700199}
   - component: {fileID: 7462995598113448599}
   - component: {fileID: 3645203428446252669}
+  - component: {fileID: 6663288821018480990}
   m_Layer: 5
   m_Name: LifeSupportCabin
   m_TagString: Untagged
@@ -5912,6 +5939,18 @@ MonoBehaviour:
   placeData: {fileID: 11400000, guid: b907534beb8093a418d284905d2cac4e, type: 2}
   hasCable: 1
   pressureLevel: 3
+--- !u!225 &6663288821018480990
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7368666251573427265}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7374112131425823710
 GameObject:
   m_ObjectHideFlags: 0
@@ -6732,6 +6771,7 @@ GameObject:
   - component: {fileID: 8659556330813360432}
   - component: {fileID: 4936334546377588261}
   - component: {fileID: 2775446253096305728}
+  - component: {fileID: 6634375099360084144}
   m_Layer: 5
   m_Name: PowerCabin
   m_TagString: Untagged
@@ -6847,6 +6887,18 @@ MonoBehaviour:
   placeData: {fileID: 11400000, guid: 0477a3ea042b4c0488260a06bebc0f9b, type: 2}
   hasCable: 1
   pressureLevel: 3
+--- !u!225 &6634375099360084144
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8253576386664065415}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8291096414560901122
 GameObject:
   m_ObjectHideFlags: 0
