@@ -9,6 +9,8 @@ public class UIPressureLevel : MonoBehaviour
 
     public Color[] colors;
 
+    public HoverableButton button;
+
     public void SetValue(PressureLevel level)
     {
         // 压强对应的颜色
@@ -29,6 +31,15 @@ public class UIPressureLevel : MonoBehaviour
         // 显示压强数值
         pressureLevelText.text = ParsePressureLevel(level);
         pressureLevelText.color = color;
+
+        if (button != null)
+        {
+            button.currentColor = button.hoveredColor = color;
+            if (button.normalImage != null)
+            {
+                button.normalImage.color = color;
+            }
+        }
     }
 
     private string ParsePressureLevel(PressureLevel level)

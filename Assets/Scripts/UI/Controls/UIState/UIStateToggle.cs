@@ -10,6 +10,8 @@ public class UIStateToggle : MonoBehaviour
     public Color onColor;
     public Color offColor;
 
+    public HoverableButton button;
+
     public void SetStateName(string name)
     {
         stateNameText.text = name;
@@ -18,6 +20,15 @@ public class UIStateToggle : MonoBehaviour
     public void SetValue(bool value)
     {
         onImage.gameObject.SetActive(value);
-        onImage.color = offImage.color = stateNameText.color = value ? onColor : offColor;
+        var color = value ? onColor : offColor;
+        onImage.color = offImage.color = stateNameText.color = color;
+        if (button != null)
+        {
+            button.currentColor = button.hoveredColor = color;
+            if (button.normalImage != null)
+            {
+                button.normalImage.color = color;
+            }
+        }
     }
 }

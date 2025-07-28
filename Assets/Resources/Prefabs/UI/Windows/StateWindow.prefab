@@ -1572,6 +1572,24 @@ MonoBehaviour:
   - {fileID: 987111515, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
   - {fileID: -566022016, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
   icon: {fileID: 5325021689163191000}
+  colors:
+  - {r: 0, g: 0.5019608, b: 1, a: 1}
+  - {r: 0, g: 0.8705883, b: 0.85098046, a: 1}
+  - {r: 0, g: 0.8196079, b: 0.24705884, a: 1}
+  - {r: 1, g: 0.909804, b: 0.050980397, a: 1}
+  - {r: 1, g: 0.03529412, b: 0.03529412, a: 1}
+  button: {fileID: 2377753081959163406}
+--- !u!114 &2377753081959163406 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1695282349199904925, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+  m_PrefabInstance: {fileID: 3997405931863864979}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2318696787236612321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &3420948487132367433 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729387763690093786, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
@@ -2206,6 +2224,23 @@ MonoBehaviour:
   - {fileID: -89833634, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
   - {fileID: 509707120, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
   icon: {fileID: 3784426004533137636}
+  colors:
+  - {r: 0, g: 0.8196079, b: 0.24705884, a: 1}
+  - {r: 1, g: 0.909804, b: 0.050980397, a: 1}
+  - {r: 1, g: 0.5019608, b: 0.043137256, a: 1}
+  - {r: 1, g: 0.03529412, b: 0.03529412, a: 1}
+  button: {fileID: 6745765183570076722}
+--- !u!114 &6745765183570076722 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1695282349199904925, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+  m_PrefabInstance: {fileID: 5339896835125851311}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6723617045121051357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8765504846427562654 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3728500925928511025, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
