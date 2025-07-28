@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class StatePressureLevel : MonoBehaviour
+public class UIPressureLevel : MonoBehaviour
 {
     public Text pressureLevelText;
 

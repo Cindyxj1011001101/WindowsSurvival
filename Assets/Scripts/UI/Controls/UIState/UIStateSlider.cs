@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class StateSlider : MonoBehaviour
+public class UIStateSlider : MonoBehaviour
 {
     public Text stateNameText;
     public Text valueText;
@@ -14,7 +14,7 @@ public class StateSlider : MonoBehaviour
         stateNameText.text = name;
     }
 
-    public void SetValue(float value, float maxValue)
+    public virtual void SetValue(float value, float maxValue)
     {
         slider.value = value / maxValue;
         if (displayPercentage)

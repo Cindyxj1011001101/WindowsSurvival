@@ -14,6 +14,11 @@ public enum PlayerStateEnum
     San,
     Oxygen,
     Sobriety,
+    Load,
+    CarbonMonoxidePoisoning,
+    Itchiness,
+    PainLevel,
+    BodyTemperature,
 }
 
 /// <summary>
@@ -25,7 +30,10 @@ public enum EnvironmentStateEnum
     Oxygen,
     WaterLevel,
     HasCable,
-    PressureLevel
+    PressureLevel,
+    RoomTemperature,
+    CarbonMonoxideLevel,
+    Dirtiness,
 }
 /// <summary>
 /// 当前危险程度
@@ -126,12 +134,12 @@ public class StateManager : MonoBehaviour
     /// <summary>
     /// 电力
     /// </summary>
-    public EnvironmentState Electricity { get; set; }
+    public EnvironmentState Electricity { get; private set; }
 
     /// <summary>
     /// 飞船水平面高度
     /// </summary>
-    public EnvironmentState WaterLevel { get; set; }
+    public EnvironmentState WaterLevel { get; private set; }
 
     #region 单例
     private static StateManager instance;
@@ -171,16 +179,12 @@ public class StateManager : MonoBehaviour
             InitPlayerState();
             InitElectricity();
             InitWaterLevel();
-            InitLoad();
-            //GameDataManager.Instance.SaveStateData();
         }
         else
         {
             Electricity = stateData.electricity;
             WaterLevel = stateData.waterLevel;
             PlayerStateDict = stateData.playerState;
-            CurLoad = stateData.curLoad;
-            MaxLoad = stateData.maxLoad;
         }
 
         // 监听回合结算
@@ -217,13 +221,18 @@ public class StateManager : MonoBehaviour
 
     private void InitPlayerState()
     {
-        //初始化玩家状态
+        // 初始化玩家状态
         PlayerStateDict.Add(PlayerStateEnum.Health, new PlayerState(InitPlayerStateData.Instance.Health, 100, 0, PlayerStateEnum.Health));
         PlayerStateDict.Add(PlayerStateEnum.Fullness, new PlayerState(InitPlayerStateData.Instance.Fullness, 100, 0, PlayerStateEnum.Fullness));
         PlayerStateDict.Add(PlayerStateEnum.Thirst, new PlayerState(InitPlayerStateData.Instance.Thirst, 100, 0, PlayerStateEnum.Thirst));
         PlayerStateDict.Add(PlayerStateEnum.San, new PlayerState(InitPlayerStateData.Instance.San, 100, 0, PlayerStateEnum.San));
         PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 60, 0, PlayerStateEnum.Oxygen));
         PlayerStateDict.Add(PlayerStateEnum.Sobriety, new PlayerState(InitPlayerStateData.Instance.Sobriety, 100, 0, PlayerStateEnum.Sobriety));
+        PlayerStateDict.Add(PlayerStateEnum.Load, new PlayerState(0, 30, 0, PlayerStateEnum.Load));
+        PlayerStateDict.Add(PlayerStateEnum.BodyTemperature, new PlayerState(100, 200, 0, PlayerStateEnum.BodyTemperature));
+        // 新状态的添加
+        // 新状态的添加
+        // 新状态的添加
     }
 
     private void InitElectricity()
@@ -234,12 +243,6 @@ public class StateManager : MonoBehaviour
     private void InitWaterLevel()
     {
         WaterLevel = new EnvironmentState(0, 100, EnvironmentStateEnum.WaterLevel);
-    }
-
-    private void InitLoad()
-    {
-        MaxLoad = 15;
-        CurLoad = 0;
     }
     #endregion
 
@@ -507,7 +510,7 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void ExtraHealthChange()
     {
-        
+
     }
 
     /// <summary>
@@ -653,19 +656,26 @@ public class StateManager : MonoBehaviour
     #endregion
 
     #region 载重
-    /// <summary>
-    /// 最大负重
-    /// </summary>
-    public float MaxLoad { get; set; }
-    /// <summary>
-    /// 当前负重
-    /// </summary>
-    public float CurLoad { get; set; }
 
-    public void AddLoad(float weight)
+    public int GetLoadLevel()
     {
-        CurLoad += weight;
-        EventManager.Instance.TriggerEvent(EventType.ChangeLoad);
+        float curLoad = PlayerStateDict[PlayerStateEnum.Load].CurValue;
+        float maxLoad = PlayerStateDict[PlayerStateEnum.Load].MaxValue;
+        if (curLoad <= maxLoad * 0.5f)
+            return 0; // 轻负重
+        else if (curLoad <= maxLoad * 0.6f)
+            return 1; // 中负重
+        else if (curLoad <= maxLoad * 0.75f)
+            return 2; // 高负重
+        else
+            return 3; // 重负重
+    }
+    #endregion
+
+    #region 体温
+    public int GetTemperatureLevel()
+    {
+        return 2;
     }
     #endregion
 }

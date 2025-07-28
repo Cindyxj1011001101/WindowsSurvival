@@ -1,7 +1,7 @@
 ﻿public enum EventType
 {
     IntervalSettle,
-    ChangeLoad, // 背包载重变化
+    //ChangeLoad, // 背包载重变化
     ChangeCardProperty, // 卡牌属性变化
     Move,//场景移动界面刷新
     RefreshPlayerState,//更新玩家状态数据

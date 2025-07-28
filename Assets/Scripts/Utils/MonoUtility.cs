@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 public static class MonoUtility
@@ -48,7 +49,8 @@ public static class MonoUtility
 
     public static void UpdateGridLayoutSize(GridLayoutGroup layout)
     {
-        int elementCount = layout.transform.childCount;
+        int elementCount = layout.transform.Cast<Transform>()
+                                     .Count(child => child.gameObject.activeSelf); // 只计算激活的子物体
 
         RectTransform layoutTransform = layout.transform as RectTransform;
 
@@ -77,12 +79,16 @@ public static class MonoUtility
         RectTransform layoutTransform = layout.transform as RectTransform;
 
         float containerHeight = layout.padding.top + layout.padding.bottom;
+
+        int activateChildCount = 0;
         for (int i = 0; i < layout.transform.childCount; i++)
         {
+            if (!layout.transform.GetChild(i).gameObject.activeSelf) continue; // 只计算激活的子物体
             containerHeight += layout.transform.GetChild(i).GetComponent<RectTransform>().sizeDelta.y;
+            activateChildCount++;
         }
 
-        containerHeight += (layout.transform.childCount - 1) * layout.spacing;
+        containerHeight += Mathf.Max(0, activateChildCount - 1) * layout.spacing;
 
         layoutTransform.sizeDelta = new Vector2(layoutTransform.sizeDelta.x, containerHeight);
 
@@ -96,12 +102,15 @@ public static class MonoUtility
 
         float containerWidth = layout.padding.left + layout.padding.right;
 
+        int activateChildCount = 0;
         for (int i = 0; i < layout.transform.childCount; i++)
         {
+            if (!layout.transform.GetChild(i).gameObject.activeSelf) continue; // 只计算激活的子物体
             containerWidth += layout.transform.GetChild(i).GetComponent<RectTransform>().sizeDelta.x;
+            activateChildCount++;
         }
 
-        containerWidth += (layout.transform.childCount - 1) * layout.spacing;
+        containerWidth += Mathf.Max(0, activateChildCount - 1) * layout.spacing;
 
         layoutTransform.sizeDelta = new Vector2(containerWidth, layoutTransform.sizeDelta.y);
         // 立刻更新布局

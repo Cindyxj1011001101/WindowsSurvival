@@ -363,8 +363,6 @@ public class GameDataManager
             electricity = StateManager.Instance.Electricity,
             waterLevel = StateManager.Instance.WaterLevel,
             playerState = StateManager.Instance.PlayerStateDict,
-            maxLoad = StateManager.Instance.MaxLoad,
-            curLoad = StateManager.Instance.CurLoad
         };
         JsonManager.SaveData(stateData, CurLoadName, "State");
     }

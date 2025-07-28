@@ -6,6 +6,4 @@ public class StateData
     public EnvironmentState electricity;
     public EnvironmentState waterLevel;
     public Dictionary<PlayerStateEnum, PlayerState> playerState = new();
-    public float maxLoad;
-    public float curLoad;
 }

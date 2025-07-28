@@ -93,7 +93,10 @@ public class EnvironmentBag : BagBase
             case EnvironmentStateEnum.Electricity:
             case EnvironmentStateEnum.WaterLevel:
                 throw new ArgumentException("修改电力或水平面请通过StateManager.Instance.ChangeElectricity/ChangeWaterLevel方法");
-            case EnvironmentStateEnum.Oxygen:
+            case EnvironmentStateEnum.HasCable:
+            case EnvironmentStateEnum.PressureLevel:
+                throw new ArgumentException("修改是否铺设电缆或压强请通过ChangeHasCable/ChangePressureLevel方法");
+            default:
                 // 没有这个状态不处理
                 if (!StateDict.ContainsKey(stateEnum)) return;
                 var state = StateDict[stateEnum];
@@ -104,8 +107,6 @@ public class EnvironmentBag : BagBase
                     stateValue = state
                 });
                 break;
-            default:
-                throw new ArgumentException("修改是否铺设电缆或压强请通过ChangeHasCable/ChangePressureLevel方法");
         }
     }
 

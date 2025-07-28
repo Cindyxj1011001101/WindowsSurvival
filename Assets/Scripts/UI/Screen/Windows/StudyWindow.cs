@@ -10,7 +10,7 @@ public class StudyWindow : WindowBase
     [SerializeField] private Text techDescription;
 
     [SerializeField] private StudyButton studyButton;
-    [SerializeField] private StateSlider progressSlider;
+    [SerializeField] private UIStateSlider progressSlider;
     [SerializeField] private Text studyRate;
     [SerializeField] private Text studyTime;
 
@@ -146,7 +146,7 @@ public class StudyWindow : WindowBase
         var prerequisitePrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Study/TechPrerequisite");
         foreach (var prerequisite in techNode.prerequisites)
         {
-            var toggle = Instantiate(prerequisitePrefab, detailLayout).GetComponentInChildren<StateToggle>();
+            var toggle = Instantiate(prerequisitePrefab, detailLayout).GetComponentInChildren<UIStateToggle>();
             unlockRecipe.transform.SetAsLastSibling();
             toggle.SetStateName(prerequisite.techName);
             toggle.SetValue(TechnologyManager.Instance.IsTechNodeComplished(prerequisite));
@@ -186,7 +186,6 @@ public class StudyWindow : WindowBase
         {
             progressSlider.gameObject.SetActive(false);
             studyTime.transform.parent.gameObject.SetActive(false);
-            //progressSlider.SetValue(techNode.cost, techNode.cost);
         }
         // 其他情况
         else

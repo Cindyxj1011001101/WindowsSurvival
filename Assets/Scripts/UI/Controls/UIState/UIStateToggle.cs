@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class StateToggle : MonoBehaviour
+public class UIStateToggle : MonoBehaviour
 {
     public Text stateNameText;
     public Image offImage;

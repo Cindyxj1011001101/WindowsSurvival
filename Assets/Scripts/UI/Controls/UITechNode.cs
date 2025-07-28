@@ -6,7 +6,7 @@ public class UITechNode : HoverableButton
 {
     public Text techName;
     public Transform recipeLayout;
-    public StateSlider progressSlider;
+    public UIStateSlider progressSlider;
     public GameObject background;
     public GameObject foreground_inProgress;
     public GameObject foreground_complished;

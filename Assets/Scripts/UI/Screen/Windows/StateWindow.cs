@@ -9,7 +9,7 @@ public class StateWindow : WindowBase
 
     [SerializeField] private GridLayoutGroup buffLayout;
 
-    private Dictionary<PlayerStateEnum, StateSlider> stateSliders = new();
+    private Dictionary<PlayerStateEnum, UIStateSlider> stateSliders = new();
 
     protected override void Awake()
     {
@@ -18,7 +18,7 @@ public class StateWindow : WindowBase
         {
             var child = stateLayout.GetChild(i);
             PlayerStateEnum stateType = (PlayerStateEnum)Enum.Parse(typeof(PlayerStateEnum), child.name);
-            stateSliders.Add(stateType, child.GetComponentInChildren<StateSlider>());
+            stateSliders.Add(stateType, child.GetComponentInChildren<UIStateSlider>());
         }
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshState);
     }
@@ -31,12 +31,13 @@ public class StateWindow : WindowBase
     //初始化显示数据
     protected override void Init()
     {
-        RefreshState(PlayerStateEnum.Fullness);
-        RefreshState(PlayerStateEnum.Health);
-        RefreshState(PlayerStateEnum.Thirst);
-        RefreshState(PlayerStateEnum.San);
-        RefreshState(PlayerStateEnum.Oxygen);
-        RefreshState(PlayerStateEnum.Sobriety);
+        foreach (PlayerStateEnum stateEnum in Enum.GetValues(typeof(PlayerStateEnum)))
+        {
+            if (!StateManager.Instance.PlayerStateDict.ContainsKey(stateEnum)) continue;
+            RefreshState(stateEnum);
+        }
+        // 刷新布局大小
+        MonoUtility.UpdateLayoutSize(stateLayout.GetComponent<ILayoutGroup>());
     }
 
     //更新显示数据

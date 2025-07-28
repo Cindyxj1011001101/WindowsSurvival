@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public enum PressureLevel
@@ -16,16 +15,16 @@ public enum PressureLevel
 
 public class EnvironmentBagWindow : BagWindow
 {
-    [SerializeField] private StateSlider discoveryDegreeSlider; // 探索度显示
+    [SerializeField] private UIStateSlider discoveryDegreeSlider; // 探索度显示
     [SerializeField] private Text placeNameText; // 环境名称
     [SerializeField] private Image environmentImage; // 环境图片
     [SerializeField] private HoverableButton exploreButton; // 探索按钮
     [SerializeField] private RectTransform stateLayout;
     [SerializeField] private RectTransform frontCard;
 
-    private StateToggle hasCabbleToggle; // 是否铺设电缆
-    private StatePressureLevel pressureLevel; // 压强等级
-    private Dictionary<EnvironmentStateEnum, StateSlider> stateSliders = new(); // 环境状态显示
+    private UIStateToggle hasCabbleToggle; // 是否铺设电缆
+    private UIPressureLevel pressureLevel; // 压强等级
+    private Dictionary<EnvironmentStateEnum, UIStateSlider> stateSliders = new(); // 环境状态显示
 
     protected override void Awake()
     {
@@ -65,21 +64,19 @@ public class EnvironmentBagWindow : BagWindow
         MonoUtility.DestroyAllChildren(stateLayout);
 
         // 压强都显示
-        pressureLevel = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/PressureLevel"), stateLayout).GetComponent<StatePressureLevel>();
+        pressureLevel = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/PressureLevel"), stateLayout).GetComponent<UIPressureLevel>();
         pressureLevel.SetValue(curEnvironmentBag.PressureLevel);
 
         // 是否铺设电缆都显示
-        hasCabbleToggle = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/ToggleState"), stateLayout).GetComponent<StateToggle>();
+        hasCabbleToggle = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/HasCable"), stateLayout).GetComponent<UIStateToggle>();
         hasCabbleToggle.SetStateName("铺设电缆");
         hasCabbleToggle.SetValue(curEnvironmentBag.HasCable);
 
         // 铺设电缆才显示电力
-        StateSlider slider;
+        UIStateSlider slider;
         if (curEnvironmentBag.HasCable)
         {
-            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/SliderState"), stateLayout).GetComponent<StateSlider>();
-            slider.SetStateName("电力");
-            slider.displayPercentage = false;
+            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/Electricity"), stateLayout).GetComponent<UIStateSlider>();
             slider.SetValue(StateManager.Instance.Electricity);
             stateSliders.Add(EnvironmentStateEnum.Electricity, slider);
         }
@@ -87,21 +84,17 @@ public class EnvironmentBagWindow : BagWindow
         // 在飞船内显示水平面高度
         if (curEnvironmentBag.PlaceData.isInSpacecraft)
         {
-            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/SliderState"), stateLayout).GetComponent<StateSlider>();
-            slider.SetStateName("水平面");
-            slider.displayPercentage = true;
+            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/WaterLevel"), stateLayout).GetComponent<UIStateSlider>();
             slider.SetValue(StateManager.Instance.WaterLevel);
             stateSliders.Add(EnvironmentStateEnum.WaterLevel, slider);
         }
 
-        // 在室内显示氧气
-        if (curEnvironmentBag.StateDict.ContainsKey(EnvironmentStateEnum.Oxygen))
+        // 其他状态显示
+        foreach (var (state, value) in curEnvironmentBag.StateDict)
         {
-            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/State/SliderState"), stateLayout).GetComponent<StateSlider>();
-            slider.SetStateName("氧气");
-            slider.displayPercentage = false;
-            slider.SetValue(curEnvironmentBag.StateDict[EnvironmentStateEnum.Oxygen]);
-            stateSliders.Add(EnvironmentStateEnum.Oxygen, slider);
+            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/" + state.ToString()), stateLayout).GetComponent<UIStateSlider>();
+            slider.SetValue(value);
+            stateSliders.Add(state, slider);
         }
 
         MonoUtility.UpdateLayoutSize(stateLayout.GetComponent<VerticalLayoutGroup>());
@@ -127,13 +120,6 @@ public class EnvironmentBagWindow : BagWindow
 
         switch (args.stateEnum)
         {
-            case EnvironmentStateEnum.Electricity:
-            case EnvironmentStateEnum.Oxygen:
-            case EnvironmentStateEnum.WaterLevel:
-                // 不存在这个状态不显示
-                if (!stateSliders.ContainsKey(args.stateEnum)) return;
-                stateSliders[args.stateEnum].SetValue(args.stateValue);
-                break;
             case EnvironmentStateEnum.HasCable:
                 hasCabbleToggle.SetValue(args.hasCable);
                 break;
@@ -141,7 +127,10 @@ public class EnvironmentBagWindow : BagWindow
                 pressureLevel.SetValue(args.pressureLevel);
                 break;
             default:
-                throw new ArgumentException("未知状态改变: " + args.stateEnum.ToString());
+                // 不存在这个状态不显示
+                if (!stateSliders.ContainsKey(args.stateEnum)) return;
+                stateSliders[args.stateEnum].SetValue(args.stateValue);
+                break;
         }
     }
 
