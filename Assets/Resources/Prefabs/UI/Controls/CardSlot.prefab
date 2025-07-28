@@ -589,6 +589,7 @@ GameObject:
   - component: {fileID: 545166251674420746}
   - component: {fileID: 6612119921627977956}
   - component: {fileID: 8356294659441100970}
+  - component: {fileID: 3974766719659012217}
   m_Layer: 5
   m_Name: CardSlot
   m_TagString: Untagged
@@ -674,6 +675,7 @@ MonoBehaviour:
   componentLayout: {fileID: 5653223418816246087}
   cardCanvasGroup: {fileID: 2762523007511967095}
   moreInfoText: {fileID: 8165112822295029467}
+  dontRefresh: 0
 --- !u!225 &8356294659441100970
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -686,6 +688,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &3974766719659012217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8250425150690940461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 1
 --- !u!1 &8271824455966453760
 GameObject:
   m_ObjectHideFlags: 0

@@ -34,6 +34,39 @@ public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
         rectMask = FindObjectOfType<RectMask2D>().GetComponent<RectTransform>();
     }
 
+    public void ChangeMouseByDirection()
+    {
+
+        switch (direction)
+        {
+            case ScaleDirection.Left:
+                MouseManager.Instance.ChangeMouseState(MouseState.ResizeX);
+                break;
+            case ScaleDirection.Right:
+                MouseManager.Instance.ChangeMouseState(MouseState.ResizeX);
+                break;
+            case ScaleDirection.Top:
+                MouseManager.Instance.ChangeMouseState(MouseState.ResizeY);
+                break;
+            case ScaleDirection.Bottom:
+                MouseManager.Instance.ChangeMouseState(MouseState.ResizeY);
+                break;
+            case ScaleDirection.TopLeft:
+                MouseManager.Instance.ChangeMouseState(MouseState.ResizeCounterDiagonal);
+                break;
+            case ScaleDirection.TopRight:
+                MouseManager.Instance.ChangeMouseState(MouseState.ResizeMainDiagonal);
+                break;
+            case ScaleDirection.BottomLeft:
+                MouseManager.Instance.ChangeMouseState(MouseState.ResizeMainDiagonal);
+                break;
+            case ScaleDirection.BottomRight:
+                MouseManager.Instance.ChangeMouseState(MouseState.ResizeCounterDiagonal);
+                break;
+
+        }
+    }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         if (targetRect == null || canvasRect == null) return;

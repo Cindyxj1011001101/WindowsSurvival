@@ -18,7 +18,7 @@ public class InitPlayerStateData : SingleScriptableObject<InitPlayerStateData>
     public float BasicThirstChange;
     public float BasicSanChange;
     public float BasicOxygenChange;
-    public float BasicSobrietyChange;
+    public float BasicSobrietyChange;   
     //地点状态基础变化
     [Header("地点状态基础变化")]
     public float BasicElectricityChange;

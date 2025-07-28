@@ -6,7 +6,7 @@ public class TechnologyManager
     private static TechnologyManager instance = new();
     public static TechnologyManager Instance => instance;
 
-    private TechnologyData techData;
+    public TechnologyData techData;
 
     public ScriptableTechnologyNode CurStudiedTechNode => Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techData.curStudiedTechNodeName);
     public float CurStudyRate => techData.curStudyRate;

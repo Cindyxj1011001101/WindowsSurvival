@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LoadButton : MonoBehaviour
+public class ButtonEvent : MonoBehaviour
 {
     public void LoadScene()
     {

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1244506311909691922}
   - component: {fileID: 7146250573843502559}
   - component: {fileID: 7700665487795521149}
+  - component: {fileID: 4939259059235914899}
   m_Layer: 5
   m_Name: CardEventButton
   m_TagString: Untagged
@@ -65,8 +66,19 @@ MonoBehaviour:
   textsNeedToReverseColor:
   - {fileID: 576773620984651417}
   imagseNeedToReverseColor: []
-  currentColor: {r: 0.90588236, g: 0.90588236, b: 0.90588236, a: 1}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 255}
+--- !u!114 &4939259059235914899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853790556351804927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &1273064475476806626
 GameObject:
   m_ObjectHideFlags: 0
