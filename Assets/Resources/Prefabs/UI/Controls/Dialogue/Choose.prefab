@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 384762904626183970}
   - component: {fileID: 3213429385096757779}
   - component: {fileID: 5428821051892660774}
+  - component: {fileID: 1186612927786892523}
   m_Layer: 5
   m_Name: Choose
   m_TagString: Untagged
@@ -229,3 +230,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
+--- !u!114 &1186612927786892523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8335998440406647172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0

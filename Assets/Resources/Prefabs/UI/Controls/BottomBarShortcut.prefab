@@ -255,6 +255,7 @@ GameObject:
   - component: {fileID: 7478144127290824878}
   - component: {fileID: 883832406892597147}
   - component: {fileID: 8642876423555751592}
+  - component: {fileID: 5577162714920964891}
   m_Layer: 5
   m_Name: BottomBarShortcut
   m_TagString: Untagged
@@ -341,6 +342,19 @@ MonoBehaviour:
   imagseNeedToReverseColor:
   - {fileID: 1544076831294994151}
   tipCanvas: {fileID: 5673908950745335246}
+--- !u!114 &5577162714920964891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5353490118747857353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &8514854646569422851
 GameObject:
   m_ObjectHideFlags: 0

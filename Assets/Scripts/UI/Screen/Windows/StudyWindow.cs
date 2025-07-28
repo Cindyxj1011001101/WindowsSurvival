@@ -34,6 +34,7 @@ public class StudyWindow : WindowBase
     {
         base.Awake();
         EventManager.Instance.AddListener(EventType.ChangeStudyProgress, RefreshCurrentDisplay);
+        TechnologyManager.Instance.techData = GameDataManager.Instance.TechnologyData;
     }
     private void OnDestroy()
     {

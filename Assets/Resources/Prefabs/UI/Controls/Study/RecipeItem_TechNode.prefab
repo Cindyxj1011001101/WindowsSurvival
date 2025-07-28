@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3237894273093696923}
   - component: {fileID: 7645577530815306561}
   - component: {fileID: 5526177910479824943}
+  - component: {fileID: -2618037891490429271}
   m_Layer: 5
   m_Name: RecipeItem_TechNode
   m_TagString: Untagged
@@ -91,12 +92,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   normalImage: {fileID: 6918878457431914790}
-  hoveredImage: {fileID: 6329092397687430353}
+  hoveredGraphics: []
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 6918878457431914790}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
+--- !u!114 &-2618037891490429271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933645690032951672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &5946990542256765882
 GameObject:
   m_ObjectHideFlags: 0

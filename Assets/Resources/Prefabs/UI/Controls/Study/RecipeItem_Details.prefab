@@ -162,6 +162,7 @@ GameObject:
   - component: {fileID: 8211231557069362188}
   - component: {fileID: 5947976459831864433}
   - component: {fileID: 1281330595506549702}
+  - component: {fileID: 6537552286737378074}
   m_Layer: 5
   m_Name: RecipeItem_Details
   m_TagString: Untagged
@@ -251,8 +252,19 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 5338849676551946250}
-  currentColor: {r: 0.90588236, g: 0.90588236, b: 0.90588236, a: 255}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 255}
+--- !u!114 &6537552286737378074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7936865704861026117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &9011149717776577559
 GameObject:
   m_ObjectHideFlags: 0

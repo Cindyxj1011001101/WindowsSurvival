@@ -20,4 +20,5 @@ public class BottledWater : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 15);
         TimeManager.Instance.AddTime(3);
     }
+    
 }

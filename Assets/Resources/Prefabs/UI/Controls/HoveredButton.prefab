@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4673379636625080258}
   - component: {fileID: 8429975445812066290}
   - component: {fileID: 7636039873176578960}
+  - component: {fileID: 6112153371868600644}
   m_Layer: 5
   m_Name: HoveredButton
   m_TagString: Untagged
@@ -95,8 +96,19 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
-  currentColor: {r: 0.90588236, g: 0.90588236, b: 0.90588236, a: 255}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 1}
+--- !u!114 &6112153371868600644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2242866399758872912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &7427339299358911752
 GameObject:
   m_ObjectHideFlags: 0

@@ -145,6 +145,7 @@ GameObject:
   - component: {fileID: 3032541018031648279}
   - component: {fileID: 8271769607416970200}
   - component: {fileID: 6816300620845605854}
+  - component: {fileID: 7455130186948689497}
   m_Layer: 5
   m_Name: StyduButton
   m_TagString: Untagged
@@ -233,6 +234,19 @@ MonoBehaviour:
   text: {fileID: 2786951710767958119}
   iconObject: {fileID: 3132186631542892690}
   studyingAnim: {fileID: 7753119047892390488}
+--- !u!114 &7455130186948689497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72787737989433970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &171708254967416415
 GameObject:
   m_ObjectHideFlags: 0
@@ -705,6 +719,7 @@ GameObject:
   - component: {fileID: 8844308669791538511}
   - component: {fileID: 6264877370729927463}
   - component: {fileID: 3733254275335905976}
+  - component: {fileID: 910425131611041282}
   m_Layer: 5
   m_Name: Oxygen
   m_TagString: Untagged
@@ -791,6 +806,19 @@ MonoBehaviour:
   - {fileID: 559301413298828357}
   imagseNeedToReverseColor:
   - {fileID: 6697802867119912723}
+--- !u!114 &910425131611041282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418359191147581921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &438961972688174482
 GameObject:
   m_ObjectHideFlags: 0
@@ -1386,10 +1414,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6279749422703330590}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 134, y: -28}
+  m_SizeDelta: {x: 160, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1579489195067216756
 CanvasRenderer:
@@ -1575,6 +1603,7 @@ GameObject:
   - component: {fileID: 8263145949643795045}
   - component: {fileID: 2556697933444444448}
   - component: {fileID: 7957665293126695686}
+  - component: {fileID: 3734320542748145549}
   m_Layer: 5
   m_Name: Food
   m_TagString: Untagged
@@ -1661,6 +1690,19 @@ MonoBehaviour:
   - {fileID: 7817761631880854361}
   imagseNeedToReverseColor:
   - {fileID: 2687013651138877109}
+--- !u!114 &3734320542748145549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701972558568940493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &1773076335277505229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1693,10 +1735,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6279749422703330590}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 253, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 134, y: -298}
+  m_SizeDelta: {x: 253, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3551939241171524253
 CanvasRenderer:
@@ -3423,6 +3465,7 @@ GameObject:
   - component: {fileID: 2782279785542814294}
   - component: {fileID: 6738383345369152243}
   - component: {fileID: 4528405169280010293}
+  - component: {fileID: 7170579519213926249}
   m_Layer: 5
   m_Name: Resource
   m_TagString: Untagged
@@ -3509,6 +3552,19 @@ MonoBehaviour:
   - {fileID: 1787544717274635551}
   imagseNeedToReverseColor:
   - {fileID: 5916540415040598158}
+--- !u!114 &7170579519213926249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4052232534582742128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &4125727555020222161
 GameObject:
   m_ObjectHideFlags: 0
@@ -4131,6 +4187,7 @@ GameObject:
   - component: {fileID: 2262312406943004303}
   - component: {fileID: 1090370183013268877}
   - component: {fileID: 4447077978958845803}
+  - component: {fileID: 4643410456134741161}
   m_Layer: 5
   m_Name: Equipment
   m_TagString: Untagged
@@ -4217,6 +4274,19 @@ MonoBehaviour:
   - {fileID: 1747268784227039100}
   imagseNeedToReverseColor:
   - {fileID: 6323923284856618420}
+--- !u!114 &4643410456134741161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5101064992314609537}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &5181614743988117121
 GameObject:
   m_ObjectHideFlags: 0
@@ -5009,10 +5079,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6279749422703330590}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 253, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 134, y: -146}
+  m_SizeDelta: {x: 253, y: 196}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8749268800249730646
 CanvasRenderer:
@@ -5233,6 +5303,7 @@ GameObject:
   - component: {fileID: 4725647886723157289}
   - component: {fileID: 1605746116244064841}
   - component: {fileID: 3260287130721309076}
+  - component: {fileID: 6905498900054922479}
   m_Layer: 5
   m_Name: Construction
   m_TagString: Untagged
@@ -5319,6 +5390,19 @@ MonoBehaviour:
   - {fileID: 570309157961830548}
   imagseNeedToReverseColor:
   - {fileID: 1615786602670311518}
+--- !u!114 &6905498900054922479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6634157792812635939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &6741170786196429246
 GameObject:
   m_ObjectHideFlags: 0
@@ -5415,10 +5499,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 6279749422703330590}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 253, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 134, y: -264}
+  m_SizeDelta: {x: 253, y: 28}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1599742054368072633
 CanvasRenderer:

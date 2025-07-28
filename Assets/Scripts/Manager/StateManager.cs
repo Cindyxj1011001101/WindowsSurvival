@@ -189,6 +189,8 @@ public class StateManager : MonoBehaviour
 
         // 监听回合结算
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
+        //监听睡眠状态结算
+        EventManager.Instance.AddListener(EventType.Sleep, Sleep);
         // 当环境改变时尝试获取氧气
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnPlayerHealthChanged);
@@ -204,6 +206,7 @@ public class StateManager : MonoBehaviour
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
+        EventManager.Instance.RemoveListener(EventType.Sleep, Sleep);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnPlayerHealthChanged);
     }
@@ -257,6 +260,8 @@ public class StateManager : MonoBehaviour
     public void ChangePlayerState(PlayerStateEnum stateEnum, float delta)
     {
         if (!PlayerStateDict.ContainsKey(stateEnum)) return;
+
+
 
         // 氧气特殊处理
         if (stateEnum == PlayerStateEnum.Oxygen)
@@ -449,7 +454,9 @@ public class StateManager : MonoBehaviour
     public void IntervalSettle()
     {
         PlayerIntervalSettle();
+        
         ExtraPlayerIntervalSettle();
+
         EnvironmentIntervalSettle();
     }
 
@@ -580,6 +587,13 @@ public class StateManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region 睡觉额外结算
+    public void Sleep()
+    {
+        ChangePlayerState(PlayerStateEnum.Sobriety, 3.5f);
+    }
     #endregion
 
     #region 危险状态

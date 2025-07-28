@@ -87,6 +87,7 @@ GameObject:
   - component: {fileID: 1202659598935261814}
   - component: {fileID: 6443309137950036250}
   - component: {fileID: 5646945572789281356}
+  - component: {fileID: 1690931536545078660}
   m_Layer: 5
   m_Name: MaterialItem
   m_TagString: Untagged
@@ -138,7 +139,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 1703501114179676635}
   requiredNumText: {fileID: 5012085251614484177}
-  notAdequateColor: {r: 0.34901962, g: 0.34901962, b: 0.34901962, a: 1}
   button: {fileID: 5646945572789281356}
 --- !u!114 &5646945572789281356
 MonoBehaviour:
@@ -158,8 +158,19 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 1703501114179676635}
-  currentColor: {r: 0.90588236, g: 0.90588236, b: 0.90588236, a: 255}
-  reversedColor: {r: 0.06666667, g: 0.06666667, b: 0.06666667, a: 255}
+--- !u!114 &1690931536545078660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6602357911263969448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
 --- !u!1 &8277805548770378705
 GameObject:
   m_ObjectHideFlags: 0
