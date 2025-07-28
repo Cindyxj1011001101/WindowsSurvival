@@ -54,7 +54,7 @@ public class UITechNode : HoverableButton
             // 设置颜色
             foreach (var btn in recipeButtons)
             {
-                btn.currentColor = btn.normalImage.color = ColorManager.cyan;
+                btn.hoveredColor = btn.currentColor = btn.normalImage.color = ColorManager.cyan;
             }
         }
         // 未解锁
