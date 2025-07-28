@@ -15,6 +15,7 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private VerticalLayoutGroup componentLayout; // 用于显示新鲜度、耐久等组件的布局
     [SerializeField] private CanvasGroup cardCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
+    [SerializeField] private bool dontRefresh; // 是否不刷新显示（用于某些特殊情况）
 
     private Dictionary<ICardComponent, Slider> componentSliders = new(); // 用于存储组件的滑动条
 
@@ -37,7 +38,8 @@ public class CardSlot : MonoBehaviour
             });
         }
 
-        EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
+        if (!dontRefresh)
+            EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
     }
 
     public void SetBag(BagBase bag)
@@ -65,7 +67,6 @@ public class CardSlot : MonoBehaviour
     {
         if (IsEmpty)
         {
-            //ClearSlot();
             DisableDisplay();
             return;
         }

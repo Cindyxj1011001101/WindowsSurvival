@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
         // 卡牌的属性开始随时间变化
         card.StartUpdating();
 
-        if (toPlayerBag && WindowsManager.Instance.IsWindowOpen("PlayerBag") && playerBag.CanAddCard(card))
+        if (toPlayerBag/* && WindowsManager.Instance.IsWindowOpen("PlayerBag")*/ && playerBag.CanAddCard(card))
         {
             playerBag.AddCard(card, refreshImmediately);
         }
