@@ -47,6 +47,8 @@ public class BottomBar : MonoBehaviour
     {
         if (selectedAppName == appName) return;
 
+        if (!shortcuts.ContainsKey(appName)) return;
+
         Vector2 startPos = string.IsNullOrEmpty(selectedAppName) ?
             selectRect.anchoredPosition :
             (shortcuts[selectedAppName].transform as RectTransform).anchoredPosition;
@@ -73,7 +75,8 @@ public class BottomBar : MonoBehaviour
 
     public void SetOpened(string appName, bool value)
     {
-        SetOpened(shortcuts[appName], value);
+        if (shortcuts.ContainsKey(appName))
+            SetOpened(shortcuts[appName], value);
     }
 
     private void SetOpened(HoverableButton shortcut, bool value)

@@ -1,14 +1,13 @@
 using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 public enum AlignmentMode
 {
     Left,
-    Center
+    Center,
+    Right
 }
 
 [AddComponentMenu("UI/Effects/TextSpacing")]
@@ -63,7 +62,20 @@ public class TextSpacing : BaseMeshEffect
             var line = lines[row];
             int charCount = line.Count / 6;
             float lineWidth = (charCount - 1) * spacing_x;
-            float centerOffset = alignment == AlignmentMode.Center ? -lineWidth / 2f : 0f;
+            float offset = 0f;
+            switch (alignment)
+            {
+                case AlignmentMode.Center:
+                    offset = -lineWidth / 2f;
+                    break;
+                case AlignmentMode.Right:
+                    offset = -lineWidth;
+                    break;
+                case AlignmentMode.Left:
+                default:
+                    offset = 0f;
+                    break;
+            }
 
             for (int col = 0; col < charCount; col++)
             {
@@ -71,7 +83,7 @@ public class TextSpacing : BaseMeshEffect
                 {
                     int idx = charIndex + col * 6 + v;
                     UIVertex vertex = mVertexList[idx];
-                    vertex.position += Vector3.right * (col * spacing_x + centerOffset);
+                    vertex.position += Vector3.right * (col * spacing_x + offset);
                     vertex.position += Vector3.down * (row * spacing_y);
                     mVertexList[idx] = vertex;
                 }

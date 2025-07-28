@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class WindowsManager : MonoBehaviour, IPointerDownHandler
+public class WindowsManager : MonoBehaviour
 {
     private static WindowsManager instance;
     public static WindowsManager Instance => instance;
 
-    //private Desktop desktop; // 桌面布局
     private BottomBar bottomBar; // 底边栏布局
 
     private Dictionary<string, WindowBase> openedWindows = new(); // 当前所有打开的窗口，最小化的窗口也算打开的
@@ -15,27 +13,11 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
 
     private WindowGroup windowGroup; // 所有窗口作为其子物体，由该脚本控制窗口的渲染顺序
 
-    //private List<App> appsData;
-
-    //public Desktop Desktop => desktop;
-    //public BottomBar BottomBar => bottomBar;
-
     private void Awake()
     {
         instance = this;
-        //desktop = transform.Find("Desktop").GetComponent<Desktop>();
         bottomBar = transform.Find("BottomBar").GetComponent<BottomBar>();
         windowGroup = transform.Find("Desktop/WindowGroup").GetComponent<WindowGroup>();
-    }
-
-    private void Start()
-    {
-        currentFocusedWindow = null;
-
-        // 加载桌面图标数据
-        //appsData = Resources.Load<AppsData>("ScriptableObject/App/TestAppsData").appsData;
-        //desktop.Init(appsData);
-
     }
 
     public WindowBase OpenWindow(string appName)
@@ -90,7 +72,6 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
         // 设置获得焦点的窗口是渲染层级最靠前的窗口
         // 或者是null
         FocusWindow(windowGroup.GetTheFrontWindow());
-        
     }
 
     //public void MaximizeWindow(string appName)
@@ -162,11 +143,5 @@ public class WindowsManager : MonoBehaviour, IPointerDownHandler
     public bool IsWindowFocused(WindowBase window)
     {
         return currentFocusedWindow == window;
-    }
-
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        //Debug.Log(eventData.pointerCurrentRaycast.gameObject.name);
-        // 根据点击到的内容清除不必要的选择
     }
 }
