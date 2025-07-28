@@ -11,22 +11,25 @@ public enum ChangeMouseType
 public class ChangeMouse : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     public ChangeMouseType changeMouseType;
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         switch (changeMouseType)
         {
             case ChangeMouseType.Scaler:
-                this.GetComponent<DragScaleHandler>().ChangeMouseByDirection();
+                GetComponent<DragScaleHandler>().ChangeMouseByDirection();
                 break;
             default:
                 MouseManager.Instance.ChangeMouseState(MouseState.Click);
                 break;
         }
     }
+
     public void OnPointerExit(PointerEventData eventData)
     {
         MouseManager.Instance.ChangeMouseState(MouseState.Default);
     }
+
     public void OnPointerDown(PointerEventData eventData)
     {
         switch (changeMouseType)
@@ -56,6 +59,7 @@ public class ChangeMouse : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 break;
         }
     }
+
     public void OnDisable()
     {
         MouseManager.Instance.ChangeMouseState(MouseState.Default);
