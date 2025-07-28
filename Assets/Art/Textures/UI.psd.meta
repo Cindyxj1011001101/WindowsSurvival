@@ -1302,7 +1302,7 @@ TextureImporter:
         width: 24
         height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1310,6 +1310,27 @@ TextureImporter:
       bones: []
       spriteID: a91bf08e45eeacf48aa98475d7520dda
       internalID: 1048413523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_TimeMask
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 149
+        width: 128
+        height: 114
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9eec6ff8e4fc86c4fb5dc31a6c66a801
+      internalID: -1710442970
       vertices: []
       indices: 
       edges: []
@@ -1361,6 +1382,7 @@ TextureImporter:
       UI_Selectionbox_2: -675735941
       UI_Slidingbar_default: 959292114
       UI_Slidingbar_hovered: 853517195
+      UI_TimeMask: -1710442970
       UI_btn_Arrange_defult: -757670956
       UI_btn_Arrange_hovered: 1569353146
       UI_btn_Closed_defult: -563433557
