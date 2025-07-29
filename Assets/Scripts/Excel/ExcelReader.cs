@@ -76,7 +76,7 @@ public static class ExcelReader
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
 
-        Debug.Log($"卡牌配置读取完成。读取数量：{count}");
+        //Debug.Log($"卡牌配置读取完成。读取数量：{count}");
 
         fs.Close();
 
