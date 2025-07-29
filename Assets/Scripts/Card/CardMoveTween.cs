@@ -41,11 +41,10 @@ public class CardMoveTween
 
     public static CardSlot CreateSlot(Vector2 screenPosition)
     {
-
         // 实例化预制体
         GameObject slotObj = Object.Instantiate(
             Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot"),
-            Canvas.transform);
+            WindowsManager.Instance.transform);
 
         // 获取RectTransform并设置位置
         RectTransform slotRect = slotObj.GetComponent<RectTransform>();
