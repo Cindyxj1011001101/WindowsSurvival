@@ -190,6 +190,7 @@ MonoBehaviour:
   componentLayout: {fileID: 4373155889672002044}
   cardCanvasGroup: {fileID: 6094125291886648780}
   moreInfoText: {fileID: 257994331159875168}
+  dontRefresh: 0
   equipmentType: 0
 --- !u!1 &283027480225189638
 GameObject:
@@ -2163,6 +2164,7 @@ MonoBehaviour:
   componentLayout: {fileID: 8919661684380101579}
   cardCanvasGroup: {fileID: 1435308790467358715}
   moreInfoText: {fileID: 4966634131471776855}
+  dontRefresh: 0
   equipmentType: 1
 --- !u!1 &5213591178602247005
 GameObject:
@@ -3434,6 +3436,7 @@ MonoBehaviour:
   componentLayout: {fileID: 7099917320376320412}
   cardCanvasGroup: {fileID: 767236573384312236}
   moreInfoText: {fileID: 7720858493863591710}
+  dontRefresh: 0
   equipmentType: 2
 --- !u!1 &6923152600976532571
 GameObject:
@@ -3948,6 +3951,7 @@ MonoBehaviour:
   componentLayout: {fileID: 6053393711278860418}
   cardCanvasGroup: {fileID: 4333524096654650546}
   moreInfoText: {fileID: 7720858493863591710}
+  dontRefresh: 0
   equipmentType: 3
 --- !u!1 &7547713812199041477
 GameObject:
@@ -4725,6 +4729,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8725556472364614564}
     m_Modifications:
+    - target: {fileID: 1507412671923014928, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2531971589571122607, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -4821,11 +4829,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8781573636688091490, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -54
+      objectReference: {fileID: 0}
     - target: {fileID: 9040322266850901523, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
       propertyPath: m_Text
       value: "\u88C5\u5907"
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7549379001059998867, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
     m_RemovedGameObjects:
     - {fileID: 1966078076265591859, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
     m_AddedGameObjects: []
