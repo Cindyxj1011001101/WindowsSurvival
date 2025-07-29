@@ -19,6 +19,7 @@
     ChangeTime, // 时间变化
     ExploreDropCards, // 探索掉落卡牌
     Sleep,//睡眠额外结算
+    StudyComplished,
 }
 
 public class ChangeStateArgs

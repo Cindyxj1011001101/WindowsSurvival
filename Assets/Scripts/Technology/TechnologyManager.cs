@@ -6,7 +6,7 @@ public class TechnologyManager
     private static TechnologyManager instance = new();
     public static TechnologyManager Instance => instance;
 
-    public TechnologyData techData;
+    private TechnologyData techData;
 
     public ScriptableTechnologyNode CurStudiedTechNode => Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techData.curStudiedTechNodeName);
     public float CurStudyRate => techData.curStudyRate;
@@ -27,8 +27,6 @@ public class TechnologyManager
         // 添加监听，每回合结算研究进度
         EventManager.Instance.AddListener(EventType.IntervalSettle, OnStudy);
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("StartResearch", techNode.techName));
-
-        //EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
     }
 
     /// <summary>
@@ -58,6 +56,8 @@ public class TechnologyManager
             techData.CurStudiedTechNodeData.progress = CurStudiedTechNode.cost;
             // 解锁该科技
             UnlockTechNode(CurStudiedTechNode);
+            // 触发研究完成事件
+            EventManager.Instance.TriggerEvent(EventType.StudyComplished, CurStudiedTechNode);
             // 停止研究
             StopStudy();
         }

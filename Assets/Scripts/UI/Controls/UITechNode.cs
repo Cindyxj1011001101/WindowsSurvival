@@ -94,7 +94,7 @@ public class UITechNode : HoverableButton
             // 设置颜色
             foreach (var btn in recipeButtons)
             {
-                btn.currentColor = btn.normalImage.color = ColorManager.white;
+                btn.currentColor = btn.normalImage.color = ColorManager.lightGrey;
             }
             foreground_inProgress.GetComponent<Image>().color = ColorManager.lightGrey;
             gifObject.SetActive(false);

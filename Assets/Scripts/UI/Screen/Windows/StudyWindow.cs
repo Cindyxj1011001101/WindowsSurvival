@@ -1,7 +1,9 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class StudyWindow : WindowBase
@@ -23,22 +25,29 @@ public class StudyWindow : WindowBase
 
     [SerializeField] private RectTransform selectRect;
 
-    private string curSelectedType; // 当前选择的科技类型
     private ScriptableTechnologyNode curSelectedTechNode; // 记录当前选中的科技节点
 
     private List<GameObject> temp = new();
 
-    private Dictionary<string, RectTransform> menuItemTransforms = new();
+    private Dictionary<TechType, RectTransform> menuItemTransforms = new();
 
     protected override void Awake()
     {
         base.Awake();
         EventManager.Instance.AddListener(EventType.ChangeStudyProgress, RefreshCurrentDisplay);
-        TechnologyManager.Instance.techData = GameDataManager.Instance.TechnologyData;
+        EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
     }
+
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener(EventType.ChangeStudyProgress, RefreshCurrentDisplay);
+        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
+    }
+
+    private void OnStudiedComplished(ScriptableTechnologyNode techNode)
+    {
+        curSelectedTechNode = techNode;
+        StopStudy();
     }
 
     protected override void Init()
@@ -51,34 +60,46 @@ public class StudyWindow : WindowBase
         //DisplayTechTree();
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
 
-        curSelectedType = menuLayout.GetChild(0).name;
-
         menuItemTransforms.Clear();
         for (int i = 0; i < menuLayout.childCount; i++)
         {
             var child = menuLayout.GetChild(i);
             var button = child.GetComponent<HoverableButton>();
+            var type = (TechType)Enum.Parse(typeof(TechType), child.name);
             button.onClick.AddListener(() =>
             {
-                curSelectedType = child.name;
                 curSelectedTechNode = null;
-                DisplayTechTree(child.name);
+                DisplayTechTree(type);
             });
-            menuItemTransforms.Add(child.name, child as RectTransform);
+            menuItemTransforms.Add(type, child as RectTransform);
         }
-
-        DisplayTechTree(curSelectedType);
     }
 
-    private void DisplayTechTree(string type, bool isRefresh = false)
+    public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
+    {
+        base.Show(showMode, onFinished);
+
+        // 如果没有当前选择的节点，则尝试选择正在研究的节点
+        if (curSelectedTechNode == null)
+            curSelectedTechNode = TechnologyManager.Instance.CurStudiedTechNode;
+
+        DisplayTechTree(curSelectedTechNode == null ? 0 : curSelectedTechNode.techType);
+    }
+
+    public override void Hide(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
+    {
+        base.Hide(showMode, onFinished);
+        curSelectedTechNode = null;
+    }
+
+    private void DisplayTechTree(TechType type)
     {
         // 只显示对应类型的科技节点
         Transform targetChild = null;
         for (int i = 0; i < content.childCount; i++)
         {
             var child = content.GetChild(i);
-            child.gameObject.SetActive(child.name == type);
-            if (child.name == type)
+            if (child.name == type.ToString())
             {
                 targetChild = child;
                 child.gameObject.SetActive(true);
@@ -103,19 +124,17 @@ public class StudyWindow : WindowBase
             });
         }
 
-        // 如果是刷新，继续选中上一个选中的科技节点
-        if (isRefresh)
-            DisplayTechNodeDetails(curSelectedTechNode);
-        else if (curSelectedTechNode == null)
+        if (curSelectedTechNode == null)
         {
             curSelectedTechNode = Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techNodes[0].name);
-            DisplayTechNodeDetails(curSelectedTechNode);
         }
+
+        DisplayTechNodeDetails(curSelectedTechNode);
 
         SelectTechTreeWithTween(type);
     }
 
-    private void SelectTechTreeWithTween(string type)
+    private void SelectTechTreeWithTween(TechType type)
     {
         Vector2 targetPos = new(menuItemTransforms[type].anchoredPosition.x, selectRect.anchoredPosition.y);
 
@@ -123,9 +142,10 @@ public class StudyWindow : WindowBase
         selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad);
     }
 
-    private void RefreshCurrentDisplay()
+    public void RefreshCurrentDisplay()
     {
-        DisplayTechTree(curSelectedType, true);
+        if (state == WindowState.Closed || state == WindowState.Minimized) return;
+        DisplayTechTree(curSelectedTechNode.techType);
     }
 
     private void DisplayTechNodeDetails(ScriptableTechnologyNode techNode)
@@ -168,14 +188,17 @@ public class StudyWindow : WindowBase
         studyButton.DisplayButton(techNode, () =>
         {
             // 暂停当前研究
+            StopStudy();
             TechnologyManager.Instance.StopStudy();
             // 研究当前科技节点
             TechnologyManager.Instance.Study(techNode);
+            StartStudy(techNode);
             // 刷新显示
             RefreshCurrentDisplay();
         }, () =>
         {
             // 暂停当前研究
+            StopStudy();
             TechnologyManager.Instance.StopStudy();
             // 刷新显示
             RefreshCurrentDisplay();
@@ -216,5 +239,27 @@ public class StudyWindow : WindowBase
         {
             studyRate.gameObject.SetActive(false);
         }
+    }
+
+    private void StopStudy()
+    {
+        var node = TechnologyManager.Instance.CurStudiedTechNode;
+        if (node == null) return;
+
+        // 开始研究后，将正在研究的类型的按钮的颜色设为white
+        var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
+        button.ChangeColor(ColorManager.white);
+        button.currentColor = button.hoveredColor = ColorManager.white;
+    }
+
+    private void StartStudy(ScriptableTechnologyNode techNode)
+    {
+        var node = TechnologyManager.Instance.CurStudiedTechNode;
+        if (node == null) return;
+
+        // 开始研究后，将正在研究的类型的按钮的颜色设为cyan
+        var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
+        button.ChangeColor(ColorManager.cyan);
+        button.currentColor = button.hoveredColor = ColorManager.cyan;
     }
 }
