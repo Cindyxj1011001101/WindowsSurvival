@@ -14,6 +14,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public Text[] textsNeedToReverseColor;
     public Image[] imagseNeedToReverseColor;
 
+    private CanvasGroup canvasGroup;
+
     public Color currentColor { get; set; }
     public Color hoveredColor { get; set; } = ColorManager.white; // 鼠标悬停时的颜色，默认为白色
 
@@ -51,6 +53,10 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         var hoveredGraphic = transform.Find("Hovered");
         if (hoveredGraphic != null)
             hoveredGraphics.AddRange(hoveredGraphic.GetComponentsInChildren<Graphic>());
+
+        canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
     }
 
     protected virtual void Start()
@@ -127,6 +133,20 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         foreach (var image in imagseNeedToReverseColor)
         {
             image.color = color;
+        }
+    }
+
+    public void SetVisiable(bool visiable)
+    {
+        if (visiable)
+        {
+            canvasGroup.alpha = 1f;
+            canvasGroup.blocksRaycasts = canvasGroup.interactable = true;
+        }
+        else
+        {
+            canvasGroup.alpha = 0f;
+            canvasGroup.blocksRaycasts = canvasGroup.interactable = false;
         }
     }
 }

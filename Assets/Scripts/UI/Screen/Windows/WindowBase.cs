@@ -31,8 +31,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     private DragMoveHandler dragMoveHandler;
 
-    private WindowState lastState = WindowState.Closed;
-    private WindowState state = WindowState.Closed;
+    protected WindowState lastState = WindowState.Closed;
+    protected WindowState state = WindowState.Closed;
 
     private Vector3 lastPosition;
     private Vector3 lastScale;
