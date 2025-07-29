@@ -158,7 +158,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
+  m_SizeDelta: {x: 36, y: 36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &19863830
 MonoBehaviour:
@@ -512,6 +512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &142494941
 GameObject:
   m_ObjectHideFlags: 0
@@ -727,6 +728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &161290950
 GameObject:
   m_ObjectHideFlags: 0
@@ -941,6 +943,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &243024919
 GameObject:
   m_ObjectHideFlags: 0
@@ -1076,6 +1079,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &253177893
 GameObject:
   m_ObjectHideFlags: 0
@@ -1291,6 +1295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &630920419
 GameObject:
   m_ObjectHideFlags: 0
@@ -1622,6 +1627,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &806987563
 GameObject:
   m_ObjectHideFlags: 0
@@ -1794,6 +1800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &918846073
 GameObject:
   m_ObjectHideFlags: 0
@@ -2193,6 +2200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &1071514232
 GameObject:
   m_ObjectHideFlags: 0
@@ -3207,6 +3215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &1965264301
 GameObject:
   m_ObjectHideFlags: 0
@@ -3422,6 +3431,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &2108160587
 GameObject:
   m_ObjectHideFlags: 0
@@ -3636,6 +3646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
