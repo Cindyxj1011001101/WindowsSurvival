@@ -47,6 +47,7 @@ public class StudyWindow : WindowBase
     private void OnStudiedComplished(ScriptableTechnologyNode techNode)
     {
         curSelectedTechNode = techNode;
+        DisplayTechTree(curSelectedTechNode.techType);
         StopStudy();
     }
 
@@ -192,7 +193,7 @@ public class StudyWindow : WindowBase
             TechnologyManager.Instance.StopStudy();
             // 研究当前科技节点
             TechnologyManager.Instance.Study(techNode);
-            StartStudy(techNode);
+            StartStudy();
             // 刷新显示
             RefreshCurrentDisplay();
         }, () =>
@@ -252,7 +253,7 @@ public class StudyWindow : WindowBase
         button.currentColor = button.hoveredColor = ColorManager.white;
     }
 
-    private void StartStudy(ScriptableTechnologyNode techNode)
+    private void StartStudy()
     {
         var node = TechnologyManager.Instance.CurStudiedTechNode;
         if (node == null) return;

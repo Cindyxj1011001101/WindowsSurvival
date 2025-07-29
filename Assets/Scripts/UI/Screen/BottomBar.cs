@@ -67,7 +67,7 @@ public class BottomBar : MonoBehaviour
         studyComplishedButton.onClick.RemoveAllListeners();
         studyComplishedButton.onClick.AddListener(() =>
         {
-            (WindowsManager.Instance.OpenWindow("Study") as StudyWindow).RefreshCurrentDisplay();
+            WindowsManager.Instance.OpenWindow("Study");
             studyComplishedButton.SetVisiable(false);
         });
     }
