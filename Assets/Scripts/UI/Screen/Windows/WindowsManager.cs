@@ -31,7 +31,7 @@ public class WindowsManager : MonoBehaviour
             {
                 // 实例化窗口对象
                 GameObject windowPrefab = Resources.Load<GameObject>($"Prefabs/UI/Windows/{appName}Window");
-                window = Instantiate(windowPrefab).GetComponent<WindowBase>();
+                window = Instantiate(windowPrefab, windowGroup.transform).GetComponent<WindowBase>();
                 windowGroup.SetClosed(window);
             }
             // 添加到已打开窗口中
