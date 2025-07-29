@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -9,8 +10,12 @@ public class AquariusFish : Card
     {
         Events = new()
         {
-            new Event("用捕网捉", "用捕网捉水瓶鱼", Event_CatchByNet, Judge_CatchByNet),
-            new Event("用手捉", "用手捉水瓶鱼", Event_CatchByHand, null),
+            new Event("用捕网捉", "用捕网捉水瓶鱼",Event_CatchByNet, Judge_CatchByNet,30,
+            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, 2 },{PlayerStateEnum.Sobriety,1} },
+            new Dictionary<EnvironmentStateEnum, float>() { { EnvironmentStateEnum.WaterLevel, 1 } }),
+            new Event("用手捉", "用手捉水瓶鱼", Event_CatchByHand, null,30,
+            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, 2 } },
+            new Dictionary<EnvironmentStateEnum, float>() { { EnvironmentStateEnum.WaterLevel, 1 } }),
         };
     }
 

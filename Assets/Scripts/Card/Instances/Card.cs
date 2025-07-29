@@ -232,11 +232,17 @@ public class Event
     public string description;
     public UnityAction action;
     public Func<bool> condition;
+    public int Time;
+    public Dictionary<PlayerStateEnum, float> PlayerStateDict = new Dictionary<PlayerStateEnum, float>();
+    public Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = new Dictionary<EnvironmentStateEnum, float>();
 
-    public Event(string name, string description, UnityAction action, Func<bool> condition)
+    public Event(string name, string description, UnityAction action, Func<bool> condition, int Time = 0, Dictionary<PlayerStateEnum, float> PlayerStateDict = null, Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = null)
     {
         this.name = name;
         this.description = description;
+        this.Time = Time;
+        this.PlayerStateDict = PlayerStateDict ?? new Dictionary<PlayerStateEnum, float>();
+        this.EnvironmentStateDict = EnvironmentStateDict ?? new Dictionary<EnvironmentStateEnum, float>();
         this.action = action;
         this.condition = condition;
     }
