@@ -31,7 +31,8 @@ public class WindowsManager : MonoBehaviour
             {
                 // 实例化窗口对象
                 GameObject windowPrefab = Resources.Load<GameObject>($"Prefabs/UI/Windows/{appName}Window");
-                window = Instantiate(windowPrefab, windowGroup.Closed).GetComponent<WindowBase>();
+                window = Instantiate(windowPrefab).GetComponent<WindowBase>();
+                windowGroup.SetClosed(window);
             }
             // 添加到已打开窗口中
             openedWindows.Add(appName, window);
@@ -64,7 +65,7 @@ public class WindowsManager : MonoBehaviour
         window.Close();
 
         // 将窗口从渲染层级中移除
-        windowGroup.CloseWindow(window);
+        windowGroup.SetClosed(window);
 
         // 底边栏的快捷方式变暗
         bottomBar.SetOpened(appName, false);
@@ -97,7 +98,7 @@ public class WindowsManager : MonoBehaviour
         window.Minimize(bottomBar[appName].transform);
 
         // 将window暂停渲染
-        windowGroup.MinimizeWindow(window);
+        windowGroup.SetMinimized(window);
 
         // 设置获得焦点的窗口是渲染层级最靠前的窗口
         // 或者是null
@@ -117,7 +118,7 @@ public class WindowsManager : MonoBehaviour
         }
 
         // 调整window的渲染顺序为最高
-        windowGroup.FocusWindow(currentFocusedWindow);
+        windowGroup.SetFocused(currentFocusedWindow);
 
         if (window != null)
             // 选中底边栏中的快捷方式

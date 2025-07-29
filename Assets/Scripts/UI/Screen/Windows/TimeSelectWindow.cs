@@ -1,29 +1,30 @@
 ﻿using UnityEngine;
 using DanielLochner.Assets.SimpleScrollSnap;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
-public class TimeSelectWindow : WindowBase
+public class TimeSelectWindow : ModalWindow
 {
     [SerializeField] private SimpleScrollSnap hourScroll;
     [SerializeField] private SimpleScrollSnap minuteScroll;
 
+    [SerializeField] private HoverableButton confirmButton;
+    [SerializeField] private HoverableButton cancelButton;
+
+    private int hour = 0;
+    private int minute = 0;
+
+    public UnityAction<int> onConfirm;
+
     protected override void Init()
     {
-        //hourScroll.OnPanelSelected.AddListener((index) =>
-        //{
-        //    Debug.Log($"Hour: Selected panel index: {index}");
-        //});
-        //minuteScroll.OnPanelSelected.AddListener((index) =>
-        //{
-        //    Debug.Log($"Minute: Selected panel index: {index}");
-        //});
-        hourScroll.OnPanelCentered.AddListener((index, _) =>
+        hourScroll.OnPanelCentered.AddListener((current, previous) =>
         {
-            Debug.Log($"Hour: {23 - index}");
+            hour = 23 - current;
         });
-        minuteScroll.OnPanelCentered.AddListener((index, _) =>
+        minuteScroll.OnPanelCentered.AddListener((current, previous) =>
         {
-            Debug.Log($"Minute: {59 - index}");
+            minute = 59 - current;
         });
         foreach (Transform child in hourScroll.Content)
         {
@@ -39,5 +40,17 @@ public class TimeSelectWindow : WindowBase
                 text.text = $"{59 - child.GetSiblingIndex():D2}";
             }
         }
+        hour = 23 - hourScroll.StartingPanel;
+        minute = 59 - minuteScroll.StartingPanel;
+
+        confirmButton.onClick.AddListener(() =>
+        {
+            onConfirm?.Invoke(hour * 60 + minute);
+            WindowsManager.Instance.CloseWindow(AppName);
+        });
+        cancelButton.onClick.AddListener(() =>
+        {
+            WindowsManager.Instance.CloseWindow(AppName);
+        });
     }
 }

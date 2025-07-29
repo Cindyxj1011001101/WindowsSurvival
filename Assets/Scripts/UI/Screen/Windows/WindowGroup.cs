@@ -5,34 +5,50 @@ public class WindowGroup : MonoBehaviour
     private Transform closed;
     private Transform minimized;
     private Transform opened;
+    [SerializeField] private Transform modal;
 
-    public Transform Closed => closed;
-    public Transform Minimized => minimized;
-    public Transform Opened => opened;
 
     private void Awake()
     {
         closed = transform.Find("Closed");
         minimized = transform.Find("Minimized");
         opened = transform.Find("Opened");
+
+        modal.gameObject.SetActive(false);
     }
 
-    public void FocusWindow(WindowBase window)
+    public void SetFocused(WindowBase window)
     {
         if (window == null) return;
-        window.transform.SetParent(opened);
+        if (window is ModalWindow)
+        {
+            window.transform.SetParent(modal);
+            modal.gameObject.SetActive(true);
+        }
+        else
+        {
+            window.transform.SetParent(opened);
+        }
         window.transform.SetAsLastSibling();
     }
 
-    public void CloseWindow(WindowBase window)
+    public void SetClosed(WindowBase window)
     {
         if (window == null) return;
+        if (window is ModalWindow)
+        {
+            modal.gameObject.SetActive(false);
+        }
         window.transform.SetParent(closed);
     }
 
-    public void MinimizeWindow(WindowBase window)
+    public void SetMinimized(WindowBase window)
     {
         if (window == null) return;
+        if (window is ModalWindow)
+        {
+            modal.gameObject.SetActive(false);
+        }
         window.transform.SetParent(minimized);
     }
 
