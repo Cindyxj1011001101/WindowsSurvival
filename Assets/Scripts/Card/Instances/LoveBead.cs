@@ -17,14 +17,13 @@ public class LoveBead : Card
     {
         DestroyThis();
         TimeManager.Instance.AddTime(30);
-        GameManager.Instance.AddCard("生贝肉", true);
-        GameManager.Instance.AddCard("生贝肉", true);
+        AddCards("生贝肉", 2, true);
     }
 
     private void OnProgressChanged()
     {
         DestroyThis();
-        GameManager.Instance.AddCard("有产物的爱情贝", true);
+        AddCard("有产物的爱情贝", true);
     }
 
     protected override Action OnUpdate => () =>

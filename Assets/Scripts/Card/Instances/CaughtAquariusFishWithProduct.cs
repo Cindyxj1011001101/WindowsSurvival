@@ -27,7 +27,7 @@ public class CaughtAquariusFishWithProduct : Card
     {
         DestroyThis();
         // 地点中增加一个有产物的水瓶鱼
-        GameManager.Instance.AddCard("有产物的水瓶鱼", true);
+        AddCard("有产物的水瓶鱼", true);
     }
 
     public bool Judge_Release()

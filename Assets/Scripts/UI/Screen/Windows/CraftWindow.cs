@@ -204,7 +204,7 @@ public class CraftWindow : WindowBase
         craftButton.onClick.AddListener(() =>
         {
             // 合成卡牌
-            CraftManager.Instance.Craft(recipe);
+            CraftManager.Instance.Craft(recipe, slot.transform.position);
             // 刷新显示
             RefreshCurrentDisplay();
         });

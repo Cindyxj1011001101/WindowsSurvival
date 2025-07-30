@@ -37,7 +37,7 @@ public class EnvironmentBagWindow : BagWindow
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         // 注册探索掉落卡牌事件
-        EventManager.Instance.AddListener<List<Card>>(EventType.ExploreDropCards, OnExploreDropCards);
+        //EventManager.Instance.AddListener<List<Card>>(EventType.ExploreDropCards, OnExploreDropCards);
     }
 
     private void OnDestroy()
@@ -46,7 +46,7 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.RemoveListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
-        EventManager.Instance.RemoveListener<List<Card>>(EventType.ExploreDropCards, OnExploreDropCards);
+        //EventManager.Instance.RemoveListener<List<Card>>(EventType.ExploreDropCards, OnExploreDropCards);
     }
 
     protected override void Init()
@@ -154,7 +154,10 @@ public class EnvironmentBagWindow : BagWindow
             // 深入探索
             exploreButton.normalImage.gameObject.SetActive(true);
             exploreButton.Interactable = true;
-            exploreButton.onClick.AddListener(GameManager.Instance.HandleExplore);
+            exploreButton.onClick.AddListener(() =>
+            {
+                GameManager.Instance.HandleExplore(frontCard.position);
+            });
             text.text = "深入探索";
             text.color = ColorManager.white;
         }
@@ -162,7 +165,10 @@ public class EnvironmentBagWindow : BagWindow
         {
             exploreButton.normalImage.gameObject.SetActive(true);
             exploreButton.Interactable = true;
-            exploreButton.onClick.AddListener(GameManager.Instance.HandleExplore);
+            exploreButton.onClick.AddListener(() =>
+            {
+                GameManager.Instance.HandleExplore(frontCard.position);
+            });
             text.text = "开始探索";
             text.color = ColorManager.white;
         }
@@ -171,23 +177,23 @@ public class EnvironmentBagWindow : BagWindow
         frontCard.anchoredPosition = new Vector2(frontCard.anchoredPosition.x, -Mathf.FloorToInt(args.degree * 4) * 4);
     }
 
-    private async void OnExploreDropCards(List<Card> cards)
-    {
-        foreach (var card in cards)
-        {
-            CardMoveTween.MoveCard(
-               card,
-               1,
-               frontCard.position,
-               card.Slot.transform.position,
-               0.2f,
-               null,
-               () =>
-               {
-                   // 再刷新显示
-                   card.Slot.RefreshCurrentDisplay();
-               });
-            await Task.Delay(100); // 等待100毫秒，避免卡牌移动过快
-        }
-    }
+    //private async void OnExploreDropCards(List<Card> cards)
+    //{
+    //    foreach (var card in cards)
+    //    {
+    //        CardMoveTween.MoveCard(
+    //           card,
+    //           1,
+    //           frontCard.position,
+    //           card.Slot.transform.position,
+    //           0.2f,
+    //           null,
+    //           () =>
+    //           {
+    //               // 再刷新显示
+    //               card.Slot.RefreshCurrentDisplay();
+    //           });
+    //        await Task.Delay(100); // 等待100毫秒，避免卡牌移动过快
+    //    }
+    //}
 }

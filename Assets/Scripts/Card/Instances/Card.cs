@@ -88,11 +88,17 @@ public abstract class Card : IComparable<Card>
 
     protected virtual void LateInit() { } // 用于在卡牌实例化后进行额外的初始化操作
 
+    private bool isUpdating = false; // 是否已启用每回合更新
+
     /// <summary>
     /// 开始监听每回合的结算
     /// </summary>
     public void StartUpdating()
     {
+        if (isUpdating) return;
+
+        isUpdating = true;
+
         LateInit();
 
         if (OnUpdate != null)
@@ -223,6 +229,35 @@ public abstract class Card : IComparable<Card>
             sb.AppendLine($"  - 组件类型: {kvp.Key.Name}, 实例: {kvp.Value}");
         }
         return sb.ToString();
+    }
+
+    // 卡牌的临时位置，用来处理从临时位置处发出一张卡牌的动效，例如从详情窗口的slot处
+    private Transform tempSlotTransform;
+
+    public Transform TempSlotTransform
+    {
+        get
+        {
+            if (tempSlotTransform != null)
+                return tempSlotTransform;
+
+            
+            return Slot == null ? null : Slot.transform;
+        }
+        set
+        {
+            tempSlotTransform = value;
+        }
+    }
+
+    protected Card AddCard(string cardId, bool toPlayerBag)
+    {
+        return GameManager.Instance.AddCardWithTween(cardId, TempSlotTransform.position, toPlayerBag);
+    }
+
+    protected List<Card> AddCards(string cardId, int count, bool toPlayerBag)
+    {
+        return GameManager.Instance.AddCardsWithTween(cardId, count, TempSlotTransform.position, toPlayerBag);
     }
 }
 

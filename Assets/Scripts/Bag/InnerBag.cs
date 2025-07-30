@@ -17,14 +17,14 @@
             slots[i].Init(cardList);
         }
 
-        // 当内容物被移除时，刷新所有卡牌格的显示
-        component.onContentsRemoved = () =>
-        {
-            foreach (var slot in slots)
-            {
-                slot.RefreshCurrentDisplay();
-            }
-        };
+        //// 当内容物被移除时，刷新所有卡牌格的显示
+        //component.onContentsRemoved = () =>
+        //{
+        //    foreach (var slot in slots)
+        //    {
+        //        slot.RefreshCurrentDisplay();
+        //    }
+        //};
     }
 
     public override bool CanAddCard(Card card)
@@ -91,10 +91,11 @@
     public override void Clear()
     {
         base.Clear();
-        if (component != null)
-        {
-            component.onContentsRemoved = null;
-            component = null;
-        }
+        //if (component != null)
+        //{
+        //    component.onContentsRemoved = null;
+        //    component = null;
+        //}
+        component = null;
     }
 }

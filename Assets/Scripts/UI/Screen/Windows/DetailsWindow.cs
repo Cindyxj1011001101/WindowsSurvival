@@ -78,10 +78,12 @@ public class DetailsWindow : WindowBase
         // 清除原数据
         Clear();
 
-        if (sourceSlot == null || sourceSlot.StackNum <= 0) return;
+        if (sourceSlot == null || sourceSlot.IsEmpty) return;
 
         // 记录当前显示的卡牌
         currentDisplayedCard = sourceSlot.PeekCard();
+
+        currentDisplayedCard.TempSlotTransform = slot.transform;
 
         // 显示卡牌
         slot.DisplayCard(currentDisplayedCard, currentDisplayedCard.Slot.StackNum);
@@ -172,6 +174,8 @@ public class DetailsWindow : WindowBase
     private void Clear()
     {
         slot.ClearSlot();
+        if (currentDisplayedCard != null)
+            currentDisplayedCard.TempSlotTransform = null;
         currentDisplayedCard = null;
         detailsText.text = "";
         innerBag.Clear();

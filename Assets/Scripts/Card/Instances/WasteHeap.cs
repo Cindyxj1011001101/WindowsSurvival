@@ -28,32 +28,31 @@ public class WasteHeap : Card
         int rand = Random.Range(0, 20);
         if (rand < 5)
         {
-            GameManager.Instance.AddCard("废金属", true);
-            GameManager.Instance.AddCard("废金属", true);
+            AddCards("废金属", 2, true);
         }
         else if (rand < 9)
         {
-            GameManager.Instance.AddCard("废金属", true);
+            AddCard("废金属", true);
         }
         else if (rand < 13)
         {
-            GameManager.Instance.AddCard("韧性胶管", true);
+            AddCard("韧性胶管", true);
         }
         else if (rand < 16)
         {
-            GameManager.Instance.AddCard("压缩饼干", true);
+            AddCard("压缩饼干", true);
         }
         else if (rand < 17)
         {
-            GameManager.Instance.AddCard("老鼠尸体", true);
+            AddCard("老鼠尸体", true);
         }
         else if (rand < 18)
         {
-            GameManager.Instance.AddCard("腐烂物", true);
+            AddCard("腐烂物", true);
         }
         else
         {
-            GameManager.Instance.AddCard("氧烛", true);
+            AddCard("氧烛", true);
         }
     }
 }

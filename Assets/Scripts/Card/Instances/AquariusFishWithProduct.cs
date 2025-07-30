@@ -31,7 +31,7 @@ public class AquariusFishWithProduct : Card
         // 3. 掉落卡牌
 
         // 获得一张“有产物的被捉住的水瓶鱼”
-        GameManager.Instance.AddCard("有产物的被捉住的水瓶鱼", true);
+        AddCard("有产物的被捉住的水瓶鱼", true);
     }
 
     public bool Judge_CatchByNet()
@@ -62,7 +62,7 @@ public class AquariusFishWithProduct : Card
             TimeManager.Instance.AddTime(30);
 
             // 获得一张“有产物的被捉住的水瓶鱼”
-            GameManager.Instance.AddCard("有产物的被捉住的水瓶鱼", true);
+            AddCard("有产物的被捉住的水瓶鱼", true);
         }
     }
     #endregion

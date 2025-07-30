@@ -18,7 +18,7 @@ public class RatBody : Card
     private void OnRotton()
     {
         DestroyThis();
-        GameManager.Instance.AddCard("腐烂物", true);
+        AddCard("腐烂物", true);
     }
 
     #region 食用
@@ -64,7 +64,7 @@ public class RatBody : Card
         card.TryUse();
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
-        GameManager.Instance.AddCard("小块生肉", true);
+        AddCard("小块生肉", true);
     }
 
     public bool Judge_PeelByKnife()
@@ -79,7 +79,7 @@ public class RatBody : Card
         int rand = Random.Range(0, 4);
         if (rand < 3)
         {
-            GameManager.Instance.AddCard("小块生肉", true);
+            AddCard("小块生肉", true);
         }
         else if (rand < 4)
         {

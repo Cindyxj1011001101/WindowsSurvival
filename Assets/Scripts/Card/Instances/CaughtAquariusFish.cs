@@ -16,7 +16,7 @@ public class CaughtAquariusFish : Card
         DestroyThis();
         // 地点中增加一个水瓶鱼
         // 继承产物进度
-        GameManager.Instance.AddCard("水瓶鱼", true).InheritComponent<ProgressComponent>(this);
+        AddCard("水瓶鱼", true).InheritComponent<ProgressComponent>(this);
     }
 
     public bool Judge_Release()

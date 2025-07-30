@@ -16,7 +16,7 @@ public class Siphonophyllum : Card
     private void OnProgressFull()
     {
         DestroyThis();
-        GameManager.Instance.AddCard("有产物的虹吸海葵", true);
+        AddCard("有产物的虹吸海葵", true);
     }
 
     public void Event_Cut()
@@ -25,8 +25,7 @@ public class Siphonophyllum : Card
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
         card.TryUse();
         TimeManager.Instance.AddTime(45);
-        GameManager.Instance.AddCard("磁性触手", true);
-        GameManager.Instance.AddCard("磁性触手", true);
+        AddCards("磁性触手", 2, true);
     }
 
     public bool Judge_Cut()

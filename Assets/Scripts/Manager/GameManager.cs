@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
         SoundManager.Instance.PlayCurEnvironmentMusic();
     }
 
-    public void AddCard(Card card, bool toPlayerBag, bool refreshImmediately = true)
+    private void AddCard(Card card, bool toPlayerBag/*, bool refreshImmediately = true*/)
     {
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("抽卡", true);
@@ -76,24 +76,100 @@ public class GameManager : MonoBehaviour
         // 卡牌的属性开始随时间变化
         card.StartUpdating();
 
-        if (toPlayerBag/* && WindowsManager.Instance.IsWindowOpen("PlayerBag")*/ && playerBag.CanAddCard(card))
+        if (toPlayerBag && WindowsManager.Instance.IsWindowOpen("PlayerBag") && playerBag.CanAddCard(card))
         {
-            playerBag.AddCard(card, refreshImmediately);
+            playerBag.AddCard(card/*, refreshImmediately*/);
         }
         else
         {
-            curEnvironmentBag.AddCard(card, refreshImmediately);
+            curEnvironmentBag.AddCard(card/*, refreshImmediately*/);
         }
     }
 
-    public Card AddCard(string cardId, bool toPlayerBag, bool refreshImmediately = true)
+    private Card AddCard(string cardId, bool toPlayerBag/*, bool refreshImmediately = true*/)
     {
         var card = CardFactory.CreateCard(cardId);
-        AddCard(card, toPlayerBag, refreshImmediately);
+        AddCard(card, toPlayerBag/*, refreshImmediately*/);
         return card;
     }
 
-    public void HandleExplore()
+    public void AddCardWithTween(Card card, Vector2 startPos, bool toPlayerBag)
+    {
+        AddCard(card, toPlayerBag/*, false*/);
+
+        CardMoveTween.MoveCard(
+            card,
+            1,
+            startPos,
+            card.Slot.transform.position,
+            0.2f,
+            onComplete: () =>
+            {
+                card.Slot.RefreshCurrentDisplay();
+            }
+            );
+    }
+
+    public Card AddCardWithTween(string cardId, Vector2 startPos, bool toPlayerBag)
+    {
+        var card = CardFactory.CreateCard(cardId);
+        AddCardWithTween(card, startPos, toPlayerBag);
+        return card;
+    }
+
+    public List<Card> AddCardsWithTween(string cardId, int count, Vector2 startPos, bool toPlayerBag)
+    {
+        List<Card> cards = new();
+
+        for (int i = 0; i < count; i++)
+        {
+            cards.Add(CardFactory.CreateCard(cardId));
+        }
+
+        AddCardsWithTween(cards, startPos, toPlayerBag);
+
+        //for (int i = 0; i < count; i++)
+        //{
+        //    var card = AddCard(cardId, toPlayerBag/*, false*/);
+        //    cards.Add(card);
+        //}
+
+        //CardMoveTween.MoveCardsWithDelay(
+        //    cards,
+        //    startPos,
+        //    0.2f,
+        //    onComplete: (card) =>
+        //    {
+        //        card.Slot.RefreshCurrentDisplay();
+        //    }
+        //    );
+
+        return cards;
+    }
+
+    public void AddCardsWithTween(List<Card> cards, Vector2 startPos, bool toPlayerBag)
+    {
+        foreach (var card in cards)
+        {
+            AddCard(card, toPlayerBag/*, false*/);
+        }
+
+        CardMoveTween.MoveCardsWithDelay(
+            cards,
+            startPos,
+            0.2f,
+            onComplete: (card) =>
+            {
+                card.Slot.RefreshCurrentDisplay();
+            }
+            );
+    }
+    
+    /// <summary>
+    /// 处理探索事件
+    /// </summary>
+    /// <param name="startPos">抽牌动效的开始位置，即环境窗口牌堆的位置</param>
+    public void HandleExplore(Vector2 startPos)
     {
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
         var disposableDropList = curEnvironmentBag.DisposableDropList;
@@ -132,10 +208,10 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.AddTime((int)explorationTime);
 
         // 掉落卡牌
-        HandeleExploreDrop();
+        HandeleExploreDrop(startPos);
     }
 
-    private void HandeleExploreDrop()
+    private void HandeleExploreDrop(Vector2 startPos)
     {
         var disposableDropList = curEnvironmentBag.DisposableDropList;
         var repeatableDropList = curEnvironmentBag.RepeatableDropList;
@@ -151,13 +227,16 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            foreach (var card in droppedCards)
-            {
-                // 掉落到环境里
-                AddCard(card, false, false);
-            }
+            //foreach (var card in droppedCards)
+            //{
+            //    // 掉落到环境里
+            //    AddCard(card, false/*, false*/);
+            //}
             // 掉落卡牌动效
-            EventManager.Instance.TriggerEvent(EventType.ExploreDropCards, droppedCards);
+            //EventManager.Instance.TriggerEvent(EventType.ExploreDropCards, droppedCards);
+
+
+            AddCardsWithTween(droppedCards, startPos, false);
 
             // 探索完成后让环境生态开始更新
             if (disposableDropList.IsEmpty)
@@ -177,12 +256,14 @@ public class GameManager : MonoBehaviour
             }
 
             // 掉落卡牌
-            foreach (var card in droppedCards)
-            {
-                // 掉落到环境里
-                AddCard(card, false, false);
-            }
-            EventManager.Instance.TriggerEvent(EventType.ExploreDropCards, droppedCards);
+            //foreach (var card in droppedCards)
+            //{
+            //    // 掉落到环境里
+            //    AddCard(card, false/*, false*/);
+            //}
+
+            AddCardsWithTween(droppedCards, startPos, false);
+            //EventManager.Instance.TriggerEvent(EventType.ExploreDropCards, droppedCards);
         }
     }
 

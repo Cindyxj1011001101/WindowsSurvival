@@ -20,9 +20,7 @@ public class SiphonophyllumWithProduct : Card
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
         card.TryUse();
         TimeManager.Instance.AddTime(45);
-        GameManager.Instance.AddCard("磁性触手", true);
-        GameManager.Instance.AddCard("磁性触手", true);
-        GameManager.Instance.AddCard("磁性触手", true);
+        AddCards("磁性触手", 3, true);
     }
 
     public bool Judge_Cut()
@@ -35,21 +33,20 @@ public class SiphonophyllumWithProduct : Card
         var sourceBag = Slot.Bag;
         DestroyThis();
         // 变回虹吸海葵
-        GameManager.Instance.AddCard("虹吸海葵", sourceBag is PlayerBag);
+        AddCard("虹吸海葵", sourceBag is PlayerBag);
         TimeManager.Instance.AddTime(15);
         int random = Random.Range(0, 6);
         if (random < 3)
         {
-            GameManager.Instance.AddCard("废金属", true);
-            GameManager.Instance.AddCard("废金属", true);
+            AddCards("废金属", 2, true);
         }
         else if (random < 5)
         {
-            GameManager.Instance.AddCard("废金属", true);
+            AddCard("废金属", true);
         }
         else
         {
-            GameManager.Instance.AddCard("磁性触手", true);
+            AddCard("磁性触手", true);
         }
     }
 }

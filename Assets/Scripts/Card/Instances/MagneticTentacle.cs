@@ -16,7 +16,7 @@ public class MagneticTentacle : Card
     private void OnRotton()
     {
         DestroyThis();
-        GameManager.Instance.AddCard("废金属", true);
+        AddCard("废金属", true);
     }
 
     public void Event_Eat()

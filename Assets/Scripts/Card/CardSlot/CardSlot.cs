@@ -234,7 +234,7 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     /// <param name="card"></param>
     /// <param name="refreshImmediately">是否立刻刷新显示</param>
-    public virtual void AddCard(Card card, bool refreshImmediately = true)
+    public virtual void AddCard(Card card/*, bool refreshImmediately = true*/)
     {
         cards.Add(card);
         cards.Sort((a, b) => a.CompareTo(b));
@@ -246,15 +246,15 @@ public class CardSlot : MonoBehaviour
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = 1 });
 
-        if (refreshImmediately)
-            RefreshCurrentDisplay();
+        //if (refreshImmediately)
+        //    RefreshCurrentDisplay();
     }
 
     /// <summary>
     /// 移除指定的一张卡牌
     /// </summary>
     /// <param name="card"></param>
-    public virtual void RemoveCard(Card card, bool refreshImmediately = true)
+    public virtual void RemoveCard(Card card/*, bool refreshImmediately = true*/)
     {
         if (!cards.Contains(card)) return;
 
@@ -266,19 +266,19 @@ public class CardSlot : MonoBehaviour
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = -1 });
 
-        if (refreshImmediately)
-            RefreshCurrentDisplay();
+        //if (refreshImmediately)
+        //    RefreshCurrentDisplay();
     }
 
     /// <summary>
     /// 移除最优先显示的卡牌
     /// </summary>
     /// <returns></returns>
-    public Card RemoveCard(bool refreshImmediately = true)
+    public Card RemoveCard(/*bool refreshImmediately = true*/)
     {
         var cardToRemove = cards[0];
 
-        RemoveCard(cardToRemove, refreshImmediately);
+        RemoveCard(cardToRemove/*, refreshImmediately*/);
 
         return cardToRemove;
     }
@@ -287,17 +287,17 @@ public class CardSlot : MonoBehaviour
     /// 移除指定数量的卡牌
     /// </summary>
     /// <param name="amount"></param>
-    public void RemoveCards(int amount, bool refreshImmediately = true)
+    public void RemoveCards(int amount/*, bool refreshImmediately = true*/)
     {
         for (int i = 0; i < amount; i++)
-            RemoveCard(refreshImmediately);
+            RemoveCard(/*refreshImmediately*/);
     }
 
-    public void TransferCardsTo(CardSlot other, int count, bool refreshImmediately)
+    public void TransferCardsTo(CardSlot other, int count/*, bool refreshImmediately*/)
     {
         for (int i = 0; i < count; i++)
         {
-            other.AddCard(RemoveCard(refreshImmediately), refreshImmediately);
+            other.AddCard(RemoveCard(/*refreshImmediately*/)/*, refreshImmediately*/);
         }
     }
 

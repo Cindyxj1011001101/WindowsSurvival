@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using DG.Tweening;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 public class CardMoveTween
 {
@@ -84,5 +86,35 @@ public class CardMoveTween
                 onComplete?.Invoke();
                 Object.Destroy(slot.gameObject);
             });
+    }
+
+    public static async void MoveCardsWithDelay(
+        List<Card> cards,
+        Vector3 sourcePosition,
+        float duration,
+        int millisecondsDelay = 100,
+        System.Action onStart = null,
+        System.Action<Card> onComplete = null,
+        Ease ease = Ease.OutQuad
+        )
+    {
+        foreach (var card in cards)
+        {
+            MoveCard(
+               card,
+               1,
+               sourcePosition,
+               card.Slot.transform.position,
+               duration,
+               onStart,
+               () =>
+               {
+                   onComplete?.Invoke(card);
+               },
+               ease
+               );
+
+            await Task.Delay(millisecondsDelay);
+        }
     }
 }

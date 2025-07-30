@@ -22,7 +22,7 @@ public class AquariusFish : Card
     private void OnProgressFull()
     {
         DestroyThis();
-        GameManager.Instance.AddCard("有产物的水瓶鱼", true);
+        AddCard("有产物的水瓶鱼", true);
     }
 
     #region 用捕网捉
@@ -44,7 +44,7 @@ public class AquariusFish : Card
         // 获得一张“被捉住的水瓶鱼”
         // 继承产物进度
         // 添加到玩家背包
-        GameManager.Instance.AddCard("被捉住的水瓶鱼", true).InheritComponent<ProgressComponent>(this);
+        AddCard("被捉住的水瓶鱼", true).InheritComponent<ProgressComponent>(this);
     }
 
     public bool Judge_CatchByNet()
@@ -77,7 +77,7 @@ public class AquariusFish : Card
             // 获得一张“被捉住的水瓶鱼”
             // 继承产物进度
             // 添加到玩家背包
-            GameManager.Instance.AddCard("被捉住的水瓶鱼", true).InheritComponent<ProgressComponent>(this);
+            AddCard("被捉住的水瓶鱼", true).InheritComponent<ProgressComponent>(this);
         }
     }
     #endregion

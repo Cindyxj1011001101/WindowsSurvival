@@ -185,8 +185,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         for (int i = 0; i < count; i++)
         {
             if (!targetSlot.CanAddCard(sourceSlot.PeekCard())) break;
-            var toMove = sourceSlot.RemoveCard(false);
-            targetSlot.AddCard(toMove, false);
+            var toMove = sourceSlot.RemoveCard(/*false*/);
+            targetSlot.AddCard(toMove/*, false*/);
             movedCard.Add(toMove);
         }
 
@@ -254,8 +254,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         for (int i = 0; i < count; i++)
         {
             if (!targetBag.CanAddCard(sourceSlot.PeekCard())) break;
-            var toMove = sourceSlot.RemoveCard(false);
-            targetBag.AddCard(toMove, false);
+            var toMove = sourceSlot.RemoveCard(/*false*/);
+            targetBag.AddCard(toMove/*, false*/);
             movedCard.Add(toMove);
         }
 

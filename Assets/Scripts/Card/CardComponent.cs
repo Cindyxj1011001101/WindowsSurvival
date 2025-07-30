@@ -224,8 +224,8 @@ public class InnerContentsComponent : CardComponent
     [JsonIgnore]
     public Func<Card, bool> contentFilter;
 
-    [JsonIgnore]
-    public UnityAction onContentsRemoved;
+    //[JsonIgnore]
+    //public UnityAction onContentsRemoved;
 
     public InnerContentsComponent(int slotCount, string belongedCardId)
     {
@@ -262,12 +262,15 @@ public class InnerContentsComponent : CardComponent
             {
                 if (slot[j].CardId == cardId)
                 {
+                    if (slot[j].Slot != null)
+                        // 刷新显示
+                        slot[j].Slot.RefreshCurrentDisplay();
                     slot.RemoveAt(j);
                     removedCount++;
                 }
             }
         }
-        if (removedCount > 0) onContentsRemoved?.Invoke();
+        //if (removedCount > 0) onContentsRemoved?.Invoke();
         return removedCount;
     }
 

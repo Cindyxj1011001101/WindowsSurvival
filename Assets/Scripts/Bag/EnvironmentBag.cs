@@ -139,7 +139,7 @@ public class EnvironmentBag : BagBase
         return true;
     }
 
-    public override void AddCard(Card card, bool refreshImmediately)
+    public override void AddCard(Card card/*, bool refreshImmediately*/)
     {
         // 如果放不下，就新增格子
         if (!base.CanAddCard(card))
@@ -147,7 +147,7 @@ public class EnvironmentBag : BagBase
             // 暂定每次新增3个格子
             AddSlot(3);
         }
-        base.AddCard(card, refreshImmediately);
+        base.AddCard(card/*, refreshImmediately*/);
     }
 
     //public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)

@@ -71,7 +71,7 @@ public class CraftManager
     /// 合成卡牌 (调用前请务必先判断能否合成)
     /// </summary>
     /// <param name="recipe"></param>
-    public void Craft(ScriptableRecipe recipe)
+    public void Craft(ScriptableRecipe recipe, Vector2 startPos)
     {
         // 合成一个物品
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
@@ -85,7 +85,7 @@ public class CraftManager
 
         // 掉落制作出的卡牌
         // 如果是建筑卡牌，则优先掉落到环境里
-        GameManager.Instance.AddCard(card, card.CardType != CardType.Construction);
+        GameManager.Instance.AddCardWithTween(card, startPos, card.CardType != CardType.Construction);
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", card.CardName));
 
