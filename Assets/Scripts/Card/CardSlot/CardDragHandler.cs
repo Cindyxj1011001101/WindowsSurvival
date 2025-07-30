@@ -7,8 +7,8 @@ using UnityEngine.EventSystems;
 public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     // 动画参数配置
-    private float moveDuration = 0.2f;
-    private float returnDuration = 0.2f;
+    private float moveDuration = 0.3f;
+    private float returnDuration = 0.3f;
 
     private CardSlot sourceSlot;
     private Canvas canvas;

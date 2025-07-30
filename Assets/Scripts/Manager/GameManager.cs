@@ -86,12 +86,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private Card AddCard(string cardId, bool toPlayerBag/*, bool refreshImmediately = true*/)
-    {
-        var card = CardFactory.CreateCard(cardId);
-        AddCard(card, toPlayerBag/*, refreshImmediately*/);
-        return card;
-    }
+    //private Card AddCard(string cardId, bool toPlayerBag/*, bool refreshImmediately = true*/)
+    //{
+    //    var card = CardFactory.CreateCard(cardId);
+    //    AddCard(card, toPlayerBag/*, refreshImmediately*/);
+    //    return card;
+    //}
 
     public void AddCardWithTween(Card card, Vector2 startPos, bool toPlayerBag)
     {
@@ -102,7 +102,6 @@ public class GameManager : MonoBehaviour
             1,
             startPos,
             card.Slot.transform.position,
-            0.2f,
             onComplete: () =>
             {
                 card.Slot.RefreshCurrentDisplay();

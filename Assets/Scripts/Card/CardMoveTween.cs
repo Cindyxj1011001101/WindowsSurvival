@@ -70,7 +70,7 @@ public class CardMoveTween
         int count,
         Vector3 sourcePosition,
         Vector3 targetPosition,
-        float duration,
+        float duration = 0.3f,
         System.Action onStart = null,
         System.Action onComplete = null,
         Ease ease = Ease.OutQuad)
@@ -91,7 +91,7 @@ public class CardMoveTween
     public static async void MoveCardsWithDelay(
         List<Card> cards,
         Vector3 sourcePosition,
-        float duration,
+        float duration = 0.3f,
         int millisecondsDelay = 100,
         System.Action onStart = null,
         System.Action<Card> onComplete = null,
