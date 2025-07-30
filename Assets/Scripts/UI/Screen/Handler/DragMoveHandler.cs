@@ -15,7 +15,6 @@ public class DragMoveHandler : MonoBehaviour, IPointerDownHandler, IDragHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("1");
         canDrag = true;
         if (targetToMove == null) return;
 

@@ -36,7 +36,6 @@ public class ChangeMouse : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log(MouseManager.Instance.curChangeMouseType.Peek());
         switch (MouseManager.Instance.curChangeMouseType.Peek())
         {
             case ChangeMouseType.Hover:
