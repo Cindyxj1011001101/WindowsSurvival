@@ -188,7 +188,7 @@ public static class ExcelReader
             dict.Add((PlaceEnum)Enum.Parse(typeof(PlaceEnum), table.TableName), disposableDropList);
             //JsonManager.SaveData(disposableDropList, "Excel", table.TableName + "一次性掉落列表");
         }
-        Debug.Log("Disposable drop list generated successfully!");
+        //Debug.Log("Disposable drop list generated successfully!");
         return dict;
     }
 
@@ -281,7 +281,7 @@ public static class ExcelReader
             dict.Add((PlaceEnum)Enum.Parse(typeof(PlaceEnum), table.TableName), repeatableDropList);
             //JsonManager.SaveData(repeatableDropList, "Excel", table.TableName + "重复掉落列表");
         }
-        Debug.Log("Repeatable drop list generated successfully!");
+        //Debug.Log("Repeatable drop list generated successfully!");
         return dict;
     }
 
