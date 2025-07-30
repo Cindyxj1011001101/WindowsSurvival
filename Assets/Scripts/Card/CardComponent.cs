@@ -36,7 +36,6 @@ public class FreshnessComponent : CardComponent
 
         // 随时间自动减少新鲜度
         freshness -= (int)(deltaTime * updateRate);
-        MonoUtility.PlayParticleEffect(1, false, ColorManager.orange, BelongedCard.Slot.transform);
         if (freshness <= 0)
         {
             freshness = 0;
