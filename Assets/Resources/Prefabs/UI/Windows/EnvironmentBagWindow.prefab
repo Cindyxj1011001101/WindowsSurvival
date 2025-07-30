@@ -398,7 +398,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8572384597170285532}
   m_HandleRect: {fileID: 686229522281716730}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -7488,6 +7488,38 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3788474116430189270}
     m_Modifications:
+    - target: {fileID: 1065582681270328394, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minWidth
+      value: 774
+      objectReference: {fileID: 0}
+    - target: {fileID: 1065582681270328394, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minHeight
+      value: 560
+      objectReference: {fileID: 0}
+    - target: {fileID: 1113768014524737052, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minWidth
+      value: 774
+      objectReference: {fileID: 0}
+    - target: {fileID: 1113768014524737052, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minHeight
+      value: 560
+      objectReference: {fileID: 0}
+    - target: {fileID: 2224730111995872713, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minWidth
+      value: 774
+      objectReference: {fileID: 0}
+    - target: {fileID: 2224730111995872713, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minHeight
+      value: 560
+      objectReference: {fileID: 0}
+    - target: {fileID: 2677453288185900698, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minWidth
+      value: 774
+      objectReference: {fileID: 0}
+    - target: {fileID: 2677453288185900698, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minHeight
+      value: 560
+      objectReference: {fileID: 0}
     - target: {fileID: 3372133531176856807, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: m_Name
       value: Scaler
@@ -7495,6 +7527,14 @@ PrefabInstance:
     - target: {fileID: 4561760683937910170, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 5.0000305
+      objectReference: {fileID: 0}
+    - target: {fileID: 4717627398990265235, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minWidth
+      value: 774
+      objectReference: {fileID: 0}
+    - target: {fileID: 4717627398990265235, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minHeight
+      value: 560
       objectReference: {fileID: 0}
     - target: {fileID: 4997966270239748422, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -7579,6 +7619,30 @@ PrefabInstance:
     - target: {fileID: 5028869827966537445, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6009868744749949120, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minWidth
+      value: 774
+      objectReference: {fileID: 0}
+    - target: {fileID: 6009868744749949120, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minHeight
+      value: 560
+      objectReference: {fileID: 0}
+    - target: {fileID: 6240264970601181780, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minWidth
+      value: 774
+      objectReference: {fileID: 0}
+    - target: {fileID: 6240264970601181780, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minHeight
+      value: 560
+      objectReference: {fileID: 0}
+    - target: {fileID: 7063507758247106707, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minWidth
+      value: 774
+      objectReference: {fileID: 0}
+    - target: {fileID: 7063507758247106707, guid: 480c060adc538c745946fdd18329de5f, type: 3}
+      propertyPath: minHeight
+      value: 560
       objectReference: {fileID: 0}
     - target: {fileID: 7762920398974859047, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: m_AnchoredPosition.y
