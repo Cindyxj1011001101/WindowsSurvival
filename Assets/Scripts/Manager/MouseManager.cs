@@ -21,6 +21,8 @@ public class MouseManager : MonoBehaviour
     private static MouseManager instance;
     public static MouseManager Instance => instance;
 
+    public Stack<ChangeMouseType> curChangeMouseType = new Stack<ChangeMouseType>();
+
     public Sprite DefaultSprite; // 默认
     public Sprite ClickSprite; // 点击
     public Sprite ClickDownSprite;//点下
