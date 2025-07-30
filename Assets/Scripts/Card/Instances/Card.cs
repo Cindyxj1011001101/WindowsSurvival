@@ -32,7 +32,7 @@ public abstract class Card : IComparable<Card>
     public string CardId { get; private set; } // 卡牌ID
 
     [JsonProperty]
-    protected Dictionary<Type, ICardComponent> components = new();
+    protected Dictionary<Type, CardComponent> components = new();
 
     [JsonIgnore]
     public List<Event> Events { get; protected set; } = new(); // 可交互事件
@@ -143,7 +143,7 @@ public abstract class Card : IComparable<Card>
     /// <typeparam name="T"></typeparam>
     /// <param name="component"></param>
     /// <returns></returns>
-    public bool TryGetComponent<T>(out T component) where T : ICardComponent
+    public bool TryGetComponent<T>(out T component) where T : CardComponent
     {
         if (components.TryGetValue(typeof(T), out var comp))
         {
@@ -155,10 +155,11 @@ public abstract class Card : IComparable<Card>
         return false;
     }
 
-    public void AddComponent(Type type, ICardComponent component)
+    public void AddComponent(Type type, CardComponent component)
     {
         if (components.ContainsKey(type)) return;
 
+        component.SetBelongedCard(this);
         components.Add(type, component);
     }
 
@@ -167,7 +168,7 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="other"></param>
-    public void InheritComponent<T>(Card other) where T : ICardComponent
+    public void InheritComponent<T>(Card other) where T : CardComponent
     {
         // 如果other有该组件，并且当前卡牌也有该组件，则复制一份
         if (other.TryGetComponent<T>(out var component) && TryGetComponent<T>(out _))

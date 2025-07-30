@@ -7,13 +7,18 @@ using UnityEngine.Events;
 /// <summary>
 /// 组件接口
 /// </summary>
-public interface ICardComponent
+public abstract class CardComponent
 {
+    public Card BelongedCard { get; private set; }
 
+    public void SetBelongedCard(Card card)
+    {
+        BelongedCard = card;
+    }
 }
 
 #region 新鲜度组件
-public class FreshnessComponent : ICardComponent
+public class FreshnessComponent : CardComponent
 {
     public int freshness;
     public int maxFreshness;
@@ -31,6 +36,7 @@ public class FreshnessComponent : ICardComponent
 
         // 随时间自动减少新鲜度
         freshness -= (int)(deltaTime * updateRate);
+        MonoUtility.PlayParticleEffect(1, false, ColorManager.orange, BelongedCard.Slot.transform);
         if (freshness <= 0)
         {
             freshness = 0;
@@ -49,7 +55,7 @@ public class FreshnessComponent : ICardComponent
 #endregion
 
 #region 生长度组件
-public class GrowthComponent : ICardComponent
+public class GrowthComponent : CardComponent
 {
     public int growth;
     public int maxGrowth;
@@ -87,7 +93,7 @@ public class GrowthComponent : ICardComponent
 #endregion
 
 #region 产物进度组件
-public class ProgressComponent : ICardComponent
+public class ProgressComponent : CardComponent
 {
     public int progress;
     public int maxProgress;
@@ -132,7 +138,7 @@ public enum EquipmentType
     Leg = 3,
 }
 
-public class EquipmentComponent : ICardComponent
+public class EquipmentComponent : CardComponent
 {
     public EquipmentType equipmentType;
     public bool isEquipped;
@@ -160,7 +166,7 @@ public enum ToolType
     Dig,//挖掘
 }
 
-public class ToolComponent : ICardComponent
+public class ToolComponent : CardComponent
 {
     public List<ToolType> toolTypes;
 
@@ -188,7 +194,7 @@ public class ToolComponent : ICardComponent
 #endregion
 
 #region 耐久度组件
-public class DurabilityComponent : ICardComponent
+public class DurabilityComponent : CardComponent
 {
     public int durability;
     public int maxDurability;
@@ -208,7 +214,7 @@ public class DurabilityComponent : ICardComponent
 #endregion
 
 #region 内容物组件
-public class InnerContentsComponent : ICardComponent
+public class InnerContentsComponent : CardComponent
 {
     public string belongedCardId; // 所属卡牌ID
 
