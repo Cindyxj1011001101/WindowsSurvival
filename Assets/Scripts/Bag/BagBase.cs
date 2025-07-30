@@ -128,13 +128,13 @@ public abstract class BagBase : MonoBehaviour
         return result;
     }
 
-    /// <summary>
-    /// 获取所有能放置卡牌的格子以及放置数量
-    /// </summary>
-    /// <param name="card"></param>
-    /// <param name="count"></param>
-    /// <returns></returns>
-    public abstract List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count);
+    ///// <summary>
+    ///// 获取所有能放置卡牌的格子以及放置数量
+    ///// </summary>
+    ///// <param name="card"></param>
+    ///// <param name="count"></param>
+    ///// <returns></returns>
+    //public abstract List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count);
 
     /// <summary>
     /// 添加一张卡牌

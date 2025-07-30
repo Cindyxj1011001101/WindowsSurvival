@@ -127,16 +127,16 @@ public class EquipmentBag : BagBase
         return equipmentSlotDict[component.equipmentType].IsEmpty;
     }
 
-    public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)
-    {
-        List<(CardSlot, int)> result = new();
+    //public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)
+    //{
+    //    List<(CardSlot, int)> result = new();
 
-        if (!card.TryGetComponent<EquipmentComponent>(out var component)) return result;
+    //    if (!card.TryGetComponent<EquipmentComponent>(out var component)) return result;
 
-        if (!equipmentSlotDict[component.equipmentType].IsEmpty) return result;
+    //    if (!equipmentSlotDict[component.equipmentType].IsEmpty) return result;
 
-        result.Add((equipmentSlotDict[component.equipmentType], 1));
+    //    result.Add((equipmentSlotDict[component.equipmentType], 1));
 
-        return result;
-    }
+    //    return result;
+    //}
 }
