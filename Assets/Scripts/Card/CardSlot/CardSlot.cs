@@ -17,7 +17,7 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private Text moreInfoText; // 额外信息
     [SerializeField] private bool dontRefresh; // 是否不刷新显示（用于某些特殊情况）
 
-    private Dictionary<ICardComponent, Slider> componentSliders = new(); // 用于存储组件的滑动条
+    private Dictionary<CardComponent, Slider> componentSliders = new(); // 用于存储组件的滑动条
 
     private List<Card> cards = new();
     public bool IsEmpty => cards.Count == 0;
@@ -100,7 +100,7 @@ public class CardSlot : MonoBehaviour
         }
     }
 
-    private void DisplayComponent(ICardComponent component)
+    private void DisplayComponent(CardComponent component)
     {
         if (!componentSliders.TryGetValue(component, out Slider slider))
         {

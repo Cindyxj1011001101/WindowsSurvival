@@ -175,6 +175,7 @@ public class DetailsWindow : WindowBase
         currentDisplayedCard = null;
         detailsText.text = "";
         innerBag.Clear();
+        innerContentsButton.gameObject.SetActive(false);
         MonoUtility.DestroyAllChildren(buttonLayout);
     }
 

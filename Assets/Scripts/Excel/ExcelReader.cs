@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using Excel;
@@ -119,12 +120,14 @@ public static class ExcelReader
         return toolTypes;
     }
 
-    public static void GenerateDisposableDropListJson(string fileName)
+    public static Dictionary<PlaceEnum, DisposableDropList> GenerateDisposableDropList()
     {
         // 打开Excel文件
-        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
+        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/DisposableDropListConfig.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
+
+        Dictionary<PlaceEnum, DisposableDropList> dict = new();
 
         foreach (DataTable table in result.Tables)
         {
@@ -182,18 +185,21 @@ public static class ExcelReader
             }
             // 保存为Json
             DisposableDropList disposableDropList = new() { maxCount = dropList.Count, dropList = dropList };
-            JsonManager.SaveData(disposableDropList, "Excel", table.TableName + "一次性掉落列表");
+            dict.Add((PlaceEnum)Enum.Parse(typeof(PlaceEnum), table.TableName), disposableDropList);
+            //JsonManager.SaveData(disposableDropList, "Excel", table.TableName + "一次性掉落列表");
         }
         Debug.Log("Disposable drop list generated successfully!");
+        return dict;
     }
 
-    public static void GenerateRepeatableDropListJson(string fileName)
+    public static Dictionary<PlaceEnum, RepeatableDropList> GenerateRepeatableDropList()
     {
         // 打开Excel文件
-        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
+        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/RepeatableDropListConfig.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
 
+        Dictionary<PlaceEnum, RepeatableDropList> dict = new();
 
         foreach (DataTable table in result.Tables)
         {
@@ -272,9 +278,11 @@ public static class ExcelReader
                 emptyPopulationSizeChangeOnNotCaught = sizeChangeOnNotCaught,
                 populationList = populationList
             };
-            JsonManager.SaveData(repeatableDropList, "Excel", table.TableName + "重复掉落列表");
+            dict.Add((PlaceEnum)Enum.Parse(typeof(PlaceEnum), table.TableName), repeatableDropList);
+            //JsonManager.SaveData(repeatableDropList, "Excel", table.TableName + "重复掉落列表");
         }
         Debug.Log("Repeatable drop list generated successfully!");
+        return dict;
     }
 
     #region 读取对话配置

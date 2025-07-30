@@ -58,20 +58,19 @@ public class EnvironmentBag : BagBase
         base.InitBag(runtimeData);
         var data = (runtimeData as EnvironmentBagRuntimeData);
 
-        // 读取掉落列表
-        DisposableDropList = data.disposableDropList;
-        RepeatableDropList = data.repeatableDropList;
-        RepeatableDropList.StartUpdating();
-
-        // 读取环境状态
         if (!data.init)
         {
             InitState();
+            InitDropList();
         }
         else
         {
             StateDict = data.environmentStateDict;
+            DisposableDropList = data.disposableDropList;
+            RepeatableDropList = data.repeatableDropList;
         }
+
+        RepeatableDropList.StartUpdating();
     }
 
     private void InitState()
@@ -79,6 +78,12 @@ public class EnvironmentBag : BagBase
         // 在室内显示氧气
         if (placeData.isIndoor)
             StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(UnityEngine.Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
+    }
+
+    private void InitDropList()
+    {
+        DisposableDropList = CardFactory.GetDisposableDropList(placeData.placeType);
+        RepeatableDropList = CardFactory.GetRepeatableDropList(placeData.placeType);
     }
 
     /// <summary>
@@ -145,45 +150,45 @@ public class EnvironmentBag : BagBase
         base.AddCard(card, refreshImmediately);
     }
 
-    public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)
-    {
-        List<(CardSlot, int)> result = new();
+    //public override List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count)
+    //{
+    //    List<(CardSlot, int)> result = new();
 
-        int leftCount = count; // 剩余要添加的数量
+    //    int leftCount = count; // 剩余要添加的数量
 
-        // 优先堆叠，卡牌格按照已堆叠数量降序排序，即优先堆满
-        foreach (var slot in GetSlotsByCardId(card.CardId, false))
-        {
-            if (leftCount <= 0) return result;
+    //    // 优先堆叠，卡牌格按照已堆叠数量降序排序，即优先堆满
+    //    foreach (var slot in GetSlotsByCardId(card.CardId, false))
+    //    {
+    //        if (leftCount <= 0) return result;
 
-            int remainingCapacity = slot.GetRemainingCapacity(card);
-            if (remainingCapacity > 0)
-            {
-                result.Add((slot, Mathf.Min(remainingCapacity, leftCount)));
-                leftCount -= remainingCapacity;
-            }
-        }
+    //        int remainingCapacity = slot.GetRemainingCapacity(card);
+    //        if (remainingCapacity > 0)
+    //        {
+    //            result.Add((slot, Mathf.Min(remainingCapacity, leftCount)));
+    //            leftCount -= remainingCapacity;
+    //        }
+    //    }
 
-        // 如果还有要添加的卡牌
-        // 这里不能while true，因为上面的循环可能正常结束但是leftCount<=0
-        while (leftCount > 0)
-        {
-            // 找空位
-            foreach (var slot in slots)
-            {
-                if (slot.IsEmpty)
-                {
-                    result.Add((slot, Mathf.Min(card.MaxStackNum, leftCount)));
-                    leftCount -= card.MaxStackNum;
-                }
+    //    // 如果还有要添加的卡牌
+    //    // 这里不能while true，因为上面的循环可能正常结束但是leftCount<=0
+    //    while (leftCount > 0)
+    //    {
+    //        // 找空位
+    //        foreach (var slot in slots)
+    //        {
+    //            if (slot.IsEmpty)
+    //            {
+    //                result.Add((slot, Mathf.Min(card.MaxStackNum, leftCount)));
+    //                leftCount -= card.MaxStackNum;
+    //            }
 
-                if (leftCount <= 0) return result;
-            }
-            // 没有return说明还有要添加的卡牌
-            // 那么新增3个空卡牌格
-            AddSlot(3);
-        }
+    //            if (leftCount <= 0) return result;
+    //        }
+    //        // 没有return说明还有要添加的卡牌
+    //        // 那么新增3个空卡牌格
+    //        AddSlot(3);
+    //    }
 
-        return result;
-    }
+    //    return result;
+    //}
 }
