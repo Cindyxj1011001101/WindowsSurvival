@@ -136,11 +136,14 @@ public class DetailsWindow : WindowBase
             GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/CardEventButton");
             var button = Instantiate(buttonPrefab, buttonLayout).GetComponent<HoverableButton>();
             var btnText = button.GetComponentInChildren<Text>();
+            var showDetail = button.GetComponent<ShowDetail>();
+            showDetail.e = e;
             btnText.text = e.name;
 
             // 判断cardEvent是否满足条件
             if (e.Judge())
             {
+                showDetail.canShowDetail = true;
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() =>
                 {
@@ -159,6 +162,7 @@ public class DetailsWindow : WindowBase
             }
             else
             {
+                showDetail.canShowDetail = false;
                 button.Interactable = false;
                 btnText.color = ColorManager.darkGrey;
             }
