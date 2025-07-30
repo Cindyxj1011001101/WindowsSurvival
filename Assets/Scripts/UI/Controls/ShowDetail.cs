@@ -24,7 +24,8 @@ public class ShowDetail : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         DetailInfo = Instantiate(DetailInfoPrefab, transform);
         DetailInfo.transform.position = transform.position + offset;
         //时间变化显示
-        if (e.Time != null)
+        //if (e.Time != null)
+        if (e.Time != 0)
         {
             GameObject Time = DetailInfo.transform.Find("Time").gameObject;
             Time.transform.Find("Text").GetComponent<Text>().text = e.Time.ToString() + "分钟";
