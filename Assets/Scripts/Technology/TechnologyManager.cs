@@ -16,6 +16,11 @@ public class TechnologyManager
         techData = GameDataManager.Instance.TechnologyData;
     }
 
+    public void InitFromGameData()
+    {
+        techData = GameDataManager.Instance.TechnologyData;
+    }
+
     /// <summary>
     /// 研究一个科技节点
     /// </summary>

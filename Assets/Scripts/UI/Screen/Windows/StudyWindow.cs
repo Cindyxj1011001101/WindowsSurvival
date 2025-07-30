@@ -59,6 +59,7 @@ public class StudyWindow : WindowBase
         //}
         //GameDataManager.Instance.SaveTechnologyData();
         //DisplayTechTree();
+        TechnologyManager.Instance.InitFromGameData();
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
 
         menuItemTransforms.Clear();
