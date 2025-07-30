@@ -37,7 +37,7 @@ public class WasteHeap : Card
         }
         else if (rand < 13)
         {
-            GameManager.Instance.AddCard("硬质纤维", true);
+            GameManager.Instance.AddCard("韧性胶管", true);
         }
         else if (rand < 16)
         {

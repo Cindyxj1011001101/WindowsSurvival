@@ -32,7 +32,7 @@ public static class CardFactory
             { "捞网", typeof(FishingNet) },
             { "玻璃", typeof(Glass) },
             { "玻璃沙", typeof(GlassSand) },
-            { "硬质纤维", typeof(HardFiber) },
+            { "韧性胶管", typeof(ResilientRubberHose) },
             { "人力发电机", typeof(HumanPoweredGenerator) },
             { "点燃的氧烛", typeof(LightenedOxygenCandle) },
             { "小块生肉", typeof(LittleRawMeat) },
@@ -216,5 +216,37 @@ public static class CardFactory
         }
 
         return card;
+    }
+
+    // 环境一次性掉落列表
+    private static Dictionary<PlaceEnum, DisposableDropList> disposableDropListDict = null;
+
+    private static void InitDisposableDropList()
+    {
+        disposableDropListDict ??= ExcelReader.GenerateDisposableDropList();
+    }
+
+    public static DisposableDropList GetDisposableDropList(PlaceEnum place)
+    {
+        InitDisposableDropList();
+        if (disposableDropListDict.ContainsKey(place))
+            return disposableDropListDict[place];
+        return new DisposableDropList();
+    }
+
+    // 环境重复掉落列表
+    private static Dictionary<PlaceEnum, RepeatableDropList> repeatableDropListDict = null;
+
+    private static void InitRepeatableDropList()
+    {
+        repeatableDropListDict ??= ExcelReader.GenerateRepeatableDropList();
+    }
+
+    public static RepeatableDropList GetRepeatableDropList(PlaceEnum place)
+    {
+        InitRepeatableDropList();
+        if (repeatableDropListDict.ContainsKey(place))
+            return repeatableDropListDict[place];
+        return new RepeatableDropList();
     }
 }

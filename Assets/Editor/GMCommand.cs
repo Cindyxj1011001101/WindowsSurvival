@@ -70,10 +70,10 @@ public class GMCommand
         AddCard("废料堆");
     }
 
-    [MenuItem("Command/添加/硬质纤维")]
+    [MenuItem("Command/添加/韧性胶管")]
     public static void G()
     {
-        AddCard("硬质纤维");
+        AddCard("韧性胶管");
     }
 
     [MenuItem("Command/添加/老鼠尸体")]
@@ -213,7 +213,7 @@ public class GMCommand
     [MenuItem("Command/生成掉落列表的Json文件")]
     public static void Q()
     {
-        ExcelReader.GenerateDisposableDropListJson("DisposableDropListConfig");
-        ExcelReader.GenerateRepeatableDropListJson("RepeatableDropListConfig");
+        ExcelReader.GenerateDisposableDropList();
+        ExcelReader.GenerateRepeatableDropList();
     }
 }

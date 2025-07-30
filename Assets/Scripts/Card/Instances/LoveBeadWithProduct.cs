@@ -44,7 +44,7 @@ public class LoveBeadWithProduct : Card
         }
         else if (random < 12)
         {
-            GameManager.Instance.AddCard("硬质纤维", true);
+            GameManager.Instance.AddCard("韧性胶管", true);
         }
         else if (random < 15)
         {

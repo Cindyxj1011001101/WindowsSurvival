@@ -58,20 +58,19 @@ public class EnvironmentBag : BagBase
         base.InitBag(runtimeData);
         var data = (runtimeData as EnvironmentBagRuntimeData);
 
-        // 读取掉落列表
-        DisposableDropList = data.disposableDropList;
-        RepeatableDropList = data.repeatableDropList;
-        RepeatableDropList.StartUpdating();
-
-        // 读取环境状态
         if (!data.init)
         {
             InitState();
+            InitDropList();
         }
         else
         {
             StateDict = data.environmentStateDict;
+            DisposableDropList = data.disposableDropList;
+            RepeatableDropList = data.repeatableDropList;
         }
+
+        RepeatableDropList.StartUpdating();
     }
 
     private void InitState()
@@ -79,6 +78,12 @@ public class EnvironmentBag : BagBase
         // 在室内显示氧气
         if (placeData.isIndoor)
             StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(UnityEngine.Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
+    }
+
+    private void InitDropList()
+    {
+        DisposableDropList = CardFactory.GetDisposableDropList(placeData.placeType);
+        RepeatableDropList = CardFactory.GetRepeatableDropList(placeData.placeType);
     }
 
     /// <summary>
