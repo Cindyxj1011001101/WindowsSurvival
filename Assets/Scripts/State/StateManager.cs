@@ -144,8 +144,6 @@ public class StateManager : MonoBehaviour
 
         // 监听回合结算
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
-        //监听睡眠状态结算
-        EventManager.Instance.AddListener(EventType.Sleep, Sleep);
         // 当环境改变时尝试获取氧气
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
     }
@@ -153,14 +151,12 @@ public class StateManager : MonoBehaviour
     private void Start()
     {
         // 评估危险状态，播放音乐
-        _lastDangerLevel = EvaluateDangerLevel();
-        PlayDangerLevelMusic(_lastDangerLevel);
+        EvaluateDangerLevel();
     }
 
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
-        EventManager.Instance.RemoveListener(EventType.Sleep, Sleep);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
     }
 
@@ -516,15 +512,7 @@ public class StateManager : MonoBehaviour
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
 
         // 判断危险等级，播放音乐
-        DangerLevelEnum dangerLevel = EvaluateDangerLevel();
-
-        // 如果状态没有变化，直接返回
-        if (dangerLevel != _lastDangerLevel)
-        {
-            // 更新缓存的状态
-            _lastDangerLevel = dangerLevel;
-            PlayDangerLevelMusic(dangerLevel);
-        }
+        EvaluateDangerLevel();
     }
 
     /// <summary>
@@ -719,6 +707,12 @@ public class StateManager : MonoBehaviour
         ExtraPlayerIntervalSettle();
 
         EnvironmentIntervalSettle();
+
+        // 睡眠时每回合+3.5清醒
+        if (isSleeping)
+        {
+            ChangePlayerState(PlayerStateEnum.Sobriety, 3.5f);
+        }
     }
 
     public void EnvironmentIntervalSettle()
@@ -757,10 +751,14 @@ public class StateManager : MonoBehaviour
     }
     #endregion
 
-    #region 睡觉额外结算
+    #region 睡觉
+    private bool isSleeping;
+
     public void Sleep()
     {
-        ChangePlayerState(PlayerStateEnum.Sobriety, 3.5f);
+        isSleeping = true;
+        TimeManager.Instance.AddTime(240);
+        isSleeping = false;
     }
     #endregion
 
@@ -774,36 +772,36 @@ public class StateManager : MonoBehaviour
     // 缓存上次的危险状态
     private DangerLevelEnum _lastDangerLevel = DangerLevelEnum.None;
 
-    // 危险阈值配置
-    private readonly Dictionary<PlayerStateEnum, (float high, float low)> _thresholds = new()
+    private void EvaluateDangerLevel()
     {
-        { PlayerStateEnum.Health, (10f, 30f) },//健康
-        { PlayerStateEnum.Fullness, (10f, 30f) },//饱食
-        { PlayerStateEnum.Thirst, (10f, 30f) },//水分
-        { PlayerStateEnum.Sobriety, (10f, 30f) },//清醒度
-        { PlayerStateEnum.San, (10f, 30f) },//精神
-        { PlayerStateEnum.Oxygen, (25f, 50f) },//氧气
-    };
+        int currentLevel = int.MaxValue;
+        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.Health].StateLevel);
+        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.Fullness].StateLevel);
+        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.Thirst].StateLevel);
+        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.Sobriety].StateLevel);
+        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.San].StateLevel);
+        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.Oxygen].StateLevel);
 
-    //一个用于判断危险状态的静态方法，会根据之前的危险阈值配置和当前状态值，来评估当前的危险等级
-    private DangerLevelEnum EvaluateDangerLevel()
-    {
-        bool /*hasHigh = false, */hasLow = false;
+        DangerLevelEnum danger;
 
-        foreach (var (state, (high, low)) in _thresholds)
-        {
-            if (!PlayerStateDict.TryGetValue(state, out var s)) continue;
+        // 高危
+        if (currentLevel <= 1)
+            danger = DangerLevelEnum.High;
+        // 低危
+        else if (currentLevel == 2)
+            danger = DangerLevelEnum.Low;
+        // 安全
+        else
+            danger = DangerLevelEnum.None;
 
-            float value = s.CurValue;
-            if (value <= high) return DangerLevelEnum.High; // 发现高危立即返回
-            if (value <= low) hasLow = true;
-        }
+        //如果上次的状态和这次一致，就不切音乐
+        if (danger != _lastDangerLevel)
+            PlayDangerLevelMusic(danger);
 
-        return hasLow ? DangerLevelEnum.Low : DangerLevelEnum.None;
+        _lastDangerLevel = danger;
     }
 
     //处于危险状态时，就播放心跳声，离开就播放环境音乐
-    //如果上次的状态和这次一致，就不切音乐
     private void PlayDangerLevelMusic(DangerLevelEnum currentLevel)
     {
         // 应用低通滤波等音效变化
