@@ -19,6 +19,8 @@ public class TechnologyManager
     public void InitFromGameData()
     {
         techData = GameDataManager.Instance.TechnologyData;
+        if (CurStudiedTechNode != null)
+            Study(CurStudiedTechNode);
     }
 
     /// <summary>
