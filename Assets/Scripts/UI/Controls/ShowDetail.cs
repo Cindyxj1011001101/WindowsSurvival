@@ -58,13 +58,13 @@ public class ShowDetail : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             State.transform.Find("Text").GetComponent<Text>().text = r;
             if (item.Key == PlayerStateEnum.Load)
             {
-                int level = StateManager.Instance.GetLoadLevel();
+                int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
                 State.transform.Find("ICON").GetComponent<Image>().sprite = LoadSprite[level];
                 State.transform.Find("Name").GetComponent<Text>().color = LoadColor[level];
             }
             else if (item.Key == PlayerStateEnum.BodyTemperature)
             {
-                int level = StateManager.Instance.GetTemperatureLevel();
+                int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.BodyTemperature].StateLevel;
                 State.transform.Find("ICON").GetComponent<Image>().sprite = TempretureSprite[level];
                 State.transform.Find("Name").GetComponent<Text>().color = TempretureColor[level];
             }

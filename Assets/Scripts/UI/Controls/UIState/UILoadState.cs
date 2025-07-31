@@ -16,7 +16,7 @@ public class UILoadState : UIStateSlider
     {
         slider.value = value / maxValue;
         valueText.text = $"{value:0.0}/{maxValue / 2}";
-        int level = StateManager.Instance.GetLoadLevel();
+        int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
         icon.sprite = levels[level];
 
         var color = colors[level];
