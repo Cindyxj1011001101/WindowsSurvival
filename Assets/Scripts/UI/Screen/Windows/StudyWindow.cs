@@ -47,7 +47,7 @@ public class StudyWindow : WindowBase
     private void OnStudiedComplished(ScriptableTechnologyNode techNode)
     {
         curSelectedTechNode = techNode;
-        DisplayTechTree(curSelectedTechNode.techType);
+        RefreshCurrentDisplay();
         StopStudy();
     }
 
@@ -146,7 +146,6 @@ public class StudyWindow : WindowBase
 
     public void RefreshCurrentDisplay()
     {
-        if (state == WindowState.Closed || state == WindowState.Minimized) return;
         DisplayTechTree(curSelectedTechNode.techType);
     }
 
