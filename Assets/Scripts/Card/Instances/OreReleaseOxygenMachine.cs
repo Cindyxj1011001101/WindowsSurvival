@@ -31,7 +31,7 @@ public class OreReleaseOxygenMachine : Card
             new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
             new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, null)
         };
-    }
+    }   
 
     protected override void LateInit()
     {

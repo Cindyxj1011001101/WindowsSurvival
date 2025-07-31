@@ -685,7 +685,7 @@ public class StateManager : MonoBehaviour
         { PlayerStateEnum.Thirst, (10f, 30f) },//水分
         { PlayerStateEnum.Sobriety, (10f, 30f) },//清醒度
         { PlayerStateEnum.San, (10f, 30f) },//精神
-        { PlayerStateEnum.Oxygen, (10f, 25f) },//氧气
+        { PlayerStateEnum.Oxygen, (25f, 50f) },//氧气
     };
 
     //一个用于判断危险状态的静态方法，会根据之前的危险阈值配置和当前状态值，来评估当前的危险等级
