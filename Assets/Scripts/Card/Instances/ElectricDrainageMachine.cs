@@ -1,22 +1,52 @@
 public class ElectricDrainageMachine : Card
 {
+    public bool isWorking; // 是否已打开
     private ElectricDrainageMachine()
     {
+        isWorking = false;
         Events = new()
         {
-            new Event("开启", "开启电动排水机", Event_Open, null),
-            new Event("关闭", "关闭电动排水机", Event_Close, null)
+            new Event("开启", "开启电动排水机", Event_Open, Judge_Open),
+            new Event("关闭", "关闭电动排水机", Event_Close, Judge_Close)
         };
     }
-    //开启状态下每回合-0.5电，使水面高度-0.8；
-    //当每回合结算时水面高度为0或电力不足0.5，本回合就不消耗电力并自动关闭。
-    //只能在室内非水域环境建造。
-    //交互行为：开启、关闭
+    #region 开关
     public void Event_Open()
     {
+        isWorking = true;
     }
+
+    public bool Judge_Open()
+    {
+        return !isWorking;
+    }
+
     public void Event_Close()
     {
+        isWorking = false;
+    }
+
+    public bool Judge_Close()
+    {
+        return isWorking;
+    }
+    #endregion
+
+    protected override System.Action OnUpdate => () =>
+    {
+       Work();
+    };
+
+    private void Work()
+    {
+        if(!isWorking) return;
+        if(StateManager.Instance.Electricity.CurValue < 0.5f||StateManager.Instance.WaterLevel.CurValue <= 0)
+        {
+            isWorking = false;
+            return;
+        }
+        StateManager.Instance.ChangeElectricity(-0.5f);
+        StateManager.Instance.ChangeWaterLevel(-0.8f);
     }
 
 }

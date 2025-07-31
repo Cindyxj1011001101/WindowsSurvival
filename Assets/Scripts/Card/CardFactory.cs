@@ -53,7 +53,26 @@ public static class CardFactory
             { "有产物的虹吸海葵", typeof(SiphonophyllumWithProduct) },
             { "废料堆", typeof(WasteHeap) },
             { "渗水裂缝", typeof(WaterCrack) },
-            { "白爆矿", typeof(WhiteBlastMine) }
+            { "白爆矿", typeof(WhiteBlastMine) },
+            { "海麻线", typeof(SeaGrass) },
+            { "海爬虫", typeof(SeaLizard) },
+            { "熟海爬虫", typeof(CookedSeaLizard) },
+            { "石砖", typeof(StoneBrick) },
+            { "电动排水机", typeof(ElectricDrainageMachine) },
+            { "废铁铲", typeof(WasteShovel) },
+            { "储物箱", typeof(StorageBox) },
+            { "食物残渣", typeof(FoodScrap) },
+            { "海麻线丛", typeof(SeaGrassBed) },
+            { "纤维", typeof(Fiber) },
+            { "珊瑚礁", typeof(CoralReef) },
+            { "燃素", typeof(Phlogiston) },
+            { "铁齿铜牙餐盘", typeof(IronMeal) },
+            { "黑金炭烤肉", typeof(CoalGrilledMeat) },
+            { "蛤蜊浓汤", typeof(ClamSoup) },
+            { "肉排", typeof(Steak) },
+            { "炸虫串", typeof(FriedInsectStick) },
+            { "白灼触手", typeof(ScaldedClaw) },
+            { "厨房恶物", typeof(KitchenFoes) },
         };
     }
 
