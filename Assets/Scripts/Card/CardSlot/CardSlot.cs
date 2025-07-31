@@ -15,7 +15,7 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private VerticalLayoutGroup componentLayout; // 用于显示新鲜度、耐久等组件的布局
     [SerializeField] private CanvasGroup cardCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
-    [SerializeField] private bool dontRefresh; // 是否不刷新显示（用于某些特殊情况）
+    public bool dontRefresh; // 是否不刷新显示（用于某些特殊情况）
 
     private Dictionary<CardComponent, Slider> componentSliders = new(); // 用于存储组件的滑动条
 

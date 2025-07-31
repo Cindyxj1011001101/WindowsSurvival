@@ -80,6 +80,9 @@ public class CraftManager
             playerBag.RemoveCardsByCardId(material.cardId, material.requiredNum);
         }
 
+        // 消耗时间
+        TimeManager.Instance.AddTime(recipe.craftTime);
+
         // 创建一个新的卡牌
         var card = CardFactory.CreateCard(recipe.cardId);
 
@@ -88,8 +91,5 @@ public class CraftManager
         GameManager.Instance.AddCardWithTween(card, startPos, card.CardType != CardType.Construction);
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", card.CardName));
-
-        // 消耗时间
-        TimeManager.Instance.AddTime(recipe.craftTime);
     }
 }

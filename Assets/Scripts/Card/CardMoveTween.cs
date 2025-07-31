@@ -57,6 +57,7 @@ public class CardMoveTween
         // 设置CardSlot组件
         CardSlot slot = slotObj.GetComponent<CardSlot>();
         slot.GetComponent<CanvasGroup>().blocksRaycasts = false;
+        slot.dontRefresh = true;
 
         return slot;
     }
