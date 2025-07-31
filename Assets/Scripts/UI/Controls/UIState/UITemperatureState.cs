@@ -13,7 +13,7 @@ public class UITemperatureState : UIStateSlider
     {
         slider.value = value / maxValue;
         valueText.text = $"{value - maxValue / 2:0.0}";
-        int level = StateManager.Instance.GetTemperatureLevel();
+        int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.BodyTemperature].StateLevel;
         icon.sprite = levels[level];
 
         var color = colors[level];

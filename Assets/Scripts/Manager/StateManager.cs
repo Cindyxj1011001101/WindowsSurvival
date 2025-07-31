@@ -46,53 +46,6 @@ public enum DangerLevelEnum
 }
 
 /// <summary>
-/// 玩家状态类
-/// </summary>
-public class PlayerState
-{
-    [JsonProperty]
-    private float curValue;
-    [JsonProperty]
-    private float extraValue;
-    [JsonProperty]
-    private float maxValue;
-    [JsonProperty]
-    public PlayerStateEnum stateEnum;
-
-    [JsonIgnore]
-    public float CurValue => curValue;
-
-    [JsonIgnore]
-    public float ExtraValue => extraValue;
-
-    [JsonIgnore]
-    public float MaxValue => maxValue + extraValue;
-
-    [JsonIgnore]
-    public float RemainingCapacity => MaxValue - CurValue;
-
-    public void AddCurValue(float delta)
-    {
-        curValue += delta;
-        curValue = Mathf.Clamp(curValue, 0, MaxValue);
-    }
-
-    public void AddExtraValue(float delta)
-    {
-        extraValue += delta;
-        curValue = Mathf.Clamp(curValue, 0, MaxValue);
-    }
-
-    public PlayerState(float value, float maxValue, float extraValue, PlayerStateEnum state)
-    {
-        curValue = value;
-        this.maxValue = maxValue;
-        this.extraValue = extraValue;
-        stateEnum = state;
-    }
-}
-
-/// <summary>
 /// 环境状态类
 /// </summary>
 public class EnvironmentState
@@ -176,7 +129,7 @@ public class StateManager : MonoBehaviour
         var stateData = GameDataManager.Instance.StateData;
         if (!stateData.init)
         {
-            InitPlayerState();
+            InitPlayerStates();
             InitElectricity();
             InitWaterLevel();
         }
@@ -222,21 +175,232 @@ public class StateManager : MonoBehaviour
         }
     }
 
-    private void InitPlayerState()
+    #region 初始化玩家状态
+    private void InitPlayerStates()
     {
         // 初始化玩家状态
-        PlayerStateDict.Add(PlayerStateEnum.Health, new PlayerState(InitPlayerStateData.Instance.Health, 100, 0, PlayerStateEnum.Health));
-        PlayerStateDict.Add(PlayerStateEnum.Fullness, new PlayerState(InitPlayerStateData.Instance.Fullness, 100, 0, PlayerStateEnum.Fullness));
-        PlayerStateDict.Add(PlayerStateEnum.Thirst, new PlayerState(InitPlayerStateData.Instance.Thirst, 100, 0, PlayerStateEnum.Thirst));
-        PlayerStateDict.Add(PlayerStateEnum.San, new PlayerState(InitPlayerStateData.Instance.San, 100, 0, PlayerStateEnum.San));
-        PlayerStateDict.Add(PlayerStateEnum.Oxygen, new PlayerState(InitPlayerStateData.Instance.Oxygen, 60, 0, PlayerStateEnum.Oxygen));
-        PlayerStateDict.Add(PlayerStateEnum.Sobriety, new PlayerState(InitPlayerStateData.Instance.Sobriety, 100, 0, PlayerStateEnum.Sobriety));
-        PlayerStateDict.Add(PlayerStateEnum.Load, new PlayerState(0, 30, 0, PlayerStateEnum.Load));
-        PlayerStateDict.Add(PlayerStateEnum.BodyTemperature, new PlayerState(100, 200, 0, PlayerStateEnum.BodyTemperature));
-        // 新状态的添加
-        // 新状态的添加
-        // 新状态的添加
+        PlayerStateDict.Add(PlayerStateEnum.Health, InitHealthState());
+        PlayerStateDict.Add(PlayerStateEnum.Fullness, InitFullnessState());
+        PlayerStateDict.Add(PlayerStateEnum.Thirst, InitThirstState());
+        PlayerStateDict.Add(PlayerStateEnum.San, InitSanityState());
+        PlayerStateDict.Add(PlayerStateEnum.Oxygen, InitOxygenState());
+        PlayerStateDict.Add(PlayerStateEnum.Sobriety, InitSorbriety());
+        PlayerStateDict.Add(PlayerStateEnum.Load, InitLoadState());
+        PlayerStateDict.Add(PlayerStateEnum.BodyTemperature, InitBodyTemperatureState());
+        PlayerStateDict.Add(PlayerStateEnum.CarbonMonoxidePoisoning, InitCarbonMonoxideState());
+        PlayerStateDict.Add(PlayerStateEnum.Itchiness, InitItchinessState());
+        PlayerStateDict.Add(PlayerStateEnum.PainLevel, InitPainState());
     }
+
+    private PlayerState InitHealthState()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 0, "死亡"),
+            new (0, 10, "快死了"),
+            new (10, 30, "低健康"),
+            new (30, int.MaxValue, "健康")
+        };
+        var effects = new List<StateEffect>()
+        {
+            StateEffect.NoEffect,
+            StateEffect.NoEffect,
+            StateEffect.NoEffect,
+            StateEffect.NoEffect
+        };
+        return new PlayerState(100, 100, PlayerStateEnum.Health, +0.1f, thresholds, effects);
+    }
+
+    private PlayerState InitFullnessState()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 0, "饥荒"),
+            new (0, 10, "极度饥饿"),
+            new (10, 30, "饥饿"),
+            new (30, int.MaxValue, "还不饿")
+        };
+        var effects = new List<StateEffect>()
+        {
+            new () { sanityEffect = -1, healthEffect = -8 },
+            new () { sanityEffect = -0.7f },
+            new () { sanityEffect = -0.3f },
+            StateEffect.NoEffect
+        };
+        return new PlayerState(100, 100, PlayerStateEnum.Fullness, -1.2f, thresholds, effects);
+    }
+
+    private PlayerState InitThirstState()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 0, "脱水"),
+            new (0, 10, "极度口渴"),
+            new (10, 30, "口渴"),
+            new (30, int.MaxValue, "还不渴")
+        };
+        var effects = new List<StateEffect>()
+        {
+            new () { sanityEffect = -1, healthEffect = -8 },
+            new () { sanityEffect = -0.7f },
+            new () { sanityEffect = -0.3f },
+            StateEffect.NoEffect
+        };
+        return new PlayerState(100, 100, PlayerStateEnum.Thirst, -1.5f, thresholds, effects);
+    }
+
+    private PlayerState InitSanityState()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 0, "梦魇"),
+            new (0, 10, "精神崩溃"),
+            new (10, 30, "精神紧张"),
+            new (30, int.MaxValue, "精神正常")
+        };
+        var effects = new List<StateEffect>()
+        {
+            StateEffect.NoEffect,
+            StateEffect.NoEffect,
+            StateEffect.NoEffect,
+            StateEffect.NoEffect
+        };
+        return new PlayerState(100, 100, PlayerStateEnum.San, +0.1f, thresholds, effects);
+    }
+
+    private PlayerState InitOxygenState()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 0, "窒息"),
+            new (0, 25, "缺氧"),
+            new (25, 50, "呼吸不畅"),
+            new (50, int.MaxValue, "正常")
+        };
+        var effects = new List<StateEffect>()
+        {
+            new () { healthEffect = -10 },
+            StateEffect.NoEffect,
+            StateEffect.NoEffect,
+            StateEffect.NoEffect,
+        };
+        return new PlayerState(60, 60, PlayerStateEnum.Oxygen, -6f, thresholds, effects);
+    }
+
+    private PlayerState InitSorbriety()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 0, "困得要死"),
+            new (0, 10, "极度疲劳"),
+            new (10, 30, "疲劳"),
+            new (30, int.MaxValue, "正常")
+        };
+        var effects = new List<StateEffect>()
+        {
+            new () { sanityEffect = -6, healthEffect = -4 },
+            new () { sanityEffect = -2, healthEffect = -1.5f },
+            new () { sanityEffect = -0.5f },
+            StateEffect.NoEffect
+        };
+        return new PlayerState(100, 100, PlayerStateEnum.Sobriety, -1.1f, thresholds, effects);
+    }
+
+    private PlayerState InitLoadState()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 15, "正常重量"),
+            new (15, 18, "轻微超重"),
+            new (18, 22.5f, "严重超重"),
+            new (22.5f, int.MaxValue, "压得我喘不过气"),
+        };
+        var effects = new List<StateEffect>()
+        {
+            StateEffect.NoEffect,
+            StateEffect.NoEffect,
+            StateEffect.NoEffect,
+            StateEffect.NoEffect
+        };
+        return new PlayerState(0, 30, PlayerStateEnum.Load, 0f, thresholds, effects);
+    }
+
+    private PlayerState InitBodyTemperatureState()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 25, "极度寒冷"),
+            new (25, 50, "寒冷"),
+            new (50, 150, "体温舒适"),
+            new (150, 175, "炎热"),
+            new (175, int.MaxValue, "极度炎热")
+        };
+        var effects = new List<StateEffect>()
+        {
+            new () { fulnessEffect = -1.2f, healthEffect = -1 },
+            new () { fulnessEffect = -0.4f },
+            new () { sanityEffect = +0.2f },
+            new () { thirstEffect = -0.5f },
+            new () { thirstEffect = -1.5f, healthEffect = -1 },
+        };
+        return new PlayerState(100, 200, PlayerStateEnum.BodyTemperature, 0f, thresholds, effects);
+    }
+
+    private PlayerState InitCarbonMonoxideState()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 30, "正常"),
+            new (30, 50, "轻度一氧化碳中毒"),
+            new (50, 80, "中度一氧化碳中毒"),
+            new (80, int.MaxValue, "重度一氧化碳中毒"),
+        };
+        var effects = new List<StateEffect>()
+        {
+            StateEffect.NoEffect,
+            new () { healthEffect = -0.1f },
+            new () { healthEffect = -0.4f },
+            new () { healthEffect = -1.2f },
+        };
+        return new PlayerState(0, 100, PlayerStateEnum.CarbonMonoxidePoisoning, -0.8f, thresholds, effects);
+    }
+
+    private PlayerState InitItchinessState()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 50, "有点痒"),
+            new (50, 75, "很痒"),
+            new (75, int.MaxValue, "极度瘙痒"),
+        };
+        var effects = new List<StateEffect>()
+        {
+            StateEffect.NoEffect,
+            new () { sanityEffect = -0.1f },
+            new () { sanityEffect = -0.3f },
+        };
+        return new PlayerState(0, 100, PlayerStateEnum.Itchiness, -3f, thresholds, effects);
+    }
+
+    private PlayerState InitPainState()
+    {
+        var thresholds = new List<StateThreshold>()
+        {
+            new (-1, 100, "不疼"),
+            new (100, 200, "有点疼"),
+            new (200, 300, "很疼"),
+            new (300, int.MaxValue, "极度疼痛"),
+        };
+        var effects = new List<StateEffect>()
+        {
+            StateEffect.NoEffect,
+            new () { sanityEffect = -0.2f },
+            new () { sanityEffect = -0.6f, sorbrietyEffect = +0.5f, healthEffect = -0.5f },
+            new () { sanityEffect = -2f, sorbrietyEffect = +1f, healthEffect = -1f },
+        };
+        return new PlayerState(0, 400, PlayerStateEnum.PainLevel, -8f, thresholds, effects);
+    }
+    #endregion
 
     private void InitElectricity()
     {
@@ -267,7 +431,7 @@ public class StateManager : MonoBehaviour
         if (stateEnum == PlayerStateEnum.Oxygen)
             HandlePlayerOxygenChange(delta);
         else
-            PlayerStateDict[stateEnum].AddCurValue(delta);
+            PlayerStateDict[stateEnum].AddValue(delta);
 
         // 刷新前端显示
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
@@ -295,7 +459,7 @@ public class StateManager : MonoBehaviour
         var gain = Mathf.Min(PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity, env.StateDict[EnvironmentStateEnum.Oxygen].CurValue);
         if (gain > 0)
         {
-            PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(gain);
+            PlayerStateDict[PlayerStateEnum.Oxygen].AddValue(gain);
             env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -gain);
         }
 
@@ -308,7 +472,7 @@ public class StateManager : MonoBehaviour
         // 室外环境直接改变玩家氧气，多余的就浪费
         if (!env.PlaceData.isIndoor)
         {
-            PlayerStateDict[PlayerStateEnum.Oxygen].AddCurValue(delta);
+            PlayerStateDict[PlayerStateEnum.Oxygen].AddValue(delta);
             return;
         }
 
@@ -336,7 +500,7 @@ public class StateManager : MonoBehaviour
             if (playerConsume > 0)
             {
                 // 消耗玩家氧气
-                playerOxygen.AddCurValue(-playerConsume);
+                playerOxygen.AddValue(-playerConsume);
             }
         }
         // 如果是补充氧气，优先补充到玩家
@@ -346,7 +510,7 @@ public class StateManager : MonoBehaviour
             var playerGain = Mathf.Min(playerOxygen.RemainingCapacity, delta);
             if (playerGain > 0)
                 // 补充玩家氧气
-                playerOxygen.AddCurValue(playerGain);
+                playerOxygen.AddValue(playerGain);
             // 计算环境能补充多少
             var envGain = delta - playerGain;
             if (envGain > 0)
@@ -468,12 +632,13 @@ public class StateManager : MonoBehaviour
 
     public void PlayerIntervalSettle()
     {
-        ChangePlayerState(PlayerStateEnum.Fullness, InitPlayerStateData.Instance.BasicFullnessChange);
-        ChangePlayerState(PlayerStateEnum.Health, InitPlayerStateData.Instance.BasicHealthChange);
-        ChangePlayerState(PlayerStateEnum.Thirst, InitPlayerStateData.Instance.BasicThirstChange);
-        ChangePlayerState(PlayerStateEnum.San, InitPlayerStateData.Instance.BasicSanChange);
-        ChangePlayerState(PlayerStateEnum.Sobriety, InitPlayerStateData.Instance.BasicSobrietyChange);
-        ChangePlayerState(PlayerStateEnum.Oxygen, InitPlayerStateData.Instance.BasicOxygenChange);
+        foreach (var (type, state) in PlayerStateDict)
+        {
+            if (state.BasicChangeRate != 0)
+            {
+                ChangePlayerState(type, state.BasicChangeRate);
+            }
+        }
     }
 
     /// <summary>
@@ -481,112 +646,18 @@ public class StateManager : MonoBehaviour
     /// </summary>
     public void ExtraPlayerIntervalSettle()
     {
-        ExtraFullnessChange();
-        ExtraThirstChange();
-        ExtraSanChange();
-        ExtraOxygenChange();
-        ExtraSobrietyChange();
-        ExtraHealthChange();
+        // 统计最终状态影响效果
+        StateEffect finalEffect = StateEffect.NoEffect;
+        foreach (var state in PlayerStateDict.Values)
+        {
+            finalEffect += state.GetStateEffect();
+        }
+        ChangePlayerState(PlayerStateEnum.Health, finalEffect.healthEffect);
+        ChangePlayerState(PlayerStateEnum.San, finalEffect.sanityEffect);
+        ChangePlayerState(PlayerStateEnum.Fullness, finalEffect.fulnessEffect);
+        ChangePlayerState(PlayerStateEnum.Thirst, finalEffect.thirstEffect);
+        ChangePlayerState(PlayerStateEnum.Sobriety, finalEffect.sorbrietyEffect);
     }
-
-    /// <summary>
-    /// 饥饿导致的额外变化结算
-    /// 饱食低于30，每回合-0.3精神
-    /// 饱食低于10，每回合-0.7精神
-    /// 饱食为0时，每回合-1精神，-8 健康
-    /// </summary>
-    private void ExtraFullnessChange()
-    {
-        if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 0)
-        {
-            ChangePlayerState(PlayerStateEnum.San, -1f);
-            ChangePlayerState(PlayerStateEnum.Health, -8f);
-        }
-        else if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 10)
-        {
-            ChangePlayerState(PlayerStateEnum.San, -0.7f);
-        }
-        else if (PlayerStateDict[PlayerStateEnum.Fullness].CurValue <= 30)
-        {
-            ChangePlayerState(PlayerStateEnum.San, -0.3f);
-        }
-    }
-
-    /// <summary>
-    /// 健康导致的额外变化结算
-    /// </summary>
-    private void ExtraHealthChange()
-    {
-
-    }
-
-    /// <summary>
-    /// 口渴导致的额外变化结算
-    /// 水分低于30，每回合-0.3精神
-    /// 水分低于10，每回合-0.7精神
-    /// 口渴为0时，每回合-1精神，-8健康
-    /// </summary>
-    private void ExtraThirstChange()
-    {
-        if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 0)
-        {
-            ChangePlayerState(PlayerStateEnum.San, -1f);
-            ChangePlayerState(PlayerStateEnum.Health, -8f);
-        }
-        else if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 10)
-        {
-            ChangePlayerState(PlayerStateEnum.San, -0.7f);
-        }
-        else if (PlayerStateDict[PlayerStateEnum.Thirst].CurValue <= 30)
-        {
-            ChangePlayerState(PlayerStateEnum.San, -0.3f);
-        }
-
-    }
-
-    /// <summary>
-    /// 精神导致的额外变化结算
-    /// </summary>
-    private void ExtraSanChange()
-    {
-
-    }
-
-    /// <summary>
-    /// 氧气导致的额外变化结算
-    /// </summary>
-    private void ExtraOxygenChange()
-    {
-        if (PlayerStateDict[PlayerStateEnum.Oxygen].CurValue == 0)
-        {
-            ChangePlayerState(PlayerStateEnum.Health, -10f);
-        }
-    }
-
-    /// <summary>
-    /// 清醒度导致的额外变化结算
-    /// 清醒度小于等于30每回合-0.5精神
-    /// 清醒度小于等于10后每回合-1.5精神，-2健康
-    /// </summary>
-    private void ExtraSobrietyChange()
-    {
-        if (PlayerStateDict[PlayerStateEnum.Sobriety].CurValue == 0)
-        {
-            ChangePlayerState(PlayerStateEnum.San, -6f);
-            ChangePlayerState(PlayerStateEnum.Health, -4f);
-        }
-
-        else if (PlayerStateDict[PlayerStateEnum.Sobriety].CurValue <= 10)
-        {
-            ChangePlayerState(PlayerStateEnum.San, -1.5f);
-            ChangePlayerState(PlayerStateEnum.Health, -2f);
-        }
-        else if (PlayerStateDict[PlayerStateEnum.Sobriety].CurValue <= 30)
-        {
-            ChangePlayerState(PlayerStateEnum.San, -0.3f);
-        }
-    }
-
     #endregion
 
     #region 睡觉额外结算
@@ -666,30 +737,6 @@ public class StateManager : MonoBehaviour
     {
         Debug.Log(FindObjectOfType<Canvas>().transform.Find("Die").name);
         FindObjectOfType<Canvas>().transform.Find("Die").gameObject.SetActive(true);
-    }
-    #endregion
-
-    #region 载重
-
-    public int GetLoadLevel()
-    {
-        float curLoad = PlayerStateDict[PlayerStateEnum.Load].CurValue;
-        float maxLoad = PlayerStateDict[PlayerStateEnum.Load].MaxValue;
-        if (curLoad <= maxLoad * 0.5f)
-            return 0; // 轻负重
-        else if (curLoad <= maxLoad * 0.6f)
-            return 1; // 中负重
-        else if (curLoad <= maxLoad * 0.75f)
-            return 2; // 高负重
-        else
-            return 3; // 重负重
-    }
-    #endregion
-
-    #region 体温
-    public int GetTemperatureLevel()
-    {
-        return 2;
     }
     #endregion
 }

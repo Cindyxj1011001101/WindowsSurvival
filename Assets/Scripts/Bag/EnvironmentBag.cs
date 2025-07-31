@@ -68,6 +68,8 @@ public class EnvironmentBag : BagBase
             StateDict = data.environmentStateDict;
             DisposableDropList = data.disposableDropList;
             RepeatableDropList = data.repeatableDropList;
+            pressureLevel = data.pressureLevel;
+            hasCable = data.hasCable;
         }
 
         RepeatableDropList.StartUpdating();
