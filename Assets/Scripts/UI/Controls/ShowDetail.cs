@@ -136,5 +136,6 @@ public class ShowDetail : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         DetailInfo.transform.position = transform.position + offset;
         GameObject Hint = DetailInfo.transform.Find("Hint").gameObject;
         Hint.transform.Find("Text").GetComponent<Text>().text = e.hint.ToString();
+        Hint.SetActive(true);
     }
 }
