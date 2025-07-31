@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// 玩家状态类
@@ -32,7 +33,7 @@ public class PlayerState
     private List<StateEffect> effects = new();
 
     [JsonProperty]
-    private int stateLevel;
+    private int stateLevel = -1;
 
     [JsonProperty]
     public float BasicChangeRate { get; private set; }
@@ -44,7 +45,7 @@ public class PlayerState
     public int StateLevel => stateLevel;
 
     [JsonIgnore]
-    public float CurValue => constValue + variableValue;
+    public float CurValue => Mathf.Clamp(variableValue + constValue, 0, MaxValue);
 
     [JsonIgnore]
     public float ExtraValue => extraValue;
@@ -55,25 +56,42 @@ public class PlayerState
     [JsonIgnore]
     public float RemainingCapacity => MaxValue - CurValue;
 
+    [JsonIgnore]
+    private UnityAction<int> onEnterLevel;
+
+    [JsonIgnore]
+    private UnityAction<int> onExitLevel;
+
     public void AddValue(float delta)
     {
-        //curValue += delta;
-        //curValue = Mathf.Clamp(curValue, 0, MaxValue);
         variableValue += delta;
-        variableValue = Mathf.Clamp(variableValue, 0, MaxValue - constValue);
+        variableValue = Mathf.Clamp(variableValue, 0, MaxValue);
+        //curValue = Mathf.Clamp(variableValue + constValue, 0, MaxValue);
+
         CalcStateLevel();
     }
 
     public void AddExtraValue(float delta)
     {
         extraValue += delta;
-        variableValue = Mathf.Clamp(variableValue, 0, MaxValue - constValue);
+        //curValue = Mathf.Clamp(variableValue + constValue, 0, MaxValue);
+
+        CalcStateLevel();
     }
 
     public void AddConstValue(float delta)
     {
         constValue += delta;
-        constValue = Mathf.Clamp(constValue, 0, MaxValue);
+        //curValue = Mathf.Clamp(variableValue + constValue, 0, MaxValue);
+
+        CalcStateLevel();
+    }
+
+    public void AddMaxValue(float delta)
+    {
+        maxValue += delta;
+        //curValue = Mathf.Clamp(variableValue + constValue, 0, MaxValue);
+
         CalcStateLevel();
     }
 
@@ -83,6 +101,14 @@ public class PlayerState
         {
             if (CurValue > thresholds[i].minValue && CurValue <= thresholds[i].maxValue)
             {
+                // 如果状态等级发生了变化
+                if (stateLevel != i)
+                {
+                    // 离开stateLevel事件
+                    onExitLevel?.Invoke(stateLevel);
+                    // 进入i事件
+                    onEnterLevel?.Invoke(i);
+                }
                 stateLevel = i;
                 break;
             }
@@ -94,9 +120,9 @@ public class PlayerState
         return effects[stateLevel];
     }
 
-    public PlayerState(float value, float maxValue, PlayerStateEnum state, float basicChangeRate, List<StateThreshold> thresholds, List<StateEffect> effects)
+    public PlayerState(float value, float maxValue, PlayerStateEnum state, float basicChangeRate,
+        List<StateThreshold> thresholds, List<StateEffect> effects)
     {
-        //curValue = value;
         constValue = 0;
         extraValue = 0;
         variableValue = value;
@@ -105,6 +131,12 @@ public class PlayerState
         this.thresholds = thresholds;
         this.effects = effects;
         BasicChangeRate = basicChangeRate;
+    }
+
+    public void SetUpEvent(UnityAction<int> onEnterLevel = null, UnityAction<int> onExitLevel = null)
+    {
+        this.onEnterLevel = onEnterLevel;
+        this.onExitLevel = onExitLevel;
         CalcStateLevel();
     }
 }

@@ -140,13 +140,14 @@ public class StateManager : MonoBehaviour
             PlayerStateDict = stateData.playerState;
         }
 
+        SetupPlayerStateEvents();
+
         // 监听回合结算
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
         //监听睡眠状态结算
         EventManager.Instance.AddListener(EventType.Sleep, Sleep);
         // 当环境改变时尝试获取氧气
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
-        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnPlayerHealthChanged);
     }
 
     private void Start()
@@ -161,18 +162,6 @@ public class StateManager : MonoBehaviour
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
         EventManager.Instance.RemoveListener(EventType.Sleep, Sleep);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
-        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnPlayerHealthChanged);
-    }
-
-    private void OnPlayerHealthChanged(PlayerStateEnum state)
-    {
-        if (state != PlayerStateEnum.Health) return;
-
-        if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0)
-        {
-            Debug.Log("游戏结束");
-            Die();
-        }
     }
 
     #region 初始化玩家状态
@@ -192,6 +181,96 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.PainLevel, InitPainState());
     }
 
+    /// <summary>
+    /// 设置玩家状态等级变化的事件
+    /// </summary>
+    private void SetupPlayerStateEvents()
+    {
+        PlayerStateDict[PlayerStateEnum.Health].SetUpEvent(
+            onEnterLevel: level =>
+            {
+                if (level == 0)
+                {
+                    Debug.Log("游戏结束");
+                    Die();
+                }
+            }, onExitLevel: null);
+        PlayerStateDict[PlayerStateEnum.BodyTemperature].SetUpEvent(
+            onEnterLevel: level =>
+            {
+                // 极度寒冷
+                if (level == 0)
+                    ChangePlayerConstState(PlayerStateEnum.PainLevel, +50);
+                // 极度炎热
+                else if (level == 4)
+                    ChangePlayerConstState(PlayerStateEnum.PainLevel, +50);
+            }, onExitLevel: level =>
+            {
+                if (level == 0)
+                    ChangePlayerConstState(PlayerStateEnum.PainLevel, -50);
+                else if (level == 4)
+                    ChangePlayerConstState(PlayerStateEnum.PainLevel, -50);
+            });
+        PlayerStateDict[PlayerStateEnum.CarbonMonoxidePoisoning].SetUpEvent(
+            onEnterLevel: level =>
+            {
+                // 轻度
+                if (level == 1)
+                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, -10);
+                // 中度
+                else if (level == 2)
+                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, -30);
+                // 重度
+                else if (level == 3)
+                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, -50);
+            }, onExitLevel: level =>
+            {
+                // 轻度
+                if (level == 1)
+                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, +10);
+                // 中度
+                else if (level == 2)
+                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, +30);
+                // 重度
+                else if (level == 3)
+                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, +50);
+            });
+        PlayerStateDict[PlayerStateEnum.Itchiness].SetUpEvent(
+            onEnterLevel: level =>
+            {
+                // 很痒
+                if (level == 1)
+                {
+                    ChangePlayerConstState(PlayerStateEnum.PainLevel, +20);
+                }
+                // 极度瘙痒
+                else if (level == 2)
+                {
+                    ChangePlayerMaxState(PlayerStateEnum.PainLevel, +75);
+                }
+            }, onExitLevel: level =>
+            {
+                // 很痒
+                if (level == 1)
+                {
+                    ChangePlayerConstState(PlayerStateEnum.PainLevel, -20);
+                }
+                // 极度瘙痒
+                else if (level == 2)
+                {
+                    ChangePlayerMaxState(PlayerStateEnum.PainLevel, -75);
+                }
+            });
+
+        PlayerStateDict[PlayerStateEnum.Fullness].SetUpEvent();
+        PlayerStateDict[PlayerStateEnum.Thirst].SetUpEvent();
+        PlayerStateDict[PlayerStateEnum.San].SetUpEvent();
+        PlayerStateDict[PlayerStateEnum.Sobriety].SetUpEvent();
+        PlayerStateDict[PlayerStateEnum.Load].SetUpEvent();
+        PlayerStateDict[PlayerStateEnum.PainLevel].SetUpEvent();
+        PlayerStateDict[PlayerStateEnum.Oxygen].SetUpEvent();
+    }
+
     private PlayerState InitHealthState()
     {
         var thresholds = new List<StateThreshold>()
@@ -208,6 +287,7 @@ public class StateManager : MonoBehaviour
             StateEffect.NoEffect,
             StateEffect.NoEffect
         };
+
         return new PlayerState(100, 100, PlayerStateEnum.Health, +0.1f, thresholds, effects);
     }
 
@@ -343,6 +423,7 @@ public class StateManager : MonoBehaviour
             new () { thirstEffect = -0.5f },
             new () { thirstEffect = -1.5f, healthEffect = -1 },
         };
+
         return new PlayerState(100, 200, PlayerStateEnum.BodyTemperature, 0f, thresholds, effects);
     }
 
@@ -424,8 +505,6 @@ public class StateManager : MonoBehaviour
     public void ChangePlayerState(PlayerStateEnum stateEnum, float delta)
     {
         if (!PlayerStateDict.ContainsKey(stateEnum)) return;
-
-
 
         // 氧气特殊处理
         if (stateEnum == PlayerStateEnum.Oxygen)
@@ -526,6 +605,8 @@ public class StateManager : MonoBehaviour
     /// <param name="delta"></param>
     public void ChangePlayerExtraState(PlayerStateEnum stateEnum, float delta)
     {
+        if (!PlayerStateDict.ContainsKey(stateEnum)) return;
+
         if (stateEnum == PlayerStateEnum.Oxygen)
             HandleExtraOxygenChange(delta);
         else
@@ -573,6 +654,22 @@ public class StateManager : MonoBehaviour
                 env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, extraOxygen);
             }
         }
+    }
+
+    public void ChangePlayerConstState(PlayerStateEnum stateEnum, float delta)
+    {
+        if (!PlayerStateDict.ContainsKey(stateEnum)) return;
+
+        PlayerStateDict[stateEnum].AddConstValue(delta);
+        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
+    }
+
+    public void ChangePlayerMaxState(PlayerStateEnum stateEnum, float delta)
+    {
+        if (!PlayerStateDict.ContainsKey(stateEnum)) return;
+
+        PlayerStateDict[stateEnum].AddMaxValue(delta);
+        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
     }
     #endregion
 
@@ -627,7 +724,7 @@ public class StateManager : MonoBehaviour
     public void EnvironmentIntervalSettle()
     {
         // 每回合减少0.2电力
-        ChangeElectricity(InitPlayerStateData.Instance.BasicElectricityChange);
+        ChangeElectricity(-0.2f);
     }
 
     public void PlayerIntervalSettle()
