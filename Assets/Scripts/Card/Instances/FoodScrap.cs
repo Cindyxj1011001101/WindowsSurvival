@@ -1,7 +1,7 @@
-public class FoodRecidues : Card
+public class FoodScrap : Card
 {
     public int RemainRound;
-    private FoodRecidues()
+    private FoodScrap()
     {
         RemainRound=4;
         Events = new()

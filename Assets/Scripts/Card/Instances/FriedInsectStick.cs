@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class FriedInsectSticks : Card
+public class FriedInsectStick : Card
 {
-    private FriedInsectSticks()
+    private FriedInsectStick()
     {
         Events=new()
         {
