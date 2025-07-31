@@ -139,7 +139,9 @@ public abstract class Card : IComparable<Card>
 
     public virtual void DestroyThis()
     {
+        var temp = Slot;
         Slot.RemoveCard(this);
+        temp.RefreshCurrentDisplay();
         StopUpdating();
     }
 
