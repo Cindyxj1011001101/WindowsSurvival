@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 /// <summary>
 /// 生贝肉
 /// </summary>
@@ -7,7 +9,8 @@ public class RawOysterMeat : Card
     {
         Events = new()
         {
-            new Event("食用", "食用生贝肉", Event_Eat, null),
+            new Event("食用", "吃得很快，但不管饱", Event_Eat, null, null,5,
+            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 6 }, { PlayerStateEnum.Health, -1.2f } })
         };
     }
 

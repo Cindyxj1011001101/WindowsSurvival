@@ -9,7 +9,7 @@ public class Siphonophyllum : Card
     {
         Events = new()
         {
-            new Event("切割", "切割虹吸海葵", Event_Cut, Judge_Cut)
+            new Event("切割", "这会杀死虹吸海葵并获得磁性触手", Event_Cut, Judge_Cut, "需要切割工具",45)
         };
     }
 
