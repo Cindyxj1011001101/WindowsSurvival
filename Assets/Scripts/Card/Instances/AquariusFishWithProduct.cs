@@ -9,8 +9,8 @@ public class AquariusFishWithProduct : Card
     {
         Events = new()
         {
-            new Event("用捕网捉", "用捕网捉水瓶鱼", Event_CatchByNet, Judge_CatchByNet),
-            new Event("用手捉", "用手捉水瓶鱼", Event_CatchByHand, null),
+            new Event("用捕网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet,30),
+            new Event("用手捉", "可能捉不到", Event_CatchByHand, null,30),
         };
     }
 

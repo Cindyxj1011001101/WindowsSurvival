@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 /// <summary>
 /// 被捉住的水瓶鱼
 /// </summary>
@@ -7,8 +9,10 @@ public class CaughtAquariusFishWithProduct : Card
     {
         Events = new()
         {
-            new Event("饮用", "饮用水瓶鱼", Event_Drink, null),
-            new Event("放生", "放生水瓶鱼", Event_Release, Judge_Release),
+            new Event("饮用", "饮用水瓶鱼的育卵液", Event_Drink, null,15,
+            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Thirst, 15 },{ PlayerStateEnum.Fullness, 4 } }),
+            
+            new Event("放生", "放生水瓶鱼", Event_Release, Judge_Release)
         };
     }
 
