@@ -11,8 +11,8 @@
     ChangeStudyProgress, // 研究进度变化
     UnlockRecipe, // 解锁合成配方
     GameOver, // 游戏结束
-    Equip, // 穿上装备
-    Unequip, // 卸下装备
+    //Equip, // 穿上装备
+    //Unequip, // 卸下装备
     TriggerParagraph, // 触发对话
     DialogueCondition, // 触发对话条件
     ChangeWaterLevel, // 水平面变化

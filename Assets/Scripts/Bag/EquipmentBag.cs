@@ -22,15 +22,15 @@ public class EquipmentBag : BagBase
             slot.ClearSlot();
             slot.SetBag(this);
         }
-        EventManager.Instance.AddListener<Card>(EventType.Equip, OnCardEquipped);
-        EventManager.Instance.AddListener<Card>(EventType.Unequip, OnCardUnequipped);
+        //EventManager.Instance.AddListener<Card>(EventType.Equip, OnCardEquipped);
+        //EventManager.Instance.AddListener<Card>(EventType.Unequip, OnCardUnequipped);
     }
 
-    private void OnDestroy()
-    {
-        EventManager.Instance.RemoveListener<Card>(EventType.Equip, OnCardEquipped);
-        EventManager.Instance.RemoveListener<Card>(EventType.Unequip, OnCardUnequipped);
-    }
+    //private void OnDestroy()
+    //{
+    //    EventManager.Instance.RemoveListener<Card>(EventType.Equip, OnCardEquipped);
+    //    EventManager.Instance.RemoveListener<Card>(EventType.Unequip, OnCardUnequipped);
+    //}
 
     public override void Init()
     {
@@ -57,51 +57,55 @@ public class EquipmentBag : BagBase
         return equipmentSlotDict[type].PeekCard();
     }
 
-    private void OnCardEquipped(Card equipment)
-    {
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, equipment.Weight);
-    }
+    //private void OnCardEquipped(Card equipment)
+    //{
+    //    StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, equipment.Weight);
+    //}
 
-    private void OnCardUnequipped(Card equipment)
-    {
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -equipment.Weight);
-    }
+    //private void OnCardUnequipped(Card equipment)
+    //{
+    //    StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -equipment.Weight);
+    //}
 
-    /// <summary>
-    /// 穿上装备
-    /// </summary>
-    /// <param name="equipment"></param>
-    public void Equip(Card equipment)
-    {
-        // 从原来的格子里移除
-        equipment.Slot.RemoveCard(equipment);
-        // 添加到装备格子里
-        AddCard(equipment);
-    }
+    ///// <summary>
+    ///// 穿上装备
+    ///// </summary>
+    ///// <param name="equipment"></param>
+    //public void Equip(Card equipment)
+    //{
+    //    var originalSlot = equipment.Slot;
+    //    // 从原来的格子里移除
+    //    originalSlot.RemoveCard(equipment);
+    //    originalSlot.RefreshCurrentDisplay();
+    //    // 添加到装备格子里
+    //    AddCard(equipment);
+    //    equipment.Slot.RefreshCurrentDisplay();
+    //}
 
-    /// <summary>
-    /// 脱下装备
-    /// </summary>
-    /// <param name="type"></param>
-    public void Unequip(Card equipment)
-    {
-        // 从装备格子中移除
-        equipment.TryGetComponent<EquipmentComponent>(out var component);
-        equipmentSlotDict[component.equipmentType].RemoveCard(equipment);
+    ///// <summary>
+    ///// 脱下装备
+    ///// </summary>
+    ///// <param name="type"></param>
+    //public void Unequip(Card equipment)
+    //{
+    //    // 从装备格子中移除
+    //    equipment.TryGetComponent<EquipmentComponent>(out var component);
+    //    equipmentSlotDict[component.equipmentType].RemoveCard(equipment);
+    //    equipmentSlotDict[component.equipmentType].RefreshCurrentDisplay();
 
-        // 添加到背包(优先)或环境中
-        GameManager.Instance.AddCardWithTween(equipment, equipmentSlotDict[component.equipmentType].transform.position, true);
-    }
+    //    // 添加到背包(优先)或环境中
+    //    GameManager.Instance.AddCardWithTween(equipment, equipmentSlotDict[component.equipmentType].transform.position, true);
+    //}
 
-    /// <summary>
-    /// 判断能否装备
-    /// </summary>
-    /// <param name="equipment"></param>
-    /// <returns></returns>
-    public bool CanEquip(Card equipment)
-    {
-        return CanAddCard(equipment);
-    }
+    ///// <summary>
+    ///// 判断能否装备
+    ///// </summary>
+    ///// <param name="equipment"></param>
+    ///// <returns></returns>
+    //public bool CanEquip(Card equipment)
+    //{
+    //    return CanAddCard(equipment);
+    //}
 
     public override void AddCard(Card card/*, bool refreshImmediately = true*/)
     {

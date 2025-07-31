@@ -8,7 +8,17 @@ public class EquipmentCardSlot : CardSlot
     public override void AddCard(Card card/*, bool refreshImmediately = true*/)
     {
         base.AddCard(card/*, refreshImmediately*/);
-        EventManager.Instance.TriggerEvent(EventType.Equip, card);
+        //EventManager.Instance.TriggerEvent(EventType.Equip, card);
+
+        // 将装备状态设置为已装备
+        card.TryGetComponent<EquipmentComponent>(out var equipmentComponent);
+        equipmentComponent.isEquipped = true;
+
+        // 触发穿上装备事件
+        (card as EquipmentCard).OnEquipped();
+
+        // 增加负重
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, card.Weight);
     }
 
     public override bool CanAddCard(Card card)
@@ -23,6 +33,16 @@ public class EquipmentCardSlot : CardSlot
     public override void RemoveCard(Card card/*, bool refreshImmediately = true*/)
     {
         base.RemoveCard(card/*, refreshImmediately*/);
-        EventManager.Instance.TriggerEvent(EventType.Unequip, card);
+        //EventManager.Instance.TriggerEvent(EventType.Unequip, card);
+
+        // 将装备状态设置为未装备
+        card.TryGetComponent<EquipmentComponent>(out var equipmentComponent);
+        equipmentComponent.isEquipped = false;
+
+        // 触发脱下装备事件
+        (card as EquipmentCard).OnUnEquipped();
+
+        // 减少负重
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -card.Weight);
     }
 }

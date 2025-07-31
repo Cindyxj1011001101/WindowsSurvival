@@ -234,6 +234,7 @@ public abstract class Card : IComparable<Card>
     // 卡牌的临时位置，用来处理从临时位置处发出一张卡牌的动效，例如从详情窗口的slot处
     private Transform tempSlotTransform;
 
+    [JsonIgnore]
     public Transform TempSlotTransform
     {
         get

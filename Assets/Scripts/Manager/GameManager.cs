@@ -163,7 +163,62 @@ public class GameManager : MonoBehaviour
             }
             );
     }
-    
+
+    #region 装备
+    /// <summary>
+    /// 穿上装备
+    /// </summary>
+    /// <param name="equipment"></param>
+    public void Equip(Card equipment)
+    {
+        // 从原来的格子里移除
+        var originalSlot = equipment.Slot;
+        originalSlot.RemoveCard(equipment);
+        originalSlot.RefreshCurrentDisplay();
+
+        // 打开装备窗口
+        WindowsManager.Instance.OpenWindow("Equipment");
+
+        // 添加到装备格子里
+        EquipmentBag.AddCard(equipment);
+        CardMoveTween.MoveCard(
+            equipment,
+            1,
+            originalSlot.transform.position,
+            equipment.Slot.transform.position,
+            onComplete: () =>
+            {
+                equipment.Slot.RefreshCurrentDisplay();
+            }
+            );
+    }
+
+    /// <summary>
+    /// 脱下装备
+    /// </summary>
+    /// <param name="type"></param>
+    public void Unequip(Card equipment)
+    {
+        // 从装备格子中移除
+        var originalSlot = equipment.Slot;
+        originalSlot.RemoveCard(equipment);
+        originalSlot.RefreshCurrentDisplay();
+
+        // 添加到背包(优先)或环境中
+        AddCardWithTween(equipment, originalSlot.transform.position, true);
+    }
+
+    /// <summary>
+    /// 判断能否装备
+    /// </summary>
+    /// <param name="equipment"></param>
+    /// <returns></returns>
+    public bool CanEquip(Card equipment)
+    {
+        return EquipmentBag.CanAddCard(equipment);
+    }
+    #endregion
+
     /// <summary>
     /// 处理探索事件
     /// </summary>

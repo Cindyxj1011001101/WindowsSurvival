@@ -9,6 +9,7 @@ public class GMCommand
         card.StartUpdating();
         var bag = GetFocusedBag();
         if (bag != null && bag.CanAddCard(card)) bag.AddCard(card);
+        card.Slot.RefreshCurrentDisplay();
     }
 
     private static BagBase GetFocusedBag()
