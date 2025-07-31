@@ -78,12 +78,14 @@ public class GameManager : MonoBehaviour
 
         if (toPlayerBag && playerBag.CanAddCard(card))
         {
-            WindowsManager.Instance.OpenWindow("PlayerBag");
+            if (!WindowsManager.Instance.IsWindowOpen("PlayerBag"))
+                WindowsManager.Instance.OpenWindow("PlayerBag");
             playerBag.AddCard(card/*, refreshImmediately*/);
         }
         else
         {
-            WindowsManager.Instance.OpenWindow("EnvironmentBag");
+            if (!WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))
+                WindowsManager.Instance.OpenWindow("EnvironmentBag");
             curEnvironmentBag.AddCard(card/*, refreshImmediately*/);
         }
     }
@@ -179,7 +181,8 @@ public class GameManager : MonoBehaviour
         originalSlot.RefreshCurrentDisplay();
 
         // 打开装备窗口
-        WindowsManager.Instance.OpenWindow("Equipment");
+        if (!WindowsManager.Instance.IsWindowOpen("Equipment"))
+            WindowsManager.Instance.OpenWindow("Equipment");
 
         // 添加到装备格子里
         EquipmentBag.AddCard(equipment);
