@@ -9,7 +9,7 @@ public class BottledWater : Card
     {
         Events = new()
         {
-            new Event("饮用", "连瓶子也喝掉", Event_Drink, null,15,
+            new Event("饮用", "连瓶子也喝掉", Event_Drink, null, null, 15,
             new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Thirst, 15 } })
         };
     }

@@ -9,7 +9,7 @@ public class CompactBiscuit : Card
     {
         Events = new()
         {
-            new Event("食用", "食用压缩饼干", Event_Eat, null,3,
+            new Event("食用", "食用压缩饼干", Event_Eat, null, null, 3,
             new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 12 } })
         };
     }

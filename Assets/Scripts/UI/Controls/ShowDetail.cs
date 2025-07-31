@@ -19,14 +19,23 @@ public class ShowDetail : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     }
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (!canShowDetail && e.hint != null)
+        {
+            ShowHint();
+            return;
+        }
+        ShowDetailInfo();
+
+    }
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        Destroy(DetailInfo);
+    }
+    private void ShowDetailInfo()
+    {
         //创建详情区域
         DetailInfo = Instantiate(DetailInfoPrefab, FindObjectOfType<WindowsManager>().transform);
         DetailInfo.transform.position = transform.position + offset;
-        if (!canShowDetail)
-        {
-            GameObject Hint = DetailInfo.transform.Find("Hint").gameObject;
-            Hint.transform.Find("Text").GetComponent<Text>().text = e.hint.ToString();
-        }
         //时间变化显示
         if (e.Time != 0)
         {
@@ -120,8 +129,12 @@ public class ShowDetail : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             Description.SetActive(true);
         }
     }
-    public void OnPointerExit(PointerEventData eventData)
+    public void ShowHint()
     {
-        Destroy(DetailInfo);
+        //创建详情区域
+        DetailInfo = Instantiate(DetailInfoPrefab, FindObjectOfType<WindowsManager>().transform);
+        DetailInfo.transform.position = transform.position + offset;
+        GameObject Hint = DetailInfo.transform.Find("Hint").gameObject;
+        Hint.transform.Find("Text").GetComponent<Text>().text = e.hint.ToString();
     }
 }

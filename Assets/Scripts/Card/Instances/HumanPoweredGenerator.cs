@@ -9,7 +9,7 @@ public class HumanPoweredGenerator : Card
     {
         Events = new()
         {
-            new Event("人力发电", "踩轮子发电", Event_Generate, Judge_Generate, 60,
+            new Event("人力发电", "踩轮子发电", Event_Generate, Judge_Generate, null, 60,
             new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Thirst, -5 }, { PlayerStateEnum.Sobriety, -6 } },
             new Dictionary<EnvironmentStateEnum, float>() { { EnvironmentStateEnum.Electricity, 10 } })
         };
