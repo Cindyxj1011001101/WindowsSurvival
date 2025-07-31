@@ -9,8 +9,8 @@ public class SiphonophyllumWithProduct : Card
     {
         Events = new()
         {
-            new Event("切割", "切割虹吸海葵", Event_Cut, Judge_Cut),
-            new Event("采集", "采集虹吸海葵", Event_Collect, null)
+            new Event("切割", "这会杀死虹吸海葵并获得磁性触手", Event_Cut, Judge_Cut, 45),
+            new Event("采集", "虹吸海葵上似乎富集了很多金属", Event_Collect, null, 15)
         };
     }
 
