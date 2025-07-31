@@ -29,7 +29,7 @@ public class ChatWindow : WindowBase
         InputText = transform.Find("Body/InputLine/InputBG/InputText").gameObject;
         body = transform.Find("Body").gameObject;
         GameDataManager.Instance.LoadGeneratedChatData();
-        LoadGeneratedChatData();
+        if (ChatManager.Instance.GeneratedChatDataList.Count > 0) LoadGeneratedChatData();
         body.GetComponent<CustomMessageLayout>().Refresh();
         ConfirmButton.GetComponent<Button>().onClick.RemoveAllListeners();
         ConfirmButton.GetComponent<Button>().onClick.AddListener(Confirm);
@@ -73,7 +73,8 @@ public class ChatWindow : WindowBase
     }
     public void LoadGeneratedChatData()
     {
-        inParagraph=true;
+        if (ChatManager.Instance.GeneratedChatDataList.Count == 0) return;
+        inParagraph = true;
         //从GeneratedChatDataList中加载已触发的对话数据(一次性)
         for (int i = 0; i < ChatManager.Instance.GeneratedChatDataList.Count - 1; i++)
         {
@@ -150,9 +151,6 @@ public class ChatWindow : WindowBase
             inParagraph = false;
         }
     }
-
-    //
-
     public GameObject CreateNewMessage(ChatData chatData)
     {
         body.GetComponent<CustomMessageLayout>().Refresh();
@@ -223,7 +221,7 @@ public class ChatWindow : WindowBase
             //销毁所有选项消息
             foreach (var button in messageSpace.GetComponentsInChildren<Button>())
             {
-                Destroy(button.gameObject);
+                DestroyImmediate(button.gameObject);
             }
             InputText.GetComponent<Text>().text = "";
             //刷新界面显示
@@ -233,6 +231,7 @@ public class ChatWindow : WindowBase
             //刷新数据存储
             ChatManager.Instance.canConfirm = false;
             ChatManager.Instance.ChoosedChatData = null;
+
         }
     }
     private IEnumerator WaitSeconds(float seconds)

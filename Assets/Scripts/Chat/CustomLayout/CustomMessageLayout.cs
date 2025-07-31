@@ -6,8 +6,8 @@ using UnityEngine.UI;
 [ExecuteAlways]
 public class CustomMessageLayout : MonoBehaviour
 {
-
-
+    //间距
+    public float Spacing;
     private GameObject ScrollView;
     private GameObject InputLine;
     private GameObject MessageSpace;
@@ -17,44 +17,31 @@ public class CustomMessageLayout : MonoBehaviour
         InputLine = this.transform.Find("InputLine").gameObject;
         MessageSpace = this.transform.Find("MessageSpace").gameObject;
     }
+    public void Update()
+    {
+        Refresh();
+    }
 
     public void Refresh()
     {
-        StartCoroutine(RefreshCoroutine());
-
-    }
-    private IEnumerator RefreshCoroutine()
-    {
-        yield return new WaitForSeconds(0.01f);
-        foreach (Transform message in MessageSpace.transform)
+        float height = 0;
+        if (MessageSpace.transform.childCount != 0)
         {
-            message.GetComponentInChildren<CustomTextBox>().RefreshSizeIfNeeded();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(message.GetComponent<RectTransform>());
+            height += Spacing;
+            foreach (Transform message in MessageSpace.transform)
+            {
+                message.GetComponentInChildren<CustomTextBox>().RefreshSizeIfNeeded();
+                LayoutRebuilder.ForceRebuildLayoutImmediate(message.GetComponent<RectTransform>());
+                message.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-height);
+                height += message.GetComponent<RectTransform>().rect.height + Spacing;
+            }
         }
-        if (MessageSpace.transform.childCount == 0)
-        {
-            MessageSpace.GetComponent<VerticalLayoutGroup>().padding.top = 0;
-            MessageSpace.GetComponent<VerticalLayoutGroup>().padding.bottom = 0;
-        }
-        else
-        {
-            MessageSpace.GetComponent<VerticalLayoutGroup>().padding.top = 10;
-            MessageSpace.GetComponent<VerticalLayoutGroup>().padding.bottom = 10;
-        }
-
+        MessageSpace.GetComponent<RectTransform>().sizeDelta = new Vector2(MessageSpace.GetComponent<RectTransform>().sizeDelta.x, height);
         LayoutRebuilder.ForceRebuildLayoutImmediate(MessageSpace.GetComponent<RectTransform>());
-        float height = MessageSpace.GetComponent<RectTransform>().rect.height;  
-
         InputLine.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, height);
         float ScrollViewheight = this.transform.GetComponent<RectTransform>().rect.height - height - InputLine.GetComponent<RectTransform>().rect.height;
         ScrollView.GetComponent<RectTransform>().sizeDelta = new Vector2(ScrollView.GetComponent<RectTransform>().sizeDelta.x, ScrollViewheight);
-        StartCoroutine(RefreshScrollView());
-    }
-
-    private IEnumerator RefreshScrollView()
-    {
-        for (int i = 0; i < 2; i++) yield return null;
         ScrollView.GetComponentInChildren<Scrollbar>().value = 0;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(MessageSpace.GetComponent<RectTransform>());
     }
 }
-;
