@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 /// <summary>
 /// 瓶装水
 /// </summary>
@@ -7,7 +9,8 @@ public class BottledWater : Card
     {
         Events = new()
         {
-            new Event("饮用", "饮用瓶装水", Event_Drink, null),
+            new Event("饮用", "连瓶子也喝掉", Event_Drink, null,15,
+            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Thirst, 15 } })
         };
     }
 

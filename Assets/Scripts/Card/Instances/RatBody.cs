@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -9,9 +10,12 @@ public class RatBody : Card
     {
         Events = new()
         {
-            new Event("食用", "食用老鼠尸体", Event_Eat, null),
-            new Event("用手剥", "用手剥老鼠尸体", Event_PeelByHand, null),
-            new Event("用刀切割", "用刀切割老鼠尸体", Event_PeelByKnife, Judge_PeelByKnife),
+            new Event("食用", "不做任何处理，连同皮毛和内脏一起吃下", Event_Eat, null, 30,
+            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 16 }, { PlayerStateEnum.San, -20 }, { PlayerStateEnum.Health, -8 } }),
+            new Event("用手剥", "用手撕扯老鼠，这会弄得脏兮兮的，而且有小概率什么都拿不到", Event_PeelByHand, null, 45,
+            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, -3 }, { PlayerStateEnum.Health, -2 } }),
+            new Event("用刀切割", "可以采集到小块生肉", Event_PeelByKnife, Judge_PeelByKnife,15),
+            
         };
     }
 
