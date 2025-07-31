@@ -17,6 +17,7 @@ public class OreReleaseOxygenMachine : Card
 
     private OreReleaseOxygenMachine()
     {
+        isWorking = false;
         maxOxygenStorage = 360;
         curOxygenStorage = 0;
         maxTimeProgress = 360;

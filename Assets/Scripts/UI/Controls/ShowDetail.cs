@@ -115,9 +115,9 @@ public class ShowDetail : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             else
             {
                 State.transform.Find("Slider/Max").GetComponent<Slider>().value = curValue / maxValue;
-                State.transform.Find("Slider/Max/Fill").GetComponent<Image>().color = ColorManager.white;
+                State.transform.Find("Slider/Max/Fill").GetComponent<Image>().color = ColorManager.red;
                 State.transform.Find("Slider/Min").GetComponent<Slider>().value = (curValue + item.Value) / maxValue;
-                State.transform.Find("Slider/Min/Fill").GetComponent<Image>().color = ColorManager.red;
+                State.transform.Find("Slider/Min/Fill").GetComponent<Image>().color = ColorManager.white;
             }
             State.transform.Find("Text").GetComponent<Text>().text = r;
             State.SetActive(true);
@@ -127,6 +127,13 @@ public class ShowDetail : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             GameObject Description = DetailInfo.transform.Find("Desc").gameObject;
             Description.transform.Find("Text").GetComponent<Text>().text = e.description;
             Description.SetActive(true);
+        }
+    }
+    public void OnDestroy()
+    {
+        if (DetailInfo != null)
+        {
+            Destroy(DetailInfo);
         }
     }
     public void ShowHint()

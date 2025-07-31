@@ -87,7 +87,7 @@ public class RatBody : Card
         }
         else if (rand < 4)
         {
-            // 什么也没有掉落
+            //掉落提示：“肉被糟蹋了，什么都没得到”
         }
     }
     #endregion

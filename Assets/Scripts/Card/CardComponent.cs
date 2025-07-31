@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
@@ -296,6 +297,36 @@ public class InnerContentsComponent : CardComponent
             sb.Append("\n");
         }
         return sb.ToString();
+    }
+}
+#endregion
+
+#region 每日衰减组件
+public class DailyReduceComponent : CardComponent
+{
+    public int ReduceRate;
+    public int curReduceCount;
+    public int maxReduceCount;
+
+    public DailyReduceComponent(int reduceRate, int maxReduceCount)
+    {
+        this.ReduceRate = reduceRate;
+        this.maxReduceCount = maxReduceCount;
+        this.curReduceCount = 0;
+    }
+
+    public float CalReduce(float value)
+    {
+        return value * Mathf.Pow(ReduceRate, curReduceCount);
+    }
+    public void AddReduceCount()
+    {
+        curReduceCount++;
+        curReduceCount = Mathf.Min(curReduceCount, maxReduceCount);
+    }
+    public void ResetReduceCount()
+    {
+        curReduceCount = 0;
     }
 }
 #endregion
