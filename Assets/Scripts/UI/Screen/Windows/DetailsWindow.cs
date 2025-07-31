@@ -35,7 +35,6 @@ public class DetailsWindow : WindowBase
         if (currentDisplayedCard == null)
         {
             Clear();
-            innerBag.Clear();
         }
 
         detailsButton.onClick.AddListener(() =>
@@ -179,6 +178,7 @@ public class DetailsWindow : WindowBase
         currentDisplayedCard = null;
         detailsText.text = "";
         innerBag.Clear();
+        innerBag.gameObject.SetActive(false);
         innerContentsButton.gameObject.SetActive(false);
         MonoUtility.DestroyAllChildren(buttonLayout);
     }
