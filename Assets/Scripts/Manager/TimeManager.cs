@@ -64,7 +64,7 @@ public class TimeManager : MonoBehaviour
     }
 
 
-    public void AddTime(int minute,bool sleep=false) 
+    public void AddTime(int minute) 
     {
         int time = minute;
         curTime = curTime.AddMinutes(minute);
@@ -76,11 +76,6 @@ public class TimeManager : MonoBehaviour
                 time -= curInterval;
                 curInterval = SettleInterval;
                 EventManager.Instance.TriggerEvent(EventType.IntervalSettle);
-                if(sleep)
-                {
-                EventManager.Instance.TriggerEvent(EventType.Sleep);
-                }
-
                 EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
             }
             else

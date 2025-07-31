@@ -10,10 +10,12 @@ public class ButtonEvent : MonoBehaviour
         GameDataManager.Instance.SaveAllData();
         SceneManager.LoadScene(0);
     }
+
     public void Sleep()
     {
-        TimeManager.Instance.AddTime(240);
+        StateManager.Instance.Sleep();
     }
+
     public void Die()
     {
         int index = GameDataManager.Instance.curLoadIndex;
