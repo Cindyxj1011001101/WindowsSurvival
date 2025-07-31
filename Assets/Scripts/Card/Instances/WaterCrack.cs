@@ -7,7 +7,7 @@ public class WaterCrack : Card
     {
         Events = new()
         {
-            new Event("堵住", "消耗裂缝填充物修补裂缝", Event_Fix, Jugde_Fix, 15),
+            new Event("堵住", "消耗裂缝填充物修补裂缝", Event_Fix, Jugde_Fix, "需要裂缝填充物",15),
         };
     }
 

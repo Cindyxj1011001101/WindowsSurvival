@@ -14,7 +14,7 @@ public class RatBody : Card
             new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 16 }, { PlayerStateEnum.San, -20 }, { PlayerStateEnum.Health, -8 } }),
             new Event("用手剥", "用手撕扯老鼠，这会弄得脏兮兮的，而且有小概率什么都拿不到", Event_PeelByHand, null, null,45,
             new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, -3 }, { PlayerStateEnum.Health, -2 } }),
-            new Event("用刀切割", "可以采集到小块生肉", Event_PeelByKnife, Judge_PeelByKnife,null,15),
+            new Event("用刀切割", "可以采集到小块生肉", Event_PeelByKnife, Judge_PeelByKnife,"需要切割工具",15),
             
         };
     }
