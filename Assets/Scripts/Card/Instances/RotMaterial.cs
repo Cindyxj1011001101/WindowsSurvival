@@ -7,7 +7,7 @@ public class RotMaterial : Card
     {
         Events = new()
         {
-            new Event("食用", "食用腐烂物", Event_Eat, null)
+            new Event("食用", "食用腐烂物",Event_Eat, null)
         };
     }
 

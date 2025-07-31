@@ -29,9 +29,9 @@ public class OreReleaseOxygenMachine : Card
         {
             new Event("打开", "打开矿石释氧机", Event_Open, Judge_Open),
             new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
-            new Event("获取氧气", "获取氧气", Event_GetOxygen, null)
+            new Event("获取氧气", "获取氧气",Event_GetOxygen, null)
         };
-    }
+    }   
 
     protected override void LateInit()
     {

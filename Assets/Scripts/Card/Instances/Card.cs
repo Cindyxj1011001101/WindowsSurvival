@@ -242,7 +242,7 @@ public abstract class Card : IComparable<Card>
             if (tempSlotTransform != null)
                 return tempSlotTransform;
 
-            
+
             return Slot == null ? null : Slot.transform;
         }
         set
@@ -267,16 +267,18 @@ public class Event
 {
     public string name;
     public string description;
+    public string hint;
     public UnityAction action;
     public Func<bool> condition;
     public int Time;
     public Dictionary<PlayerStateEnum, float> PlayerStateDict = new();
     public Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = new();
 
-    public Event(string name, string description, UnityAction action, Func<bool> condition, int Time = 0, Dictionary<PlayerStateEnum, float> PlayerStateDict = null, Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = null)
+    public Event(string name, string description, UnityAction action, Func<bool> condition, string hint=null, int Time = 0, Dictionary<PlayerStateEnum, float> PlayerStateDict = null, Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = null)
     {
         this.name = name;
         this.description = description;
+        this.hint = hint;
         this.Time = Time;
         this.PlayerStateDict = PlayerStateDict ?? new Dictionary<PlayerStateEnum, float>();
         this.EnvironmentStateDict = EnvironmentStateDict ?? new Dictionary<EnvironmentStateEnum, float>();

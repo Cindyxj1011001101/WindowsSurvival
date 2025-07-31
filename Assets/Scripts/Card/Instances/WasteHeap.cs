@@ -9,7 +9,7 @@ public class WasteHeap : Card
     {
         Events = new()
         {
-            new Event("挖掘", "挖掘废料堆", Event_Dig, null)
+            new Event("挖掘", "挖掘废料堆",Event_Dig, null)
         };
     }
 

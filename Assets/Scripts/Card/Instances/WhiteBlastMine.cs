@@ -7,7 +7,7 @@ public class WhiteBlastMine : Card
     {
         Events = new()
         {
-            new Event("敲碎", "敲碎白爆矿", Event_Break, null)
+            new Event("敲碎", "敲碎白爆矿",Event_Break, null)
         };
     }
 
