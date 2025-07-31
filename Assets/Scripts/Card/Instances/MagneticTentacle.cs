@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// 磁性触手
@@ -9,7 +10,8 @@ public class MagneticTentacle : Card
     {
         Events = new()
         {
-            new Event("食用", "食用磁性触手",Event_Eat,null)
+            new Event("食用", "食用磁性触手", Event_Eat,null,30,
+            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 14 }, { PlayerStateEnum.San, -6 }, { PlayerStateEnum.Health, -5 } })
         };
     }
 

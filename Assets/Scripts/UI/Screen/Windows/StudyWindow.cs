@@ -146,7 +146,8 @@ public class StudyWindow : WindowBase
 
     public void RefreshCurrentDisplay()
     {
-        DisplayTechTree(curSelectedTechNode.techType);
+        if (curSelectedTechNode != null)
+            DisplayTechTree(curSelectedTechNode.techType);
     }
 
     private void DisplayTechNodeDetails(ScriptableTechnologyNode techNode)

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 /// <summary>
 /// 压缩饼干
 /// </summary>
@@ -7,7 +9,8 @@ public class CompactBiscuit : Card
     {
         Events = new()
         {
-            new Event("食用", "食用压缩饼干", Event_Eat, null)
+            new Event("食用", "食用压缩饼干", Event_Eat, null,3,
+            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 12 } })
         };
     }
 
