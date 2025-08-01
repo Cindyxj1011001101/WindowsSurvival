@@ -166,6 +166,9 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.Interactable = false;
             text.text = "探索完成";
             text.color = ColorManager.cyan;
+
+            // 临时
+            hoverTip.Hide();
         }
         else if (args.degree == 1)
         {
@@ -194,24 +197,4 @@ public class EnvironmentBagWindow : BagWindow
         // 显示牌堆数量
         frontCard.anchoredPosition = new Vector2(frontCard.anchoredPosition.x, -Mathf.FloorToInt(args.degree * 4) * 4);
     }
-
-    //private async void OnExploreDropCards(List<Card> cards)
-    //{
-    //    foreach (var card in cards)
-    //    {
-    //        CardMoveTween.MoveCard(
-    //           card,
-    //           1,
-    //           frontCard.position,
-    //           card.Slot.transform.position,
-    //           0.2f,
-    //           null,
-    //           () =>
-    //           {
-    //               // 再刷新显示
-    //               card.Slot.RefreshCurrentDisplay();
-    //           });
-    //        await Task.Delay(100); // 等待100毫秒，避免卡牌移动过快
-    //    }
-    //}
 }

@@ -156,7 +156,6 @@ public class DetailsWindow : WindowBase
                     {
                         // 再刷新
                         DisplayCardDetails(sourceSlot);
-                        moved = false;
                     }
                 });
             }
@@ -172,6 +171,7 @@ public class DetailsWindow : WindowBase
 
     private void Clear()
     {
+        moved = false;
         slot.ClearSlot();
         if (currentDisplayedCard != null)
             currentDisplayedCard.TempSlotTransform = null;
