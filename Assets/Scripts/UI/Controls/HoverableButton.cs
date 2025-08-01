@@ -38,6 +38,10 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                     graphic.color = new Color(graphic.color.r, graphic.color.g, graphic.color.b, 0f); // 设置透明度为0
                 }
             }
+            else
+            {
+                ChangeColor(currentColor);
+            }
         }
     }
 
