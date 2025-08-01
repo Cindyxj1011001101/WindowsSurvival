@@ -22,8 +22,8 @@ public class ChatWindow : WindowBase
 
     protected override void Init()
     {
-        layout = transform.Find("Body/Scroll View/Viewport/Content").gameObject;
-        scroll = transform.Find("Body/Scroll View").GetComponent<ScrollRect>();
+        layout = transform.Find("Body/ScrollView/Viewport/Content").gameObject;
+        scroll = transform.Find("Body/ScrollView").GetComponent<ScrollRect>();
         messageSpace = transform.Find("Body/MessageSpace").gameObject;
         ConfirmButton = transform.Find("Body/InputLine/Confirm").gameObject;
         InputText = transform.Find("Body/InputLine/InputBG/InputText").gameObject;
@@ -195,6 +195,12 @@ public class ChatWindow : WindowBase
                     Choose(button, option);
                 });
             }
+            //添加对话区域的监听
+            body.transform.Find("InputLine/InputBG").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                body.transform.Find("MessageSpace").gameObject.SetActive(true);
+                body.GetComponent<CustomMessageLayout>().Refresh();
+            });
         }
         body.GetComponent<CustomMessageLayout>().Refresh();
     }
@@ -203,7 +209,11 @@ public class ChatWindow : WindowBase
         //被点击的按钮变化状态，其余所有按钮恢复默认
         //输入框显示被点击按钮的文字
         //发送按钮可被点击
-        if (ChatManager.Instance.ChoosedChatData == chatData) return;
+        if (ChatManager.Instance.ChoosedChatData == chatData)
+        {
+            Confirm();
+            return;
+        }
         foreach (var button in messageSpace.GetComponentsInChildren<Button>())
         {
             button.GetComponent<Image>().color = Color.blue;
@@ -226,21 +236,19 @@ public class ChatWindow : WindowBase
             InputText.GetComponent<Text>().text = "";
             //刷新界面显示
             body.GetComponent<CustomMessageLayout>().Refresh();
+
+
             //生成选中的消息
             StartCoroutine(CreateMessage(ChatManager.Instance.ChoosedChatData));
             //刷新数据存储
             ChatManager.Instance.canConfirm = false;
             ChatManager.Instance.ChoosedChatData = null;
-
+            //移除对话区域的监听
+            body.transform.Find("InputLine/InputBG").GetComponent<Button>().onClick.RemoveAllListeners();
         }
     }
     private IEnumerator WaitSeconds(float seconds)
     {
         yield return new WaitForSeconds(seconds);
     }
-
-    //TODO：逐字显示
-
-
-
 }

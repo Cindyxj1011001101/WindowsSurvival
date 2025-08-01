@@ -62,6 +62,10 @@ public class ChatManager : MonoBehaviour
             return;
         }
         instance = this;
+        NPCTextBox=Resources.Load<GameObject>("Prefabs/UI/Controls/Dialogue/NPC");
+        PlayerTextBox=Resources.Load<GameObject>("Prefabs/UI/Controls/Dialogue/Player");
+        AsideTextBox=Resources.Load<GameObject>("Prefabs/UI/Controls/Dialogue/Aside");
+        MessagePrefab=Resources.Load<GameObject>("Prefabs/UI/Controls/Dialogue/Choose");
         EventManager.Instance.AddListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
         ExcelReader.ReadChat("test");
         GameDataManager.Instance.LoadGeneratedChatData();
