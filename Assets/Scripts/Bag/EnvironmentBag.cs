@@ -84,8 +84,8 @@ public class EnvironmentBag : BagBase
 
     private void InitDropList()
     {
-        DisposableDropList = CardFactory.GetDisposableDropList(placeData.placeType);
-        RepeatableDropList = CardFactory.GetRepeatableDropList(placeData.placeType);
+        DisposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(placeData.placeType));
+        RepeatableDropList = JsonManager.DeepCopy(CardFactory.GetRepeatableDropList(placeData.placeType));
     }
 
     /// <summary>
