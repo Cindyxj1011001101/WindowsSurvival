@@ -225,9 +225,6 @@ public class InnerContentsComponent : CardComponent
     [JsonIgnore]
     public Func<Card, bool> contentFilter;
 
-    //[JsonIgnore]
-    //public UnityAction onContentsRemoved;
-
     public InnerContentsComponent(int slotCount, string belongedCardId)
     {
         this.slotCount = slotCount;
@@ -271,7 +268,6 @@ public class InnerContentsComponent : CardComponent
                 }
             }
         }
-        //if (removedCount > 0) onContentsRemoved?.Invoke();
         return removedCount;
     }
 

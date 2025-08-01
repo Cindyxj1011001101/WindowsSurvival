@@ -128,19 +128,11 @@ public abstract class BagBase : MonoBehaviour
         return result;
     }
 
-    ///// <summary>
-    ///// 获取所有能放置卡牌的格子以及放置数量
-    ///// </summary>
-    ///// <param name="card"></param>
-    ///// <param name="count"></param>
-    ///// <returns></returns>
-    //public abstract List<(CardSlot, int)> GetSlotsCanAddCard(Card card, int count);
-
     /// <summary>
     /// 添加一张卡牌
     /// </summary>
     /// <param name="card"></param>
-    public virtual void AddCard(Card card/*, bool refreshImmediately = true*/)
+    public virtual void AddCard(Card card)
     {
         // 尝试堆叠同类卡牌
         // 优先堆叠到当前堆叠数多的格子
@@ -148,7 +140,7 @@ public abstract class BagBase : MonoBehaviour
         {
             if (slot.CanAddCard(card))
             {
-                slot.AddCard(card/*, refreshImmediately*/);
+                slot.AddCard(card);
                 return;
             }
         }
@@ -158,7 +150,7 @@ public abstract class BagBase : MonoBehaviour
         {
             if (slot.IsEmpty)
             {
-                slot.AddCard(card/*, refreshImmediately*/);
+                slot.AddCard(card);
                 return;
             }
         }
@@ -283,6 +275,8 @@ public abstract class BagBase : MonoBehaviour
             }
         }
 
+        RefreshCurrentDisplay();
+
         return amount;
     }
 
@@ -314,64 +308,15 @@ public abstract class BagBase : MonoBehaviour
         MonoUtility.DestroyAllChildren(slotLayout.GetComponent<RectTransform>());
     }
 
-    #region 紧凑排列（旧）
-    ///// <summary>
-    ///// 使卡牌紧凑排列
-    ///// </summary>
-    //public void CompactCards()
-    //{
-    //    if(SoundManager.Instance != null)
-    //        SoundManager.Instance.PlaySound("万能泡泡音",true);
-    //    // 记录需要移动的卡牌和它们的原始位置
-    //    List<(CardSlot slot, int index)> nonEmptySlots = new();
-
-    //    // 第一次遍历：收集所有非空槽位信息
-    //    for (int i = 0; i < slots.Count; i++)
-    //    {
-    //        if (!slots[i].IsEmpty)
-    //        {
-    //            nonEmptySlots.Add((slots[i], i));
-    //        }
-    //    }
-
-    //    // 第二次遍历：从前往后填充空位
-    //    int currentPosition = 0;
-    //    foreach (var (slot, index) in nonEmptySlots)
-    //    {
-    //        // 如果当前卡牌已经在正确位置，跳过
-    //        if (currentPosition == index)
-    //        {
-    //            currentPosition++;
-    //            continue;
-    //        }
-
-    //        // 移动卡牌到当前位置
-    //        MoveCardToPosition(slot, currentPosition);
-    //        currentPosition++;
-    //    }
-    //}
-
-    ///// <summary>
-    ///// 将卡牌从一个槽位移动到另一个槽位
-    ///// </summary>
-    //private void MoveCardToPosition(CardSlot sourceSlot, int targetIndex)
-    //{
-    //    // 如果目标位置就是当前位置，不做任何操作
-    //    int sourceIndex = slots.IndexOf(sourceSlot);
-    //    if (sourceIndex == targetIndex) return;
-
-    //    CardSlot targetSlot = slots[targetIndex];
-
-    //    while (!sourceSlot.IsEmpty && targetSlot.CanAddCard(sourceSlot.PeekCard()))
-    //    {
-    //        targetSlot.AddCard(sourceSlot.RemoveCard());
-    //    }
-
-    //    if (SoundManager.Instance != null)
-    //        SoundManager.Instance.PlaySound("整理",true);
-    //}
-    #endregion
-
+    private void RefreshCurrentDisplay()
+    {
+        // 刷新显示
+        foreach (var slot in slots)
+        {
+            slot.RefreshCurrentDisplay();
+        }
+    }
+    
     #region 紧凑排列
     /// <summary>
     /// 使卡牌紧凑排列并尽可能堆叠
@@ -423,11 +368,7 @@ public abstract class BagBase : MonoBehaviour
             SoundManager.Instance.PlaySound("低沉泡泡音", true, 1.3f);
         }
 
-        // 刷新显示
-        foreach (var slot in slots)
-        {
-            slot.RefreshCurrentDisplay();
-        }
+        RefreshCurrentDisplay();
     }
 
     /// <summary>

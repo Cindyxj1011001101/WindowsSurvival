@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
         SoundManager.Instance.PlayCurEnvironmentMusic();
     }
 
-    private void AddCard(Card card, bool toPlayerBag/*, bool refreshImmediately = true*/)
+    private void AddCard(Card card, bool toPlayerBag)
     {
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("抽卡", true);
@@ -80,26 +80,18 @@ public class GameManager : MonoBehaviour
         {
             if (!WindowsManager.Instance.IsWindowOpen("PlayerBag"))
                 WindowsManager.Instance.OpenWindow("PlayerBag");
-            playerBag.AddCard(card/*, refreshImmediately*/);
+            playerBag.AddCard(card);
         }
         else
         {
             if (!WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))
                 WindowsManager.Instance.OpenWindow("EnvironmentBag");
-            curEnvironmentBag.AddCard(card/*, refreshImmediately*/);
+            curEnvironmentBag.AddCard(card);
         }
     }
-
-    //private Card AddCard(string cardId, bool toPlayerBag/*, bool refreshImmediately = true*/)
-    //{
-    //    var card = CardFactory.CreateCard(cardId);
-    //    AddCard(card, toPlayerBag/*, refreshImmediately*/);
-    //    return card;
-    //}
-
     public void AddCardWithTween(Card card, Vector2 startPos, bool toPlayerBag)
     {
-        AddCard(card, toPlayerBag/*, false*/);
+        AddCard(card, toPlayerBag);
 
         CardMoveTween.MoveCard(
             card,
@@ -131,22 +123,6 @@ public class GameManager : MonoBehaviour
 
         AddCardsWithTween(cards, startPos, toPlayerBag);
 
-        //for (int i = 0; i < count; i++)
-        //{
-        //    var card = AddCard(cardId, toPlayerBag/*, false*/);
-        //    cards.Add(card);
-        //}
-
-        //CardMoveTween.MoveCardsWithDelay(
-        //    cards,
-        //    startPos,
-        //    0.2f,
-        //    onComplete: (card) =>
-        //    {
-        //        card.Slot.RefreshCurrentDisplay();
-        //    }
-        //    );
-
         return cards;
     }
 
@@ -154,7 +130,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (var card in cards)
         {
-            AddCard(card, toPlayerBag/*, false*/);
+            AddCard(card, toPlayerBag);
         }
 
         CardMoveTween.MoveCardsWithDelay(
@@ -289,7 +265,7 @@ public class GameManager : MonoBehaviour
             //foreach (var card in droppedCards)
             //{
             //    // 掉落到环境里
-            //    AddCard(card, false/*, false*/);
+            //    AddCard(card, false);
             //}
             // 掉落卡牌动效
             //EventManager.Instance.TriggerEvent(EventType.ExploreDropCards, droppedCards);
@@ -318,7 +294,7 @@ public class GameManager : MonoBehaviour
             //foreach (var card in droppedCards)
             //{
             //    // 掉落到环境里
-            //    AddCard(card, false/*, false*/);
+            //    AddCard(card, false);
             //}
 
             AddCardsWithTween(droppedCards, startPos, false);

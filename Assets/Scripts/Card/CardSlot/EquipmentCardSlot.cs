@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// 装备卡牌格
@@ -8,10 +7,9 @@ public class EquipmentCardSlot : CardSlot
 {
     [SerializeField] private EquipmentType equipmentType;
 
-    public override void AddCard(Card card/*, bool refreshImmediately = true*/)
+    public override void AddCard(Card card)
     {
-        base.AddCard(card/*, refreshImmediately*/);
-        //EventManager.Instance.TriggerEvent(EventType.Equip, card);
+        base.AddCard(card);
 
         // 将装备状态设置为已装备
         card.TryGetComponent<EquipmentComponent>(out var equipmentComponent);
@@ -33,10 +31,9 @@ public class EquipmentCardSlot : CardSlot
         return component.equipmentType == equipmentType;
     }
 
-    public override void RemoveCard(Card card/*, bool refreshImmediately = true*/)
+    public override void RemoveCard(Card card)
     {
-        base.RemoveCard(card/*, refreshImmediately*/);
-        //EventManager.Instance.TriggerEvent(EventType.Unequip, card);
+        base.RemoveCard(card);
 
         // 将装备状态设置为未装备
         card.TryGetComponent<EquipmentComponent>(out var equipmentComponent);

@@ -194,17 +194,8 @@ public static class CardFactory
 
         // 配置基础属性
         card.SetCardId(cardId);
-        //card.CardId = config.CardId;
-        //card.CardName = config.CardName;
-        //card.CardDesc = config.CardDesc;
-        //card.CardType = config.CardType;
-        //card.MaxStackNum = config.MaxStackCount;
-        //card.Moveable = config.Moveable;
-        //card.Weight = config.Weight;
-        //card.Tags = config.Tags;
 
         // 配置可变属性
-        //card.components = new();
         if (config.HasFreshness)
         {
             card.AddComponent(typeof(FreshnessComponent), new FreshnessComponent(config.MaxFreshness));

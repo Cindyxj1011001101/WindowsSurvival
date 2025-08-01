@@ -185,8 +185,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         for (int i = 0; i < count; i++)
         {
             if (!targetSlot.CanAddCard(sourceSlot.PeekCard())) break;
-            var toMove = sourceSlot.RemoveCard(/*false*/);
-            targetSlot.AddCard(toMove/*, false*/);
+            var toMove = sourceSlot.RemoveCard();
+            targetSlot.AddCard(toMove);
             movedCard.Add(toMove);
         }
 
@@ -208,38 +208,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         int leftCount = count - movedCard.Count;
         if (leftCount > 0)
             AnimateCardReturn(leftCount);
-
-
-        //var card = sourceSlot.PeekCard();
-        //// 得到targetSlot的剩余容量
-        //int remainingCapacity = targetSlot.GetRemainingCapacity(card);
-
-        //// 得到真正移动的数量
-        //int moveCount = Mathf.Min(remainingCapacity, count);
-        //if (moveCount > 0)
-        //{
-        //    // 先把数据转移了
-        //    sourceSlot.TransferCardsTo(targetSlot, moveCount, false);
-        //    AnimateCardPlacement(
-        //        card,
-        //        () =>
-        //        {
-        //            // 再刷新显示
-        //            targetSlot.RefreshCurrentDisplay();
-        //        },
-        //        dragEndPosition,
-        //        targetSlot.transform.position,
-        //        moveCount
-        //    );
-        //}
-
-        //// 记录剩余数量
-        //int leftCount = count - moveCount;
-        //if (leftCount > 0)
-        //{
-        //    // 剩余卡牌回到原位
-        //    AnimateCardReturn(leftCount);
-        //}
     }
 
     /// <summary>
@@ -254,8 +222,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         for (int i = 0; i < count; i++)
         {
             if (!targetBag.CanAddCard(sourceSlot.PeekCard())) break;
-            var toMove = sourceSlot.RemoveCard(/*false*/);
-            targetBag.AddCard(toMove/*, false*/);
+            var toMove = sourceSlot.RemoveCard();
+            targetBag.AddCard(toMove);
             movedCard.Add(toMove);
         }
 
@@ -283,38 +251,5 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         int leftCount = count - movedCard.Count;
         if (leftCount > 0)
             AnimateCardReturn(leftCount);
-
-
-        //var card = sourceSlot.PeekCard();
-        //// 得到targetBag中所有可以放置卡牌的格子以及可以放置的数量
-        //List<(CardSlot, int)> list = targetBag.GetSlotsCanAddCard(card, count);
-
-        //int leftCount = count; // 剩余待移动卡牌的数量
-
-        //// 将卡牌放入目标背包的目标格子里
-        //foreach (var (targetSlot, moveCount) in list)
-        //{
-        //    // 这里targetBag.GetSlotsCanAddCard方法确保leftCount不会是负数
-        //    leftCount -= moveCount;
-        //    // 先把数据转移了
-        //    sourceSlot.TransferCardsTo(targetSlot, moveCount, false);
-        //    AnimateCardPlacement(
-        //        card,
-        //        () =>
-        //        {
-        //            // 再刷新显示
-        //            targetSlot.RefreshCurrentDisplay();
-        //        },
-        //        startPos,
-        //        targetSlot.transform.position,
-        //        moveCount
-        //    );
-        //}
-
-        //if (leftCount > 0)
-        //{
-        //    // 剩余卡牌回到原位
-        //    AnimateCardReturn(leftCount);
-        //}
     }
 }

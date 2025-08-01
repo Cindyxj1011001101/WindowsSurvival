@@ -3,7 +3,6 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 using System.IO;
-using System.Linq;
 
 public class StartSceneManager : MonoBehaviour
 {

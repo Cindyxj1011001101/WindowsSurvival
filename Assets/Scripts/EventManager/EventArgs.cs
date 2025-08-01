@@ -14,7 +14,6 @@
     DialogueCondition, // 触发对话条件
     ChangeWaterLevel, // 水平面变化
     ChangeTime, // 时间变化
-    //Sleep,//睡眠额外结算
     StudyComplished,
 }
 
