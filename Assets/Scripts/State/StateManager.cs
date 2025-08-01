@@ -4,24 +4,6 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 /// <summary>
-/// 玩家状态
-/// </summary>
-public enum PlayerStateEnum
-{
-    Health,
-    Fullness,
-    Thirst,
-    San,
-    Oxygen,
-    Sobriety,
-    Load,
-    CarbonMonoxidePoisoning,
-    Itchiness,
-    PainLevel,
-    BodyTemperature,
-}
-
-/// <summary>
 /// 环境状态
 /// </summary>
 public enum EnvironmentStateEnum

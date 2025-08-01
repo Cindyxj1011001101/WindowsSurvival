@@ -4,6 +4,24 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
+/// 玩家状态
+/// </summary>
+public enum PlayerStateEnum
+{
+    Health,
+    Fullness,
+    Thirst,
+    San,
+    Oxygen,
+    Sobriety,
+    Load,
+    CarbonMonoxidePoisoning,
+    Itchiness,
+    PainLevel,
+    BodyTemperature,
+}
+
+/// <summary>
 /// 玩家状态类
 /// </summary>
 public class PlayerState
