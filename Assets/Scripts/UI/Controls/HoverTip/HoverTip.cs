@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -76,5 +77,11 @@ public class HoverTip : MonoBehaviour
     {
         canvasGroup.DOKill();
         canvasGroup.DOFade(0, 0.1f).SetEase(Ease.OutQuad);
+    }
+
+    public void SelfDestroy()
+    {
+        canvasGroup.DOKill();
+        Destroy(gameObject);
     }
 }

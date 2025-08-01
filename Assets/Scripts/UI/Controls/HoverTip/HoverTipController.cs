@@ -47,6 +47,6 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
     public void OnDestroy()
     {
         if (hoverTip != null)
-            Destroy(hoverTip.gameObject);
+            hoverTip.SelfDestroy();
     }
 }
