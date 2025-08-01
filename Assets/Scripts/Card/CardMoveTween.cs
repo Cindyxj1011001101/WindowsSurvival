@@ -45,7 +45,7 @@ public class CardMoveTween
     {
         // 实例化预制体
         GameObject slotObj = Object.Instantiate(
-            Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot"),
+            Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot/CardSlot"),
             WindowsManager.Instance.transform);
 
         // 获取RectTransform并设置位置

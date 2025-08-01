@@ -10,7 +10,7 @@ public abstract class BagBase : MonoBehaviour
     [SerializeField] protected Transform slotLayout; // 格子布局
     [SerializeField] protected HoverableButton organizeButton; // 整理背包按钮
 
-    protected List<CardSlot> slots = new();
+    [SerializeField] protected List<CardSlot> slots = new();
 
     public List<CardSlot> Slots => slots;
 

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7146250573843502559}
   - component: {fileID: 7700665487795521149}
   - component: {fileID: 4939259059235914899}
-  - component: {fileID: 6202628134553926708}
+  - component: {fileID: 9087857122178927711}
   m_Layer: 5
   m_Name: CardEventButton
   m_TagString: Untagged
@@ -81,7 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   changeMouseType: 0
   InButton: 0
---- !u!114 &6202628134553926708
+--- !u!114 &9087857122178927711
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -90,33 +90,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 853790556351804927}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac790bde52618604a82cb89a4260934a, type: 3}
+  m_Script: {fileID: 11500000, guid: 40fa700f93e8d7446ad366bdfe799a7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canShowDetail: 0
-  LoadSprite:
-  - {fileID: 1537160113, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
-  - {fileID: 1850425268, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
-  - {fileID: -89833634, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
-  - {fileID: 509707120, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
-  LoadColor:
-  - {r: 0, g: 0.8196079, b: 0.24705884, a: 1}
-  - {r: 1, g: 0.909804, b: 0.050980397, a: 1}
-  - {r: 1, g: 0.5019608, b: 0.043137256, a: 1}
-  - {r: 1, g: 0.03529412, b: 0.03529412, a: 1}
-  TempretureSprite:
-  - {fileID: 720461001, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
-  - {fileID: 1676266322, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
-  - {fileID: -1670127099, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
-  - {fileID: 987111515, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
-  - {fileID: -566022016, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
-  TempretureColor:
-  - {r: 0, g: 0.5019608, b: 1, a: 1}
-  - {r: 0, g: 0.8705883, b: 0.85098046, a: 1}
-  - {r: 0, g: 0.8196079, b: 0.24705884, a: 1}
-  - {r: 1, g: 0.909804, b: 0.050980397, a: 1}
-  - {r: 1, g: 0.03529412, b: 0.03529412, a: 1}
-  offset: {x: 0, y: -55, z: 0}
+  offset: {x: 10, y: 0, z: 0}
 --- !u!1 &1273064475476806626
 GameObject:
   m_ObjectHideFlags: 0

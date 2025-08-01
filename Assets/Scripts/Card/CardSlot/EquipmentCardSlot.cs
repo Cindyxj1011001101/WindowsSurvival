@@ -1,9 +1,12 @@
-﻿/// <summary>
+﻿using UnityEngine;
+using UnityEngine.UI;
+
+/// <summary>
 /// 装备卡牌格
 /// </summary>
 public class EquipmentCardSlot : CardSlot
 {
-    public EquipmentType equipmentType;
+    [SerializeField] private EquipmentType equipmentType;
 
     public override void AddCard(Card card/*, bool refreshImmediately = true*/)
     {

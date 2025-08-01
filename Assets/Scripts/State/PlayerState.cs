@@ -4,6 +4,24 @@ using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
+/// 玩家状态
+/// </summary>
+public enum PlayerStateEnum
+{
+    Health,
+    Fullness,
+    Thirst,
+    San,
+    Oxygen,
+    Sobriety,
+    Load,
+    CarbonMonoxidePoisoning,
+    Itchiness,
+    PainLevel,
+    BodyTemperature,
+}
+
+/// <summary>
 /// 玩家状态类
 /// </summary>
 public class PlayerState
@@ -74,6 +92,7 @@ public class PlayerState
     public void AddExtraValue(float delta)
     {
         extraValue += delta;
+        variableValue = Mathf.Clamp(variableValue, 0, MaxValue);
         //curValue = Mathf.Clamp(variableValue + constValue, 0, MaxValue);
 
         CalcStateLevel();

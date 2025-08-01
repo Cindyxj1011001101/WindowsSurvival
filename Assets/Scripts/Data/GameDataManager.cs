@@ -295,13 +295,11 @@ public class GameDataManager
         equipmentData = new()
         {
             cardSlots = new()
-            {
-                new(bag.headSlot.Cards),
-                new(bag.bodySlot.Cards),
-                new(bag.backSlot.Cards),
-                new(bag.legSlot.Cards)
-            }
         };
+        foreach (var slot in bag.Slots)
+        {
+            equipmentData.cardSlots.Add(new List<Card>(slot.Cards));
+        }
         JsonManager.SaveData(equipmentData, CurLoadName, "Equipment");
     }
 

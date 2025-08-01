@@ -2,35 +2,7 @@
 
 public class EquipmentBag : BagBase
 {
-    public EquipmentCardSlot headSlot;
-    public EquipmentCardSlot bodySlot;
-    public EquipmentCardSlot backSlot;
-    public EquipmentCardSlot legSlot;
-
     private Dictionary<EquipmentType, EquipmentCardSlot> equipmentSlotDict;
-    private void Awake()
-    {
-        equipmentSlotDict = new()
-        {
-            { EquipmentType.Head, headSlot},
-            { EquipmentType.Body, bodySlot},
-            { EquipmentType.Back, backSlot},
-            { EquipmentType.Leg, legSlot},
-        };
-        foreach (var slot in equipmentSlotDict.Values)
-        {
-            slot.ClearSlot();
-            slot.SetBag(this);
-        }
-        //EventManager.Instance.AddListener<Card>(EventType.Equip, OnCardEquipped);
-        //EventManager.Instance.AddListener<Card>(EventType.Unequip, OnCardUnequipped);
-    }
-
-    //private void OnDestroy()
-    //{
-    //    EventManager.Instance.RemoveListener<Card>(EventType.Equip, OnCardEquipped);
-    //    EventManager.Instance.RemoveListener<Card>(EventType.Unequip, OnCardUnequipped);
-    //}
 
     public override void Init()
     {
@@ -39,12 +11,17 @@ public class EquipmentBag : BagBase
 
     protected override void InitBag(BagRuntimeData runtimeData)
     {
-        if (runtimeData.cardSlots.Count == 0) return;
-
-        headSlot.Init(runtimeData.cardSlots[0]);
-        bodySlot.Init(runtimeData.cardSlots[1]);
-        backSlot.Init(runtimeData.cardSlots[2]);
-        legSlot.Init(runtimeData.cardSlots[3]);
+        for (int i = 0; i < runtimeData.cardSlots.Count; i++)
+        {
+            slots[i].Init(runtimeData.cardSlots[i]);
+        }
+        equipmentSlotDict = new()
+        {
+            { EquipmentType.Head, slots[0] as EquipmentCardSlot},
+            { EquipmentType.Body, slots[1] as EquipmentCardSlot},
+            { EquipmentType.Back, slots[2] as EquipmentCardSlot},
+            { EquipmentType.Leg, slots[3] as EquipmentCardSlot},
+        };
     }
 
     /// <summary>

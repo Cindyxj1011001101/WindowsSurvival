@@ -31,7 +31,14 @@ public class UIRecipeItem : MonoBehaviour
     public void DisplayRecipe(Sprite icon, bool locked, bool canCraft)
     {
         this.icon.sprite = icon;
-        button.currentColor = this.icon.color = locked ? ColorManager.darkGrey : ColorManager.white;
+
+        if (locked)
+            button.currentColor = this.icon.color = ColorManager.darkGrey;
+        else if (canCraft)
+            button.currentColor = this.icon.color = ColorManager.white;
+        else
+            button.currentColor = this.icon.color = ColorManager.lightGrey;
+
         lockImage.gameObject.SetActive(locked);
         adequateImage.gameObject.SetActive(canCraft);
     }
