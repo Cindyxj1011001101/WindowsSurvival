@@ -71,9 +71,10 @@ public class OreReleaseOxygenMachine : Card
     #region 获取氧气
     private bool Judee_GetOxygen()
     {
-        // 氧气剩余容量大于0时可获取
+        // 玩家氧气剩余容量大于0，并且氧气储量大于0时可获取
         var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
-        return remainingCapacity > 0;
+        var toRelease = Mathf.Min(curOxygenStorage, remainingCapacity);
+        return toRelease > 0;
     }
 
     public void Event_GetOxygen()
