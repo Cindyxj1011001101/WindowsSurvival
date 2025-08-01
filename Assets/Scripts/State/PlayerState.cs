@@ -92,6 +92,7 @@ public class PlayerState
     public void AddExtraValue(float delta)
     {
         extraValue += delta;
+        variableValue = Mathf.Clamp(variableValue, 0, MaxValue);
         //curValue = Mathf.Clamp(variableValue + constValue, 0, MaxValue);
 
         CalcStateLevel();
