@@ -105,6 +105,11 @@ public class GMCommand
     {
         AddCard("氧烛");
     }
+    [MenuItem("Command/添加/有产物的虹吸海葵")]
+    public static void V()
+    {
+        AddCard("有产物的虹吸海葵");
+    }
     [MenuItem("Command/播放/心跳_01")]
     public static void PlayHeart()
     {
