@@ -1,3 +1,4 @@
+using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -49,10 +50,27 @@ public class EnvironmentBagWindow : BagWindow
         //EventManager.Instance.RemoveListener<List<Card>>(EventType.ExploreDropCards, OnExploreDropCards);
     }
 
+    #region 临时
+
+    GameObject hoverTipPrefab;
+    HoverTip hoverTip;
+    private void ShowExploreTime()
+    {
+        // 设置位置
+        var rect = exploreButton.transform as RectTransform;
+        hoverTip.transform.position = exploreButton.transform.position +
+            new Vector3(rect.sizeDelta.x / 2 + 10, rect.sizeDelta.y / 2);
+
+        hoverTip.Show();
+    }
     protected override void Init()
     {
-
+        hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/HoverTip/TempHoverTip");
+        hoverTip = Instantiate(hoverTipPrefab, WindowsManager.Instance.transform).GetComponent<HoverTip>();
+        exploreButton.onPointerEnter.AddListener(ShowExploreTime);
+        exploreButton.onPointerExit.AddListener(() => hoverTip.Hide());
     }
+    #endregion
 
     /// <summary>
     /// 移动到指定环境
