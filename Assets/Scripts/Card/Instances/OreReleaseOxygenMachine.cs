@@ -30,7 +30,7 @@ public class OreReleaseOxygenMachine : Card
         {
             new Event("打开", "打开矿石释氧机", Event_Open, Judge_Open),
             new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
-            new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, null)
+            new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, Judee_GetOxygen)
         };
     }   
 
@@ -69,6 +69,13 @@ public class OreReleaseOxygenMachine : Card
     #endregion
 
     #region 获取氧气
+    private bool Judee_GetOxygen()
+    {
+        // 氧气剩余容量大于0时可获取
+        var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
+        return remainingCapacity > 0;
+    }
+
     public void Event_GetOxygen()
     {
         // 玩家氧气剩余容量
