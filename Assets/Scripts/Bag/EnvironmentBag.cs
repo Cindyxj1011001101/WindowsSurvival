@@ -149,6 +149,14 @@ public class EnvironmentBag : BagBase
             // 暂定每次新增3个格子
             AddSlot(3);
         }
+
         base.AddCard(card);
+
+        // 如果剩余格子数量小于3个
+        if (UnusedSlotsCount < 3)
+        {
+            // 暂定每次新增3个格子
+            AddSlot(3);
+        }
     }
 }

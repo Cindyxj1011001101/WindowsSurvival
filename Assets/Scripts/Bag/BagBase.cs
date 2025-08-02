@@ -14,20 +14,19 @@ public abstract class BagBase : MonoBehaviour
 
     public List<CardSlot> Slots => slots;
 
-    protected int UsedSlotsCount // 放有卡牌的格子的数量
+    protected int UnusedSlotsCount // 未使用的格子的数量
     {
         get
         {
             int count = 0;
             foreach (CardSlot slot in slots)
             {
-                if (!slot.IsEmpty) count++;
+                if (slot.IsEmpty) count++;
             }
             return count;
         }
     }
-    protected int SlotsCount => slots.Count; // 格子总数
-    protected bool IsBagFull => UsedSlotsCount == SlotsCount; // 背包是否已满
+    protected bool IsBagFull => UnusedSlotsCount == 0; // 背包是否已满
 
     private void OnEnable()
     {
