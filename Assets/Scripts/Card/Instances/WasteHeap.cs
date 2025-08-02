@@ -9,18 +9,22 @@ public class WasteHeap : Card
     {
         Events = new()
         {
-            new Event("用手挖掘", "这会费时费力",Event_Dig, null, null, 45)
+            new Event("用手挖掘", "这会费时费力", Event_Dig, null, null, 45)
         };
     }
 
     public void Event_Dig()
     {
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("抽卡", true);
+
         //消耗1点耐久度
         TryUse();
         //消耗45分钟
         TimeManager.Instance.AddTime(45);
         //掉落卡牌
         RandomDrop();
+
     }
 
     public void RandomDrop()

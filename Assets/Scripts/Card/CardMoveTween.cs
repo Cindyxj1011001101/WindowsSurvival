@@ -86,6 +86,7 @@ public class CardMoveTween
             {
                 onComplete?.Invoke();
                 Object.Destroy(slot.gameObject);
+                SoundManager.Instance.PlaySound("放置卡牌", true);
             });
     }
 

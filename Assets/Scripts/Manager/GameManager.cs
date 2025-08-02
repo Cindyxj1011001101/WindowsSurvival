@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance => instance;
 
+    private float addCardAnimDuration = 0.4f;
+
     private PlayerBag playerBag;
     private Dictionary<PlaceEnum, EnvironmentBag> environmentBags = new();
     private EnvironmentBag curEnvironmentBag;
@@ -70,9 +72,6 @@ public class GameManager : MonoBehaviour
 
     private void AddCard(Card card, bool toPlayerBag)
     {
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("抽卡", true);
-
         // 卡牌的属性开始随时间变化
         card.StartUpdating();
 
@@ -89,6 +88,7 @@ public class GameManager : MonoBehaviour
             curEnvironmentBag.AddCard(card);
         }
     }
+
     public void AddCardWithTween(Card card, Vector2 startPos, bool toPlayerBag)
     {
         AddCard(card, toPlayerBag);
@@ -98,11 +98,11 @@ public class GameManager : MonoBehaviour
             1,
             startPos,
             card.Slot.transform.position,
+            addCardAnimDuration,
             onComplete: () =>
             {
                 card.Slot.RefreshCurrentDisplay();
-            }
-            );
+            });
     }
 
     public Card AddCardWithTween(string cardId, Vector2 startPos, bool toPlayerBag)
@@ -136,12 +136,11 @@ public class GameManager : MonoBehaviour
         CardMoveTween.MoveCardsWithDelay(
             cards,
             startPos,
-            0.2f,
+            addCardAnimDuration,
             onComplete: (card) =>
             {
                 card.Slot.RefreshCurrentDisplay();
-            }
-            );
+            });
     }
 
     #region 装备
@@ -214,6 +213,9 @@ public class GameManager : MonoBehaviour
             Debug.Log("探索完全");
             return;
         }
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("抽卡", true);
 
         float explorationTime = curEnvironmentBag.explorationTime;
 
