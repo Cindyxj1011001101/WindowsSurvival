@@ -106,25 +106,66 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="eventData"></param>
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Right && sourceSlot.PeekCard().Moveable)
+        int pickedCount;
+        // 右键单击
+        if (eventData.button == PointerEventData.InputButton.Right)
         {
-            BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
-            BagBase targetBag = null;
+            // 移动一张
+            pickedCount = 1;
+        }
+        // 左键单击
+        else if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            // shift + 左键
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            {
+                // 移动全部
+                pickedCount = sourceSlot.StackNum;
 
-            if (sourceBag is PlayerBag && WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))
-            {
-                targetBag = GameManager.Instance.CurEnvironmentBag;
-            }
-            else if (sourceBag is EnvironmentBag && WindowsManager.Instance.IsWindowOpen("PlayerBag"))
-            {
-                targetBag = GameManager.Instance.PlayerBag;
-            }
+                // 如果是装备卡
+                var card = sourceSlot.PeekCard();
+                // 穿脱装备
+                if (card.TryGetComponent<EquipmentComponent>(out var component))
+                {
+                    // 穿上装备
+                    if (!component.isEquipped && GameManager.Instance.CanEquip(card))
+                        GameManager.Instance.Equip(card);
+                    // 脱下装备
+                    else if (component.isEquipped)
+                        GameManager.Instance.Unequip(card);
 
-            if (targetBag != null && targetBag.CanAddCard(sourceSlot.PeekCard()))
-            {
-                sourceSlot.DisplayCard(sourceSlot.PeekCard(), sourceSlot.StackNum - 1);
-                PlaceCardInDifferentBag(targetBag, 1, sourceSlot.transform.position);
+                    return;
+                }
             }
+            // 仅左键
+            else
+            {
+                // 显示详情
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot);
+                return;
+            }
+        }
+        else return;
+
+        // 不可移动的卡牌
+        if (!sourceSlot.PeekCard().Moveable) return;
+
+        BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
+        BagBase targetBag = null;
+
+        if (sourceBag is PlayerBag && WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))
+        {
+            targetBag = GameManager.Instance.CurEnvironmentBag;
+        }
+        else if (sourceBag is EnvironmentBag && WindowsManager.Instance.IsWindowOpen("PlayerBag"))
+        {
+            targetBag = GameManager.Instance.PlayerBag;
+        }
+
+        if (targetBag != null)
+        {
+            PlaceCardInDifferentBag(targetBag, pickedCount, sourceSlot.transform.position, false);
+            sourceSlot.RefreshCurrentDisplay();
         }
     }
 
@@ -148,7 +189,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 placementAction.Invoke();
                 sourceSlot.RefreshCurrentDisplay();
-                SoundManager.Instance.PlaySound("放置卡牌", true);
+                //SoundManager.Instance.PlaySound("放置卡牌", true);
             }
         );
     }
@@ -169,7 +210,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 {
                     // 刷新源卡槽显示
                     sourceSlot.RefreshCurrentDisplay();
-                    SoundManager.Instance.PlaySound("放置卡牌", true);
+                    //SoundManager.Instance.PlaySound("放置卡牌", true);
                 }
             );
     }
@@ -216,7 +257,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="targetBag"></param>
     /// <param name="count"></param>
     /// <param name="startPos"></param>
-    private void PlaceCardInDifferentBag(BagBase targetBag, int count, Vector3 startPos)
+    private void PlaceCardInDifferentBag(BagBase targetBag, int count, Vector3 startPos, bool needReturnAnim = true)
     {
         List<Card> movedCard = new();
         for (int i = 0; i < count; i++)
@@ -235,21 +276,21 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             foreach (var group in groups)
             {
                 AnimateCardPlacement(
-                movedCard[0],
-                () =>
-                {
-                    // 再刷新显示
-                    group.Key.RefreshCurrentDisplay();
-                },
-                startPos,
-                group.Key.transform.position,
-                group.Count()
+                    movedCard[0],
+                    () =>
+                    {
+                        // 再刷新显示
+                        group.Key.RefreshCurrentDisplay();
+                    },
+                    startPos,
+                    group.Key.transform.position,
+                    group.Count()
                 );
             }
         }
 
         int leftCount = count - movedCard.Count;
-        if (leftCount > 0)
+        if (leftCount > 0 && needReturnAnim)
             AnimateCardReturn(leftCount);
     }
 }
