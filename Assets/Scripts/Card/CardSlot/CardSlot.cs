@@ -28,24 +28,8 @@ public class CardSlot : MonoBehaviour
     private BagBase bag;
     public BagBase Bag => bag;
 
-    private void Awake()
+    private void Start()
     {
-        // 双击显示详情
-        //if (cardCanvasGroup.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
-        //{
-        //    doubleClickHandler.onDoubleClick.AddListener(() =>
-        //    {
-        //        (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(this);
-        //    });
-        //}
-
-        // 单击显示详情
-        //if (cardCanvasGroup.TryGetComponent<HoverableButton>(out var button))
-        //    button.onClick.AddListener(() =>
-        //    {
-        //        (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(this);
-        //    });
-
         if (!dontRefresh)
             EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
     }
