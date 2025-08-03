@@ -68,7 +68,10 @@ public class EquipmentBag : BagBase
         }
 
         if (!equipmentSlotDict[component.equipmentType].IsEmpty)
+        {
             tip = "同样的部位上已经有一件装备了";
+            return false;
+        }
         
         // 最后看装备格子有没有位置
         return true;
