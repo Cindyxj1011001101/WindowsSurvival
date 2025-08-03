@@ -78,6 +78,12 @@ public abstract class BagBase : MonoBehaviour
         MonoUtility.UpdateLayoutSize(slotLayout.GetComponent<ILayoutGroup>());
     }
 
+    public void RemoveSlot(CardSlot slot)
+    {
+        slots.Remove(slot);
+        Destroy(slot.gameObject);
+    }
+
     /// <summary>
     /// 能否添加新的卡牌
     /// </summary>
@@ -320,7 +326,7 @@ public abstract class BagBase : MonoBehaviour
     /// <summary>
     /// 使卡牌紧凑排列并尽可能堆叠
     /// </summary>
-    public void CompactCards()
+    public virtual void CompactCards()
     {
         // 记录整理前的卡牌位置和堆叠数量
         Dictionary<CardSlot, (int index, int stackNum)> originalStates = new();

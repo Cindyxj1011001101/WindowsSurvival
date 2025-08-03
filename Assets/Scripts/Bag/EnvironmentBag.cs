@@ -159,4 +159,15 @@ public class EnvironmentBag : BagBase
             AddSlot(3);
         }
     }
+
+    public override void CompactCards()
+    {
+        base.CompactCards();
+        while (slots.Count - 3 >= 9 && UnusedSlotsCount - 3 >= 3)
+        {
+            RemoveSlot(slots[^1]);
+            RemoveSlot(slots[^1]);
+            RemoveSlot(slots[^1]);
+        }
+    }
 }
