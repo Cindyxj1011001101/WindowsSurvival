@@ -13,15 +13,16 @@ public class FloatingTip : MonoBehaviour
         canvasGroup.blocksRaycasts = canvasGroup.interactable = false;
     }
 
-    public void ShowTip(string tip, Vector3 position, float duration = 1f)
+    public void ShowTip(string tip, Vector3 position, Color textColor, float duration = 1f)
     {
         tipText.text = tip;
+        tipText.color = textColor;
         Show(position, duration);
     }
 
     private void Show(Vector3 position, float duration)
     {
-        transform.position = position - new Vector3(position.x, position.y + 100, position.z);
+        transform.position = position - Vector3.up * 100;
 
         var seq = DOTween.Sequence();
 

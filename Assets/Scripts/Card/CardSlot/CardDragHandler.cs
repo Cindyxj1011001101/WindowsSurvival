@@ -27,8 +27,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnBeginDrag(PointerEventData eventData)
     {
         // 在鼠标位置创建图标
-        var screenPosition = CardMoveTween.ScreenPointToLocalPointInRectangle(eventData.position);
-        cursorSlot = CardMoveTween.CreateSlot(screenPosition);
+        var screenPosition = CardTweenUtility.ScreenPointToLocalPointInRectangle(eventData.position);
+        cursorSlot = CardTweenUtility.CreateSlot(screenPosition);
 
         if (eventData.button == PointerEventData.InputButton.Left)
             // 左键拖拽
@@ -51,7 +51,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        dragEndPosition = CardMoveTween.ScreenPointToLocalPointInRectangle(eventData.position);
+        dragEndPosition = CardTweenUtility.ScreenPointToLocalPointInRectangle(eventData.position);
         Destroy(cursorSlot.gameObject);
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
@@ -90,7 +90,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 卡牌的moveable为false
             else
             {
-                AnimateCardReturn(pickedCount);
+                AnimateCardReturn(pickedCount, "不能移动该卡牌");
             }
         }
         // 不能放置
@@ -133,6 +133,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     // 脱下装备
                     else if (component.isEquipped)
                         GameManager.Instance.Unequip(card);
+                    else
+                        CardTweenUtility.ShowTip("无法穿上该装备", sourceSlot.transform.position + (sourceSlot.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.white);
 
                     return;
                 }
@@ -148,7 +150,11 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         else return;
 
         // 不可移动的卡牌
-        if (!sourceSlot.PeekCard().Moveable) return;
+        if (!sourceSlot.PeekCard().Moveable)
+        {
+            CardTweenUtility.ShowTip("不能移动该卡牌", sourceSlot.transform.position + (sourceSlot.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.white);
+            return;
+        }
 
         BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
         BagBase targetBag = null;
@@ -178,7 +184,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="count"></param>
     private void AnimateCardPlacement(Card card, UnityAction placementAction, Vector3 startPos, Vector3 endPos, int count)
     {
-        CardMoveTween.MoveCard(
+        CardTweenUtility.MoveCard(
             card,
             count,
             startPos,
@@ -189,7 +195,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 placementAction.Invoke();
                 sourceSlot.RefreshCurrentDisplay();
-                //SoundManager.Instance.PlaySound("放置卡牌", true);
             }
         );
     }
@@ -197,9 +202,9 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <summary>
     /// 播放卡牌返回动画
     /// </summary>
-    private void AnimateCardReturn(int count)
+    private void AnimateCardReturn(int count, string tip = "")
     {
-        CardMoveTween.MoveCard(
+        CardTweenUtility.MoveCard(
                 sourceSlot.PeekCard(),
                 count,
                 dragEndPosition,
@@ -210,7 +215,10 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 {
                     // 刷新源卡槽显示
                     sourceSlot.RefreshCurrentDisplay();
-                    //SoundManager.Instance.PlaySound("放置卡牌", true);
+                    // 显示提示
+                    if (!string.IsNullOrEmpty(tip))
+                        // 在原卡牌槽上方一点位置显示
+                        CardTweenUtility.ShowTip(tip, sourceSlot.transform.position + (sourceSlot.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.white);
                 }
             );
     }
@@ -291,6 +299,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         int leftCount = count - movedCard.Count;
         if (leftCount > 0 && needReturnAnim)
-            AnimateCardReturn(leftCount);
+            AnimateCardReturn(leftCount, "放不下更多了");
     }
 }

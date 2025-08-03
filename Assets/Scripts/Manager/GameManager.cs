@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
     {
         AddCard(card, toPlayerBag);
 
-        CardMoveTween.MoveCard(
+        CardTweenUtility.MoveCard(
             card,
             1,
             startPos,
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviour
             AddCard(card, toPlayerBag);
         }
 
-        CardMoveTween.MoveCardsWithDelay(
+        CardTweenUtility.MoveCardsWithDelay(
             cards,
             startPos,
             addCardAnimDuration,
@@ -161,7 +161,7 @@ public class GameManager : MonoBehaviour
 
         // 添加到装备格子里
         EquipmentBag.AddCard(equipment);
-        CardMoveTween.MoveCard(
+        CardTweenUtility.MoveCard(
             equipment,
             1,
             originalSlot.transform.position,

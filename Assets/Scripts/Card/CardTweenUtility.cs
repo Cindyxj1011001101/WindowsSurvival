@@ -3,7 +3,7 @@ using DG.Tweening;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-public class CardMoveTween
+public class CardTweenUtility
 {
     private static Canvas canvas;
 
@@ -118,5 +118,12 @@ public class CardMoveTween
 
             await Task.Delay(millisecondsDelay);
         }
+    }
+
+    public static void ShowTip(string tip, Vector3 position, Color textColor , float duration = 1f)
+    {
+        var obj = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/FloatingTip"), WindowsManager.Instance.transform);
+        var floatingTip = obj.GetComponent<FloatingTip>();
+        floatingTip.ShowTip(tip, position, textColor, duration);
     }
 }
