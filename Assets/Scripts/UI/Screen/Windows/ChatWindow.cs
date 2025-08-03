@@ -122,6 +122,19 @@ public class ChatWindow : WindowBase
                 }
                 CreateChooseMessagesSequentially(optionsList);
                 break;
+            case "分支对话":
+                // 先收集所有选项消息
+                List<ChatData> branchOptionsList = new List<ChatData>();
+                for (int i = chatData.MessageID - 1; i < ChatManager.Instance.ParagraphDataList[chatData.ParagraphID - 1].ChatDataList.Count; i++)
+                {
+                    if (ChatManager.Instance.ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[i].MessageType == "分支对话")
+                    {
+                        branchOptionsList.Add(ChatManager.Instance.ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[i]);
+                    }
+                    else break;
+                }
+                FindBranchMessage(branchOptionsList);
+                break;
             case "提示":
                 StartCoroutine(CreateMessage(chatData));
                 break;

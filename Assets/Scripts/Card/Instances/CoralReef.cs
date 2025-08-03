@@ -2,8 +2,14 @@ using UnityEngine;
 
 public class CoralReef : Card
 {
+    public int maxReduceCount;
+    public int curReduceCount;
+    public float ReduceRate;
     private CoralReef()
     {
+        maxReduceCount = 2;
+        curReduceCount = 0;
+        ReduceRate = 0.5f;
         Events = new()
         {
             new Event("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig),
@@ -28,13 +34,13 @@ public class CoralReef : Card
     {
         tip = string.Empty;
         TimeManager.Instance.AddTime(15);
-        if (TryGetComponent<DailyReduceComponent>(out var component))
-        {
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, component.CalReduce(4));
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, component.CalReduce(6));
-            component.AddReduceCount();
-        }
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -2 * Mathf.Pow(ReduceRate, curReduceCount));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -2 * Mathf.Pow(ReduceRate, curReduceCount));
+        curReduceCount++;
+        if (curReduceCount >= maxReduceCount) curReduceCount = maxReduceCount;
+
     }
+    //TODO:处理每过一天的重置次数
     public void RandomDropByHand()
     {
         int rand = Random.Range(0, 45);
