@@ -590,6 +590,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 1
+  InButton: 0
 --- !u!1 &8250425150690940461
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,7 +689,7 @@ MonoBehaviour:
   componentLayout: {fileID: 5653223418816246087}
   cardCanvasGroup: {fileID: 2762523007511967095}
   moreInfoText: {fileID: 8165112822295029467}
-  dontRefresh: 0
+  dontRefresh: 1
 --- !u!225 &8356294659441100970
 CanvasGroup:
   m_ObjectHideFlags: 0
