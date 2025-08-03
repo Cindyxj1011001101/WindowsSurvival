@@ -65,7 +65,7 @@ public class EnvironmentBagWindow : BagWindow
     }
     protected override void Init()
     {
-        hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/HoverTip/TempHoverTip");
+        hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/TempHoverTip");
         hoverTip = Instantiate(hoverTipPrefab, WindowsManager.Instance.transform).GetComponent<HoverTip>();
         exploreButton.onPointerEnter.AddListener(ShowExploreTime);
         exploreButton.onPointerExit.AddListener(() => hoverTip.Hide());

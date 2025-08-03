@@ -10,7 +10,7 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void Awake()
     {
-        hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/HoverTip/HoverTip");
+        hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/HoverTip");
     }
 
     public void OnPointerEnter(PointerEventData eventData)

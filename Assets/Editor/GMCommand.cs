@@ -217,10 +217,11 @@ public class GMCommand
         AddCard("气密舱门");
     }
 
-    [MenuItem("Command/生成掉落列表的Json文件")]
-    public static void Q()
+    [MenuItem("Command/测试FloatingTip")]
+    public static void TestFloatTip()
     {
-        ExcelReader.GenerateDisposableDropList();
-        ExcelReader.GenerateRepeatableDropList();
+        var obj = GameObject.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/FloatingTip"), WindowsManager.Instance.transform);
+        var floatingTip = obj.GetComponent<FloatingTip>();
+        floatingTip.ShowTip("水瓶鱼跑了", Vector3.zero);
     }
 }

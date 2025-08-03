@@ -398,7 +398,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8572384597170285532}
   m_HandleRect: {fileID: 686229522281716730}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2404,9 +2404,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88cdbba618892d24fb45fb5a1f499ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 0}
   stateNameText: {fileID: 0}
   valueText: {fileID: 5909304769834603003}
   slider: {fileID: 6092789741629009655}
+  button: {fileID: 0}
   displayPercentage: 1
 --- !u!1 &2402569909276150069
 GameObject:
