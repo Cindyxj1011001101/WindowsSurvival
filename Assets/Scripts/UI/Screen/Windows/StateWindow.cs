@@ -43,7 +43,6 @@ public class StateWindow : WindowBase
     //更新显示数据
     public void RefreshState(PlayerStateEnum stateEnum)
     {
-        PlayerState state = StateManager.Instance.PlayerStateDict[stateEnum];
-        stateSliders[stateEnum].SetValue(state.CurValue, state.MaxValue);
+        stateSliders[stateEnum].SetValue(StateManager.Instance.PlayerStateDict[stateEnum]);
     }
 }

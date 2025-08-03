@@ -4,10 +4,7 @@ using UnityEngine.UI;
 public class UITemperatureState : UIStateSlider
 {
     public Sprite[] levels;
-    public Image icon;
     public Color[] colors;
-
-    public HoverableButton button;
 
     public override void SetValue(float value, float maxValue)
     {

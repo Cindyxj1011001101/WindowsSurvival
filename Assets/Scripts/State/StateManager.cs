@@ -22,9 +22,9 @@ public enum EnvironmentStateEnum
 /// </summary>
 public enum DangerLevelEnum
 {
-    None,
-    Low,
-    High
+    High = 0,
+    Low = 1,
+    None = 2,
 }
 
 /// <summary>
@@ -265,8 +265,10 @@ public class StateManager : MonoBehaviour
             StateEffect.NoEffect,
             StateEffect.NoEffect
         };
+        var lowDangerLevels = new List<int>() { 2 };
+        var highDangerLevels = new List<int>() { 0, 1 };
 
-        return new PlayerState(100, 100, PlayerStateEnum.Health, +0.1f, thresholds, effects);
+        return new PlayerState(100, 100, PlayerStateEnum.Health, +0.1f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitFullnessState()
@@ -285,7 +287,9 @@ public class StateManager : MonoBehaviour
             new () { sanityEffect = -0.3f },
             StateEffect.NoEffect
         };
-        return new PlayerState(100, 100, PlayerStateEnum.Fullness, -1.2f, thresholds, effects);
+        var lowDangerLevels = new List<int>() { 2 };
+        var highDangerLevels = new List<int>() { 0, 1 };
+        return new PlayerState(100, 100, PlayerStateEnum.Fullness, -1.2f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitThirstState()
@@ -304,7 +308,9 @@ public class StateManager : MonoBehaviour
             new () { sanityEffect = -0.3f },
             StateEffect.NoEffect
         };
-        return new PlayerState(100, 100, PlayerStateEnum.Thirst, -1.5f, thresholds, effects);
+        var lowDangerLevels = new List<int>() { 2 };
+        var highDangerLevels = new List<int>() { 0, 1 };
+        return new PlayerState(100, 100, PlayerStateEnum.Thirst, -1.5f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitSanityState()
@@ -323,7 +329,9 @@ public class StateManager : MonoBehaviour
             StateEffect.NoEffect,
             StateEffect.NoEffect
         };
-        return new PlayerState(100, 100, PlayerStateEnum.San, +0.1f, thresholds, effects);
+        var lowDangerLevels = new List<int>() { 2 };
+        var highDangerLevels = new List<int>() { 0, 1 };
+        return new PlayerState(100, 100, PlayerStateEnum.San, +0.1f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitOxygenState()
@@ -335,6 +343,8 @@ public class StateManager : MonoBehaviour
             new (25, 50, "呼吸不畅"),
             new (50, int.MaxValue, "正常")
         };
+        var lowDangerLevels = new List<int>() { 2 };
+        var highDangerLevels = new List<int>() { 0, 1 };
         var effects = new List<StateEffect>()
         {
             new () { healthEffect = -10 },
@@ -342,7 +352,7 @@ public class StateManager : MonoBehaviour
             StateEffect.NoEffect,
             StateEffect.NoEffect,
         };
-        return new PlayerState(60, 60, PlayerStateEnum.Oxygen, -6f, thresholds, effects);
+        return new PlayerState(60, 60, PlayerStateEnum.Oxygen, -6f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitSorbriety()
@@ -361,7 +371,9 @@ public class StateManager : MonoBehaviour
             new () { sanityEffect = -0.5f },
             StateEffect.NoEffect
         };
-        return new PlayerState(100, 100, PlayerStateEnum.Sobriety, -1.1f, thresholds, effects);
+        var lowDangerLevels = new List<int>() { 2 };
+        var highDangerLevels = new List<int>() { 0, 1 };
+        return new PlayerState(100, 100, PlayerStateEnum.Sobriety, -1.1f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitLoadState()
@@ -380,7 +392,9 @@ public class StateManager : MonoBehaviour
             StateEffect.NoEffect,
             StateEffect.NoEffect
         };
-        return new PlayerState(0, 30, PlayerStateEnum.Load, 0f, thresholds, effects);
+        var lowDangerLevels = new List<int>() { 1, 2 };
+        var highDangerLevels = new List<int>() { 3 };
+        return new PlayerState(0, 30, PlayerStateEnum.Load, 0f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitBodyTemperatureState()
@@ -401,8 +415,10 @@ public class StateManager : MonoBehaviour
             new () { thirstEffect = -0.5f },
             new () { thirstEffect = -1.5f, healthEffect = -1 },
         };
+        var lowDangerLevels = new List<int>() { 1, 3 };
+        var highDangerLevels = new List<int>() { 0, 4 };
 
-        return new PlayerState(100, 200, PlayerStateEnum.BodyTemperature, 0f, thresholds, effects);
+        return new PlayerState(100, 200, PlayerStateEnum.BodyTemperature, 0f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitCarbonMonoxideState()
@@ -421,7 +437,10 @@ public class StateManager : MonoBehaviour
             new () { healthEffect = -0.4f },
             new () { healthEffect = -1.2f },
         };
-        return new PlayerState(0, 100, PlayerStateEnum.CarbonMonoxidePoisoning, -0.8f, thresholds, effects);
+        var lowDangerLevels = new List<int>() { 1, 2 };
+        var highDangerLevels = new List<int>() { 3 };
+
+        return new PlayerState(0, 100, PlayerStateEnum.CarbonMonoxidePoisoning, -0.8f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitItchinessState()
@@ -438,7 +457,9 @@ public class StateManager : MonoBehaviour
             new () { sanityEffect = -0.1f },
             new () { sanityEffect = -0.3f },
         };
-        return new PlayerState(0, 100, PlayerStateEnum.Itchiness, -3f, thresholds, effects);
+        var lowDangerLevels = new List<int>() { 1 };
+        var highDangerLevels = new List<int>() { 2 };
+        return new PlayerState(0, 100, PlayerStateEnum.Itchiness, -3f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitPainState()
@@ -457,7 +478,9 @@ public class StateManager : MonoBehaviour
             new () { sanityEffect = -0.6f, sorbrietyEffect = +0.5f, healthEffect = -0.5f },
             new () { sanityEffect = -2f, sorbrietyEffect = +1f, healthEffect = -1f },
         };
-        return new PlayerState(0, 400, PlayerStateEnum.PainLevel, -8f, thresholds, effects);
+        var lowDangerLevels = new List<int>() { 1, 2 };
+        var highDangerLevels = new List<int>() { 3 };
+        return new PlayerState(0, 400, PlayerStateEnum.PainLevel, -8f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
     #endregion
 
@@ -756,25 +779,15 @@ public class StateManager : MonoBehaviour
 
     private void EvaluateDangerLevel()
     {
-        int currentLevel = int.MaxValue;
-        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.Health].StateLevel);
-        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.Fullness].StateLevel);
-        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.Thirst].StateLevel);
-        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.Sobriety].StateLevel);
-        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.San].StateLevel);
-        currentLevel = Mathf.Min(currentLevel, PlayerStateDict[PlayerStateEnum.Oxygen].StateLevel);
+        int curLevel = int.MaxValue;
+        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Health].DangerLevel);
+        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Fullness].DangerLevel);
+        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Thirst].DangerLevel);
+        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Sobriety].DangerLevel);
+        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.San].DangerLevel);
+        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Oxygen].DangerLevel);
 
-        DangerLevelEnum danger;
-
-        // 高危
-        if (currentLevel <= 1)
-            danger = DangerLevelEnum.High;
-        // 低危
-        else if (currentLevel == 2)
-            danger = DangerLevelEnum.Low;
-        // 安全
-        else
-            danger = DangerLevelEnum.None;
+        DangerLevelEnum danger = (DangerLevelEnum)curLevel;
 
         //如果上次的状态和这次一致，就不切音乐
         if (danger != _lastDangerLevel)

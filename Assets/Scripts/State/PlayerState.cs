@@ -26,9 +26,6 @@ public enum PlayerStateEnum
 /// </summary>
 public class PlayerState
 {
-    //[JsonProperty]
-    //private float curValue; // 当前值
-
     [JsonProperty]
     private float extraValue; // 额外值
 
@@ -55,6 +52,23 @@ public class PlayerState
 
     [JsonProperty]
     public float BasicChangeRate { get; private set; }
+
+    [JsonProperty]
+    private List<int> lowDangerLevels = new();
+
+    [JsonProperty]
+    private List<int> highDangerLevels = new();
+
+    [JsonIgnore]
+    public DangerLevelEnum DangerLevel
+    {
+        get
+        {
+            if (highDangerLevels.Contains(stateLevel)) return DangerLevelEnum.High;
+            if (lowDangerLevels.Contains(stateLevel)) return DangerLevelEnum.Low;
+            return DangerLevelEnum.None;
+        }
+    }
 
     [JsonIgnore]
     public string StateLevelName => thresholds[stateLevel].levelName;
@@ -84,7 +98,6 @@ public class PlayerState
     {
         variableValue += delta;
         variableValue = Mathf.Clamp(variableValue, 0, MaxValue);
-        //curValue = Mathf.Clamp(variableValue + constValue, 0, MaxValue);
 
         CalcStateLevel();
     }
@@ -93,7 +106,6 @@ public class PlayerState
     {
         extraValue += delta;
         variableValue = Mathf.Clamp(variableValue, 0, MaxValue);
-        //curValue = Mathf.Clamp(variableValue + constValue, 0, MaxValue);
 
         CalcStateLevel();
     }
@@ -101,7 +113,6 @@ public class PlayerState
     public void AddConstValue(float delta)
     {
         constValue += delta;
-        //curValue = Mathf.Clamp(variableValue + constValue, 0, MaxValue);
 
         CalcStateLevel();
     }
@@ -109,7 +120,6 @@ public class PlayerState
     public void AddMaxValue(float delta)
     {
         maxValue += delta;
-        //curValue = Mathf.Clamp(variableValue + constValue, 0, MaxValue);
 
         CalcStateLevel();
     }
@@ -140,7 +150,8 @@ public class PlayerState
     }
 
     public PlayerState(float value, float maxValue, PlayerStateEnum state, float basicChangeRate,
-        List<StateThreshold> thresholds, List<StateEffect> effects)
+        List<StateThreshold> thresholds, List<StateEffect> effects,
+        List<int> lowDangerLevels, List<int> highDangerLevels)
     {
         constValue = 0;
         extraValue = 0;
@@ -150,6 +161,8 @@ public class PlayerState
         this.thresholds = thresholds;
         this.effects = effects;
         BasicChangeRate = basicChangeRate;
+        this.lowDangerLevels = lowDangerLevels;
+        this.highDangerLevels = highDangerLevels;
     }
 
     public void SetUpEvent(UnityAction<int> onEnterLevel = null, UnityAction<int> onExitLevel = null)
