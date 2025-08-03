@@ -39,11 +39,19 @@ public class OreReleaseOxygenMachine : Card
         base.LateInit();
         if (TryGetComponent<InnerContentsComponent>(out var component))
         {
-            component.contentFilter = (c) =>
-            {
-                return c.CardId == "白爆矿";
-            };
+            component.contentFilter = ContentFilter;
         }
+    }
+
+    private bool ContentFilter(Card c, out string s)
+    {
+        s = string.Empty;
+        if (c.CardId != "白爆矿")
+        {
+            s = "只能放入白爆矿";
+            return false;
+        }
+        return true;
     }
 
     #region 开关

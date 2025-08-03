@@ -18,15 +18,19 @@
         }
     }
 
-    public override bool CanAddCard(Card card)
+    public override bool CanAddCard(Card card, out string tip)
     {
         // 不能嵌套放置
-        if (card.CardId == component.belongedCardId) return false;
+        if (card.CardId == component.belongedCardId)
+        {
+            tip = "不能嵌套放置同类卡牌";
+            return false;
+        }
 
         // 不能放置这种卡牌，直接返回空列表
-        if (component.contentFilter != null && !component.contentFilter(card)) return false;
+        if (component.contentFilter != null && !component.contentFilter(card, out tip)) return false;
 
-        return base.CanAddCard(card);
+        return base.CanAddCard(card, out tip);
     }
     public override void Init()
     {

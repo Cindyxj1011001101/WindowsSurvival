@@ -216,6 +216,8 @@ public class DurabilityComponent : CardComponent
 #endregion
 
 #region 内容物组件
+public delegate bool CardFilterDelegate(Card card, out string s);
+
 public class InnerContentsComponent : CardComponent
 {
     public string belongedCardId; // 所属卡牌ID
@@ -225,7 +227,7 @@ public class InnerContentsComponent : CardComponent
     public int slotCount;
 
     [JsonIgnore]
-    public Func<Card, bool> contentFilter;
+    public CardFilterDelegate contentFilter;
 
     public InnerContentsComponent(int slotCount, string belongedCardId)
     {

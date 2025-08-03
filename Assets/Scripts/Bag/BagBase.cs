@@ -89,13 +89,14 @@ public abstract class BagBase : MonoBehaviour
     /// </summary>
     /// <param name="card"></param>
     /// <returns></returns>
-    public virtual bool CanAddCard(Card card)
+    public virtual bool CanAddCard(Card card, out string tip)
     {
+        tip = string.Empty;
         foreach (CardSlot slot in slots)
         {
             if (slot.CanAddCard(card)) return true;
         }
-
+        tip = "没有更多空位了";
         return false;
     }
 

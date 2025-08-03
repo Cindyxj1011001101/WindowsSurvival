@@ -128,13 +128,13 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 if (card.TryGetComponent<EquipmentComponent>(out var component))
                 {
                     // 穿上装备
-                    if (!component.isEquipped && GameManager.Instance.CanEquip(card))
+                    if (GameManager.Instance.CanEquip(card, out string tip))
                         GameManager.Instance.Equip(card);
                     // 脱下装备
                     else if (component.isEquipped)
                         GameManager.Instance.Unequip(card);
                     else
-                        sourceSlot.ShowTip("无法穿上该装备", ColorManager.white);
+                        sourceSlot.ShowTip(tip, ColorManager.white);
 
                     return;
                 }
@@ -265,10 +265,11 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="startPos"></param>
     private void PlaceCardInDifferentBag(BagBase targetBag, int count, Vector3 startPos, bool needReturnAnim = true)
     {
+        string tip = string.Empty;
         List<Card> movedCard = new();
         for (int i = 0; i < count; i++)
         {
-            if (!targetBag.CanAddCard(sourceSlot.PeekCard())) break;
+            if (!targetBag.CanAddCard(sourceSlot.PeekCard(), out tip)) break;
             var toMove = sourceSlot.RemoveCard();
             targetBag.AddCard(toMove);
             movedCard.Add(toMove);
@@ -297,6 +298,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
         int leftCount = count - movedCard.Count;
         if (leftCount > 0 && needReturnAnim)
-            AnimateCardReturn(leftCount, "放不下更多了");
+            AnimateCardReturn(leftCount, tip);
     }
 }

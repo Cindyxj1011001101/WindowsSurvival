@@ -8,7 +8,7 @@ public class GMCommand
         var card = CardFactory.CreateCard(cardName);
         card.StartUpdating();
         var bag = GetFocusedBag();
-        if (bag != null && bag.CanAddCard(card)) bag.AddCard(card);
+        if (bag != null && bag.CanAddCard(card, out _)) bag.AddCard(card);
         if (card.Slot != null)
             card.Slot.RefreshCurrentDisplay();
     }

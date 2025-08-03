@@ -136,15 +136,16 @@ public class EnvironmentBag : BagBase
         }
     }
 
-    public override bool CanAddCard(Card card)
+    public override bool CanAddCard(Card card, out string tip)
     {
+        tip = string.Empty;
         return true;
     }
 
     public override void AddCard(Card card)
     {
         // 如果放不下，就新增格子
-        if (!base.CanAddCard(card))
+        if (!base.CanAddCard(card, out _))
         {
             // 暂定每次新增3个格子
             AddSlot(3);

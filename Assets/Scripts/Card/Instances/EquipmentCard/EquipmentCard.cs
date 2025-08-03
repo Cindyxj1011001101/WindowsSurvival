@@ -14,10 +14,7 @@ public abstract class EquipmentCard : Card
 
     protected bool Judge_Equip()
     {
-        TryGetComponent<EquipmentComponent>(out var component);
-        // 已经穿上装备了
-        if (component.isEquipped) return false;
-        return GameManager.Instance.CanEquip(this);
+        return GameManager.Instance.CanEquip(this, out _);
     }
 
     protected void Event_UnEquip(out string tip)

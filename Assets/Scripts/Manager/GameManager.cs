@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
         // 卡牌的属性开始随时间变化
         card.StartUpdating();
 
-        if (toPlayerBag && playerBag.CanAddCard(card))
+        if (toPlayerBag && playerBag.CanAddCard(card, out _))
         {
             if (!WindowsManager.Instance.IsWindowOpen("PlayerBag"))
                 WindowsManager.Instance.OpenWindow("PlayerBag");
@@ -193,9 +193,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="equipment"></param>
     /// <returns></returns>
-    public bool CanEquip(Card equipment)
+    public bool CanEquip(Card equipment, out string tip)
     {
-        return EquipmentBag.CanAddCard(equipment);
+        return EquipmentBag.CanAddCard(equipment, out tip);
     }
     #endregion
 
