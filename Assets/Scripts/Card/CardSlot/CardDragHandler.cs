@@ -134,7 +134,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     else if (component.isEquipped)
                         GameManager.Instance.Unequip(card);
                     else
-                        CardTweenUtility.ShowTip("无法穿上该装备", sourceSlot.transform.position + (sourceSlot.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.white);
+                        sourceSlot.ShowTip("无法穿上该装备", ColorManager.white);
 
                     return;
                 }
@@ -152,7 +152,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // 不可移动的卡牌
         if (!sourceSlot.PeekCard().Moveable)
         {
-            CardTweenUtility.ShowTip("不能移动该卡牌", sourceSlot.transform.position + (sourceSlot.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.white);
+            sourceSlot.ShowTip("不能移动该卡牌", ColorManager.white);
             return;
         }
 
@@ -216,9 +216,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     // 刷新源卡槽显示
                     sourceSlot.RefreshCurrentDisplay();
                     // 显示提示
-                    if (!string.IsNullOrEmpty(tip))
-                        // 在原卡牌槽上方一点位置显示
-                        CardTweenUtility.ShowTip(tip, sourceSlot.transform.position + (sourceSlot.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.white);
+                    sourceSlot.ShowTip(tip, ColorManager.white);
                 }
             );
     }

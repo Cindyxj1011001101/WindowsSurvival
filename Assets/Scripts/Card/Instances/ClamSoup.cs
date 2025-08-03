@@ -7,8 +7,9 @@ public class ClamSoup : Card
             new Event("食用", "食用蛤蜊浓汤", Event_Eat, null),
         };
     }
-    public void Event_Eat()
+    public void Event_Eat(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         TimeManager.Instance.AddTime(15);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 20);

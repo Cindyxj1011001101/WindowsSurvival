@@ -39,6 +39,8 @@ public class FreshnessComponent : CardComponent
         freshness -= (int)(deltaTime * updateRate);
         if (freshness <= 0)
         {
+            if (BelongedCard.Slot != null)
+                BelongedCard.Slot.ShowTip($"{BelongedCard.CardName}腐烂了", ColorManager.white);
             freshness = 0;
             onRotton?.Invoke();
         }

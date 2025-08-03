@@ -10,8 +10,9 @@ public class CoralReef : Card
             new Event("欣赏", "欣赏珊瑚礁", Event_Enjoy, null),
         };
     }
-    public void Event_Dig()
+    public void Event_Dig(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig);
         card.TryUse();
@@ -23,8 +24,9 @@ public class CoralReef : Card
     {
         return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) != null;
     }
-    public void Event_Enjoy()
+    public void Event_Enjoy(out string tip)
     {
+        tip = string.Empty;
         TimeManager.Instance.AddTime(15);
         if (TryGetComponent<DailyReduceComponent>(out var component))
         {

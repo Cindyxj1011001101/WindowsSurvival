@@ -6,8 +6,9 @@ public abstract class EquipmentCard : Card
     public abstract void OnEquipped();
     public abstract void OnUnEquipped();
 
-    protected void Event_Equip()
+    protected void Event_Equip(out string tip)
     {
+        tip = string.Empty;
         GameManager.Instance.Equip(this);
     }
 
@@ -19,8 +20,9 @@ public abstract class EquipmentCard : Card
         return GameManager.Instance.CanEquip(this);
     }
 
-    protected void Event_UnEquip()
+    protected void Event_UnEquip(out string tip)
     {
+        tip = string.Empty;
         GameManager.Instance.Unequip(this);
     }
 

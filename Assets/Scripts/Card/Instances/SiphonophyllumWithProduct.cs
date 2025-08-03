@@ -14,8 +14,9 @@ public class SiphonophyllumWithProduct : Card
         };
     }
 
-    public void Event_Cut()
+    public void Event_Cut(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
         card.TryUse();
@@ -28,8 +29,9 @@ public class SiphonophyllumWithProduct : Card
         return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) != null;
     }
 
-    public void Event_Collect()
+    public void Event_Collect(out string tip)
     {
+        tip = string.Empty;
         var sourceBag = Slot.Bag;
         DestroyThis();
         // 变回虹吸海葵

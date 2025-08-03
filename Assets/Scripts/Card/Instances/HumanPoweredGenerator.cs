@@ -15,8 +15,9 @@ public class HumanPoweredGenerator : Card
         };
     }
 
-    public void Event_Generate()
+    public void Event_Generate(out string tip)
     {
+        tip = string.Empty;
         // 电力+10
         StateManager.Instance.ChangeElectricity(+10);
         // 水分-5

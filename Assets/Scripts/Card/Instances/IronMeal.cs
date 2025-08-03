@@ -7,8 +7,9 @@ public class IronMeal : Card
             new Event("食用", "食用铁齿铜牙餐", Event_Eat, null),
         };
     }
-    public void Event_Eat()
+    public void Event_Eat(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         TimeManager.Instance.AddTime(30);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 29);

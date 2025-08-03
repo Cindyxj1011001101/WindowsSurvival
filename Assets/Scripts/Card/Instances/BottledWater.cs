@@ -14,8 +14,9 @@ public class BottledWater : Card
         };
     }
 
-    public void Event_Drink()
+    public void Event_Drink(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         // 播放喝水的音效
         if (SoundManager.Instance != null)

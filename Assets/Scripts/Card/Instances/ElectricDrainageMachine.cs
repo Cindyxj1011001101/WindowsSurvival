@@ -11,8 +11,9 @@ public class ElectricDrainageMachine : Card
         };
     }
     #region 开关
-    public void Event_Open()
+    public void Event_Open(out string tip)
     {
+        tip = string.Empty;
         isWorking = true;
     }
 
@@ -21,8 +22,9 @@ public class ElectricDrainageMachine : Card
         return !isWorking;
     }
 
-    public void Event_Close()
+    public void Event_Close(out string tip)
     {
+        tip = string.Empty;
         isWorking = false;
     }
 
@@ -34,13 +36,13 @@ public class ElectricDrainageMachine : Card
 
     protected override System.Action OnUpdate => () =>
     {
-       Work();
+        Work();
     };
 
     private void Work()
     {
-        if(!isWorking) return;
-        if(StateManager.Instance.Electricity.CurValue < 0.5f||StateManager.Instance.WaterLevel.CurValue <= 0)
+        if (!isWorking) return;
+        if (StateManager.Instance.Electricity.CurValue < 0.5f || StateManager.Instance.WaterLevel.CurValue <= 0)
         {
             isWorking = false;
             return;

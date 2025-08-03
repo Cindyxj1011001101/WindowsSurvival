@@ -11,8 +11,9 @@ public class WaterCrack : Card
         };
     }
 
-    public void Event_Fix()
+    public void Event_Fix(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物").DestroyThis();
         TimeManager.Instance.AddTime(15);

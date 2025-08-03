@@ -11,13 +11,12 @@ public class SeaGrassBed : Card
         };
     }
 
-    public void Event_CollectByHand()
+    public void Event_CollectByHand(out string tip)
     {
         DestroyThis();
         TryUse();
         TimeManager.Instance.AddTime(30);
-        RandomDropByHand();
-        RandomDropByHand();
+        RandomDropByHand(out tip);
     }
 
     public bool Judge_CollectByKnife()
@@ -25,62 +24,67 @@ public class SeaGrassBed : Card
         return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) != null;
     }
 
-    public void Event_CollectByKnife()
+    public void Event_CollectByKnife(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
         card.TryUse();
         RandomDropByKnife();
-        RandomDropByKnife();
-        RandomDropByKnife();
     }
 
-    public void RandomDropByHand()
+    public void RandomDropByHand(out string tip)
     {
-        int rand = Random.Range(0, 22);
-        if (rand < 4)
+        tip = string.Empty;
+        for (int i = 0; i < 2; i++)
         {
-            AddCard("海麻线", true);
-            AddCard("海麻线", true);
-        }
-        else if (rand < 16)
-        {
-            AddCard("海麻线", true);
-        }
-        else if (rand < 19)
-        {
-            AddCard("海爬虫", true);
-        }
-        else if (rand < 21)
-        {
-            AddCard("海麻线根", true);
-        }
-        else
-        {
-            //掉落提示："手被划伤了"
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 5);
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -3);
+            int rand = Random.Range(0, 22);
+            if (rand < 4)
+            {
+                AddCards("海麻线", 2, true);
+            }
+            else if (rand < 16)
+            {
+                AddCard("海麻线", true);
+            }
+            else if (rand < 19)
+            {
+                AddCard("海爬虫", true);
+            }
+            else if (rand < 21)
+            {
+                AddCard("海麻线根", true);
+            }
+            else
+            {
+                tip = "手被划伤了";
+                //掉落提示："手被划伤了"
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 5);
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -3);
+            }
         }
     }
     public void RandomDropByKnife()
     {
-        int rand = Random.Range(0, 20);
-        if (rand < 10)
+        for (int i = 0; i < 3; i++)
         {
-            AddCard("海麻线", true);
-            AddCard("海麻线", true);
-        }
-        else if (rand < 15)
-        {
-            AddCard("海麻线", true);
-        }
-        else if (rand < 18)
-        {
-            AddCard("海爬虫", true);
-        }
-        else
-        {
-            AddCard("海麻线根", true);
+            int rand = Random.Range(0, 20);
+            if (rand < 10)
+            {
+                AddCards("海麻线", 2, true);
+            }
+            else if (rand < 15)
+            {
+                AddCard("海麻线", true);
+            }
+            else if (rand < 18)
+            {
+                AddCard("海爬虫", true);
+            }
+            else
+            {
+                AddCard("海麻线根", true);
+            }
         }
     }
 }

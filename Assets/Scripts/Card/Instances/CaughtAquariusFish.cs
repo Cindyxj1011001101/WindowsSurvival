@@ -11,8 +11,9 @@ public class CaughtAquariusFish : Card
         };
     }
 
-    public void Event_Release()
+    public void Event_Release(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         // 地点中增加一个水瓶鱼
         // 继承产物进度

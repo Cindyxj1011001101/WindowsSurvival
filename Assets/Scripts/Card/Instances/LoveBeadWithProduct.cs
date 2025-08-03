@@ -15,8 +15,9 @@ public class LoveBeadWithProduct : Card
     }
 
     #region 事件
-    public void Event_OpenByTool()
+    public void Event_OpenByTool(out string tip)
     {
+        tip = string.Empty;
         var sourceBag = Slot.Bag;
         DestroyThis();
         Card tool = GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig });

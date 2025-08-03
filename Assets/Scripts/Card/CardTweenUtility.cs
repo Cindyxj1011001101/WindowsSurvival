@@ -120,8 +120,10 @@ public class CardTweenUtility
         }
     }
 
-    public static void ShowTip(string tip, Vector3 position, Color textColor , float duration = 1f)
+    public static void ShowTip(string tip, Vector3 position, Color textColor, float duration = 1f)
     {
+        if (string.IsNullOrEmpty(tip)) return;
+
         var obj = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/FloatingTip"), WindowsManager.Instance.transform);
         var floatingTip = obj.GetComponent<FloatingTip>();
         floatingTip.ShowTip(tip, position, textColor, duration);

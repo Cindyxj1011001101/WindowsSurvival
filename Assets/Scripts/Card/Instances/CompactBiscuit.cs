@@ -14,8 +14,9 @@ public class CompactBiscuit : Card
         };
     }
 
-    public void Event_Eat()
+    public void Event_Eat(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         // 播放吃的音效
         if(SoundManager.Instance != null)

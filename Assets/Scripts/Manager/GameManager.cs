@@ -203,8 +203,9 @@ public class GameManager : MonoBehaviour
     /// 处理探索事件
     /// </summary>
     /// <param name="startPos">抽牌动效的开始位置，即环境窗口牌堆的位置</param>
-    public void HandleExplore(Vector2 startPos)
+    public void HandleExplore(Vector2 startPos, out string tip)
     {
+        tip = string.Empty;
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
         var disposableDropList = curEnvironmentBag.DisposableDropList;
         var repeatableDropList = curEnvironmentBag.RepeatableDropList;
@@ -245,11 +246,12 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.AddTime((int)explorationTime);
 
         // 掉落卡牌
-        HandeleExploreDrop(startPos);
+        HandeleExploreDrop(startPos, out tip);
     }
 
-    private void HandeleExploreDrop(Vector2 startPos)
+    private void HandeleExploreDrop(Vector2 startPos, out string tip)
     {
+        tip = string.Empty;
         var disposableDropList = curEnvironmentBag.DisposableDropList;
         var repeatableDropList = curEnvironmentBag.RepeatableDropList;
 
@@ -260,17 +262,9 @@ public class GameManager : MonoBehaviour
             var droppedCards = disposableDropList.RandomDrop();
             if (droppedCards == null || droppedCards.Count == 0)
             {
-                Debug.Log("什么也没有捞到");
+                tip = "什么也没有得到";
                 return;
             }
-
-            //foreach (var card in droppedCards)
-            //{
-            //    // 掉落到环境里
-            //    AddCard(card, false);
-            //}
-            // 掉落卡牌动效
-            //EventManager.Instance.TriggerEvent(EventType.ExploreDropCards, droppedCards);
 
 
             AddCardsWithTween(droppedCards, startPos, false);
@@ -288,19 +282,11 @@ public class GameManager : MonoBehaviour
             var droppedCards = repeatableDropList.RandomDrop();
             if (droppedCards == null || droppedCards.Count == 0)
             {
-                Debug.Log("什么也没有捞到");
+                tip = "什么也没有得到";
                 return;
             }
 
-            // 掉落卡牌
-            //foreach (var card in droppedCards)
-            //{
-            //    // 掉落到环境里
-            //    AddCard(card, false);
-            //}
-
             AddCardsWithTween(droppedCards, startPos, false);
-            //EventManager.Instance.TriggerEvent(EventType.ExploreDropCards, droppedCards);
         }
     }
 

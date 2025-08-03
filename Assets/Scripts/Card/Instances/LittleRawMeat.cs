@@ -21,8 +21,9 @@ public class LittleRawMeat : Card
         AddCard("腐烂物", true);
     }
 
-    public void Event_Eat()
+    public void Event_Eat(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         // 播放吃的音效
         if(SoundManager.Instance != null)

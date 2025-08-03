@@ -13,8 +13,9 @@ public class WasteHeap : Card
         };
     }
 
-    public void Event_Dig()
+    public void Event_Dig(out string tip)
     {
+        tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("抽卡", true);
 

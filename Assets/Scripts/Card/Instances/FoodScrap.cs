@@ -10,8 +10,9 @@ public class FoodScrap : Card
         };
     }
 
-    public void Event_Eat()
+    public void Event_Eat(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         TimeManager.Instance.AddTime(15);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 12);

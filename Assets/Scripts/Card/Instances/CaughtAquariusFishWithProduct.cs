@@ -16,8 +16,9 @@ public class CaughtAquariusFishWithProduct : Card
         };
     }
 
-    public void Event_Drink()
+    public void Event_Drink(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         // 播放喝水的音效
         if (SoundManager.Instance != null)
@@ -27,8 +28,9 @@ public class CaughtAquariusFishWithProduct : Card
         TimeManager.Instance.AddTime(15);
     }
 
-    public void Event_Release()
+    public void Event_Release(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         // 地点中增加一个有产物的水瓶鱼
         AddCard("有产物的水瓶鱼", true);

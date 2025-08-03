@@ -47,8 +47,9 @@ public class OreReleaseOxygenMachine : Card
     }
 
     #region 开关
-    public void Event_Open()
+    public void Event_Open(out string tip)
     {
+        tip = string.Empty;
         isWorking = true;
     }
 
@@ -57,8 +58,9 @@ public class OreReleaseOxygenMachine : Card
         return !isWorking;
     }
 
-    public void Event_Close()
+    public void Event_Close(out string tip)
     {
+        tip = string.Empty;
         isWorking = false;
     }
 
@@ -77,8 +79,9 @@ public class OreReleaseOxygenMachine : Card
         return toRelease > 0;
     }
 
-    public void Event_GetOxygen()
+    public void Event_GetOxygen(out string tip)
     {
+        tip = string.Empty;
         // 玩家氧气剩余容量
         var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
         // 计算释放量

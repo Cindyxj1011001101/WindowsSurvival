@@ -15,7 +15,7 @@ public class RatBody : Card
             new Event("用手剥", "用手撕扯老鼠，这会弄得脏兮兮的，而且有小概率什么都拿不到", Event_PeelByHand, null, null,45,
             new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, -3 }, { PlayerStateEnum.Health, -2 } }),
             new Event("用刀切割", "可以采集到小块生肉", Event_PeelByKnife, Judge_PeelByKnife,"需要切割工具",15),
-            
+
         };
     }
 
@@ -26,8 +26,9 @@ public class RatBody : Card
     }
 
     #region 食用
-    public void Event_Eat()
+    public void Event_Eat(out string tip)
     {
+        tip = string.Empty;
         //销毁老鼠尸体
         DestroyThis();
         // 播放吃的音效
@@ -45,8 +46,9 @@ public class RatBody : Card
     #endregion
 
     #region 用手剥
-    public void Event_PeelByHand()
+    public void Event_PeelByHand(out string tip)
     {
+        tip = string.Empty;
         //销毁老鼠尸体
         DestroyThis();
         //-3精神值
@@ -56,13 +58,23 @@ public class RatBody : Card
         //消耗45分钟
         TimeManager.Instance.AddTime(45);
         //随机掉落卡牌
-        RandomDrop();
+        int rand = Random.Range(0, 4);
+        if (rand < 3)
+        {
+            AddCard("小块生肉", true);
+        }
+        else if (rand < 4)
+        {
+            //掉落提示：“肉被糟蹋了，什么都没得到”
+            tip = "肉被糟蹋了，什么都没得到";
+        }
     }
     #endregion
 
     #region 用刀切割
-    public void Event_PeelByKnife()
+    public void Event_PeelByKnife(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
         card.TryUse();
@@ -74,21 +86,6 @@ public class RatBody : Card
     public bool Judge_PeelByKnife()
     {
         return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) != null;
-    }
-    #endregion
-
-    #region 随机掉落
-    public void RandomDrop()
-    {
-        int rand = Random.Range(0, 4);
-        if (rand < 3)
-        {
-            AddCard("小块生肉", true);
-        }
-        else if (rand < 4)
-        {
-            //掉落提示：“肉被糟蹋了，什么都没得到”
-        }
     }
     #endregion
 

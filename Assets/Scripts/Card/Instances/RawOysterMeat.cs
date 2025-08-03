@@ -20,8 +20,9 @@ public class RawOysterMeat : Card
     }
 
     #region 食用
-    public void Event_Eat()
+    public void Event_Eat(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         // 播放吃的音效
         if (SoundManager.Instance != null)

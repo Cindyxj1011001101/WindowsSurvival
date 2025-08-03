@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using UnityEngine.Events;
 
 public enum CardTag
 {
@@ -270,13 +269,13 @@ public class Event
     public string name;
     public string description;
     public string hint;
-    public UnityAction action;
+    public OutStringAction action;
     public Func<bool> condition;
     public int Time;
     public Dictionary<PlayerStateEnum, float> PlayerStateDict = new();
     public Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = new();
 
-    public Event(string name, string description, UnityAction action, Func<bool> condition, string hint=null, int Time = 0, Dictionary<PlayerStateEnum, float> PlayerStateDict = null, Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = null)
+    public Event(string name, string description, OutStringAction action, Func<bool> condition, string hint = null, int Time = 0, Dictionary<PlayerStateEnum, float> PlayerStateDict = null, Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = null)
     {
         this.name = name;
         this.description = description;
@@ -288,9 +287,12 @@ public class Event
         this.condition = condition;
     }
 
-    public void Inovke()
+    public void Inovke(out string tip)
     {
-        action?.Invoke();
+        if (action != null)
+            action.Invoke(out tip);
+        else
+            tip = string.Empty;
     }
 
     public bool Judge()
@@ -300,3 +302,5 @@ public class Event
         return condition.Invoke();
     }
 }
+
+public delegate void OutStringAction(out string s);

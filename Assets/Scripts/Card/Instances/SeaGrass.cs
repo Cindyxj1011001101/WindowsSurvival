@@ -9,14 +9,16 @@ public class SeaGrass : Card
             new Event("用刀提取", "用刀提取海麻线", Event_CollectByKnife, Judge_CollectByKnife),
         };
     }
-    public void Event_CollectByHand()
+    public void Event_CollectByHand(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         TimeManager.Instance.AddTime(30);
         AddCard("纤维", true);
     }
-    public void Event_CollectByKnife()
+    public void Event_CollectByKnife(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         TimeManager.Instance.AddTime(15);
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);

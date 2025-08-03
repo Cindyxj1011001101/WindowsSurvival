@@ -8,8 +8,9 @@ public class ScaldedClaw : Card
         };
     }
 
-    public void Event_Eat()
+    public void Event_Eat(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         TimeManager.Instance.AddTime(45);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 56);

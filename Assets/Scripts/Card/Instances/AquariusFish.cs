@@ -22,8 +22,9 @@ public class AquariusFish : Card
     }
 
     #region 用捕网捉
-    public void Event_CatchByNet()
+    public void Event_CatchByNet(out string tip)
     {
+        tip = string.Empty;
         // 1. 消耗耐久
 
         // “捞网”耐久-1
@@ -50,8 +51,9 @@ public class AquariusFish : Card
     #endregion
 
     #region 用手捉
-    public void Event_CatchByHand()
+    public void Event_CatchByHand(out string tip)
     {
+        tip = string.Empty;
         // 1. 销毁卡牌
         DestroyThis();
 
@@ -64,7 +66,8 @@ public class AquariusFish : Card
             // 3. 时间变化
             TimeManager.Instance.AddTime(30);
 
-            // 4. 鱼逃跑了    
+            // 4. 鱼逃跑了
+            tip = "水瓶鱼逃跑了";
         }
         else
         {

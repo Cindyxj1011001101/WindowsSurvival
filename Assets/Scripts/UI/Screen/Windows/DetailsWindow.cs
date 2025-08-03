@@ -148,14 +148,15 @@ public class DetailsWindow : WindowBase
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() =>
                 {
-                    var sourceSlot = currentDisplayedCard.Slot;
+                    var originalSlot = currentDisplayedCard.Slot;
                     // 先执行事件
-                    e.Inovke();
+                    e.Inovke(out string tip);
+                    CardTweenUtility.ShowTip(tip, button.transform.position + (button.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.white);
                     // 如果地点发生改变则不刷新
                     if (!moved)
                     {
                         // 再刷新
-                        DisplayCardDetails(sourceSlot);
+                        DisplayCardDetails(originalSlot);
                     }
                 });
             }
