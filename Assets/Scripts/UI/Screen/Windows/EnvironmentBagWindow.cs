@@ -178,7 +178,7 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.onClick.AddListener(() =>
             {
                 GameManager.Instance.HandleExplore(frontCard.position, out string tip);
-                CardTweenUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.white);
+                CardTweenUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.yellow);
             });
             text.text = "深入探索";
             text.color = ColorManager.white;
@@ -190,7 +190,7 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.onClick.AddListener(() =>
             {
                 GameManager.Instance.HandleExplore(frontCard.position, out string tip);
-                CardTweenUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.white);
+                CardTweenUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.yellow);
             });
             text.text = "开始探索";
             text.color = ColorManager.white;

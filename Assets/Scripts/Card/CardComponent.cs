@@ -40,7 +40,7 @@ public class FreshnessComponent : CardComponent
         if (freshness <= 0)
         {
             if (BelongedCard.Slot != null)
-                BelongedCard.Slot.ShowTip($"{BelongedCard.CardName}腐烂了", ColorManager.white);
+                BelongedCard.Slot.ShowTip($"{BelongedCard.CardName}腐烂了", ColorManager.yellow);
             freshness = 0;
             onRotton?.Invoke();
         }
