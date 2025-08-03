@@ -141,7 +141,7 @@ public class ChatWindow : WindowBase
         ChatManager.Instance.GeneratedChatDataList.Add(chatData);
         GameObject MessageObject = CreateNewMessage(chatData);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(2.5f);
         if (chatData.NextMessageID != -1)
         {
             TriggerMessage(ChatManager.Instance.ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[chatData.NextMessageID - 1]);
