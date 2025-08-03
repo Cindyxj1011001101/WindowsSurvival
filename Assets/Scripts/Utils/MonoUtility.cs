@@ -49,10 +49,10 @@ public static class MonoUtility
 
     public static void UpdateGridLayoutSize(GridLayoutGroup layout)
     {
-        int elementCount = layout.transform.Cast<Transform>()
-                                     .Count(child => child.gameObject.activeSelf); // 只计算激活的子物体
-
         RectTransform layoutTransform = layout.transform as RectTransform;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
+
+        int activateChildCount = layout.transform.Cast<Transform>().Count(child => child.gameObject.activeSelf); // 只计算激活的子物体
 
         float containerWidth = layoutTransform.rect.width;
         // 计算一行可以放几个格子
@@ -62,7 +62,7 @@ public static class MonoUtility
             i++;
         }
         int columns = Mathf.Max(1, i - 1);
-        int totalRows = Mathf.CeilToInt((float)elementCount / columns);
+        int totalRows = Mathf.CeilToInt((float)activateChildCount / columns);
 
         // 计算容器高度
         float containerHeight = totalRows * layout.cellSize.y + (totalRows - 1) * layout.spacing.y + layout.padding.top + layout.padding.bottom;
@@ -77,6 +77,7 @@ public static class MonoUtility
     public static void UpdateVerticalLayoutSize(VerticalLayoutGroup layout)
     {
         RectTransform layoutTransform = layout.transform as RectTransform;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
 
         float containerHeight = layout.padding.top + layout.padding.bottom;
 
@@ -99,6 +100,7 @@ public static class MonoUtility
     public static void UpdateHorizontalLayoutSize(HorizontalLayoutGroup layout)
     {
         RectTransform layoutTransform = layout.transform as RectTransform;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
 
         float containerWidth = layout.padding.left + layout.padding.right;
 
