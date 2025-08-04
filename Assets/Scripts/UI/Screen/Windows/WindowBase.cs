@@ -274,7 +274,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         WindowsManager.Instance.FocusWindow(this);
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         Focus();
     }

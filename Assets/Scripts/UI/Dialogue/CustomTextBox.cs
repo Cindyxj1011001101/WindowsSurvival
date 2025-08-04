@@ -18,6 +18,16 @@ public class CustomTextBox : MonoBehaviour
     {
         rectTransform = transform as RectTransform;
         text = GetComponentInChildren<Text>();
+    }
+
+    private void Start()
+    {
+        UpdateSize();
+    }
+
+    public void SetText(string text)
+    {
+        this.text.text = text;
         UpdateSize();
     }
 
@@ -25,6 +35,7 @@ public class CustomTextBox : MonoBehaviour
     public void UpdateSize()
     {
         var textRectTransform = text.transform as RectTransform;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(textRectTransform);
         //获得当前宽度
         float preferredWidth = text.preferredWidth;
         //限制宽度在最大/父对象和最小之间

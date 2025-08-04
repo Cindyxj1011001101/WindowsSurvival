@@ -1,16 +1,14 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class ChatLayoutGroup : MonoBehaviour
+public class ChatLayoutGroup : MonoBehaviour, ILayoutGroup
 {
     [Header("Spacing")]
     public float spacing = 0f;
 
     [Header("Margins")]
-    public float marginTop = 0f;
-    public float marginBottom = 0f;
-    public float marginLeft = 0f;
-    public float marginRight = 0f;
+    public RectOffset padding;
 
     [Header("Child Control")]
     public bool controlChildWidth = false;
@@ -52,7 +50,7 @@ public class ChatLayoutGroup : MonoBehaviour
 
         tracker.Clear();
 
-        float yOffset = marginTop;
+        float yOffset = padding.top;
 
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -75,7 +73,7 @@ public class ChatLayoutGroup : MonoBehaviour
             Vector2 childSize = GetChildSize(child);
 
             // 水平对齐计算
-            float xPosition = marginLeft - marginRight;
+            float xPosition = padding.left - padding.right;
 
             child.anchoredPosition = new Vector2(xPosition, -yOffset);
 
@@ -119,7 +117,7 @@ public class ChatLayoutGroup : MonoBehaviour
 
         if (controlChildWidth)
         {
-            size.x = Mathf.Min(childWidth, rectTransform.rect.width - marginLeft - marginRight);
+            size.x = Mathf.Min(childWidth, rectTransform.rect.width - padding.left - padding.right);
         }
 
         if (controlChildHeight)
@@ -128,5 +126,25 @@ public class ChatLayoutGroup : MonoBehaviour
         }
 
         return size;
+    }
+
+    public void SetLayoutHorizontal()
+    {
+
+    }
+
+    public void SetLayoutVertical()
+    {
+
+    }
+
+    private void OnTransformChildrenChanged()
+    {
+        UpdateLayout();
+    }
+
+    private void OnRectTransformDimensionsChange()
+    {
+        UpdateLayout();
     }
 }
