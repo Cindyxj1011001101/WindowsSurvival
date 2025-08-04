@@ -5,7 +5,8 @@ using UnityEngine.UI;
 // 挂载在文本和图片的父对象下，用于自动调整大小
 public class CustomTextBox : MonoBehaviour
 {
-    public float padding = 10;
+    public float paddingHorizontal = 10;
+    public float paddingVertical = 10;
 
     public float minWidth;   // 最小宽度
     public float maxWidth;   // 最大宽度
@@ -27,11 +28,11 @@ public class CustomTextBox : MonoBehaviour
         //获得当前宽度
         float preferredWidth = text.preferredWidth;
         //限制宽度在最大/父对象和最小之间
-        preferredWidth = Mathf.Clamp(preferredWidth + padding * 2, minWidth, maxWidth);
+        preferredWidth = Mathf.Clamp(preferredWidth + paddingHorizontal * 2, minWidth, maxWidth);
         //设置当前宽度
-        rectTransform.sizeDelta = new Vector2(preferredWidth, textRectTransform.sizeDelta.y + padding * 2);
+        rectTransform.sizeDelta = new Vector2(preferredWidth, textRectTransform.sizeDelta.y + paddingVertical * 2);
 
-        textRectTransform.anchoredPosition = new Vector2(padding, -padding);
+        textRectTransform.anchoredPosition = new Vector2(paddingHorizontal, -paddingVertical);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
     }
