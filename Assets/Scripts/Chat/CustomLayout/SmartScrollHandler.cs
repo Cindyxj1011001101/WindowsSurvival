@@ -28,8 +28,6 @@ public class SmartScrollHandler : MonoBehaviour, IPointerDownHandler, IPointerUp
     
     private void HandleClick(PointerEventData eventData)
     {
-        Debug.Log("点击事件");
-        // 处理点击逻辑
         transform.parent.Find("MessageSpace").gameObject.SetActive(false);
         transform.parent.GetComponent<CustomMessageLayout>().Refresh();
         transform.parent.Find("ScrollView").GetComponentInChildren<Scrollbar>().value = 0;

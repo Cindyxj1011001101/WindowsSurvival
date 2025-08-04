@@ -25,10 +25,24 @@ public class Condition
             Unlock();
         }
     }
+    public void UpdateProgress(Card card,int add)
+    {
+        if (!startedDetect) return;
+        if (isUnlocked) return;
+        if(OnCardChanges(card,add))
+        {
+            Unlock();
+        }
+    }
 
     public virtual bool Detect(string type,string value)
     {
-        return true;
+        return false;
+    }
+
+    public virtual bool OnCardChanges(Card card,int add)
+    {
+        return false;
     }
 
     private void Unlock()
