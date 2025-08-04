@@ -15,6 +15,7 @@
     ChangeWaterLevel, // 水平面变化
     ChangeTime, // 时间变化
     StudyComplished,
+    AnotherDay,//跨天行为触发
 }
 
 public class ChangeStateArgs

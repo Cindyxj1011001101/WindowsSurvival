@@ -133,7 +133,7 @@ public class ChatWindow : WindowBase
                     }
                     else break;
                 }
-                FindBranchMessage(branchOptionsList);
+                // FindBranchMessage(branchOptionsList);
                 break;
             case "提示":
                 StartCoroutine(CreateMessage(chatData));

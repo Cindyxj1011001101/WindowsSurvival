@@ -8,6 +8,7 @@ public class TimeManager : MonoBehaviour
     public DateTime curTime;
     public int SettleInterval;
     public int curInterval;
+    private DateTime lastDay;
 
     private static TimeManager instance;
     public static TimeManager Instance
@@ -51,11 +52,13 @@ public class TimeManager : MonoBehaviour
         }
         else
         {
-            //Debug.Log("从存档初始化");
             //从存档初始化
             curTime = GameDataManager.Instance.TimeData.curTime;
             curInterval = GameDataManager.Instance.TimeData.curIntervel;
         }
+
+        // 初始化lastDay
+        lastDay = curTime.Date;
     }
 
     private void Start()
@@ -64,7 +67,7 @@ public class TimeManager : MonoBehaviour
     }
 
 
-    public void AddTime(int minute) 
+    public void AddTime(int minute)
     {
         int time = minute;
         curTime = curTime.AddMinutes(minute);
@@ -84,5 +87,10 @@ public class TimeManager : MonoBehaviour
                 time = 0;
             }
         }
+        lastDay = curTime.Date;
+    }
+    public bool AnotherDay()
+    {
+        return curTime.Date != lastDay;
     }
 }

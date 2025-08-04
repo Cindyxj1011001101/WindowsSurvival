@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class CoralReef : Card
 {
@@ -30,17 +32,20 @@ public class CoralReef : Card
     {
         return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) != null;
     }
-    public void Event_Enjoy(out string tip)
+    public void Event_Enjoy(out string tip) 
     {
         tip = string.Empty;
         TimeManager.Instance.AddTime(15);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -2 * Mathf.Pow(ReduceRate, curReduceCount));
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -2 * Mathf.Pow(ReduceRate, curReduceCount));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 6 * Mathf.Pow(ReduceRate, curReduceCount));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4* Mathf.Pow(ReduceRate, curReduceCount));
         curReduceCount++;
         if (curReduceCount >= maxReduceCount) curReduceCount = maxReduceCount;
 
     }
-    //TODO:处理每过一天的重置次数
+    protected override Action OnUpdate => () =>
+    {
+        if (TimeManager.Instance.AnotherDay()) curReduceCount = 0;  
+    };
     public void RandomDropByHand()
     {
         int rand = Random.Range(0, 45);
