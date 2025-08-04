@@ -22,6 +22,10 @@ public class ChatConditionManager : MonoBehaviour
         EventManager.Instance.AddListener<SubscribeActionArgs>(EventType.DialogueCondition, TriggerAction);
         DetectParagraph();
     }
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<SubscribeActionArgs>(EventType.DialogueCondition, TriggerAction);
+    }
 
     private void DetectParagraph()
     {
@@ -51,8 +55,7 @@ public class ChatConditionManager : MonoBehaviour
     #region 触发行为
     public void TriggerAction(SubscribeActionArgs args)
     {
-        //Debug.Log($"触发行为: {args.type} {args.value}");
-        Dictionary<string, Condition> tmpDic=new Dictionary<string, Condition>(DetectedConditions);
+        Dictionary<string, Condition> tmpDic = new Dictionary<string, Condition>(DetectedConditions);
         foreach (var condition in tmpDic.Values)
         {
             condition.UpdateProgress(args.type, args.value);
@@ -118,7 +121,6 @@ public class ChatConditionManager : MonoBehaviour
                 DetectedConditions.Add(chatData.MessageCondition,
                 new ClickExploreButton(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
-
             case "制作“裂缝填充物”":
                 DetectedConditions.Add(chatData.MessageCondition,
                 new CreateCrackFiller(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
@@ -127,7 +129,19 @@ public class ChatConditionManager : MonoBehaviour
                 DetectedConditions.Add(chatData.MessageCondition,
                 new HaveMetalInBag(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
+        }
+    }
 
+    public bool CanTriggerBranchCondition(ChatData chatData)
+    {
+        switch (chatData.MessageCondition)
+        {
+            case "身上有“废金属”":
+                return GameManager.Instance.PlayerBag.FindCardOfName("废金属") != null;
+            case "身上没有“废金属”":
+                return GameManager.Instance.PlayerBag.FindCardOfName("废金属") == null;
+            default:
+                return false;
         }
     }
     #endregion

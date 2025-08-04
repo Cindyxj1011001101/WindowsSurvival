@@ -45,8 +45,8 @@ public static class ExcelReader
                 IsTool = bool.Parse(row[20].ToString()),
                 IsBigIcon = bool.Parse(row[22].ToString()),
                 HasInnerContents = bool.Parse(row[23].ToString()),
-                HasBurn = bool.Parse(row[25].ToString()),
-                HasFoodProperty = bool.Parse(row[27].ToString()),
+                // HasBurn = bool.Parse(row[25].ToString()),
+                // HasFoodProperty = bool.Parse(row[27].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
@@ -76,22 +76,22 @@ public static class ExcelReader
             {
                 cardConfig.InnerContentSlotCount = int.Parse(row[24].ToString());
             }
-            if (cardConfig.HasBurn)
-            {
-                cardConfig.BurnTime = int.Parse(row[26].ToString());
-            }
-            if (cardConfig.HasFoodProperty)
-            {
-                cardConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>();
-                cardConfig.FoodPropertyDict.Add(FoodProperty.EatableDegree, ParseFoodPropertyDictValue(row[28].ToString()));//可食用度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.UneatableDegree, ParseFoodPropertyDictValue(row[29].ToString()));//不可食用度   
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Meatiness, ParseFoodPropertyDictValue(row[30].ToString()));//肉度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Fishiness, ParseFoodPropertyDictValue(row[31].ToString()));//鱼度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Shellfishiness, ParseFoodPropertyDictValue(row[32].ToString()));//贝度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Wateriness, ParseFoodPropertyDictValue(row[33].ToString()));//水度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Vegetableness, ParseFoodPropertyDictValue(row[34].ToString()));//菜度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Fruitiness, ParseFoodPropertyDictValue(row[35].ToString()));//果度
-            }
+            // if (cardConfig.HasBurn)
+            // {
+            //     cardConfig.BurnTime = int.Parse(row[26].ToString());
+            // }
+            // if (cardConfig.HasFoodProperty)
+            // {
+            //     cardConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>();
+            //     cardConfig.FoodPropertyDict.Add(FoodProperty.EatableDegree, ParseFoodPropertyDictValue(row[28].ToString()));//可食用度
+            //     cardConfig.FoodPropertyDict.Add(FoodProperty.UneatableDegree, ParseFoodPropertyDictValue(row[29].ToString()));//不可食用度   
+            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Meatiness, ParseFoodPropertyDictValue(row[30].ToString()));//肉度
+            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Fishiness, ParseFoodPropertyDictValue(row[31].ToString()));//鱼度
+            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Shellfishiness, ParseFoodPropertyDictValue(row[32].ToString()));//贝度
+            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Wateriness, ParseFoodPropertyDictValue(row[33].ToString()));//水度
+            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Vegetableness, ParseFoodPropertyDictValue(row[34].ToString()));//菜度
+            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Fruitiness, ParseFoodPropertyDictValue(row[35].ToString()));//果度
+            // }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
 

@@ -14,12 +14,6 @@ public class ChatWindow : WindowBase
     private bool inParagraph = false;
     private GameObject body;
     public ParagraphData InterruptParagraphData = null;//打断的段落数据
-    protected override void Start()
-    {
-        base.Start();
-
-    }
-
     protected override void Init()
     {
         layout = transform.Find("Body/ScrollView/Viewport/Content").gameObject;
@@ -59,7 +53,7 @@ public class ChatWindow : WindowBase
                 //当前不在段落中且段落为空时直接触发
                 else if (!inParagraph && ChatManager.Instance.CurrentParagraphData == null)
                 {
-                    TriggerParagraph(paragraph);
+                    TriggerParagraph(paragraph);    
                     ChatManager.Instance.ParagraphToTriggeer.Remove(paragraph);
                     break;
                 }
@@ -133,14 +127,20 @@ public class ChatWindow : WindowBase
                     }
                     else break;
                 }
-                // FindBranchMessage(branchOptionsList);
+                foreach (var option in branchOptionsList)
+                {
+                    if (option.MessageCondition != "" && ChatConditionManager.Instance.CanTriggerBranchCondition(option))
+                    {
+                        StartCoroutine(CreateMessage(option));
+                        break;
+                    }
+                }
                 break;
             case "提示":
                 StartCoroutine(CreateMessage(chatData));
                 break;
         }
     }
-
     public IEnumerator WaitBeforeMessage(float waitTime)
     {
         //可能需要加动画
@@ -154,7 +154,8 @@ public class ChatWindow : WindowBase
         ChatManager.Instance.GeneratedChatDataList.Add(chatData);
         GameObject MessageObject = CreateNewMessage(chatData);
 
-        yield return new WaitForSeconds(2.5f);
+        // yield return new WaitForSeconds(2.5f);
+        yield return null;
         if (chatData.NextMessageID != -1)
         {
             TriggerMessage(ChatManager.Instance.ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[chatData.NextMessageID - 1]);
