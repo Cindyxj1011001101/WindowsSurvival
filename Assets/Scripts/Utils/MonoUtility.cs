@@ -42,9 +42,35 @@ public static class MonoUtility
             case HorizontalLayoutGroup horizontalLayout:
                 UpdateHorizontalLayoutSize(horizontalLayout);
                 break;
+            case ChatLayoutGroup chatLayout:
+                UpdateChatLayoutSize(chatLayout);
+                break;
             default:
                 break;
         }
+    }
+
+    public static void UpdateChatLayoutSize(ChatLayoutGroup layout)
+    {
+        RectTransform layoutTransform = layout.transform as RectTransform;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
+
+        float containerHeight = layout.padding.top + layout.padding.bottom;
+
+        int activateChildCount = 0;
+        for (int i = 0; i < layout.transform.childCount; i++)
+        {
+            if (!layout.transform.GetChild(i).gameObject.activeSelf) continue; // 只计算激活的子物体
+            containerHeight += layout.transform.GetChild(i).GetComponent<RectTransform>().sizeDelta.y;
+            activateChildCount++;
+        }
+
+        containerHeight += Mathf.Max(0, activateChildCount - 1) * layout.spacing;
+
+        layoutTransform.sizeDelta = new Vector2(layoutTransform.sizeDelta.x, containerHeight);
+
+        // 立刻更新布局
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
     }
 
     public static void UpdateGridLayoutSize(GridLayoutGroup layout)

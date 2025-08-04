@@ -27,7 +27,7 @@ public class CustomMessageLayout : MonoBehaviour
                 height += Spacing;
                 foreach (Transform message in MessageSpace.transform)
                 {
-                    message.GetComponentInChildren<CustomTextBox>().RefreshSizeIfNeeded();
+                    message.GetComponentInChildren<CustomTextBox>().UpdateSize();
                     LayoutRebuilder.ForceRebuildLayoutImmediate(message.GetComponent<RectTransform>());
                     message.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -height);
                     height += message.GetComponent<RectTransform>().rect.height + Spacing;
