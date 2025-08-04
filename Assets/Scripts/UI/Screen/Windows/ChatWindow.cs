@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -14,11 +13,6 @@ public class ChatWindow : WindowBase
     private bool inParagraph = false;
     private GameObject body;
     public ParagraphData InterruptParagraphData = null;//打断的段落数据
-    protected override void Start()
-    {
-        base.Start();
-
-    }
 
     protected override void Init()
     {

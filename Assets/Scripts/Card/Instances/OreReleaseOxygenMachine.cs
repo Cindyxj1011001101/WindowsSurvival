@@ -31,7 +31,7 @@ public class OreReleaseOxygenMachine : Card
         {
             new Event("打开", "打开矿石释氧机", Event_Open, Judge_Open),
             new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
-            new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, null)
+            new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, Judge_GetOxygen)
         };
     }
 
@@ -40,16 +40,25 @@ public class OreReleaseOxygenMachine : Card
         base.LateInit();
         if (TryGetComponent<InnerContentsComponent>(out var component))
         {
-            component.contentFilter = (c) =>
-            {
-                return c.CardId == "白爆矿";
-            };
+            component.contentFilter = ContentFilter;
         }
     }
 
-    #region 开关
-    public void Event_Open()
+    private bool ContentFilter(Card c, out string s)
     {
+        s = string.Empty;
+        if (c.CardId != "白爆矿")
+        {
+            s = "只能放入白爆矿";
+            return false;
+        }
+        return true;
+    }
+
+    #region 开关
+    public void Event_Open(out string tip)
+    {
+        tip = string.Empty;
         isWorking = true;
     }
 
@@ -58,8 +67,9 @@ public class OreReleaseOxygenMachine : Card
         return !isWorking;
     }
 
-    public void Event_Close()
+    public void Event_Close(out string tip)
     {
+        tip = string.Empty;
         isWorking = false;
     }
 
@@ -70,8 +80,17 @@ public class OreReleaseOxygenMachine : Card
     #endregion
 
     #region 获取氧气
-    public void Event_GetOxygen()
+    private bool Judge_GetOxygen()
     {
+        // 玩家氧气剩余容量大于0，并且氧气储量大于0时可获取
+        var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
+        var toRelease = Mathf.Min(curOxygenStorage, remainingCapacity);
+        return toRelease > 0;
+    }
+
+    public void Event_GetOxygen(out string tip)
+    {
+        tip = string.Empty;
         // 玩家氧气剩余容量
         var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
         // 计算释放量
