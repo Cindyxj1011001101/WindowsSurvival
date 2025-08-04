@@ -131,7 +131,7 @@ public class ChatManager : MonoBehaviour
         //从GeneratedChatDataList中加载已触发的对话数据
         for (int i = 0; i <GeneratedChatDataList.Count - 1; i++)
         {
-            chatWindow.CreateMessage(GeneratedChatDataList[i]);
+            chatWindow.CreateMessage(GeneratedChatDataList[i].MessageSender, GeneratedChatDataList[i].Message);
         }
         TriggerMessage(GeneratedChatDataList[GeneratedChatDataList.Count - 1]);
     }
@@ -168,7 +168,7 @@ public class ChatManager : MonoBehaviour
                     }
                     else break;
                 }
-                chatWindow.CreateChooseMessagesSequentially(optionsList);
+                chatWindow.SetDialogueOptions(optionsList);
                 break;
             case "分支对话":
                 // 先收集所有选项消息
@@ -202,7 +202,7 @@ public class ChatManager : MonoBehaviour
         yield return null;
         //将该对话加入已生成列表
         GeneratedChatDataList.Add(chatData);
-        chatWindow.CreateMessage(chatData);
+        chatWindow.CreateMessage(chatData.MessageSender, chatData.Message);
 
         //不是最后一句时继续触发下一句对话
         if (chatData.NextMessageID != -1)
@@ -226,5 +226,13 @@ public class ChatManager : MonoBehaviour
         {
             inParagraph = false;
         }
+    }
+
+    public void Submit()
+    {
+        if (ChoosedChatData == null) return;
+
+        StartCoroutine(CreateMessage(ChoosedChatData));
+        ChoosedChatData = null;
     }
 }
