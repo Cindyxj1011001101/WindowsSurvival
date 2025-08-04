@@ -300,33 +300,25 @@ public class InnerContentsComponent : CardComponent
     }
 }
 #endregion
-
-#region 每日衰减组件
-public class DailyReduceComponent : CardComponent
+#region 食物属性
+public class FoodPropertyComponent : CardComponent
 {
-    public int ReduceRate;
-    public int curReduceCount;
-    public int maxReduceCount;
+    public Dictionary<FoodProperty, int> foodPropertyDict;
 
-    public DailyReduceComponent(int reduceRate, int maxReduceCount)
+    public FoodPropertyComponent(Dictionary<FoodProperty, int> foodPropertyDict)
     {
-        this.ReduceRate = reduceRate;
-        this.maxReduceCount = maxReduceCount;
-        this.curReduceCount = 0;
+        this.foodPropertyDict = foodPropertyDict;
     }
+}
+#endregion
+#region 可燃烧组件
+public class BurnableComponent : CardComponent
+{
+    public int burnTime;
 
-    public float CalReduce(float value)
+    public BurnableComponent(int burnTime)
     {
-        return value * Mathf.Pow(ReduceRate, curReduceCount);
-    }
-    public void AddReduceCount()
-    {
-        curReduceCount++;
-        curReduceCount = Mathf.Min(curReduceCount, maxReduceCount);
-    }
-    public void ResetReduceCount()
-    {
-        curReduceCount = 0;
+        this.burnTime = burnTime;
     }
 }
 #endregion

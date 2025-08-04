@@ -18,6 +18,7 @@ public class OreReleaseOxygenMachine : Card
     private OreReleaseOxygenMachine()
     {
         isWorking = false;
+        //图片及小标题切换为关闭状态
         maxOxygenStorage = 360;
         curOxygenStorage = 0;
         maxTimeProgress = 360;
@@ -30,34 +31,25 @@ public class OreReleaseOxygenMachine : Card
         {
             new Event("打开", "打开矿石释氧机", Event_Open, Judge_Open),
             new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
-            new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, Judee_GetOxygen)
+            new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, null)
         };
-    }   
+    }
 
     protected override void LateInit()
     {
         base.LateInit();
         if (TryGetComponent<InnerContentsComponent>(out var component))
         {
-            component.contentFilter = ContentFilter;
+            component.contentFilter = (c) =>
+            {
+                return c.CardId == "白爆矿";
+            };
         }
-    }
-
-    private bool ContentFilter(Card c, out string s)
-    {
-        s = string.Empty;
-        if (c.CardId != "白爆矿")
-        {
-            s = "只能放入白爆矿";
-            return false;
-        }
-        return true;
     }
 
     #region 开关
-    public void Event_Open(out string tip)
+    public void Event_Open()
     {
-        tip = string.Empty;
         isWorking = true;
     }
 
@@ -66,9 +58,8 @@ public class OreReleaseOxygenMachine : Card
         return !isWorking;
     }
 
-    public void Event_Close(out string tip)
+    public void Event_Close()
     {
-        tip = string.Empty;
         isWorking = false;
     }
 
@@ -79,17 +70,8 @@ public class OreReleaseOxygenMachine : Card
     #endregion
 
     #region 获取氧气
-    private bool Judee_GetOxygen()
+    public void Event_GetOxygen()
     {
-        // 玩家氧气剩余容量大于0，并且氧气储量大于0时可获取
-        var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
-        var toRelease = Mathf.Min(curOxygenStorage, remainingCapacity);
-        return toRelease > 0;
-    }
-
-    public void Event_GetOxygen(out string tip)
-    {
-        tip = string.Empty;
         // 玩家氧气剩余容量
         var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
         // 计算释放量
@@ -160,7 +142,7 @@ public class OreReleaseOxygenMachine : Card
 
         // 白爆矿不够不制氧
         if (!TryConsumeOre(oreConsumption)) return;
-        
+
         //归零生产进度
         curTimeProgress = 0;
 

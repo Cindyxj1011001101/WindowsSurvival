@@ -45,6 +45,8 @@ public static class ExcelReader
                 IsTool = bool.Parse(row[20].ToString()),
                 IsBigIcon = bool.Parse(row[22].ToString()),
                 HasInnerContents = bool.Parse(row[23].ToString()),
+                HasBurn = bool.Parse(row[25].ToString()),
+                HasFoodProperty = bool.Parse(row[27].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
@@ -73,6 +75,22 @@ public static class ExcelReader
             if (cardConfig.HasInnerContents)
             {
                 cardConfig.InnerContentSlotCount = int.Parse(row[24].ToString());
+            }
+            if (cardConfig.HasBurn)
+            {
+                cardConfig.BurnTime = int.Parse(row[26].ToString());
+            }
+            if (cardConfig.HasFoodProperty)
+            {
+                cardConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>();
+                cardConfig.FoodPropertyDict.Add(FoodProperty.EatableDegree, ParseFoodPropertyDictValue(row[28].ToString()));//可食用度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.UneatableDegree, ParseFoodPropertyDictValue(row[29].ToString()));//不可食用度   
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Meatiness, ParseFoodPropertyDictValue(row[30].ToString()));//肉度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Fishiness, ParseFoodPropertyDictValue(row[31].ToString()));//鱼度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Shellfishiness, ParseFoodPropertyDictValue(row[32].ToString()));//贝度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Wateriness, ParseFoodPropertyDictValue(row[33].ToString()));//水度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Vegetableness, ParseFoodPropertyDictValue(row[34].ToString()));//菜度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Fruitiness, ParseFoodPropertyDictValue(row[35].ToString()));//果度
             }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
@@ -118,6 +136,16 @@ public static class ExcelReader
             toolTypes.Add((ToolType)System.Enum.Parse(typeof(ToolType), toolType.Trim()));
         }
         return toolTypes;
+    }
+    private static int ParseFoodPropertyDictValue(string foodPropertyDictStr)
+    {
+        if (foodPropertyDictStr != "/" && int.TryParse(foodPropertyDictStr, out int value))
+        {
+            return value;
+        }else
+        {
+            return 0;
+        }
     }
 
     public static Dictionary<PlaceEnum, DisposableDropList> GenerateDisposableDropList()
@@ -308,6 +336,26 @@ public static class ExcelReader
         }
     }
     #endregion
+    #region 读取加工表配置
+    public static List<ProcessData> ReadProcess(string filename)
+    {
+        // 打开Excel文件
+        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
+        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+        DataSet result = excelReader.AsDataSet();
+        List<ProcessData> processDataList = new();
+        foreach (DataTable table in result.Tables)
+        {
+            DataRow row;
+            for (int i = 1; i < table.Rows.Count; i++)
+            {
+                row = table.Rows[i];
+                processDataList.Add(new ProcessData(row));
+            }
+        }
+        return processDataList;
+    }
+    #endregion
 }
 
 public class CardConfig
@@ -337,6 +385,10 @@ public class CardConfig
     public bool IsBigIcon; // 是否是大图标
     public bool HasInnerContents; // 是否有内部内容（如生物、建筑等）
     public int InnerContentSlotCount; // 内部内容槽位数量
+    public bool HasBurn; // 是否有可燃烧组件
+    public int BurnTime; // 可燃烧时间
+    public bool HasFoodProperty; // 是否有食物属性
+    public Dictionary<FoodProperty, int> FoodPropertyDict; // 食物属性
 }
 
 public class DropConfig
