@@ -67,7 +67,7 @@ public class ChatManager : MonoBehaviour
         AsideTextBox=Resources.Load<GameObject>("Prefabs/UI/Controls/Dialogue/Aside");
         MessagePrefab=Resources.Load<GameObject>("Prefabs/UI/Controls/Dialogue/Choose");
         EventManager.Instance.AddListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
-        ExcelReader.ReadChat("test");
+        ExcelReader.ReadChat("ChatData");
         GameDataManager.Instance.LoadGeneratedChatData();
         if (GeneratedChatDataList.Count == 0)//没有生成过对话时
         {
