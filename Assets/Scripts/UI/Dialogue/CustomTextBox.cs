@@ -20,11 +20,6 @@ public class CustomTextBox : MonoBehaviour
         text = GetComponentInChildren<Text>();
     }
 
-    private void Start()
-    {
-        UpdateSize();
-    }
-
     public void SetText(string text)
     {
         this.text.text = text;
@@ -44,8 +39,6 @@ public class CustomTextBox : MonoBehaviour
         rectTransform.sizeDelta = new Vector2(preferredWidth, textRectTransform.sizeDelta.y + paddingVertical * 2);
 
         textRectTransform.anchoredPosition = new Vector2(paddingHorizontal, -paddingVertical);
-
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
     }
 
     private void Update()
