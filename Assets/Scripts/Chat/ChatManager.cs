@@ -21,10 +21,6 @@ public class ChatManager : MonoBehaviour
                 {
                     GameObject managerObj = new GameObject("ChatManager");
                     instance = managerObj.AddComponent<ChatManager>();
-                    if (Application.isPlaying)
-                    {
-                        DontDestroyOnLoad(managerObj);
-                    }
                 }
             }
             return instance;
@@ -79,8 +75,6 @@ public class ChatManager : MonoBehaviour
     }
     public void OnDestroy()
     {
-        //保存已生成对话数据
-        GameDataManager.Instance.SaveGeneratedChatData();
         //移除对话段落监听
         EventManager.Instance.RemoveListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
     }

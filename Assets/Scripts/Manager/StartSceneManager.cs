@@ -71,7 +71,6 @@ public class StartSceneManager : MonoBehaviour
         // 加载存档
         if (GameDataManager.Instance.LoadData.loads[index] == null)
         {
-            Debug.Log("存档不存在");
             //创建新存档    
             CreateNewLoad(index);
             GameDataManager.Instance.LoadAllData(index);
@@ -158,7 +157,6 @@ public class StartSceneManager : MonoBehaviour
         {
             File.Copy(file, Path.Combine(targetFolder, Path.GetFileName(file)), true);
         }
-        Debug.Log("文件已复制到: " + targetFolder);
     }
 
 

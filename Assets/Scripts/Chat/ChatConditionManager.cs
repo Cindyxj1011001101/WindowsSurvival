@@ -20,11 +20,13 @@ public class ChatConditionManager : MonoBehaviour
 
         Instance = this;
         EventManager.Instance.AddListener<SubscribeActionArgs>(EventType.DialogueCondition, TriggerAction);
+        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, ChangeCardCondition);
         DetectParagraph();
     }
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<SubscribeActionArgs>(EventType.DialogueCondition, TriggerAction);
+        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, ChangeCardCondition);
     }
 
     private void DetectParagraph()
@@ -33,7 +35,6 @@ public class ChatConditionManager : MonoBehaviour
         foreach (var paragraph in ChatManager.Instance.ParagraphDataList)
         {
             AddParagraphCondition(paragraph);
-            //Debug.Log($"开始检测段落条件: {paragraph.TriggerParagraphCondition}");
         }
     }
     public void DetectChatCondition(ChatData chatData)
@@ -62,6 +63,14 @@ public class ChatConditionManager : MonoBehaviour
             condition.UpdateProgress(args.type, args.value);
         }
     }
+    public void ChangeCardCondition(ChangePlayerBagCardsArgs args)
+    { 
+        Dictionary<string, Condition> tmpDic = new Dictionary<string, Condition>(DetectedConditions);
+        foreach (var condition in tmpDic.Values)
+        {
+            condition.UpdateProgress(args.card, args.add);
+        }
+    }
     #endregion
 
     #region 检测
@@ -69,7 +78,6 @@ public class ChatConditionManager : MonoBehaviour
     public void StartChatConditionDetection(ChatData chatData)
     {
         AddChatCondition(chatData);
-        //Debug.Log($"开始检测对话条件: {chatData.MessageCondition}");
     }
     public void AddParagraphCondition(ParagraphData paragraphData)
     {

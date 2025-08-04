@@ -11,19 +11,14 @@ public class HaveMetalInBag : Condition
         this.isUnlocked = isUnlocked;
         this.onUnlocked = onUnlocked;
         triggered = false;
-        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards,OnCardChanges);
     }
 
     public override bool Detect(string type, string value)
     {
-        if(triggered)EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards,OnCardChanges);
         return triggered;
     }
-    public void OnCardChanges(ChangePlayerBagCardsArgs args)
+    public override bool OnCardChanges(Card card,int  add)
     {
-        if (args.card.CardName == "废金属"&& args.add > 0)
-        {
-            triggered = true;
-        }
+        return card.CardName == "废金属";
     }
 }
