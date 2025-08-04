@@ -5,6 +5,7 @@
 /// </summary>
 public class BagRuntimeData
 {
+    public bool init;
     /// <summary>
     /// 列表的长度代表了背包当前的格子数量，每一项代表这一格里的卡牌内容
     /// </summary>
