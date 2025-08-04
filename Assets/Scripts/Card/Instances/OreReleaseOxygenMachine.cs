@@ -27,25 +27,25 @@ public class OreReleaseOxygenMachine : Card
         //curOreNum = 0;
         oreConsumption = 1;
         electricityConsumption = 1;
-        Events = new()
-        {
-            new Event("打开", "打开矿石释氧机", Event_Open, Judge_Open),
-            new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
-            new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, null)
-        };
+        // Events = new()
+        // {
+        //     new Event("打开", "打开矿石释氧机", Event_Open, Judge_Open),
+        //     new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
+        //     new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, null)
+        // };
     }
 
-    protected override void LateInit()
-    {
-        base.LateInit();
-        if (TryGetComponent<InnerContentsComponent>(out var component))
-        {
-            component.contentFilter = (c) =>
-            {
-                return c.CardId == "白爆矿";
-            };
-        }
-    }
+        // protected override void LateInit()
+        // {
+        //     base.LateInit();
+        //     if (TryGetComponent<InnerContentsComponent>(out var component))
+        //     {
+        //         component.contentFilter = (c) =>
+        //         {
+        //             return c.CardId == "白爆矿";
+        //         };
+        //     }
+        // }
 
     #region 开关
     public void Event_Open()

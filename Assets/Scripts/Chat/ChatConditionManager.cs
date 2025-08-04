@@ -43,13 +43,14 @@ public class ChatConditionManager : MonoBehaviour
     }
     public void PassParagraphCondition(ParagraphData paragraphData)
     {
-        ChatManager.Instance.TriggerParagraph(paragraphData);
+        //通过对话条件检测时判断该对话是否会打断
+        ChatManager.Instance.AddTriggerParagraph(paragraphData);
     }
 
 
     public void PassChatCondition(ChatData chatData)
     {
-        ChatManager.Instance.NextMessage = chatData;
+        StartCoroutine(ChatManager.Instance.CreateMessage(chatData)) ;
     }
 
     #region 触发行为
