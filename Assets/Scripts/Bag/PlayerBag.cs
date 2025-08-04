@@ -20,6 +20,18 @@
         InitBag(GameDataManager.Instance.PlayerBagData);
     }
 
+    protected override void InitBag(BagRuntimeData runtimeData)
+    {
+        base.InitBag(runtimeData);
+        if (!runtimeData.init)
+        {
+            // 初始携带一个压缩饼干
+            var card = CardFactory.CreateCard("压缩饼干");
+            AddCard(card);
+            card.Slot.RefreshCurrentDisplay();
+        }
+    }
+
     public override bool CanAddCard(Card card, out string tip)
     {
         float curLoad = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].CurValue;
