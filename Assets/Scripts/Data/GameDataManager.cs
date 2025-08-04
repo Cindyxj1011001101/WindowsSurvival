@@ -136,6 +136,7 @@ public class GameDataManager
         PlayerBag bag = GameManager.Instance.PlayerBag;
         playerBagData = new()
         {
+            init = true,
             cardSlots = new()
         };
         foreach (var slot in bag.Slots)
