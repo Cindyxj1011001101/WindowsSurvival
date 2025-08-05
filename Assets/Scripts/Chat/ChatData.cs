@@ -47,8 +47,8 @@ public class ChatData
         MessageType = row[3].ToString();
         MessageCondition = row[4].ToString();
         Message = row[5].ToString();
-        NextMessageID = row[6].ToString() != "" ? -1 : int.Parse(row[6].ToString());
-        WaitTime = row[7].ToString() != "" ? 0 : int.Parse(row[7].ToString());
+        NextMessageID = row[6].ToString() == "" ? -1 : int.Parse(row[6].ToString());
+        WaitTime = row[7].ToString() == "" ? 0 : int.Parse(row[7].ToString());
         TriggerMessageEffect = row[8].ToString();
     }
 }
