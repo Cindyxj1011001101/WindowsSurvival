@@ -3,7 +3,7 @@ using DanielLochner.Assets.SimpleScrollSnap;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-public class TimeSelectWindow : ModalWindow
+public class TimeSelectWindow : WindowBase
 {
     [SerializeField] private SimpleScrollSnap hourScroll;
     [SerializeField] private SimpleScrollSnap minuteScroll;

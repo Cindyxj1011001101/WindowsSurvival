@@ -20,7 +20,7 @@ public class WindowsManager : MonoBehaviour
         windowGroup = transform.Find("Desktop/WindowGroup").GetComponent<WindowGroup>();
     }
 
-    public WindowBase OpenWindow(string appName)
+    public WindowBase OpenWindow(string appName, bool isModal = false)
     {
         WindowBase window;
         // 窗口没有打开
@@ -47,6 +47,8 @@ public class WindowsManager : MonoBehaviour
 
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("万能泡泡音", true);
+
+        window.SetModal(isModal);
 
         // 打开窗口
         window.Open();

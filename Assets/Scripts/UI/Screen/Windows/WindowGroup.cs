@@ -20,7 +20,7 @@ public class WindowGroup : MonoBehaviour
     public void SetFocused(WindowBase window)
     {
         if (window == null) return;
-        if (window is ModalWindow)
+        if (window.IsModal)
         {
             window.transform.SetParent(modal);
             modal.gameObject.SetActive(true);
@@ -35,7 +35,7 @@ public class WindowGroup : MonoBehaviour
     public void SetClosed(WindowBase window)
     {
         if (window == null) return;
-        if (window is ModalWindow)
+        if (window.IsModal)
         {
             modal.gameObject.SetActive(false);
         }
@@ -45,7 +45,7 @@ public class WindowGroup : MonoBehaviour
     public void SetMinimized(WindowBase window)
     {
         if (window == null) return;
-        if (window is ModalWindow)
+        if (window.IsModal)
         {
             modal.gameObject.SetActive(false);
         }

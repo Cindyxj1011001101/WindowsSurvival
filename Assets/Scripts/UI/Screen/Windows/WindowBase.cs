@@ -44,6 +44,12 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     public bool IsPlayingAnim => anim != null && anim.IsActive();
 
+    private bool isModal;
+
+    public bool IsModal => isModal;
+
+    public void SetModal(bool isModal) => this.isModal = isModal;
+
     protected override void Awake()
     {
         base.Awake();
