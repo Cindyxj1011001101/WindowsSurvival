@@ -89,10 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 317e6118a3fbaae4e82db41bb9a93c3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  paddingHorizontal: 30
-  paddingVertical: 10
-  minWidth: 0
-  maxWidth: 342
+  textPaddingHorizontal: 10
+  textPaddingVertical: 10
+  boxPaddingHorizontal: 42
 --- !u!1 &4592818011079789141
 GameObject:
   m_ObjectHideFlags: 0

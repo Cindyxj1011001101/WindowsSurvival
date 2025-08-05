@@ -1,6 +1,5 @@
 ﻿using DG.Tweening;
 using System.Collections.Generic;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -65,7 +64,8 @@ public class ChatWindow : WindowBase
         }
 
         // 创建聊天气泡
-        Instantiate(prefab, chatLayoutGroup.transform).GetComponent<CustomTextBox>().SetText(content);
+        var textBox = Instantiate(prefab, chatLayoutGroup.transform).GetComponent<CustomTextBox>();
+        textBox.SetText(content);
 
         // 更新组件高度
         MonoUtility.UpdateChatLayoutSize(chatLayoutGroup);
@@ -103,7 +103,7 @@ public class ChatWindow : WindowBase
         ShowDialogueOptions();
     }
 
-    float animDuration = 0.15f;
+    float optionAnimDuration = 0.15f;
     /// <summary>
     /// 显示对话选项
     /// </summary>
@@ -119,7 +119,7 @@ public class ChatWindow : WindowBase
 
         seq = DOTween.Sequence();
 
-        seq.Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, (inputFieldButton.transform as RectTransform).sizeDelta.y + optionLayout.sizeDelta.y - 2), animDuration))
+        seq.Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, (inputFieldButton.transform as RectTransform).sizeDelta.y + optionLayout.sizeDelta.y - 2), optionAnimDuration))
            .OnComplete(() =>
            {
                optionLayoutCanvasGroup.alpha = 1f;
@@ -143,8 +143,8 @@ public class ChatWindow : WindowBase
                 optionLayoutCanvasGroup.alpha = 0f;
                 optionLayoutCanvasGroup.blocksRaycasts = optionLayoutCanvasGroup.interactable = false;
             })
-           .Join(chatScrollViewRect.DOSizeDelta(new Vector2(chatScrollViewRect.sizeDelta.x, chatScrollViewRect.sizeDelta.y + optionLayout.sizeDelta.y - 2), animDuration))
-           .Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, (inputFieldButton.transform as RectTransform).sizeDelta.y), animDuration));
+           .Join(chatScrollViewRect.DOSizeDelta(new Vector2(chatScrollViewRect.sizeDelta.x, chatScrollViewRect.sizeDelta.y + optionLayout.sizeDelta.y - 2), optionAnimDuration))
+           .Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, (inputFieldButton.transform as RectTransform).sizeDelta.y), optionAnimDuration));
     }
 
     public override void OnPointerDown(PointerEventData eventData)
