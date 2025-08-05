@@ -824,7 +824,7 @@ public class StateManager : MonoBehaviour
 
     private void Die()
     {
-        WindowsManager.Instance.OpenWindow("Chat",true);
+        ChatManager.Instance.chatWindow = WindowsManager.Instance.OpenWindow("Chat",true) as ChatWindow;
     }
     #endregion
 }
