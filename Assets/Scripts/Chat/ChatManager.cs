@@ -198,8 +198,10 @@ public class ChatManager : MonoBehaviour
         GeneratedChatDataList.Add(chatData);
         chatWindow.CreateMessage(chatData.MessageSender, chatData.Message);
         SoundManager.Instance.PlaySound("消息提示音_02", true);
+        AfterChatFactory.TriggerEffect(chatData.TriggerMessageEffect);
         await Task.Delay(chatData.WaitTime==0?2500:chatData.WaitTime);
-        //不是最后一句时继续触发下一句对话
+        //触发对话效果
+
         if (chatData.NextMessageID != -1)
         {
             TriggerMessage(ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[chatData.NextMessageID - 1]);
