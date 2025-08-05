@@ -35,11 +35,11 @@ public class WindowGroup : MonoBehaviour
     public void SetClosed(WindowBase window)
     {
         if (window == null) return;
-        if (window.IsModal)
+        window.transform.SetParent(closed);
+        if (modal.childCount == 0)
         {
             modal.gameObject.SetActive(false);
         }
-        window.transform.SetParent(closed);
     }
 
     public void SetMinimized(WindowBase window)

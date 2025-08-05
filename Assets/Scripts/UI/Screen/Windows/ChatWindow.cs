@@ -111,7 +111,7 @@ public class ChatWindow : WindowBase
     {
         if (optionLayoutCanvasGroup.interactable) return;
 
-        if (seq != null && seq.IsActive()) seq.Kill();
+        if (seq != null && seq.IsActive()) return;
 
         chatScrollViewRect.sizeDelta = new Vector2(chatScrollViewRect.sizeDelta.x, chatScrollViewRect.sizeDelta.y - optionLayout.sizeDelta.y + 2);
 
@@ -134,7 +134,7 @@ public class ChatWindow : WindowBase
     {
         if (!optionLayoutCanvasGroup.interactable) return;
 
-        if (seq != null && seq.IsActive()) seq.Kill();
+        if (seq != null && seq.IsActive()) return;
 
         seq = DOTween.Sequence();
 
@@ -173,6 +173,6 @@ public class ChatWindow : WindowBase
         inputFieldText.text = "";
         MonoUtility.DestroyAllChildren(optionLayout);
         ChatManager.Instance.ChoosedChatData = null;
-        HideDialogueOptions();
+        //HideDialogueOptions();
     }
 }
