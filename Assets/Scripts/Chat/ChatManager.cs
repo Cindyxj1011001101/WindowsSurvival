@@ -39,16 +39,14 @@ public class ChatManager : MonoBehaviour
     public List<ParagraphData> ParagraphToTriggeer = new List<ParagraphData>();
     //当前段落数据
     public ParagraphData CurrentParagraphData;
-    //是否可以确认
-    public bool canConfirm = false;
     //当前选项数据
     public ChatData ChoosedChatData;
-    //下一个对话数据
-    public ChatData NextMessage=null;
     //是否在段落中
     private bool inParagraph = false;
     //打断的段落数据
     public ParagraphData InterruptParagraphData = null;
+    //当前是否在选择中
+    public bool Choosing = false;
     #endregion
 
     private void Awake()
@@ -100,7 +98,19 @@ public class ChatManager : MonoBehaviour
             //判断是否可以打断，无法打断则加入待触发列表，在本段对话结束后触发
             if (paragraphData.ParagraphPriority > CurrentParagraphData.ParagraphPriority)
             {
-                InterruptParagraphData = paragraphData;
+                //如果当前在等待选择则删除选项，直接进入对话
+                if (Choosing)
+                {
+                    chatWindow.InterruptChoose();
+                    Choosing = false;
+                    InterruptParagraphData = paragraphData;
+                    TriggerMessage(null);
+                }
+                else
+                {
+                    InterruptParagraphData = paragraphData;
+                }
+
             }
             else
             {
@@ -114,6 +124,7 @@ public class ChatManager : MonoBehaviour
     }
     public void TriggerParagraph(ParagraphData paragraphData)
     {
+        InterruptParagraphData=null;
         CurrentParagraphData = paragraphData;
         inParagraph = true;
         TriggerMessage(paragraphData.ChatDataList[0]);
@@ -139,6 +150,7 @@ public class ChatManager : MonoBehaviour
             TriggerParagraph(InterruptParagraphData);
             InterruptParagraphData = null;
         }
+        if(chatData==null)return;
         //非分支对话且有条件时开始该条件判断，不生成对话
         if (chatData.MessageCondition != "" && chatData.MessageType != "分支对话")
         {
@@ -163,6 +175,7 @@ public class ChatManager : MonoBehaviour
                     }
                     else break;
                 }
+                Choosing=true;
                 chatWindow.SetDialogueOptions(optionsList);
                 break;
             case "分支对话":
@@ -228,6 +241,7 @@ public class ChatManager : MonoBehaviour
     public void Submit()
     {
         if (ChoosedChatData == null) return;
+        Choosing=false;
         CreateMessage(ChoosedChatData);
         ChoosedChatData = null;
     }

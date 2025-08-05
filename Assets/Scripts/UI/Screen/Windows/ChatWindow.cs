@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections.Generic;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -23,7 +24,7 @@ public class ChatWindow : WindowBase
     [SerializeField] private RectTransform optionLayout;
     [SerializeField] private CanvasGroup optionLayoutCanvasGroup;
     [SerializeField] private GameObject optionPrefab;
-
+    
     private Sequence seq;
 
     protected override void Init()
@@ -164,5 +165,13 @@ public class ChatWindow : WindowBase
         inputFieldText.text = "";
         MonoUtility.DestroyAllChildren(optionLayout);
         ChatManager.Instance.Submit();
+    }
+
+    public void InterruptChoose()
+    {
+        inputFieldText.text = "";
+        MonoUtility.DestroyAllChildren(optionLayout);
+        ChatManager.Instance.ChoosedChatData = null;
+        HideDialogueOptions();
     }
 }
