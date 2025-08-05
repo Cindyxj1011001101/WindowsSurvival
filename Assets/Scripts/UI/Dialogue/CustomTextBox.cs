@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
 // 挂载在文本和图片的父对象下，用于自动调整大小
 public class CustomTextBox : MonoBehaviour
 {
@@ -9,6 +8,10 @@ public class CustomTextBox : MonoBehaviour
     public float textPaddingVertical = 10;
 
     public float boxPaddingHorizontal = 42;
+
+    public float minWidth = 0;
+
+    public bool alwaysMaxWidth = false;
 
     private RectTransform rectTransform;
     private Text text;     // 文本组件
@@ -21,7 +24,7 @@ public class CustomTextBox : MonoBehaviour
         rectTransform = transform as RectTransform;
         text = GetComponentInChildren<Text>();
         textRectTransform = text.transform as RectTransform;
-        layoutTransform = GetComponentInParent<ChatLayoutGroup>().transform as RectTransform;
+        layoutTransform = (GetComponentInParent<ILayoutGroup>() as MonoBehaviour).transform as RectTransform;
     }
 
     public void SetText(string text)
@@ -39,9 +42,12 @@ public class CustomTextBox : MonoBehaviour
 
         //获得当前宽度
         float preferredWidth = text.preferredWidth;
-        
+
         //限制宽度在最大/父对象和最小之间
-        preferredWidth = Mathf.Clamp(preferredWidth + textPaddingHorizontal * 2, 0, layoutTransform.rect.width - boxPaddingHorizontal);
+        if (alwaysMaxWidth)
+            preferredWidth = layoutTransform.rect.width - boxPaddingHorizontal;
+        else
+            preferredWidth = Mathf.Clamp(preferredWidth + textPaddingHorizontal * 2, minWidth, layoutTransform.rect.width - boxPaddingHorizontal);
         
         //设置当前宽度
         rectTransform.sizeDelta = new Vector2(preferredWidth, textRectTransform.sizeDelta.y + textPaddingVertical * 2);

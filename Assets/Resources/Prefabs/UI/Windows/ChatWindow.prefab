@@ -176,7 +176,7 @@ MonoBehaviour:
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
+  m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
 --- !u!225 &4118471638637659321
 CanvasGroup:
@@ -186,9 +186,9 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1190079362917449852}
   m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &2889695643386606345
 GameObject:
@@ -423,7 +423,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8287811318130231249}
   m_HandleRect: {fileID: 6579552511493230617}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -464,7 +464,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 6}
-  m_SizeDelta: {x: -12, y: 260}
+  m_SizeDelta: {x: -12, y: 48}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &3559176575980522309
 GameObject:
@@ -741,7 +741,7 @@ MonoBehaviour:
   submitButton: {fileID: 7663842507804551509}
   optionLayout: {fileID: 1876888938957203494}
   optionLayoutCanvasGroup: {fileID: 4118471638637659321}
-  optionPrefab: {fileID: 7923811559259565006, guid: fe5c0cc7a58867c4b8383cdf0a02cf4f, type: 3}
+  optionPrefab: {fileID: 7923811559259565006, guid: 19e39244cb65f56428be96a699e428f9, type: 3}
 --- !u!1 &6496892257497442735
 GameObject:
   m_ObjectHideFlags: 0
@@ -1076,7 +1076,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -60}
-  m_SizeDelta: {x: -11.999998, y: -324}
+  m_SizeDelta: {x: -11.999998, y: -112}
   m_Pivot: {x: 0.49999997, y: 1}
 --- !u!222 &3734042885417519065
 CanvasRenderer:

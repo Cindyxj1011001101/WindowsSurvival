@@ -89,9 +89,9 @@ public class ChatWindow : WindowBase
         MonoUtility.DestroyAllChildren(optionLayout);
         foreach (var option in options)
         {
-            var button = Instantiate(optionPrefab, optionLayout).GetComponent<DialogueOption>();
-            button.SetText(option.Message);
-            button.onClick.AddListener(() =>
+            var obj = Instantiate(optionPrefab, optionLayout);
+            obj.GetComponent<CustomTextBox>().SetText(option.Message);
+            obj.GetComponent<HoverableButton>().onClick.AddListener(() =>
             {
                 inputFieldText.text = option.Message;
                 ChatManager.Instance.ChoosedChatData = option;
@@ -164,6 +164,7 @@ public class ChatWindow : WindowBase
         if (string.IsNullOrEmpty(inputFieldText.text)) return;
         inputFieldText.text = "";
         MonoUtility.DestroyAllChildren(optionLayout);
+        HideDialogueOptions();
         ChatManager.Instance.Submit();
     }
 
