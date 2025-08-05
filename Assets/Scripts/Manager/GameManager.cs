@@ -322,6 +322,7 @@ public class GameManager : MonoBehaviour
     // 移动到目标场景
     public void Move(PlaceEnum targetPlace)
     {
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("EnterEnvironment",targetPlace.ToString()));
         //拿到原先场景是哪个
         PlaceEnum lastPlace = curEnvironmentBag.PlaceData.placeType;
 

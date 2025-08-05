@@ -6,6 +6,7 @@ public class Condition
     public string name;
     public bool startedDetect;
     public bool isUnlocked;
+    public bool Repeat;
     public Action onUnlocked;
 
     public Condition(string name, bool startedDetect, bool isUnlocked,Action onUnlocked)
@@ -50,6 +51,6 @@ public class Condition
         if(!startedDetect) return;
         isUnlocked = true;
         onUnlocked?.Invoke();
-        ChatConditionManager.Instance.DetectedConditions.Remove(name);
+        if(!Repeat) ChatConditionManager.Instance.DetectedConditions.Remove(name);
     }
 }

@@ -10,6 +10,7 @@ public class ChatConditionManager : MonoBehaviour
     public static ChatConditionManager Instance { get; private set; }
 
     public Dictionary<string, Condition> DetectedConditions = new Dictionary<string, Condition>();
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -20,13 +21,16 @@ public class ChatConditionManager : MonoBehaviour
 
         Instance = this;
         EventManager.Instance.AddListener<SubscribeActionArgs>(EventType.DialogueCondition, TriggerAction);
-        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, ChangeCardCondition);
+        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards,
+            ChangeCardCondition);
         DetectParagraph();
     }
+
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<SubscribeActionArgs>(EventType.DialogueCondition, TriggerAction);
-        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, ChangeCardCondition);
+        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards,
+            ChangeCardCondition);
     }
 
     private void DetectParagraph()
@@ -37,11 +41,13 @@ public class ChatConditionManager : MonoBehaviour
             AddParagraphCondition(paragraph);
         }
     }
+
     public void DetectChatCondition(ChatData chatData)
     {
         //对话判断触发条件，本句有条件时进入，订阅段落触发
         AddChatCondition(chatData);
     }
+
     public void PassParagraphCondition(ParagraphData paragraphData)
     {
         //通过对话条件检测时判断该对话是否会打断
@@ -55,6 +61,7 @@ public class ChatConditionManager : MonoBehaviour
     }
 
     #region 触发行为
+
     public void TriggerAction(SubscribeActionArgs args)
     {
         Dictionary<string, Condition> tmpDic = new Dictionary<string, Condition>(DetectedConditions);
@@ -63,33 +70,56 @@ public class ChatConditionManager : MonoBehaviour
             condition.UpdateProgress(args.type, args.value);
         }
     }
+
     public void ChangeCardCondition(ChangePlayerBagCardsArgs args)
-    { 
+    {
         Dictionary<string, Condition> tmpDic = new Dictionary<string, Condition>(DetectedConditions);
         foreach (var condition in tmpDic.Values)
         {
             condition.UpdateProgress(args.card, args.add);
         }
     }
+
     #endregion
 
     #region 检测
+
     //开始检测
     public void StartChatConditionDetection(ChatData chatData)
     {
         AddChatCondition(chatData);
     }
+
     public void AddParagraphCondition(ParagraphData paragraphData)
     {
         switch (paragraphData.TriggerParagraphCondition)
         {
             case "健康<=0":
                 DetectedConditions.Add(paragraphData.TriggerParagraphCondition,
-                new HealthZero(paragraphData.TriggerParagraphCondition, true, false, () => PassParagraphCondition(paragraphData)));
+                    new HealthZero(paragraphData.TriggerParagraphCondition, true, false,
+                        () => PassParagraphCondition(paragraphData)));
                 break;
             case "“修理”研究完毕":
                 DetectedConditions.Add(paragraphData.TriggerParagraphCondition,
-                new FinishResearchFix(paragraphData.TriggerParagraphCondition, true, false, () => PassParagraphCondition(paragraphData)));
+                    new FinishResearchFix(paragraphData.TriggerParagraphCondition, true, false,
+                        () => PassParagraphCondition(paragraphData)));
+                break;
+            case "首次点开“气密舱门”":
+                DetectedConditions.Add(paragraphData.TriggerParagraphCondition,
+                    new FirstOpenAirtightDoor(paragraphData.TriggerParagraphCondition, true, false,
+                        () => PassParagraphCondition(paragraphData)));
+                break;
+            case "第一次进入珊瑚礁海域":
+                DetectedConditions.Add(paragraphData.TriggerParagraphCondition,
+                    new FirstEnterCoralIsland(paragraphData.TriggerParagraphCondition, true, false,
+                        () => PassParagraphCondition(paragraphData)));
+                break;
+            case "每次清醒度<=30":
+                DetectedConditions.Add(paragraphData.TriggerParagraphCondition,
+                    new SobrietyLessThan30(paragraphData.TriggerParagraphCondition, true, false,
+                        () => PassParagraphCondition(paragraphData)));
+                break;
+            default:
                 break;
         }
     }
@@ -100,43 +130,44 @@ public class ChatConditionManager : MonoBehaviour
         {
             case "打开摄像头窗口":
                 DetectedConditions.Add(chatData.MessageCondition,
-                new OpenCameraWindow(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
+                    new OpenCameraWindow(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
             case "打开背包窗口":
                 DetectedConditions.Add(chatData.MessageCondition,
-                new OpenBagWindow(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
+                    new OpenBagWindow(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
             case "打开“压缩饼干”的详情窗口":
                 DetectedConditions.Add(chatData.MessageCondition,
-                new OpenDetailBiscuit(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
+                    new OpenDetailBiscuit(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
             case "打开“状态窗口”":
                 DetectedConditions.Add(chatData.MessageCondition,
-                new OpenStateWindow(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
+                    new OpenStateWindow(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
             case "打开“研究窗口”":
                 DetectedConditions.Add(chatData.MessageCondition,
-                new OpenTechnologyWindow(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
+                    new OpenTechnologyWindow(chatData.MessageCondition, true, false,
+                        () => PassChatCondition(chatData)));
                 break;
             case "研究“修理”这项科技":
                 DetectedConditions.Add(chatData.MessageCondition,
-                new StartResearchFix(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
+                    new StartResearchFix(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
             case "打开地点窗口":
                 DetectedConditions.Add(chatData.MessageCondition,
-                new OpenLocationWindow(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
+                    new OpenLocationWindow(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
             case "点击探索按钮":
                 DetectedConditions.Add(chatData.MessageCondition,
-                new ClickExploreButton(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
+                    new ClickExploreButton(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
             case "制作“裂缝填充物”":
                 DetectedConditions.Add(chatData.MessageCondition,
-                new CreateCrackFiller(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
+                    new CreateCrackFiller(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
             case "身上有“废金属”":
                 DetectedConditions.Add(chatData.MessageCondition,
-                new HaveMetalInBag(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
+                    new HaveMetalInBag(chatData.MessageCondition, true, false, () => PassChatCondition(chatData)));
                 break;
         }
     }
@@ -149,9 +180,14 @@ public class ChatConditionManager : MonoBehaviour
                 return GameManager.Instance.PlayerBag.FindCardOfName("废金属") != null;
             case "身上没有“废金属”":
                 return GameManager.Instance.PlayerBag.FindCardOfName("废金属") == null;
+            case "未装备“氧气面罩”":
+                return GameManager.Instance.EquipmentBag.FindCardOfName("氧气面罩") == null;
+            case "已装备“氧气面罩”":
+                return GameManager.Instance.EquipmentBag.FindCardOfName("氧气面罩") != null;
             default:
                 return false;
         }
     }
+
     #endregion
 }

@@ -504,6 +504,8 @@ public class StateManager : MonoBehaviour
     /// <param name="delta"></param>
     public void ChangePlayerState(PlayerStateEnum stateEnum, float delta)
     {
+        //记录改值前的危险等级
+        var lastStateLevel = PlayerStateDict[stateEnum].StateLevelName;
         if (!PlayerStateDict.ContainsKey(stateEnum)) return;
 
         // 氧气特殊处理
@@ -511,7 +513,10 @@ public class StateManager : MonoBehaviour
             HandlePlayerOxygenChange(delta);
         else
             PlayerStateDict[stateEnum].AddValue(delta);
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs(stateEnum.ToString(), PlayerStateDict[stateEnum].CurValue.ToString()));
+        //记录改值前的危险等级
+        var curStateLevel = PlayerStateDict[stateEnum].StateLevelName;
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Player"+stateEnum, PlayerStateDict[stateEnum].CurValue.ToString()));
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Player"+stateEnum, lastStateLevel+"-"+curStateLevel));
         // 刷新前端显示
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
 

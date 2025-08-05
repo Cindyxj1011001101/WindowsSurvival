@@ -12,7 +12,7 @@ public class HealthZero : Condition
 
     public override bool Detect(string type, string value)
     {
-        if(type=="Health"&&value=="0")
+        if(type=="PlayerHealth"&&value=="0")
         {
             return true;
         }

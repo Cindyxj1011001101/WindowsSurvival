@@ -212,7 +212,7 @@ public class ChatManager : MonoBehaviour
         chatWindow.CreateMessage(chatData.MessageSender, chatData.Message);
         SoundManager.Instance.PlaySound("消息提示音_02", true);
         AfterChatFactory.TriggerEffect(chatData.TriggerMessageEffect);
-        await Task.Delay(chatData.WaitTime==0?2500:chatData.WaitTime);
+        //await Task.Delay(chatData.WaitTime==0?2500:chatData.WaitTime);
         //触发对话效果
 
         if (chatData.NextMessageID != -1)
