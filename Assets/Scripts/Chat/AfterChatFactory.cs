@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
-public class AfterChatFactory
+public static class AfterChatFactory
 {
-    public void TriggerEffect(string EventName)
+    public static void TriggerEffect(string EventName)
     {
         //根据EventName创建对应的事件;英文分号隔开两个事件
         //音效：音效_音效名_是否随机
@@ -11,6 +14,7 @@ public class AfterChatFactory
         //状态：状态_目标状态位置（玩家/当前环境/维生舱/驾驶室/动力舱/珊瑚礁海域）_状态名(健康/饱食/口渴/精神/氧气/疲劳/电力/氧气/压力/高度/电缆/水域)_数值
         //时间：时间_数值
         //其他：其他_其他名
+        if(EventName=="")return;
         List<string> eventList = new List<string>(EventName.Split(';'));
         List<List<string>> eventListList = new List<List<string>>();
         foreach (string eventItem in eventList)
@@ -40,7 +44,7 @@ public class AfterChatFactory
             }
         }
     }
-    public void ChangeState(List<string> eventItemList)
+    public static void ChangeState(List<string> eventItemList)
     {
         switch (eventItemList[1])
         {
@@ -66,7 +70,7 @@ public class AfterChatFactory
 
     }
 
-    private void ChangePlayerStateByString(string stateName, float delta)
+    private static void ChangePlayerStateByString(string stateName, float delta)
     {
         switch (stateName)
         {
@@ -91,7 +95,7 @@ public class AfterChatFactory
         }
     }
 
-    private void ChangeEnvironmentStateByString(PlaceEnum placeType, string stateName, float delta)
+    private static void ChangeEnvironmentStateByString(PlaceEnum placeType, string stateName, float delta)
     {
         var env = GameManager.Instance.EnvironmentBags[placeType];
         switch (stateName)
@@ -117,12 +121,34 @@ public class AfterChatFactory
         }
     }
 
-    public void OtherEvent(List<string> eventItemList)
+    public static void OtherEvent(List<string> eventItemList)
     {
         switch (eventItemList[1])
         {
-            case "":
+            case "死亡":
+                Die();
                 break;
         }
+    }
+    public static void Die()
+    {
+        int index = GameDataManager.Instance.curLoadIndex;
+        //删除本存档
+        GameDataManager.Instance.LoadData.loads[index] = null;
+        GameDataManager.Instance.SaveLoadData();
+        //目标路径
+        string targetFolder = Application.persistentDataPath + "/GameData" + index + "/";
+        // 如果目标文件夹不存在，先创建
+        if (Directory.Exists(targetFolder))
+        {
+            Directory.Delete(targetFolder, true);
+        }
+        else
+        {
+            Debug.Log("存档不存在");
+            return;
+        }
+        //返回初始界面
+        SceneManager.LoadScene(0);
     }
 }
