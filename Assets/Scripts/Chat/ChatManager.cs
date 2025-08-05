@@ -193,11 +193,11 @@ public class ChatManager : MonoBehaviour
     //创建消息（不包括选项）
     public async void CreateMessage(ChatData chatData)
     {
-        // await Task.Delay(1000);
+        await Task.Delay(chatData.WaitTime);
         //将该对话加入已生成列表
         GeneratedChatDataList.Add(chatData);
         chatWindow.CreateMessage(chatData.MessageSender, chatData.Message);
-
+        
         //不是最后一句时继续触发下一句对话
         if (chatData.NextMessageID != -1)
         {
