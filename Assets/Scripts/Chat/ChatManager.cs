@@ -226,7 +226,7 @@ public class ChatManager : MonoBehaviour
     {
         if (ChoosedChatData == null) return;
 
-        StartCoroutine(CreateMessage(ChoosedChatData));
+        CreateMessage(ChoosedChatData);
         ChoosedChatData = null;
     }
 }
