@@ -1,6 +1,5 @@
 ﻿using DG.Tweening;
-using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,28 +19,32 @@ public class HoverTip : MonoBehaviour
         canvasGroup.interactable = canvasGroup.blocksRaycasts = false;
     }
 
-    public void SetEvent(Event e, bool interactable)
+    public void SetTip(
+        string textTip,
+        int time,
+        Dictionary<PlayerStateEnum, float> playerEffects,
+        Dictionary<EnvironmentStateEnum, float> envEffects)
     {
-        // 显示描述
-        descText.gameObject.SetActive(!string.IsNullOrEmpty(e.description));
-        if (!interactable)
+        (verticalLayout.transform as RectTransform).sizeDelta = new Vector2((verticalLayout.transform as RectTransform).sizeDelta.x, 1000);
+
+        foreach (Transform child in transform)
         {
-            descText.text = e.hint;
-            // 更新高度
-            MonoUtility.UpdateVerticalLayoutSize(verticalLayout);
-            return;
+            child.gameObject.SetActive(false);
         }
 
-        descText.text = e.description;
+        // 显示描述
+        descText.gameObject.SetActive(!string.IsNullOrEmpty(textTip));
+
+        descText.text = textTip;
 
         // 显示时间
-        timeText.transform.parent.gameObject.SetActive(e.Time > 0);
-        timeText.text = $"{e.Time}min";
+        timeText.transform.parent.gameObject.SetActive(time > 0);
+        timeText.text = $"{time}min";
 
         // 玩家状态变化
-        forPlayer.SetActive(e.PlayerStateDict.Count > 0);
+        forPlayer.SetActive(playerEffects.Count > 0);
 
-        foreach (var (type, delta) in e.PlayerStateDict)
+        foreach (var (type, delta) in playerEffects)
         {
             if (StateManager.Instance.PlayerStateDict.TryGetValue(type, out var state))
             {
@@ -52,9 +55,9 @@ public class HoverTip : MonoBehaviour
         }
 
         // 环境状态变化
-        forEnvironment.SetActive(e.EnvironmentStateDict.Count > 0);
+        forEnvironment.SetActive(envEffects.Count > 0);
 
-        foreach (var (type, delta) in e.EnvironmentStateDict)
+        foreach (var (type, delta) in envEffects)
         {
             if (GameManager.Instance.CurEnvironmentBag.StateDict.TryGetValue(type, out var state))
             {

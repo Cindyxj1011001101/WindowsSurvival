@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
@@ -8,6 +10,8 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public Vector2 offset;
 
+    public UnityEvent onPointerEnter = new();
+
     public void Awake()
     {
         hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/HoverTip");
@@ -15,6 +19,7 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        onPointerEnter?.Invoke();
         ShowTip();
     }
 
@@ -23,13 +28,23 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         HideTip();
     }
 
-    public void SetEvent(Event e, bool interactable)
+    public void SetTip(Event e, bool interactable)
     {
-        hoverTip = Instantiate(hoverTipPrefab, WindowsManager.Instance.transform).GetComponent<HoverTip>();
-        hoverTip.SetEvent(e, interactable);
+        SetTip(interactable ? e.description : e.hint, e.time, e.playerEffects, e.envEffects);
     }
 
-    private void ShowTip()
+    public void SetTip(
+        string textTip,
+        int time,
+        Dictionary<PlayerStateEnum, float> playerEffects,
+        Dictionary<EnvironmentStateEnum, float> envEffects)
+    {
+        if (hoverTip == null)
+            hoverTip = Instantiate(hoverTipPrefab, WindowsManager.Instance.transform).GetComponent<HoverTip>();
+        hoverTip.SetTip(textTip, time, playerEffects, envEffects);
+    }
+
+    public void ShowTip()
     {
         // 设置位置
         hoverTip.transform.position = CalcTipPos();
@@ -37,7 +52,7 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         hoverTip.Show();
     }
 
-    private void HideTip()
+    public void HideTip()
     {
         hoverTip.Hide();
     }
@@ -45,7 +60,10 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
     public void OnDestroy()
     {
         if (hoverTip != null)
+        {
             hoverTip.SelfDestroy();
+            hoverTip = null;
+        }
     }
 
     private Vector3 CalcTipPos()
@@ -77,7 +95,7 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         }
         if (screenPos.y > Screen.height)
         {
-            Debug.Log("超过下边界");
+            Debug.Log("超过上边界");
         }
         if (screenPos.x < 0)
         {

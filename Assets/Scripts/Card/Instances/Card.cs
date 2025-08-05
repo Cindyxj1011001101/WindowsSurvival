@@ -271,18 +271,18 @@ public class Event
     public string hint;
     public OutStringAction action;
     public Func<bool> condition;
-    public int Time;
-    public Dictionary<PlayerStateEnum, float> PlayerStateDict = new();
-    public Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = new();
+    public int time;
+    public Dictionary<PlayerStateEnum, float> playerEffects = new();
+    public Dictionary<EnvironmentStateEnum, float> envEffects = new();
 
     public Event(string name, string description, OutStringAction action, Func<bool> condition, string hint = null, int Time = 0, Dictionary<PlayerStateEnum, float> PlayerStateDict = null, Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = null)
     {
         this.name = name;
         this.description = description;
         this.hint = hint;
-        this.Time = Time;
-        this.PlayerStateDict = PlayerStateDict ?? new Dictionary<PlayerStateEnum, float>();
-        this.EnvironmentStateDict = EnvironmentStateDict ?? new Dictionary<EnvironmentStateEnum, float>();
+        this.time = Time;
+        this.playerEffects = PlayerStateDict ?? new Dictionary<PlayerStateEnum, float>();
+        this.envEffects = EnvironmentStateDict ?? new Dictionary<EnvironmentStateEnum, float>();
         this.action = action;
         this.condition = condition;
     }

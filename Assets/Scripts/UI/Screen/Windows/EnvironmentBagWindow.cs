@@ -1,7 +1,4 @@
-using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
-using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +24,10 @@ public class EnvironmentBagWindow : BagWindow
     private UIPressureLevel pressureLevel; // 压强等级
     private Dictionary<EnvironmentStateEnum, UIStateSlider> stateSliders = new(); // 环境状态显示
 
+    private HoverTipController hoveredTipController;
+
+    public RectTransform FrontCard => frontCard;
+
     protected override void Awake()
     {
         base.Awake();
@@ -37,8 +38,6 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
-        // 注册探索掉落卡牌事件
-        //EventManager.Instance.AddListener<List<Card>>(EventType.ExploreDropCards, OnExploreDropCards);
     }
 
     private void OnDestroy()
@@ -47,30 +46,17 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.RemoveListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
-        //EventManager.Instance.RemoveListener<List<Card>>(EventType.ExploreDropCards, OnExploreDropCards);
     }
 
-    #region 临时
-
-    GameObject hoverTipPrefab;
-    HoverTip hoverTip;
-    private void ShowExploreTime()
-    {
-        // 设置位置
-        var rect = exploreButton.transform as RectTransform;
-        hoverTip.transform.position = exploreButton.transform.position +
-            new Vector3(rect.sizeDelta.x / 2 + 10, rect.sizeDelta.y / 2);
-
-        hoverTip.Show();
-    }
     protected override void Init()
     {
-        hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/TempHoverTip");
-        hoverTip = Instantiate(hoverTipPrefab, WindowsManager.Instance.transform).GetComponent<HoverTip>();
-        exploreButton.onPointerEnter.AddListener(ShowExploreTime);
-        exploreButton.onPointerExit.AddListener(() => hoverTip.Hide());
+        hoveredTipController = exploreButton.gameObject.AddComponent<HoverTipController>();
+        hoveredTipController.onPointerEnter.AddListener(() =>
+        {
+            var (desc, time, playerEffects, envEffects) = GameManager.Instance.GetExploreEffects();
+            hoveredTipController.SetTip(desc, time, playerEffects, envEffects);
+        });
     }
-    #endregion
 
     /// <summary>
     /// 移动到指定环境
@@ -167,8 +153,9 @@ public class EnvironmentBagWindow : BagWindow
             text.text = "探索完成";
             text.color = ColorManager.cyan;
 
-            // 临时
-            hoverTip.Hide();
+            // 不再显示探索提示
+            hoveredTipController.HideTip();
+            hoveredTipController.enabled = false;
         }
         else if (args.degree == 1)
         {
@@ -177,11 +164,13 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.Interactable = true;
             exploreButton.onClick.AddListener(() =>
             {
-                GameManager.Instance.HandleExplore(frontCard.position, out string tip);
+                GameManager.Instance.HandleExplore(out string tip);
                 CardTweenUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.yellow);
             });
             text.text = "深入探索";
             text.color = ColorManager.white;
+
+            hoveredTipController.enabled = true;
         }
         else
         {
@@ -189,11 +178,13 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.Interactable = true;
             exploreButton.onClick.AddListener(() =>
             {
-                GameManager.Instance.HandleExplore(frontCard.position, out string tip);
+                GameManager.Instance.HandleExplore(out string tip);
                 CardTweenUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.yellow);
             });
             text.text = "开始探索";
             text.color = ColorManager.white;
+
+            hoveredTipController.enabled = true;
         }
 
         // 显示牌堆数量

@@ -1,3 +1,4 @@
+using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
     private Dictionary<PlaceEnum, EnvironmentBag> environmentBags = new();
     private EnvironmentBag curEnvironmentBag;
     private EquipmentBag equipmentBag;
+    private EnvironmentBagWindow envWindow;
 
     public PlayerBag PlayerBag => playerBag;
     public Dictionary<PlaceEnum, EnvironmentBag> EnvironmentBags => environmentBags;
@@ -51,6 +53,8 @@ public class GameManager : MonoBehaviour
         // 当前环境背包
         curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
         equipmentBag = FindObjectOfType<EquipmentBag>(true);
+
+        envWindow = FindObjectOfType<EnvironmentBagWindow>(true);
     }
 
     private void Start()
@@ -199,11 +203,40 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects,
+        Dictionary<EnvironmentStateEnum, float> envEffects) GetExploreEffects()
+    {
+        string desc = "";
+        int time = curEnvironmentBag.explorationTime;
+        Dictionary<PlayerStateEnum, float> playerEffects = new();
+        Dictionary<EnvironmentStateEnum, float> envEffects = new();
+        switch (curEnvironmentBag.PlaceData.placeType)
+        {
+            case PlaceEnum.PowerCabin:
+            case PlaceEnum.Cockpit:
+            case PlaceEnum.LifeSupportCabin:
+                break;
+            case PlaceEnum.CoralCoast:
+                desc = "最好佩戴上氧气面罩";
+                // 如果没有佩戴氧气面罩
+                if (equipmentBag.FindCardOfName("氧气面罩") == null)
+                {
+                    // 探索时间+40%
+                    time += Mathf.CeilToInt(curEnvironmentBag.explorationTime * .4f);
+                    // 健康值-4
+                    playerEffects.Add(PlayerStateEnum.Health, -4);
+                }
+                break;
+        }
+
+        return (desc, time, playerEffects, envEffects);
+    }
+
     /// <summary>
     /// 处理探索事件
     /// </summary>
     /// <param name="startPos">抽牌动效的开始位置，即环境窗口牌堆的位置</param>
-    public void HandleExplore(Vector2 startPos, out string tip)
+    public void HandleExplore(out string tip)
     {
         tip = string.Empty;
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
@@ -218,14 +251,12 @@ public class GameManager : MonoBehaviour
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("抽卡", true);
 
-        float explorationTime = curEnvironmentBag.explorationTime;
+        int explorationTime = curEnvironmentBag.explorationTime;
 
         switch (curEnvironmentBag.PlaceData.placeType)
         {
             case PlaceEnum.PowerCabin:
-                break;
             case PlaceEnum.Cockpit:
-                break;
             case PlaceEnum.LifeSupportCabin:
                 break;
             case PlaceEnum.CoralCoast:
@@ -233,23 +264,21 @@ public class GameManager : MonoBehaviour
                 if (equipmentBag.FindCardOfName("氧气面罩") == null)
                 {
                     // 探索时间+40%
-                    explorationTime *= 1.4f;
+                    explorationTime += Mathf.CeilToInt(curEnvironmentBag.explorationTime * .4f);
                     // 健康值-4
                     StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -4);
                 }
                 break;
-            default:
-                break;
         }
 
         // 消耗时间
-        TimeManager.Instance.AddTime((int)explorationTime);
+        TimeManager.Instance.AddTime(explorationTime);
 
         // 掉落卡牌
-        HandeleExploreDrop(startPos, out tip);
+        HandeleExploreDrop(out tip);
     }
 
-    private void HandeleExploreDrop(Vector2 startPos, out string tip)
+    private void HandeleExploreDrop(out string tip)
     {
         tip = string.Empty;
         var disposableDropList = curEnvironmentBag.DisposableDropList;
@@ -267,7 +296,7 @@ public class GameManager : MonoBehaviour
             }
 
 
-            AddCardsWithTween(droppedCards, startPos, false);
+            AddCardsWithTween(droppedCards, envWindow.FrontCard.position, false);
 
             // 探索完成后让环境生态开始更新
             if (disposableDropList.IsEmpty)
@@ -286,7 +315,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            AddCardsWithTween(droppedCards, startPos, false);
+            AddCardsWithTween(droppedCards, envWindow.FrontCard.position, false);
         }
     }
 
