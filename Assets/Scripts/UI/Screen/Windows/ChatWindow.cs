@@ -152,9 +152,8 @@ public class ChatWindow : WindowBase
     private void Submit()
     {
         if (string.IsNullOrEmpty(inputFieldText.text)) return;
-
-        ChatManager.Instance.Submit();
         inputFieldText.text = "";
         MonoUtility.DestroyAllChildren(optionLayout);
+        ChatManager.Instance.Submit();
     }
 }

@@ -226,7 +226,6 @@ public class ChatManager : MonoBehaviour
     public void Submit()
     {
         if (ChoosedChatData == null) return;
-
         CreateMessage(ChoosedChatData);
         ChoosedChatData = null;
     }
