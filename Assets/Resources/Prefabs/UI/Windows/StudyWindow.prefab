@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8183627290990164476}
   - component: {fileID: 631985945664971319}
   - component: {fileID: 7185511415040615389}
+  - component: {fileID: 1706505017872923077}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -95,6 +96,20 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
+--- !u!114 &1706505017872923077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 57889422455287194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
+  InButton: 0
 --- !u!1 &70418301638071301
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,6 +275,7 @@ GameObject:
   - component: {fileID: 1649954356162370307}
   - component: {fileID: 1827499079118095554}
   - component: {fileID: 7415281903851315911}
+  - component: {fileID: 5481979061896587365}
   m_Layer: 5
   m_Name: MinimizeButton
   m_TagString: Untagged
@@ -343,6 +359,20 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
+--- !u!114 &5481979061896587365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171708254967416415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  changeMouseType: 0
+  InButton: 0
 --- !u!1 &208318731913794627
 GameObject:
   m_ObjectHideFlags: 0

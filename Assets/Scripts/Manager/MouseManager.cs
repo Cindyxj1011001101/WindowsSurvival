@@ -30,6 +30,8 @@ public class MouseManager : MonoBehaviour
     public Sprite ResizeSideSprite; //Y轴
     public Sprite InputSprite; // 输入框
 
+    public bool isDragging;
+
 
     public void Awake()
     {
@@ -47,9 +49,9 @@ public class MouseManager : MonoBehaviour
 
     public void Update()
     {
-        setCursor();
+        SetCursor();
     }
-    void setCursor()
+    void SetCursor()
     {
         Cursor.visible = false;
         //设置鼠标位置
@@ -60,6 +62,8 @@ public class MouseManager : MonoBehaviour
 
     public void ChangeMouseState(MouseState mouseState)
     {
+        if (isDragging) return;
+
         ResetRotation(mouseState);
         switch (mouseState)
         {

@@ -26,6 +26,9 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        MouseManager.Instance.ChangeMouseState(MouseState.Drag);
+        MouseManager.Instance.isDragging = true;
+
         // 在鼠标位置创建图标
         var screenPosition = CardTweenUtility.ScreenPointToLocalPointInRectangle(eventData.position);
         cursorSlot = CardTweenUtility.CreateSlot(screenPosition);
@@ -51,6 +54,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        MouseManager.Instance.isDragging = false;
+
         dragEndPosition = CardTweenUtility.ScreenPointToLocalPointInRectangle(eventData.position);
         Destroy(cursorSlot.gameObject);
 

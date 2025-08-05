@@ -59,6 +59,8 @@ public class CardTweenUtility
         slot.GetComponent<CanvasGroup>().blocksRaycasts = false;
         slot.dontRefresh = true;
 
+        slot.GetComponentInChildren<ChangeMouse>().changeMouseType = ChangeMouseType.Drag;
+
         return slot;
     }
 

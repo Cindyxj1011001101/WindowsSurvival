@@ -7,7 +7,6 @@ public class DragMoveHandler : MonoBehaviour, IPointerDownHandler, IDragHandler,
     [Header("移动目标")]
     public RectTransform targetToMove;
 
-    public bool canDrag = false;
     private Vector2 offset;
 
     public UnityEvent onPointerDown = new UnityEvent();
@@ -15,8 +14,9 @@ public class DragMoveHandler : MonoBehaviour, IPointerDownHandler, IDragHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        canDrag = true;
         if (targetToMove == null) return;
+
+        MouseManager.Instance.ChangeMouseState(MouseState.Drag);
 
         onPointerDown?.Invoke();
 
@@ -32,7 +32,6 @@ public class DragMoveHandler : MonoBehaviour, IPointerDownHandler, IDragHandler,
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!canDrag) return;
         if (targetToMove == null) return;
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -70,6 +69,6 @@ public class DragMoveHandler : MonoBehaviour, IPointerDownHandler, IDragHandler,
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        canDrag = false;
+        MouseManager.Instance.ChangeMouseState(MouseState.Default);
     }
 }

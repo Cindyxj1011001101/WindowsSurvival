@@ -664,7 +664,6 @@ GameObject:
   - component: {fileID: 3653338631443784132}
   - component: {fileID: 7549379001059998867}
   - component: {fileID: 9117391328418656105}
-  - component: {fileID: 5462191074928299307}
   m_Layer: 5
   m_Name: TopBar
   m_TagString: Untagged
@@ -785,20 +784,6 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
---- !u!114 &5462191074928299307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4395314999938323517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  changeMouseType: 1
-  InButton: 0
 --- !u!1 &6137164314612005241
 GameObject:
   m_ObjectHideFlags: 0

@@ -50,8 +50,8 @@ public class ChangeMouse : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     }
 
     public void OnPointerUp(PointerEventData eventData)
-    {  
-        if (InButton == false)
+    {
+        if (!InButton)
         {
             MouseManager.Instance.curChangeMouseType.Pop();
             MouseManager.Instance.ChangeMouseState(MouseState.Default);
@@ -69,10 +69,4 @@ public class ChangeMouse : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 break;
         }
     }
-
-    public void OnDisable()
-    {
-        MouseManager.Instance.ChangeMouseState(MouseState.Default);
-    }
-
 }
