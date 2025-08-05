@@ -21,6 +21,7 @@ public class ChatWindow : WindowBase
     [SerializeField] private HoverableButton submitButton;
 
     [SerializeField] private RectTransform optionLayout;
+    [SerializeField] private CanvasGroup optionLayoutCanvasGroup;
     [SerializeField] private GameObject optionPrefab;
 
     private Sequence seq;
@@ -107,7 +108,7 @@ public class ChatWindow : WindowBase
     /// </summary>
     public void ShowDialogueOptions()
     {
-        if (optionLayout.gameObject.activeSelf) return;
+        if (optionLayoutCanvasGroup.interactable) return;
 
         if (seq != null && seq.IsActive()) seq.Kill();
 
@@ -118,7 +119,11 @@ public class ChatWindow : WindowBase
         seq = DOTween.Sequence();
 
         seq.Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, (inputFieldButton.transform as RectTransform).sizeDelta.y + optionLayout.sizeDelta.y - 2), animDuration))
-           .OnComplete(() => optionLayout.gameObject.SetActive(true));
+           .OnComplete(() =>
+           {
+               optionLayoutCanvasGroup.alpha = 1f;
+               optionLayoutCanvasGroup.blocksRaycasts = optionLayoutCanvasGroup.interactable = true;
+           });
     }
 
     /// <summary>
@@ -126,13 +131,17 @@ public class ChatWindow : WindowBase
     /// </summary>
     public void HideDialogueOptions()
     {
-        if (!optionLayout.gameObject.activeSelf) return;
+        if (!optionLayoutCanvasGroup.interactable) return;
 
         if (seq != null && seq.IsActive()) seq.Kill();
 
         seq = DOTween.Sequence();
 
-        seq.OnStart(() => optionLayout.gameObject.SetActive(false))
+        seq.OnStart(() =>
+            {
+                optionLayoutCanvasGroup.alpha = 0f;
+                optionLayoutCanvasGroup.blocksRaycasts = optionLayoutCanvasGroup.interactable = false;
+            })
            .Join(chatScrollViewRect.DOSizeDelta(new Vector2(chatScrollViewRect.sizeDelta.x, chatScrollViewRect.sizeDelta.y + optionLayout.sizeDelta.y - 2), animDuration))
            .Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, (inputFieldButton.transform as RectTransform).sizeDelta.y), animDuration));
     }
