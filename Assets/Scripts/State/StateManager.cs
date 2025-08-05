@@ -494,7 +494,6 @@ public class StateManager : MonoBehaviour
     }
     #endregion
 
-
     #region 状态变化相关
 
     /// <summary>
@@ -763,10 +762,10 @@ public class StateManager : MonoBehaviour
     #region 睡觉
     private bool isSleeping;
 
-    public void Sleep()
+    public void Sleep(int time)
     {
         isSleeping = true;
-        TimeManager.Instance.AddTime(240);
+        TimeManager.Instance.AddTime(time);
         isSleeping = false;
     }
     #endregion
