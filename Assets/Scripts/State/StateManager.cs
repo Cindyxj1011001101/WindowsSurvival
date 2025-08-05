@@ -169,7 +169,6 @@ public class StateManager : MonoBehaviour
             {
                 if (level == 0)
                 {
-                    Debug.Log("游戏结束");
                     Die();
                 }
             }, onExitLevel: null);
@@ -825,8 +824,7 @@ public class StateManager : MonoBehaviour
 
     private void Die()
     {
-        // Debug.Log(FindObjectOfType<Canvas>().transform.Find("Die").name);
-        // FindObjectOfType<Canvas>().transform.Find("Die").gameObject.SetActive(true);
+        WindowsManager.Instance.OpenWindow("Chat",true);
     }
     #endregion
 }

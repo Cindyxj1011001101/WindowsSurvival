@@ -3,7 +3,7 @@ using UnityEngine.UIElements;
 
 public class AfterChatFactory
 {
-    public void Init(string EventName)
+    public void TriggerEffect(string EventName)
     {
         //根据EventName创建对应的事件;英文分号隔开两个事件
         //音效：音效_音效名_是否随机
