@@ -51,7 +51,7 @@ public class ChatConditionManager : MonoBehaviour
 
     public void PassChatCondition(ChatData chatData)
     {
-        StartCoroutine(ChatManager.Instance.CreateMessage(chatData)) ;
+        ChatManager.Instance.CreateMessage(chatData);
     }
 
     #region 触发行为

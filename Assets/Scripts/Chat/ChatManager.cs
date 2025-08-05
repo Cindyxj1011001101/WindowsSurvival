@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 public class ChatManager : MonoBehaviour
 {
@@ -149,7 +150,7 @@ public class ChatManager : MonoBehaviour
         switch (chatData.MessageType)
         {
             case "对话":
-                StartCoroutine(CreateMessage(chatData));
+                CreateMessage(chatData);
                 break;
             case "选项":
                 // 先收集所有选项消息
@@ -179,21 +180,20 @@ public class ChatManager : MonoBehaviour
                 {
                     if (option.MessageCondition != "" && ChatConditionManager.Instance.CanTriggerBranchCondition(option))
                     {
-                        StartCoroutine(CreateMessage(option));
+                        CreateMessage(option);
                         break;
                     }
                 }
                 break;
             case "提示":
-                StartCoroutine(CreateMessage(chatData));
+                CreateMessage(chatData);
                 break;
         }
     }
     //创建消息（不包括选项）
-    public IEnumerator CreateMessage(ChatData chatData)
+    public async void CreateMessage(ChatData chatData)
     {
-        // yield return new WaitForSeconds(2.5f);
-        yield return null;
+        // await Task.Delay(1000);
         //将该对话加入已生成列表
         GeneratedChatDataList.Add(chatData);
         chatWindow.CreateMessage(chatData.MessageSender, chatData.Message);
@@ -226,7 +226,7 @@ public class ChatManager : MonoBehaviour
     {
         if (ChoosedChatData == null) return;
 
-        StartCoroutine(CreateMessage(ChoosedChatData));
+        CreateMessage(ChoosedChatData);
         ChoosedChatData = null;
     }
 }
