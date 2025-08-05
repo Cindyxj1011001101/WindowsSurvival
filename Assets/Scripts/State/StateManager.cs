@@ -512,7 +512,7 @@ public class StateManager : MonoBehaviour
             HandlePlayerOxygenChange(delta);
         else
             PlayerStateDict[stateEnum].AddValue(delta);
-
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs(stateEnum.ToString(), PlayerStateDict[stateEnum].CurValue.ToString()));
         // 刷新前端显示
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
 
@@ -825,8 +825,8 @@ public class StateManager : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log(FindObjectOfType<Canvas>().transform.Find("Die").name);
-        FindObjectOfType<Canvas>().transform.Find("Die").gameObject.SetActive(true);
+        // Debug.Log(FindObjectOfType<Canvas>().transform.Find("Die").name);
+        // FindObjectOfType<Canvas>().transform.Find("Die").gameObject.SetActive(true);
     }
     #endregion
 }
