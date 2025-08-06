@@ -10,6 +10,7 @@ public class TechnologyManager
 
     public ScriptableTechnologyNode CurStudiedTechNode => Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techData.curStudiedTechNodeName);
     public float CurStudyRate { get; private set; }
+    public bool AllTechnologiesStudied => techData.studiedTechNodes.Count == techData.techNodeDict.Count;
 
     private TechnologyManager()
     {

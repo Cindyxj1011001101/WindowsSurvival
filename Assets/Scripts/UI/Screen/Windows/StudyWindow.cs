@@ -65,12 +65,13 @@ public class StudyWindow : WindowBase
 
     protected override void Init()
     {
-        //foreach (var node in techNodes)
+        //GameDataManager.Instance.TechnologyData.techNodeDict = new();
+        //foreach (var node in GetComponentsInChildren<UITechNode>())
         //{
         //    GameDataManager.Instance.TechnologyData.techNodeDict.Add(node.gameObject.name, new TechNodeData { name = node.gameObject.name, progress = 0 });
         //}
         //GameDataManager.Instance.SaveTechnologyData();
-        //DisplayTechTree();
+
         DisplayStudyState(2, null);
 
         TechnologyManager.Instance.InitFromGameData();
@@ -283,6 +284,11 @@ public class StudyWindow : WindowBase
 
     private void DisplayStudyState(int state, ScriptableTechnologyNode techNode)
     {
+        if (!TechnologyManager.Instance.AllTechnologiesStudied)
+        {
+            studyStateButton.SetVisiable(false);
+            return;
+        }
         studyState = state;
         studyStateButton.onClick.RemoveAllListeners();
         studyStateButton.onClick.AddListener(() =>
