@@ -146,12 +146,6 @@ public class EnvironmentBagWindow : BagWindow
         // 显示探索按钮
         exploreButton.onClick.RemoveAllListeners(); // 清除之前的监听器
 
-        // 播放鼠标等待动画
-        exploreButton.onClick.AddListener(() =>
-        {
-            MouseManager.Instance.Wait();
-        });
-
         var text = exploreButton.GetComponentInChildren<Text>();
         if (args.completed)
         {

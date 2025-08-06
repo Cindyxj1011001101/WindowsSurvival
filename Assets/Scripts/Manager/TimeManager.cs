@@ -66,9 +66,11 @@ public class TimeManager : MonoBehaviour
         EventManager.Instance.TriggerEvent(EventType.ChangeTime, curTime);
     }
 
-
     public void AddTime(int minute)
     {
+        // 等待动画
+        MouseManager.Instance.Wait();
+
         int time = minute;
         curTime = curTime.AddMinutes(minute);
         EventManager.Instance.TriggerEvent(EventType.ChangeTime, curTime);
@@ -89,6 +91,7 @@ public class TimeManager : MonoBehaviour
         }
         lastDay = curTime.Date;
     }
+
     public bool AnotherDay()
     {
         return curTime.Date != lastDay;
