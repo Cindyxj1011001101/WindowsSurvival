@@ -284,7 +284,7 @@ public class StudyWindow : WindowBase
 
     private void DisplayStudyState(int state, ScriptableTechnologyNode techNode)
     {
-        if (!TechnologyManager.Instance.AllTechnologiesStudied)
+        if (TechnologyManager.Instance.AllTechnologiesStudied)
         {
             studyStateButton.SetVisiable(false);
             return;
