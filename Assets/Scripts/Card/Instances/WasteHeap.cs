@@ -17,7 +17,7 @@ public class WasteHeap : Card
     {
         tip = string.Empty;
         if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("抽卡", true);
+            SoundManager.Instance.PlaySound("挖掘废料_01", true);
 
         //消耗1点耐久度
         TryUse();

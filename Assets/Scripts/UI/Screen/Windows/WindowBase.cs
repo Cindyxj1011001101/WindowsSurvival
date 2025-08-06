@@ -38,7 +38,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     private Vector3 lastScale;
     private Vector3 lastSizeDelta;
 
-    private bool focused = false;
+    protected bool focused = false;
 
     private Sequence anim;
 
@@ -288,7 +288,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     // 不要由自己调用
     // 不要由自己调用
     // 不要由自己调用
-    public void SetFocused(bool focused)
+    public virtual void SetFocused(bool focused)
     {
         if (this.focused == focused) return;
 

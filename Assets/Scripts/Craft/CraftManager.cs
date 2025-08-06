@@ -82,6 +82,7 @@ public class CraftManager
 
         // 消耗时间
         TimeManager.Instance.AddTime(recipe.craftTime);
+        SoundManager.Instance.PlaySound("制作_03",true);
 
         // 创建一个新的卡牌
         var card = CardFactory.CreateCard(recipe.cardId);

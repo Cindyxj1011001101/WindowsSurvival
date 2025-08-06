@@ -178,6 +178,7 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.alpha = 0;
         cardCanvasGroup.blocksRaycasts = false;
         cardCanvasGroup.interactable = false;
+        MonoUtility.DestroyAllChildren(componentLayout.transform);
     }
 
     /// <summary>
@@ -302,7 +303,6 @@ public class CardSlot : MonoBehaviour
         }
         cards = new List<Card>(); // 避免影响其他引用
         componentSliders.Clear();
-        MonoUtility.DestroyAllChildren(componentLayout.transform);
         DisableDisplay();
     }
 

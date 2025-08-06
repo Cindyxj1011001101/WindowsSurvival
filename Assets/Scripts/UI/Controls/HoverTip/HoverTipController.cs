@@ -39,15 +39,17 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         Dictionary<PlayerStateEnum, float> playerEffects,
         Dictionary<EnvironmentStateEnum, float> envEffects)
     {
+        if (hoverTipPrefab == null)
+            hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/HoverTip");
+
         if (hoverTip == null)
             hoverTip = Instantiate(hoverTipPrefab, WindowsManager.Instance.transform).GetComponent<HoverTip>();
         hoverTip.SetTip(textTip, time, playerEffects, envEffects);
     }
 
-    public void SetTip(
-        string textTip)
+    public void SetTip(string textTip)
     {
-        SetTip(textTip, 0, new(), new());
+        SetTip(textTip, 0, null, null);
     }
 
     public void ShowTip()

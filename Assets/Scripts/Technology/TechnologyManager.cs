@@ -10,6 +10,7 @@ public class TechnologyManager
 
     public ScriptableTechnologyNode CurStudiedTechNode => Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techData.curStudiedTechNodeName);
     public float CurStudyRate { get; private set; }
+    public bool AllTechnologiesStudied => techData.studiedTechNodes.Count == techData.techNodeDict.Count;
 
     private TechnologyManager()
     {
@@ -61,6 +62,7 @@ public class TechnologyManager
         // 研究完成
         if (techData.CurStudiedTechNodeData.progress >= CurStudiedTechNode.cost)
         {
+            SoundManager.Instance.PlaySound("研究完成", true);
             techData.CurStudiedTechNodeData.progress = CurStudiedTechNode.cost;
             // 解锁该科技
             UnlockTechNode(CurStudiedTechNode);

@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 
@@ -32,6 +34,9 @@ public class MouseManager : MonoBehaviour
 
     public bool isDragging;
 
+    public Animator animator;
+    public CanvasGroup mouseCanvasGroup;
+
 
     public void Awake()
     {
@@ -44,6 +49,7 @@ public class MouseManager : MonoBehaviour
         else{
             instance=this;
         }
+        animator.gameObject.SetActive(false);
         ChangeMouseState(MouseState.Default);
     }
 
@@ -51,7 +57,8 @@ public class MouseManager : MonoBehaviour
     {
         SetCursor();
     }
-    void SetCursor()
+
+    private void SetCursor()
     {
         Cursor.visible = false;
         //设置鼠标位置
@@ -136,6 +143,50 @@ public class MouseManager : MonoBehaviour
                 GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, 0);
                 break;
         }
+    }
+
+    public void Wait(float waitTime = 19f / 24, UnityAction callBack = null)
+    {
+        StartCoroutine(PlayWaitingAnim(waitTime, callBack));
+    }
+
+    private IEnumerator PlayWaitingAnim(float waitTime, UnityAction callBack)
+    {
+        // 禁用鼠标
+        SetMouseEnabled(false);
+
+        // 隐藏鼠标
+        SetMouseVisible(false);
+
+        // 播放动画
+        animator.gameObject.SetActive(true);
+        animator.Play("Waiting");
+
+        // 等待动画播放完毕
+        yield return new WaitForSeconds(waitTime);
+
+        // 执行回调
+        callBack?.Invoke();
+
+        // 停止动画
+        animator.Play("");
+        animator.gameObject.SetActive(false);
+
+        // 显示鼠标
+        SetMouseVisible(true);
+
+        // 启用鼠标
+        SetMouseEnabled(true);
+    }
+
+    private void SetMouseVisible(bool visible)
+    {
+        mouseCanvasGroup.alpha = visible ? 1 : 0;
+    }
+
+    private void SetMouseEnabled(bool enabled)
+    {
+       mouseCanvasGroup.interactable = !enabled;
     }
 }
 

@@ -42,29 +42,43 @@ public class HoverTip : MonoBehaviour
         timeText.text = $"{time}min";
 
         // 玩家状态变化
-        forPlayer.SetActive(playerEffects.Count > 0);
-
-        foreach (var (type, delta) in playerEffects)
+        if (playerEffects != null && playerEffects.Count > 0)
         {
-            if (StateManager.Instance.PlayerStateDict.TryGetValue(type, out var state))
+            forPlayer.SetActive(true);
+
+            foreach (var (type, delta) in playerEffects)
             {
-                var stateTip = transform.Find($"P_{type}").GetComponent<UIStateTip>();
-                stateTip.SetValue(state, delta);
-                stateTip.gameObject.SetActive(true);
+                if (StateManager.Instance.PlayerStateDict.TryGetValue(type, out var state))
+                {
+                    var stateTip = transform.Find($"P_{type}").GetComponent<UIStateTip>();
+                    stateTip.SetValue(state, delta);
+                    stateTip.gameObject.SetActive(true);
+                }
             }
+        }
+        else
+        {
+            forPlayer.SetActive(false);
         }
 
         // 环境状态变化
-        forEnvironment.SetActive(envEffects.Count > 0);
-
-        foreach (var (type, delta) in envEffects)
+        if (envEffects != null && envEffects.Count > 0)
         {
-            if (GameManager.Instance.CurEnvironmentBag.StateDict.TryGetValue(type, out var state))
+            forEnvironment.SetActive(envEffects.Count > 0);
+
+            foreach (var (type, delta) in envEffects)
             {
-                var stateTip = transform.Find($"E_{type}").GetComponent<UIStateTip>();
-                stateTip.SetValue(state, delta);
-                stateTip.gameObject.SetActive(true);
+                if (GameManager.Instance.CurEnvironmentBag.StateDict.TryGetValue(type, out var state))
+                {
+                    var stateTip = transform.Find($"E_{type}").GetComponent<UIStateTip>();
+                    stateTip.SetValue(state, delta);
+                    stateTip.gameObject.SetActive(true);
+                }
             }
+        }
+        else
+        {
+            forEnvironment.SetActive(false);
         }
 
         // 更新高度

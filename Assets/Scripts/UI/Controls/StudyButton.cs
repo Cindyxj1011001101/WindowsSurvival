@@ -25,7 +25,7 @@ public class StudyButton : HoverableButton
             iconObject.SetActive(false);
             Interactable = false;
             text.text = "已完成";
-            text.color = ColorManager.cyan;
+            text.color = ColorManager.Cyan;
         }
         // 研究正在进行
         else if (beingStudied)
@@ -40,7 +40,7 @@ public class StudyButton : HoverableButton
             onClick.AddListener(stopStudying);
 
             text.text = "研究中";
-            text.color = ColorManager.white;
+            text.color = ColorManager.White;
         }
         // 研究未解锁
         else if (TechnologyManager.Instance.IsTechNodeLocked(techNode))
@@ -48,7 +48,7 @@ public class StudyButton : HoverableButton
             iconObject.SetActive(false);
             Interactable = false;
             text.text = "未解锁";
-            text.color = ColorManager.darkGrey;
+            text.color = ColorManager.DarkGrey;
         }
         // 可以进行研究
         else
@@ -61,7 +61,7 @@ public class StudyButton : HoverableButton
             onClick.AddListener(startStuyding);
 
             text.text = "开始研究";
-            text.color = ColorManager.white;
+            text.color = ColorManager.White;
         }
     }
 

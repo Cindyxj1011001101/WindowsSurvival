@@ -139,7 +139,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     else if (component.isEquipped)
                         GameManager.Instance.Unequip(card);
                     else
-                        sourceSlot.ShowTip(tip, ColorManager.yellow);
+                        sourceSlot.ShowTip(tip, ColorManager.Yellow);
 
                     return;
                 }
@@ -157,7 +157,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // 不可移动的卡牌
         if (!sourceSlot.PeekCard().Moveable)
         {
-            sourceSlot.ShowTip("不能移动该卡牌", ColorManager.yellow);
+            sourceSlot.ShowTip("不能移动该卡牌", ColorManager.Yellow);
             return;
         }
 
@@ -221,7 +221,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     // 刷新源卡槽显示
                     sourceSlot.RefreshCurrentDisplay();
                     // 显示提示
-                    sourceSlot.ShowTip(tip, ColorManager.yellow);
+                    sourceSlot.ShowTip(tip, ColorManager.Yellow);
                 }
             );
     }
