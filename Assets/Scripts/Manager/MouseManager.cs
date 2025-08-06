@@ -49,7 +49,7 @@ public class MouseManager : MonoBehaviour
         else{
             instance=this;
         }
-        //animator.gameObject.SetActive(false);
+        animator.gameObject.SetActive(false);
         ChangeMouseState(MouseState.Default);
     }
 
