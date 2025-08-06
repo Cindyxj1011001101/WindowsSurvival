@@ -86,7 +86,7 @@ public class DetailsWindow : WindowBase
 
         // 显示卡牌
         slot.DisplayCard(currentDisplayedCard, currentDisplayedCard.Slot.StackNum);
-
+        Debug.Log("Detail"+currentDisplayedCard.CardName);
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 
         // 显示可选择按钮

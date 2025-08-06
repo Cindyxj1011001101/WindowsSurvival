@@ -1,18 +1,14 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class HaveMetalInBag : Condition
+public class HaveMetalInBag : ChatCondition
 {
     private bool triggered;
-    public HaveMetalInBag(string name, bool startedDetect, bool isUnlocked, Action onUnlocked) : base(name, startedDetect, isUnlocked, onUnlocked)
+    public HaveMetalInBag(string name, bool startedDetect, bool isUnlocked,  Action<List<ChatData>> onUnlocked,ChatData chatData) : base(name, startedDetect, isUnlocked, onUnlocked,chatData)
     {
-        this.name = name;
-        this.startedDetect = startedDetect;
-        this.isUnlocked = isUnlocked;
-        this.onUnlocked = onUnlocked;
         triggered = false;
     }
-
     public override bool Detect(string type, string value)
     {
         return triggered;

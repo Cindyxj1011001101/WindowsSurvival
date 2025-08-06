@@ -44,8 +44,6 @@ public class ChangeMouse : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             case ChangeMouseType.Drag:
                 MouseManager.Instance.ChangeMouseState(MouseState.Drag);
                 break;
-            default:
-                break;
         }
     }
 

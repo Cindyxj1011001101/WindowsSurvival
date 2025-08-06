@@ -1,22 +1,24 @@
 using System;
+using System.Collections.Generic;
 
 [Serializable]
-public class Condition
+public class ParagraphCondition
 {
+    public List<ParagraphData> ParagraphDatas=new List<ParagraphData>();
     public string name;
     public bool startedDetect;
     public bool isUnlocked;
     public bool Repeat;
-    public Action onUnlocked;
+    public Action<List<ParagraphData>> onUnlocked;
 
-    public Condition(string name, bool startedDetect, bool isUnlocked,Action onUnlocked)
+    public ParagraphCondition(string name, bool startedDetect, bool isUnlocked,Action<List<ParagraphData>> onUnlocked)
     {
         this.name = name;
         this.startedDetect = startedDetect;
         this.isUnlocked = isUnlocked;
+        Repeat = false;
         this.onUnlocked = onUnlocked;
     }
-
     public void UpdateProgress(string type,string value)
     {
         if (!startedDetect) return;
@@ -35,7 +37,7 @@ public class Condition
             Unlock();
         }
     }
-
+    
     public virtual bool Detect(string type,string value)
     {
         return false;
@@ -46,11 +48,16 @@ public class Condition
         return false;
     }
 
-    private void Unlock()
+    public virtual void Unlock()
     {
         if(!startedDetect) return;
         isUnlocked = true;
-        onUnlocked?.Invoke();
-        if(!Repeat) ChatConditionManager.Instance.DetectedConditions.Remove(name);
+        onUnlocked?.Invoke(ParagraphDatas);
+        if(!Repeat) ChatConditionManager.Instance.DetectedParagraphConditions.Remove(name);
+    }
+
+    public virtual void AddData(ParagraphData paragraphData)
+    {
+        ParagraphDatas.Add(paragraphData);
     }
 }

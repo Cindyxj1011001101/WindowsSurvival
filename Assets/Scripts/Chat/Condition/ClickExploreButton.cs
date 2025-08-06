@@ -1,13 +1,10 @@
 using System;
+using System.Collections.Generic;
 
-public class ClickExploreButton : Condition
+public class ClickExploreButton : ChatCondition
 {
-    public ClickExploreButton(string name, bool startedDetect, bool isUnlocked, Action onUnlocked) : base(name, startedDetect, isUnlocked, onUnlocked)
+    public ClickExploreButton(string name, bool startedDetect, bool isUnlocked,  Action<List<ChatData>> onUnlocked,ChatData chatData) : base(name, startedDetect, isUnlocked, onUnlocked,chatData)
     {
-        this.name = name;
-        this.startedDetect = startedDetect;
-        this.isUnlocked = isUnlocked;
-        this.onUnlocked = onUnlocked;
     }
 
     public override bool Detect(string type, string value)

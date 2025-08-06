@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 
-public class OpenBagWindow : Condition
+public class OpenBagWindow : ChatCondition
 {
-    public OpenBagWindow(string name, bool startedDetect, bool isUnlocked, Action onUnlocked) : base(name, startedDetect, isUnlocked, onUnlocked) { }
+    public OpenBagWindow(string name, bool startedDetect, bool isUnlocked,  Action<List<ChatData>> onUnlocked,ChatData chatData) : base(name, startedDetect, isUnlocked, onUnlocked,chatData)
+    {
+    }
 
     public override bool Detect(string type, string value)
     {

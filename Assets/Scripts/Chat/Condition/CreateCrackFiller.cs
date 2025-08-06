@@ -1,13 +1,10 @@
 using System;
+using System.Collections.Generic;
 
-public class CreateCrackFiller : Condition
+public class CreateCrackFiller : ChatCondition
 {
-    public CreateCrackFiller(string name, bool startedDetect, bool isUnlocked, Action onUnlocked) : base(name, startedDetect, isUnlocked, onUnlocked)
+    public CreateCrackFiller(string name, bool startedDetect, bool isUnlocked,  Action<List<ChatData>> onUnlocked,ChatData chatData) : base(name, startedDetect, isUnlocked, onUnlocked,chatData)
     {
-        this.name = name;
-        this.startedDetect = startedDetect;
-        this.isUnlocked = isUnlocked;
-        this.onUnlocked = onUnlocked;
     }
 
     public override bool Detect(string type, string value)

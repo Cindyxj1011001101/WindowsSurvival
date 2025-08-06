@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 
-public class FirstEnterCoralIsland:Condition
+public class FirstEnterCoralIsland:ParagraphCondition
 {
     public static bool triggered=false;
-    public FirstEnterCoralIsland(string name, bool startedDetect, bool isUnlocked, Action onUnlocked) : base(name, startedDetect, isUnlocked, onUnlocked) {
-        this.name = name;
-        this.startedDetect = startedDetect;
-        this.isUnlocked = isUnlocked;
-        this.onUnlocked = onUnlocked;
+    public FirstEnterCoralIsland(string name, bool startedDetect, bool isUnlocked,  Action<List<ParagraphData>> onUnlocked,ParagraphData paragraphData) : base(name, startedDetect, isUnlocked, onUnlocked) {
+        AddData(paragraphData);
     }
 
     public override bool Detect(string type, string value)
