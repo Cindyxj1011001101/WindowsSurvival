@@ -8,7 +8,7 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
     private GameObject hoverTipPrefab;
     private HoverTip hoverTip;
 
-    public Vector2 offset;
+    public Vector2 offset = new Vector2(10, 0);
 
     public UnityEvent onPointerEnter = new();
 
@@ -42,6 +42,12 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         if (hoverTip == null)
             hoverTip = Instantiate(hoverTipPrefab, WindowsManager.Instance.transform).GetComponent<HoverTip>();
         hoverTip.SetTip(textTip, time, playerEffects, envEffects);
+    }
+
+    public void SetTip(
+        string textTip)
+    {
+        SetTip(textTip, 0, new(), new());
     }
 
     public void ShowTip()
