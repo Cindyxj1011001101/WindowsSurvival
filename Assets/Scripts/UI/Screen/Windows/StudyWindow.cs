@@ -25,6 +25,7 @@ public class StudyWindow : WindowBase
 
     [SerializeField] private RectTransform selectRect;
 
+    private int studyState;
     [SerializeField] private HoverableButton studyStateButton; // 显示研究状态的按钮
 
     private ScriptableTechnologyNode curSelectedTechNode; // 记录当前选中的科技节点
@@ -50,36 +51,16 @@ public class StudyWindow : WindowBase
 
     private void OnStudyStarted(ScriptableTechnologyNode techNode)
     {
-        // 显示正在研究按钮
-        studyStateButton.GetComponentInChildren<Text>().text = "正在研究";
-        studyStateButton.hoveredColor = studyStateButton.currentColor = ColorManager.White;
-        studyStateButton.ChangeColor(ColorManager.White);
-        studyStateButton.onClick.RemoveAllListeners();
-        studyStateButton.onClick.AddListener(() =>
-        {
-            WindowsManager.Instance.OpenWindow("Study");
-            curSelectedTechNode = techNode;
-            RefreshCurrentDisplay();
-        });
-        studyStateButton.SetVisiable(true);
+        DisplayStudyState(1, techNode);
     }
 
     private void OnStudiedComplished(ScriptableTechnologyNode techNode)
     {
-        // 显示研究完成按钮
-        studyStateButton.GetComponentInChildren<Text>().text = "研究完成";
-        studyStateButton.hoveredColor = studyStateButton.currentColor = ColorManager.Cyan;
-        studyStateButton.ChangeColor(ColorManager.Cyan);
-        studyStateButton.onClick.RemoveAllListeners();
-        studyStateButton.onClick.AddListener(() =>
-        {
-            WindowsManager.Instance.OpenWindow("Study");
-            studyStateButton.SetVisiable(false);
-        });
-
         curSelectedTechNode = techNode;
         RefreshCurrentDisplay();
         StopStudy();
+
+        DisplayStudyState(0, techNode);
     }
 
     protected override void Init()
@@ -90,8 +71,7 @@ public class StudyWindow : WindowBase
         //}
         //GameDataManager.Instance.SaveTechnologyData();
         //DisplayTechTree();
-
-        studyStateButton.SetVisiable(false);
+        DisplayStudyState(2, null);
 
         TechnologyManager.Instance.InitFromGameData();
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
@@ -287,8 +267,7 @@ public class StudyWindow : WindowBase
         button.ChangeColor(ColorManager.White);
         button.currentColor = button.hoveredColor = ColorManager.White;
 
-        // 隐藏研究状态按钮
-        studyStateButton.SetVisiable(false);
+        DisplayStudyState(2, null);
     }
 
     private void StartStudy()
@@ -300,5 +279,56 @@ public class StudyWindow : WindowBase
         var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
         button.ChangeColor(ColorManager.Cyan);
         button.currentColor = button.hoveredColor = ColorManager.Cyan;
+    }
+
+    private void DisplayStudyState(int state, ScriptableTechnologyNode techNode)
+    {
+        studyState = state;
+        studyStateButton.onClick.RemoveAllListeners();
+        studyStateButton.onClick.AddListener(() =>
+        {
+            WindowsManager.Instance.OpenWindow("Study");
+        });
+
+        string text = "";
+        Color color = ColorManager.White;
+        switch (state)
+        {
+            // 研究完成
+            case 0:
+                text = "研究完成";
+                color = ColorManager.Cyan;
+                break;
+            // 开始研究
+            case 1:
+                text = "正在研究";
+                color = ColorManager.White;
+                studyStateButton.onClick.AddListener(() =>
+                {
+                    curSelectedTechNode = techNode;
+                    RefreshCurrentDisplay();
+                });
+                break;
+            // 未在研究
+            case 2:
+                text = "未在研究";
+                color = ColorManager.Red;
+                break;
+        }
+
+        studyStateButton.GetComponentInChildren<Text>().text = text;
+        studyStateButton.hoveredColor = studyStateButton.currentColor = color;
+        studyStateButton.ChangeColor(color);
+    }
+
+    public override void SetFocused(bool focused)
+    {
+        // 从聚焦到失焦时处于研究完成状态
+        if (this.focused && !focused && studyState == 0)
+        {
+            // 显示未在研究
+            DisplayStudyState(2, null);
+        }
+        base.SetFocused(focused);
     }
 }
