@@ -329,14 +329,10 @@ public class StudyWindow : WindowBase
         studyStateButton.ChangeColor(color);
     }
 
-    public override void SetFocused(bool focused)
+    protected override void OnFocused()
     {
-        // 从聚焦到失焦时处于研究完成状态
-        if (this.focused && !focused && studyState == 0)
-        {
+        if (studyState == 0)
             // 显示未在研究
             DisplayStudyState(2, null);
-        }
-        base.SetFocused(focused);
     }
 }

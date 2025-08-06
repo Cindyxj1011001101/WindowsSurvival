@@ -23,8 +23,16 @@ public class ChatWindow : WindowBase
     [SerializeField] private RectTransform optionLayout;
     [SerializeField] private CanvasGroup optionLayoutCanvasGroup;
     [SerializeField] private GameObject optionPrefab;
+
+    private ChatTipGroup chatTipGroup;
     
     private Sequence seq;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        chatTipGroup = FindObjectOfType<ChatTipGroup>();
+    }
 
     protected override void Init()
     {
@@ -47,7 +55,7 @@ public class ChatWindow : WindowBase
     /// 添加一条对话
     /// </summary>
     /// <param name="sender"></param>
-    public void CreateMessage(MessageSenderEnum sender, string content)
+    public void CreateMessage(MessageSenderEnum sender, string content, bool addChatTip = true)
     {
         GameObject prefab = null;
         switch (sender)
@@ -71,6 +79,8 @@ public class ChatWindow : WindowBase
         MonoUtility.UpdateChatLayoutSize(chatLayoutGroup);
 
         ResetScroll();
+
+        if (addChatTip && !focused) CreateChatTip(content);
     }
 
     private void ResetScroll()
@@ -175,4 +185,24 @@ public class ChatWindow : WindowBase
         ChatManager.Instance.ChoosedChatData = null;
         //HideDialogueOptions();
     }
+
+    private void CreateChatTip(string text)
+    {
+        chatTipGroup.AddTip(text);
+    }
+
+    protected override void OnFocused()
+    {
+        chatTipGroup.Clear();
+    }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            CreateChatTip("这是一条测试信息测试信息测试");
+        }
+    }
+#endif
 }

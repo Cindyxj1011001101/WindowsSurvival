@@ -16,10 +16,12 @@ public class WindowsManager : MonoBehaviour
     [SerializeField] private RectTransform hoverTipLayer;
     [SerializeField] private RectTransform tempCardSlotLayer;
     [SerializeField] private RectTransform floatingCardSlotLayer;
+    [SerializeField] private RectTransform chatTipLayer;
 
     public RectTransform HoverTipLayer => hoverTipLayer;
     public RectTransform TempCardSlotLayer => tempCardSlotLayer;
     public RectTransform FloatingTipLayer => floatingCardSlotLayer;
+    public RectTransform ChatTipLayer => chatTipLayer;
 
     private void Awake()
     {
@@ -72,6 +74,10 @@ public class WindowsManager : MonoBehaviour
 
         WindowBase window = openedWindows[appName];
         openedWindows.Remove(appName);
+
+        // 设置为未聚焦
+        window.SetFocused(false);
+
         window.Close();
 
         // 将窗口从渲染层级中移除
