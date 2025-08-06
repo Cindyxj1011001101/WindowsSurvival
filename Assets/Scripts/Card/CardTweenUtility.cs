@@ -46,7 +46,7 @@ public class CardTweenUtility
         // 实例化预制体
         GameObject slotObj = Object.Instantiate(
             Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot/CardSlot"),
-            WindowsManager.Instance.transform);
+            WindowsManager.Instance.TempCardSlotLayer);
 
         // 获取RectTransform并设置位置
         RectTransform slotRect = slotObj.GetComponent<RectTransform>();
@@ -126,7 +126,7 @@ public class CardTweenUtility
     {
         if (string.IsNullOrEmpty(tip)) return;
 
-        var obj = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/FloatingTip"), WindowsManager.Instance.transform);
+        var obj = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/FloatingTip"), WindowsManager.Instance.FloatingTipLayer);
         var floatingTip = obj.GetComponent<FloatingTip>();
         floatingTip.ShowTip(tip, position, textColor, duration);
     }
