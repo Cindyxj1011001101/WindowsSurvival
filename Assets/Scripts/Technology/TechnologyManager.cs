@@ -61,6 +61,7 @@ public class TechnologyManager
         // 研究完成
         if (techData.CurStudiedTechNodeData.progress >= CurStudiedTechNode.cost)
         {
+            SoundManager.Instance.PlaySound("研究完成", true);
             techData.CurStudiedTechNodeData.progress = CurStudiedTechNode.cost;
             // 解锁该科技
             UnlockTechNode(CurStudiedTechNode);
