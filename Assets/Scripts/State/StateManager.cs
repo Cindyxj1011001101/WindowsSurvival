@@ -824,11 +824,14 @@ public class StateManager : MonoBehaviour
 
     #endregion
 
-    #region 临时死亡逻辑
+    #region 死亡逻辑
 
     private void Die()
     {
         ChatManager.Instance.chatWindow = WindowsManager.Instance.OpenWindow("Chat",true) as ChatWindow;
+        ChatManager.Instance.chatWindow.gameObject.transform.Find("TopBar/CloseButton").gameObject.SetActive(false);
+        ChatManager.Instance.chatWindow.gameObject.transform.Find("TopBar/MaximizeButton").gameObject.SetActive(false);
+        ChatManager.Instance.chatWindow.gameObject.transform.Find("TopBar/MinimizeButton").gameObject.SetActive(false);
     }
     #endregion
 }

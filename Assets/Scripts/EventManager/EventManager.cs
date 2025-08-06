@@ -25,10 +25,6 @@ public class EventManager : MonoBehaviour
                 {
                     GameObject managerObj = new GameObject("EventManager");
                     instance = managerObj.AddComponent<EventManager>();
-                    if (Application.isPlaying)
-                    {
-                        DontDestroyOnLoad(managerObj);
-                    }
                 }
             }
             return instance;
@@ -45,9 +41,6 @@ public class EventManager : MonoBehaviour
         }
         
         instance = this;
-        DontDestroyOnLoad(gameObject);
-        
-
     }
     
     // 清理所有事件订阅
