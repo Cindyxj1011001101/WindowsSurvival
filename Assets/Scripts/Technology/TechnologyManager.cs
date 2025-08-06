@@ -34,6 +34,7 @@ public class TechnologyManager
         CurStudyRate = CalcStudyRate();
         // 添加监听，每回合结算研究进度
         EventManager.Instance.AddListener(EventType.IntervalSettle, OnStudy);
+        EventManager.Instance.TriggerEvent(EventType.StudyStarted, CurStudiedTechNode);
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("StartResearch", techNode.techName));
     }
 

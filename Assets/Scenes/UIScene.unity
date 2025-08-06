@@ -1243,6 +1243,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1516384003318883590, guid: aeb59a11f1ebe3149b9088c87f1a0362, type: 3}
+      propertyPath: studyStateButton
+      value: 
+      objectReference: {fileID: 7636039874300651393}
+    - target: {fileID: 1516384003318883590, guid: aeb59a11f1ebe3149b9088c87f1a0362, type: 3}
+      propertyPath: studyComplishedButton
+      value: 
+      objectReference: {fileID: 7636039874300651393}
     - target: {fileID: 1525040154462453501, guid: aeb59a11f1ebe3149b9088c87f1a0362, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -3132,7 +3140,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u7814\u7A76\u5B8C\u6BD5\uFF01"
+  m_Text: "\u7814\u7A76\u5B8C\u6BD5"
 --- !u!222 &1152911113
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5060,7 +5068,7 @@ GameObject:
   - component: {fileID: 7636039874300651393}
   - component: {fileID: 6112153372892009813}
   m_Layer: 5
-  m_Name: HoveredButton
+  m_Name: StudyStateButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5272,7 +5280,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectRect: {fileID: 1669283244}
-  studyComplishedButton: {fileID: 7636039874300651393}
 --- !u!222 &4673379635467449299
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5546,8 +5553,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 317, y: 0}
-  m_SizeDelta: {x: 190, y: 44}
+  m_AnchoredPosition: {x: 308.43, y: 0}
+  m_SizeDelta: {x: 172, y: 44}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7298348844962186320
 CanvasRenderer:

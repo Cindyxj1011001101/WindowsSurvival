@@ -16,6 +16,7 @@
     ChangeTime, // 时间变化
     StudyComplished,
     AnotherDay,//跨天行为触发
+    StudyStarted,
 }
 
 public class ChangeStateArgs
