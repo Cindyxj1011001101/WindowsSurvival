@@ -47,7 +47,7 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
     public void SetTip(
         string textTip)
     {
-        SetTip(textTip, 0, new(), new());
+        SetTip(textTip, 0, null, null);
     }
 
     public void ShowTip()
