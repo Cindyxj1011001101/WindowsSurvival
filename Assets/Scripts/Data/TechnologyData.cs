@@ -16,7 +16,6 @@ public class TechnologyData
     public List<string> studiedTechNodes = new(); // 学习过的科技节点
 
     public string curStudiedTechNodeName; // 当前正在学习的科技节点
-    public float curStudyRate; // 当前学习速度
 
     public Dictionary<string, TechNodeData> techNodeDict = new();
 

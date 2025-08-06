@@ -222,7 +222,7 @@ public class StudyWindow : WindowBase
 
             // 显示研究时间
             studyTime.transform.parent.gameObject.SetActive(true);
-            var time = techNode.cost * 15;
+            var time = Mathf.CeilToInt(techNode.cost * 15f / TechnologyManager.Instance.CurStudyRate);
             int hour = time / 60;
             int minute = time % 60;
             StringBuilder sb = new();
