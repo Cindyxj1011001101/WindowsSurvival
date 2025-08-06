@@ -288,11 +288,15 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     // 不要由自己调用
     // 不要由自己调用
     // 不要由自己调用
-    public virtual void SetFocused(bool focused)
+    public void SetFocused(bool focused)
     {
         if (this.focused == focused) return;
+
+        if (focused) OnFocused();
 
         this.focused = focused;
         focusFrameImage.gameObject.SetActive(focused);
     }
+
+    protected virtual void OnFocused() { }
 }
