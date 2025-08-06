@@ -267,7 +267,7 @@ public class StateManager : MonoBehaviour
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
 
-        return new PlayerState(100, 100, PlayerStateEnum.Health, +0.1f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new PlayerState(100, 100, PlayerStateEnum.Health, +0.4f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitFullnessState()
@@ -346,7 +346,7 @@ public class StateManager : MonoBehaviour
         var highDangerLevels = new List<int>() { 0, 1 };
         var effects = new List<StateEffect>()
         {
-            new () { healthEffect = -10 },
+            new () { healthEffect = -7 },
             StateEffect.NoEffect,
             StateEffect.NoEffect,
             StateEffect.NoEffect,
@@ -365,8 +365,8 @@ public class StateManager : MonoBehaviour
         };
         var effects = new List<StateEffect>()
         {
-            new () { sanityEffect = -6, healthEffect = -4 },
-            new () { sanityEffect = -2, healthEffect = -1.5f },
+            new () { sanityEffect = -4, healthEffect = -3 },
+            new () { sanityEffect = -2, healthEffect = -1 },
             new () { sanityEffect = -0.5f },
             StateEffect.NoEffect
         };
