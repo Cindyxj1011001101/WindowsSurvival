@@ -16,6 +16,16 @@ namespace ChatPlugIn
             this.storyEditorWindow = storyEditorWindow;
             AddGridBackground();
             AddManipulators();
+            AddDefaultNodes();
+        }
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            base.BuildContextualMenu(evt);
+            evt.menu.AppendAction("添加节点", (e) =>
+            {
+                BaseNode node = CreateNode("节点",Vector2.zero);
+                AddElement(node);
+            });
         }
         //添加网格背景 
         private void AddGridBackground()
@@ -40,6 +50,20 @@ namespace ChatPlugIn
             //添加框选组件
             this.AddManipulator(new RectangleSelector());
         }
+
+        public BaseNode CreateNode(string title, Vector2 position)
+        {
+            BaseNode node = new BaseNode();
+            node.Init(this, title, position);
+            node.Draw();
+            return node;
+        }
+
+        private void AddDefaultNodes()
+        {
+            AddElement(CreateNode("节点", new Vector2(200, 200)));
+        }
+
     }
 }
 

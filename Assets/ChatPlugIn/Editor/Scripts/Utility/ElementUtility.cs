@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
 
@@ -41,6 +42,13 @@ namespace ChatPlugIn
             TextField textArea = CreateTextField(value, label, onValueChanged);
             textArea.multiline = true;
             return textArea;
+        }
+        
+        public static Port CreatePort(this BaseNode node,string portName="",Orientation orientation=Orientation.Horizontal,Direction direction=Direction.Output,Port.Capacity capacity=Port.Capacity.Single)
+        {
+            Port port = node.InstantiatePort(orientation, direction, capacity, typeof(bool));
+            port.portName = portName;
+            return port;
         }
 
     }
