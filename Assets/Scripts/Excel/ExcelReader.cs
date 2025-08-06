@@ -324,7 +324,7 @@ public static class ExcelReader
         {
             DataRow row;
             //读取第一行段落信息
-            ParagraphData paragraphData = new ParagraphData(ChatManager.Instance.ParagraphDataList.Count + 1, int.Parse(table.Rows[1][6].ToString()), new List<ChatData>(), table.Rows[1][4].ToString());
+            ParagraphData paragraphData = new ParagraphData(ChatManager.Instance.ParagraphDataList.Count, int.Parse(table.Rows[1][6].ToString()), new List<ChatData>(), table.Rows[1][4].ToString());
             List<ChatData> chatDataList = new List<ChatData>();
             for (int i = 2; i < table.Rows.Count; i++)
             {

@@ -167,11 +167,11 @@ public class ChatManager : MonoBehaviour
             case "选项":
                 // 先收集所有选项消息
                 List<ChatData> optionsList = new List<ChatData>();
-                for (int i = chatData.MessageID - 1; i <ParagraphDataList[chatData.ParagraphID - 1].ChatDataList.Count; i++)
+                for (int i = chatData.MessageID - 1; i <ParagraphDataList[chatData.ParagraphID].ChatDataList.Count; i++)
                 {
-                    if (ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[i].MessageType == "选项")
+                    if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "选项")
                     {
-                        optionsList.Add(ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[i]);
+                        optionsList.Add(ParagraphDataList[chatData.ParagraphID].ChatDataList[i]);
                     }
                     else break;
                 }
@@ -183,9 +183,9 @@ public class ChatManager : MonoBehaviour
                 List<ChatData> branchOptionsList = new List<ChatData>();
                 for (int i = chatData.MessageID - 1; i < ParagraphDataList[chatData.ParagraphID - 1].ChatDataList.Count; i++)
                 {
-                    if (ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[i].MessageType == "分支对话")
+                    if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "分支对话")
                     {
-                        branchOptionsList.Add(ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[i]);
+                        branchOptionsList.Add(ParagraphDataList[chatData.ParagraphID].ChatDataList[i]);
                     }
                     else break;
                 }
@@ -217,7 +217,7 @@ public class ChatManager : MonoBehaviour
 
         if (chatData.NextMessageID != -1)
         {
-            TriggerMessage(ParagraphDataList[chatData.ParagraphID - 1].ChatDataList[chatData.NextMessageID - 1]);
+            TriggerMessage(ParagraphDataList[chatData.ParagraphID].ChatDataList[chatData.NextMessageID - 1]);
         }
         else
         {

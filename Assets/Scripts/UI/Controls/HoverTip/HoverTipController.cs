@@ -62,6 +62,8 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void HideTip()
     {
+        if (hoverTip == null)
+            return;
         hoverTip.Hide();
     }
 

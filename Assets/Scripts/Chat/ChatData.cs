@@ -10,6 +10,7 @@ public enum MessageSenderEnum
     Aside //旁白
 }
 
+[Serializable]
 public class ChatData
 {
     public int MessageID; //消息ID

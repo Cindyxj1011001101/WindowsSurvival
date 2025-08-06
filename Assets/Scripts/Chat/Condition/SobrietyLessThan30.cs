@@ -11,7 +11,7 @@ public class SobrietyLessThan30:ParagraphCondition
 
     public override bool Detect(string type, string value)
     {
-        if (type == "PlayerSobriety" && value=="正常-疲劳")
+        if (type == "PlayerSobriety" && value=="还不困-疲劳")
         {
             return true;
         }

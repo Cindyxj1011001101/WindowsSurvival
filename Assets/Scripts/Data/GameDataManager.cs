@@ -314,7 +314,7 @@ public class GameDataManager
     private GeneratedChatData generatedChatData;
     public GeneratedChatData GeneratedChatData => generatedChatData;
 
-    public void SaveGeneratedChatData()
+    public void SaveGeneratedChatData() 
     {
         generatedChatData.GeneratedChatDataList = new List<ChatData>(ChatManager.Instance.GeneratedChatDataList);
         JsonManager.SaveData(generatedChatData, CurLoadName, "GeneratedChatData");
