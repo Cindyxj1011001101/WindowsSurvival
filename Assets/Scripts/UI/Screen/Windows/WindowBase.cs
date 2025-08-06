@@ -48,7 +48,15 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
 
     public bool IsModal => isModal;
 
-    public void SetModal(bool isModal) => this.isModal = isModal;
+    public void SetModal(bool isModal)
+    {
+        this.isModal = isModal;
+        if (isModal)
+        {
+            // 禁用最小化和关闭
+            closeButton.Interactable = minimizeButton.Interactable = false;
+        }
+    }
 
     protected override void Awake()
     {

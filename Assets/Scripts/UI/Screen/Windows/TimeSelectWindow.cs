@@ -45,8 +45,8 @@ public class TimeSelectWindow : WindowBase
 
         confirmButton.onClick.AddListener(() =>
         {
-            onConfirm?.Invoke(hour * 60 + minute);
             WindowsManager.Instance.CloseWindow(AppName);
+            onConfirm?.Invoke(hour * 60 + minute);
         });
         cancelButton.onClick.AddListener(() =>
         {
