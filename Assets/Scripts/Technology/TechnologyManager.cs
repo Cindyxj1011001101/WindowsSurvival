@@ -9,7 +9,7 @@ public class TechnologyManager
     private TechnologyData techData;
 
     public ScriptableTechnologyNode CurStudiedTechNode => Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techData.curStudiedTechNodeName);
-    public float CurStudyRate => techData.curStudyRate;
+    public float CurStudyRate { get; private set; }
 
     private TechnologyManager()
     {
@@ -21,6 +21,7 @@ public class TechnologyManager
         techData = GameDataManager.Instance.TechnologyData;
         if (CurStudiedTechNode != null)
             Study(CurStudiedTechNode);
+        CurStudyRate = CalcStudyRate();
     }
 
     /// <summary>
@@ -30,9 +31,10 @@ public class TechnologyManager
     public void Study(ScriptableTechnologyNode techNode)
     {
         techData.curStudiedTechNodeName = techNode.techName;
-        techData.curStudyRate = CalcStudyRate();
+        CurStudyRate = CalcStudyRate();
         // 添加监听，每回合结算研究进度
         EventManager.Instance.AddListener(EventType.IntervalSettle, OnStudy);
+        EventManager.Instance.TriggerEvent(EventType.StudyStarted, CurStudiedTechNode);
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("StartResearch", techNode.techName));
     }
 
@@ -53,10 +55,9 @@ public class TechnologyManager
     private void OnStudy()
     {
         // 计算研究速率
-        techData.curStudyRate = CalcStudyRate();
+        CurStudyRate = CalcStudyRate();
         // 进度增长
-        //CurStudiedTechNode.progress += techData.curStudyRate;
-        techData.CurStudiedTechNodeData.progress += techData.curStudyRate;
+        techData.CurStudiedTechNodeData.progress += CurStudyRate;
         // 研究完成
         if (techData.CurStudiedTechNodeData.progress >= CurStudiedTechNode.cost)
         {

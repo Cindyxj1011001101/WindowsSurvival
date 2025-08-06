@@ -1,5 +1,4 @@
 ﻿using DG.Tweening;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,8 +11,6 @@ public class BottomBar : MonoBehaviour
     private Dictionary<string, HoverableButton> shortcuts = new();
 
     private string selectedAppName;
-
-    [SerializeField] private HoverableButton studyComplishedButton; // 研究完成以后显示的按钮
 
     public HoverableButton this[string appName]
     {
@@ -44,32 +41,6 @@ public class BottomBar : MonoBehaviour
             }
         }
         selectRect.gameObject.SetActive(false);
-
-        // 监听研究完成事件
-        studyComplishedButton.hoveredColor = studyComplishedButton.currentColor = ColorManager.cyan;
-        studyComplishedButton.ChangeColor(ColorManager.cyan);
-        EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudyComplished);
-    }
-
-    private void Start()
-    {
-        studyComplishedButton.SetVisiable(false);
-    }
-
-    private void OnDestroy()
-    {
-        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudyComplished);
-    }
-
-    private void OnStudyComplished(ScriptableTechnologyNode techNode)
-    {
-        studyComplishedButton.SetVisiable(true);
-        studyComplishedButton.onClick.RemoveAllListeners();
-        studyComplishedButton.onClick.AddListener(() =>
-        {
-            WindowsManager.Instance.OpenWindow("Study");
-            studyComplishedButton.SetVisiable(false);
-        });
     }
 
     public void SelectAppShortcut(string appName)

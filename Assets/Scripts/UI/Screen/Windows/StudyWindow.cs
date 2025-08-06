@@ -25,6 +25,8 @@ public class StudyWindow : WindowBase
 
     [SerializeField] private RectTransform selectRect;
 
+    [SerializeField] private HoverableButton studyStateButton; // 显示研究状态的按钮
+
     private ScriptableTechnologyNode curSelectedTechNode; // 记录当前选中的科技节点
 
     private List<GameObject> temp = new();
@@ -36,16 +38,45 @@ public class StudyWindow : WindowBase
         base.Awake();
         EventManager.Instance.AddListener(EventType.ChangeStudyProgress, RefreshCurrentDisplay);
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
+        EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
     }
 
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener(EventType.ChangeStudyProgress, RefreshCurrentDisplay);
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
+        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
+    }
+
+    private void OnStudyStarted(ScriptableTechnologyNode techNode)
+    {
+        // 显示正在研究按钮
+        studyStateButton.GetComponentInChildren<Text>().text = "正在研究";
+        studyStateButton.hoveredColor = studyStateButton.currentColor = ColorManager.white;
+        studyStateButton.ChangeColor(ColorManager.white);
+        studyStateButton.onClick.RemoveAllListeners();
+        studyStateButton.onClick.AddListener(() =>
+        {
+            WindowsManager.Instance.OpenWindow("Study");
+            curSelectedTechNode = techNode;
+            RefreshCurrentDisplay();
+        });
+        studyStateButton.SetVisiable(true);
     }
 
     private void OnStudiedComplished(ScriptableTechnologyNode techNode)
     {
+        // 显示研究完成按钮
+        studyStateButton.GetComponentInChildren<Text>().text = "研究完成";
+        studyStateButton.hoveredColor = studyStateButton.currentColor = ColorManager.cyan;
+        studyStateButton.ChangeColor(ColorManager.cyan);
+        studyStateButton.onClick.RemoveAllListeners();
+        studyStateButton.onClick.AddListener(() =>
+        {
+            WindowsManager.Instance.OpenWindow("Study");
+            studyStateButton.SetVisiable(false);
+        });
+
         curSelectedTechNode = techNode;
         RefreshCurrentDisplay();
         StopStudy();
@@ -59,6 +90,9 @@ public class StudyWindow : WindowBase
         //}
         //GameDataManager.Instance.SaveTechnologyData();
         //DisplayTechTree();
+
+        studyStateButton.SetVisiable(false);
+
         TechnologyManager.Instance.InitFromGameData();
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
 
@@ -222,7 +256,7 @@ public class StudyWindow : WindowBase
 
             // 显示研究时间
             studyTime.transform.parent.gameObject.SetActive(true);
-            var time = techNode.cost * 15;
+            var time = Mathf.CeilToInt(techNode.cost * 15f / TechnologyManager.Instance.CurStudyRate);
             int hour = time / 60;
             int minute = time % 60;
             StringBuilder sb = new();
@@ -252,6 +286,9 @@ public class StudyWindow : WindowBase
         var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
         button.ChangeColor(ColorManager.white);
         button.currentColor = button.hoveredColor = ColorManager.white;
+
+        // 隐藏研究状态按钮
+        studyStateButton.SetVisiable(false);
     }
 
     private void StartStudy()

@@ -101,19 +101,25 @@ public class CardSlot : MonoBehaviour
             componentSliders.Add(component, slider);
         }
 
+        var tipController = slider.gameObject.AddComponent<HoverTipController>();
+
         switch (component)
         {
             case DurabilityComponent durabilityComponent:
                 slider.value = (float)durabilityComponent.durability / durabilityComponent.maxDurability;
+                tipController.SetTip($"耐久度:    {slider.value * 100:0.0}%");
                 break;
             case FreshnessComponent freshnessComponent:
                 slider.value = (float)freshnessComponent.freshness / freshnessComponent.maxFreshness;
+                tipController.SetTip($"新鲜度:    {slider.value * 100:0.0}%");
                 break;
             case GrowthComponent growthComponent:
                 slider.value = (float)growthComponent.growth / growthComponent.maxGrowth;
+                tipController.SetTip($"生长度:    {slider.value * 100:0.0}%");
                 break;
             case ProgressComponent progressComponent:
                 slider.value = (float)progressComponent.progress / progressComponent.maxProgress;
+                tipController.SetTip($"产物进度:    {slider.value * 100:0.0}%");
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");

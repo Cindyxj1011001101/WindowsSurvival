@@ -2,7 +2,7 @@ using UnityEngine.EventSystems;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class DragMoveHandler : MonoBehaviour, IPointerDownHandler, IDragHandler,IEndDragHandler
+public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler,IEndDragHandler
 {
     [Header("移动目标")]
     public RectTransform targetToMove;
@@ -12,7 +12,7 @@ public class DragMoveHandler : MonoBehaviour, IPointerDownHandler, IDragHandler,
     public UnityEvent onPointerDown = new UnityEvent();
 
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnBeginDrag(PointerEventData eventData)
     {
         if (targetToMove == null) return;
 
