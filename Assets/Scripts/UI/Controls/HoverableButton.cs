@@ -17,7 +17,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     private CanvasGroup canvasGroup;
 
     public Color currentColor { get; set; }
-    public Color hoveredColor { get; set; } = ColorManager.white; // 鼠标悬停时的颜色，默认为白色
+    public Color hoveredColor { get; set; } = ColorManager.White; // 鼠标悬停时的颜色，默认为白色
 
     public UnityEvent onClick { get; set; } = new UnityEvent();
     public UnityEvent onPointerEnter { get; set; } = new UnityEvent();
@@ -52,7 +52,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         if (normalImage != null)
             currentColor = normalImage.color;
         else
-            currentColor = ColorManager.white;
+            currentColor = ColorManager.White;
 
         var hoveredGraphic = transform.Find("Hovered");
         if (hoveredGraphic != null)
@@ -96,7 +96,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                 .SetEase(Ease.OutQuad)
                 .OnStart(() =>
                 {
-                    ChangeColor(ColorManager.black); // 反色
+                    ChangeColor(ColorManager.Black); // 反色
                     graphic.color = hoveredColor; // 改变悬浮框的颜色
                 }); // 在动画开始时改变颜色
         }

@@ -52,8 +52,8 @@ public class StudyWindow : WindowBase
     {
         // 显示正在研究按钮
         studyStateButton.GetComponentInChildren<Text>().text = "正在研究";
-        studyStateButton.hoveredColor = studyStateButton.currentColor = ColorManager.white;
-        studyStateButton.ChangeColor(ColorManager.white);
+        studyStateButton.hoveredColor = studyStateButton.currentColor = ColorManager.White;
+        studyStateButton.ChangeColor(ColorManager.White);
         studyStateButton.onClick.RemoveAllListeners();
         studyStateButton.onClick.AddListener(() =>
         {
@@ -68,8 +68,8 @@ public class StudyWindow : WindowBase
     {
         // 显示研究完成按钮
         studyStateButton.GetComponentInChildren<Text>().text = "研究完成";
-        studyStateButton.hoveredColor = studyStateButton.currentColor = ColorManager.cyan;
-        studyStateButton.ChangeColor(ColorManager.cyan);
+        studyStateButton.hoveredColor = studyStateButton.currentColor = ColorManager.Cyan;
+        studyStateButton.ChangeColor(ColorManager.Cyan);
         studyStateButton.onClick.RemoveAllListeners();
         studyStateButton.onClick.AddListener(() =>
         {
@@ -284,8 +284,8 @@ public class StudyWindow : WindowBase
 
         // 开始研究后，将正在研究的类型的按钮的颜色设为white
         var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
-        button.ChangeColor(ColorManager.white);
-        button.currentColor = button.hoveredColor = ColorManager.white;
+        button.ChangeColor(ColorManager.White);
+        button.currentColor = button.hoveredColor = ColorManager.White;
 
         // 隐藏研究状态按钮
         studyStateButton.SetVisiable(false);
@@ -298,7 +298,7 @@ public class StudyWindow : WindowBase
 
         // 开始研究后，将正在研究的类型的按钮的颜色设为cyan
         var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
-        button.ChangeColor(ColorManager.cyan);
-        button.currentColor = button.hoveredColor = ColorManager.cyan;
+        button.ChangeColor(ColorManager.Cyan);
+        button.currentColor = button.hoveredColor = ColorManager.Cyan;
     }
 }

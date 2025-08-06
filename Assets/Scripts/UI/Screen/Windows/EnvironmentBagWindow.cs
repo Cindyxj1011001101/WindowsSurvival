@@ -152,7 +152,7 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.normalImage.gameObject.SetActive(false);
             exploreButton.Interactable = false;
             text.text = "探索完成";
-            text.color = ColorManager.cyan;
+            text.color = ColorManager.Cyan;
 
             // 不再显示探索提示
             hoveredTipController.HideTip();
@@ -166,10 +166,10 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.onClick.AddListener(() =>
             {
                 GameManager.Instance.HandleExplore(out string tip);
-                CardTweenUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.yellow);
+                CardTweenUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
             });
             text.text = "深入探索";
-            text.color = ColorManager.white;
+            text.color = ColorManager.White;
 
             hoveredTipController.enabled = true;
         }
@@ -180,10 +180,10 @@ public class EnvironmentBagWindow : BagWindow
             exploreButton.onClick.AddListener(() =>
             {
                 GameManager.Instance.HandleExplore(out string tip);
-                CardTweenUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.yellow);
+                CardTweenUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
             });
             text.text = "开始探索";
-            text.color = ColorManager.white;
+            text.color = ColorManager.White;
 
             hoveredTipController.enabled = true;
         }
