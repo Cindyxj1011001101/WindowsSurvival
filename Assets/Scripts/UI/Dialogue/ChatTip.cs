@@ -9,7 +9,6 @@ public class ChatTip : HoverableButton
     public RectTransform mask;
     public CanvasGroup iconEnter;
     public CanvasGroup iconExit;
-    public CanvasGroup canvasGroup;
     public Text text;
 
     private Sequence showSeq;

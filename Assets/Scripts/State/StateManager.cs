@@ -829,9 +829,6 @@ public class StateManager : MonoBehaviour
     private void Die()
     {
         ChatManager.Instance.chatWindow = WindowsManager.Instance.OpenWindow("Chat",true) as ChatWindow;
-        ChatManager.Instance.chatWindow.gameObject.transform.Find("TopBar/CloseButton").gameObject.SetActive(false);
-        ChatManager.Instance.chatWindow.gameObject.transform.Find("TopBar/MaximizeButton").gameObject.SetActive(false);
-        ChatManager.Instance.chatWindow.gameObject.transform.Find("TopBar/MinimizeButton").gameObject.SetActive(false);
     }
     #endregion
 }
