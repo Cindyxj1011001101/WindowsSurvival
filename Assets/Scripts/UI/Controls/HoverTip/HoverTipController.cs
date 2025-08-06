@@ -43,7 +43,7 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
             hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/HoverTip");
 
         if (hoverTip == null)
-            hoverTip = Instantiate(hoverTipPrefab, WindowsManager.Instance.transform).GetComponent<HoverTip>();
+            hoverTip = Instantiate(hoverTipPrefab, WindowsManager.Instance.HoverTipLayer).GetComponent<HoverTip>();
         hoverTip.SetTip(textTip, time, playerEffects, envEffects);
     }
 

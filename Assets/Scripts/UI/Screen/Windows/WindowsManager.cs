@@ -13,6 +13,14 @@ public class WindowsManager : MonoBehaviour
 
     private WindowGroup windowGroup; // 所有窗口作为其子物体，由该脚本控制窗口的渲染顺序
 
+    [SerializeField] private RectTransform hoverTipLayer;
+    [SerializeField] private RectTransform tempCardSlotLayer;
+    [SerializeField] private RectTransform floatingCardSlotLayer;
+
+    public RectTransform HoverTipLayer => hoverTipLayer;
+    public RectTransform TempCardSlotLayer => tempCardSlotLayer;
+    public RectTransform FloatingTipLayer => floatingCardSlotLayer;
+
     private void Awake()
     {
         instance = this;
