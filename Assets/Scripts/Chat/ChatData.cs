@@ -21,14 +21,10 @@ public class ChatData
     public int NextMessageID; //下一条消息ID
     public int WaitTime; //播放本句后的等待时间
     public string TriggerMessageEffect; //消息触发时效果
-
-    public ChatData()
-    {
-    }
-
     public ChatData(int paragraphID, DataRow row)
     {
         if (row == null) return;
+        if(row[0].ToString()=="")return;
         MessageID = int.Parse(row[0].ToString());
         ParagraphID = paragraphID;
         switch (row[2].ToString())
