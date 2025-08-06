@@ -25,6 +25,7 @@ public class StudyWindow : WindowBase
 
     [SerializeField] private RectTransform selectRect;
 
+    private int studyState;
     [SerializeField] private HoverableButton studyStateButton; // 显示研究状态的按钮
 
     private ScriptableTechnologyNode curSelectedTechNode; // 记录当前选中的科技节点
@@ -50,48 +51,28 @@ public class StudyWindow : WindowBase
 
     private void OnStudyStarted(ScriptableTechnologyNode techNode)
     {
-        // 显示正在研究按钮
-        studyStateButton.GetComponentInChildren<Text>().text = "正在研究";
-        studyStateButton.hoveredColor = studyStateButton.currentColor = ColorManager.white;
-        studyStateButton.ChangeColor(ColorManager.white);
-        studyStateButton.onClick.RemoveAllListeners();
-        studyStateButton.onClick.AddListener(() =>
-        {
-            WindowsManager.Instance.OpenWindow("Study");
-            curSelectedTechNode = techNode;
-            RefreshCurrentDisplay();
-        });
-        studyStateButton.SetVisiable(true);
+        DisplayStudyState(1, techNode);
     }
 
     private void OnStudiedComplished(ScriptableTechnologyNode techNode)
     {
-        // 显示研究完成按钮
-        studyStateButton.GetComponentInChildren<Text>().text = "研究完成";
-        studyStateButton.hoveredColor = studyStateButton.currentColor = ColorManager.cyan;
-        studyStateButton.ChangeColor(ColorManager.cyan);
-        studyStateButton.onClick.RemoveAllListeners();
-        studyStateButton.onClick.AddListener(() =>
-        {
-            WindowsManager.Instance.OpenWindow("Study");
-            studyStateButton.SetVisiable(false);
-        });
-
         curSelectedTechNode = techNode;
         RefreshCurrentDisplay();
-        StopStudy();
+        //StopStudy();
+
+        DisplayStudyState(0, techNode);
     }
 
     protected override void Init()
     {
-        //foreach (var node in techNodes)
+        //GameDataManager.Instance.TechnologyData.techNodeDict = new();
+        //foreach (var node in GetComponentsInChildren<UITechNode>())
         //{
         //    GameDataManager.Instance.TechnologyData.techNodeDict.Add(node.gameObject.name, new TechNodeData { name = node.gameObject.name, progress = 0 });
         //}
         //GameDataManager.Instance.SaveTechnologyData();
-        //DisplayTechTree();
 
-        studyStateButton.SetVisiable(false);
+        DisplayStudyState(2, null);
 
         TechnologyManager.Instance.InitFromGameData();
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
@@ -224,17 +205,19 @@ public class StudyWindow : WindowBase
         studyButton.DisplayButton(techNode, () =>
         {
             // 暂停当前研究
-            StopStudy();
+            //StopStudy();
+            DisplayStudyState(2, null);
             TechnologyManager.Instance.StopStudy();
             // 研究当前科技节点
             TechnologyManager.Instance.Study(techNode);
-            StartStudy();
+            //StartStudy();
             // 刷新显示
             RefreshCurrentDisplay();
         }, () =>
         {
             // 暂停当前研究
-            StopStudy();
+            //StopStudy();
+            DisplayStudyState(2, null);
             TechnologyManager.Instance.StopStudy();
             // 刷新显示
             RefreshCurrentDisplay();
@@ -277,28 +260,83 @@ public class StudyWindow : WindowBase
         }
     }
 
-    private void StopStudy()
+    //private void StopStudy()
+    //{
+    //    var node = TechnologyManager.Instance.CurStudiedTechNode;
+    //    if (node == null) return;
+
+    //    // 开始研究后，将正在研究的类型的按钮的颜色设为white
+    //    var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
+    //    button.ChangeColor(ColorManager.White);
+    //    button.currentColor = button.hoveredColor = ColorManager.White;
+
+    //    DisplayStudyState(2, null);
+    //}
+
+    //private void StartStudy()
+    //{
+    //    var node = TechnologyManager.Instance.CurStudiedTechNode;
+    //    if (node == null) return;
+
+    //    // 开始研究后，将正在研究的类型的按钮的颜色设为cyan
+    //    var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
+    //    button.ChangeColor(ColorManager.Cyan);
+    //    button.currentColor = button.hoveredColor = ColorManager.Cyan;
+    //}
+
+    private void DisplayStudyState(int state, ScriptableTechnologyNode techNode)
     {
-        var node = TechnologyManager.Instance.CurStudiedTechNode;
-        if (node == null) return;
+        if (TechnologyManager.Instance.AllTechnologiesStudied)
+        {
+            studyStateButton.SetVisiable(false);
+            return;
+        }
+        studyState = state;
+        studyStateButton.onClick.RemoveAllListeners();
+        studyStateButton.onClick.AddListener(() =>
+        {
+            WindowsManager.Instance.OpenWindow("Study");
+        });
 
-        // 开始研究后，将正在研究的类型的按钮的颜色设为white
-        var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
-        button.ChangeColor(ColorManager.white);
-        button.currentColor = button.hoveredColor = ColorManager.white;
+        string text = "";
+        Color color = ColorManager.White;
+        switch (state)
+        {
+            // 研究完成
+            case 0:
+                text = "研究完成";
+                color = ColorManager.Cyan;
+                break;
+            // 开始研究
+            case 1:
+                text = "正在研究";
+                color = ColorManager.White;
+                studyStateButton.onClick.AddListener(() =>
+                {
+                    curSelectedTechNode = techNode;
+                    RefreshCurrentDisplay();
+                });
+                break;
+            // 未在研究
+            case 2:
+                text = "未在研究";
+                color = ColorManager.Red;
+                break;
+        }
 
-        // 隐藏研究状态按钮
-        studyStateButton.SetVisiable(false);
+        studyStateButton.GetComponentInChildren<Text>().text = text;
+        studyStateButton.hoveredColor = studyStateButton.currentColor = color;
+        studyStateButton.ChangeColor(color);
     }
 
-    private void StartStudy()
+    public override void SetFocused(bool focused)
     {
-        var node = TechnologyManager.Instance.CurStudiedTechNode;
-        if (node == null) return;
-
-        // 开始研究后，将正在研究的类型的按钮的颜色设为cyan
-        var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
-        button.ChangeColor(ColorManager.cyan);
-        button.currentColor = button.hoveredColor = ColorManager.cyan;
+        // 从聚焦到失焦时处于研究完成状态
+        if (this.focused && !focused && studyState == 0)
+        {
+            // 显示未在研究
+            DisplayStudyState(2, null);
+        }
+        base.SetFocused(focused);
     }
 }

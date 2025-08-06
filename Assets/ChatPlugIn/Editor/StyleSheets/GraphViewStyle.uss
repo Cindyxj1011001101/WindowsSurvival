@@ -1,0 +1,13 @@
+GridBackground
+{
+    --grid-background-color: var(--colors-dark-grey-0);
+    --line-color:var(--colors-dark-grey-1);
+    --thick-line-color:var(--colors-dark-grey-3);
+    --spacing:var(--metrics-20);
+}
+
+StoryGraphView
+{ 
+    width: 100%;
+    height: 100%;
+}

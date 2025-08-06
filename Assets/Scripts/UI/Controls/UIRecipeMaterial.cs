@@ -11,6 +11,6 @@ public class UIRecipeMaterial : MonoBehaviour
     {
         this.icon.sprite = icon;
         requiredNumText.text = $"{currentNum}/{requiredNum}";
-        button.currentColor = this.icon.color = requiredNumText.color = currentNum < requiredNum ? ColorManager.lightGrey : ColorManager.white;
+        button.currentColor = this.icon.color = requiredNumText.color = currentNum < requiredNum ? ColorManager.LightGrey : ColorManager.White;
     }
 }

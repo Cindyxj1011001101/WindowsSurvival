@@ -54,7 +54,7 @@ public class UITechNode : HoverableButton
             // 设置颜色
             foreach (var btn in recipeButtons)
             {
-                btn.hoveredColor = btn.currentColor = btn.normalImage.color = ColorManager.cyan;
+                btn.hoveredColor = btn.currentColor = btn.normalImage.color = ColorManager.Cyan;
             }
         }
         // 未解锁
@@ -66,9 +66,9 @@ public class UITechNode : HoverableButton
             // 设置颜色
             foreach (var btn in recipeButtons)
             {
-                btn.currentColor = btn.normalImage.color = ColorManager.darkGrey;
+                btn.currentColor = btn.normalImage.color = ColorManager.DarkGrey;
             }
-            techName.color = ColorManager.darkGrey;
+            techName.color = ColorManager.DarkGrey;
         }
         // 正在研究
         else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
@@ -79,9 +79,9 @@ public class UITechNode : HoverableButton
             // 设置颜色
             foreach (var btn in recipeButtons)
             {
-                btn.currentColor = btn.normalImage.color = ColorManager.white;
+                btn.currentColor = btn.normalImage.color = ColorManager.White;
             }
-            foreground_inProgress.GetComponent<Image>().color = ColorManager.white;
+            foreground_inProgress.GetComponent<Image>().color = ColorManager.White;
             gifObject.SetActive(true);
             gifObject.GetComponent<Animator>().SetTrigger("Play");
         }
@@ -94,11 +94,11 @@ public class UITechNode : HoverableButton
             // 设置颜色
             foreach (var btn in recipeButtons)
             {
-                btn.currentColor = btn.normalImage.color = ColorManager.lightGrey;
+                btn.currentColor = btn.normalImage.color = ColorManager.LightGrey;
             }
-            foreground_inProgress.GetComponent<Image>().color = ColorManager.lightGrey;
+            foreground_inProgress.GetComponent<Image>().color = ColorManager.LightGrey;
             gifObject.SetActive(false);
-            techName.color = ColorManager.black;
+            techName.color = ColorManager.Black;
         }
     }
 }

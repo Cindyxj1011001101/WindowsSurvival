@@ -14,14 +14,14 @@ public class UIStateTip : MonoBehaviour
             front.value = value / maxValue;
             behind.value = (value + delta) / maxValue;
             valueText.text = $"+{delta}";
-            valueText.color = behind.fillRect.GetComponent<Image>().color = ColorManager.green;
+            valueText.color = behind.fillRect.GetComponent<Image>().color = ColorManager.Green;
         }
         else
         {
             front.value = (value + delta) / maxValue;
             behind.value = value / maxValue;
             valueText.text = $"-{-delta}";
-            valueText.color = behind.fillRect.GetComponent<Image>().color = ColorManager.red;
+            valueText.color = behind.fillRect.GetComponent<Image>().color = ColorManager.Red;
         }
     }
 

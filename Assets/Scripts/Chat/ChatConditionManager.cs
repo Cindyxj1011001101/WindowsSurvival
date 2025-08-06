@@ -92,6 +92,7 @@ public class ChatConditionManager : MonoBehaviour
 
     public void AddParagraphCondition(ParagraphData paragraphData)
     {
+        if(DetectedConditions.ContainsKey(paragraphData.TriggerParagraphCondition))return;
         switch (paragraphData.TriggerParagraphCondition)
         {
             case "健康<=0":

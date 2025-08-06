@@ -253,9 +253,9 @@ public class StateManager : MonoBehaviour
         var thresholds = new List<StateThreshold>()
         {
             new (-1, 0, "死亡"),
-            new (0, 10, "快死了"),
-            new (10, 30, "低健康"),
-            new (30, int.MaxValue, "健康")
+            new (0, 10, "濒死"),
+            new (10, 30, "重伤"),
+            new (30, int.MaxValue, "还算健康")
         };
         var effects = new List<StateEffect>()
         {
@@ -267,7 +267,7 @@ public class StateManager : MonoBehaviour
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
 
-        return new PlayerState(100, 100, PlayerStateEnum.Health, +0.1f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new PlayerState(100, 100, PlayerStateEnum.Health, +0.4f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitFullnessState()
@@ -340,13 +340,13 @@ public class StateManager : MonoBehaviour
             new (-1, 0, "窒息"),
             new (0, 25, "缺氧"),
             new (25, 50, "呼吸不畅"),
-            new (50, int.MaxValue, "正常")
+            new (50, int.MaxValue, "氧气充足")
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
         var effects = new List<StateEffect>()
         {
-            new () { healthEffect = -10 },
+            new () { healthEffect = -7 },
             StateEffect.NoEffect,
             StateEffect.NoEffect,
             StateEffect.NoEffect,
@@ -361,12 +361,12 @@ public class StateManager : MonoBehaviour
             new (-1, 0, "困得要死"),
             new (0, 10, "极度疲劳"),
             new (10, 30, "疲劳"),
-            new (30, int.MaxValue, "正常")
+            new (30, int.MaxValue, "还不困")
         };
         var effects = new List<StateEffect>()
         {
-            new () { sanityEffect = -6, healthEffect = -4 },
-            new () { sanityEffect = -2, healthEffect = -1.5f },
+            new () { sanityEffect = -4, healthEffect = -3 },
+            new () { sanityEffect = -2, healthEffect = -1 },
             new () { sanityEffect = -0.5f },
             StateEffect.NoEffect
         };
@@ -382,7 +382,7 @@ public class StateManager : MonoBehaviour
             new (-1, 15, "正常重量"),
             new (15, 18, "轻微超重"),
             new (18, 22.5f, "严重超重"),
-            new (22.5f, int.MaxValue, "压得我喘不过气"),
+            new (22.5f, int.MaxValue, "压得喘不过气"),
         };
         var effects = new List<StateEffect>()
         {
