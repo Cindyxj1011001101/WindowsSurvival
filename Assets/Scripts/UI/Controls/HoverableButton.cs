@@ -14,7 +14,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public Text[] textsNeedToReverseColor;
     public Image[] imagseNeedToReverseColor;
 
-    private CanvasGroup canvasGroup;
+    protected CanvasGroup canvasGroup;
 
     public Color currentColor { get; set; }
     public Color hoveredColor { get; set; } = ColorManager.White; // 鼠标悬停时的颜色，默认为白色
