@@ -271,7 +271,7 @@ public class SoundManager : MonoBehaviour
             case PlaceEnum.CoralCoast:
                 SoundManager.Instance.StopBGM();
                 //珊瑚礁海域的音乐还没制作
-                //SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
+                SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
                 break;
         };
     }
