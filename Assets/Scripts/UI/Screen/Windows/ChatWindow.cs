@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -43,6 +44,16 @@ public class ChatWindow : WindowBase
 
         // 点击发送消息
         submitButton.onClick.AddListener(Submit);
+    }
+
+    private bool init = false;
+    public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
+    {
+        base.Show(showMode, onFinished);
+
+        if (init) return;
+
+        init = true;
 
         ChatManager.Instance.chatWindow = this;
         //生成已发送过的对话数据
