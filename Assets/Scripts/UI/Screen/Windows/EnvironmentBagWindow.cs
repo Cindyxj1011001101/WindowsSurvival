@@ -18,7 +18,7 @@ public class EnvironmentBagWindow : BagWindow
     [SerializeField] private Image environmentImage; // 环境图片
     [SerializeField] private HoverableButton exploreButton; // 探索按钮
     [SerializeField] private RectTransform stateLayout;
-    [SerializeField] private RectTransform frontCard;
+    [SerializeField] private RectTransform envCard;
 
     private UIStateToggle hasCabbleToggle; // 是否铺设电缆
     private UIPressureLevel pressureLevel; // 压强等级
@@ -26,7 +26,7 @@ public class EnvironmentBagWindow : BagWindow
 
     private HoverTipController hoveredTipController;
 
-    public RectTransform FrontCard => frontCard;
+    public RectTransform EnvCard => envCard;
 
     protected override void Awake()
     {
@@ -188,7 +188,7 @@ public class EnvironmentBagWindow : BagWindow
             hoveredTipController.enabled = true;
         }
 
-        // 显示牌堆数量
-        frontCard.anchoredPosition = new Vector2(frontCard.anchoredPosition.x, -Mathf.FloorToInt(args.degree * 4) * 4);
+        //// 显示牌堆数量
+        //frontCard.anchoredPosition = new Vector2(frontCard.anchoredPosition.x, -Mathf.FloorToInt(args.degree * 4) * 4);
     }
 }

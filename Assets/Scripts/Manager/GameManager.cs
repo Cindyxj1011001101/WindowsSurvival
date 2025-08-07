@@ -296,7 +296,7 @@ public class GameManager : MonoBehaviour
             }
 
 
-            AddCardsWithTween(droppedCards, envWindow.FrontCard.position, false);
+            AddCardsWithTween(droppedCards, envWindow.EnvCard.position, false);
 
             // 探索完成后让环境生态开始更新
             if (disposableDropList.IsEmpty)
@@ -315,7 +315,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            AddCardsWithTween(droppedCards, envWindow.FrontCard.position, false);
+            AddCardsWithTween(droppedCards, envWindow.EnvCard.position, false);
         }
     }
 

@@ -27,6 +27,7 @@ public class StudyWindow : WindowBase
 
     private int studyState;
     [SerializeField] private HoverableButton studyStateButton; // 显示研究状态的按钮
+    [SerializeField] private Animator studyStateButtonAnimator;
 
     private ScriptableTechnologyNode curSelectedTechNode; // 记录当前选中的科技节点
 
@@ -291,12 +292,18 @@ public class StudyWindow : WindowBase
             studyStateButton.SetVisiable(false);
             return;
         }
-        studyState = state;
+
+        if (studyState == state) return;
+
         studyStateButton.onClick.RemoveAllListeners();
         studyStateButton.onClick.AddListener(() =>
         {
             WindowsManager.Instance.OpenWindow("Study");
         });
+
+
+        studyStateButton.transform.GetChild(2).gameObject.SetActive(state == 2);
+        studyStateButton.transform.GetChild(1).gameObject.SetActive(state != 2);
 
         string text = "";
         Color color = ColorManager.White;
@@ -306,11 +313,15 @@ public class StudyWindow : WindowBase
             case 0:
                 text = "研究完成";
                 color = ColorManager.Cyan;
+                studyStateButtonAnimator.ResetTrigger("Play");
+                studyStateButtonAnimator.SetTrigger("Stop");
                 break;
             // 开始研究
             case 1:
                 text = "正在研究";
                 color = ColorManager.White;
+                studyStateButtonAnimator.ResetTrigger("Stop");
+                studyStateButtonAnimator.SetTrigger("Play");
                 studyStateButton.onClick.AddListener(() =>
                 {
                     curSelectedTechNode = techNode;
@@ -327,6 +338,8 @@ public class StudyWindow : WindowBase
         studyStateButton.GetComponentInChildren<Text>().text = text;
         studyStateButton.hoveredColor = studyStateButton.currentColor = color;
         studyStateButton.ChangeColor(color);
+
+        studyState = state;
     }
 
     protected override void OnFocused()
