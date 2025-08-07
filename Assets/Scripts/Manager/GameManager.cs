@@ -20,6 +20,15 @@ public enum PlaceEnum
     /// 珊瑚礁海域
     /// </summary>
     CoralCoast,
+    /// <summary>
+    /// 织光藻墓园
+    /// </summary>
+    PhosphorTomb,
+    /// <summary>
+    /// 飞船外壳
+    /// </summary>
+    SpaceshipOuterHull,
+    
 }
 
 public class GameManager : MonoBehaviour
