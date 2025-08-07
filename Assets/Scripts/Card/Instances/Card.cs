@@ -68,6 +68,9 @@ public abstract class Card : IComparable<Card>
 
     [JsonIgnore]
     public bool IsBigIcon => CardFactory.GetIsBigIcon(CardId);
+    
+    /// 是否有循环音效，默认无
+    public virtual bool HasLoopSound => false;
     #endregion
 
     /// <summary>
@@ -143,6 +146,25 @@ public abstract class Card : IComparable<Card>
         temp.RefreshCurrentDisplay();
         StopUpdating();
     }
+    /// <summary>
+    /// 进入当前环境时（如玩家进入该卡牌所在地点）（通常用于播放卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnEnterEnvironment() { }
+
+    /// <summary>
+    /// 离开当前环境时（如玩家离开该卡牌所在地点）
+    /// </summary>
+    public virtual void OnLeaveEnvironment() { }
+
+    /// <summary>
+    /// 打开卡牌详情时（通常用于调大卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnDetailOpen() { }
+
+    /// <summary>
+    /// 关闭卡牌详情时（通常用于调小卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnDetailClose() { }
 
     /// <summary>
     /// 获取卡牌的组件

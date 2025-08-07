@@ -108,6 +108,9 @@ public class DetailsWindow : WindowBase
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
         DisplayDetails();
+        // 打开详情如果卡牌有循环音
+        if (currentDisplayedCard.HasLoopSound)
+            currentDisplayedCard.OnDetailOpen();
     }
 
     private void DisplayDetails()
@@ -181,6 +184,9 @@ public class DetailsWindow : WindowBase
         innerBag.gameObject.SetActive(false);
         innerContentsButton.gameObject.SetActive(false);
         MonoUtility.DestroyAllChildren(buttonLayout);
+        //关闭时如果卡牌有循环音将循环音减小
+        if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
+            currentDisplayedCard.OnDetailClose();
     }
 
     private void SelectWithTween(RectTransform target)

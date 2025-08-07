@@ -3,6 +3,7 @@
 /// </summary>
 public class WaterCrack : Card
 {
+    public override bool HasLoopSound => true;
     private WaterCrack()
     {
         Events = new()
@@ -32,4 +33,25 @@ public class WaterCrack : Card
         // 每个渗水裂缝每回合会使飞船水平面高度+0.3
         StateManager.Instance.ChangeWaterLevel(+0.3f);
     };
+    public override void OnEnterEnvironment()
+    {
+        SoundManager.Instance.PlayCardLoopSound(CardId, "渗水声", 0.3f);
+    }
+    public override void OnLeaveEnvironment()
+    {
+        SoundManager.Instance.StopCardLoopSound(CardId);
+    }
+    public override void OnDetailOpen()
+    {
+        SoundManager.Instance.SetCardLoopVolume(CardId, 1.0f); // 音量调高
+    }
+    public override void OnDetailClose()
+    {
+        SoundManager.Instance.SetCardLoopVolume(CardId, 0.3f); // 恢复正常
+    }
+    public override void DestroyThis()
+    {
+        OnLeaveEnvironment();
+        base.DestroyThis();
+    }
 }

@@ -341,8 +341,30 @@ public class GameManager : MonoBehaviour
         }
 
         SoundManager.Instance.PlayPlaceMusic(environmentBags[targetPlace]);
+        // 离开旧地点：关闭有循环音的卡牌的循环音
+        foreach (var slot in curEnvironmentBag.Slots)
+        {
+            if (!slot.IsEmpty)
+            {
+                var card = slot.PeekCard();
+                if (card.HasLoopSound) 
+                    card.OnLeaveEnvironment();
+
+            }
+        }
 
         curEnvironmentBag = environmentBags[targetPlace];
+        // 进入新地点：播放新地点离有循环音的卡牌
+        foreach (var slot in curEnvironmentBag.Slots)
+        {
+            if (!slot.IsEmpty)
+            {
+                var card = slot.PeekCard();
+                if (card.HasLoopSound)
+                    card.OnEnterEnvironment();
+
+            }
+        }
         //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
         var door = curEnvironmentBag.DisposableDropList.CertainDrop($"通往{ParsePlaceEnum(lastPlace)}的门");
         if (door != null)
