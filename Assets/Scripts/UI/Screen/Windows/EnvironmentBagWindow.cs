@@ -54,7 +54,10 @@ public class EnvironmentBagWindow : BagWindow
         hoveredTipController.onPointerEnter.AddListener(() =>
         {
             var (desc, time, playerEffects, envEffects) = GameManager.Instance.GetExploreEffects();
-            hoveredTipController.SetTip(desc, time, playerEffects, envEffects);
+            if (GameManager.Instance.CanMoveExplore())
+                hoveredTipController.SetTip(desc, time, playerEffects, envEffects);
+            else
+                hoveredTipController.SetTip(desc);
         });
     }
 

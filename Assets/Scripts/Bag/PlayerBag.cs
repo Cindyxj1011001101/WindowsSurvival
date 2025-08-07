@@ -1,20 +1,5 @@
 ﻿public class PlayerBag : BagBase
 {
-    private void Awake()
-    {
-        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnCardsChanged);
-    }
-
-    private void OnDestroy()
-    {
-        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnCardsChanged);
-    }
-
-    public void OnCardsChanged(ChangePlayerBagCardsArgs args)
-    {
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, args.card.Weight * args.add);
-    }
-
     public override void Init()
     {
         InitBag(GameDataManager.Instance.PlayerBagData);

@@ -213,7 +213,7 @@ public class GameManager : MonoBehaviour
     public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects,
         Dictionary<EnvironmentStateEnum, float> envEffects) GetExploreEffects()
     {
-        string desc = "";
+        string desc = "探索该区域";
         int time = curEnvironmentBag.explorationTime;
         Dictionary<PlayerStateEnum, float> playerEffects = new();
         Dictionary<EnvironmentStateEnum, float> envEffects = new();
@@ -224,7 +224,7 @@ public class GameManager : MonoBehaviour
             case PlaceEnum.LifeSupportCabin:
                 break;
             case PlaceEnum.CoralCoast:
-                desc = "最好佩戴上氧气面罩";
+                desc += "，最好佩戴上氧气面罩";
                 // 如果没有佩戴氧气面罩
                 if (equipmentBag.FindCardOfName("氧气面罩") == null)
                 {
@@ -234,6 +234,20 @@ public class GameManager : MonoBehaviour
                     playerEffects.Add(PlayerStateEnum.Health, -4);
                 }
                 break;
+        }
+
+        desc = GetMoveDesc(desc);
+        time += GetExtraMoveExploreTime(curEnvironmentBag.explorationTime);
+        foreach (var (state, delta) in GetMoveExplorePlayerEffects())
+        {
+            if (playerEffects.ContainsKey(state))
+            {
+                playerEffects[state] += delta;
+            }
+            else
+            {
+                playerEffects.Add(state, delta);
+            }
         }
 
         return (desc, time, playerEffects, envEffects);
@@ -247,6 +261,9 @@ public class GameManager : MonoBehaviour
     {
         tip = string.Empty;
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
+
+        if (!CanMoveExplore()) return;
+
         var disposableDropList = curEnvironmentBag.DisposableDropList;
         var repeatableDropList = curEnvironmentBag.RepeatableDropList;
         if (disposableDropList.IsEmpty && repeatableDropList.IsEmpty)
@@ -258,28 +275,17 @@ public class GameManager : MonoBehaviour
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("抽卡", true);
 
-        int explorationTime = curEnvironmentBag.explorationTime;
+        (_, int time, Dictionary<PlayerStateEnum, float> playerEffects,
+            Dictionary<EnvironmentStateEnum, float> envEffects) = GetExploreEffects();
 
-        switch (curEnvironmentBag.PlaceData.placeType)
-        {
-            case PlaceEnum.PowerCabin:
-            case PlaceEnum.Cockpit:
-            case PlaceEnum.LifeSupportCabin:
-                break;
-            case PlaceEnum.CoralCoast:
-                // 如果没有佩戴氧气面罩
-                if (equipmentBag.FindCardOfName("氧气面罩") == null)
-                {
-                    // 探索时间+40%
-                    explorationTime += Mathf.CeilToInt(curEnvironmentBag.explorationTime * .4f);
-                    // 健康值-4
-                    StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -4);
-                }
-                break;
-        }
+        // 玩家状态变化
+        StateManager.Instance.ApplyPlayerEffects(playerEffects);
+
+        // 环境状态变化
+        curEnvironmentBag.ApplyEnvEffects(envEffects);
 
         // 消耗时间
-        TimeManager.Instance.AddTime(explorationTime);
+        TimeManager.Instance.AddTime(time);
 
         // 掉落卡牌
         HandeleExploreDrop(out tip);
@@ -327,13 +333,13 @@ public class GameManager : MonoBehaviour
     }
 
     // 移动到目标场景
-    public void Move(PlaceEnum targetPlace, int time)
+    public void Move(PlaceEnum targetPlace, int bsaicMoveTime)
     {
         ChangeEnv(targetPlace);
 
         // 移动消耗
         StateManager.Instance.ApplyPlayerEffects(GetMoveExplorePlayerEffects());
-        TimeManager.Instance.AddTime(GetMoveExploreTime(time));
+        TimeManager.Instance.AddTime(bsaicMoveTime + GetExtraMoveExploreTime(bsaicMoveTime));
     }
 
     private void ChangeEnv(PlaceEnum targetPlace)
@@ -366,25 +372,38 @@ public class GameManager : MonoBehaviour
         return StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel < 3;
     }
 
-    public int GetMoveExploreTime(int time)
+    public string GetMoveDesc(string origin)
     {
-        int result = time;
+        string result = origin;
         int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
         switch (level)
         {
             case 0:
                 break;
             case 1:
-                result += Mathf.CeilToInt(time * 0.25f);
+                result += "\n身上有点重，额外消耗25%时间";
                 break;
             case 2:
-                result += Mathf.CeilToInt(time * 1f);
+                result += "\n身上很重，额外消耗100%时间";
                 break;
             case 3:
-                result = 0;
+                result = "身上太重了，没法这么做";
                 break;
         }
         return result;
+    }
+
+    public int GetExtraMoveExploreTime(int basicTime)
+    {
+        int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
+        return level switch
+        {
+            0 => 0,
+            1 => Mathf.CeilToInt(basicTime * 0.25f),
+            2 => Mathf.CeilToInt(basicTime * 1f),
+            3 => 0,
+            _ => 0,
+        };
     }
 
     public Dictionary<PlayerStateEnum, float> GetMoveExplorePlayerEffects()

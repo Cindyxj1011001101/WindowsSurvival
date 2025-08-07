@@ -165,7 +165,10 @@ public class DetailsWindow : WindowBase
             }
 
             // 设置提示
-            button.GetComponent<HoverTipController>().SetTip(e);
+            if (interactable)
+                button.GetComponent<HoverTipController>().SetTip(e.Description, e.GetTimeEffect(), e.GetPlayerEffects(), e.GetEnvEffects());
+            else
+                button.GetComponent<HoverTipController>().SetTip(e.Description);
         }
     }
 

@@ -13,6 +13,7 @@ public class EquipmentBag : BagBase
     {
         for (int i = 0; i < runtimeData.cardSlots.Count; i++)
         {
+            slots[i].SetBag(this);
             slots[i].Init(runtimeData.cardSlots[i]);
         }
         equipmentSlotDict = new()
