@@ -10,8 +10,8 @@ public class LittleRawMeat : Card
     {
         Events = new()
         {
-            new Event("食用", "食用小块生肉", Event_Eat, null, null, 15,
-            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 12 } ,{ PlayerStateEnum.San, -2 }, { PlayerStateEnum.Health, -3 }})
+            new Event("食用", "食用小块生肉", Event_Eat, null, () => 15,
+            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 12 } ,{ PlayerStateEnum.San, -2 }, { PlayerStateEnum.Health, -3 }})
         };
     }
 

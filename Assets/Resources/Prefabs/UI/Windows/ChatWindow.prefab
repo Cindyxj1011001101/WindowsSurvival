@@ -287,6 +287,7 @@ MonoBehaviour:
   textsNeedToReverseColor:
   - {fileID: 2559459314443397075}
   imagseNeedToReverseColor: []
+  canvasGroup: {fileID: 0}
 --- !u!114 &3139723242731683411
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -423,7 +424,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8287811318130231249}
   m_HandleRect: {fileID: 6579552511493230617}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -671,7 +672,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 516, y: 0}
+  m_AnchoredPosition: {x: 650, y: 74}
   m_SizeDelta: {x: 600, y: 788}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3265300837410242647
@@ -742,7 +743,6 @@ MonoBehaviour:
   optionLayout: {fileID: 1876888938957203494}
   optionLayoutCanvasGroup: {fileID: 4118471638637659321}
   optionPrefab: {fileID: 7923811559259565006, guid: 19e39244cb65f56428be96a699e428f9, type: 3}
-  chatTipPrefab: {fileID: 6962859369273640820, guid: 20d52bafdaad0d745a36be6180485df9, type: 3}
 --- !u!1 &6496892257497442735
 GameObject:
   m_ObjectHideFlags: 0

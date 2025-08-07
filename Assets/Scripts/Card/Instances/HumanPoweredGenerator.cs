@@ -9,9 +9,9 @@ public class HumanPoweredGenerator : Card
     {
         Events = new()
         {
-            new Event("人力发电", "踩轮子发电", Event_Generate, Judge_Generate, null, 60,
-            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Thirst, -5 }, { PlayerStateEnum.Sobriety, -6 } },
-            new Dictionary<EnvironmentStateEnum, float>() { { EnvironmentStateEnum.Electricity, 10 } })
+            new Event("人力发电", "踩轮子发电", Event_Generate, Judge_Generate, () => 60,
+            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Thirst, -5 }, { PlayerStateEnum.Sobriety, -6 } },
+            () => new Dictionary < EnvironmentStateEnum, float >() { { EnvironmentStateEnum.Electricity, 10 } })
         };
     }
 
@@ -28,11 +28,16 @@ public class HumanPoweredGenerator : Card
         TimeManager.Instance.AddTime(60);
     }
 
-    public bool Judge_Generate()
+    public bool Judge_Generate(out string hint)
     {
-        if (Slot == null || Slot.Bag == null || Slot.Bag is not EnvironmentBag) return false;
+        hint = string.Empty;
 
         var env = Slot.Bag as EnvironmentBag;
-        return env.HasCable;
+        if (!env.HasCable)
+        {
+            hint = "需要将该地区连入电网";
+            return false;
+        }
+        return true;
     }
 }

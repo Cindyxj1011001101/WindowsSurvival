@@ -11,7 +11,6 @@ public class OreReleaseOxygenMachine : Card
     public int maxTimeProgress; // 最大时间进度
     public int curTimeProgress; // 当前时间进度
     public float oxygenRelease; // 氧气释放量
-    //public int curOreNum; // 白爆矿数量
     public int oreConsumption; // 白爆矿消耗量
     public float electricityConsumption; // 电力消耗量
 
@@ -62,8 +61,9 @@ public class OreReleaseOxygenMachine : Card
         isWorking = true;
     }
 
-    public bool Judge_Open()
+    public bool Judge_Open(out string hint)
     {
+        hint = string.Empty;
         return !isWorking;
     }
 
@@ -73,19 +73,31 @@ public class OreReleaseOxygenMachine : Card
         isWorking = false;
     }
 
-    public bool Judge_Close()
+    public bool Judge_Close(out string hint)
     {
+        hint = string.Empty;
         return isWorking;
     }
     #endregion
 
     #region 获取氧气
-    private bool Judge_GetOxygen()
+    private bool Judge_GetOxygen(out string hint)
     {
+        hint = string.Empty;
         // 玩家氧气剩余容量大于0，并且氧气储量大于0时可获取
         var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
+        if (remainingCapacity == 0)
+        {
+            hint = "麦麦的氧气已满";
+            return false;
+        }
         var toRelease = Mathf.Min(curOxygenStorage, remainingCapacity);
-        return toRelease > 0;
+        if (toRelease == 0)
+        {
+            hint = "机器的氧气存储不足";
+            return false;
+        }
+        return true;
     }
 
     public void Event_GetOxygen(out string tip)

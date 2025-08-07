@@ -117,6 +117,14 @@ public class EnvironmentBag : BagBase
         }
     }
 
+    public void ApplyEnvEffects(Dictionary<EnvironmentStateEnum, float> envEffects)
+    {
+        foreach (var (state, delta) in envEffects)
+        {
+            ChangeEnvironmentState(state, delta);
+        }
+    }
+
     private void OnWaterLevelChanged(float level)
     {
         // 如果当前是水域环境

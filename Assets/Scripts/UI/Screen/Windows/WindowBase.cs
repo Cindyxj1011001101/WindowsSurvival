@@ -300,9 +300,10 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     {
         if (this.focused == focused) return;
 
+        this.focused = focused;
+
         if (focused) OnFocused();
 
-        this.focused = focused;
         focusFrameImage.gameObject.SetActive(focused);
     }
 

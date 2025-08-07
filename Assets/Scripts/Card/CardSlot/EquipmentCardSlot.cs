@@ -17,9 +17,6 @@ public class EquipmentCardSlot : CardSlot
 
         // 触发穿上装备事件
         (card as EquipmentCard).OnEquipped();
-
-        // 增加负重
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, card.Weight);
     }
 
     public override bool CanAddCard(Card card)
@@ -41,8 +38,5 @@ public class EquipmentCardSlot : CardSlot
 
         // 触发脱下装备事件
         (card as EquipmentCard).OnUnEquipped();
-
-        // 减少负重
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -card.Weight);
     }
 }

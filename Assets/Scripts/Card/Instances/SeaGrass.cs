@@ -1,4 +1,3 @@
-using UnityEngine;
 public class SeaGrass : Card
 {
     private SeaGrass()
@@ -25,9 +24,14 @@ public class SeaGrass : Card
         card.TryUse();
         AddCard("纤维", true);
     }
-    public bool Judge_CollectByKnife()
+    public bool Judge_CollectByKnife(out string hint)
     {
-        return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) != null;
+        hint = string.Empty;
+        if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) == null)
+        {
+            hint = "需要切割类工具";
+            return false;
+        }
+        return true;
     }
-
 }

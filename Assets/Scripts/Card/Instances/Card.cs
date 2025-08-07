@@ -244,7 +244,7 @@ public abstract class Card : IComparable<Card>
         sb.AppendLine($"事件数量: {Events.Count}");
         foreach (var ev in Events)
         {
-            sb.AppendLine($"  - 事件名称: {ev.name}, 描述: {ev.description}");
+            sb.AppendLine($"  - 事件名称: {ev.name}");
         }
         sb.AppendLine($"组件数量: {components.Count}");
         foreach (var kvp in components)
@@ -291,22 +291,32 @@ public class Event
     public string name;
     public string description;
     public string hint;
+    //public string hint;
     public OutStringAction action;
-    public Func<bool> condition;
-    public int time;
-    public Dictionary<PlayerStateEnum, float> playerEffects = new();
-    public Dictionary<EnvironmentStateEnum, float> envEffects = new();
+    public OutStringAction<bool> condition;
+    //public int time;
+    //public Dictionary<PlayerStateEnum, float> playerEffects = new();
+    //public Dictionary<EnvironmentStateEnum, float> envEffects = new();
+    public Func<int> getTimeEffect;
+    public Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects;
+    public Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects;
 
-    public Event(string name, string description, OutStringAction action, Func<bool> condition, string hint = null, int Time = 0, Dictionary<PlayerStateEnum, float> PlayerStateDict = null, Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = null)
+    public string Description => string.IsNullOrEmpty(hint) ? description : hint;
+
+    public Event(string name, string description, OutStringAction action, OutStringAction<bool> condition,/* string hint = null,*/
+        Func<int> getTimeEffect = null, Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects = null, Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects = null)
     {
         this.name = name;
         this.description = description;
-        this.hint = hint;
-        this.time = Time;
-        this.playerEffects = PlayerStateDict ?? new Dictionary<PlayerStateEnum, float>();
-        this.envEffects = EnvironmentStateDict ?? new Dictionary<EnvironmentStateEnum, float>();
+        //this.hint = hint;
+        //this.time = Time;
+        //this.playerEffects = PlayerStateDict ?? new Dictionary<PlayerStateEnum, float>();
+        //this.envEffects = EnvironmentStateDict ?? new Dictionary<EnvironmentStateEnum, float>();
         this.action = action;
         this.condition = condition;
+        this.getTimeEffect = getTimeEffect;
+        this.getPlayerEffects = getPlayerEffects;
+        this.getEnvEffects = getEnvEffects;
     }
 
     public void Inovke(out string tip)
@@ -319,10 +329,33 @@ public class Event
 
     public bool Judge()
     {
-        if (condition == null) return true;
+        hint = string.Empty;
+        if (condition == null || condition.Invoke(out hint))
+        {
+            return true;
+        }
 
-        return condition.Invoke();
+        return false;
+    }
+
+    public int GetTimeEffect()
+    {
+        if (getTimeEffect == null) return 0;
+        return getTimeEffect.Invoke();
+    }
+
+    public Dictionary<PlayerStateEnum, float> GetPlayerEffects()
+    {
+        if (getPlayerEffects == null) return null;
+        return getPlayerEffects.Invoke();
+    }
+
+    public Dictionary<EnvironmentStateEnum, float> GetEnvEffects()
+    {
+        if (getEnvEffects == null) return null;
+        return getEnvEffects.Invoke();
     }
 }
 
+public delegate T OutStringAction<T>(out string s);
 public delegate void OutStringAction(out string s);

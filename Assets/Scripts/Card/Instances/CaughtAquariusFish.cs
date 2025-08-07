@@ -20,8 +20,14 @@ public class CaughtAquariusFish : Card
         AddCard("水瓶鱼", true).InheritComponent<ProgressComponent>(this);
     }
 
-    public bool Judge_Release()
+    public bool Judge_Release(out string hint)
     {
-        return GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater;
+        hint = string.Empty;
+        if (!GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
+        {
+            hint = "只能放生在水域环境";
+            return false;
+        }
+        return true;
     }
 }

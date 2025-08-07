@@ -12,9 +12,9 @@ public abstract class EquipmentCard : Card
         GameManager.Instance.Equip(this);
     }
 
-    protected bool Judge_Equip()
+    protected bool Judge_Equip(out string hint)
     {
-        return GameManager.Instance.CanEquip(this, out _);
+        return GameManager.Instance.CanEquip(this, out hint);
     }
 
     protected void Event_UnEquip(out string tip)
@@ -23,8 +23,9 @@ public abstract class EquipmentCard : Card
         GameManager.Instance.Unequip(this);
     }
 
-    protected bool Judge_UnEquip()
+    protected bool Judge_UnEquip(out string hint)
     {
+        hint = string.Empty;
         return TryGetComponent<EquipmentComponent>(out var component) && component.isEquipped;
     }
 }

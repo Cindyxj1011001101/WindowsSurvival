@@ -300,6 +300,7 @@ public class InnerContentsComponent : CardComponent
     }
 }
 #endregion
+
 #region 食物属性
 public class FoodPropertyComponent : CardComponent
 {
@@ -311,6 +312,7 @@ public class FoodPropertyComponent : CardComponent
     }
 }
 #endregion
+
 #region 可燃烧组件
 public class BurnableComponent : CardComponent
 {
@@ -319,6 +321,22 @@ public class BurnableComponent : CardComponent
     public BurnableComponent(int burnTime)
     {
         this.burnTime = burnTime;
+    }
+}
+#endregion
+
+#region 通道组件
+public class PassageComponent : CardComponent
+{
+    public PlaceEnum targetPlace;
+    public int time;
+    public string audioClip;
+
+    public PassageComponent(PlaceEnum targetPlace, int time, string audioClip)
+    {
+        this.targetPlace = targetPlace;
+        this.time = time;
+        this.audioClip = audioClip;
     }
 }
 #endregion

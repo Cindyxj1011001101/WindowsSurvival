@@ -17,7 +17,16 @@ public static class CardFactory
         configCache ??= ExcelReader.ReadCardConfig("CardConfig");
         classTypes ??= new()
         {
-            { "气密舱门", typeof(AirtightDoor) },
+            { "从动力舱到驾驶室", typeof(FromPowerCabinToCockpit) },
+            { "从驾驶室到动力舱", typeof(FromCockpitToPowerCabin) },
+            { "从驾驶室到维生舱", typeof(FromCockpitToLifeSupportCabin) },
+            { "从维生舱到驾驶室", typeof(FromLifeSupportCabinToCockpit) },
+            { "从驾驶室到珊瑚礁海域", typeof(FromCockpitToCoralCoast) },
+            { "从珊瑚礁海域到驾驶室", typeof(FromCoralCoastToCockpit) },
+            { "从珊瑚礁海域到织光藻墓园", typeof(FromCoralCoastToPhosphorTomb) },
+            { "从织光藻墓园到珊瑚礁海域", typeof(FromPhosphorTombToCoralCoast) },
+            { "从珊瑚礁海域到飞船外壳", typeof(FromCoralCoastToSpaceshipOuterHull) },
+            { "从飞船外壳到珊瑚礁海域", typeof(FromSpaceshipOuterHullToCoralCoast) },
             { "水瓶鱼", typeof(AquariusFish) },
             { "有产物的水瓶鱼", typeof(AquariusFishWithProduct) },
             { "电池", typeof(Battery) },
@@ -26,9 +35,6 @@ public static class CardFactory
             { "有产物的被捉住的水瓶鱼", typeof(CaughtAquariusFishWithProduct) },
             { "压缩饼干", typeof(CompactBiscuit) },
             { "珊瑚", typeof(Coral) },
-            { "通往驾驶室的门", typeof(DoorToCockpit) },
-            { "通往维生舱的门", typeof(DoorToLifeSupportCabin) },
-            { "通往动力舱的门", typeof(DoorToPowerCabin) },
             { "捞网", typeof(FishingNet) },
             { "玻璃", typeof(Glass) },
             { "玻璃沙", typeof(GlassSand) },
@@ -223,6 +229,10 @@ public static class CardFactory
         if (config.HasInnerContents)
         {
             card.AddComponent(typeof(InnerContentsComponent), new InnerContentsComponent(config.InnerContentSlotCount, cardId));
+        }
+        if (config.IsPassage)
+        {
+            card.AddComponent(typeof(PassageComponent), new PassageComponent(config.TargetPlace, config.MoveTime, config.InteractAudio));
         }
 
         return card;
