@@ -291,27 +291,19 @@ public class Event
     public string name;
     public string description;
     public string hint;
-    //public string hint;
     public OutStringAction action;
     public OutStringAction<bool> condition;
-    //public int time;
-    //public Dictionary<PlayerStateEnum, float> playerEffects = new();
-    //public Dictionary<EnvironmentStateEnum, float> envEffects = new();
     public Func<int> getTimeEffect;
     public Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects;
     public Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects;
 
     public string Description => string.IsNullOrEmpty(hint) ? description : hint;
 
-    public Event(string name, string description, OutStringAction action, OutStringAction<bool> condition,/* string hint = null,*/
+    public Event(string name, string description, OutStringAction action, OutStringAction<bool> condition,
         Func<int> getTimeEffect = null, Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects = null, Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects = null)
     {
         this.name = name;
         this.description = description;
-        //this.hint = hint;
-        //this.time = Time;
-        //this.playerEffects = PlayerStateDict ?? new Dictionary<PlayerStateEnum, float>();
-        //this.envEffects = EnvironmentStateDict ?? new Dictionary<EnvironmentStateEnum, float>();
         this.action = action;
         this.condition = condition;
         this.getTimeEffect = getTimeEffect;

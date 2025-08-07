@@ -172,11 +172,6 @@ public class ToolComponent : CardComponent
 {
     public List<ToolType> toolTypes;
 
-    public ToolComponent(params ToolType[] toolTypes)
-    {
-        this.toolTypes = new List<ToolType>(toolTypes);
-    }
-
     public ToolComponent(List<ToolType> toolTypes)
     {
         this.toolTypes = toolTypes;

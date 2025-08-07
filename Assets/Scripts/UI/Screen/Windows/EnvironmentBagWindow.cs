@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -120,6 +119,9 @@ public class EnvironmentBagWindow : BagWindow
 
         // 探索事件
         DisplayDiscoveryDegree((curEnvironmentBag.DiscoveryDegree, curEnvironmentBag.ExploreCompleted));
+
+        // 按钮是否能够交互
+        exploreButton.Interactable = GameManager.Instance.CanMoveExplore();
 
         // 显示图片
         environmentImage.sprite = curEnvironmentBag.PlaceData.placeImage;
