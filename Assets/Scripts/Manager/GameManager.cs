@@ -262,8 +262,6 @@ public class GameManager : MonoBehaviour
         tip = string.Empty;
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
 
-        if (!CanMoveExplore()) return;
-
         var disposableDropList = curEnvironmentBag.DisposableDropList;
         var repeatableDropList = curEnvironmentBag.RepeatableDropList;
         if (disposableDropList.IsEmpty && repeatableDropList.IsEmpty)

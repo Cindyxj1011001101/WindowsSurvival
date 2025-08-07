@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,6 +39,8 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
+        // 玩家背包卡牌变化
+        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerBagCardsChanged);
     }
 
     private void OnDestroy()
@@ -46,6 +49,12 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.RemoveListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
+        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerBagCardsChanged);
+    }
+
+    private void OnPlayerBagCardsChanged(ChangePlayerBagCardsArgs args)
+    {
+        exploreButton.Interactable = GameManager.Instance.CanMoveExplore();
     }
 
     protected override void Init()
