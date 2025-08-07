@@ -1,4 +1,3 @@
-using OfficeOpenXml.FormulaParsing.Excel.Functions.DateTime;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,6 +19,14 @@ public enum PlaceEnum
     /// 珊瑚礁海域
     /// </summary>
     CoralCoast,
+    /// <summary>
+    /// 织光藻墓园
+    /// </summary>
+    PhosphorTomb,
+    /// <summary>
+    /// 飞船外壳
+    /// </summary>
+    SpaceshipOuterHull
 }
 
 public class GameManager : MonoBehaviour
@@ -70,7 +77,7 @@ public class GameManager : MonoBehaviour
         {
             bag.Init();
         }
-        Move(GameDataManager.Instance.LastPlace);
+        ChangeEnv(GameDataManager.Instance.LastPlace);
         SoundManager.Instance.PlayCurEnvironmentMusic();
     }
 
@@ -320,9 +327,18 @@ public class GameManager : MonoBehaviour
     }
 
     // 移动到目标场景
-    public void Move(PlaceEnum targetPlace)
+    public void Move(PlaceEnum targetPlace, int time)
     {
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("EnterEnvironment",targetPlace.ToString()));
+        ChangeEnv(targetPlace);
+
+        // 移动消耗
+        StateManager.Instance.ApplyPlayerEffects(GetMoveExplorePlayerEffects());
+        TimeManager.Instance.AddTime(GetMoveExploreTime(time));
+    }
+
+    private void ChangeEnv(PlaceEnum targetPlace)
+    {
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("EnterEnvironment", targetPlace.ToString()));
         //拿到原先场景是哪个
         PlaceEnum lastPlace = curEnvironmentBag.PlaceData.placeType;
 
@@ -335,7 +351,7 @@ public class GameManager : MonoBehaviour
 
         curEnvironmentBag = environmentBags[targetPlace];
         //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
-        var door = curEnvironmentBag.DisposableDropList.CertainDrop($"通往{ParsePlaceEnum(lastPlace)}的门");
+        var door = curEnvironmentBag.DisposableDropList.CertainDrop($"从{ParsePlaceEnum(targetPlace)}到{ParsePlaceEnum(lastPlace)}");
         if (door != null)
         {
             AddCard(door[0], false);
@@ -345,7 +361,52 @@ public class GameManager : MonoBehaviour
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
     }
 
-    private string ParsePlaceEnum(PlaceEnum place)
+    public bool CanMoveExplore()
+    {
+        return StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel < 3;
+    }
+
+    public int GetMoveExploreTime(int time)
+    {
+        int result = time;
+        int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
+        switch (level)
+        {
+            case 0:
+                break;
+            case 1:
+                result += Mathf.CeilToInt(time * 0.25f);
+                break;
+            case 2:
+                result += Mathf.CeilToInt(time * 1f);
+                break;
+            case 3:
+                result = 0;
+                break;
+        }
+        return result;
+    }
+
+    public Dictionary<PlayerStateEnum, float> GetMoveExplorePlayerEffects()
+    {
+        Dictionary<PlayerStateEnum, float> result = new();
+        int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
+        switch (level)
+        {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                result.Add(PlayerStateEnum.Health, -3);
+                break;
+            case 3:
+                break;
+        }
+        return result;
+    }
+
+    public static string ParsePlaceEnum(PlaceEnum place)
     {
         return place switch
         {
@@ -353,6 +414,8 @@ public class GameManager : MonoBehaviour
             PlaceEnum.Cockpit => "驾驶室",
             PlaceEnum.LifeSupportCabin => "维生舱",
             PlaceEnum.CoralCoast => "珊瑚礁海域",
+            PlaceEnum.PhosphorTomb => "织光藻墓园",
+            PlaceEnum.SpaceshipOuterHull => "飞船外壳",
             _ => null,
         };
     }

@@ -28,9 +28,9 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         HideTip();
     }
 
-    public void SetTip(Event e, bool interactable)
+    public void SetTip(Event e)
     {
-        SetTip(interactable ? e.description : e.hint, e.time, e.playerEffects, e.envEffects);
+        SetTip(e.Description, e.GetTimeEffect(), e.GetPlayerEffects(), e.GetEnvEffects());
     }
 
     public void SetTip(

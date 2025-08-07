@@ -19,9 +19,15 @@ public class SeaGrassBed : Card
         RandomDropByHand(out tip);
     }
 
-    public bool Judge_CollectByKnife()
+    public bool Judge_CollectByKnife(out string hint)
     {
-        return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) != null;
+        hint = string.Empty;
+        if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) == null)
+        {
+            hint = "需要切割类工具";
+            return false;
+        }
+        return true;
     }
 
     public void Event_CollectByKnife(out string tip)

@@ -206,10 +206,10 @@ public class ChatManager : MonoBehaviour
     //创建消息（不包括选项）
     public async void CreateMessage(ChatData chatData)
     {
-
         //将该对话加入已生成列表
         GeneratedChatDataList.Add(chatData);
         chatWindow.CreateMessage(chatData.MessageSender, chatData.Message);
+ 
         SoundManager.Instance.PlaySound("消息提示音_02", true);
         AfterChatFactory.TriggerEffect(chatData.TriggerMessageEffect);
         //await Task.Delay(chatData.WaitTime==0?2500:chatData.WaitTime);

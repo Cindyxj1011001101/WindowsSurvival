@@ -7,7 +7,7 @@ public class WaterCrack : Card
     {
         Events = new()
         {
-            new Event("堵住", "消耗裂缝填充物修补裂缝", Event_Fix, Jugde_Fix, "需要裂缝填充物",15),
+            new Event("堵住", "消耗裂缝填充物修补裂缝", Event_Fix, Jugde_Fix, () => 15),
         };
     }
 
@@ -19,9 +19,15 @@ public class WaterCrack : Card
         TimeManager.Instance.AddTime(15);
     }
 
-    public bool Jugde_Fix()
+    public bool Jugde_Fix(out string hint)
     {
-        return GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物") != null;
+        hint = string.Empty;
+        if (GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物") == null)
+        {
+            hint = "需要裂缝填充物";
+            return false;
+        }
+        return true;
     }
 
     protected override System.Action OnUpdate => () =>

@@ -9,8 +9,8 @@ public class RotMaterial : Card
     {
         Events = new()
         {
-            new Event("食用", "吃这个？你疯了",Event_Eat, null, null, 15,
-            new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 6 }, { PlayerStateEnum.San, -20 }, { PlayerStateEnum.Health, -10 } })
+            new Event("食用", "吃这个？你疯了",Event_Eat, null, () => 15,
+            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 6 }, { PlayerStateEnum.San, -20 }, { PlayerStateEnum.Health, -10 } })
         };
     }
 

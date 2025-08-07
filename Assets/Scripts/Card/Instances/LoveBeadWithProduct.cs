@@ -10,7 +10,7 @@ public class LoveBeadWithProduct : Card
     {
         Events = new()
         {
-            new Event("撬开", "撬开后会获得爱情贝内的随机产物", Event_OpenByTool, Judge_OpenByTool, "需要切割工具", 15),
+            new Event("撬开", "撬开后会获得爱情贝内的随机产物", Event_OpenByTool, Judge_OpenByTool, () => 15),
         };
     }
 
@@ -51,9 +51,15 @@ public class LoveBeadWithProduct : Card
         }
     }
 
-    public bool Judge_OpenByTool()
+    public bool Judge_OpenByTool(out string hint)
     {
-        return GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }) != null;
+        hint = string.Empty;
+        if (GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }) == null)
+        {
+            hint = "需要切割类工具";
+            return false;
+        }
+        return true;
     }
     #endregion
 }

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -10,8 +9,8 @@ public class AquariusFish : Card
     {
         Events = new()
         {
-            new Event("用捕网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, null, 30),
-            new Event("用手捉", "可能捉不到", Event_CatchByHand, null, null, 30),
+            new Event("用捕网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, () => 30),
+            new Event("用手捉", "可能捉不到", Event_CatchByHand, null, () => 30),
         };
     }
 
@@ -44,9 +43,15 @@ public class AquariusFish : Card
         AddCard("被捉住的水瓶鱼", true).InheritComponent<ProgressComponent>(this);
     }
 
-    public bool Judge_CatchByNet()
+    public bool Judge_CatchByNet(out string hint)
     {
-        return GameManager.Instance.PlayerBag.FindCardOfName("捞网") != null;
+        hint = string.Empty;
+        if (GameManager.Instance.PlayerBag.FindCardOfName("捞网") == null)
+        {
+            hint = "需要捞网";
+            return false;
+        }
+        return true;
     }
     #endregion
 
