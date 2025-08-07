@@ -189,7 +189,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
             Hide();
     }
 
-    public void Minimize(Transform shortcut)
+    public virtual void Minimize(Transform shortcut)
     {
         if (state == WindowState.Minimized) return;
 

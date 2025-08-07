@@ -179,6 +179,9 @@ public class DetailsWindow : WindowBase
     {
         moved = false;
         slot.ClearSlot();
+        // 关闭时如果卡牌有循环音将循环音减小
+        if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
+            currentDisplayedCard.OnDetailClose();
         if (currentDisplayedCard != null)
             currentDisplayedCard.TempSlotTransform = null;
         currentDisplayedCard = null;
@@ -187,9 +190,6 @@ public class DetailsWindow : WindowBase
         innerBag.gameObject.SetActive(false);
         innerContentsButton.gameObject.SetActive(false);
         MonoUtility.DestroyAllChildren(buttonLayout);
-        //关闭时如果卡牌有循环音将循环音减小
-        if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
-            currentDisplayedCard.OnDetailClose();
     }
 
     private void SelectWithTween(RectTransform target)
@@ -198,5 +198,19 @@ public class DetailsWindow : WindowBase
 
         selectRect.DOKill();
         selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad);
+    }
+
+    public override void Hide(ShowMode showMode = ShowMode.Fade, UnityEngine.Events.UnityAction onFinished = null)
+    {
+        if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
+            currentDisplayedCard.OnDetailClose();
+        base.Hide(showMode, onFinished);
+    }
+
+    public override void Minimize(Transform shortcut)
+    {
+        if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
+            currentDisplayedCard.OnDetailClose();
+        base.Minimize(shortcut);
     }
 }
