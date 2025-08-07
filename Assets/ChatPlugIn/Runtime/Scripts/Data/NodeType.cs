@@ -22,5 +22,25 @@
         MultiInSingleOut =8,
         //多进多出
         MultiInMulti0ut =9,   
+        
+        
+        //开始对话触发条件
+        //开始对话优先级
+        //进入该条对话条件
+        //进入各对话分支判断条件
+        //对话延迟时间
+        //对话结束效果
+        
+        //开始
+        Start=21,
+        //结束
+        End=41,
+        //对话
+        Dialogue=51,
+        //分支
+        BranchCondition=61,
+        //通过条件
+        PassCondition=71,
+        
     }
 }

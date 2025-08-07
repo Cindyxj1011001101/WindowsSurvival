@@ -1,0 +1,63 @@
+{
+  "graphViewName": "新段落",
+  "nodes": [
+    {
+      "guid": "00a2192995116354f8dc23b9f6a12d1b",
+      "typeName": "ChatPlugIn.EndNode",
+      "NodePos": {
+        "x": 846.0,
+        "y": 187.0,
+        "normalized": {
+          "x": 0.9764309,
+          "y": 0.21583046,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.00000012
+        },
+        "magnitude": 866.4208,
+        "sqrMagnitude": 750685.0
+      },
+      "nodeData": "{\"ChoiceDatas\":[],\"InputNodes\":[],\"OutputNodes\":[]}",
+      "ports": [
+        {
+          "name": "上个节点",
+          "portType": "System.Boolean",
+          "direction": 0,
+          "capacity": 1
+        }
+      ]
+    },
+    {
+      "guid": "4921ac980b55d4440abb5ade488baabc",
+      "typeName": "ChatPlugIn.StartNode",
+      "NodePos": {
+        "x": 534.0,
+        "y": 154.0,
+        "normalized": {
+          "x": 0.9608421,
+          "y": 0.277096778,
+          "magnitude": 1.0,
+          "sqrMagnitude": 1.00000012
+        },
+        "magnitude": 555.7625,
+        "sqrMagnitude": 308872.0
+      },
+      "nodeData": "{\"ChoiceDatas\":[{\"text\":\"下个节点\",\"nextNodeID\":\"\"}],\"InputNodes\":[],\"OutputNodes\":[]}",
+      "ports": [
+        {
+          "name": "下个节点",
+          "portType": "System.Boolean",
+          "direction": 1,
+          "capacity": 0
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "outputNodeGUID": "4921ac980b55d4440abb5ade488baabc",
+      "outputPortName": "下个节点",
+      "inputNodeGUID": "00a2192995116354f8dc23b9f6a12d1b",
+      "inputPortName": "上个节点"
+    }
+  ]
+}

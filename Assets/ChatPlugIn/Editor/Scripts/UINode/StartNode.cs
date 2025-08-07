@@ -1,0 +1,47 @@
+﻿using System.Collections.Generic;
+using PlasticPipe.PlasticProtocol.Messages;
+using UnityEditor.Experimental.GraphView;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace ChatPlugIn
+{
+    public class StartNode : ZeroInSingleOutNode
+    {
+        private ParagraphData paragraphData;
+        public override void Init(StoryGraphView graphView, string title, Vector2 position)
+        {
+            base.Init(graphView, title, position);
+            Type = NodeType.Start;
+            paragraphData = new ParagraphData("Start", "", 0, new List<SentenceData>());
+        }
+        protected override void DrawExtensionContainer()
+        {
+            customDataContainer = new VisualElement();
+            foldout=ElementUtility.CreateFoldout("节点信息");
+            TextField Name= ElementUtility.CreateTextField(paragraphData.ParagraphName, "段落名称", callback =>
+            {
+                paragraphData.ParagraphName = callback.newValue;
+            });
+            TextField Condition= ElementUtility.CreateTextField(paragraphData.ParagraphCondition, "触发条件", callback =>
+            {
+                paragraphData.ParagraphCondition = callback.newValue;
+            });
+            FloatField Priority= ElementUtility.CreateFloatField(paragraphData.ParagraphPriority, "优先级", callback =>
+            {
+                paragraphData.ParagraphPriority = callback.newValue;
+            });
+            foldout.Add(Name);
+            foldout.Add(Condition);
+            foldout.Add(Priority);
+            customDataContainer.Add(foldout);
+            extensionContainer.Add(customDataContainer);
+            // 添加USS类名
+            customDataContainer.AddClasses
+            (
+                "node__custom-data-container"
+            );
+            RefreshExpandedState();
+        }
+    }
+}

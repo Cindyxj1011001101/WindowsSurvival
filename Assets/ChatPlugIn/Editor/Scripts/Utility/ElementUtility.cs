@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
@@ -37,6 +38,22 @@ namespace ChatPlugIn
             }
             return textField;
         }
+
+        public static FloatField CreateFloatField(float value = 0f, string label = null, EventCallback<ChangeEvent<float>> onValueChanged = null)
+        {
+            FloatField floatField = new FloatField()
+            {
+                value = value,
+                label = label,
+            };
+    
+            if (onValueChanged != null)
+            {
+                floatField.RegisterValueChangedCallback(onValueChanged);
+            }
+    
+            return floatField;
+        }
         public static TextField CreateTextArea(string value = null, string label = null, EventCallback<ChangeEvent<string>> onValueChanged = null)
         {
             TextField textArea = CreateTextField(value, label, onValueChanged);
@@ -44,11 +61,28 @@ namespace ChatPlugIn
             return textArea;
         }
         
+        
         public static Port CreatePort(this BaseNode node,string portName="",Orientation orientation=Orientation.Horizontal,Direction direction=Direction.Output,Port.Capacity capacity=Port.Capacity.Single)
         {
             Port port = node.InstantiatePort(orientation, direction, capacity, typeof(bool));
             port.portName = portName;
             return port;
+        }
+        
+        public static DropdownField CreateEnumDropdown<T>(T value, string label = null, EventCallback<ChangeEvent<string>> onValueChanged = null) where T :Enum
+        {
+            // 获取枚举所有值
+            var choices = Enum.GetNames(typeof(T));
+
+            // 创建下拉菜单
+            var dropdown = new DropdownField(typeof(T).ToString(), choices.ToList(), 0);
+
+            // 添加值改变回调
+            dropdown.RegisterValueChangedCallback(evt =>
+            {
+                T newvalue = (T)System.Enum.Parse(typeof(T), evt.newValue);
+            });
+            return dropdown;
         }
 
     }
