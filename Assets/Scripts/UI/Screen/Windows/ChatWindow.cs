@@ -44,6 +44,8 @@ public class ChatWindow : WindowBase
 
         // 点击发送消息
         submitButton.onClick.AddListener(Submit);
+
+        ChatManager.Instance.chatWindow = this;
     }
 
     private bool init = false;
@@ -54,8 +56,6 @@ public class ChatWindow : WindowBase
         if (init) return;
 
         init = true;
-
-        ChatManager.Instance.chatWindow = this;
         //生成已发送过的对话数据
         ChatManager.Instance.InitChat();
 
