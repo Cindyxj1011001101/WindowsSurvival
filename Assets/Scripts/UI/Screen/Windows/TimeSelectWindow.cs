@@ -20,10 +20,12 @@ public class TimeSelectWindow : WindowBase
     {
         hourScroll.OnPanelCentered.AddListener((current, previous) =>
         {
+            SoundManager.Instance.PlaySound("简单点击_01", true);
             hour = 23 - current;
         });
         minuteScroll.OnPanelCentered.AddListener((current, previous) =>
         {
+            SoundManager.Instance.PlaySound("简单点击_01", true);
             minute = 59 - current;
         });
         foreach (Transform child in hourScroll.Content)

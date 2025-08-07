@@ -523,6 +523,14 @@ public class StateManager : MonoBehaviour
         EvaluateDangerLevel();
     }
 
+    public void ApplyPlayerEffects(Dictionary<PlayerStateEnum, float> playerEffects)
+    {
+        foreach (var (state, delta) in playerEffects)
+        {
+            ChangePlayerState(state, delta);
+        }
+    }
+
     /// <summary>
     /// 尝试从环境中获取氧气
     /// </summary>

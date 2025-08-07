@@ -28,9 +28,15 @@ public class CoralReef : Card
         RandomDropByHand();
         RandomDropByHand();
     }
-    public bool Judge_Dig()
+    public bool Judge_Dig(out string hint)
     {
-        return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) != null;
+        hint = string.Empty;
+        if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) == null)
+        {
+            hint = "需要挖掘类工具";
+            return false;
+        }
+        return true;
     }
     public void Event_Enjoy(out string tip) 
     {

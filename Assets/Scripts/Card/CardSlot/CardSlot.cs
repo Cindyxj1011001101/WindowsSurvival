@@ -240,9 +240,13 @@ public class CardSlot : MonoBehaviour
         card.SetCardSlot(this);
 
         // 当卡牌添加到玩家背包时
-        if (bag is PlayerBag)
+        if (bag is PlayerBag || bag is EquipmentBag)
+        {
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, card.Weight);
+
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = 1 });
+        }
     }
 
     /// <summary>
@@ -257,9 +261,13 @@ public class CardSlot : MonoBehaviour
         card.SetCardSlot(null);
 
         // 当卡牌从玩家背包移除时
-        if (bag is PlayerBag)
+        if (bag is PlayerBag || bag is EquipmentBag)
+        {
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -card.Weight);
+
             EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
                 new ChangePlayerBagCardsArgs { card = card, add = -1 });
+        }
     }
 
     /// <summary>

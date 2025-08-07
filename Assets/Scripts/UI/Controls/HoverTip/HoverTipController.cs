@@ -28,11 +28,6 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         HideTip();
     }
 
-    public void SetTip(Event e, bool interactable)
-    {
-        SetTip(interactable ? e.description : e.hint, e.time, e.playerEffects, e.envEffects);
-    }
-
     public void SetTip(
         string textTip,
         int time,

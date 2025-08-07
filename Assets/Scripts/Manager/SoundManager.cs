@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SoundManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class SoundManager : MonoBehaviour
 
     private AudioSource audioSource;
     private AudioSource sfxSource; // 专用于音效
+    private Dictionary<string, AudioSource> cardLoopSources = new();
     private Coroutine fadeCoroutine;// 用于淡入淡出音频
     private float targetVolume;// 目标音量，用于淡入淡出
     // 心跳时音量倍率
@@ -226,6 +228,51 @@ public class SoundManager : MonoBehaviour
             $"请确保切片文件\"Resources\\Audio\\{type}\\{clipName}\"存在");
         return clip;
     }
+    /// <summary>
+    /// 播放特定卡牌的循环音效
+    /// </summary>
+    /// <param name="cardId">卡牌唯一ID</param>
+    /// <param name="clipName">音效名</param>
+    /// <param name="volume">音量</param>
+    public void PlayCardLoopSound(string cardId, string clipName, float volume = 0.3f)
+    {
+        if (cardLoopSources.ContainsKey(cardId)) return;
+        var source = gameObject.AddComponent<AudioSource>();
+        var clip = GetClip(clipName, "SFX");
+        if (clip == null)
+        {
+            Debug.LogWarning($"未找到音效: {clipName}");
+            Destroy(source);
+            return;
+        }
+        source.clip = clip;
+        source.loop = true;
+        source.volume = volume;
+        source.Play();
+        cardLoopSources[cardId] = source;
+    }
+
+    /// <summary>
+    /// 停止特定卡牌的循环音效
+    /// </summary>
+    public void StopCardLoopSound(string cardId)
+    {
+        if (cardLoopSources.TryGetValue(cardId, out var source))
+        {
+            source.Stop();
+            Destroy(source);
+            cardLoopSources.Remove(cardId);
+        }
+    }
+
+    /// <summary>
+    /// 设置特定卡牌循环音效的音量
+    /// </summary>
+    public void SetCardLoopVolume(string cardId, float volume)
+    {
+        if (cardLoopSources.TryGetValue(cardId, out var source))
+            source.volume = volume;
+    }
 
     private float GetNormalizedBGMVolume()
     {
@@ -294,8 +341,8 @@ public class SoundManager : MonoBehaviour
                 SoundManager.Instance.PlayBGM("飞船内_01", true);
                 break;
             case PlaceEnum.CoralCoast:
-                //珊瑚礁海域的音乐还没制作
-                //SoundManager.Instance.PlayBGM("珊瑚礁海域_01, true);
+                
+                SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
                 break;
         }
     }

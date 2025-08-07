@@ -47,6 +47,7 @@ public static class ExcelReader
                 HasInnerContents = bool.Parse(row[23].ToString()),
                 // HasBurn = bool.Parse(row[25].ToString()),
                 // HasFoodProperty = bool.Parse(row[27].ToString()),
+                IsPassage = bool.Parse(row[36].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
@@ -92,6 +93,12 @@ public static class ExcelReader
             //     cardConfig.FoodPropertyDict.Add(FoodProperty.Vegetableness, ParseFoodPropertyDictValue(row[34].ToString()));//菜度
             //     cardConfig.FoodPropertyDict.Add(FoodProperty.Fruitiness, ParseFoodPropertyDictValue(row[35].ToString()));//果度
             // }
+            if (cardConfig.IsPassage)
+            {
+                cardConfig.MoveTime = int.Parse(row[37].ToString());
+                cardConfig.TargetPlace = ParsePlaceEnum(row[38].ToString());
+                cardConfig.InteractAudio = row[39].ToString();
+            }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
 
@@ -137,6 +144,7 @@ public static class ExcelReader
         }
         return toolTypes;
     }
+
     private static int ParseFoodPropertyDictValue(string foodPropertyDictStr)
     {
         if (foodPropertyDictStr != "/" && int.TryParse(foodPropertyDictStr, out int value))
@@ -146,6 +154,10 @@ public static class ExcelReader
         {
             return 0;
         }
+    }
+    private static PlaceEnum ParsePlaceEnum(string placeEnumStr)
+    {
+        return (PlaceEnum)System.Enum.Parse(typeof(PlaceEnum), placeEnumStr);
     }
 
     public static Dictionary<PlaceEnum, DisposableDropList> GenerateDisposableDropList()
@@ -389,6 +401,10 @@ public class CardConfig
     public int BurnTime; // 可燃烧时间
     public bool HasFoodProperty; // 是否有食物属性
     public Dictionary<FoodProperty, int> FoodPropertyDict; // 食物属性
+    public bool IsPassage; // 是否是通道
+    public int MoveTime; // 移动时间
+    public PlaceEnum TargetPlace; // 目标地点
+    public string InteractAudio; // 交互音效
 }
 
 public class DropConfig

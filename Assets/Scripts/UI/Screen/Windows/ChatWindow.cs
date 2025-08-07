@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -45,10 +46,6 @@ public class ChatWindow : WindowBase
         submitButton.onClick.AddListener(Submit);
 
         ChatManager.Instance.chatWindow = this;
-        //生成已发送过的对话数据
-        ChatManager.Instance.InitChat();
-
-        ResetScroll();
     }
 
     /// <summary>
@@ -191,8 +188,17 @@ public class ChatWindow : WindowBase
         chatTipGroup.AddTip(text);
     }
 
+    private bool init = false;
     protected override void OnFocused()
     {
+        if (!init)
+        {
+            init = true;
+            //生成已发送过的对话数据
+            ChatManager.Instance.InitChat();
+            ResetScroll();
+        }
+
         chatTipGroup.Clear();
     }
 

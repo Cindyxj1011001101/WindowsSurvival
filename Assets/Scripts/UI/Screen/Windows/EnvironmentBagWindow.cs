@@ -18,7 +18,7 @@ public class EnvironmentBagWindow : BagWindow
     [SerializeField] private Image environmentImage; // 环境图片
     [SerializeField] private HoverableButton exploreButton; // 探索按钮
     [SerializeField] private RectTransform stateLayout;
-    [SerializeField] private RectTransform frontCard;
+    [SerializeField] private RectTransform envCard;
 
     private UIStateToggle hasCabbleToggle; // 是否铺设电缆
     private UIPressureLevel pressureLevel; // 压强等级
@@ -26,7 +26,7 @@ public class EnvironmentBagWindow : BagWindow
 
     private HoverTipController hoveredTipController;
 
-    public RectTransform FrontCard => frontCard;
+    public RectTransform EnvCard => envCard;
 
     protected override void Awake()
     {
@@ -38,6 +38,8 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
+        // 玩家背包卡牌变化
+        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerBagCardsChanged);
     }
 
     private void OnDestroy()
@@ -46,6 +48,12 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.RemoveListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
+        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerBagCardsChanged);
+    }
+
+    private void OnPlayerBagCardsChanged(ChangePlayerBagCardsArgs args)
+    {
+        exploreButton.Interactable = GameManager.Instance.CanMoveExplore();
     }
 
     protected override void Init()
@@ -54,7 +62,10 @@ public class EnvironmentBagWindow : BagWindow
         hoveredTipController.onPointerEnter.AddListener(() =>
         {
             var (desc, time, playerEffects, envEffects) = GameManager.Instance.GetExploreEffects();
-            hoveredTipController.SetTip(desc, time, playerEffects, envEffects);
+            if (GameManager.Instance.CanMoveExplore())
+                hoveredTipController.SetTip(desc, time, playerEffects, envEffects);
+            else
+                hoveredTipController.SetTip(desc);
         });
     }
 
@@ -108,6 +119,9 @@ public class EnvironmentBagWindow : BagWindow
 
         // 探索事件
         DisplayDiscoveryDegree((curEnvironmentBag.DiscoveryDegree, curEnvironmentBag.ExploreCompleted));
+
+        // 按钮是否能够交互
+        exploreButton.Interactable = GameManager.Instance.CanMoveExplore();
 
         // 显示图片
         environmentImage.sprite = curEnvironmentBag.PlaceData.placeImage;
@@ -188,7 +202,7 @@ public class EnvironmentBagWindow : BagWindow
             hoveredTipController.enabled = true;
         }
 
-        // 显示牌堆数量
-        frontCard.anchoredPosition = new Vector2(frontCard.anchoredPosition.x, -Mathf.FloorToInt(args.degree * 4) * 4);
+        //// 显示牌堆数量
+        //frontCard.anchoredPosition = new Vector2(frontCard.anchoredPosition.x, -Mathf.FloorToInt(args.degree * 4) * 4);
     }
 }

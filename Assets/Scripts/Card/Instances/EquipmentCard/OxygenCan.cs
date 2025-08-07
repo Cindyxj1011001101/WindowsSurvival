@@ -7,44 +7,10 @@ public class OxygenCan : EquipmentCard
     {
         Events = new()
         {
-            new Event("穿上", "穿上氧气罐",  Event_Equip, Judge_Equip),
-            new Event("脱下", "脱下氧气罐", Event_UnEquip,Judge_UnEquip)
+            new Event("穿上", "穿上氧气罐", Event_Equip, Judge_Equip),
+            new Event("脱下", "脱下氧气罐", Event_UnEquip, Judge_UnEquip)
         };
-
-        //EventManager.Instance.AddListener<Card>(EventType.Equip, OnEquipped);
-        //EventManager.Instance.AddListener<Card>(EventType.Unequip, OnUnequipped);
     }
-
-    //private void OnEquipped(Card equipment)
-    //{
-    //    if (equipment == this)
-    //    {
-    //        TryGetComponent<EquipmentComponent>(out var component);
-    //        component.isEquipped = true;
-    //        // 当穿上装备时，额外氧气增加
-    //        StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, 120);
-    //    }
-    //}
-
-    //private void OnUnequipped(Card equipment)
-    //{
-    //    if (equipment == this)
-    //    {
-    //        TryGetComponent<EquipmentComponent>(out var component);
-    //        component.isEquipped = false;
-
-    //        // 当卸下装备时，额外氧气减少
-    //        StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, -120);
-    //    }
-    //}
-
-    //public override void DestroyThis()
-    //{
-    //    base.DestroyThis();
-    //    EventManager.Instance.RemoveListener<Card>(EventType.Equip, OnEquipped);
-    //    EventManager.Instance.RemoveListener<Card>(EventType.Unequip, OnUnequipped);
-    //}
-
     public override void OnEquipped()
     {
         StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, 120);

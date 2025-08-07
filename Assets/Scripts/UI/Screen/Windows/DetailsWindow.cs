@@ -108,6 +108,9 @@ public class DetailsWindow : WindowBase
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
         DisplayDetails();
+        // 打开详情如果卡牌有循环音
+        if (currentDisplayedCard.HasLoopSound)
+            currentDisplayedCard.OnDetailOpen();
     }
 
     private void DisplayDetails()
@@ -165,7 +168,10 @@ public class DetailsWindow : WindowBase
             }
 
             // 设置提示
-            button.GetComponent<HoverTipController>().SetTip(e, interactable);
+            if (interactable)
+                button.GetComponent<HoverTipController>().SetTip(e.Description, e.GetTimeEffect(), e.GetPlayerEffects(), e.GetEnvEffects());
+            else
+                button.GetComponent<HoverTipController>().SetTip(e.Description);
         }
     }
 
@@ -173,6 +179,9 @@ public class DetailsWindow : WindowBase
     {
         moved = false;
         slot.ClearSlot();
+        // 关闭时如果卡牌有循环音将循环音减小
+        if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
+            currentDisplayedCard.OnDetailClose();
         if (currentDisplayedCard != null)
             currentDisplayedCard.TempSlotTransform = null;
         currentDisplayedCard = null;
@@ -189,5 +198,19 @@ public class DetailsWindow : WindowBase
 
         selectRect.DOKill();
         selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad);
+    }
+
+    public override void Hide(ShowMode showMode = ShowMode.Fade, UnityEngine.Events.UnityAction onFinished = null)
+    {
+        if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
+            currentDisplayedCard.OnDetailClose();
+        base.Hide(showMode, onFinished);
+    }
+
+    public override void Minimize(Transform shortcut)
+    {
+        if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
+            currentDisplayedCard.OnDetailClose();
+        base.Minimize(shortcut);
     }
 }

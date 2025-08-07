@@ -9,7 +9,7 @@ public class LoveBead : Card
     {
         Events = new()
         {
-            new Event("取贝肉", "这将会杀死爱情贝", Event_GetMeat, null, null, 30)
+            new Event("取贝肉", "这将会杀死爱情贝", Event_GetMeat, null, () => 30)
         };
     }
 

@@ -68,6 +68,9 @@ public abstract class Card : IComparable<Card>
 
     [JsonIgnore]
     public bool IsBigIcon => CardFactory.GetIsBigIcon(CardId);
+    
+    /// 是否有循环音效，默认无
+    public virtual bool HasLoopSound => false;
     #endregion
 
     /// <summary>
@@ -143,6 +146,25 @@ public abstract class Card : IComparable<Card>
         temp.RefreshCurrentDisplay();
         StopUpdating();
     }
+    /// <summary>
+    /// 进入当前环境时（如玩家进入该卡牌所在地点）（通常用于播放卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnEnterEnvironment() { }
+
+    /// <summary>
+    /// 离开当前环境时（如玩家离开该卡牌所在地点）
+    /// </summary>
+    public virtual void OnLeaveEnvironment() { }
+
+    /// <summary>
+    /// 打开卡牌详情时（通常用于调大卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnDetailOpen() { }
+
+    /// <summary>
+    /// 关闭卡牌详情时（通常用于调小卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnDetailClose() { }
 
     /// <summary>
     /// 获取卡牌的组件
@@ -222,7 +244,7 @@ public abstract class Card : IComparable<Card>
         sb.AppendLine($"事件数量: {Events.Count}");
         foreach (var ev in Events)
         {
-            sb.AppendLine($"  - 事件名称: {ev.name}, 描述: {ev.description}");
+            sb.AppendLine($"  - 事件名称: {ev.name}");
         }
         sb.AppendLine($"组件数量: {components.Count}");
         foreach (var kvp in components)
@@ -270,21 +292,23 @@ public class Event
     public string description;
     public string hint;
     public OutStringAction action;
-    public Func<bool> condition;
-    public int time;
-    public Dictionary<PlayerStateEnum, float> playerEffects = new();
-    public Dictionary<EnvironmentStateEnum, float> envEffects = new();
+    public OutStringAction<bool> condition;
+    public Func<int> getTimeEffect;
+    public Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects;
+    public Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects;
 
-    public Event(string name, string description, OutStringAction action, Func<bool> condition, string hint = null, int Time = 0, Dictionary<PlayerStateEnum, float> PlayerStateDict = null, Dictionary<EnvironmentStateEnum, float> EnvironmentStateDict = null)
+    public string Description => string.IsNullOrEmpty(hint) ? description : hint;
+
+    public Event(string name, string description, OutStringAction action, OutStringAction<bool> condition,
+        Func<int> getTimeEffect = null, Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects = null, Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects = null)
     {
         this.name = name;
         this.description = description;
-        this.hint = hint;
-        this.time = Time;
-        this.playerEffects = PlayerStateDict ?? new Dictionary<PlayerStateEnum, float>();
-        this.envEffects = EnvironmentStateDict ?? new Dictionary<EnvironmentStateEnum, float>();
         this.action = action;
         this.condition = condition;
+        this.getTimeEffect = getTimeEffect;
+        this.getPlayerEffects = getPlayerEffects;
+        this.getEnvEffects = getEnvEffects;
     }
 
     public void Inovke(out string tip)
@@ -297,10 +321,33 @@ public class Event
 
     public bool Judge()
     {
-        if (condition == null) return true;
+        hint = string.Empty;
+        if (condition == null || condition.Invoke(out hint))
+        {
+            return true;
+        }
 
-        return condition.Invoke();
+        return false;
+    }
+
+    public int GetTimeEffect()
+    {
+        if (getTimeEffect == null) return 0;
+        return getTimeEffect.Invoke();
+    }
+
+    public Dictionary<PlayerStateEnum, float> GetPlayerEffects()
+    {
+        if (getPlayerEffects == null) return null;
+        return getPlayerEffects.Invoke();
+    }
+
+    public Dictionary<EnvironmentStateEnum, float> GetEnvEffects()
+    {
+        if (getEnvEffects == null) return null;
+        return getEnvEffects.Invoke();
     }
 }
 
+public delegate T OutStringAction<T>(out string s);
 public delegate void OutStringAction(out string s);

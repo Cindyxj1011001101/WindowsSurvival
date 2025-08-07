@@ -17,8 +17,9 @@ public class ElectricDrainageMachine : Card
         isWorking = true;
     }
 
-    public bool Judge_Open()
+    public bool Judge_Open(out string hint)
     {
+        hint = string.Empty;
         return !isWorking;
     }
 
@@ -28,8 +29,9 @@ public class ElectricDrainageMachine : Card
         isWorking = false;
     }
 
-    public bool Judge_Close()
+    public bool Judge_Close(out string hint)
     {
+        hint = string.Empty;
         return isWorking;
     }
     #endregion
