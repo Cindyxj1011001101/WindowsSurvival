@@ -48,20 +48,6 @@ public class ChatWindow : WindowBase
         ChatManager.Instance.chatWindow = this;
     }
 
-    private bool init = false;
-    public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
-    {
-        base.Show(showMode, onFinished);
-
-        if (init) return;
-
-        init = true;
-        //生成已发送过的对话数据
-        ChatManager.Instance.InitChat();
-
-        ResetScroll();
-    }
-
     /// <summary>
     /// 添加一条对话
     /// </summary>
@@ -202,8 +188,17 @@ public class ChatWindow : WindowBase
         chatTipGroup.AddTip(text);
     }
 
+    private bool init = false;
     protected override void OnFocused()
     {
+        if (!init)
+        {
+            init = true;
+            //生成已发送过的对话数据
+            ChatManager.Instance.InitChat();
+            ResetScroll();
+        }
+
         chatTipGroup.Clear();
     }
 
