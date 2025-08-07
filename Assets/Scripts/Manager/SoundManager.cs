@@ -238,7 +238,14 @@ public class SoundManager : MonoBehaviour
     {
         if (cardLoopSources.ContainsKey(cardId)) return;
         var source = gameObject.AddComponent<AudioSource>();
-        source.clip = GetClip(clipName, "SFX"); 
+        var clip = GetClip(clipName, "SFX");
+        if (clip == null)
+        {
+            Debug.LogWarning($"未找到音效: {clipName}");
+            Destroy(source);
+            return;
+        }
+        source.clip = clip;
         source.loop = true;
         source.volume = volume;
         source.Play();
