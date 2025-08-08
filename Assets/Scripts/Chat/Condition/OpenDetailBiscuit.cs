@@ -10,7 +10,6 @@ public class OpenDetailBiscuit : ChatCondition
 
     public override bool Detect(string type, string value)
     {
-        Debug.Log(type+value);
         if(type=="Detail"&&value=="压缩饼干")
         {
             return true;
