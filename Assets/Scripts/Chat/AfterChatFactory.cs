@@ -40,12 +40,36 @@ public static class AfterChatFactory
                 case "时间":
                     TimeManager.Instance.AddTime(int.Parse(eventItemList[1]));
                     break;
+                case "解锁":
+                    UnlockWindow(eventItemList[1]);
+                    break;
+                case "添加":
+                    AddCardEvent(eventItemList[1], eventItemList[2]); 
+                    break;
                 case "其他":
                     OtherEvent(eventItemList);
                     break;
             }
         }
     }
+
+    private static void AddCardEvent(string PlayerOrScene, string CardName)
+    {
+        GameManager.Instance.AddCardWithTween(CardName, new Vector2(0,-700), PlayerOrScene=="玩家");
+    }
+
+    private static void UnlockWindow(string WindowName)
+    {
+        string windowName = WindowName switch
+        {
+            "背包" => "PlayerBag",
+            "场景" => "Scene",
+            "摄像头"=>"Camera",
+            _ => throw new System.Exception("WindowName Error")
+        };
+        //解锁窗口逻辑
+    }
+
     public static void ChangeState(List<string> eventItemList)
     {
         switch (eventItemList[1])
