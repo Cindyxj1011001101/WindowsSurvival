@@ -89,7 +89,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         if (!interactable) return;
 
         if (playHoverSound)
-        SoundManager.Instance.PlaySound(hoveredAudio, true,0.5f);
+        SoundManager.Instance.PlaySound(hoveredAudio, true,0.2f);
 
         onPointerEnter?.Invoke();
 
