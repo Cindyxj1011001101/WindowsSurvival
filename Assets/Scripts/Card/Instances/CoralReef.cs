@@ -25,7 +25,6 @@ public class CoralReef : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("挖掘废料_01", true);
         tip = string.Empty;
-        DestroyThis();
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig);
         card.TryUse();
         TimeManager.Instance.AddTime(45);
