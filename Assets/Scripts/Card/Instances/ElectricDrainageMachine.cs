@@ -6,7 +6,7 @@ public class ElectricDrainageMachine : Card
         isWorking = false;
         Events = new()
         {
-            new Event("开启", "开启电动排水机", Event_Open, Judge_Open),
+            new Event("开启", "开启后每回合消耗电力，降低水平面", Event_Open, Judge_Open),
             new Event("关闭", "关闭电动排水机", Event_Close, Judge_Close)
         };
     }

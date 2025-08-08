@@ -20,8 +20,7 @@ public class WasteHeap : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("挖掘废料_01", true);
 
-        //消耗1点耐久度
-        TryUse();
+    
         //消耗45分钟
         TimeManager.Instance.AddTime(45);
         //掉落卡牌
@@ -39,7 +38,7 @@ public class WasteHeap : Card
         // 工具消耗耐久
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig);
         card.TryUse();
-        //消耗45分钟
+        //消耗15分钟
         TimeManager.Instance.AddTime(15);
         //掉落卡牌
         RandomDrop();

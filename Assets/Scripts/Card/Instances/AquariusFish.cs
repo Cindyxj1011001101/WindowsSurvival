@@ -9,7 +9,7 @@ public class AquariusFish : Card
     {
         Events = new()
         {
-            new Event("用捕网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, () => 30),
+            new Event("用捕网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, () => 15),
             new Event("用手捉", "可能捉不到", Event_CatchByHand, null, () => 30),
         };
     }
@@ -33,7 +33,7 @@ public class AquariusFish : Card
         DestroyThis();
 
         // 2. 时间变化
-        TimeManager.Instance.AddTime(30);
+        TimeManager.Instance.AddTime(15);
 
         // 3. 掉落卡牌
 
