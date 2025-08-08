@@ -79,6 +79,9 @@ public static class CardFactory
             { "炸虫串", typeof(FriedInsectStick) },
             { "白灼触手", typeof(ScaldedClaw) },
             { "厨房恶物", typeof(KitchenFoes) },
+            { "鱼汤", typeof(FishSoup) },
+            { "贝类刺身", typeof(ShellSashimi) },
+            { "白爆矿堆", typeof(WhiteBlastMineStack) },
         };
     }
 
