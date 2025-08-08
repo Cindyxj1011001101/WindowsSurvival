@@ -91,7 +91,7 @@ public class ChatManager : MonoBehaviour
     }
     //触发段落时判断是否需要打断，不打断则放弃该段对话
     public void AddTriggerParagraph(ParagraphData paragraphData)
-    { 
+    {
         //当前在段落内
         if (inParagraph)
         {
@@ -124,7 +124,7 @@ public class ChatManager : MonoBehaviour
     }
     public void TriggerParagraph(ParagraphData paragraphData)
     {
-        InterruptParagraphData=null;
+        InterruptParagraphData = null;
         CurrentParagraphData = paragraphData;
         inParagraph = true;
         TriggerMessage(paragraphData.ChatDataList[0]);
@@ -135,7 +135,7 @@ public class ChatManager : MonoBehaviour
         //进入对话
         inParagraph = true;
         //从GeneratedChatDataList中加载已触发的对话数据
-        for (int i = 0; i <GeneratedChatDataList.Count - 1; i++)
+        for (int i = 0; i < GeneratedChatDataList.Count - 1; i++)
         {
             chatWindow.CreateMessage(GeneratedChatDataList[i].MessageSender, GeneratedChatDataList[i].Message);
         }
@@ -150,11 +150,11 @@ public class ChatManager : MonoBehaviour
             TriggerParagraph(InterruptParagraphData);
             InterruptParagraphData = null;
         }
-        if(chatData==null)return;
+        if (chatData == null) return;
         //非分支对话且有条件时开始该条件判断，不生成对话
         if (chatData.MessageCondition != "" && chatData.MessageType != "分支对话")
         {
-            inParagraph=false;
+            inParagraph = false;
             ChatConditionManager.Instance.StartChatConditionDetection(chatData);
             return;
         }
@@ -167,7 +167,7 @@ public class ChatManager : MonoBehaviour
             case "选项":
                 // 先收集所有选项消息
                 List<ChatData> optionsList = new List<ChatData>();
-                for (int i = chatData.MessageID - 1; i <ParagraphDataList[chatData.ParagraphID].ChatDataList.Count; i++)
+                for (int i = chatData.MessageID - 1; i < ParagraphDataList[chatData.ParagraphID].ChatDataList.Count; i++)
                 {
                     if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "选项")
                     {
@@ -175,7 +175,7 @@ public class ChatManager : MonoBehaviour
                     }
                     else break;
                 }
-                Choosing=true;
+                Choosing = true;
                 chatWindow.SetDialogueOptions(optionsList);
                 break;
             case "分支对话":
@@ -203,19 +203,25 @@ public class ChatManager : MonoBehaviour
                 break;
         }
     }
+
+    public void CreateMessage(ChatData chatData)
+    {
+        StartCoroutine(CreateMessageCoroutine(chatData));
+    }
+
     //创建消息（不包括选项）
-    public async void CreateMessage(ChatData chatData)
+    private IEnumerator CreateMessageCoroutine(ChatData chatData)
     {
         //将该对话加入已生成列表
         GeneratedChatDataList.Add(chatData);
         chatWindow.CreateMessage(chatData.MessageSender, chatData.Message);
- 
+
         SoundManager.Instance.PlaySound("消息提示音_02", true);
         AfterChatFactory.TriggerEffect(chatData.TriggerMessageEffect);
-        //await Task.Delay(500);
-        await Task.Delay(chatData.WaitTime==0?2500:chatData.WaitTime);
-        //触发对话效果
 
+        yield return new WaitForSeconds(chatData.WaitTime == 0 ? 2.5f : chatData.WaitTime / 1000);
+
+        //触发对话效果
         if (chatData.NextMessageID != -1)
         {
             TriggerMessage(ParagraphDataList[chatData.ParagraphID].ChatDataList[chatData.NextMessageID - 1]);
@@ -242,7 +248,7 @@ public class ChatManager : MonoBehaviour
     public void Submit()
     {
         if (ChoosedChatData == null) return;
-        Choosing=false;
+        Choosing = false;
         CreateMessage(ChoosedChatData);
         ChoosedChatData = null;
     }
