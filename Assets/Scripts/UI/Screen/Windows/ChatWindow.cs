@@ -91,7 +91,7 @@ public class ChatWindow : WindowBase
 
         ResetScroll();
 
-        if (addChatTip && !focused) CreateChatTip(content);
+        if (addChatTip && !focused) CreateChatTip(sender, content);
     }
 
     private void ResetScroll()
@@ -197,9 +197,9 @@ public class ChatWindow : WindowBase
         //HideDialogueOptions();
     }
 
-    private void CreateChatTip(string text)
+    private void CreateChatTip(MessageSenderEnum sender, string text)
     {
-        chatTipGroup.AddTip(text);
+        chatTipGroup.AddTip(sender, text);
     }
 
     private bool init = false;
@@ -214,14 +214,4 @@ public class ChatWindow : WindowBase
         }
         chatTipGroup.Clear();
     }
-
-#if UNITY_EDITOR
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            CreateChatTip("这是一条测试信息测试信息测试");
-        }
-    }
-#endif
 }

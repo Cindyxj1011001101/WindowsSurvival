@@ -9,7 +9,16 @@ public class ChatTip : HoverableButton
     public RectTransform mask;
     public CanvasGroup iconEnter;
     public CanvasGroup iconExit;
+    public Image bubble;
     public Text text;
+
+    public Color playerBubbleColor;
+    public Color othersBubbleColor;
+    public Color narrationBubbleColor;
+
+    public Color playerTextColor;
+    public Color othersTextColor;
+    public Color narrationTextColor;
 
     private Sequence showSeq;
     private Sequence pointerEnterSeq;
@@ -35,8 +44,23 @@ public class ChatTip : HoverableButton
         Show();
     }
 
-    public void SetText(string text)
+    public void SetText(MessageSenderEnum sender, string text)
     {
+        switch (sender)
+        {
+            case MessageSenderEnum.NPC:
+                this.text.color = othersTextColor;
+                bubble.color = othersBubbleColor;
+                break;
+            case MessageSenderEnum.Player:
+                this.text.color = playerTextColor;
+                bubble.color = playerBubbleColor;
+                break;
+            case MessageSenderEnum.Aside:
+                this.text.color = narrationTextColor;
+                bubble.color = narrationBubbleColor;
+                break;
+        }
         string newStr = text;
         if (text.Length > 10)
         {

@@ -416,7 +416,14 @@ MonoBehaviour:
   mask: {fileID: 4867423622765669220}
   iconEnter: {fileID: 7550947742920588425}
   iconExit: {fileID: 9202411470255685026}
+  bubble: {fileID: 4725559879571345520}
   text: {fileID: 1731888677399812865}
+  playerBubbleColor: {r: 0.0627451, g: 0.20784315, b: 0.17254902, a: 1}
+  othersBubbleColor: {r: 0.2509804, g: 0.20392159, b: 0.20392159, a: 1}
+  narrationBubbleColor: {r: 0.31764707, g: 0.29411766, b: 0.0627451, a: 1}
+  playerTextColor: {r: 0.043137256, g: 0.76470596, b: 0.5921569, a: 1}
+  othersTextColor: {r: 0.9803922, g: 0.74509805, b: 0.74509805, a: 1}
+  narrationTextColor: {r: 1, g: 0.909804, b: 0.050980397, a: 1}
 --- !u!225 &2150939234906585755
 CanvasGroup:
   m_ObjectHideFlags: 0
