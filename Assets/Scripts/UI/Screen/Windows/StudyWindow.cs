@@ -73,7 +73,10 @@ public class StudyWindow : WindowBase
         //}
         //GameDataManager.Instance.SaveTechnologyData();
 
-        DisplayStudyState(2, null);
+        if (GameDataManager.Instance.UnlockedShortcuts.Contains(AppName))
+            DisplayStudyState(2, null);
+        else
+            studyStateButton.SetVisiable(false);
 
         TechnologyManager.Instance.InitFromGameData();
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
@@ -294,6 +297,8 @@ public class StudyWindow : WindowBase
         }
 
         if (studyState == state) return;
+
+        studyStateButton.SetVisiable(true);
 
         studyStateButton.onClick.RemoveAllListeners();
         studyStateButton.onClick.AddListener(() =>
