@@ -56,7 +56,7 @@ public class LoveBeadWithProduct : Card
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }) == null)
         {
-            hint = "需要切割类工具";
+            hint = "需要切割类或挖掘类工具";
             return false;
         }
         return true;
