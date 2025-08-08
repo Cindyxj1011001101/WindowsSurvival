@@ -130,7 +130,7 @@ public class ChatTip : HoverableButton
     private bool pointerEnter = false;
     private bool isHiding = false;
     private float timer = 0;
-    private float timeThreshold = 4f;
+    private float timeThreshold = 10f;
     private void Update()
     {
         // 3s未操作后自动隐藏
