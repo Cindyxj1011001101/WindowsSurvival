@@ -2,6 +2,7 @@
 using DG.Tweening;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class DynamicEffectUtility
 {
@@ -129,5 +130,26 @@ public class DynamicEffectUtility
         var obj = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/FloatingTip"), WindowsManager.Instance.FloatingTipLayer);
         var floatingTip = obj.GetComponent<FloatingTip>();
         floatingTip.ShowTip(tip, position, textColor, duration);
+    }
+
+    public static void ShowArrows(Rect rect, bool up, int level, Color color, int arrowCount = 6)
+    {
+        Vector3 randomPos;
+        Animator animator;
+        GameObject obj;
+        var prefab = Resources.Load<GameObject>($"Prefabs/UI/Controls/Arrow/{(up ? "Up" : "Down")}_Lv{level}");
+        for (int i = 0; i < arrowCount; i++)
+        {
+            randomPos = new(Random.Range(rect.xMin, rect.xMax), Random.Range(rect.yMin, rect.yMax));
+            obj = Object.Instantiate(prefab, WindowsManager.Instance.FloatingTipLayer);
+            obj.transform.position = randomPos;
+
+            obj.GetComponentInChildren<Image>().color = color;
+
+            animator = obj.GetComponentInChildren<Animator>();
+            animator.Play(up ? "Up" : "Down");
+            
+            Object.Destroy(obj, animator.GetCurrentAnimatorStateInfo(0).length);
+        }
     }
 }
