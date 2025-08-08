@@ -13,6 +13,8 @@ public static class AfterChatFactory
         //音乐：音乐_音乐名_是否循环
         //状态：状态_目标状态位置（玩家/当前环境/维生舱/驾驶室/动力舱/珊瑚礁海域）_状态名(健康/饱食/口渴/精神/氧气/疲劳/电力/氧气/压力/高度/电缆/水域)_数值
         //时间：时间_数值
+        //解锁：解锁_目标窗口名称
+        //添加：添加_玩家（玩家/场景）_压缩饼干（物品名称）
         //其他：其他_其他名
         if(EventName=="")return;
         List<string> eventList = new List<string>(EventName.Split(';'));
@@ -38,12 +40,36 @@ public static class AfterChatFactory
                 case "时间":
                     TimeManager.Instance.AddTime(int.Parse(eventItemList[1]));
                     break;
+                case "解锁":
+                    UnlockWindow(eventItemList[1]);
+                    break;
+                case "添加":
+                    AddCardEvent(eventItemList[1], eventItemList[2]); 
+                    break;
                 case "其他":
                     OtherEvent(eventItemList);
                     break;
             }
         }
     }
+
+    private static void AddCardEvent(string PlayerOrScene, string CardName)
+    {
+        GameManager.Instance.AddCardWithTween(CardName, new Vector2(0,-700), PlayerOrScene=="玩家");
+    }
+
+    private static void UnlockWindow(string WindowName)
+    {
+        string windowName = WindowName switch
+        {
+            "背包" => "PlayerBag",
+            "场景" => "Scene",
+            "摄像头"=>"Camera",
+            _ => throw new System.Exception("WindowName Error")
+        };
+        //解锁窗口逻辑
+    }
+
     public static void ChangeState(List<string> eventItemList)
     {
         switch (eventItemList[1])

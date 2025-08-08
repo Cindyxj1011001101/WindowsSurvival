@@ -1,13 +1,298 @@
+/* 故事视图 */
+StoryGraphView
+{
+    width: 100%;
+    height: 100%;
+}
+
+/* 网格背景 */
 GridBackground
 {
     --grid-background-color: var(--colors-dark-grey-0);
-    --line-color:var(--colors-dark-grey-1);
-    --thick-line-color:var(--colors-dark-grey-3);
-    --spacing:var(--metrics-20);
+    --line-color: var(--colors-dark-grey-1);
+    --thick-line-color: var(--colors-dark-grey-3);
+    --spacing: var(--metrics-20);
 }
 
-StoryGraphView
-{ 
-    width: 100%;
-    height: 100%;
+/* -------------------------------------------------------布局容器 */
+
+/* ----块容器---- */
+
+/* 节点主容器 */
+.node__main-container
+{
+    min-width: var(--metrics-pixels-200);
+    background-color:  var(--colors-dark-grey-3);
+}
+
+/* 节点主容器（小型） */
+.node__main-container-small
+{
+    min-width: var(--metrics-pixels-120);
+    background-color:  var(--colors-dark-grey-3);
+}
+
+/* 节点标题容器 */
+.node__title-container
+{
+}
+
+/* 节点输入容器 */
+.node__input-container
+{
+}
+
+/* 节点输出容器 */
+.node__output-container
+{
+}
+
+/* 节点扩展容器 */
+.node__extension-container
+{
+    padding: var(--metrics-0);
+}
+
+/* 节点自定义数据容器 */
+.node__custom-data-container
+{
+    padding: var(--metrics-pixels-8);
+}
+
+/* ----行容器---- */
+
+/* 行容器 */
+.row-container
+{
+    flex-direction: row;
+}
+
+/* 行容器 > 输入框 */
+.row-container > .textfield
+{
+    flex-grow: 1000;
+    max-width: var(--metrics-pixels-400);
+}
+
+/* 行容器 > 左侧和中间的元素 */
+.row-container > .row-item__left-center
+{
+    margin-top: var(--metrics-pixels-2);
+    margin-right: var(--metrics-pixels-4);
+    margin-bottom: var(--metrics-pixels-2);
+    margin-left: var(--metrics-0);
+}
+
+/* 行容器 > 最右侧的元素 */
+.row-container > .row-item__right
+{
+    margin-top: var(--metrics-pixels-2);
+    margin-right: var(--metrics-0);
+    margin-bottom: var(--metrics-pixels-2);
+    margin-left: var(--metrics-0);
+}
+
+/* ----列容器---- */
+
+/* 列容器 */
+.col-container
+{
+}
+
+/* 列容器 > 上侧和中间的元素 */
+.col-container > .col-item__top-center
+{
+    margin-top: var(--metrics-0);
+    margin-right: var(--metrics-0);
+    margin-bottom: var(--metrics-pixels-4);
+    margin-left: var(--metrics-0);
+}
+
+/* 列容器 > 最下侧的元素 */
+.col-container > .col-item__bottom
+{
+    margin-top: var(--metrics-0);
+    margin-right: var(--metrics-0);
+    margin-bottom: var(--metrics-0);
+    margin-left: var(--metrics-0);
+}
+
+
+/* -------------------------------------------------------交互元素 */
+
+/* ----折叠组---- */
+
+/* 折叠组 */
+Foldout
+{
+}
+
+/* 折叠组内容 */
+.unity-foldout__content
+{
+    margin: var(--metrics-0);
+}
+
+/* 折叠组 > 折叠框 */
+Foldout > Toggle
+{
+    margin: var(--metrics-0);
+}
+
+/* 折叠组 > 子项 */
+Foldout > .foldout-item
+{
+    margin: var(--metrics-0);
+    margin-top: var(--metrics-pixels-4);
+}
+
+/* 折叠组 > 折叠框unity文本元素 */
+.unity-toggle__text
+{
+    margin-left: var(--metrics-0);
+}
+
+/* ----按钮---- */
+
+Button
+{
+    min-height: var(--metrics-pixels-24);
+    background-color:  var(--colors-dark-grey-7);
+    border-color:  var(--colors-dark-grey-1);
+}
+
+/* 按钮（悬停时） */
+Button:hover
+{
+    background-color:  var(--colors-dark-grey-8);
+}
+
+/* 按钮（按下时） */
+Button:active
+{
+    background-color:  var(--colors-dark-grey-6);
+    color: var(--colors-yellow);
+}
+
+/* ----输入字段---- */
+
+/* 文本字段 */
+.textfield
+{
+}
+
+/* 文本字段 > unity文本输入框 */
+.textfield > .unity-text-field__input
+{
+    
+}
+    /* 文本字段 > unity整数输入框 */
+.textfield > .unity-integer-field__input
+{
+    min-width: var(--metrics-pixels-40);
+    background-color:  var(--colors-dark-grey-1);
+    border-color:  var(--colors-dark-grey-7);
+    border-radius: var(--metrics-pixels-4);
+    white-space: nowrap;
+}
+
+/* 隐藏文本字段 > unity文本输入框 */
+.textfield__hidden > .unity-text-field__input
+{
+    background-color: transparent;
+    border-color: transparent;
+}
+
+/* 隐藏文本字段（聚焦时） > unity文本输入框 */
+.textfield__hidden:focus > .unity-text-field__input
+{
+    background-color:  var(--colors-dark-grey-1);
+    border-color: var(--colors-yellow);
+}
+
+/* 引用文本字段 > unity文本输入框 */
+.textfield__quote > .unity-text-field__input,
+.textfield__quote > .unity-integer-field__input
+{
+    padding: var(--metrics-pixels-6);
+    background-color: var(--colors-dark-grey-2);
+    border-color: transparent;
+    border-left-color:  var(--colors-dark-grey-7);
+    border-left-width: var(--metrics-pixels-4);
+}
+
+/* 引用文本字段（悬停时） > unity文本输入框 */
+.textfield__quote:hover > .unity-text-field__input,
+.textfield__quote:hover > .unity-integer-field__input
+{
+    background-color:  var(--colors-dark-grey-4);
+}
+
+/* 引用文本字段（聚焦时） > unity文本输入框 */
+.textfield__quote:focus > .unity-text-field__input,
+.textfield__quote:focus > .unity-integer-field__input
+{
+    background-color:  var(--colors-dark-grey-1);
+    border-color:  var(--colors-yellow);
+}
+
+/* 节点标题文本字段 > unity文本输入框 */
+.textfield__node-title > .unity-text-field__input
+{
+    max-width: var(--metrics-pixels-320);
+    margin: var(--metrics-pixels-4);
+    margin-left: var(--metrics-0);
+    padding: var(--metrics-pixels-2);
+}
+
+/* 节点标题文本字段 > unity文本输入框 > 文本元素 */
+.textfield__node-title > .unity-text-field__input > TextElement
+{
+    font-size: var(--metrics-pixels-14);
+}
+
+/* 节点输出端口选项文本字段 > unity文本输入框 */
+.textfield__node-output-port > .unity-text-field__input
+{
+    height: var(--metrics-pixels-24);
+    min-width: var(--metrics-pixels-40);
+    max-width: var(--metrics-pixels-240);
+    margin: var(--metrics-pixels-4);
+    margin-right: var(--metrics-0);
+    padding: var(--metrics-pixels-4);
+}
+
+/* -------------------------------------------------------附加样式 */
+
+/* 错误（边框） */
+.error-border
+{
+    border-color: var(--colors-red);
+    border-width: var(--metrics-pixels-2);
+    border-radius: 4px 4px 0 0;
+}
+
+/* 错误（背景） */
+.error-bg
+{
+    background-color:  var(--colors-red);
+}
+
+/* 帮助文本 */
+.help-text
+{
+    color: var(--colors-red);
+    -unity-text-align: middle-center;
+}
+
+/* 行缩进 */
+.indent
+{
+    margin-left: var(--metrics-pixels-8);
+}
+
+/* 全宽 */
+.full-width
+{
+    flex-grow: var(--metrics-1);
 }

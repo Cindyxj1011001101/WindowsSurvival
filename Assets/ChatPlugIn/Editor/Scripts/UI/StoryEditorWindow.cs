@@ -42,11 +42,10 @@ namespace ChatPlugIn
         private void AddToolbar()
         {
             tfdFileName = ElementUtility.CreateTextField(defaultFileWindow, "当前段落名", null);
-            btnSave= ElementUtility.CreateButton("保存", null);
-            btnOpen = ElementUtility.CreateButton("打开", null);
-            btnNew = ElementUtility.CreateButton("新建", null);
-            btnClear = ElementUtility.CreateButton("清空", null);
-            btnMiniMap = ElementUtility.CreateButton("小地图", null);
+            btnSave= ElementUtility.CreateButton("保存", () => SaveGraph());
+            btnOpen = ElementUtility.CreateButton("打开", () => LoadGraph());
+            btnNew = ElementUtility.CreateButton("新建", () => NewGraph());
+            btnClear = ElementUtility.CreateButton("清空", () => ClearGraph());
             //创建工具栏
             toolbar = new();
             //将UI元素加入工具栏
@@ -55,10 +54,11 @@ namespace ChatPlugIn
             toolbar.Add(btnOpen);
             toolbar.Add(btnNew);
             toolbar.Add(btnClear);
-            toolbar.Add(btnMiniMap);
             //将工具栏加入窗口
             rootVisualElement.Add(toolbar);
         }
+
+        #region 添加
         //添加视图
         private void AddGraphView()
         {
@@ -74,6 +74,53 @@ namespace ChatPlugIn
             toolbar.AddStyleSheets(toolbarStylePath);
             storyGraphView.AddStyleSheets(graphViewStylePath);
         }
+        
+
+        #endregion
+
+        #region 按钮功能
+
+        private void SaveGraph()
+        {
+            if (storyGraphView == null || string.IsNullOrEmpty(tfdFileName.value))
+            {
+                Debug.LogWarning("无法保存：图视图为空或文件名为空");
+                return;
+            }
+            
+            storyGraphView.SaveGraph(tfdFileName.value);
+        }
+        // 加载图数据
+        private void LoadGraph()
+        {
+            if (storyGraphView == null || string.IsNullOrEmpty(tfdFileName.value))
+            {
+                Debug.LogWarning("无法加载：图视图为空或文件名为空");
+                return;
+            }
+            
+            storyGraphView.LoadGraph(tfdFileName.value);
+        }
+        
+        // 新建图
+        private void NewGraph()
+        {
+            if (storyGraphView != null)
+            {
+                ClearGraph();
+                tfdFileName.value = defaultFileWindow;
+            }
+        }
+        
+        // 清空图
+        private void ClearGraph()
+        {
+            if (storyGraphView != null)
+            {
+                storyGraphView.ClearGraph(tfdFileName.value);
+            }
+        }
+        #endregion
     }
 }
 
