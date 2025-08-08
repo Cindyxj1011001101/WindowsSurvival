@@ -17,6 +17,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public CanvasGroup canvasGroup;
 
     public string hoveredAudio = "临时悬浮";
+    public bool playHoverSound = true;
 
     public Color currentColor { get; set; }
     public Color hoveredColor { get; set; } = ColorManager.White; // 鼠标悬停时的颜色，默认为白色
@@ -87,7 +88,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     {
         if (!interactable) return;
 
-        SoundManager.Instance.PlaySound(hoveredAudio, true);
+        if (playHoverSound)
+        SoundManager.Instance.PlaySound(hoveredAudio, true,0.5f);
 
         onPointerEnter?.Invoke();
 
