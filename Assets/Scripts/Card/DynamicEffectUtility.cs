@@ -3,7 +3,7 @@ using DG.Tweening;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-public class CardTweenUtility
+public class DynamicEffectUtility
 {
     private static Canvas canvas;
 
