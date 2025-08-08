@@ -49,6 +49,10 @@ public class BottomBar : MonoBehaviour
         //{
         //    SetLocked(appName, !GameDataManager.Instance.UnlockedShortcuts.Contains(appName));
         //}
+
+        #region 临时
+        GameObject.Find("RestButton").SetActive(GameDataManager.Instance.UnlockedShortcuts.Contains("Rest"));
+        #endregion
     }
 
     public void SelectAppShortcut(string appName)
@@ -96,6 +100,14 @@ public class BottomBar : MonoBehaviour
 
     public void SetLocked(string appName, bool value)
     {
+        #region 临时
+        if (appName == "Rest")
+        {
+            GameObject.Find("RestButton").SetActive(true);
+            return;
+        }
+        #endregion
+
         if (!shortcuts.ContainsKey(appName)) return;
 
         shortcuts[appName].gameObject.SetActive(!value);
@@ -111,6 +123,14 @@ public class BottomBar : MonoBehaviour
             if (shortcut.gameObject.activeSelf)
                 list.Add(shortcut.name);
         }
+
+        #region 临时
+        if (GameObject.Find("RestButton").activeSelf)
+        {
+            list.Add("Rest");
+        }
+        #endregion
+
         return list;
     }
 }

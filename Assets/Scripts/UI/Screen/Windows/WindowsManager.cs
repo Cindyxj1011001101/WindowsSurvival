@@ -126,12 +126,14 @@ public class WindowsManager : MonoBehaviour
         // 如果当前窗口已经获取焦点，则直接返回
         if (IsWindowFocused(window)) return;
 
-        currentFocusedWindow = window;
         // 设置window的聚焦状态
-        foreach (var (name, win) in openedWindows)
-        {
-            win.SetFocused(win == window);
-        }
+        if (currentFocusedWindow != null)
+            currentFocusedWindow.SetFocused(false);
+
+        if (window != null)
+            window.SetFocused(true);
+
+        currentFocusedWindow = window;
 
         // 调整window的渲染顺序为最高
         windowGroup.SetFocused(currentFocusedWindow);
