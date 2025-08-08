@@ -12,6 +12,10 @@ public class BottomBar : MonoBehaviour
 
     private string selectedAppName;
 
+    #region 临时
+    [SerializeField] private GameObject restButton;
+    #endregion
+
     public HoverableButton this[string appName]
     {
         get
@@ -51,7 +55,7 @@ public class BottomBar : MonoBehaviour
         //}
 
         #region 临时
-        GameObject.Find("RestButton").SetActive(GameDataManager.Instance.UnlockedShortcuts.Contains("Rest"));
+        restButton.SetActive(GameDataManager.Instance.UnlockedShortcuts.Contains("Rest"));
         #endregion
     }
 
@@ -103,7 +107,7 @@ public class BottomBar : MonoBehaviour
         #region 临时
         if (appName == "Rest")
         {
-            GameObject.Find("RestButton").SetActive(true);
+            restButton.SetActive(true);
             return;
         }
         #endregion
@@ -125,7 +129,7 @@ public class BottomBar : MonoBehaviour
         }
 
         #region 临时
-        if (GameObject.Find("RestButton").activeSelf)
+        if (restButton.activeSelf)
         {
             list.Add("Rest");
         }
