@@ -41,19 +41,19 @@ public class WaterCrack : Card
     };
     public override void OnEnterEnvironment()
     {
-        //SoundManager.Instance.PlayCardLoopSound(CardId, "渗水声", 0.3f);
+        SoundManager.Instance.PlayCardLoopSound(CardId, "渗水声", 0.3f);
     }
     public override void OnLeaveEnvironment()
     {
-        //SoundManager.Instance.StopCardLoopSound(CardId);
+        SoundManager.Instance.StopCardLoopSound(CardId);
     }
     public override void OnDetailOpen()
     {
-        //SoundManager.Instance.SetCardLoopVolume(CardId, 1.0f); // 音量调高
+        SoundManager.Instance.SetCardLoopVolume(CardId, 1.0f); // 音量调高
     }
     public override void OnDetailClose()
     {
-        //SoundManager.Instance.SetCardLoopVolume(CardId, 0.3f); // 恢复正常
+        SoundManager.Instance.SetCardLoopVolume(CardId, 0.3f); // 恢复正常
     }
     public override void DestroyThis()
     {
