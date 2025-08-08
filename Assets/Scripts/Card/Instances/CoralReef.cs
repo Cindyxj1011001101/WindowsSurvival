@@ -41,6 +41,7 @@ public class CoralReef : Card
     public void Event_Enjoy(out string tip) 
     {
         tip = string.Empty;
+        Debug.Log("珊瑚礁"+curReduceCount);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 6 * Mathf.Pow(ReduceRate, curReduceCount));
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4* Mathf.Pow(ReduceRate, curReduceCount));
         TimeManager.Instance.AddTime(15);

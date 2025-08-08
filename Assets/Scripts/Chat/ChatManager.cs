@@ -96,7 +96,7 @@ public class ChatManager : MonoBehaviour
         if (inParagraph)
         {
             //判断是否可以打断，无法打断则加入待触发列表，在本段对话结束后触发
-            if (paragraphData.ParagraphPriority > CurrentParagraphData.ParagraphPriority)
+                if (paragraphData.ParagraphPriority > CurrentParagraphData.ParagraphPriority)
             {
                 //如果当前在等待选择则删除选项，直接进入对话
                 if (Choosing)
@@ -218,8 +218,8 @@ public class ChatManager : MonoBehaviour
 
         SoundManager.Instance.PlaySound("消息提示音_02", true);
         AfterChatFactory.TriggerEffect(chatData.TriggerMessageEffect);
-
-        yield return new WaitForSeconds(chatData.WaitTime == 0 ? 2.5f : chatData.WaitTime / 1000);
+        yield return new WaitForSeconds(0.5f);
+        //yield return new WaitForSeconds(chatData.WaitTime == 0 ? 2.5f : chatData.WaitTime / 1000);
 
         //触发对话效果
         if (chatData.NextMessageID != -1)

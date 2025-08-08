@@ -70,6 +70,7 @@ public static class AfterChatFactory
             "休息" => "Rest",
             "装备" => "Equipment",
             "制作"=>"Craft",
+            "详情"=>"Details",
             _ => throw new System.Exception("WindowName Error")
         };
         WindowsManager.Instance.UnlockShortcut(windowName);
