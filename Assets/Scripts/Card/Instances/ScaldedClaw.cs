@@ -12,8 +12,8 @@ public class ScaldedClaw : Card
     {
         tip = string.Empty;
         DestroyThis();
-        TimeManager.Instance.AddTime(45);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 56);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
+        TimeManager.Instance.AddTime(45);
     }
 }

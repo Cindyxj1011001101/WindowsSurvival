@@ -12,9 +12,9 @@ public class KitchenFoes : Card
     {
         tip = string.Empty;
         DestroyThis();
-        TimeManager.Instance.AddTime(15);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 10);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -6);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -4);
+        TimeManager.Instance.AddTime(15);
     }
 }

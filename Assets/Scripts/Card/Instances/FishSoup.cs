@@ -12,11 +12,11 @@ public class FishSoup : Card
     {
         tip = string.Empty;
         DestroyThis();
-        TimeManager.Instance.AddTime(15);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 10);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 18);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 12);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 12);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, -25);
+        TimeManager.Instance.AddTime(15);
     }
 }

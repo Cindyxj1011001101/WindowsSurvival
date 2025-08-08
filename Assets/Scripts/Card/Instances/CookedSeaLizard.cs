@@ -12,9 +12,9 @@ public class CookedSeaLizard : Card
     {
         tip = string.Empty;
         DestroyThis();
-        TimeManager.Instance.AddTime(15);
+
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 9);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Itchiness, 8);
-        
+        TimeManager.Instance.AddTime(15);
     }
 }
