@@ -4,7 +4,7 @@ public class Steak : Card
     {
         Events = new()
         {
-            new Event("食用", "食用牛排", Event_Eat, null),
+            new Event("食用", "食用肉排", Event_Eat, null),
         };
     }
     public void Event_Eat(out string tip)

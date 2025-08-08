@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -14,12 +15,15 @@ public class CoralReef : Card
         ReduceRate = 0.5f;
         Events = new()
         {
-            new Event("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig),
-            new Event("欣赏", "欣赏珊瑚礁", Event_Enjoy, null),
+            new Event("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig,() =>45),
+            new Event("欣赏", "一天内多次欣赏获得的数值会衰减", Event_Enjoy, null,() => 15,
+            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, 6 }, { PlayerStateEnum.Sobriety, 4 } })
         };
     }
     public void Event_Dig(out string tip)
     {
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("挖掘废料_01", true);
         tip = string.Empty;
         DestroyThis();
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig);
@@ -27,6 +31,7 @@ public class CoralReef : Card
         TimeManager.Instance.AddTime(45);
         RandomDropByHand();
         RandomDropByHand();
+        
     }
     public bool Judge_Dig(out string hint)
     {

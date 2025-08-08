@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public class FoodScrap : Card
 {
     public int RemainRound;
@@ -6,7 +8,8 @@ public class FoodScrap : Card
         RemainRound=4;
         Events = new()
         {
-            new Event("食用", "食用食物残渣", Event_Eat, null)
+            new Event("食用", "和鱼抢吃的", Event_Eat, null, () => 15,
+            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 12 }, { PlayerStateEnum.San, -3 } }),
         };
     }
 

@@ -10,7 +10,7 @@ public class WhiteBlastMineStack : Card
     {
         Events = new()
         {
-            new Event("用铲子凿", "用铲子凿白爆矿堆",Event_Dig, Judge_Dig)
+            new Event("用铲子凿", "用铲子凿白爆矿堆",Event_Dig, Judge_Dig, () => 30)
         };
     }
 
@@ -30,7 +30,7 @@ public class WhiteBlastMineStack : Card
         hint = string.Empty;
         if(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) == null)
         {
-            hint = "需要切割类工具";
+            hint = "需要挖掘类工具";
             return false;
         }
         return true;

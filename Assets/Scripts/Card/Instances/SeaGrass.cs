@@ -4,8 +4,8 @@ public class SeaGrass : Card
     {
         Events = new()
         {
-            new Event("用手提取", "用手提取海麻线", Event_CollectByHand, null),
-            new Event("用刀提取", "用刀提取海麻线", Event_CollectByKnife, Judge_CollectByKnife),
+            new Event("用手提取", "用手提取纤维", Event_CollectByHand, null, () => 30),
+            new Event("用刀提取", "用刀提取纤维", Event_CollectByKnife, Judge_CollectByKnife, () => 15),
         };
     }
     public void Event_CollectByHand(out string tip)
