@@ -19,9 +19,9 @@ public class SeaGrass : Card
     {
         tip = string.Empty;
         DestroyThis();
-        TimeManager.Instance.AddTime(15);
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
         card.TryUse();
+        TimeManager.Instance.AddTime(15);
         AddCard("纤维", true);
     }
     public bool Judge_CollectByKnife(out string hint)

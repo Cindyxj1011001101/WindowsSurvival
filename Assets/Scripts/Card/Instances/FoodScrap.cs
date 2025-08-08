@@ -14,10 +14,9 @@ public class FoodScrap : Card
     {
         tip = string.Empty;
         DestroyThis();
-        TimeManager.Instance.AddTime(15);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 12);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
-
+        TimeManager.Instance.AddTime(15);
     }
     protected override System.Action OnUpdate => () =>
     {

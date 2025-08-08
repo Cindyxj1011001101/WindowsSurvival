@@ -15,10 +15,9 @@ public class SeaLizard : Card
     {
         tip = string.Empty;
         DestroyThis();
-        TimeManager.Instance.AddTime(15);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 6);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Itchiness, 25);
-
+        TimeManager.Instance.AddTime(15);
     }
 }

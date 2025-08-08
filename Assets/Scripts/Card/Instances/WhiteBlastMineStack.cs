@@ -28,7 +28,12 @@ public class WhiteBlastMineStack : Card
     public bool Judge_Dig(out string hint)
     {
         hint = string.Empty;
-        return GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) != null;
+        if(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) == null)
+        {
+            hint = "需要切割类工具";
+            return false;
+        }
+        return true;
     }
     public void RandomDrop()
     {

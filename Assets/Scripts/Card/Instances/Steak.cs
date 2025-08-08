@@ -11,8 +11,8 @@ public class Steak : Card
     {
         tip = string.Empty;
         DestroyThis();
-        TimeManager.Instance.AddTime(15);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 55);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 3);
+        TimeManager.Instance.AddTime(15);
     }
 }

@@ -69,6 +69,7 @@ public static class AfterChatFactory
             "地点" => "EnvironmentBag",
             "休息" => "Rest",
             "装备" => "Equipment",
+            "制作"=>"Craft",
             _ => throw new System.Exception("WindowName Error")
         };
         WindowsManager.Instance.UnlockShortcut(windowName);
