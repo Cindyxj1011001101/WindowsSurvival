@@ -234,45 +234,45 @@ public class SoundManager : MonoBehaviour
     /// <param name="cardId">卡牌唯一ID</param>
     /// <param name="clipName">音效名</param>
     /// <param name="volume">音量</param>
-    public void PlayCardLoopSound(string cardId, string clipName, float volume = 0.3f)
-    {
-        if (cardLoopSources.ContainsKey(cardId)) return;
-        var source = gameObject.AddComponent<AudioSource>();
-        var clip = GetClip(clipName, "SFX");
-        if (clip == null)
-        {
-            Debug.LogWarning($"未找到音效: {clipName}");
-            Destroy(source);
-            return;
-        }
-        source.clip = clip;
-        source.loop = true;
-        source.volume = volume;
-        source.Play();
-        cardLoopSources[cardId] = source;
-    }
+    // public void PlayCardLoopSound(string cardId, string clipName, float volume = 0.3f)
+    // {
+    //     if (cardLoopSources.ContainsKey(cardId)) return;
+    //     var source = gameObject.AddComponent<AudioSource>();
+    //     var clip = GetClip(clipName, "SFX");
+    //     if (clip == null)
+    //     {
+    //         Debug.LogWarning($"未找到音效: {clipName}");
+    //         Destroy(source);
+    //         return;
+    //     }
+    //     source.clip = clip;
+    //     source.loop = true;
+    //     source.volume = volume;
+    //     source.Play();
+    //     cardLoopSources[cardId] = source;
+    // }
 
-    /// <summary>
-    /// 停止特定卡牌的循环音效
-    /// </summary>
-    public void StopCardLoopSound(string cardId)
-    {
-        if (cardLoopSources.TryGetValue(cardId, out var source))
-        {
-            source.Stop();
-            Destroy(source);
-            cardLoopSources.Remove(cardId);
-        }
-    }
+    // /// <summary>
+    // /// 停止特定卡牌的循环音效
+    // /// </summary>
+    // public void StopCardLoopSound(string cardId)
+    // {
+    //     if (cardLoopSources.TryGetValue(cardId, out var source))
+    //     {
+    //         source.Stop();
+    //         Destroy(source);
+    //         cardLoopSources.Remove(cardId);
+    //     }
+    // }
 
-    /// <summary>
-    /// 设置特定卡牌循环音效的音量
-    /// </summary>
-    public void SetCardLoopVolume(string cardId, float volume)
-    {
-        if (cardLoopSources.TryGetValue(cardId, out var source))
-            source.volume = volume;
-    }
+    // /// <summary>
+    // /// 设置特定卡牌循环音效的音量
+    // /// </summary>
+    // public void SetCardLoopVolume(string cardId, float volume)
+    // {
+    //     if (cardLoopSources.TryGetValue(cardId, out var source))
+    //         source.volume = volume;
+    // }
 
     private float GetNormalizedBGMVolume()
     {
