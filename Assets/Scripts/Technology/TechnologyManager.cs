@@ -55,6 +55,8 @@ public class TechnologyManager
     /// </summary>
     private void OnStudy()
     {
+        if (string.IsNullOrEmpty(techData.curStudiedTechNodeName)) return;
+        
         // 计算研究速率
         CurStudyRate = CalcStudyRate();
         // 进度增长
