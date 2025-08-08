@@ -39,6 +39,11 @@ public class GMCommand
     {
         AddCard("压缩饼干");
     }
+    [MenuItem("Command/添加/珊瑚礁")]
+    public static void Coral()
+    {
+        AddCard("珊瑚礁");
+    }
 
 
     [MenuItem("Command/添加/废金属")]
