@@ -71,7 +71,7 @@ public static class AfterChatFactory
             "装备" => "Equipment",
             _ => throw new System.Exception("WindowName Error")
         };
-        
+        WindowsManager.Instance.UnlockShortcut(windowName);
         //解锁窗口逻辑
     }
 
