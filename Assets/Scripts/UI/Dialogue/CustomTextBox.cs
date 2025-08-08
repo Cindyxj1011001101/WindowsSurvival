@@ -53,7 +53,7 @@ public class CustomTextBox : MonoBehaviour
         rectTransform.sizeDelta = new Vector2(preferredWidth, textRectTransform.sizeDelta.y + textPaddingVertical * 2);
 
         // 设置文本偏移
-        textRectTransform.anchoredPosition = new Vector2(textPaddingHorizontal, -textPaddingVertical);
+        textRectTransform.anchoredPosition = new Vector2(textRectTransform.pivot.x == 0.5 ? 0 : textPaddingHorizontal, -textPaddingVertical);
     }
 
     private void FixedUpdate()
