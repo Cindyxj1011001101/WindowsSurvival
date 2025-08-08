@@ -11,10 +11,10 @@ public class IronMeal : Card
     {
         tip = string.Empty;
         DestroyThis();
-        TimeManager.Instance.AddTime(30);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 29);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -6);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -7);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Itchiness, 50);
+        TimeManager.Instance.AddTime(30);
     }
 }   

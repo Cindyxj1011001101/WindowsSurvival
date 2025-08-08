@@ -11,9 +11,9 @@ public class CoalGrilledMeat : Card
     {
         tip = string.Empty;
         DestroyThis();
-        TimeManager.Instance.AddTime(15);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 78);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -10);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 8);
+        TimeManager.Instance.AddTime(15);
     }
 }
