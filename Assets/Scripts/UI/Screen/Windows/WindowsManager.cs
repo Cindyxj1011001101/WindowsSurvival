@@ -161,4 +161,14 @@ public class WindowsManager : MonoBehaviour
     {
         return currentFocusedWindow == window;
     }
+
+    public void UnlockShortcut(string appName)
+    {
+        bottomBar.SetLocked(appName, false);
+    }
+
+    public List<string> GetUnlockedShortcuts()
+    {
+        return bottomBar.GetUnlockedShortcuts();
+    }
 }

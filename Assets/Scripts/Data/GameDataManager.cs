@@ -40,6 +40,8 @@ public class GameDataManager
         generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
         // 其他数据
         timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
+        // 已解锁的快捷方式
+        unlockedShortcuts = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedShortcuts");
     }
 
     public void LoadAllData(int index)
@@ -72,6 +74,8 @@ public class GameDataManager
         generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
         // 时间数据
         timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
+        // 已解锁的快捷方式
+        unlockedShortcuts = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedShortcuts");
     }
 
     public void SaveAllData()
@@ -96,6 +100,8 @@ public class GameDataManager
         SaveGeneratedChatData();
         // 时间数据
         SaveTimeData();
+        // 已解锁的快捷方式
+        SaveUnlockedShortcuts();
 
         if (loadData == null)
         {
@@ -364,6 +370,17 @@ public class GameDataManager
             playerState = StateManager.Instance.PlayerStateDict,
         };
         JsonManager.SaveData(stateData, CurLoadName, "State");
+    }
+    #endregion
+
+    #region 已解锁的快捷方式
+    private List<string> unlockedShortcuts = new();
+
+    public List<string> UnlockedShortcuts => unlockedShortcuts;
+
+    public void SaveUnlockedShortcuts()
+    {
+        JsonManager.SaveData(WindowsManager.Instance.GetUnlockedShortcuts(), CurLoadName, "UnlockedShortcuts");
     }
     #endregion
 }

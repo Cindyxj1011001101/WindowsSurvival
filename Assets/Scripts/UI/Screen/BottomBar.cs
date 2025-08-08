@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 public class BottomBar : MonoBehaviour
 {
-    private Transform layoutTransform;
-    [SerializeField] RectTransform selectRect;
+    [SerializeField] private RectTransform layoutTransform;
+    [SerializeField] private RectTransform selectRect;
 
     private Dictionary<string, HoverableButton> shortcuts = new();
 
@@ -24,7 +24,6 @@ public class BottomBar : MonoBehaviour
 
     private void Awake()
     {
-        layoutTransform = GetComponentInChildren<GridLayoutGroup>().transform;
         for (int i = 0; i < layoutTransform.childCount; i++)
         {
             if (layoutTransform.GetChild(i).TryGetComponent<BottomBarShortcut>(out var shortcut))
@@ -41,6 +40,15 @@ public class BottomBar : MonoBehaviour
             }
         }
         selectRect.gameObject.SetActive(false);
+    }
+
+    private void Start()
+    {
+        //// 显示已解锁的快捷方式
+        //foreach (var appName in shortcuts.Keys)
+        //{
+        //    SetLocked(appName, !GameDataManager.Instance.UnlockedShortcuts.Contains(appName));
+        //}
     }
 
     public void SelectAppShortcut(string appName)
@@ -84,5 +92,25 @@ public class BottomBar : MonoBehaviour
         var color = value? ColorManager.White: ColorManager.DarkGrey;
         shortcut.currentColor = color;
         shortcut.ChangeColor(color);
+    }
+
+    public void SetLocked(string appName, bool value)
+    {
+        if (!shortcuts.ContainsKey(appName)) return;
+
+        shortcuts[appName].gameObject.SetActive(!value);
+        MonoUtility.UpdateHorizontalLayoutSize(layoutTransform.GetComponent<HorizontalLayoutGroup>());
+        (transform as RectTransform).sizeDelta = new Vector2(layoutTransform.sizeDelta.x, (transform as RectTransform).sizeDelta.y);
+    }
+
+    public List<string> GetUnlockedShortcuts()
+    {
+        List<string> list = new();
+        foreach (var shortcut in shortcuts.Values)
+        {
+            if (shortcut.gameObject.activeSelf)
+                list.Add(shortcut.name);
+        }
+        return list;
     }
 }
