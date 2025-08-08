@@ -54,9 +54,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88cdbba618892d24fb45fb5a1f499ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 0}
   stateNameText: {fileID: 8815320350878729689}
   valueText: {fileID: 2034084246233058892}
   slider: {fileID: 1588914648768909706}
+  button: {fileID: 0}
   displayPercentage: 1
 --- !u!114 &3973208755699802528
 MonoBehaviour:
@@ -76,6 +78,9 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 3770729932018948590}
+  canvasGroup: {fileID: 0}
+  hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
+  playHoverSound: 0
 --- !u!1 &1618794779004365283
 GameObject:
   m_ObjectHideFlags: 0

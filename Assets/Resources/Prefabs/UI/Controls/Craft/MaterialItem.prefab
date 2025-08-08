@@ -158,6 +158,9 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 1703501114179676635}
+  canvasGroup: {fileID: 0}
+  hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
+  playHoverSound: 0
 --- !u!114 &1690931536545078660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,6 +174,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   changeMouseType: 0
+  InButton: 0
 --- !u!1 &8277805548770378705
 GameObject:
   m_ObjectHideFlags: 0

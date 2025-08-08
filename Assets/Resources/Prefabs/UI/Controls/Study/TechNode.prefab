@@ -1008,9 +1008,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88cdbba618892d24fb45fb5a1f499ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 0}
   stateNameText: {fileID: 0}
   valueText: {fileID: 8272117924916207001}
   slider: {fileID: 7023511800485481748}
+  button: {fileID: 0}
   displayPercentage: 0
 --- !u!1 &6135513350366997236
 GameObject:
@@ -1279,6 +1281,9 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
+  canvasGroup: {fileID: 0}
+  hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
+  playHoverSound: 0
   techName: {fileID: 986151656385515189}
   recipeLayout: {fileID: 5906836050503831739}
   progressSlider: {fileID: 3347910298658397897}
