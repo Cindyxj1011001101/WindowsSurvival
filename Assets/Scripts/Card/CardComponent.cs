@@ -215,8 +215,6 @@ public delegate bool CardFilterDelegate(Card card, out string s);
 
 public class InnerContentsComponent : CardComponent
 {
-    public string belongedCardId; // 所属卡牌ID
-
     public List<List<Card>> innerContents = new();
 
     public int slotCount;
@@ -224,7 +222,7 @@ public class InnerContentsComponent : CardComponent
     [JsonIgnore]
     public CardFilterDelegate contentFilter;
 
-    public InnerContentsComponent(int slotCount, string belongedCardId)
+    public InnerContentsComponent(int slotCount)
     {
         this.slotCount = slotCount;
         innerContents = new();
@@ -232,7 +230,6 @@ public class InnerContentsComponent : CardComponent
         {
             innerContents.Add(new List<Card>());
         }
-        this.belongedCardId = belongedCardId;
     }
 
     public int GetTotalCountByCardId(string cardId)
@@ -268,6 +265,22 @@ public class InnerContentsComponent : CardComponent
             }
         }
         return removedCount;
+    }
+
+    public void RemoveCard(Card card)
+    {
+        // 遍历外层列表
+        foreach (var slot in innerContents)
+        {
+            for (int i = slot.Count - 1; i >= 0; i--)
+            {
+                if (slot[i] == card)
+                {
+                    slot.RemoveAt(i);
+                    break;
+                }
+            }
+        }
     }
 
     public override string ToString()

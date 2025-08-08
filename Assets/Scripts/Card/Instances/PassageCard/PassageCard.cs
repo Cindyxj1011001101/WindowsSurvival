@@ -11,6 +11,7 @@
 
     protected override void LateInit()
     {
+        base.LateInit();
         TryGetComponent<PassageComponent>(out var component);
         Events[0].description = "前往" + GameManager.ParsePlaceEnum(component.targetPlace);
         Events[0].getTimeEffect = () => component.time + GameManager.Instance.GetExtraMoveExploreTime(component.time);

@@ -15,13 +15,14 @@
         {
             var cardList = component.innerContents[i];
             slots[i].Init(cardList);
+            (slots[i] as InnerCardSlot).SetInnerContentsComponent(component);
         }
     }
 
     public override bool CanAddCard(Card card, out string tip)
     {
         // 不能嵌套放置
-        if (card.CardId == component.belongedCardId)
+        if (card.CardId == component.BelongedCard.CardId)
         {
             tip = "不能嵌套放置同类卡牌";
             return false;

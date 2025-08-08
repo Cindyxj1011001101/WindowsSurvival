@@ -231,7 +231,7 @@ public static class CardFactory
         }
         if (config.HasInnerContents)
         {
-            card.AddComponent(typeof(InnerContentsComponent), new InnerContentsComponent(config.InnerContentSlotCount, cardId));
+            card.AddComponent(typeof(InnerContentsComponent), new InnerContentsComponent(config.InnerContentSlotCount));
         }
         if (config.IsPassage)
         {

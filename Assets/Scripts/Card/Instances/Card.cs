@@ -68,6 +68,9 @@ public abstract class Card : IComparable<Card>
 
     [JsonIgnore]
     public bool IsBigIcon => CardFactory.GetIsBigIcon(CardId);
+
+    [JsonIgnore]
+    public Card ParentCard { get; protected set; } = null; // 父卡牌，用于被作为内容物的卡牌
     
     /// 是否有循环音效，默认无
     public virtual bool HasLoopSound => false;
@@ -88,6 +91,11 @@ public abstract class Card : IComparable<Card>
         Slot = slot;
     }
 
+    public void SetParentCard(Card parentCard)
+    {
+        ParentCard = parentCard;
+    }
+
     protected virtual void LateInit() { } // 用于在卡牌实例化后进行额外的初始化操作
 
     private bool isUpdating = false; // 是否已启用每回合更新
@@ -101,6 +109,11 @@ public abstract class Card : IComparable<Card>
 
         isUpdating = true;
 
+        foreach (var c in components.Values)
+        {
+            c.SetBelongedCard(this);
+        }
+
         LateInit();
 
         if (OnUpdate != null)
@@ -112,7 +125,10 @@ public abstract class Card : IComparable<Card>
             foreach (var list in component.innerContents)
             {
                 foreach (var c in list)
+                {
+                    c.SetParentCard(this);
                     c.StartUpdating();
+                }
             }
         }
     }
@@ -141,9 +157,17 @@ public abstract class Card : IComparable<Card>
 
     public virtual void DestroyThis()
     {
+        if (ParentCard != null)
+        {
+            ParentCard.TryGetComponent<InnerContentsComponent>(out var component);
+            component.RemoveCard(this);
+        }
         var temp = Slot;
-        Slot.RemoveCard(this);
-        temp.RefreshCurrentDisplay();
+        if (temp != null)
+        {
+            Slot.RemoveCard(this);
+            temp.RefreshCurrentDisplay();
+        }
         StopUpdating();
     }
     /// <summary>
