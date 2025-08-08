@@ -54,16 +54,16 @@ public class GMCommand
         AddCard("瓶装水");
     }
 
-    [MenuItem("Command/添加/通往驾驶室的门")]
+    [MenuItem("Command/添加/通往织光藻墓园")]
     public static void D()
     {
-        AddCard("通往驾驶室的门");
+        AddCard("从珊瑚礁海域到织光藻墓园");
     }
 
-    [MenuItem("Command/添加/通往动力舱的门")]
+    [MenuItem("Command/添加/通往飞船外壳")]
     public static void E()
     {
-        AddCard("通往动力舱的门");
+        AddCard("从珊瑚礁海域到飞船外壳");
     }
 
     [MenuItem("Command/添加/安全泡沫覆盖的废料堆")]
@@ -110,6 +110,11 @@ public class GMCommand
     public static void V()
     {
         AddCard("有产物的虹吸海葵");
+    }
+    [MenuItem("Command/添加/储物箱")]
+    public static void W()
+    {
+        AddCard("储物箱");
     }
     [MenuItem("Command/播放/心跳_01")]
     public static void PlayHeart()
