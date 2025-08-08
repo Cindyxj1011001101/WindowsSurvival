@@ -63,10 +63,15 @@ public static class AfterChatFactory
         string windowName = WindowName switch
         {
             "背包" => "PlayerBag",
-            "场景" => "Scene",
             "摄像头"=>"Camera",
+            "状态" => "State",
+            "研究" => "Study",
+            "地点" => "EnvironmentBag",
+            "休息" => "Relax",
+            "装备" => "Equipment",
             _ => throw new System.Exception("WindowName Error")
         };
+        
         //解锁窗口逻辑
     }
 
