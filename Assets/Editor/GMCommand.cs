@@ -44,7 +44,11 @@ public class GMCommand
     {
         AddCard("珊瑚礁");
     }
-
+    [MenuItem("Command/添加/电动排水机")]
+    public static void AddMachine()
+    {
+        AddCard("电动排水机");
+    }
 
     [MenuItem("Command/添加/废金属")]
     public static void B()
