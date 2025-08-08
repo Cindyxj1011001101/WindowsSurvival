@@ -67,7 +67,7 @@ public static class AfterChatFactory
             "状态" => "State",
             "研究" => "Study",
             "地点" => "EnvironmentBag",
-            "休息" => "Relax",
+            "休息" => "Rest",
             "装备" => "Equipment",
             _ => throw new System.Exception("WindowName Error")
         };
