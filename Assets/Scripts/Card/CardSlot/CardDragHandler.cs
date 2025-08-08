@@ -30,8 +30,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         MouseManager.Instance.isDragging = true;
 
         // 在鼠标位置创建图标
-        var screenPosition = CardTweenUtility.ScreenPointToLocalPointInRectangle(eventData.position);
-        cursorSlot = CardTweenUtility.CreateSlot(screenPosition);
+        var screenPosition = DynamicEffectUtility.ScreenPointToLocalPointInRectangle(eventData.position);
+        cursorSlot = DynamicEffectUtility.CreateSlot(screenPosition);
 
         if (eventData.button == PointerEventData.InputButton.Left)
             // 左键拖拽
@@ -56,7 +56,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         MouseManager.Instance.isDragging = false;
 
-        dragEndPosition = CardTweenUtility.ScreenPointToLocalPointInRectangle(eventData.position);
+        dragEndPosition = DynamicEffectUtility.ScreenPointToLocalPointInRectangle(eventData.position);
         Destroy(cursorSlot.gameObject);
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
@@ -189,7 +189,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="count"></param>
     private void AnimateCardPlacement(Card card, UnityAction placementAction, Vector3 startPos, Vector3 endPos, int count)
     {
-        CardTweenUtility.MoveCard(
+        DynamicEffectUtility.MoveCard(
             card,
             count,
             startPos,
@@ -209,7 +209,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// </summary>
     private void AnimateCardReturn(int count, string tip = "")
     {
-        CardTweenUtility.MoveCard(
+        DynamicEffectUtility.MoveCard(
                 sourceSlot.PeekCard(),
                 count,
                 dragEndPosition,

@@ -316,7 +316,7 @@ public class CardSlot : MonoBehaviour
 
     public void ShowTip(string tip, Color color)
     {
-        CardTweenUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, color);
+        DynamicEffectUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, color);
     }
 
     private void OnDestroy()

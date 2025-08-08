@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
     {
         AddCard(card, toPlayerBag);
 
-        CardTweenUtility.MoveCard(
+        DynamicEffectUtility.MoveCard(
             card,
             1,
             startPos,
@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
             AddCard(card, toPlayerBag);
         }
 
-        CardTweenUtility.MoveCardsWithDelay(
+        DynamicEffectUtility.MoveCardsWithDelay(
             cards,
             startPos,
             addCardAnimDuration,
@@ -172,7 +172,7 @@ public class GameManager : MonoBehaviour
 
         // 添加到装备格子里
         EquipmentBag.AddCard(equipment);
-        CardTweenUtility.MoveCard(
+        DynamicEffectUtility.MoveCard(
             equipment,
             1,
             originalSlot.transform.position,
@@ -210,6 +210,8 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    #region 探索
+
     public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects,
         Dictionary<EnvironmentStateEnum, float> envEffects) GetExploreEffects()
     {
@@ -224,6 +226,8 @@ public class GameManager : MonoBehaviour
             case PlaceEnum.LifeSupportCabin:
                 break;
             case PlaceEnum.CoralCoast:
+            case PlaceEnum.PhosphorTomb:
+            case PlaceEnum.SpaceshipOuterHull:
                 desc += "，最好佩戴上氧气面罩";
                 // 如果没有佩戴氧气面罩
                 if (equipmentBag.FindCardOfName("氧气面罩") == null)
@@ -329,6 +333,7 @@ public class GameManager : MonoBehaviour
             AddCardsWithTween(droppedCards, envWindow.EnvCard.position, false);
         }
     }
+    #endregion
 
     // 移动到目标场景
     public void Move(PlaceEnum targetPlace, int bsaicMoveTime)
