@@ -32,6 +32,16 @@ public class EnvironmentBagWindow : BagWindow
     {
         base.Awake();
 
+        hoveredTipController = exploreButton.gameObject.AddComponent<HoverTipController>();
+        hoveredTipController.onPointerEnter.AddListener(() =>
+        {
+            var (desc, time, playerEffects, envEffects) = GameManager.Instance.GetExploreEffects();
+            if (GameManager.Instance.CanMoveExplore())
+                hoveredTipController.SetTip(desc, time, playerEffects, envEffects);
+            else
+                hoveredTipController.SetTip(desc);
+        });
+
         // 注册探索度变化事件
         EventManager.Instance.AddListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         // 注册环境移动事件
@@ -58,15 +68,7 @@ public class EnvironmentBagWindow : BagWindow
 
     protected override void Init()
     {
-        hoveredTipController = exploreButton.gameObject.AddComponent<HoverTipController>();
-        hoveredTipController.onPointerEnter.AddListener(() =>
-        {
-            var (desc, time, playerEffects, envEffects) = GameManager.Instance.GetExploreEffects();
-            if (GameManager.Instance.CanMoveExplore())
-                hoveredTipController.SetTip(desc, time, playerEffects, envEffects);
-            else
-                hoveredTipController.SetTip(desc);
-        });
+
     }
 
     /// <summary>
