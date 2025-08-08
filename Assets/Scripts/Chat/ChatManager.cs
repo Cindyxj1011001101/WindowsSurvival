@@ -96,21 +96,15 @@ public class ChatManager : MonoBehaviour
         if (inParagraph)
         {
             //判断是否可以打断，无法打断则加入待触发列表，在本段对话结束后触发
-                if (paragraphData.ParagraphPriority > CurrentParagraphData.ParagraphPriority)
+            if (paragraphData.ParagraphPriority > CurrentParagraphData.ParagraphPriority)
             {
+                InterruptParagraphData = paragraphData;
                 //如果当前在等待选择则删除选项，直接进入对话
                 if (Choosing)
                 {
                     chatWindow.InterruptChoose();
                     Choosing = false;
-                    InterruptParagraphData = paragraphData;
-                    TriggerMessage(null);
                 }
-                else
-                {
-                    InterruptParagraphData = paragraphData;
-                }
-
             }
             else
             {
@@ -134,6 +128,7 @@ public class ChatManager : MonoBehaviour
     {
         //进入对话
         inParagraph = true;
+        CurrentParagraphData = ParagraphDataList[GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID];
         //从GeneratedChatDataList中加载已触发的对话数据
         for (int i = 0; i < GeneratedChatDataList.Count - 1; i++)
         {
@@ -149,6 +144,7 @@ public class ChatManager : MonoBehaviour
         {
             TriggerParagraph(InterruptParagraphData);
             InterruptParagraphData = null;
+            return;
         }
         if (chatData == null) return;
         //非分支对话且有条件时开始该条件判断，不生成对话
