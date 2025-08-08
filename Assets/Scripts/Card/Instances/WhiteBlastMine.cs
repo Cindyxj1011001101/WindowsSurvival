@@ -18,7 +18,6 @@ public class WhiteBlastMine : Card
     {
         tip = string.Empty;
         DestroyThis();
-        // 因为在室内环境加玩家氧气时会优先加到环境里，所以这里可以写直接加给玩家
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, +80);
         TimeManager.Instance.AddTime(3);
     }

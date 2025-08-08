@@ -14,7 +14,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public Text[] textsNeedToReverseColor;
     public Image[] imagseNeedToReverseColor;
 
-    public CanvasGroup canvasGroup;
+    public CanvasGroup canvasGroup {  get; private set; }
 
     public string hoveredAudio = "临时悬浮";
     public bool playHoverSound = true;
