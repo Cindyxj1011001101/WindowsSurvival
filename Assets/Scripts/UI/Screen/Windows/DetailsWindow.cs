@@ -20,13 +20,13 @@ public class DetailsWindow : WindowBase
     protected override void Awake()
     {
         base.Awake();
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
+        //EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
+        //EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
@@ -64,28 +64,30 @@ public class DetailsWindow : WindowBase
             DisplayEventButtons();
     }
 
-    bool moved = false;
-    private void OnMove(EnvironmentBag curEnvironmentBag)
-    {
-        // 切地点时清除显示
-        Clear();
-        moved = true;
-    }
+    //bool moved = false;
+    //private void OnMove(EnvironmentBag curEnvironmentBag)
+    //{
+    //    // 切地点时清除显示
+    //    Clear();
+    //    moved = true;
+    //}
 
-    public void DisplayCardDetails(CardSlot sourceSlot)
+    public void DisplayCardDetails(Card card)
     {
         // 清除原数据
         Clear();
 
-        if (sourceSlot == null || sourceSlot.IsEmpty) return;
+        //if (sourceSlot == null || sourceSlot.IsEmpty) return;
 
         // 记录当前显示的卡牌
-        currentDisplayedCard = sourceSlot.PeekCard();
+        //currentDisplayedCard = sourceSlot.PeekCard();
+        currentDisplayedCard = card;
 
         currentDisplayedCard.TempSlotTransform = slot.transform;
 
         // 显示卡牌
-        slot.DisplayCard(currentDisplayedCard, currentDisplayedCard.Slot.StackNum);
+        //slot.DisplayCard(currentDisplayedCard, currentDisplayedCard.Slot.StackNum);
+        slot.DisplayCard(currentDisplayedCard, 1, false);
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 
         // 显示可选择按钮
@@ -103,7 +105,6 @@ public class DetailsWindow : WindowBase
         else
         {
             innerContentsButton.gameObject.SetActive(false);
-            //innerContentsButton.ChangeColor(ColorManager.darkGrey);
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
@@ -155,11 +156,12 @@ public class DetailsWindow : WindowBase
                     e.Inovke(out string tip);
                     DynamicEffectUtility.ShowTip(tip, button.transform.position + (button.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
                     // 如果地点发生改变则不刷新
-                    if (!moved)
-                    {
-                        // 再刷新
-                        DisplayCardDetails(originalSlot);
-                    }
+                    //if (!moved)
+                    //{
+                    //    // 再刷新
+                    //    DisplayCardDetails(originalSlot);
+                    //}
+                    Clear();
                 });
             }
             else
@@ -177,7 +179,7 @@ public class DetailsWindow : WindowBase
 
     private void Clear()
     {
-        moved = false;
+        //moved = false;
         slot.ClearSlot();
         // 关闭时如果卡牌有循环音将循环音减小
         if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
