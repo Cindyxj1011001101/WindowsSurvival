@@ -225,9 +225,9 @@ public class GMCommand
         AddCard("渗水裂缝");
     }
 
-    [MenuItem("Command/添加/气密舱门")]
+    [MenuItem("Command/添加/废铁铲")]
     public static void P()
     {
-        AddCard("气密舱门");
+        AddCard("废铁铲");
     }
 }

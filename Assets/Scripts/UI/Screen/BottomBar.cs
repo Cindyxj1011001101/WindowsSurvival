@@ -48,11 +48,11 @@ public class BottomBar : MonoBehaviour
 
     private void Start()
     {
-        // 显示已解锁的快捷方式
-        foreach (var appName in shortcuts.Keys)
-        {
-            SetLocked(appName, !GameDataManager.Instance.UnlockedShortcuts.Contains(appName));
-        }
+        //// 显示已解锁的快捷方式
+        //foreach (var appName in shortcuts.Keys)
+        //{
+        //    SetLocked(appName, !GameDataManager.Instance.UnlockedShortcuts.Contains(appName));
+        //}
 
         #region 临时
         restButton.SetActive(GameDataManager.Instance.UnlockedShortcuts.Contains("Rest"));

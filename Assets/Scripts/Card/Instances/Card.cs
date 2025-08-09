@@ -71,7 +71,11 @@ public abstract class Card : IComparable<Card>
 
     [JsonIgnore]
     public Card ParentCard { get; protected set; } = null; // 父卡牌，用于被作为内容物的卡牌
-    
+
+    [JsonIgnore]
+    public bool Destroyed { get; private set; } = false;
+
+    [JsonIgnore]
     /// 是否有循环音效，默认无
     public virtual bool HasLoopSound => false;
     #endregion
@@ -157,6 +161,9 @@ public abstract class Card : IComparable<Card>
 
     public virtual void DestroyThis()
     {
+        if (Destroyed) return;
+
+        Destroyed = true;
         if (ParentCard != null)
         {
             ParentCard.TryGetComponent<InnerContentsComponent>(out var component);

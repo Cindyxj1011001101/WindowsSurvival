@@ -155,13 +155,18 @@ public class DetailsWindow : WindowBase
                     // 先执行事件
                     e.Inovke(out string tip);
                     DynamicEffectUtility.ShowTip(tip, button.transform.position + (button.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
+                    if (originalSlot != null)
+                        originalSlot.RefreshCurrentDisplay();
                     // 如果地点发生改变则不刷新
                     //if (!moved)
                     //{
                     //    // 再刷新
                     //    DisplayCardDetails(originalSlot);
                     //}
-                    Clear();
+                    if (!currentDisplayedCard.Destroyed)
+                        DisplayCardDetails(currentDisplayedCard);
+                    else
+                        Clear();
                 });
             }
             else
