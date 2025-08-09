@@ -20,13 +20,13 @@ public class DetailsWindow : WindowBase
     protected override void Awake()
     {
         base.Awake();
-        //EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
     private void OnDestroy()
     {
-        //EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
@@ -64,13 +64,13 @@ public class DetailsWindow : WindowBase
             DisplayEventButtons();
     }
 
-    //bool moved = false;
-    //private void OnMove(EnvironmentBag curEnvironmentBag)
-    //{
-    //    // 切地点时清除显示
-    //    Clear();
-    //    moved = true;
-    //}
+    bool moved = false;
+    private void OnMove(EnvironmentBag curEnvironmentBag)
+    {
+        // 切地点时清除显示
+        //Clear();
+        moved = true;
+    }
 
     public void DisplayCardDetails(Card card)
     {
@@ -163,10 +163,10 @@ public class DetailsWindow : WindowBase
                     //    // 再刷新
                     //    DisplayCardDetails(originalSlot);
                     //}
-                    if (!currentDisplayedCard.Destroyed)
+                    if (moved) Clear();
+                    else if (!currentDisplayedCard.Destroyed)
                         DisplayCardDetails(currentDisplayedCard);
-                    else
-                        Clear();
+                    else Clear();
                 });
             }
             else
@@ -184,7 +184,7 @@ public class DetailsWindow : WindowBase
 
     private void Clear()
     {
-        //moved = false;
+        moved = false;
         slot.ClearSlot();
         // 关闭时如果卡牌有循环音将循环音减小
         if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
