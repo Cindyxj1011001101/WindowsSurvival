@@ -19,12 +19,12 @@ public class UIRecipeItem : MonoBehaviour
         button.onPointerEnter.AddListener(() =>
         {
             lockImage.sprite = hoveredLockSprite;
-            adequateImage.sprite = normalAdequateSprite;
+            adequateImage.sprite = hoveredAdequateSprite;
         });
         button.onPointerExit.AddListener(() =>
         {
             lockImage.sprite = normalLockSprite;
-            adequateImage.sprite = hoveredAdequateSprite;
+            adequateImage.sprite = normalAdequateSprite;
         });
     }
 
