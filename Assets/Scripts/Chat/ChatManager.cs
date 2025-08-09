@@ -2,10 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using TMPro;
-using System.IO;
-using System.Net;
-using System.Threading.Tasks;
 
 public class ChatManager : MonoBehaviour
 {
@@ -30,6 +26,10 @@ public class ChatManager : MonoBehaviour
     #endregion
 
     public ChatWindow chatWindow;
+
+    public HoverableButton chatSpeedButton;
+    private int curSpeed = 1;
+
     #region 数据
     //所有对话数据
     public List<ParagraphData> ParagraphDataList = new List<ParagraphData>();
@@ -71,6 +71,22 @@ public class ChatManager : MonoBehaviour
             ParagraphToTriggeer.Add(ParagraphDataList[0]);
         }
 
+    }
+
+    private void Start()
+    {
+        ChangeChatSpeed(1);
+        chatSpeedButton.onClick.AddListener(() =>
+        {
+            if (curSpeed == 1)
+            {
+                ChangeChatSpeed(3);
+            }
+            else
+            {
+                ChangeChatSpeed(1);
+            }
+        });
     }
     public void OnDestroy()
     {
@@ -211,6 +227,8 @@ public class ChatManager : MonoBehaviour
         float finalWaitTime;
         if (waitTime > 0) finalWaitTime = waitTime;
         else finalWaitTime = chatData.WaitTime == 0 ? 2.5f : chatData.WaitTime / 1000;
+
+        finalWaitTime /= curSpeed;
         
         yield return new WaitForSeconds(finalWaitTime);
 
@@ -252,5 +270,11 @@ public class ChatManager : MonoBehaviour
         Choosing = false;
         CreateMessage(ChoosedChatData, .1f); // 0.1f是玩家主动发送消息的发送延迟
         ChoosedChatData = null;
+    }
+
+    private void ChangeChatSpeed(int speed)
+    {
+        curSpeed = speed;
+        chatSpeedButton.GetComponentInChildren<Text>().text = $"x{speed}";
     }
 }
