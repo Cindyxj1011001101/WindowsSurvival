@@ -40,7 +40,6 @@ public class WasteHeap : Card
         // 工具消耗耐久
         var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig);
         card.TryUse();
-        Debug.Log(card);
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
         //掉落卡牌

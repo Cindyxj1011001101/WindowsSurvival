@@ -200,14 +200,20 @@ public class ChatManager : MonoBehaviour
         }
     }
 
-    public void CreateMessage(ChatData chatData)
+    public void CreateMessage(ChatData chatData, float waitTime = -1f)
     {
-        StartCoroutine(CreateMessageCoroutine(chatData));
+        StartCoroutine(CreateMessageCoroutine(chatData, waitTime));
     }
 
     //创建消息（不包括选项）
-    private IEnumerator CreateMessageCoroutine(ChatData chatData)
+    private IEnumerator CreateMessageCoroutine(ChatData chatData, float waitTime)
     {
+        float finalWaitTime;
+        if (waitTime > 0) finalWaitTime = waitTime;
+        else finalWaitTime = chatData.WaitTime == 0 ? 2.5f : chatData.WaitTime / 1000;
+        
+        yield return new WaitForSeconds(finalWaitTime);
+
         //将该对话加入已生成列表
         GeneratedChatDataList.Add(chatData);
         chatWindow.CreateMessage(chatData.MessageSender, chatData.Message);
@@ -215,7 +221,6 @@ public class ChatManager : MonoBehaviour
         SoundManager.Instance.PlaySound("消息提示音_02", true);
         AfterChatFactory.TriggerEffect(chatData.TriggerMessageEffect);
         //yield return new WaitForSeconds(0.5f);
-        yield return new WaitForSeconds(chatData.WaitTime == 0 ? 2.5f : chatData.WaitTime / 1000);
 
         //触发对话效果
         if (chatData.NextMessageID != -1)
@@ -245,7 +250,7 @@ public class ChatManager : MonoBehaviour
     {
         if (ChoosedChatData == null) return;
         Choosing = false;
-        CreateMessage(ChoosedChatData);
+        CreateMessage(ChoosedChatData, .1f); // 0.1f是玩家主动发送消息的发送延迟
         ChoosedChatData = null;
     }
 }
