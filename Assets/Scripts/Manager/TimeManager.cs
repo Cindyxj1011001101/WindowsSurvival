@@ -1,14 +1,17 @@
 ﻿using System;
 using UnityEngine;
-using TMPro;
 
 public class TimeManager : MonoBehaviour
 {
     public DateTime StartDateTime { get; private set; } = new(2020, 1, 1, 0, 0, 0);
-    public DateTime curTime;
+    public DateTime CurTime { get; private set; }
     public int SettleInterval;
     public int curInterval;
     private DateTime lastDay;
+
+    public int Day => (CurTime - StartDateTime).Days;
+    public int Hour => (CurTime - StartDateTime).Hours;
+    public int Minute => (CurTime - StartDateTime).Minutes;
 
     private static TimeManager instance;
     public static TimeManager Instance
@@ -47,24 +50,24 @@ public class TimeManager : MonoBehaviour
         if (!timeData.init)
         {
             //默认初始化
-            curTime = StartDateTime;
+            CurTime = StartDateTime;
             curInterval = SettleInterval;
         }
         else
         {
             //从存档初始化
-            curTime = GameDataManager.Instance.TimeData.curTime;
+            CurTime = GameDataManager.Instance.TimeData.curTime;
             curInterval = GameDataManager.Instance.TimeData.curIntervel;
         }
 
         // 初始化lastDay
-        lastDay = curTime.Date;
+        lastDay = CurTime.Date;
     }
 
-    private void Start()
-    {
-        EventManager.Instance.TriggerEvent(EventType.ChangeTime, curTime);
-    }
+    //private void Start()
+    //{
+    //    //EventManager.Instance.TriggerEvent(EventType.ChangeTime, curTime);
+    //}
 
     public void AddTime(int minute)
     {
@@ -72,8 +75,9 @@ public class TimeManager : MonoBehaviour
         MouseManager.Instance.Wait();
 
         int time = minute;
-        curTime = curTime.AddMinutes(minute);
-        EventManager.Instance.TriggerEvent(EventType.ChangeTime, curTime);
+        CurTime = CurTime.AddMinutes(minute);
+        //EventManager.Instance.TriggerEvent(EventType.ChangeTime, curTime);
+        EventManager.Instance.TriggerEvent(EventType.ChangeTime, CurTime);
         while (time != 0)
         {
             if (time >= curInterval)
@@ -89,11 +93,11 @@ public class TimeManager : MonoBehaviour
                 time = 0;
             }
         }
-        lastDay = curTime.Date;
+        lastDay = CurTime.Date;
     }
 
     public bool AnotherDay()
     {
-        return curTime.Date != lastDay;
+        return CurTime.Date != lastDay;
     }
 }

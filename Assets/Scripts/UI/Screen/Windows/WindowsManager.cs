@@ -26,44 +26,12 @@ public class WindowsManager : MonoBehaviour
     private Dictionary<string, WindowBase> openedWindows = new(); // 当前所有打开的窗口，最小化的窗口也算打开的
     private WindowBase currentFocusedWindow; // 当前持有焦点的窗口，可能是openWindows[0]，可能是null
 
-    #region 顶边栏部分
-    [SerializeField] private Text dateText;
-    [SerializeField] private Text timeText;
     [SerializeField] private HoverableButton saveButton;
     [SerializeField] private HoverableButton restButton;
-
-    private void OnTimeChanged(DateTime dateTime)
-    {
-        if (dateText != null)
-        {
-            dateText.text = CalculateDate(dateTime);
-        }
-        if (timeText != null)
-        {
-            timeText.text = CalculateTime(dateTime);
-        }
-    }
-
-    public string CalculateDate(DateTime curTime)
-    {
-        TimeSpan timeSpan = curTime - TimeManager.Instance.StartDateTime;
-        int days = timeSpan.Days + 1;
-        return $"DAY {days}";
-    }
-
-    public string CalculateTime(DateTime curTime)
-    {
-        int hour = curTime.Hour;
-        int minute = curTime.Minute;
-        return $"{hour:D2}:{minute:D2}";
-    }
-    #endregion
-    
 
     private void Awake()
     {
         instance = this;
-        EventManager.Instance.AddListener<DateTime>(EventType.ChangeTime, OnTimeChanged);
     }
 
     private void Start()
