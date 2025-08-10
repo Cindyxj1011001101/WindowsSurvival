@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ShortcutsController : MonoBehaviour
+public class BottomBar : MonoBehaviour
 {
     [SerializeField] private RectTransform layoutTransform;
     [SerializeField] private RectTransform selectRect;
@@ -61,17 +61,10 @@ public class ShortcutsController : MonoBehaviour
 
     public void SelectAppShortcut(string appName)
     {
-        if (appName == selectedAppName) return;
+        if (selectedAppName == appName) return;
 
         if (!shortcuts.ContainsKey(appName)) return;
 
-        SelectWithTween(appName);
-
-        selectedAppName = appName;
-    }
-
-    private void SelectWithTween(string appName)
-    {
         Vector2 startPos = string.IsNullOrEmpty(selectedAppName) ?
             selectRect.anchoredPosition :
             (shortcuts[selectedAppName].transform as RectTransform).anchoredPosition;
@@ -86,6 +79,8 @@ public class ShortcutsController : MonoBehaviour
         // 创建动画序列
         selectRect.DOKill();
         selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutBack);
+
+        selectedAppName = appName;
     }
 
     public void ClearSelection()
@@ -122,15 +117,6 @@ public class ShortcutsController : MonoBehaviour
         shortcuts[appName].gameObject.SetActive(!value);
         MonoUtility.UpdateHorizontalLayoutSize(layoutTransform.GetComponent<HorizontalLayoutGroup>());
         (transform as RectTransform).sizeDelta = new Vector2(layoutTransform.sizeDelta.x, (transform as RectTransform).sizeDelta.y);
-
-        if (!string.IsNullOrEmpty(selectedAppName))
-        {
-            SelectWithTween(selectedAppName);
-        }
-
-        if (!value)
-            // 按钮闪烁
-            shortcuts[appName].StartBlinking();
     }
 
     public List<string> GetUnlockedShortcuts()

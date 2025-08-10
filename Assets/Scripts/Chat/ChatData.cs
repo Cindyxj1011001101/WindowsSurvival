@@ -1,12 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using UnityEngine;
 
 public enum MessageSenderEnum
 {
     NPC, //NPC
     Player, //玩家
-    Aside, //旁白
-    Alert // 警示
+    Aside //旁白
 }
 
 [Serializable]

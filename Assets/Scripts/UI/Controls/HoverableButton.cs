@@ -159,23 +159,4 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             canvasGroup.blocksRaycasts = canvasGroup.interactable = false;
         }
     }
-
-    public void StartBlinking(float interval = .5f)
-    {
-        currentColor = Color.white;
-        ChangeColor(ColorManager.White);
-
-        canvasGroup.DOFade(0f, interval)
-            .SetLoops(-1, LoopType.Yoyo) // Yoyo 模式让动画往返播放
-            .SetEase(Ease.Linear);
-
-        void StopBlinking()
-        {
-            onClick.RemoveListener(StopBlinking);
-            canvasGroup.DOKill();
-            canvasGroup.alpha = 1f;
-        }
-
-        onClick.AddListener(StopBlinking);
-    }
 }

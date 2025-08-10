@@ -6,11 +6,9 @@ public class ChatTipGroup : MonoBehaviour
     [SerializeField] int maxChildCount = 3;
     [SerializeField] private GameObject chatTipPrefab;
 
-    public void AddTip(MessageSenderEnum sender, string text, float lifeTime)
+    public void AddTip(MessageSenderEnum sender, string text)
     {
-        var tip = Instantiate(chatTipPrefab, transform).GetComponent<ChatTip>();
-        tip.SetText(sender, text);
-        tip.SetLifeTime(lifeTime);
+        Instantiate(chatTipPrefab, transform).GetComponent<ChatTip>().SetText(sender, text);
         LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);
         if (transform.childCount > maxChildCount)
         {
