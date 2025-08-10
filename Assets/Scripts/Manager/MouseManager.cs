@@ -22,6 +22,8 @@ public class MouseManager : MonoBehaviour
     private static MouseManager instance;
     public static MouseManager Instance => instance;
 
+    public const float BasicWaitTime = 19f / 24;
+
     public Stack<ChangeMouseType> curChangeMouseType = new Stack<ChangeMouseType>();
 
     public Sprite DefaultSprite; // 默认
@@ -145,7 +147,7 @@ public class MouseManager : MonoBehaviour
         }
     }
 
-    public void Wait(float waitTime = 19f / 24, UnityAction callBack = null)
+    public void Wait(float waitTime = BasicWaitTime, UnityAction callBack = null)
     {
         StartCoroutine(PlayWaitingAnim(waitTime, callBack));
     }

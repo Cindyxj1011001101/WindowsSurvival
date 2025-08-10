@@ -1,4 +1,5 @@
 ﻿using DanielLochner.Assets.SimpleScrollSnap;
+using DG.Tweening;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,8 +9,10 @@ public class DateTimeScrollSnap : MonoBehaviour
     [SerializeField] private SimpleScrollSnap dateScrollSnap;
     [SerializeField] private SimpleScrollSnap hourScrollSnap;
     [SerializeField] private SimpleScrollSnap minuteScrollSnap;
+    [SerializeField] private RectTransform timePeriodRectTransform;
 
     private DateTime lastDateTime;
+    private float speed = 50f / (12 * 60);
 
     private void Awake()
     {
@@ -73,12 +76,27 @@ public class DateTimeScrollSnap : MonoBehaviour
         var m = curTime.Minute - lastDateTime.Minute;
         var h = curTime.Hour - lastDateTime.Hour;
         var d = curTime.Day - lastDateTime.Day;
-
-        lastDateTime = curTime;
         
         minuteScrollSnap.GoToPanel(GetChildIndex(minuteScrollSnap, m + minuteScrollSnap.CenteredPanel));
         hourScrollSnap.GoToPanel(GetChildIndex(hourScrollSnap, h + hourScrollSnap.CenteredPanel));
         dateScrollSnap.GoToPanel(GetChildIndex(dateScrollSnap, d + dateScrollSnap.CenteredPanel));
+
+        // 实现无限滚动日月图标
+        float totalMinutes = (float)(curTime - lastDateTime).TotalMinutes;
+        var newAnchoredPos = new Vector2(timePeriodRectTransform.anchoredPosition.x, timePeriodRectTransform.anchoredPosition.y - totalMinutes * speed);
+        //timePeriodRectTransform.anchoredPosition = newAnchoredPos;
+        timePeriodRectTransform.DOAnchorPos(newAnchoredPos, totalMinutes / 100).OnComplete(() =>
+        {
+            foreach (RectTransform child in timePeriodRectTransform)
+            {
+                if (child.anchoredPosition.y + timePeriodRectTransform.anchoredPosition.y <= -100f)
+                {
+                    child.anchoredPosition = new Vector2(child.anchoredPosition.x, child.anchoredPosition.y + 200);
+                }
+            }
+        });
+
+        lastDateTime = curTime;
     }
 
     private int GetChildIndex(SimpleScrollSnap scroll, int index)
