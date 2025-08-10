@@ -1231,7 +1231,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_11
+      name: UI_study_bg
       rect:
         serializedVersion: 2
         x: 346
@@ -1336,7 +1336,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_4
+      name: UI_bg
       rect:
         serializedVersion: 2
         x: 213
@@ -1344,8 +1344,8 @@ TextureImporter:
         width: 13
         height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 2, y: 2, z: 2, w: 2}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1370,7 +1370,6 @@ TextureImporter:
       UI_0: 940146804
       UI_1: -393629588
       UI_10: -1300053351
-      UI_11: -1730895238
       UI_12: 1138885455
       UI_13: 973356370
       UI_2: 1505840638
@@ -1384,7 +1383,6 @@ TextureImporter:
       UI_29: -150795827
       UI_3: 488781603
       UI_30: -704582210
-      UI_4: -1074642187
       UI_5: 1048413523
       UI_6: 956610979
       UI_7: -1974728413
@@ -1414,6 +1412,7 @@ TextureImporter:
       UI_arrow_1: -1364170369
       UI_arrow_2: 688397521
       UI_arrow_3: -1067156244
+      UI_bg: -1074642187
       UI_btn_Arrange_defult: -757670956
       UI_btn_Arrange_hovered: 1569353146
       UI_btn_Closed_defult: -563433557
@@ -1436,6 +1435,7 @@ TextureImporter:
       UI_checkbox_checked_hovered: -420838126
       UI_checkbox_default: 1879455347
       UI_checkbox_default_hovered: 1419871759
+      UI_study_bg: -1730895238
   mipmapLimitGroupName: 
   pSDRemoveMatte: 1
   userData: 

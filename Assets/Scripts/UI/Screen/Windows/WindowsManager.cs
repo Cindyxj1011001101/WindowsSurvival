@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class WindowsManager : MonoBehaviour
 {
     private static WindowsManager instance;
     public static WindowsManager Instance => instance;
 
-    private BottomBar bottomBar; // 底边栏布局
+    [SerializeField] private ShortcutsController shortcutsController; // 管理快捷方式
 
-    private Dictionary<string, WindowBase> openedWindows = new(); // 当前所有打开的窗口，最小化的窗口也算打开的
-    private WindowBase currentFocusedWindow; // 当前持有焦点的窗口，可能是openWindows[0]，可能是null
-
-    private WindowGroup windowGroup; // 所有窗口作为其子物体，由该脚本控制窗口的渲染顺序
+    [SerializeField] private WindowGroup windowGroup; // 所有窗口作为其子物体，由该脚本控制窗口的渲染顺序
 
     [SerializeField] private RectTransform hoverTipLayer;
     [SerializeField] private RectTransform tempCardSlotLayer;
@@ -23,11 +23,65 @@ public class WindowsManager : MonoBehaviour
     public RectTransform FloatingTipLayer => floatingCardSlotLayer;
     public RectTransform ChatTipLayer => chatTipLayer;
 
+    private Dictionary<string, WindowBase> openedWindows = new(); // 当前所有打开的窗口，最小化的窗口也算打开的
+    private WindowBase currentFocusedWindow; // 当前持有焦点的窗口，可能是openWindows[0]，可能是null
+
+    #region 顶边栏部分
+    [SerializeField] private Text dateText;
+    [SerializeField] private Text timeText;
+    [SerializeField] private HoverableButton saveButton;
+    [SerializeField] private HoverableButton restButton;
+
+    private void OnTimeChanged(DateTime dateTime)
+    {
+        if (dateText != null)
+        {
+            dateText.text = CalculateDate(dateTime);
+        }
+        if (timeText != null)
+        {
+            timeText.text = CalculateTime(dateTime);
+        }
+    }
+
+    public string CalculateDate(DateTime curTime)
+    {
+        TimeSpan timeSpan = curTime - TimeManager.Instance.StartDateTime;
+        int days = timeSpan.Days + 1;
+        return $"DAY {days}";
+    }
+
+    public string CalculateTime(DateTime curTime)
+    {
+        int hour = curTime.Hour;
+        int minute = curTime.Minute;
+        return $"{hour:D2}:{minute:D2}";
+    }
+    #endregion
+    
+
     private void Awake()
     {
         instance = this;
-        bottomBar = transform.Find("BottomBar").GetComponent<BottomBar>();
-        windowGroup = transform.Find("Desktop/WindowGroup").GetComponent<WindowGroup>();
+        EventManager.Instance.AddListener<DateTime>(EventType.ChangeTime, OnTimeChanged);
+    }
+
+    private void Start()
+    {
+        saveButton.onClick.AddListener(() =>
+        {
+            GameDataManager.Instance.SaveAllData();
+            SceneManager.LoadScene(0);
+        });
+
+        restButton.onClick.AddListener(() =>
+        {
+            (OpenWindow("TimeSelect", true) as TimeSelectWindow).onConfirm += (time) =>
+            {
+                StateManager.Instance.Sleep(time);
+                Debug.Log($"休息了{time}分钟");
+            };
+        });
     }
 
     public WindowBase OpenWindow(string appName, bool isModal = false)
@@ -47,7 +101,7 @@ public class WindowsManager : MonoBehaviour
             // 添加到已打开窗口中
             openedWindows.Add(appName, window);
             // 底边栏的快捷方式变亮
-            bottomBar.SetOpened(appName, true);
+            shortcutsController.SetOpened(appName, true);
         }
         else
         {
@@ -84,7 +138,7 @@ public class WindowsManager : MonoBehaviour
         windowGroup.SetClosed(window);
 
         // 底边栏的快捷方式变暗
-        bottomBar.SetOpened(appName, false);
+        shortcutsController.SetOpened(appName, false);
 
         // 设置获得焦点的窗口是渲染层级最靠前的窗口
         // 或者是null
@@ -111,7 +165,7 @@ public class WindowsManager : MonoBehaviour
 
         if (window.IsPlayingAnim) return;
         // 最小化窗口
-        window.Minimize(bottomBar[appName].transform);
+        window.Minimize(shortcutsController[appName].transform);
 
         // 将window暂停渲染
         windowGroup.SetMinimized(window);
@@ -140,9 +194,9 @@ public class WindowsManager : MonoBehaviour
 
         if (window != null)
             // 选中底边栏中的快捷方式
-            bottomBar.SelectAppShortcut(window.AppName);
+            shortcutsController.SelectAppShortcut(window.AppName);
         else
-            bottomBar.ClearSelection();
+            shortcutsController.ClearSelection();
     }
 
     public void FocusWindow(string appName)
@@ -166,11 +220,11 @@ public class WindowsManager : MonoBehaviour
 
     public void UnlockShortcut(string appName)
     {
-        bottomBar.SetLocked(appName, false);
+        shortcutsController.SetLocked(appName, false);
     }
 
     public List<string> GetUnlockedShortcuts()
     {
-        return bottomBar.GetUnlockedShortcuts();
+        return shortcutsController.GetUnlockedShortcuts();
     }
 }
