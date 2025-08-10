@@ -218,13 +218,13 @@ public class ChatWindow : WindowBase
     }
 
     private float timer = int.MaxValue;
-    private float alertTimeIntervel = 10f;
+    private float alertTimeInterval = 10f;
     private void Update()
     {
-        if (timer < alertTimeIntervel)
+        if (timer < alertTimeInterval)
         {
             timer += Time.deltaTime;
-            if (timer >= alertTimeIntervel)
+            if (timer >= alertTimeInterval)
             {
                 if (!focused) CreateChatTip(MessageSenderEnum.Alert, "您有一条待发送消息", int.MaxValue);
             }
