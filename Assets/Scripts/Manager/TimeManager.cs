@@ -64,11 +64,6 @@ public class TimeManager : MonoBehaviour
         lastDay = CurTime.Date;
     }
 
-    //private void Start()
-    //{
-    //    //EventManager.Instance.TriggerEvent(EventType.ChangeTime, curTime);
-    //}
-
     public void AddTime(int minute)
     {
         // 等待动画
