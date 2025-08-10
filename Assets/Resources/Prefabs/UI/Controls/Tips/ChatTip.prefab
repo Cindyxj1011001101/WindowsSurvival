@@ -409,7 +409,6 @@ MonoBehaviour:
   fadeDuration: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
-  canvasGroup: {fileID: 2150939234906585755}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
   background: {fileID: 5703369850813878340}
@@ -421,9 +420,11 @@ MonoBehaviour:
   playerBubbleColor: {r: 0.0627451, g: 0.20784315, b: 0.17254902, a: 1}
   othersBubbleColor: {r: 0.2509804, g: 0.20392159, b: 0.20392159, a: 1}
   narrationBubbleColor: {r: 0.31764707, g: 0.29411766, b: 0.0627451, a: 1}
+  alertBubbleColor: {r: 0.2627451, g: 0.058823533, b: 0.058823533, a: 1}
   playerTextColor: {r: 0.043137256, g: 0.76470596, b: 0.5921569, a: 1}
   othersTextColor: {r: 0.9803922, g: 0.74509805, b: 0.74509805, a: 1}
   narrationTextColor: {r: 1, g: 0.909804, b: 0.050980397, a: 1}
+  alertTextColor: {r: 1, g: 0.03529412, b: 0.03529412, a: 1}
 --- !u!225 &2150939234906585755
 CanvasGroup:
   m_ObjectHideFlags: 0

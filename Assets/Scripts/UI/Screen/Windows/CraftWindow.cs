@@ -195,9 +195,12 @@ public class CraftWindow : WindowBase
         sb.Append(minute > 0 ? $"{minute}min" : "");
         craftTimeText.text = sb.ToString();
 
+        // 不可制作的卡牌，卡牌槽变灰
+        bool canCraft = CraftManager.Instance.CanCrfat(recipe);
+        slot.GetComponent<CanvasGroup>().alpha = canCraft ? 1f : 0.14f;
+
         // 显示制作按钮
-        craftButton.DisplayButton(CraftManager.Instance.IsRecipeLocked(recipe), CraftManager.Instance.CanCrfat(recipe));
-        //craftButton.DisplayButton(false, true);
+        craftButton.DisplayButton(CraftManager.Instance.IsRecipeLocked(recipe), canCraft);
 
         // 添加制作事件
         craftButton.onClick.RemoveAllListeners();
