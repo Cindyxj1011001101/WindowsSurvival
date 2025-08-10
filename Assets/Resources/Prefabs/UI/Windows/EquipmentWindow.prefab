@@ -283,7 +283,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -532, y: -319}
+  m_AnchoredPosition: {x: -532.00006, y: -319}
   m_SizeDelta: {x: 618, y: 298}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3038431994427294090
@@ -607,6 +607,18 @@ PrefabInstance:
     - target: {fileID: 3544771827832024813, guid: e186b6b1018b4d64686557c28a9d3873, type: 3}
       propertyPath: m_Name
       value: HeadSlot
+      objectReference: {fileID: 0}
+    - target: {fileID: 6038285676190166455, guid: e186b6b1018b4d64686557c28a9d3873, type: 3}
+      propertyPath: m_Color.b
+      value: 0.25490198
+      objectReference: {fileID: 0}
+    - target: {fileID: 6038285676190166455, guid: e186b6b1018b4d64686557c28a9d3873, type: 3}
+      propertyPath: m_Color.g
+      value: 0.25490198
+      objectReference: {fileID: 0}
+    - target: {fileID: 6038285676190166455, guid: e186b6b1018b4d64686557c28a9d3873, type: 3}
+      propertyPath: m_Color.r
+      value: 0.25490198
       objectReference: {fileID: 0}
     - target: {fileID: 8445176971740573630, guid: e186b6b1018b4d64686557c28a9d3873, type: 3}
       propertyPath: m_Pivot.x

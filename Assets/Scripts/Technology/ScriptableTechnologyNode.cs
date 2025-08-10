@@ -5,7 +5,7 @@ public enum TechType
 {
     Food,
     Oxygen,
-    Equipment,
+    Tool,
     Construction,
     Resource,
 }
