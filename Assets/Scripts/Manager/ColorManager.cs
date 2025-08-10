@@ -3,8 +3,8 @@
 public static class ColorManager
 {
     public static Color32 Black { get; private set; } = new(17, 17, 17, 255);
-    public static Color32 DarkGrey { get; private set; } = new(89, 89, 89, 255);
-    public static Color32 LightGrey { get; private set; } = new(173, 173, 173, 255);
+    public static Color32 DarkGrey { get; private set; } = new(41, 41, 41, 255);
+    public static Color32 LightGrey { get; private set; } = new(118, 118, 118, 255);
     public static Color32 White { get; private set; } = new(255, 255, 255, 255);
     public static Color32 Blue { get; private set; } = new(77, 154, 255, 255);
     public static Color32 SkyBlue { get; private set; } = new(1, 255, 249, 255);
