@@ -91,7 +91,7 @@ public class ChatWindow : WindowBase
 
         ResetScroll();
 
-        if (addChatTip && !focused) CreateChatTip(sender, content);
+        if (addChatTip && !focused) CreateChatTip(sender, content, 10f);
     }
 
     private void ResetScroll()
@@ -122,6 +122,8 @@ public class ChatWindow : WindowBase
         LayoutRebuilder.ForceRebuildLayoutImmediate(optionLayout);
 
         ShowDialogueOptions();
+
+        timer = 0;
     }
 
     float optionAnimDuration = 0.15f;
@@ -187,6 +189,7 @@ public class ChatWindow : WindowBase
         MonoUtility.DestroyAllChildren(optionLayout);
         HideDialogueOptions();
         ChatManager.Instance.Submit();
+        timer = int.MaxValue;
     }
 
     public void InterruptChoose()
@@ -194,12 +197,11 @@ public class ChatWindow : WindowBase
         inputFieldText.text = "";
         MonoUtility.DestroyAllChildren(optionLayout);
         ChatManager.Instance.ChoosedChatData = null;
-        //HideDialogueOptions();
     }
 
-    private void CreateChatTip(MessageSenderEnum sender, string text)
+    private void CreateChatTip(MessageSenderEnum sender, string text, float lifeTime)
     {
-        chatTipGroup.AddTip(sender, text);
+        chatTipGroup.AddTip(sender, text, lifeTime);
     }
 
     private bool init = false;
@@ -213,5 +215,19 @@ public class ChatWindow : WindowBase
             ResetScroll();
         }
         chatTipGroup.Clear();
+    }
+
+    private float timer = int.MaxValue;
+    private float alertTimeIntervel = 10f;
+    private void Update()
+    {
+        if (timer < alertTimeIntervel)
+        {
+            timer += Time.deltaTime;
+            if (timer >= alertTimeIntervel)
+            {
+                if (!focused) CreateChatTip(MessageSenderEnum.Alert, "您有一条待发送消息", int.MaxValue);
+            }
+        }
     }
 }
