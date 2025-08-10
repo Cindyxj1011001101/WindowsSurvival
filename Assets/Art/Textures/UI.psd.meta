@@ -1356,6 +1356,48 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: UI_Midnight
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 328
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6a333766da8f9649af5504b545000fd
+      internalID: 1542629904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Noon
+      rect:
+        serializedVersion: 2
+        x: 27
+        y: 303
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3070d8248869b7d498627b1777e7cec7
+      internalID: -1794130667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -1398,7 +1440,9 @@ TextureImporter:
       UI_Locked: -758408193
       UI_Locked_hovered: -1122691988
       UI_MaximumNumber: -1474591250
+      UI_Midnight: 1542629904
       UI_NameTooltip: -1275816256
+      UI_Noon: -1794130667
       UI_Number: -841556680
       UI_Panel: -1503842033
       UI_PowerOn: -573434214
