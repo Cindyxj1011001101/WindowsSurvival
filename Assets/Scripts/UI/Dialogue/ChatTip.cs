@@ -15,10 +15,12 @@ public class ChatTip : HoverableButton
     public Color playerBubbleColor;
     public Color othersBubbleColor;
     public Color narrationBubbleColor;
+    public Color alertBubbleColor;
 
     public Color playerTextColor;
     public Color othersTextColor;
     public Color narrationTextColor;
+    public Color alertTextColor;
 
     private Sequence showSeq;
     private Sequence pointerEnterSeq;
@@ -59,6 +61,10 @@ public class ChatTip : HoverableButton
             case MessageSenderEnum.Aside:
                 this.text.color = narrationTextColor;
                 bubble.color = narrationBubbleColor;
+                break;
+            case MessageSenderEnum.Alert:
+                this.text.color = alertTextColor;
+                bubble.color = alertBubbleColor;
                 break;
         }
         string newStr = text;
@@ -154,17 +160,22 @@ public class ChatTip : HoverableButton
     private bool pointerEnter = false;
     private bool isHiding = false;
     private float timer = 0;
-    private float timeThreshold = 10f;
+    private float lifeTime = 10f;
     private void Update()
     {
         // 3s未操作后自动隐藏
-        if (!pointerEnter && timer < timeThreshold)
+        if (!pointerEnter && timer < lifeTime)
         {
             timer += Time.deltaTime;
-            if (timer >= timeThreshold)
+            if (timer >= lifeTime)
             {
                 Hide();
             }
         }
+    }
+
+    public void SetLifeTime(float time)
+    {
+        lifeTime = time;
     }
 }
