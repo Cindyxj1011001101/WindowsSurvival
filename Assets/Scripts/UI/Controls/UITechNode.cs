@@ -13,6 +13,8 @@ public class UITechNode : HoverableButton
     public Text costText;
     public GameObject gifObject;
 
+    public GameObject recipeItem;
+
     private List<HoverableButton> recipeButtons = new();
 
     private ScriptableTechnologyNode techNode;
@@ -36,7 +38,6 @@ public class UITechNode : HoverableButton
         // 显示解锁配方
         MonoUtility.DestroyAllChildren(recipeLayout);
         recipeButtons.Clear();
-        var recipeItem = Resources.Load<GameObject>("Prefabs/UI/Controls/Study/RecipeItem_TechNode");
         foreach (var recipe in techNode.recipes)
         {
             var obj = Instantiate(recipeItem, recipeLayout);
