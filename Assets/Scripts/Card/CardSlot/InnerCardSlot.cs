@@ -11,11 +11,15 @@
     {
         base.AddCard(card);
         card.SetParentCard(component.BelongedCard);
+        component.BelongedCard.Slot.RefreshCurrentDisplay();
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
     }
 
     public override void RemoveCard(Card card)
     {
         base.RemoveCard(card);
         card.SetParentCard(null);
+        component.BelongedCard.Slot.RefreshCurrentDisplay();
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
     }
 }

@@ -13,7 +13,7 @@ public class ShellSashimi : Card
         tip = string.Empty;
         DestroyThis();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 34);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 9);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 11);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 10);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -5);
         TimeManager.Instance.AddTime(15);

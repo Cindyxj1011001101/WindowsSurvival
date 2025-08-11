@@ -132,16 +132,26 @@ public class DynamicEffectUtility
         floatingTip.ShowTip(tip, position, textColor, duration);
     }
 
-    public static void ShowArrows(Rect rect, bool up, int level, Color color, int arrowCount = 6)
+    public static void ShowArrows(RectTransform rectTransform, bool up, int level, Color color, int arrowCount = 6)
     {
+        float xMin, xMax, yMin, yMax;
+        xMin = rectTransform.position.x + rectTransform.rect.xMin;
+        xMax = rectTransform.position.x + rectTransform.rect.xMax;
+        yMin = rectTransform.position.y + rectTransform.rect.yMin;
+        yMax = rectTransform.position.y + rectTransform.rect.yMax;
+        if (up)
+            yMax -= rectTransform.rect.height / 2;
+        else
+            yMin += rectTransform.rect.height / 2;
+
         Vector3 randomPos;
         Animator animator;
         GameObject obj;
         var prefab = Resources.Load<GameObject>($"Prefabs/UI/Controls/Arrow/{(up ? "Up" : "Down")}_Lv{level}");
         for (int i = 0; i < arrowCount; i++)
         {
-            randomPos = new(Random.Range(rect.xMin, rect.xMax), Random.Range(rect.yMin, rect.yMax));
-            obj = Object.Instantiate(prefab, WindowsManager.Instance.FloatingTipLayer);
+            randomPos = new(Random.Range(xMin, xMax), Random.Range(yMin, yMax));
+            obj = Object.Instantiate(prefab, rectTransform);
             obj.transform.position = randomPos;
 
             obj.GetComponentInChildren<Image>().color = color;
@@ -150,6 +160,14 @@ public class DynamicEffectUtility
             animator.Play(up ? "Up" : "Down");
             
             Object.Destroy(obj, animator.GetCurrentAnimatorStateInfo(0).length);
+        }
+    }
+
+    public static void ShowArrows(RectTransform rectTransform, List<(bool up, int level, Color color)> groups, int arrowCount = 6)
+    {
+        foreach (var (up, level, color) in groups)
+        {
+            ShowArrows(rectTransform, up, level, color, arrowCount / groups.Count);
         }
     }
 }

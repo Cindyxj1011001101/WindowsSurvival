@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public static class ColorManager
 {
@@ -13,4 +15,12 @@ public static class ColorManager
     public static Color32 Yellow { get; private set; } = new(255, 232, 13, 255);
     public static Color32 Orange { get; private set; } = new(255, 128, 11, 255);
     public static Color32 Red { get; private set; } = new(255, 9, 9, 255);
+
+    public static Dictionary<Type, Color32> CardComponentColors = new()
+    {
+        { typeof(DurabilityComponent), White },
+        { typeof(FreshnessComponent), Orange },
+        { typeof(ProgressComponent), Green },
+        { typeof(GrowthComponent), White },
+    };
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,12 +13,16 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private GameObject stackObject; // 控制是否显示堆叠
     [SerializeField] private Text stackNumText; // 显示数量
     [SerializeField] private Image maxStackNumImage; // 显示最大堆叠数量的图标
-    [SerializeField] private VerticalLayoutGroup componentLayout; // 用于显示新鲜度、耐久等组件的布局
+    [SerializeField] private RectTransform valueComponentLayout; // 用于显示新鲜度、耐久等组件的布局
+    [SerializeField] private RectTransform innerContentsComponentLayout; // 用于显示内容物组件
     [SerializeField] private CanvasGroup cardCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
+    [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
     public bool dontRefresh; // 是否不刷新显示（用于某些特殊情况）
 
-    private Dictionary<CardComponent, Slider> componentSliders = new(); // 用于存储组件的滑动条
+
+    private Dictionary<Type, float> lastComponentValues = new();
+    private Dictionary<Type, Slider> componentSliders = new(); // 用于存储组件的滑动条
 
     private List<Card> cards = new();
     public bool IsEmpty => cards.Count == 0;
@@ -28,15 +33,19 @@ public class CardSlot : MonoBehaviour
     private BagBase bag;
     public BagBase Bag => bag;
 
-    private void Start()
+    private void Awake()
     {
         if (!dontRefresh)
             EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
+        EventManager.Instance.AddListener(EventType.StartChangeTime, OnChangeTimeStarted);
+        EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
     }
 
-    public void SetBag(BagBase bag)
+    private void OnDestroy()
     {
-        this.bag = bag;
+        EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
+        EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);
+        EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
     }
 
     public void Init(List<Card> cardList)
@@ -48,6 +57,40 @@ public class CardSlot : MonoBehaviour
             card.StartUpdating();
         }
         RefreshCurrentDisplay();
+    }
+
+    public void SetBag(BagBase bag)
+    {
+        this.bag = bag;
+    }
+
+    private void OnChangeTimeStarted()
+    {
+        // 记录组件的初始值
+        lastComponentValues.Clear();
+        foreach (var (type, slider) in componentSliders)
+        {
+            lastComponentValues.Add(type, slider.value);
+        }
+    }
+
+    private void OnChangeTimeEnded()
+    {
+        // 计算组件的变化值
+        Dictionary<Type, float> deltaValues = new();
+        foreach (var(type, lastValue) in lastComponentValues)
+        {
+            if (componentSliders.TryGetValue(type, out var slider))
+            {
+                if (slider.value != lastValue)
+                    deltaValues.Add(type, slider.value - lastValue);
+            }
+        }
+
+        if (deltaValues.Count > 0)
+            DisplayComponentValuesChange(deltaValues);
+        
+        lastComponentValues.Clear();
     }
 
     #region 显示
@@ -92,13 +135,17 @@ public class CardSlot : MonoBehaviour
         }
     }
 
-    private void DisplayComponent(CardComponent component)
+    /// <summary>
+    /// 显示具有浮点值数据的组件
+    /// </summary>
+    /// <param name="component"></param>
+    private void DisplayValueComponent(CardComponent component)
     {
-        if (!componentSliders.TryGetValue(component, out Slider slider))
+        if (!componentSliders.TryGetValue(component.GetType(), out Slider slider))
         {
             var prefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Components/" + component.GetType().Name);
-            slider = Instantiate(prefab, componentLayout.transform).GetComponent<Slider>();
-            componentSliders.Add(component, slider);
+            slider = Instantiate(prefab, valueComponentLayout).GetComponent<Slider>();
+            componentSliders.Add(component.GetType(), slider);
         }
 
         var tipController = slider.gameObject.AddComponent<HoverTipController>();
@@ -128,6 +175,20 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
+    /// 显示内容物组件
+    /// </summary>
+    /// <param name="component"></param>
+    private void DisplayInnerContentsComponent(InnerContentsComponent component)
+    {
+        innerContentsComponentLayout.gameObject.SetActive(true);
+        for (int i = 0; i < innerContentsComponentLayout.childCount; i++)
+        {
+            innerContentsComponentLayout.GetChild(i).gameObject.SetActive(i < component.innerContents.Count);
+            innerContentsComponentLayout.GetChild(i).GetComponent<Image>().color = i < component.UsedSlotCount ? ColorManager.White : ColorManager.DarkGrey;
+        }
+    }
+
+    /// <summary>
     /// 显示指定数量的卡牌
     /// </summary>
     /// <param name="card"></param>
@@ -147,24 +208,27 @@ public class CardSlot : MonoBehaviour
         nameText.text = card.CardName;
 
         // 销毁旧的组件显示
-        MonoUtility.DestroyAllChildren(componentLayout.transform);
-        componentSliders.Clear();
+        //MonoUtility.DestroyAllChildren(componentLayout.transform);
+        //componentSliders.Clear();
 
         // 显示堆叠数量
         DisplayStackNum(stackNum, card.MaxStackNum, displayStack);
 
         // 显示耐久
         if (card.TryGetComponent<DurabilityComponent>(out var d))
-            DisplayComponent(d);
+            DisplayValueComponent(d);
         // 显示新鲜度
         if (card.TryGetComponent<FreshnessComponent>(out var f))
-            DisplayComponent(f);
+            DisplayValueComponent(f);
         // 显示生长度
         if (card.TryGetComponent<GrowthComponent>(out var g))
-            DisplayComponent(g);
+            DisplayValueComponent(g);
         // 显示产物进度
         if (card.TryGetComponent<ProgressComponent>(out var p))
-            DisplayComponent(p);
+            DisplayValueComponent(p);
+        // 显示内容物数量
+        if (card.TryGetComponent<InnerContentsComponent>(out var i))
+            DisplayInnerContentsComponent(i);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;
@@ -178,7 +242,10 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.alpha = 0;
         cardCanvasGroup.blocksRaycasts = false;
         cardCanvasGroup.interactable = false;
-        MonoUtility.DestroyAllChildren(componentLayout.transform);
+        MonoUtility.DestroyAllChildren(valueComponentLayout);
+        if (innerContentsComponentLayout != null)
+            innerContentsComponentLayout.gameObject.SetActive(false);
+        componentSliders.Clear();
     }
 
     /// <summary>
@@ -189,6 +256,38 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.alpha = 1;
         cardCanvasGroup.blocksRaycasts = true;
         cardCanvasGroup.interactable = true;
+    }
+
+    /// <summary>
+    /// 显示卡牌如耐久度变化、
+    /// </summary>
+    /// <param name="minute"></param>
+    public void DisplayComponentValuesChange(Dictionary<Type, float> deltaValues)
+    {
+        List<(bool up, int level, Color color)> groups = new();
+
+        foreach (var (type, deltaValue) in deltaValues)
+        {
+            groups.Add((deltaValue > 0, CalcLevel(deltaValue), ColorManager.CardComponentColors[type]));
+        }
+
+        DynamicEffectUtility.ShowArrows(particleDisplayRect, groups);
+    }
+
+    public void DisplayComponentValueChange(Type componentType, float value)
+    {
+        DynamicEffectUtility.ShowArrows(particleDisplayRect, value > 0, CalcLevel(value), ColorManager.CardComponentColors[componentType]);
+    }
+
+    private  int CalcLevel(float value)
+    {
+        var absValue = Mathf.Abs(value);
+        if (absValue <= 0.1)
+            return 1;
+        else if (absValue <= 0.3)
+            return 2;
+        else
+            return 3;
     }
     #endregion
 
@@ -310,17 +409,12 @@ public class CardSlot : MonoBehaviour
             card.SetCardSlot(null);
         }
         cards = new List<Card>(); // 避免影响其他引用
-        componentSliders.Clear();
+        lastComponentValues.Clear();
         DisableDisplay();
     }
 
     public void ShowTip(string tip, Color color)
     {
         DynamicEffectUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, color);
-    }
-
-    private void OnDestroy()
-    {
-        EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
     }
 }

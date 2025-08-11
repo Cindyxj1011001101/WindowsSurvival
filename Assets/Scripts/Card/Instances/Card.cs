@@ -154,8 +154,11 @@ public abstract class Card : IComparable<Card>
             component.durability--;
             if (component.durability <= 0)
                 DestroyThis();
-            else
+            else if (Slot != null)
+            {
                 Slot.RefreshCurrentDisplay();
+                Slot.DisplayComponentValueChange(typeof(DurabilityComponent), -1f / component.maxDurability);
+            }
         }
     }
 
