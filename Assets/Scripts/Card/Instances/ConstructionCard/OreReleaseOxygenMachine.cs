@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 矿石释氧机
 /// </summary>
-public class OreReleaseOxygenMachine : Card
+public class OreReleaseOxygenMachine : ConstructionCard
 {
     public bool isWorking; // 是否已打开
     public float maxOxygenStorage; // 最大氧气存储
@@ -32,6 +32,20 @@ public class OreReleaseOxygenMachine : Card
             new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
             new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, Judge_GetOxygen)
         };
+    }
+
+    public override bool CanPlace(out string hint)
+    {
+        hint = string.Empty;
+        var env = GameManager.Instance.CurEnvironmentBag;
+
+        if (!env.HasCable)
+        {
+            hint = "需要先在该地点铺设电缆";
+            return false;
+        }
+
+        return true;
     }
 
     protected override void LateInit()

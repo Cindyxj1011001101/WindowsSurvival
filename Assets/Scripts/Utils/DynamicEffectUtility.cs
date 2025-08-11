@@ -134,6 +134,8 @@ public class DynamicEffectUtility
 
     public static void ShowArrows(RectTransform rectTransform, bool up, int level, Color color, int arrowCount = 6)
     {
+        if (!rectTransform.gameObject.activeInHierarchy) return;
+
         float xMin, xMax, yMin, yMax;
         xMin = rectTransform.position.x + rectTransform.rect.xMin;
         xMax = rectTransform.position.x + rectTransform.rect.xMax;

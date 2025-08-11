@@ -1,4 +1,4 @@
-﻿public class PassageCard : Card
+﻿public abstract class PassageCard : Card
 {
     protected PassageCard()
     {

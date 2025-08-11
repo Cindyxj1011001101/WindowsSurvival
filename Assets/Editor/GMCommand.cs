@@ -230,4 +230,16 @@ public class GMCommand
     {
         AddCard("废铁铲");
     }
+
+    [MenuItem("Command/添加/电池")]
+    public static void Q()
+    {
+        AddCard("电池");
+    }
+
+    [MenuItem("Command/添加/白爆矿")]
+    public static void R()
+    {
+        AddCard("白爆矿");
+    }
 }

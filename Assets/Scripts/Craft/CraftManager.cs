@@ -50,18 +50,28 @@ public class CraftManager
     /// 判断一个配方能否合成
     /// </summary>
     /// <param name="recipe"></param>
-    public bool CanCrfat(ScriptableRecipe recipe)
+    public bool CanCrfat(ScriptableRecipe recipe, out string hint)
     {
+        hint = string.Empty;
         // 配方未解锁，则无法合成
         if (IsRecipeLocked(recipe)) return false;
 
-        // 配方已解锁
-        // 能否合成取决于材料是否充足
+        // 配方已解锁，看材料是否充足
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
         foreach (var material in recipe.materials)
         {
             // 任何一项材料不满足数量需求，不能合成
-            if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum) return false;
+            if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum)
+            {
+                hint = "缺少制作材料";
+                return false;
+            }
+        }
+
+        // 材料充足，看有没有制造限制
+        if (recipe.CraftedCard is ConstructionCard constructionCard)
+        {
+            return constructionCard.CanPlace(out hint);
         }
 
         return true;
