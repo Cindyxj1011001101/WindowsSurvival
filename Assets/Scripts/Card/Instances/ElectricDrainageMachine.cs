@@ -6,7 +6,7 @@ public class ElectricDrainageMachine : Card
         isWorking = false;
         Events = new()
         {
-            new Event("开启", "开启后每回合消耗电力，降低水平面", Event_Open, Judge_Open),
+            new Event("开启", "开启后每回合消耗0.5电力，降低2水平面高度", Event_Open, Judge_Open),
             new Event("关闭", "关闭电动排水机", Event_Close, Judge_Close)
         };
     }
@@ -50,7 +50,7 @@ public class ElectricDrainageMachine : Card
             return;
         }
         StateManager.Instance.ChangeElectricity(-0.5f);
-        StateManager.Instance.ChangeWaterLevel(-0.8f);
+        StateManager.Instance.ChangeWaterLevel(-2);
     }
 
 }
