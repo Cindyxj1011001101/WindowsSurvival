@@ -20,12 +20,14 @@ public class DetailsWindow : WindowBase
     protected override void Awake()
     {
         base.Awake();
+        EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
     private void OnDestroy()
     {
+        EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
@@ -64,6 +66,12 @@ public class DetailsWindow : WindowBase
             DisplayEventButtons();
     }
 
+    private void RefreshCurrentDisplay()
+    {
+        if (currentDisplayedCard != null)
+            slot.DisplayCard(currentDisplayedCard, 1, false);
+    }
+
     bool moved = false;
     private void OnMove(EnvironmentBag curEnvironmentBag)
     {
@@ -77,16 +85,12 @@ public class DetailsWindow : WindowBase
         // 清除原数据
         Clear();
 
-        //if (sourceSlot == null || sourceSlot.IsEmpty) return;
-
         // 记录当前显示的卡牌
-        //currentDisplayedCard = sourceSlot.PeekCard();
         currentDisplayedCard = card;
 
         currentDisplayedCard.TempSlotTransform = slot.transform;
 
         // 显示卡牌
-        //slot.DisplayCard(currentDisplayedCard, currentDisplayedCard.Slot.StackNum);
         slot.DisplayCard(currentDisplayedCard, 1, false);
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 
@@ -157,12 +161,6 @@ public class DetailsWindow : WindowBase
                     DynamicEffectUtility.ShowTip(tip, button.transform.position + (button.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
                     if (originalSlot != null)
                         originalSlot.RefreshCurrentDisplay();
-                    // 如果地点发生改变则不刷新
-                    //if (!moved)
-                    //{
-                    //    // 再刷新
-                    //    DisplayCardDetails(originalSlot);
-                    //}
                     if (moved) Clear();
                     else if (!currentDisplayedCard.Destroyed)
                         DisplayCardDetails(currentDisplayedCard);
@@ -186,11 +184,14 @@ public class DetailsWindow : WindowBase
     {
         moved = false;
         slot.ClearSlot();
+
         // 关闭时如果卡牌有循环音将循环音减小
         if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
             currentDisplayedCard.OnDetailClose();
+
         if (currentDisplayedCard != null)
             currentDisplayedCard.TempSlotTransform = null;
+
         currentDisplayedCard = null;
         detailsText.text = "";
         innerBag.Clear();

@@ -13,10 +13,11 @@
     TriggerParagraph, // 触发对话
     DialogueCondition, // 触发对话条件
     ChangeWaterLevel, // 水平面变化
-    ChangeTime, // 时间变化
     StudyComplished,
     AnotherDay,//跨天行为触发
     StudyStarted,
+    StartChangeTime,
+    EndChangeTime,
 }
 
 public class ChangeStateArgs

@@ -64,13 +64,13 @@ public class TimeManager : MonoBehaviour
 
     public void AddTime(int minute)
     {
+        EventManager.Instance.TriggerEvent(EventType.StartChangeTime);
+
         // 等待动画
         MouseManager.Instance.Wait();
 
         int time = minute;
         CurTime = CurTime.AddMinutes(minute);
-        //EventManager.Instance.TriggerEvent(EventType.ChangeTime, curTime);
-        EventManager.Instance.TriggerEvent(EventType.ChangeTime, CurTime);
         while (time != 0)
         {
             if (time >= curInterval)
@@ -87,6 +87,8 @@ public class TimeManager : MonoBehaviour
             }
         }
         lastDay = CurTime.Date;
+
+        EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
     }
 
     public bool AnotherDay()

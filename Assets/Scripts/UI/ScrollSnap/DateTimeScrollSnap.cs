@@ -31,12 +31,12 @@ public class DateTimeScrollSnap : MonoBehaviour
             }
         }
 
-        EventManager.Instance.AddListener<DateTime>(EventType.ChangeTime, UpdateTime);
+        EventManager.Instance.AddListener(EventType.EndChangeTime, UpdateTime);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<DateTime>(EventType.ChangeTime, UpdateTime);
+        EventManager.Instance.RemoveListener(EventType.EndChangeTime, UpdateTime);
     }
 
     private void Start()
@@ -84,8 +84,10 @@ public class DateTimeScrollSnap : MonoBehaviour
         dateScrollSnap.Content.GetChild(index).GetComponent<Text>().text = text;
     }
 
-    private void UpdateTime(DateTime curTime)
+    private void UpdateTime()
     {
+        DateTime curTime = TimeManager.Instance.CurTime;
+
         var m = curTime.Minute - lastDateTime.Minute;
         var h = curTime.Hour - lastDateTime.Hour;
         var d = curTime.Day - lastDateTime.Day;
