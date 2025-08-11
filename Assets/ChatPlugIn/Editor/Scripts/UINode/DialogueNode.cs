@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PlasticPipe.PlasticProtocol.Messages;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -6,6 +7,8 @@ using UnityEngine.UIElements;
 
 namespace ChatPlugIn
 {
+
+    [Serializable]
     public class DialogueNode:SingleInSingleOutNode
     {
         public string RoleName {get;set; }
@@ -13,6 +16,8 @@ namespace ChatPlugIn
 
         public override void Init(StoryGraphView graphView, string title, Vector2 position)
         {
+            if(inputPortData.Count==0)inputPortData.Add(new PortData("输入"));
+            if(outputPortData.Count==0)outputPortData.Add(new PortData("输出"));
             base.Init(graphView, title, position);
             Type = NodeType.Dialogue;
             RoleName = "角色名称";
@@ -20,6 +25,7 @@ namespace ChatPlugIn
             {
                 new SentenceData(RoleEnum.NPC, "发言内容", 0)
             };
+
         }
         protected override void DrawExtensionContainer()
         {
@@ -55,7 +61,6 @@ namespace ChatPlugIn
             roleInfoColContainer.AddClasses
             (
                 "col-container",
-                //"row-item__left-center",
                 "full-width"
             );
             btnAdd.AddClasses
@@ -93,9 +98,17 @@ namespace ChatPlugIn
             {
                 sentenceData.Text = callback.newValue;
             });
-            FloatField tfdDelay = ElementUtility.CreateFloatField(sentenceData.WaitTime, "延迟时间", callback =>
+            FloatField tfdPreDelay = ElementUtility.CreateFloatField(sentenceData.WaitTime, "触发前延迟时间", callback =>
             {
                 sentenceData.WaitTime = callback.newValue;
+            });
+            FloatField tfdLateDelay = ElementUtility.CreateFloatField(sentenceData.WaitTime, "触发后延迟时间", callback =>
+            {
+                sentenceData.WaitTime = callback.newValue;
+            });
+            TextField tfdEffect = ElementUtility.CreateTextArea(sentenceData.Text, "对话效果", callback =>
+            {
+                sentenceData.Text = callback.newValue;
             });
             Button btnDelete = ElementUtility.CreateButton("X", () =>
             {
@@ -110,7 +123,9 @@ namespace ChatPlugIn
             });
             lineContainer.Add(RoleDropdown);
             lineContainer.Add(tfdSentence);
-            lineContainer.Add(tfdDelay);
+            lineContainer.Add(tfdPreDelay);
+            lineContainer.Add(tfdLateDelay);
+            lineContainer.Add(tfdEffect);
             lineContainer.Add(btnDelete);
             btnDelete.AddClasses
             (

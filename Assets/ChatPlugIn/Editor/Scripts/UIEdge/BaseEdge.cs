@@ -7,10 +7,10 @@ namespace ChatPlugIn
     [Serializable]
     public class BaseEdge:Edge
     {
-        public string outputNodeGUID {get;set;}
-        public string outputPortName {get;set;}
-        public string inputNodeGUID {get;set;}
-        public string inputPortName {get;set;}
+        public string outputNodeGUID;
+        public string outputPortName;
+        public string inputNodeGUID;
+        public string inputPortName;
         // 返回节点特定的可序列化数据
         public virtual string Serialize()
         {

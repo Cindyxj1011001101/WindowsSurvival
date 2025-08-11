@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using PlasticPipe.PlasticProtocol.Messages;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -6,11 +7,13 @@ using UnityEngine.UIElements;
 
 namespace ChatPlugIn
 {
+    [Serializable]
     public class StartNode : ZeroInSingleOutNode
     {
         private ParagraphData paragraphData;
         public override void Init(StoryGraphView graphView, string title, Vector2 position)
         {
+            if(outputPortData.Count==0)outputPortData.Add(new PortData("输出"));
             base.Init(graphView, title, position);
             Type = NodeType.Start;
             paragraphData = new ParagraphData("Start", "", 0, new List<SentenceData>());

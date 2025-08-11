@@ -79,13 +79,14 @@ namespace ChatPlugIn
             this.AddManipulator(new RectangleSelector());
         }
 
-        public void CreateNodeFromJson(Type type, Vector2 position, string json)
+        public BaseNode CreateNodeFromJson(Type type, Vector2 position, string json)
         {
             BaseNode node = Activator.CreateInstance(type) as BaseNode;
-            node.Init(this, "title", position);
             node.Deserialize(json);
+            node.Init(this,node.Title, position);
             node.Draw();
             AddElement(node);
+            return node;
         }
         public BaseNode CreateNode(string title,NodeType type, Vector2 position)
         {
@@ -96,32 +97,6 @@ namespace ChatPlugIn
             AddElement(node);
             return node;
         }
-                
-        // 创建连线
-        public BaseEdge CreateEdge(Port outputPort, Port inputPort)
-        {
-            BaseEdge edge = new BaseEdge
-            {
-                output = outputPort,
-                input = inputPort
-            };
-            edge.output.Connect(edge);
-            edge.input.Connect(edge);
-            
-            AddElement(edge);
-            
-            // 通知节点连接事件
-            if (edge.output.node is BaseNode outputNode && edge.input.node is BaseNode inputNode)
-            {
-                // 通知输入节点它已连接到输出节点
-                inputNode.OnConnectedFrom(outputNode);
-                // 通知输出节点它已连接到输入节点
-                outputNode.OnConnectedTo(inputNode);
-            }
-            
-            return edge;
-        }
-       
         public new void DeleteElements(IEnumerable<GraphElement> elements)
         {
             // 记录将要删除的连接，以便通知节点
@@ -137,16 +112,7 @@ namespace ChatPlugIn
             
             // 先调用基类方法删除元素
             base.DeleteElements(elements);
-            
-            // 通知节点断开连接事件
-            foreach (BaseEdge edge in edgesToDelete)
-            {
-                if (edge.output.node is BaseNode outputNode && edge.input.node is BaseNode inputNode)
-                {
-                    inputNode.OnDisconnectedFrom(outputNode);
-                    outputNode.OnDisconnectedTo(inputNode);
-                }
-            }
+
         }
 
         #region CreationBox
@@ -210,7 +176,7 @@ namespace ChatPlugIn
         // 清空图
         public void ClearGraph(string filename)
         {
-            SaveGraph(filename);
+            // SaveGraph(filename);
             // 删除所有节点和连线
             List<GraphElement> elementsToDelete = graphElements.ToList();
             DeleteElements(elementsToDelete);

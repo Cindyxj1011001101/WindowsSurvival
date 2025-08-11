@@ -93,12 +93,7 @@ namespace ChatPlugIn
         // 加载图数据
         private void LoadGraph()
         {
-            if (storyGraphView == null || string.IsNullOrEmpty(tfdFileName.value))
-            {
-                Debug.LogWarning("无法加载：图视图为空或文件名为空");
-                return;
-            }
-            
+            ClearGraph();
             storyGraphView.LoadGraph(tfdFileName.value);
         }
         

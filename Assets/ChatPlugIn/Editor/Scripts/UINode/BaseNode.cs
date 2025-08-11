@@ -13,18 +13,32 @@ namespace ChatPlugIn
         protected StoryGraphView graphView;
         protected VisualElement customDataContainer;
         protected Foldout foldout;
-        protected Port input;
-        protected Port output;
+        public List<Port> input=new List<Port>();
+        public List<Port> output=new List<Port>();
 
+        public List<PortData> inputPortData=new List<PortData>();
+        public List<PortData> outputPortData=new List<PortData>();
         //节点GUID
-        public string GUID {get;set;}
+        [SerializeField] private string _GUID;
+        public string GUID
+        {
+            get => _GUID;
+            set => _GUID = value;
+        }
         //节点类型
-        public NodeType Type{get;set;}
+        [SerializeField] private NodeType _Type;
+        public NodeType Type
+        {
+            get => _Type;
+            set => _Type = value;
+        }
         //节点标题
-        public string Title { get; set; }
-        public List<ChoiceData> ChoiceDatas;
-        public List<BaseNode> InputNodes=new List<BaseNode>();
-        public List<BaseNode> OutputNodes=new List<BaseNode>();
+        [SerializeField] private string _Title;
+        public string Title
+        {
+            get => _Title;
+            set => _Title = value;
+        }
         public virtual void Init(StoryGraphView graphView, string title, Vector2 position)
         {
             this.graphView = graphView;
@@ -33,7 +47,8 @@ namespace ChatPlugIn
             Type=NodeType.Base;
             GUID=UnityEditor.GUID.Generate().ToString();
             Title = title;
-            ChoiceDatas = new() { new("下个节点") };
+            InitPort();
+            capabilities |= Capabilities.Resizable;
             //添加USS类名
             mainContainer.AddToClassList("node__main-container");
             titleContainer.AddToClassList("node__title-container");
@@ -58,29 +73,6 @@ namespace ChatPlugIn
 
             evt.menu.AppendSeparator();
         }
-
-        public void OnConnectedFrom(BaseNode node)
-        {
-            Debug.Log("OnConnectedFrom");
-            InputNodes.Add(node);
-        }
-        public void OnConnectedTo(BaseNode node)
-        {
-            Debug.Log("OnConnectedTo");
-            OutputNodes.Add(node);
-        }
-
-        public void OnDisconnectedFrom(BaseNode node)
-        {
-            Debug.Log("OnDisConnectedFrom");
-            InputNodes.Remove(node);
-        }
-        
-        public void OnDisconnectedTo(BaseNode node)
-        {
-            Debug.Log("OnDisconnectedTo");
-            OutputNodes.Remove(node);
-        }
         
         public virtual void Draw()
         {
@@ -91,6 +83,8 @@ namespace ChatPlugIn
             DrawInputContainer();
             DrawOutputContainer();
             DrawExtensionContainer();
+
+
         }
 
         protected virtual void DrawExtensionContainer()
@@ -107,21 +101,20 @@ namespace ChatPlugIn
             RefreshExpandedState();
         }
 
-        protected virtual void DrawOutputContainer()
+        public virtual void DrawOutputContainer()
         {
-            foreach (var choiceData in ChoiceDatas)
+            foreach (var port in output)
             {
-                output = this.CreatePort(choiceData.Text);
-                output.userData = choiceData;
-                outputContainer.Add(output);
+                outputContainer.Add(port);
             }
-
         }
 
         protected virtual void DrawInputContainer()
         {
-            input = this.CreatePort("上个节点",Orientation.Horizontal, Direction.Input, Port.Capacity.Multi);
-            inputContainer.Add(input);
+            foreach (var port in input)
+            {
+                inputContainer.Add(port);
+            }
         }
 
         protected virtual void DrawTopContainer()
@@ -241,6 +234,122 @@ namespace ChatPlugIn
         public virtual void Deserialize(string json)
         {
             JsonUtility.FromJsonOverwrite(json, this);
+        }
+           public VisualElement CreatePortData(object userData)
+        {
+            PortData portData=(PortData)userData;
+            VisualElement portContainer = new();
+            VisualElement lineContainer = new();
+            lineContainer.userData = userData;
+            TextField tfdPortName = ElementUtility.CreateTextArea(portData.PortName, null, callback =>
+            {
+                portData.PortName = callback.newValue;
+                OnEditPortName(portData);
+            });
+            TextField tfdPortCondition = ElementUtility.CreateTextArea(portData.PortCondition, null, callback =>
+            {
+                portData.PortCondition = callback.newValue;
+                OnEditPortName(portData);
+            });
+            Button btnDelete = ElementUtility.CreateButton("X", () =>
+            {
+                if (outputPortData.Count == 1)
+                {
+                    Debug.LogWarning("至少需要一个端口");
+                    return;
+                }
+                outputPortData.Remove(portData);
+                foldout.Remove(portContainer);
+                OnRemovePortData(portData);
+
+            });
+            lineContainer.Add(tfdPortName);
+            lineContainer.Add(tfdPortCondition);
+            lineContainer.Add(btnDelete);
+            portContainer.Add(lineContainer);
+            // 添加USS类名
+            portContainer.AddClasses
+            (
+                "foldout-item"
+            );
+            lineContainer.AddClasses
+            (
+                "row-container"
+            );
+            tfdPortName.AddClasses
+            (
+                "textfield",
+                "textfield__quote",
+                "row-item__left-center"
+            );
+            tfdPortCondition.AddClasses
+            (
+                "textfield",
+                "textfield__quote",
+                "row-item__left-center"
+            );
+            btnDelete.AddClasses
+            (
+                "row-item__right"
+            );
+            return portContainer;
+        }
+
+        public void OnEditPortName(PortData portData)
+        {
+            foreach (Port port in outputContainer.Children())
+            {
+                if (port.userData == portData)
+                {
+                    port.portName = portData.PortName;
+                    break;
+                }
+            }
+        }
+
+        public void OnAddPortData(PortData portData)
+        {
+
+            Port newPort = this.CreatePort(portData.PortName);
+            newPort.userData = portData;
+            if(outputContainer.Contains(newPort))return;
+            outputContainer.Add(newPort);
+        }
+        public void OnRemovePortData(PortData portData)
+        {
+            Port portToRemove = null;
+            foreach (Port port in outputContainer.Children())
+            {
+                if (port.userData == portData)
+                {
+                    portToRemove = port;
+                    break;
+                }
+            }
+            outputContainer.Remove(portToRemove);
+        }
+
+        public void InitPort()
+        {
+            InitInput();
+            InitOutput();
+        }
+
+        public void InitInput()
+        {
+            foreach (var inputdata in inputPortData)
+            {
+                Port newPort = this.CreatePort(inputdata.PortName, Orientation.Horizontal, Direction.Input, Port.Capacity.Multi);
+                input.Add(newPort);
+            }
+        }
+        public void InitOutput()
+        {
+            foreach (var outputdata in outputPortData)
+            {
+                Port newPort = this.CreatePort(outputdata.PortName, Orientation.Horizontal, Direction.Output, Port.Capacity.Multi);
+                output.Add(newPort);
+            }
         }
     }
 }

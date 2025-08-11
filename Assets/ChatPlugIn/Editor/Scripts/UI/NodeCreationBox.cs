@@ -47,6 +47,11 @@ namespace ChatPlugIn
                     level = 1,
                     userData = NodeType.End
                 },
+                new SearchTreeEntry(new GUIContent("选项",indentationIcon))
+                {
+                    level = 1,
+                    userData = NodeType.Choose
+                },
             };
             return searchTreeEntries;
         }
@@ -62,6 +67,7 @@ namespace ChatPlugIn
                 case NodeType.BranchCondition:
                 case NodeType.PassCondition:
                 case NodeType.Dialogue:
+                case NodeType.Choose:
                     graphView.CreateNode(SearchTreeEntry.content.text, type, localMousePosition);
                     return true;
                 default:

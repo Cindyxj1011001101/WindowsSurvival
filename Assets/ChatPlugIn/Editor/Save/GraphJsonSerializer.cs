@@ -9,79 +9,80 @@ using UnityEngine.UIElements;
 
 namespace ChatPlugIn
 {
-public static class GraphJsonSerializer
-{
-    public static JsonSerializerSettings settings = new JsonSerializerSettings
+    public static class GraphJsonSerializer
     {
-        Formatting = Formatting.Indented,
-        ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-    };
-    public static string SerializeGraph(GraphView graphView, string graphName = "")
-    {
-        var saveData = new GraphSaveData
+        public static JsonSerializerSettings settings = new JsonSerializerSettings
         {
-            graphViewName = graphName
+            Formatting = Formatting.Indented,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
         };
-        // 序列化节点
-        foreach (var node in graphView.nodes.ToList().Cast<BaseNode>())
+
+        public static string SerializeGraph(GraphView graphView, string graphName = "")
         {
-            var serializedNode = new GraphSaveData.SerializedNode
+            var saveData = new GraphSaveData
             {
-                guid = node.GUID,
-                typeName = node.GetType().FullName,
-                NodePos = node.GetPosition().position,
-                nodeData = JsonUtility.ToJson(node)
+                graphViewName = graphName
             };
-
-            // 序列化端口
-            foreach (var port in node.inputContainer.Children().OfType<Port>())
+            // 序列化节点
+            foreach (var node in graphView.nodes.ToList().Cast<BaseNode>())
             {
-                serializedNode.ports.Add(new GraphSaveData.SerializedPort
+                var serializedNode = new GraphSaveData.SerializedNode
                 {
-                    name = port.portName,
-                    portType = port.portType.FullName,
-                    direction = Direction.Input,
-                    capacity = port.capacity
+                    guid = node.GUID,
+                    typeName = node.GetType().FullName,
+                    NodePos = node.GetPosition().position,
+                    nodeData = JsonUtility.ToJson(node)
+                };
+
+                // 序列化端口
+                foreach (var port in node.inputContainer.Children().OfType<Port>())
+                {
+                    serializedNode.ports.Add(new GraphSaveData.SerializedPort
+                    {
+                        name = port.portName,
+                        portType = port.portType.FullName,
+                        direction = Direction.Input,
+                        capacity = port.capacity
+                    });
+                }
+
+                foreach (var port in node.outputContainer.Children().OfType<Port>())
+                {
+                    serializedNode.ports.Add(new GraphSaveData.SerializedPort
+                    {
+                        name = port.portName,
+                        portType = port.portType.FullName,
+                        direction = Direction.Output,
+                        capacity = port.capacity
+                    });
+                }
+
+                saveData.nodes.Add(serializedNode);
+            }
+
+            // 序列化边
+            foreach (var edge in graphView.edges.ToList())
+            {
+                var outputNode = edge.output.node as BaseNode;
+                var inputNode = edge.input.node as BaseNode;
+
+                saveData.edges.Add(new GraphSaveData.SerializedEdge
+                {
+                    outputNodeGUID = outputNode.GUID,
+                    outputPortName = edge.output.portName,
+                    inputNodeGUID = inputNode.GUID,
+                    inputPortName = edge.input.portName
                 });
             }
-        
-            foreach (var port in node.outputContainer.Children().OfType<Port>())
-            {
-                serializedNode.ports.Add(new GraphSaveData.SerializedPort
-                {
-                    name = port.portName,
-                    portType = port.portType.FullName,
-                    direction = Direction.Output,
-                    capacity = port.capacity
-                });
-            }
 
-            saveData.nodes.Add(serializedNode);
-            
+            return JsonConvert.SerializeObject(saveData, settings);
         }
 
-        // 序列化边
-        foreach (var edge in graphView.edges.ToList())
+        public static void DeserializeGraph(GraphView graphView, string json,
+            Func<Type, Vector2, string, BaseNode> nodeCreator)
         {
-            var outputNode = edge.output.node as BaseNode;
-            var inputNode = edge.input.node as BaseNode;
-        
-            saveData.edges.Add(new GraphSaveData.SerializedEdge
-            {
-                outputNodeGUID = outputNode.GUID,
-                outputPortName = edge.output.portName,
-                inputNodeGUID = inputNode.GUID,
-                inputPortName = edge.input.portName
-            });
-        }
+            GraphSaveData saveData = JsonConvert.DeserializeObject<GraphSaveData>(json, settings);
 
-        return  JsonConvert.SerializeObject(saveData, settings);
-    }
-
-    public static void DeserializeGraph(GraphView graphView, string json, Action<Type, Vector2, string> nodeCreator)
-    {
-            GraphSaveData saveData =JsonConvert.DeserializeObject<GraphSaveData>(json, settings);
-             
             // 清空当前视图
             graphView.DeleteElements(graphView.nodes.ToList());
             graphView.DeleteElements(graphView.edges.ToList());
@@ -90,66 +91,45 @@ public static class GraphJsonSerializer
             var nodeMap = new Dictionary<string, BaseNode>();
 
             // 创建所有节点
-            foreach (var nodeData in saveData.nodes)
+            foreach (var nodedata in saveData.nodes)
             {
-                var nodeType = Type.GetType(nodeData.typeName);
+                var nodeType = Type.GetType(nodedata.typeName);
                 if (nodeType == null)
                 {
-                    Debug.LogError($"无法找到节点类型: {nodeData.typeName}");
+                    Debug.LogError($"无法找到节点类型: {nodedata.typeName}");
                     continue;
                 }
 
-                var node = Activator.CreateInstance(nodeType) as BaseNode;
-                JsonUtility.FromJsonOverwrite(nodeData.nodeData, node);
-        
-                node.GUID = nodeData.guid;
-                node.SetPosition(new Rect(nodeData.NodePos, Vector2.zero));
-        
-                // 重建端口
-                foreach (var portData in nodeData.ports)
-                {
-                    var portType = Type.GetType(portData.portType);
-                    var port = node.InstantiatePort(
-                        Orientation.Horizontal,
-                        portData.direction,
-                        portData.capacity,
-                        portType);
-            
-                    port.portName = portData.name;
-            
-                    if (portData.direction == Direction.Input)
-                        node.inputContainer.Add(port);
-                    else
-                        node.outputContainer.Add(port);
-                }
-        
+                BaseNode node = nodeCreator(nodeType, nodedata.NodePos, nodedata.nodeData);
+                JsonUtility.FromJsonOverwrite(nodedata.nodeData, node);
+                node.GUID = nodedata.guid;
+                node.SetPosition(new Rect(nodedata.NodePos, Vector2.zero));
                 graphView.AddElement(node);
                 nodeMap.Add(node.GUID, node);
-                // 创建所有边
-                foreach (var edgeData in saveData.edges)
+            }
+
+            // 创建所有边
+            foreach (var edgeData in saveData.edges)
+            {
+                if (!nodeMap.TryGetValue(edgeData.outputNodeGUID, out var outputNode) ||
+                    !nodeMap.TryGetValue(edgeData.inputNodeGUID, out var inputNode))
                 {
-                    if (!nodeMap.TryGetValue(edgeData.outputNodeGUID, out var outputNode) ||
-                        !nodeMap.TryGetValue(edgeData.inputNodeGUID, out var inputNode))
+                    continue;
+                }
+                Port outputPort = outputNode.output.FirstOrDefault(x => x.portName == edgeData.outputPortName);
+                Port inputPort = inputNode.input.FirstOrDefault(x => x.portName == edgeData.inputPortName);
+                if (outputPort != null && inputPort != null)
+                {
+                    var edge = new BaseEdge()
                     {
-                        continue;
-                    }
-
-                    var outputPort = outputNode.outputContainer.Q<Port>(edgeData.outputPortName);
-                    var inputPort = inputNode.inputContainer.Q<Port>(edgeData.inputPortName);
-
-                    if (outputPort != null && inputPort != null)
-                    {
-                        var edge = new Edge
-                        {
-                            output = outputPort,
-                            input = inputPort
-                        };
-                        edge.input.Connect(edge);
-                        edge.output.Connect(edge);
-                        graphView.AddElement(edge);
-                    }
+                        output = outputPort,
+                        input = inputPort
+                    };
+                    edge.input.Connect(edge);
+                    edge.output.Connect(edge);
+                    graphView.AddElement(edge);
                 }
             }
+        }
     }
-}
 }

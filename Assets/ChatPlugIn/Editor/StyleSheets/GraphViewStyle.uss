@@ -71,7 +71,7 @@ GridBackground
 .row-container > .textfield
 {
     flex-grow: 1000;
-    max-width: var(--metrics-pixels-400);
+    max-width: var(--metrics-pixels-200);
 }
 
 /* 行容器 > 左侧和中间的元素 */
@@ -239,7 +239,7 @@ Button:active
 /* 节点标题文本字段 > unity文本输入框 */
 .textfield__node-title > .unity-text-field__input
 {
-    max-width: var(--metrics-pixels-320);
+    max-width: var(--metrics-pixels-160);
     margin: var(--metrics-pixels-4);
     margin-left: var(--metrics-0);
     padding: var(--metrics-pixels-2);
@@ -256,7 +256,7 @@ Button:active
 {
     height: var(--metrics-pixels-24);
     min-width: var(--metrics-pixels-40);
-    max-width: var(--metrics-pixels-240);
+    max-width: var(--metrics-pixels-160);
     margin: var(--metrics-pixels-4);
     margin-right: var(--metrics-0);
     padding: var(--metrics-pixels-4);

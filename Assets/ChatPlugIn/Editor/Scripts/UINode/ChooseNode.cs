@@ -9,13 +9,13 @@ using UnityEngine.UIElements;
 namespace ChatPlugIn
 {
     [Serializable]
-    public class PassConditionNode:SingleInMulti0utNode
+    public class ChooseNode:SingleInMulti0utNode
     {
         public override void Init(StoryGraphView graphView, string title, Vector2 position)
         {
             if(inputPortData.Count==0) inputPortData.Add(new PortData("输入"));
             base.Init(graphView, title, position);
-            Type = NodeType.PassCondition;
+            Type = NodeType.Choose;
         }
       
     }
