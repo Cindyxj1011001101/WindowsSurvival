@@ -13,7 +13,8 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private GameObject stackObject; // 控制是否显示堆叠
     [SerializeField] private Text stackNumText; // 显示数量
     [SerializeField] private Image maxStackNumImage; // 显示最大堆叠数量的图标
-    [SerializeField] private VerticalLayoutGroup componentLayout; // 用于显示新鲜度、耐久等组件的布局
+    [SerializeField] private RectTransform valueComponentLayout; // 用于显示新鲜度、耐久等组件的布局
+    [SerializeField] private RectTransform innerContentsComponentLayout; // 用于显示内容物组件
     [SerializeField] private CanvasGroup cardCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
     [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
@@ -134,12 +135,16 @@ public class CardSlot : MonoBehaviour
         }
     }
 
-    private void DisplayComponent(CardComponent component)
+    /// <summary>
+    /// 显示具有浮点值数据的组件
+    /// </summary>
+    /// <param name="component"></param>
+    private void DisplayValueComponent(CardComponent component)
     {
         if (!componentSliders.TryGetValue(component.GetType(), out Slider slider))
         {
             var prefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Components/" + component.GetType().Name);
-            slider = Instantiate(prefab, componentLayout.transform).GetComponent<Slider>();
+            slider = Instantiate(prefab, valueComponentLayout).GetComponent<Slider>();
             componentSliders.Add(component.GetType(), slider);
         }
 
@@ -166,6 +171,20 @@ public class CardSlot : MonoBehaviour
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
                 break;
+        }
+    }
+
+    /// <summary>
+    /// 显示内容物组件
+    /// </summary>
+    /// <param name="component"></param>
+    private void DisplayInnerContentsComponent(InnerContentsComponent component)
+    {
+        innerContentsComponentLayout.gameObject.SetActive(true);
+        for (int i = 0; i < innerContentsComponentLayout.childCount; i++)
+        {
+            innerContentsComponentLayout.GetChild(i).gameObject.SetActive(i < component.innerContents.Count);
+            innerContentsComponentLayout.GetChild(i).GetComponent<Image>().color = i < component.UsedSlotCount ? ColorManager.White : ColorManager.DarkGrey;
         }
     }
 
@@ -197,16 +216,19 @@ public class CardSlot : MonoBehaviour
 
         // 显示耐久
         if (card.TryGetComponent<DurabilityComponent>(out var d))
-            DisplayComponent(d);
+            DisplayValueComponent(d);
         // 显示新鲜度
         if (card.TryGetComponent<FreshnessComponent>(out var f))
-            DisplayComponent(f);
+            DisplayValueComponent(f);
         // 显示生长度
         if (card.TryGetComponent<GrowthComponent>(out var g))
-            DisplayComponent(g);
+            DisplayValueComponent(g);
         // 显示产物进度
         if (card.TryGetComponent<ProgressComponent>(out var p))
-            DisplayComponent(p);
+            DisplayValueComponent(p);
+        // 显示内容物数量
+        if (card.TryGetComponent<InnerContentsComponent>(out var i))
+            DisplayInnerContentsComponent(i);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;
@@ -220,7 +242,9 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.alpha = 0;
         cardCanvasGroup.blocksRaycasts = false;
         cardCanvasGroup.interactable = false;
-        MonoUtility.DestroyAllChildren(componentLayout.transform);
+        MonoUtility.DestroyAllChildren(valueComponentLayout);
+        if (innerContentsComponentLayout != null)
+            innerContentsComponentLayout.gameObject.SetActive(false);
         componentSliders.Clear();
     }
 

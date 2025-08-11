@@ -222,6 +222,21 @@ public class InnerContentsComponent : CardComponent
     [JsonIgnore]
     public CardFilterDelegate contentFilter;
 
+    [JsonIgnore]
+    public int UsedSlotCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (var slot in innerContents)
+            {
+                if (slot.Count > 0)
+                    count++;
+            }
+            return count;
+        }
+    }
+
     public InnerContentsComponent(int slotCount)
     {
         this.slotCount = slotCount;

@@ -701,7 +701,8 @@ MonoBehaviour:
   stackObject: {fileID: 4881063295985015584}
   stackNumText: {fileID: 2098704030238793200}
   maxStackNumImage: {fileID: 5079525843909057303}
-  componentLayout: {fileID: 5653223418816246087}
+  valueComponentLayout: {fileID: 3797233462845240790}
+  innerContentsComponentLayout: {fileID: 0}
   cardCanvasGroup: {fileID: 2762523007511967095}
   moreInfoText: {fileID: 8165112822295029467}
   particleDisplayRect: {fileID: 795111130606066731}
@@ -906,7 +907,7 @@ GameObject:
   - component: {fileID: 3797233462845240790}
   - component: {fileID: 5653223418816246087}
   m_Layer: 5
-  m_Name: ComponentLayout
+  m_Name: ValueComponentLayout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

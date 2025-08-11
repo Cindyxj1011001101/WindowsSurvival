@@ -21,6 +21,7 @@ public class DetailsWindow : WindowBase
     {
         base.Awake();
         EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
+        EventManager.Instance.AddListener<Card>(EventType.ChangeCardProperty, RefreshCurrentDisplay);
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
@@ -28,6 +29,7 @@ public class DetailsWindow : WindowBase
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
+        EventManager.Instance.RemoveListener<Card>(EventType.ChangeCardProperty, RefreshCurrentDisplay);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
@@ -70,6 +72,12 @@ public class DetailsWindow : WindowBase
     {
         if (currentDisplayedCard != null)
             slot.DisplayCard(currentDisplayedCard, 1, false);
+    }
+
+    private void RefreshCurrentDisplay(Card card)
+    {
+        if (currentDisplayedCard == card)
+            RefreshCurrentDisplay();
     }
 
     bool moved = false;
