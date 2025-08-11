@@ -17,18 +17,8 @@ public class UITechNode : HoverableButton
 
     private List<HoverableButton> recipeButtons = new();
 
-    private ScriptableTechnologyNode techNode;
-
-    public void RefreshDiplay()
-    {
-        if (this.techNode != null)
-            DisplayTechNode(this.techNode);
-    }
-
     public void DisplayTechNode(ScriptableTechnologyNode techNode)
     {
-        this.techNode = techNode;
-
         // 显示必要信息
         techName.text = techNode.techName;
         costText.text = $"{techNode.cost}科技点";
