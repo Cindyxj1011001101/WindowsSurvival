@@ -16,6 +16,21 @@ public class DateTimeScrollSnap : MonoBehaviour
 
     private void Awake()
     {
+        foreach (Transform child in hourScrollSnap.Content)
+        {
+            if (child.TryGetComponent<Text>(out var text))
+            {
+                text.text = $"{child.GetSiblingIndex():D2}";
+            }
+        }
+        foreach (Transform child in minuteScrollSnap.Content)
+        {
+            if (child.TryGetComponent<Text>(out var text))
+            {
+                text.text = $"{child.GetSiblingIndex():D2}";
+            }
+        }
+
         EventManager.Instance.AddListener<DateTime>(EventType.ChangeTime, UpdateTime);
     }
 
@@ -40,29 +55,27 @@ public class DateTimeScrollSnap : MonoBehaviour
     {
         lastDateTime = TimeManager.Instance.CurTime;
 
-
+        // 初始化日期
         for (int i = 0; i < dateScrollSnap.Content.childCount; i++)
         {
             SetChildText(dateScrollSnap.CenteredPanel + i, (TimeManager.Instance.Day + i).ToString());
         }
 
-        foreach (Transform child in hourScrollSnap.Content)
-        {
-            if (child.TryGetComponent<Text>(out var text))
-            {
-                text.text = $"{ child.GetSiblingIndex():D2}";
-            }
-        }
-        foreach (Transform child in minuteScrollSnap.Content)
-        {
-            if (child.TryGetComponent<Text>(out var text))
-            {
-                text.text = $"{child.GetSiblingIndex():D2}";
-            }
-        }
+        // 初始化小时和分钟
+        hourScrollSnap.GoToPanel(GetChildIndex(hourScrollSnap, lastDateTime.Hour));
+        minuteScrollSnap.GoToPanel(GetChildIndex(minuteScrollSnap, lastDateTime.Minute));
 
-        hourScrollSnap.StartingPanel = TimeManager.Instance.Hour;
-        minuteScrollSnap.StartingPanel = TimeManager.Instance.Minute;
+        // 初始化日月图标
+        int totalMinutes = lastDateTime.Hour * 60 + lastDateTime.Minute;
+        var newAnchoredPos = new Vector2(timePeriodRectTransform.anchoredPosition.x, timePeriodRectTransform.anchoredPosition.y - totalMinutes * speed);
+        timePeriodRectTransform.anchoredPosition = newAnchoredPos;
+        foreach (RectTransform child in timePeriodRectTransform)
+        {
+            while (child.anchoredPosition.y + timePeriodRectTransform.anchoredPosition.y <= -100f)
+            {
+                child.anchoredPosition = new Vector2(child.anchoredPosition.x, child.anchoredPosition.y + 200);
+            }
+        }
     }
 
     private void SetChildText(int index, string text)
@@ -89,7 +102,7 @@ public class DateTimeScrollSnap : MonoBehaviour
         {
             foreach (RectTransform child in timePeriodRectTransform)
             {
-                if (child.anchoredPosition.y + timePeriodRectTransform.anchoredPosition.y <= -100f)
+                while (child.anchoredPosition.y + timePeriodRectTransform.anchoredPosition.y <= -100f)
                 {
                     child.anchoredPosition = new Vector2(child.anchoredPosition.x, child.anchoredPosition.y + 200);
                 }

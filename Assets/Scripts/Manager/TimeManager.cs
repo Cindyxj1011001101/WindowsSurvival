@@ -10,8 +10,6 @@ public class TimeManager : MonoBehaviour
     private DateTime lastDay;
 
     public int Day => (CurTime - StartDateTime).Days;
-    public int Hour => (CurTime - StartDateTime).Hours;
-    public int Minute => (CurTime - StartDateTime).Minutes;
 
     private static TimeManager instance;
     public static TimeManager Instance
