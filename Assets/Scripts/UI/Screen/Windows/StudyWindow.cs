@@ -25,6 +25,9 @@ public class StudyWindow : WindowBase
 
     [SerializeField] private RectTransform selectRect;
 
+    [SerializeField] private GameObject recipeItem;
+    [SerializeField] private GameObject prerequisitePrefab;
+
     private int studyState;
     [SerializeField] private HoverableButton studyStateButton; // 显示研究状态的按钮
     [SerializeField] private Animator studyStateButtonAnimator;
@@ -185,7 +188,6 @@ public class StudyWindow : WindowBase
         // 显示科技的前置研究项目
         prerequisite.SetActive(techNode.prerequisites.Count != 0);
 
-        var prerequisitePrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Study/TechPrerequisite");
         foreach (var prerequisite in techNode.prerequisites)
         {
             var toggle = Instantiate(prerequisitePrefab, detailLayout).GetComponentInChildren<UIStateToggle>();
@@ -196,7 +198,6 @@ public class StudyWindow : WindowBase
         }
 
         // 显示可以解锁的配方
-        var recipeItem = Resources.Load<GameObject>("Prefabs/UI/Controls/Study/RecipeItem_Details");
         foreach (var recipe in techNode.recipes)
         {
             var button = Instantiate(recipeItem, detailLayout).GetComponent<HoverableButton>();
