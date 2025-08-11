@@ -1365,7 +1365,7 @@ TextureImporter:
         width: 25
         height: 25
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1386,7 +1386,7 @@ TextureImporter:
         width: 25
         height: 25
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1394,6 +1394,132 @@ TextureImporter:
       bones: []
       spriteID: 3070d8248869b7d498627b1777e7cec7
       internalID: -1794130667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_NoIndoor
+      rect:
+        serializedVersion: 2
+        x: 59
+        y: 342
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd802d54a1c299c44a24613ffb3bbf92
+      internalID: -1032138338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Indoor
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 342
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91aaa00b80827944c9b55a2ecf749ed7
+      internalID: 1101497485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_NoWaters
+      rect:
+        serializedVersion: 2
+        x: 59
+        y: 329
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5393cca9924ccb140af8b306f92fcd40
+      internalID: 1618620455
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Waters
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 329
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a759e6525bffa14cbc20c94eebc219a
+      internalID: -1934655251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Cable
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 316
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 198cea129d86d7d43ba1e3fcc6fb16e0
+      internalID: -1663557065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_NoCable
+      rect:
+        serializedVersion: 2
+        x: 59
+        y: 316
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b5ef11f2bcf234444a17d32b7d2f1295
+      internalID: 1781868343
       vertices: []
       indices: 
       edges: []
@@ -1431,17 +1557,22 @@ TextureImporter:
       UI_8: -1095997035
       UI_9: -340444757
       UI_Arrow: -817005766
+      UI_Cable: -1663557065
       UI_Card: 470443997
       UI_CardHoveredFrame: -275653607
       UI_CardSlot: -1859285613
       UI_FireOn: -343286534
       UI_FullScreenFrame: -710150027
       UI_HoveredFrame: 1242553631
+      UI_Indoor: 1101497485
       UI_Locked: -758408193
       UI_Locked_hovered: -1122691988
       UI_MaximumNumber: -1474591250
       UI_Midnight: 1542629904
       UI_NameTooltip: -1275816256
+      UI_NoCable: 1781868343
+      UI_NoIndoor: -1032138338
+      UI_NoWaters: 1618620455
       UI_Noon: -1794130667
       UI_Number: -841556680
       UI_Panel: -1503842033
@@ -1453,6 +1584,7 @@ TextureImporter:
       UI_Slidingbar_default: 959292114
       UI_Slidingbar_hovered: 853517195
       UI_TimeMask: -1710442970
+      UI_Waters: -1934655251
       UI_arrow_1: -1364170369
       UI_arrow_2: 688397521
       UI_arrow_3: -1067156244
