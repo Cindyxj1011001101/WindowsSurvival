@@ -78,6 +78,7 @@ public class ElectricDrainageMachine : ConstructionCard
         if (StateManager.Instance.Electricity.CurValue < 0.5f || StateManager.Instance.WaterLevel.CurValue <= 0)
         {
             isWorking = false;
+            EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
             return;
         }
         StateManager.Instance.ChangeElectricity(-0.5f);
