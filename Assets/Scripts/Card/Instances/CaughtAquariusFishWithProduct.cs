@@ -10,7 +10,7 @@ public class CaughtAquariusFishWithProduct : Card
         Events = new()
         {
             new Event("饮用", "饮用水瓶鱼的育卵液", Event_Drink, null, () => 15,
-            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Thirst, 15 },{ PlayerStateEnum.Fullness, 4 } }),
+            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Thirst, 28 },{ PlayerStateEnum.Fullness, 8 } }),
             
             //new Event("放生", "放生水瓶鱼", Event_Release, Judge_Release)
         };
@@ -23,8 +23,8 @@ public class CaughtAquariusFishWithProduct : Card
         // 播放喝水的音效
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("喝_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 15);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 4);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 28);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 8);
         TimeManager.Instance.AddTime(15);
     }
 
