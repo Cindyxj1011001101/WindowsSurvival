@@ -272,4 +272,25 @@ public static class CardFactory
             return repeatableDropListDict[place];
         return new RepeatableDropList();
     }
+
+    private static Dictionary<string, Card> cardInstances = new();
+
+    /// <summary>
+    /// 得到一个静态的卡牌实例
+    /// </summary>
+    /// <param name="cardId"></param>
+    /// <returns></returns>
+    public static Card GetStaticCardInstance(string cardId)
+    {
+        if (cardInstances.ContainsKey(cardId))
+        {
+            return cardInstances[cardId];
+        }
+        else
+        {
+            var card = CreateCard(cardId);
+            cardInstances.Add(cardId, card);
+            return card;
+        }
+    }
 }

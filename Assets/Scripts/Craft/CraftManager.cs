@@ -69,7 +69,7 @@ public class CraftManager
         }
 
         // 材料充足，看有没有制造限制
-        if (recipe.CraftedCard is ConstructionCard constructionCard)
+        if (recipe.CardInstance is ConstructionCard constructionCard)
         {
             return constructionCard.CanPlace(out hint);
         }

@@ -181,7 +181,7 @@ public class CraftWindow : WindowBase
 
         // 显示卡牌
         slot.ClearSlot();
-        slot.DisplayCard(recipe.CraftedCard, 1, false);
+        slot.DisplayCard(recipe.CardInstance, 1, false);
 
         // 显示所需材料
         foreach (var material in recipe.materials)
@@ -192,6 +192,12 @@ public class CraftWindow : WindowBase
                 material.requiredNum,
                 GameManager.Instance.PlayerBag.GetTotalCountByCardId(material.cardId)
                 );
+
+            recipeMaterial.gameObject.AddComponent<HoverTipController>().SetTip(material.CardInstance.CardName);
+            recipeMaterial.GetComponent<HoverableButton>().onClick.AddListener(() =>
+            {
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(material.CardInstance, true);
+            });
         }
 
         // 显示制作时间

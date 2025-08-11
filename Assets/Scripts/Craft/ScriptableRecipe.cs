@@ -22,6 +22,8 @@ public class RecipeMaterial
     public string cardId;
     public int requiredNum;
     public Sprite CardImage => CardFactory.GetCardImage(cardId);
+
+    public Card CardInstance => CardFactory.GetStaticCardInstance(cardId);
 }
 
 
@@ -33,16 +35,7 @@ public class ScriptableRecipe : ScriptableObject
     public List<RecipeMaterial> materials; // 制作需要的材料
     public int craftTime; // 制作时间
 
-    private Card craftedCard;
-
-    public Card CraftedCard
-    {
-        get
-        {
-            craftedCard ??= CardFactory.CreateCard(cardId);
-            return craftedCard;
-        }
-    }
+    public Card CardInstance => CardFactory.GetStaticCardInstance(cardId);
 
     public Sprite CardImage => CardFactory.GetCardImage(cardId);
 

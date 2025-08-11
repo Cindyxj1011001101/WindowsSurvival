@@ -88,7 +88,7 @@ public class DetailsWindow : WindowBase
         moved = true;
     }
 
-    public void DisplayCardDetails(Card card)
+    public void DisplayCardDetails(Card card, bool onlyDetails = false)
     {
         // 清除原数据
         Clear();
@@ -102,21 +102,24 @@ public class DetailsWindow : WindowBase
         slot.DisplayCard(currentDisplayedCard, 1, false);
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 
-        // 显示可选择按钮
-        DisplayEventButtons();
-
-        innerContentsButton.Interactable = false;
-
-        // 初始化内容物
-        if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component))
+        if (!onlyDetails)
         {
-            innerContentsButton.gameObject.SetActive(true);
-            innerBag.InitFromInnerContentComponent(component);
-            innerContentsButton.Interactable = true;
-        }
-        else
-        {
-            innerContentsButton.gameObject.SetActive(false);
+            // 显示可选择按钮
+            DisplayEventButtons();
+
+            innerContentsButton.Interactable = false;
+
+            // 初始化内容物
+            if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component))
+            {
+                innerContentsButton.gameObject.SetActive(true);
+                innerBag.InitFromInnerContentComponent(component);
+                innerContentsButton.Interactable = true;
+            }
+            else
+            {
+                innerContentsButton.gameObject.SetActive(false);
+            }
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
