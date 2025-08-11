@@ -13,10 +13,15 @@ public class HoverTip : MonoBehaviour
     public VerticalLayoutGroup verticalLayout;
     public CanvasGroup canvasGroup;
 
+    private float maxWidth;
+    private RectTransform rectTransform;
+
     private void Awake()
     {
+        rectTransform = transform as RectTransform;
         canvasGroup.alpha = 0;
         canvasGroup.interactable = canvasGroup.blocksRaycasts = false;
+        maxWidth = rectTransform.sizeDelta.x;
     }
 
     public void SetTip(
@@ -25,6 +30,8 @@ public class HoverTip : MonoBehaviour
         Dictionary<PlayerStateEnum, float> playerEffects,
         Dictionary<EnvironmentStateEnum, float> envEffects)
     {
+        bool textTipOnly = true;
+
         (verticalLayout.transform as RectTransform).sizeDelta = new Vector2((verticalLayout.transform as RectTransform).sizeDelta.x, 1000);
 
         foreach (Transform child in transform)
@@ -33,17 +40,34 @@ public class HoverTip : MonoBehaviour
         }
 
         // 显示描述
-        descText.gameObject.SetActive(!string.IsNullOrEmpty(textTip));
-
-        descText.text = textTip;
+        if (string.IsNullOrEmpty(textTip))
+        {
+            textTipOnly = false;
+            descText.gameObject.SetActive(false);
+        }
+        else
+        {
+            descText.gameObject.SetActive(true);
+            descText.text = textTip;
+        }
 
         // 显示时间
-        timeText.transform.parent.gameObject.SetActive(time > 0);
-        timeText.text = $"{time}min";
+        if (time > 0)
+        {
+            textTipOnly = false;
+            timeText.transform.parent.gameObject.SetActive(true);
+            timeText.text = $"{time}min";
+        }
+        else
+        {
+            timeText.transform.parent.gameObject.SetActive(false);
+        }
 
         // 玩家状态变化
         if (playerEffects != null && playerEffects.Count > 0)
         {
+            textTipOnly = false;
+
             forPlayer.SetActive(true);
 
             foreach (var (type, delta) in playerEffects)
@@ -64,6 +88,8 @@ public class HoverTip : MonoBehaviour
         // 环境状态变化
         if (envEffects != null && envEffects.Count > 0)
         {
+            textTipOnly = false;
+
             forEnvironment.SetActive(envEffects.Count > 0);
 
             foreach (var (type, delta) in envEffects)
@@ -83,6 +109,19 @@ public class HoverTip : MonoBehaviour
 
         // 更新高度
         MonoUtility.UpdateVerticalLayoutSize(verticalLayout);
+
+        // 如果仅显示文本
+        if (textTipOnly)
+        {
+            // 自适应长度
+            rectTransform.sizeDelta = new Vector2(Mathf.Min(maxWidth, descText.preferredWidth + verticalLayout.padding.left + verticalLayout.padding.right), rectTransform.sizeDelta.y);
+        }
+        else
+        {
+            rectTransform.sizeDelta = new Vector2(maxWidth, rectTransform.sizeDelta.y);
+        }
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
     }
 
     public void Show()
