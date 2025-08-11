@@ -183,6 +183,12 @@ public class CraftWindow : WindowBase
         slot.ClearSlot();
         slot.DisplayCard(recipe.CardInstance, 1, false);
 
+        slot.GetComponentInChildren<HoverableButton>().onClick.RemoveAllListeners();
+        slot.GetComponentInChildren<HoverableButton>().onClick.AddListener(() =>
+        {
+            (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(recipe.CardInstance, true);
+        });
+
         // 显示所需材料
         foreach (var material in recipe.materials)
         {
