@@ -30,6 +30,8 @@ public class ChatWindow : WindowBase
     
     private Sequence seq;
 
+    private bool optionSubmitted = true;
+
     protected override void Awake()
     {
         base.Awake();
@@ -121,6 +123,8 @@ public class ChatWindow : WindowBase
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(optionLayout);
 
+        optionSubmitted = false;
+
         ShowDialogueOptions();
 
         timer = 0;
@@ -155,6 +159,8 @@ public class ChatWindow : WindowBase
     /// </summary>
     public void HideDialogueOptions()
     {
+        if (!optionSubmitted) return;
+
         if (!optionLayoutCanvasGroup.interactable) return;
 
         if (seq != null && seq.IsActive()) return;
@@ -187,6 +193,7 @@ public class ChatWindow : WindowBase
         if (string.IsNullOrEmpty(inputFieldText.text)) return;
         inputFieldText.text = "";
         MonoUtility.DestroyAllChildren(optionLayout);
+        optionSubmitted = true;
         HideDialogueOptions();
         ChatManager.Instance.Submit();
         timer = int.MaxValue;
