@@ -19,12 +19,6 @@ public class UITechNode : HoverableButton
 
     private ScriptableTechnologyNode techNode;
 
-    public void RefreshDiplay()
-    {
-        if (this.techNode != null)
-            DisplayTechNode(this.techNode);
-    }
-
     public void DisplayTechNode(ScriptableTechnologyNode techNode)
     {
         this.techNode = techNode;
