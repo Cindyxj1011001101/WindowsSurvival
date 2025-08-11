@@ -17,6 +17,9 @@ public class CraftWindow : WindowBase
     [SerializeField] private RectTransform recipeLibrarySelectRect; // 配方库选择框
     [SerializeField] private RectTransform recipeItemSelectRect; // 配方选择框
 
+    [SerializeField] private GameObject recipeMaterialPrefab;
+    [SerializeField] private GameObject recipeItemPrefab;
+
     private RecipeType currentRecipeType; // 记录当前选择的配方库
     private ScriptableRecipe currentSelectedRecipe; // 记录当前选中的配方
 
@@ -98,8 +101,6 @@ public class CraftWindow : WindowBase
         // 清空位置记录字典
         recipeItemTransforms.Clear();
 
-        var recipeButtonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Craft/RecipeItem");
-
         MonoUtility.DestroyAllChildren(recipieLayout);
 
         // 获取当前类型的配方列表
@@ -125,7 +126,7 @@ public class CraftWindow : WindowBase
         // 创建所有配方按钮
         foreach (var recipe in sortedRecipes)
         {
-            var recipeItemObj = Instantiate(recipeButtonPrefab, recipieLayout);
+            var recipeItemObj = Instantiate(recipeItemPrefab, recipieLayout);
 
             // 记录配方的位置
             recipeItemTransforms.Add(recipe.cardId, recipeItemObj.transform as RectTransform);
@@ -175,8 +176,6 @@ public class CraftWindow : WindowBase
     /// <param name="recipe"></param>
     private void DisplayRecipeDetails(ScriptableRecipe recipe)
     {
-        var recipeMaterialPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Craft/MaterialItem");
-
         MonoUtility.DestroyAllChildren(materialLayout);
 
         // 显示卡牌

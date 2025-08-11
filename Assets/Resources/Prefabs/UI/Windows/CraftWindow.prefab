@@ -1163,6 +1163,8 @@ MonoBehaviour:
   craftButton: {fileID: 5596214838837018099}
   recipeLibrarySelectRect: {fileID: 5832853729345689635}
   recipeItemSelectRect: {fileID: 8003641536933688371}
+  recipeMaterialPrefab: {fileID: 6602357911263969448, guid: 5216e507d73a4d240b0d315fcd7b26f7, type: 3}
+  recipeItemPrefab: {fileID: 410721657722700717, guid: a709b1120e02f0f42816ef46eae6bc9a, type: 3}
 --- !u!1 &3682421854632228699
 GameObject:
   m_ObjectHideFlags: 0
@@ -3084,7 +3086,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4175619087531272260, guid: da256fe08454e6242a21946de9ba0dd6, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5025677617722123055, guid: da256fe08454e6242a21946de9ba0dd6, type: 3}
       propertyPath: m_Name
