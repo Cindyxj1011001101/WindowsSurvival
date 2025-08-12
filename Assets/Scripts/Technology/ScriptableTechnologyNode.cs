@@ -3,10 +3,10 @@ using UnityEngine;
 
 public enum TechType
 {
+    Construction,
     Food,
     Oxygen,
     Tool,
-    Construction,
     Resource,
 }
 
