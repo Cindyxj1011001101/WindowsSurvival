@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -138,7 +139,7 @@ public class StudyWindow : WindowBase
         var techNodes = targetChild.GetComponentsInChildren<UITechNode>();
         foreach (var node in techNodes)
         {
-            var data = Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + node.name);
+            var data = Resources.Load<ScriptableTechnologyNode>($"ScriptableObject/Technology/{type}/{node.name}");
             node.DisplayTechNode(data);
             node.onClick.RemoveAllListeners();
             node.onClick.AddListener(() =>
@@ -150,7 +151,7 @@ public class StudyWindow : WindowBase
 
         if (curSelectedTechNode == null)
         {
-            curSelectedTechNode = Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techNodes[0].name);
+            curSelectedTechNode = Resources.Load<ScriptableTechnologyNode>($"ScriptableObject/Technology/{type}/{techNodes[0].name}");
         }
 
         DisplayTechNodeDetails(curSelectedTechNode);
