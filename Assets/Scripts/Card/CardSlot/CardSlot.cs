@@ -148,7 +148,9 @@ public class CardSlot : MonoBehaviour
             componentSliders.Add(component.GetType(), slider);
         }
 
-        var tipController = slider.gameObject.AddComponent<HoverTipController>();
+        
+        if (!slider.TryGetComponent<HoverTipController>(out var tipController))
+            tipController = slider.gameObject.AddComponent<HoverTipController>();
 
         switch (component)
         {
