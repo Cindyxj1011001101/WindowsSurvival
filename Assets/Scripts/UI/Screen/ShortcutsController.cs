@@ -107,7 +107,7 @@ public class ShortcutsController : MonoBehaviour
         shortcut.ChangeColor(color);
     }
 
-    public void SetLocked(string appName, bool value)
+    public void SetLocked(string appName, bool value, bool blink)
     {
         #region 临时
         if (appName == "Rest")
@@ -128,7 +128,7 @@ public class ShortcutsController : MonoBehaviour
             SelectWithTween(selectedAppName);
         }
 
-        if (!value)
+        if (!value && blink)
             // 按钮闪烁
             shortcuts[appName].StartBlinking();
     }
