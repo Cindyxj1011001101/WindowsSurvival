@@ -57,13 +57,11 @@ public class ChatConditionManager : MonoBehaviour
 
     public void PassChatCondition(List<ChatData> chatDatas)
     {
-        Debug.Log("通过对话条件检测"+chatDatas.Count);
         foreach (var chatData in chatDatas)
         {
             
             ChatManager.Instance.CreateMessage(chatData);
         }
-
     }
     
 
@@ -122,7 +120,6 @@ public class ChatConditionManager : MonoBehaviour
                     DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
                         new HealthZero(paragraphData.TriggerParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
-                    
                     break;
                 case "修理研究完毕":
                     DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
@@ -142,6 +139,21 @@ public class ChatConditionManager : MonoBehaviour
                 case "每次清醒度<=30":
                     DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
                         new SobrietyLessThan30(paragraphData.TriggerParagraphCondition, true, false,
+                            PassParagraphCondition,paragraphData));
+                    break;
+                case "第一天5点时未完成修理的研究":
+                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
+                        new Day1Hour5FixUnConplished(paragraphData.TriggerParagraphCondition, true, false,
+                            PassParagraphCondition,paragraphData));
+                    break;
+                case "第一天11点时未完成修理的研究":
+                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
+                        new Day1Hour11FixUnConplished(paragraphData.TriggerParagraphCondition, true, false,
+                            PassParagraphCondition,paragraphData));
+                    break;
+                case "第一次堵住渗水裂缝":
+                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
+                        new SealCracks(paragraphData.TriggerParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
             }
@@ -216,14 +228,13 @@ public class ChatConditionManager : MonoBehaviour
     #endregion
     public void TrackCurrentStatus()
     {
-        //第一天5点时
-        //获取当前游戏内天数
         TimeSpan difference = TimeManager.Instance.CurTime - TimeManager.Instance.StartDateTime;
         if(difference.Days==0&&TimeManager.Instance.CurTime.Hour==5)
         {
             //判断
             if (!TechnologyManager.Instance.IsTechNodeComplished("修理"))
             {
+                Debug.Log("触发Day1Hour5FixUnConplished");
                 EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour5","FixUnConplished"));
             }
         }
