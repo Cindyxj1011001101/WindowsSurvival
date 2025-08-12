@@ -242,4 +242,12 @@ public class GMCommand
     {
         AddCard("白爆矿");
     }
+
+    [MenuItem("Command/GC")]
+    public static void GC()
+    {
+        // 通常与GC.Collect()配合使用
+        System.GC.Collect();
+        Resources.UnloadUnusedAssets();
+    }
 }
