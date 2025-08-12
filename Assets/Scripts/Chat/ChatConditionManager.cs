@@ -232,16 +232,15 @@ public class ChatConditionManager : MonoBehaviour
         if(difference.Days==0&&TimeManager.Instance.CurTime.Hour==5)
         {
             //判断
-            if (!TechnologyManager.Instance.IsTechNodeComplished("修理"))
+            if (!TechnologyManager.Instance.IsTechNodeComplished("修理")&&!TechnologyManager.Instance.IsTechNodeBeingStudied("修理"))
             {
-                Debug.Log("触发Day1Hour5FixUnConplished");
                 EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour5","FixUnConplished"));
             }
         }
         if(difference.Days==0&&TimeManager.Instance.CurTime.Hour==11)
         {
             //判断
-            if (!TechnologyManager.Instance.IsTechNodeComplished("修理"))
+            if (!TechnologyManager.Instance.IsTechNodeComplished("修理")&&!TechnologyManager.Instance.IsTechNodeBeingStudied("修理"))
             {
                 EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour11","FixUnConplished"));
             }

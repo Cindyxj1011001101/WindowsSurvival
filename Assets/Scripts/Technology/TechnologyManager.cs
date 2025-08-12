@@ -142,4 +142,8 @@ public class TechnologyManager
     {
         return techData.curStudiedTechNodeName == techNode.techName;
     }
+    public bool IsTechNodeBeingStudied(string techName)
+    {
+        return techData.curStudiedTechNodeName == techName;
+    }
 }
