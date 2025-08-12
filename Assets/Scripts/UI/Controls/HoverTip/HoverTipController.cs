@@ -5,17 +5,16 @@ using UnityEngine.EventSystems;
 
 public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    private GameObject hoverTipPrefab;
     private HoverTip hoverTip;
 
     public Vector2 offset = new Vector2(10, 0);
 
     public UnityEvent onPointerEnter = new();
 
-    public void Awake()
-    {
-        hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/HoverTip");
-    }
+    string textTip;
+    int time;
+    Dictionary<PlayerStateEnum, float> playerEffects;
+    Dictionary<EnvironmentStateEnum, float> envEffects;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -34,12 +33,11 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         Dictionary<PlayerStateEnum, float> playerEffects,
         Dictionary<EnvironmentStateEnum, float> envEffects)
     {
-        if (hoverTipPrefab == null)
-            hoverTipPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/HoverTip");
 
-        if (hoverTip == null)
-            hoverTip = Instantiate(hoverTipPrefab, WindowsManager.Instance.HoverTipLayer).GetComponent<HoverTip>();
-        hoverTip.SetTip(textTip, time, playerEffects, envEffects);
+        this.textTip = textTip;
+        this.time = time;
+        this.playerEffects = playerEffects;
+        this.envEffects = envEffects;
     }
 
     public void SetTip(string textTip)
@@ -49,26 +47,25 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void ShowTip()
     {
-        // 设置位置
-        hoverTip.transform.position = CalcTipPos();
-
-        hoverTip.Show();
+        ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Tips", "HoverTip", WindowsManager.Instance.HoverTipLayer, (asset) =>
+        {
+            hoverTip = asset.GetComponent<HoverTip>();
+            hoverTip.SetTip(textTip, time, playerEffects, envEffects);
+            hoverTip.transform.position = CalcTipPos();
+            hoverTip.Show();
+        });
     }
 
     public void HideTip()
     {
-        if (hoverTip == null)
-            return;
-        hoverTip.Hide();
+        if (hoverTip != null)
+            hoverTip.Hide();
+        hoverTip = null;
     }
 
     public void OnDestroy()
     {
-        if (hoverTip != null)
-        {
-            hoverTip.SelfDestroy();
-            hoverTip = null;
-        }
+        HideTip();
     }
 
     private Vector3 CalcTipPos()

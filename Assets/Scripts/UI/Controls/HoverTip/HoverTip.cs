@@ -30,9 +30,8 @@ public class HoverTip : MonoBehaviour
         Dictionary<PlayerStateEnum, float> playerEffects,
         Dictionary<EnvironmentStateEnum, float> envEffects)
     {
-        bool textTipOnly = true;
 
-        (verticalLayout.transform as RectTransform).sizeDelta = new Vector2((verticalLayout.transform as RectTransform).sizeDelta.x, 1000);
+        bool textTipOnly = true;
 
         foreach (Transform child in transform)
         {
@@ -107,9 +106,6 @@ public class HoverTip : MonoBehaviour
             forEnvironment.SetActive(false);
         }
 
-        // 更新高度
-        MonoUtility.UpdateVerticalLayoutSize(verticalLayout);
-
         // 如果仅显示文本
         if (textTipOnly)
         {
@@ -121,7 +117,8 @@ public class HoverTip : MonoBehaviour
             rectTransform.sizeDelta = new Vector2(maxWidth, rectTransform.sizeDelta.y);
         }
 
-        LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+        // 更新高度
+        MonoUtility.UpdateVerticalLayoutSize(verticalLayout);
     }
 
     public void Show()
@@ -133,7 +130,7 @@ public class HoverTip : MonoBehaviour
     public void Hide()
     {
         canvasGroup.DOKill();
-        canvasGroup.DOFade(0, 0.1f).SetEase(Ease.OutQuad);
+        canvasGroup.DOFade(0, 0.1f).SetEase(Ease.OutQuad).OnComplete(() => ObjectBufferPool.Instance.Restore(gameObject));
     }
 
     public void SelfDestroy()
