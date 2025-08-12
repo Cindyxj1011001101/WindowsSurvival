@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class BottomBarShortcut : HoverableButton
+public class CustomMenuItem : HoverableButton
 {
     public CanvasGroup tipCanvas;
 

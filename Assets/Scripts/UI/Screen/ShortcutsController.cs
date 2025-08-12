@@ -30,7 +30,7 @@ public class ShortcutsController : MonoBehaviour
     {
         for (int i = 0; i < layoutTransform.childCount; i++)
         {
-            if (layoutTransform.GetChild(i).TryGetComponent<BottomBarShortcut>(out var shortcut))
+            if (layoutTransform.GetChild(i).TryGetComponent<CustomMenuItem>(out var shortcut))
             {
                 shortcuts.Add(shortcut.name, shortcut);
                 SetOpened(shortcut, false);
