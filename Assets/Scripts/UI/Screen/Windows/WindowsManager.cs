@@ -184,9 +184,9 @@ public class WindowsManager : MonoBehaviour
         return currentFocusedWindow == window;
     }
 
-    public void UnlockShortcut(string appName)
+    public void UnlockShortcut(string appName, bool blink = true)
     {
-        shortcutsController.SetLocked(appName, false);
+        shortcutsController.SetLocked(appName, false, blink);
     }
 
     public List<string> GetUnlockedShortcuts()
