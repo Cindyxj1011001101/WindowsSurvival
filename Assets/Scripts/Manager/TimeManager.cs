@@ -9,7 +9,7 @@ public class TimeManager : MonoBehaviour
     public int curInterval;
     private DateTime lastDay;
 
-    public int Day => (CurTime - StartDateTime).Days;
+    public int Day => (CurTime - StartDateTime).Days + 1;
 
     private static TimeManager instance;
     public static TimeManager Instance
