@@ -1,10 +1,18 @@
+using System.Collections.Generic;
+
 public class KitchenFoes : Card
 {
     private KitchenFoes()
     {
         Events=new()
         {
-            new Event("食用", "食用厨房恶物", Event_Eat, null)
+            new Event("食用", "食用厨房恶物", Event_Eat, null, () => 15,
+            () => new Dictionary<PlayerStateEnum, float>()
+            {
+                { PlayerStateEnum.Fullness, 10 },
+                { PlayerStateEnum.San, -6 },
+                { PlayerStateEnum.Health, -4 }
+            })
         };
     }
 

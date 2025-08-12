@@ -59,7 +59,7 @@ public class WasteHeap : Card
 
     public void RandomDrop()
     {
-        int rand = Random.Range(0, 20);
+        int rand = Random.Range(0, 26);
         if (rand < 5)
         {
             AddCards("废金属", 2, true);
@@ -68,7 +68,7 @@ public class WasteHeap : Card
         {
             AddCard("废金属", true);
         }
-        else if (rand < 13)
+        else if (rand < 11)
         {
             AddCard("韧性胶管", true);
         }
@@ -84,9 +84,13 @@ public class WasteHeap : Card
         {
             AddCard("腐烂物", true);
         }
-        else
+        else if (rand < 20)
         {
             AddCard("氧烛", true);
+        }
+        else
+        {
+            AddCard("瓶装水", true);
         }
     }
 }

@@ -254,8 +254,8 @@ public class StateManager : MonoBehaviour
         {
             new (-1, 0, "死亡"),
             new (0, 10, "濒死"),
-            new (10, 30, "重伤"),
-            new (30, int.MaxValue, "还算健康")
+            new (10, 40, "重伤"),
+            new (40, int.MaxValue, "还算健康")
         };
         var effects = new List<StateEffect>()
         {
@@ -267,7 +267,7 @@ public class StateManager : MonoBehaviour
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
 
-        return new PlayerState(100, 100, PlayerStateEnum.Health, +0.4f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new PlayerState(100, 150, PlayerStateEnum.Health, +0.5f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitFullnessState()
@@ -275,20 +275,20 @@ public class StateManager : MonoBehaviour
         var thresholds = new List<StateThreshold>()
         {
             new (-1, 0, "饥荒"),
-            new (0, 10, "极度饥饿"),
-            new (10, 30, "饥饿"),
-            new (30, int.MaxValue, "还不饿")
+            new (0, 20, "极度饥饿"),
+            new (20, 50, "饥饿"),
+            new (50, int.MaxValue, "还不饿")
         };
         var effects = new List<StateEffect>()
         {
             new () { sanityEffect = -1, healthEffect = -8 },
-            new () { sanityEffect = -0.7f },
-            new () { sanityEffect = -0.3f },
+            new () { sanityEffect = -0.7f ,healthEffect = -0.5f},
+            new () { sanityEffect = -0.1f },
             StateEffect.NoEffect
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new PlayerState(100, 100, PlayerStateEnum.Fullness, -1.2f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new PlayerState(100, 250, PlayerStateEnum.Fullness, -1f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitThirstState()
@@ -296,20 +296,20 @@ public class StateManager : MonoBehaviour
         var thresholds = new List<StateThreshold>()
         {
             new (-1, 0, "脱水"),
-            new (0, 10, "极度口渴"),
-            new (10, 30, "口渴"),
-            new (30, int.MaxValue, "还不渴")
+            new (0, 20, "极度口渴"),
+            new (20, 50, "口渴"),
+            new (50, int.MaxValue, "还不渴")
         };
         var effects = new List<StateEffect>()
         {
             new () { sanityEffect = -1, healthEffect = -8 },
-            new () { sanityEffect = -0.7f },
-            new () { sanityEffect = -0.3f },
+            new () { sanityEffect = -0.7f ,healthEffect = -0.5f},
+            new () { sanityEffect = -0.1f },
             StateEffect.NoEffect
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new PlayerState(100, 100, PlayerStateEnum.Thirst, -1.5f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new PlayerState(100, 200, PlayerStateEnum.Thirst, -1.3f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitSanityState()
@@ -359,20 +359,20 @@ public class StateManager : MonoBehaviour
         var thresholds = new List<StateThreshold>()
         {
             new (-1, 0, "困得要死"),
-            new (0, 10, "极度疲劳"),
-            new (10, 30, "疲劳"),
-            new (30, int.MaxValue, "还不困")
+            new (0, 20, "极度疲劳"),
+            new (20, 50, "疲劳"),
+            new (50, int.MaxValue, "还不困")
         };
         var effects = new List<StateEffect>()
         {
             new () { sanityEffect = -4, healthEffect = -3 },
-            new () { sanityEffect = -2, healthEffect = -1 },
-            new () { sanityEffect = -0.5f },
+            new () { sanityEffect = -1.5f, healthEffect = -0.8f },
+            new () { sanityEffect = -0.3f },
             StateEffect.NoEffect
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new PlayerState(100, 100, PlayerStateEnum.Sobriety, -1.1f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new PlayerState(150, 180, PlayerStateEnum.Sobriety, -1, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitLoadState()
