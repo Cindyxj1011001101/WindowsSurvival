@@ -243,7 +243,6 @@ public class ChatManager : MonoBehaviour
         else finalWaitTime = chatData.WaitTime == 0 ? 2.5f : chatData.WaitTime / 1000;
 
         finalWaitTime /= curSpeed;
-        finalWaitTime = Mathf.Min(finalWaitTime, 0.2f);
         
         yield return new WaitForSeconds(finalWaitTime);
 
@@ -253,7 +252,6 @@ public class ChatManager : MonoBehaviour
 
         SoundManager.Instance.PlaySound("消息提示音_02", true);
         AfterChatFactory.TriggerEffect(chatData.TriggerMessageEffect);
-        //yield return new WaitForSeconds(0.5f);
 
         //触发对话效果
         if (chatData.NextMessageID != -1)
