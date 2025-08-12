@@ -46,18 +46,18 @@ public class ShortcutsController : MonoBehaviour
         selectRect.gameObject.SetActive(false);
     }
 
-    //private void Start()
-    //{
-    //    // 显示已解锁的快捷方式
-    //    foreach (var appName in shortcuts.Keys)
-    //    {
-    //        SetLocked(appName, !GameDataManager.Instance.UnlockedShortcuts.Contains(appName));
-    //    }
+    private void Start()
+    {
+        // 显示已解锁的快捷方式
+        foreach (var appName in shortcuts.Keys)
+        {
+            SetLocked(appName, !GameDataManager.Instance.UnlockedShortcuts.Contains(appName));
+        }
 
-    //    #region 临时
-    //    restButton.SetActive(GameDataManager.Instance.UnlockedShortcuts.Contains("Rest"));
-    //    #endregion
-    //}
+        #region 临时
+        restButton.SetActive(GameDataManager.Instance.UnlockedShortcuts.Contains("Rest"));
+        #endregion
+    }
 
     public void SelectAppShortcut(string appName)
     {
