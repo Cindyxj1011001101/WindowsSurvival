@@ -46,13 +46,52 @@ public class CraftManager
         EventManager.Instance.TriggerEvent(EventType.UnlockRecipe);
     }
 
-    /// <summary>
-    /// 判断一个配方能否合成
-    /// </summary>
-    /// <param name="recipe"></param>
-    public bool CanCrfat(ScriptableRecipe recipe, out string hint)
+    ///// <summary>
+    ///// 判断一个配方能否合成
+    ///// </summary>
+    ///// <param name="recipe"></param>
+    //public bool CanCrfat(ScriptableRecipe recipe, out string hint)
+    //{
+    //    hint = string.Empty;
+    //    // 配方未解锁，则无法合成
+    //    if (IsRecipeLocked(recipe)) return false;
+
+    //    // 配方已解锁，看材料是否充足
+    //    PlayerBag playerBag = GameManager.Instance.PlayerBag;
+    //    foreach (var material in recipe.materials)
+    //    {
+    //        // 任何一项材料不满足数量需求，不能合成
+    //        if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum)
+    //        {
+    //            hint = "缺少制作材料";
+    //            return false;
+    //        }
+    //    }
+
+    //    // 材料充足，看有没有制造限制
+    //    if (recipe.CardInstance is ConstructionCard constructionCard)
+    //    {
+    //        return constructionCard.CanPlace(out hint);
+    //    }
+
+    //    return true;
+    //}
+
+    public bool CanCrfat(ScriptableRecipe recipe, out Dictionary<string, bool> limitations)
     {
-        hint = string.Empty;
+        limitations = null;
+
+        // 建筑卡牌显示限制
+        if (recipe.CardInstance.TryGetComponent<ConstructionComponent>(out var component))
+        {
+            limitations = GetConstructionLimitations(component);
+            // 任意一项限制不满足不能建造
+            foreach (var met in limitations.Values)
+            {
+                if (!met) return false;
+            }
+        }
+
         // 配方未解锁，则无法合成
         if (IsRecipeLocked(recipe)) return false;
 
@@ -61,20 +100,44 @@ public class CraftManager
         foreach (var material in recipe.materials)
         {
             // 任何一项材料不满足数量需求，不能合成
-            if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum)
-            {
-                hint = "缺少制作材料";
-                return false;
-            }
-        }
-
-        // 材料充足，看有没有制造限制
-        if (recipe.CardInstance is ConstructionCard constructionCard)
-        {
-            return constructionCard.CanPlace(out hint);
+            if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum) return false;
         }
 
         return true;
+    }
+
+    private Dictionary<string, bool> GetConstructionLimitations(ConstructionComponent component)
+    {
+        Dictionary<string, bool> result = new();
+
+        var env = GameManager.Instance.CurEnvironmentBag;
+
+        if (component.onlyInDoor)
+        {
+            result.Add("OnlyInDoor", env.PlaceData.isIndoor);
+        }
+
+        if (component.onlyOutDoor)
+        {
+            result.Add("OnlyOutDoor", !env.PlaceData.isIndoor);
+        }
+
+        if (component.onlyInWater)
+        {
+            result.Add("OnlyInWater", env.PlaceData.isInWater);
+        }
+
+        if (component.onlyOutWater)
+        {
+            result.Add("OnlyOutWater", !env.PlaceData.isInWater);
+        }
+
+        if (component.needCable)
+        {
+            result.Add("NeedCable", env.HasCable);
+        }
+
+        return result;
     }
 
     /// <summary>

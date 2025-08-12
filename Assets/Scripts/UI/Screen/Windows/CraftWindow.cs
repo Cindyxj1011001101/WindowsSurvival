@@ -16,6 +16,7 @@ public class CraftWindow : WindowBase
     [SerializeField] private CraftButton craftButton;
     [SerializeField] private RectTransform recipeLibrarySelectRect; // 配方库选择框
     [SerializeField] private RectTransform recipeItemSelectRect; // 配方选择框
+    [SerializeField] private RectTransform limitationLayout; // 建筑放置限制
 
     [SerializeField] private GameObject recipeMaterialPrefab;
     [SerializeField] private GameObject recipeItemPrefab;
@@ -45,6 +46,13 @@ public class CraftWindow : WindowBase
 
     protected override void Init()
     {
+        foreach (Transform child in limitationLayout)
+        {
+            child.gameObject.AddComponent<HoverTipController>().SetTip(child.GetComponentInChildren<Text>(true).text);
+        }
+
+        limitationLayout.gameObject.SetActive(false);
+
         currentRecipeType = (RecipeType)Enum.Parse(typeof(RecipeType), recipeLibraryLayout.GetChild(0).name);
         DisplayRecipeLibraries();
     }
@@ -214,11 +222,11 @@ public class CraftWindow : WindowBase
         craftTimeText.text = sb.ToString();
 
         // 不可制作的卡牌，卡牌槽变灰
-        bool canCraft = CraftManager.Instance.CanCrfat(recipe, out var hint);
+        bool canCraft = CraftManager.Instance.CanCrfat(recipe, out var limitations);
         slot.GetComponent<CanvasGroup>().alpha = canCraft ? 1f : 0.14f;
 
         // 显示制作按钮
-        craftButton.DisplayButton(CraftManager.Instance.IsRecipeLocked(recipe), canCraft, hint);
+        craftButton.DisplayButton(CraftManager.Instance.IsRecipeLocked(recipe), canCraft);
 
         // 添加制作事件
         craftButton.onClick.RemoveAllListeners();
@@ -229,6 +237,32 @@ public class CraftWindow : WindowBase
             // 刷新显示
             RefreshCurrentDisplay();
         });
+
+        // 显示放置限制
+        if (limitations != null && limitations.Count > 0)
+        {
+            limitationLayout.gameObject.SetActive(true);
+
+            foreach (Transform child in limitationLayout)
+            {
+                if (limitations.TryGetValue(child.name, out bool met))
+                {
+                    child.gameObject.SetActive(true);
+                    var color = met ? ColorManager.White : ColorManager.DarkGrey;
+                    var button = child.GetComponent<HoverableButton>();
+                    button.currentColor = color;
+                    button.ChangeColor(color);
+                }
+                else
+                {
+                    child.gameObject.SetActive(false);
+                }
+            }
+        }
+        else
+        {
+            limitationLayout.gameObject.SetActive(false);
+        }
 
         // 播放选择动效
         SelectRecipeWithTween(recipe.cardId);

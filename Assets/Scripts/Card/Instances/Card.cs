@@ -218,12 +218,12 @@ public abstract class Card : IComparable<Card>
         return false;
     }
 
-    public void AddComponent(Type type, CardComponent component)
+    public void AddComponent(CardComponent component)
     {
-        if (components.ContainsKey(type)) return;
+        if (components.ContainsKey(component.GetType())) return;
 
         component.SetBelongedCard(this);
-        components.Add(type, component);
+        components.Add(component.GetType(), component);
     }
 
     /// <summary>

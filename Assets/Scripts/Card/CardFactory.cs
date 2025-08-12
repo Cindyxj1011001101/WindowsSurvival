@@ -207,35 +207,35 @@ public static class CardFactory
         // 配置可变属性
         if (config.HasFreshness)
         {
-            card.AddComponent(typeof(FreshnessComponent), new FreshnessComponent(config.MaxFreshness));
+            card.AddComponent(new FreshnessComponent(config.MaxFreshness));
         }
         if (config.HasDurability)
         {
-            card.AddComponent(typeof(DurabilityComponent), new DurabilityComponent(config.MaxDurability));
+            card.AddComponent(new DurabilityComponent(config.MaxDurability));
         }
         if (config.HasGrowth)
         {
-            card.AddComponent(typeof(GrowthComponent), new GrowthComponent(config.MaxGrowth));
+            card.AddComponent(new GrowthComponent(config.MaxGrowth));
         }
         if (config.HasProgress)
         {
-            card.AddComponent(typeof(ProgressComponent), new ProgressComponent(config.MaxProgress));
+            card.AddComponent(new ProgressComponent(config.MaxProgress));
         }
         if (config.IsEquipment)
         {
-            card.AddComponent(typeof(EquipmentComponent), new EquipmentComponent(config.EquipmentType));
+            card.AddComponent(new EquipmentComponent(config.EquipmentType));
         }
         if (config.IsTool)
         {
-            card.AddComponent(typeof(ToolComponent), new ToolComponent(config.ToolTypes));
+            card.AddComponent(new ToolComponent(config.ToolTypes));
         }
         if (config.HasInnerContents)
         {
-            card.AddComponent(typeof(InnerContentsComponent), new InnerContentsComponent(config.InnerContentSlotCount));
+            card.AddComponent(new InnerContentsComponent(config.InnerContentSlotCount));
         }
         if (config.IsPassage)
         {
-            card.AddComponent(typeof(PassageComponent), new PassageComponent(config.TargetPlace, config.MoveTime, config.InteractAudio));
+            card.AddComponent(new PassageComponent(config.TargetPlace, config.MoveTime, config.InteractAudio));
         }
 
         return card;

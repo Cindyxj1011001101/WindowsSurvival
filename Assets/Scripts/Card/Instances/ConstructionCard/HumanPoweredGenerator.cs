@@ -3,7 +3,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 人力发电机
 /// </summary>
-public class HumanPoweredGenerator : ConstructionCard
+public class HumanPoweredGenerator : Card
 {
     private HumanPoweredGenerator()
     {
@@ -13,20 +13,11 @@ public class HumanPoweredGenerator : ConstructionCard
             () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Thirst, -5 }, { PlayerStateEnum.Sobriety, -6 } },
             () => new Dictionary < EnvironmentStateEnum, float >() { { EnvironmentStateEnum.Electricity, 10 } })
         };
-    }
 
-    public override bool CanPlace(out string hint)
-    {
-        hint = string.Empty;
-        var env = GameManager.Instance.CurEnvironmentBag;
-
-        if (!env.HasCable)
+        AddComponent(new ConstructionComponent()
         {
-            hint = "需要先在该地点铺设电缆";
-            return false;
-        }
-
-        return true;
+            needCable = true,
+        });
     }
 
     public void Event_Generate(out string tip)

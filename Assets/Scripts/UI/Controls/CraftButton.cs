@@ -6,15 +6,15 @@ public  class CraftButton : HoverableButton
     public Text text;
     public GameObject iconObject;
 
-    private HoverTipController hoverTipController;
+    //private HoverTipController hoverTipController;
 
     protected override void Awake()
     {
         base.Awake();
-        hoverTipController = gameObject.AddComponent<HoverTipController>();
+        //hoverTipController = gameObject.AddComponent<HoverTipController>();
     }
 
-    public void DisplayButton(bool isLocked, bool canCraft, string hint)
+    public void DisplayButton(bool isLocked, bool canCraft/*, string hint*/)
     {
         if (isLocked)
         {
@@ -22,7 +22,7 @@ public  class CraftButton : HoverableButton
             iconObject.SetActive(false);
             text.text = "未解锁";
             text.color = ColorManager.DarkGrey;
-            hoverTipController.enabled = false;
+            //hoverTipController.enabled = false;
         }
         else if (canCraft)
         {
@@ -30,7 +30,7 @@ public  class CraftButton : HoverableButton
             iconObject.SetActive(true);
             text.text = "开始制作";
             text.color = ColorManager.White;
-            hoverTipController.enabled = false;
+            //hoverTipController.enabled = false;
         }
         else
         {
@@ -38,9 +38,9 @@ public  class CraftButton : HoverableButton
             iconObject.SetActive(false);
             text.text = "不可制作";
             text.color = ColorManager.LightGrey;
-            hoverTipController.enabled = true;
+            //hoverTipController.enabled = true;
         }
 
-        hoverTipController.SetTip(hint);
+        //hoverTipController.SetTip(hint);
     }
 }

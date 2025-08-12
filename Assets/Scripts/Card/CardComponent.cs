@@ -363,3 +363,25 @@ public class PassageComponent : CardComponent
     }
 }
 #endregion
+
+#region 建筑组件
+public class ConstructionComponent : CardComponent
+{
+    public bool onlyInWater;
+    public bool onlyOutWater;
+    public bool onlyInDoor;
+    public bool onlyOutDoor;
+    public bool needCable;
+
+    public ConstructionComponent(bool onlyInWater, bool onlyOutWater, bool onlyInDoor, bool onlyOutDoor, bool needCable)
+    {
+        this.onlyInWater = onlyInWater;
+        this.onlyOutWater = onlyOutWater;
+        this.onlyInDoor = onlyInDoor;
+        this.onlyOutDoor = onlyOutDoor;
+        this.needCable = needCable;
+    }
+
+    public ConstructionComponent() { }
+}
+#endregion
