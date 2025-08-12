@@ -220,6 +220,16 @@ public class ChatManager : MonoBehaviour
         }
     }
 
+    public void AddToGenerated(ChatData chatData)
+    {
+        GeneratedChatDataList.Add(chatData);
+        if (GeneratedChatDataList.Count > 20)
+        {
+            GeneratedChatDataList.RemoveAt(0);
+            chatWindow.RemoveFirstMessage();
+        }
+    }
+
     public void CreateMessage(ChatData chatData, float waitTime = -1f)
     {
         StartCoroutine(CreateMessageCoroutine(chatData, waitTime));
@@ -233,11 +243,12 @@ public class ChatManager : MonoBehaviour
         else finalWaitTime = chatData.WaitTime == 0 ? 2.5f : chatData.WaitTime / 1000;
 
         finalWaitTime /= curSpeed;
+        finalWaitTime = Mathf.Min(finalWaitTime, 0.2f);
         
         yield return new WaitForSeconds(finalWaitTime);
 
         //将该对话加入已生成列表
-        GeneratedChatDataList.Add(chatData);
+        AddToGenerated(chatData);
         chatWindow.CreateMessage(chatData.MessageSender, chatData.Message);
 
         SoundManager.Instance.PlaySound("消息提示音_02", true);

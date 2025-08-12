@@ -1,6 +1,8 @@
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ChatConditionManager : MonoBehaviour
 {
@@ -30,6 +32,7 @@ public class ChatConditionManager : MonoBehaviour
             ChangeCardCondition);
     }
 
+    #region 开始与结束检测
     private void DetectParagraph()
     {
         //订阅所有段落的触发
@@ -62,7 +65,9 @@ public class ChatConditionManager : MonoBehaviour
         }
 
     }
+    
 
+    #endregion
     #region 触发行为
 
     public void TriggerAction(SubscribeActionArgs args)
@@ -95,7 +100,6 @@ public class ChatConditionManager : MonoBehaviour
     }
 
     #endregion
-
     #region 检测
 
     //开始检测
@@ -210,4 +214,26 @@ public class ChatConditionManager : MonoBehaviour
     }
 
     #endregion
+    public void TrackCurrentStatus()
+    {
+        //第一天5点时
+        //获取当前游戏内天数
+        TimeSpan difference = TimeManager.Instance.CurTime - TimeManager.Instance.StartDateTime;
+        if(difference.Days==0&&TimeManager.Instance.CurTime.Hour==5)
+        {
+            //判断
+            if (!TechnologyManager.Instance.IsTechNodeComplished("修理"))
+            {
+                EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour5","FixUnConplished"));
+            }
+        }
+        if(difference.Days==0&&TimeManager.Instance.CurTime.Hour==11)
+        {
+            //判断
+            if (!TechnologyManager.Instance.IsTechNodeComplished("修理"))
+            {
+                EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour11","FixUnConplished"));
+            }
+        }
+    }
 }

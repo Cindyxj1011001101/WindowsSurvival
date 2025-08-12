@@ -64,6 +64,15 @@ public class ChatWindow : WindowBase
         }
     }
 
+    public void RemoveFirstMessage()
+    {
+        var first = chatLayoutGroup.transform.GetChild(0);
+        Destroy(first.gameObject);
+        // 更新组件高度
+        MonoUtility.UpdateChatLayoutSize(chatLayoutGroup);
+        ResetScroll();
+    }
+
     /// <summary>
     /// 添加一条对话
     /// </summary>

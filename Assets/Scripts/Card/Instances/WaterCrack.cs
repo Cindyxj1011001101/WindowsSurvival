@@ -17,6 +17,7 @@ public class WaterCrack : Card
         SoundManager.Instance.PlaySound("堵住裂缝");
         tip = string.Empty;
         DestroyThis();
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition,new SubscribeActionArgs("渗水裂缝","堵住"));
         GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物").DestroyThis();
         TimeManager.Instance.AddTime(15);
     }

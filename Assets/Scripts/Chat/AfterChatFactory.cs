@@ -41,7 +41,7 @@ public static class AfterChatFactory
                     TimeManager.Instance.AddTime(int.Parse(eventItemList[1]));
                     break;
                 case "解锁":
-                    UnlockWindow(eventItemList[1]);
+                    UnlockWindow(eventItemList[1], eventItemList[2]);
                     break;
                 case "添加":
                     AddCardEvent(eventItemList[1], eventItemList[2]); 
@@ -58,8 +58,9 @@ public static class AfterChatFactory
         GameManager.Instance.AddCardWithTween(CardName, new Vector2(0,-700), PlayerOrScene=="玩家");
     }
 
-    private static void UnlockWindow(string WindowName)
+    private static void UnlockWindow(string WindowName,string blink)
     {
+        bool Addblink = blink == "true" ? true : false;
         string windowName = WindowName switch
         {
             "背包" => "PlayerBag",
@@ -73,7 +74,7 @@ public static class AfterChatFactory
             "详情"=>"Details",
             _ => throw new System.Exception("WindowName Error")
         };
-        WindowsManager.Instance.UnlockShortcut(windowName);
+        WindowsManager.Instance.UnlockShortcut(windowName,Addblink);
         //解锁窗口逻辑
     }
 
