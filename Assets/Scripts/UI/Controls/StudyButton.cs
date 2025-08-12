@@ -14,6 +14,16 @@ public class StudyButton : HoverableButton
     
     public void DisplayButton(ScriptableTechnologyNode techNode, UnityAction startStuyding, UnityAction stopStudying)
     {
+        // 教程结束的标志是“修理”科技研究完成
+        if (!TechnologyManager.Instance.IsTechNodeComplished("修理") && techNode.techName != "修理")
+        {
+            iconObject.SetActive(false);
+            Interactable = false;
+            text.text = "暂不可研究";
+            text.color = ColorManager.DarkGrey;
+            return;
+        }
+
         beingStudied = TechnologyManager.Instance.IsTechNodeBeingStudied(techNode);
 
         if (!beingStudied)

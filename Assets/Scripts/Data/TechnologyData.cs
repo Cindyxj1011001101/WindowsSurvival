@@ -15,7 +15,8 @@ public class TechnologyData
 
     public List<string> studiedTechNodes = new(); // 学习过的科技节点
 
-    public string curStudiedTechNodeName; // 当前正在学习的科技节点
+    public string curStudiedTechNodeName = string.Empty; // 当前正在学习的科技节点
+    public TechType curStudiedTechNodeType;
 
     public Dictionary<string, TechNodeData> techNodeDict = new();
 

@@ -8,7 +8,7 @@ public class TechnologyManager
 
     private TechnologyData techData;
 
-    public ScriptableTechnologyNode CurStudiedTechNode => Resources.Load<ScriptableTechnologyNode>("ScriptableObject/Technology/" + techData.curStudiedTechNodeName);
+    public ScriptableTechnologyNode CurStudiedTechNode => Resources.Load<ScriptableTechnologyNode>($"ScriptableObject/Technology/{techData.curStudiedTechNodeType}/{techData.curStudiedTechNodeName}");
     public float CurStudyRate { get; private set; }
     public bool AllTechnologiesStudied => techData.studiedTechNodes.Count == techData.techNodeDict.Count;
 
@@ -32,6 +32,7 @@ public class TechnologyManager
     public void Study(ScriptableTechnologyNode techNode)
     {
         techData.curStudiedTechNodeName = techNode.techName;
+        techData.curStudiedTechNodeType = techNode.techType;
         CurStudyRate = CalcStudyRate();
         // 添加监听，每回合结算研究进度
         EventManager.Instance.AddListener(EventType.IntervalSettle, OnStudy);
@@ -45,7 +46,7 @@ public class TechnologyManager
     public void StopStudy()
     {
         // 设置正在研究的科技节点为空
-        techData.curStudiedTechNodeName = null;
+        techData.curStudiedTechNodeName = "";
         // 移除监听
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnStudy);
     }
@@ -125,6 +126,11 @@ public class TechnologyManager
     public bool IsTechNodeComplished(ScriptableTechnologyNode techNode)
     {
         return techData.studiedTechNodes.Contains(techNode.techName);
+    }
+
+    public bool IsTechNodeComplished(string techName)
+    {
+        return techData.studiedTechNodes.Contains(techName);
     }
 
     /// <summary>

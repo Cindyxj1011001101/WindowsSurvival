@@ -2,7 +2,6 @@ using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -211,18 +210,15 @@ public class StudyWindow : WindowBase
         studyButton.DisplayButton(techNode, () =>
         {
             // 暂停当前研究
-            //StopStudy();
             DisplayStudyState(2, null);
             TechnologyManager.Instance.StopStudy();
             // 研究当前科技节点
             TechnologyManager.Instance.Study(techNode);
-            //StartStudy();
             // 刷新显示
             RefreshCurrentDisplay();
         }, () =>
         {
             // 暂停当前研究
-            //StopStudy();
             DisplayStudyState(2, null);
             TechnologyManager.Instance.StopStudy();
             // 刷新显示
@@ -265,30 +261,6 @@ public class StudyWindow : WindowBase
             studyRate.gameObject.SetActive(false);
         }
     }
-
-    //private void StopStudy()
-    //{
-    //    var node = TechnologyManager.Instance.CurStudiedTechNode;
-    //    if (node == null) return;
-
-    //    // 开始研究后，将正在研究的类型的按钮的颜色设为white
-    //    var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
-    //    button.ChangeColor(ColorManager.White);
-    //    button.currentColor = button.hoveredColor = ColorManager.White;
-
-    //    DisplayStudyState(2, null);
-    //}
-
-    //private void StartStudy()
-    //{
-    //    var node = TechnologyManager.Instance.CurStudiedTechNode;
-    //    if (node == null) return;
-
-    //    // 开始研究后，将正在研究的类型的按钮的颜色设为cyan
-    //    var button = menuItemTransforms[node.techType].GetComponent<HoverableButton>();
-    //    button.ChangeColor(ColorManager.Cyan);
-    //    button.currentColor = button.hoveredColor = ColorManager.Cyan;
-    //}
 
     private void DisplayStudyState(int state, ScriptableTechnologyNode techNode)
     {
