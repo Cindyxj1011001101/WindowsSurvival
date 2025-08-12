@@ -82,6 +82,10 @@ public class ChatManager : MonoBehaviour
             {
                 ChangeChatSpeed(3);
             }
+            else if (curSpeed == 3)
+            {
+                ChangeChatSpeed(10);
+            }
             else
             {
                 ChangeChatSpeed(1);
