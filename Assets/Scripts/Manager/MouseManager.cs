@@ -34,7 +34,7 @@ public class MouseManager : MonoBehaviour
     public Sprite ResizeSideSprite; //Y轴
     public Sprite InputSprite; // 输入框
 
-    public bool isDragging;
+    [SerializeField] private bool isDragging;
 
     public Animator animator;
     public CanvasGroup mouseCanvasGroup;
@@ -67,6 +67,18 @@ public class MouseManager : MonoBehaviour
         Vector3 curTransform = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         curTransform.z = 0;
         transform.position = curTransform;
+    }
+
+    public void StartDragging()
+    {
+        ChangeMouseState(MouseState.Drag);
+        isDragging = true;
+    }
+
+    public void EndDragging()
+    {
+        isDragging = false;
+        ChangeMouseState(MouseState.Default);
     }
 
     public void ChangeMouseState(MouseState mouseState)
