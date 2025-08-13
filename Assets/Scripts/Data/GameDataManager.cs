@@ -354,8 +354,8 @@ public class GameDataManager
 
     public void SaveGeneratedChatData()
     {
-        generatedChatData.DetectedParagraphConditions =
-            new Dictionary<string, ParagraphCondition>(ChatConditionManager.Instance.DetectedParagraphConditions);
+        generatedChatData.ParagraphConditionsToTrigger =
+            new List<ParagraphData>(ChatConditionManager.Instance.ParagraphConditionsToTrigger);
         generatedChatData.GeneratedChatDataList = new List<ChatData>(ChatManager.Instance.GeneratedChatDataList);
         generatedChatData.ParagraphToTriggeer = new List<ParagraphData>(ChatManager.Instance.ParagraphToTriggeer);
         generatedChatData.CurrentParagraphData = ChatManager.Instance.CurrentParagraphData;

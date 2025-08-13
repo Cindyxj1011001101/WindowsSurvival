@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 public class ChatConditionManager : MonoBehaviour
 {
     public static ChatConditionManager Instance { get; private set; }
-
+    public List<ParagraphData> ParagraphConditionsToTrigger = new List<ParagraphData>();
     public Dictionary<string, ChatCondition> DetectedChatConditions = new Dictionary<string, ChatCondition>();
     public Dictionary<string, ParagraphCondition> DetectedParagraphConditions = new Dictionary<string, ParagraphCondition>();
     private void Awake()
@@ -41,12 +41,17 @@ public class ChatConditionManager : MonoBehaviour
             //订阅所有段落的触发
             foreach (var paragraph in ChatManager.Instance.ParagraphDataList)
             {
-                AddParagraphCondition(paragraph);
+                ParagraphConditionsToTrigger.Add(paragraph);
             }
         }
         else
         {
-            DetectedParagraphConditions=GameDataManager.Instance.GeneratedChatData.DetectedParagraphConditions;
+            ParagraphConditionsToTrigger=GameDataManager.Instance.GeneratedChatData.ParagraphConditionsToTrigger;
+        }
+
+        foreach (var paragraphData in ParagraphConditionsToTrigger)
+        {
+            AddParagraphCondition(paragraphData);
         }
 
     }

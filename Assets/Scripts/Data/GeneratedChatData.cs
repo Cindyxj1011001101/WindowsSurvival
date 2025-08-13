@@ -3,7 +3,7 @@ using System.Collections.Generic;
 public class GeneratedChatData
 {
     public bool init;
-    public Dictionary<string, ParagraphCondition> DetectedParagraphConditions = new Dictionary<string, ParagraphCondition>();
+    public List<ParagraphData> ParagraphConditionsToTrigger = new List<ParagraphData>();
     public List<ChatData> GeneratedChatDataList = new();
     //需要触发的段落列表
     public List<ParagraphData> ParagraphToTriggeer = new List<ParagraphData>();
