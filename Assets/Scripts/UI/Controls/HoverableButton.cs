@@ -79,7 +79,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (!interactable) return; // 如果不可交互，则不处理点击事件
-
+        StopBlinking();
         onClick?.Invoke();
         OnPointerEnter(eventData); // 点击时触发鼠标悬停事件
     }
@@ -160,22 +160,26 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         }
     }
 
+    private bool isBlinking = false;
     public void StartBlinking(float interval = .5f)
     {
+        if (isBlinking) return;
+
+        isBlinking = true;
         currentColor = Color.white;
         ChangeColor(ColorManager.White);
 
         canvasGroup.DOFade(0f, interval)
             .SetLoops(-1, LoopType.Yoyo) // Yoyo 模式让动画往返播放
             .SetEase(Ease.Linear);
+    }
 
-        void StopBlinking()
-        {
-            onClick.RemoveListener(StopBlinking);
-            canvasGroup.DOKill();
-            canvasGroup.alpha = 1f;
-        }
+    public void StopBlinking()
+    {
+        if (!isBlinking) return;
 
-        onClick.AddListener(StopBlinking);
+        isBlinking = false;
+        canvasGroup.DOKill();
+        canvasGroup.alpha = 1f;
     }
 }
