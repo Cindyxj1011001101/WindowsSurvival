@@ -6,7 +6,6 @@ public class Day1Hour5FixUnConplished:ParagraphCondition
 {
     public Day1Hour5FixUnConplished(string name, bool startedDetect, bool isUnlocked, Action<List<ParagraphData>> onUnlocked,ParagraphData paragraphData) : base(name, startedDetect, isUnlocked, onUnlocked) {
         ParagraphDatas.Add(paragraphData);
-        Repeat = true;
     }
 
     public override bool Detect(string type, string value)

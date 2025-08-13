@@ -35,11 +35,20 @@ public class ChatConditionManager : MonoBehaviour
     #region 开始与结束检测
     private void DetectParagraph()
     {
-        //订阅所有段落的触发
-        foreach (var paragraph in ChatManager.Instance.ParagraphDataList)
+        //添加对话段落触发监听
+        if (GameDataManager.Instance.GeneratedChatData.init)
         {
-            AddParagraphCondition(paragraph);
+            //订阅所有段落的触发
+            foreach (var paragraph in ChatManager.Instance.ParagraphDataList)
+            {
+                AddParagraphCondition(paragraph);
+            }
         }
+        else
+        {
+            DetectedParagraphConditions=GameDataManager.Instance.GeneratedChatData.DetectedParagraphConditions;
+        }
+
     }
 
     public void DetectChatCondition(ChatData chatData)
@@ -59,7 +68,6 @@ public class ChatConditionManager : MonoBehaviour
     {
         foreach (var chatData in chatDatas)
         {
-            
             ChatManager.Instance.CreateMessage(chatData);
         }
     }
@@ -156,6 +164,16 @@ public class ChatConditionManager : MonoBehaviour
                         new SealCracks(paragraphData.TriggerParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
+                case "水平面高度每次达到70":
+                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
+                        new WaterLevel70(paragraphData.TriggerParagraphCondition, true, false,
+                            PassParagraphCondition,paragraphData));
+                    break;
+                case "水平面高度达到100":
+                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
+                        new WaterLevel100(paragraphData.TriggerParagraphCondition, true, false,
+                            PassParagraphCondition,paragraphData));
+                    break;
             }
         }
        
@@ -186,8 +204,14 @@ public class ChatConditionManager : MonoBehaviour
                     new OpenTechnologyWindow(chatData.MessageCondition, true, false, PassChatCondition, chatData));
                 break;
             case "研究修理这项科技":
+                if (TechnologyManager.Instance.IsTechNodeComplished("修理") ||
+                    TechnologyManager.Instance.IsTechNodeBeingStudied("修理"))
+                {
+                    PassChatCondition(new List<ChatData>(){chatData});
+                }
                 DetectedChatConditions.Add(chatData.MessageCondition,
                     new StartResearchFix(chatData.MessageCondition, true, false, PassChatCondition, chatData));
+                
                 break;
             case "打开地点窗口":
                 DetectedChatConditions.Add(chatData.MessageCondition,

@@ -8,34 +8,46 @@ public class StartSceneManager : MonoBehaviour
 {
     public GameObject StartButton;
     public GameObject LoadButton;
+    public GameObject ChooseSkipGuide;
     private Button EnterGame;
     private Button Setting;
     private Button Exit;
+    
+    private Button ReturnStart;
+    
+    private Button SkipGuide;
+    private Button DontSkipGuide;
+    private Button ReturnLoad;
     private void Awake()
     {
         EnterGame = StartButton.transform.Find("EnterGame").GetComponent<Button>();
         Setting = StartButton.transform.Find("Setting").GetComponent<Button>();
         Exit = StartButton.transform.Find("Exit").GetComponent<Button>();
-
+        ReturnStart=LoadButton.transform.Find("ReturnStart").GetComponent<Button>();
+    
+        SkipGuide=ChooseSkipGuide.transform.Find("SkipGuide").GetComponent<Button>();
+        DontSkipGuide=ChooseSkipGuide.transform.Find("DontSkipGuide").GetComponent<Button>();
+        ReturnLoad=ChooseSkipGuide.transform.Find("ReturnLoad").GetComponent<Button>();    
+        
         EnterGame.onClick.AddListener(OnEnterGameClick);
         Exit.onClick.AddListener(OnExitClick);
         Setting.onClick.AddListener(OnSettingClick);
 
         StartButton.SetActive(true);
         LoadButton.SetActive(false);
+        ChooseSkipGuide.SetActive(false);
     }
 
 
     #region 存档按钮刷新    
     private void RefreshLoadButton()
     {
-
         //显示现在的存档情况
-        for (int i = 0; i < LoadButton.transform.childCount; i++)
+        for (int i = 0; i < 4; i++)
         {
             GameObject button = LoadButton.transform.GetChild(i).gameObject;
             //显示存档名（存档1，存档2，存档3，存档4，无）
-            if (GameDataManager.Instance.LoadData.loads[i] != null && GameDataManager.Instance.LoadData.loads[i].GameTime != DateTime.MinValue)
+            if (GameDataManager.Instance.LoadData.loads[i]!= null && GameDataManager.Instance.LoadData.loads[i].GameTime != DateTime.MinValue)
             {
                 button.transform.GetChild(0).transform.Find("Name").GetComponent<Text>().text = "存档" + (i + 1);
                 //显示存档时间
@@ -71,11 +83,15 @@ public class StartSceneManager : MonoBehaviour
         // 加载存档
         if (GameDataManager.Instance.LoadData.loads[index] == null)
         {
-            //创建新存档    
-            CreateNewLoad(index);
-            GameDataManager.Instance.LoadAllData(index);
-            //进入游戏
-            SceneManager.LoadScene(1);
+            LoadButton.SetActive(false);
+            ChooseSkipGuide.SetActive(true);
+            SkipGuide.onClick.AddListener(() => EnterNewGame(index,true));
+            DontSkipGuide.onClick.AddListener(() => EnterNewGame(index,false));
+            ReturnLoad.onClick.AddListener(() =>
+            {
+                ChooseSkipGuide.SetActive(false);
+                LoadButton.SetActive(true);
+            });
             return;
         }
         else
@@ -86,6 +102,17 @@ public class StartSceneManager : MonoBehaviour
             SceneManager.LoadScene(1);
         }
     }
+    
+    //创建新存档
+    public void EnterNewGame(int index,bool SkipGuide)
+    {
+        //创建新存档    
+        CreateNewLoad(index);
+        GameDataManager.Instance.LoadAllData(index,SkipGuide);
+
+        //进入游戏
+        SceneManager.LoadScene(1);
+    }
     #endregion
 
     #region 进入游戏按钮事件
@@ -94,13 +121,16 @@ public class StartSceneManager : MonoBehaviour
         //进入存档选择界面
         StartButton.SetActive(false);
         LoadButton.SetActive(true);
-
+        ReturnStart.onClick.AddListener(() =>
+        {
+            StartButton.SetActive(true);
+            LoadButton.SetActive(false);
+        });
         GameDataManager.Instance.LoadLoadData();
         //显示现在的存档情况
         RefreshLoadButton();
         //添加按钮事件
     }
-
     //删除存档
     public void DeleteLoad(string name)
     {
@@ -140,6 +170,7 @@ public class StartSceneManager : MonoBehaviour
     }
     #endregion
 
+    #region 创建新存档
 
     //创建新存档(从初始存档位置复制)
     void CreateNewLoad(int Index)
@@ -158,6 +189,9 @@ public class StartSceneManager : MonoBehaviour
             File.Copy(file, Path.Combine(targetFolder, Path.GetFileName(file)), true);
         }
     }
+
+    #endregion
+    
 
 
 
