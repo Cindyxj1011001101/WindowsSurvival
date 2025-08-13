@@ -23,11 +23,6 @@ public class UITechNode : HoverableButton
         bool beingStudied = TechnologyManager.Instance.IsTechNodeBeingStudied(techNode);
         bool locked = TechnologyManager.Instance.IsTechNodeLocked(techNode);
 
-        if (techNode.techName == "修理" && !complished && !beingStudied)
-        {
-            StartBlinking();
-        }
-
         // 显示必要信息
         techName.text = techNode.techName;
         costText.text = $"{techNode.cost}科技点";
