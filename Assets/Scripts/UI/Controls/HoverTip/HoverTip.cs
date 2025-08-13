@@ -26,10 +26,13 @@ public class HoverTip : MonoBehaviour
 
     public void SetTip(
         string textTip,
+        Color textColor,
         int time,
         Dictionary<PlayerStateEnum, float> playerEffects,
         Dictionary<EnvironmentStateEnum, float> envEffects)
     {
+        descText.color = textColor;
+
         bool textTipOnly = true;
 
         (verticalLayout.transform as RectTransform).sizeDelta = new Vector2((verticalLayout.transform as RectTransform).sizeDelta.x, 1000);

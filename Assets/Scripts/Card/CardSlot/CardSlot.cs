@@ -156,19 +156,19 @@ public class CardSlot : MonoBehaviour
         {
             case DurabilityComponent durabilityComponent:
                 slider.value = (float)durabilityComponent.durability / durabilityComponent.maxDurability;
-                tipController.SetTip($"耐久度:    {slider.value * 100:0.0}%");
+                tipController.SetTip($"耐久度:    {slider.value * 100:0.0}%", ColorManager.CardComponentColors[component.GetType()]);
                 break;
             case FreshnessComponent freshnessComponent:
                 slider.value = (float)freshnessComponent.freshness / freshnessComponent.maxFreshness;
-                tipController.SetTip($"新鲜度:    {slider.value * 100:0.0}%");
+                tipController.SetTip($"新鲜度:    {slider.value * 100:0.0}%", ColorManager.CardComponentColors[component.GetType()]);
                 break;
             case GrowthComponent growthComponent:
                 slider.value = (float)growthComponent.growth / growthComponent.maxGrowth;
-                tipController.SetTip($"生长度:    {slider.value * 100:0.0}%");
+                tipController.SetTip($"生长度:    {slider.value * 100:0.0}%", ColorManager.CardComponentColors[component.GetType()]);
                 break;
             case ProgressComponent progressComponent:
                 slider.value = (float)progressComponent.progress / progressComponent.maxProgress;
-                tipController.SetTip($"产物进度:    {slider.value * 100:0.0}%");
+                tipController.SetTip($"产物进度:    {slider.value * 100:0.0}%", ColorManager.CardComponentColors[component.GetType()]);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");

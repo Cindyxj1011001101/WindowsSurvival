@@ -11,10 +11,11 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public UnityEvent onPointerEnter = new();
 
-    string textTip;
-    int time;
-    Dictionary<PlayerStateEnum, float> playerEffects;
-    Dictionary<EnvironmentStateEnum, float> envEffects;
+    private string textTip;
+    private Color textColor;
+    private int time;
+    private Dictionary<PlayerStateEnum, float> playerEffects;
+    private Dictionary<EnvironmentStateEnum, float> envEffects;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -29,15 +30,25 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void SetTip(
         string textTip,
+        Color textColor,
         int time,
         Dictionary<PlayerStateEnum, float> playerEffects,
         Dictionary<EnvironmentStateEnum, float> envEffects)
     {
-
         this.textTip = textTip;
+        this.textColor = textColor;
         this.time = time;
         this.playerEffects = playerEffects;
         this.envEffects = envEffects;
+    }
+
+    public void SetTip(
+        string textTip,
+        int time,
+        Dictionary<PlayerStateEnum, float> playerEffects,
+        Dictionary<EnvironmentStateEnum, float> envEffects)
+    {
+        SetTip(textTip, ColorManager.White, time, playerEffects, envEffects);
     }
 
     public void SetTip(string textTip)
@@ -45,12 +56,17 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         SetTip(textTip, 0, null, null);
     }
 
+    public void SetTip(string textTip, Color textColor)
+    {
+        SetTip(textTip, textColor, 0, null, null);
+    }
+
     public void ShowTip()
     {
         ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Tips", "HoverTip", WindowsManager.Instance.HoverTipLayer, (asset) =>
         {
             hoverTip = asset.GetComponent<HoverTip>();
-            hoverTip.SetTip(textTip, time, playerEffects, envEffects);
+            hoverTip.SetTip(textTip, textColor, time, playerEffects, envEffects);
             hoverTip.transform.position = CalcTipPos();
             hoverTip.Show();
         });
