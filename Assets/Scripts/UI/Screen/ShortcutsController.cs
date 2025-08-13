@@ -49,8 +49,7 @@ public class ShortcutsController : MonoBehaviour
     private void Start()
     {
         #region 新手教程
-        bool skipTutorial = false;
-        if (!skipTutorial)
+        if (!GameDataManager.Instance.CurLoad.SkipGuide) // 如果新手教程未跳过
         {
             // 显示已解锁的快捷方式
             foreach (var appName in shortcuts.Keys)

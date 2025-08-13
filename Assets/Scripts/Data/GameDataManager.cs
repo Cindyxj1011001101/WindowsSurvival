@@ -20,7 +20,8 @@ public class GameDataManager
         curLoadIndex = 0;
         // 加载存档数据
         LoadLoadData();
-        loadData.loads[0] = new Load(new DateTime(2020, 1, 1, 0, 0, 0), false);
+        // 从UIScene直接打开默认跳过新手教程
+        loadData.loads[0] = new Load(new DateTime(2020, 1, 1, 0, 0, 0), true);
         // 玩家背包
         playerBagData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "PlayerBag");
         // 上次地点
