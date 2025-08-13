@@ -134,7 +134,7 @@ public class ChatManager : MonoBehaviour
                 {
                     chatWindow.InterruptChoose();
                     Choosing = false;
-                    TriggerMessage( null);
+                    TriggerMessage(null);
                 }
             }
             else
@@ -182,8 +182,9 @@ public class ChatManager : MonoBehaviour
         //如果打断对话非空时触发打断对话
         if (InterruptParagraphData != null)
         {
-            TriggerParagraph(InterruptParagraphData);
-
+            ParagraphData tmpParagraph = InterruptParagraphData;
+            InterruptParagraphData = null;
+            TriggerParagraph(tmpParagraph);
             return;
         }
         if (chatData == null) return;
