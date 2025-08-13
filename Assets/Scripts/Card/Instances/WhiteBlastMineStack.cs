@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -17,13 +16,13 @@ public class WhiteBlastMineStack : Card
     public void Event_Dig(out string tip)
     {
         tip = string.Empty;
-        TryUse();
-        var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig);
-        card.TryUse();
         TimeManager.Instance.AddTime(30);
         //掉落卡牌
         RandomDrop();
         RandomDrop();
+
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).TryUse();
+        TryUse();
     }
     public bool Judge_Dig(out string hint)
     {

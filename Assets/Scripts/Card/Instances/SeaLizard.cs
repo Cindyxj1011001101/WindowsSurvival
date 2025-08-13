@@ -13,11 +13,14 @@ public class SeaLizard : Card
 
     public void Event_Eat(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 6);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Itchiness, 25);
         TimeManager.Instance.AddTime(15);
+
+        DestroyThis();
     }
 }

@@ -5,7 +5,7 @@ public class FoodScrap : Card
     public int RemainRound;
     private FoodScrap()
     {
-        RemainRound=4;
+        RemainRound = 4;
         Events = new()
         {
             new Event("食用", "和鱼抢吃的", Event_Eat, null, () => 15,
@@ -15,11 +15,14 @@ public class FoodScrap : Card
 
     public void Event_Eat(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 12);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         TimeManager.Instance.AddTime(15);
+
+        DestroyThis();
     }
     protected override System.Action OnUpdate => () =>
     {

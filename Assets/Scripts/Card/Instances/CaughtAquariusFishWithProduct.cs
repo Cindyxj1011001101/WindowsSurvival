@@ -18,22 +18,28 @@ public class CaughtAquariusFishWithProduct : Card
 
     public void Event_Drink(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         // 播放喝水的音效
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("喝_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 45);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 10);
         TimeManager.Instance.AddTime(15);
+
+        DestroyThis();
     }
 
     public void Event_Release(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         // 地点中增加一个有产物的水瓶鱼
         AddCard("有产物的水瓶鱼", true);
+
+        DestroyThis();
     }
 
     public bool Judge_Release(out string hint)

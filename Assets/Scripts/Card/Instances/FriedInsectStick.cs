@@ -19,11 +19,14 @@ public class FriedInsectStick : Card
 
     public void Event_Eat(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 46);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -4);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 8);
         TimeManager.Instance.AddTime(15);
+
+        DestroyThis();
     }
 }

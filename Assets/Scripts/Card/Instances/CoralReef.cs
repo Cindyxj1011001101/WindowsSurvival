@@ -25,12 +25,12 @@ public class CoralReef : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("挖掘废料_01", true);
         tip = string.Empty;
-        var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig);
-        card.TryUse();
         TimeManager.Instance.AddTime(45);
         RandomDropByHand();
         RandomDropByHand();
-        
+
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).TryUse();
+
     }
     public bool Judge_Dig(out string hint)
     {

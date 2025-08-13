@@ -22,8 +22,9 @@ public class RawOysterMeat : Card
     #region 食用
     public void Event_Eat(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         // 播放吃的音效
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
@@ -33,6 +34,8 @@ public class RawOysterMeat : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -1.2f);
         //消耗5分钟
         TimeManager.Instance.AddTime(5);
+
+        DestroyThis();
     }
     #endregion
 

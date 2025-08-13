@@ -20,13 +20,13 @@ public class WasteHeap : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("挖掘废料_01", true);
 
-        //消耗1点耐久度
-        TryUse();
-
         //消耗45分钟
         TimeManager.Instance.AddTime(45);
         //掉落卡牌
         RandomDrop();
+
+        //消耗1点耐久度
+        TryUse();
     }
 
     public void Event_DigByTool(out string tip)
@@ -34,16 +34,15 @@ public class WasteHeap : Card
         tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("挖掘废料_01", true);
-
-        //消耗1点耐久度
-        TryUse();
-        // 工具消耗耐久
-        var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig);
-        card.TryUse();
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
         //掉落卡牌
         RandomDrop();
+
+        // 工具消耗耐久
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).TryUse();
+        //消耗1点耐久度
+        TryUse();
     }
 
     private bool Judge_DigByTool(out string hint)

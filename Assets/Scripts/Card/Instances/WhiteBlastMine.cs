@@ -16,9 +16,12 @@ public class WhiteBlastMine : Card
 
     public void Event_Break(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, +80);
         TimeManager.Instance.AddTime(3);
+
+        DestroyThis();
     }
 }

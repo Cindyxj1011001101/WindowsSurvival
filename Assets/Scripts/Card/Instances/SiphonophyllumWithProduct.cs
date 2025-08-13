@@ -16,12 +16,14 @@ public class SiphonophyllumWithProduct : Card
 
     public void Event_Cut(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
-        var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
-        card.TryUse();
         TimeManager.Instance.AddTime(45);
         AddCards("磁性触手", 3, true);
+
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).TryUse();
+        DestroyThis();
     }
 
     public bool Judge_Cut(out string hint)
@@ -37,9 +39,10 @@ public class SiphonophyllumWithProduct : Card
 
     public void Event_Collect(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
         var sourceBag = Slot.Bag;
-        DestroyThis();
         // 变回虹吸海葵
         AddCard("虹吸海葵", sourceBag is PlayerBag);
         TimeManager.Instance.AddTime(15);
@@ -56,5 +59,7 @@ public class SiphonophyllumWithProduct : Card
         {
             AddCard("磁性触手", true);
         }
+
+        DestroyThis();
     }
 }

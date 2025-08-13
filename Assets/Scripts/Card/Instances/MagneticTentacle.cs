@@ -17,14 +17,15 @@ public class MagneticTentacle : Card
 
     private void OnRotton()
     {
-        DestroyThis();
         AddCard("废金属", true);
+        DestroyThis();
     }
 
     public void Event_Eat(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         // 播放吃的音效
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
@@ -36,6 +37,8 @@ public class MagneticTentacle : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -5);
         //消耗30分钟
         TimeManager.Instance.AddTime(30);
+
+        DestroyThis();
     }
 
     protected override Action OnUpdate => () =>

@@ -16,8 +16,9 @@ public class RotMaterial : Card
 
     public void Event_Eat(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         // 播放吃的音效
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
@@ -29,5 +30,7 @@ public class RotMaterial : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -10);
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
+
+        DestroyThis();
     }
 }

@@ -17,11 +17,10 @@ public class LoveBeadWithProduct : Card
     #region 事件
     public void Event_OpenByTool(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
         var sourceBag = Slot.Bag;
-        DestroyThis();
-        Card tool = GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig });
-        tool.TryUse();
 
         // 变回爱情贝
         // 如果原来在玩家背包，则优先添加到玩家背包，否则添加到环境里
@@ -49,6 +48,9 @@ public class LoveBeadWithProduct : Card
         {
             AddCard("白爆矿", true);
         }
+
+        GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }).TryUse();
+        DestroyThis();
     }
 
     public bool Judge_OpenByTool(out string hint)

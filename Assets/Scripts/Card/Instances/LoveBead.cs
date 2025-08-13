@@ -15,10 +15,13 @@ public class LoveBead : Card
 
     public void Event_GetMeat(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         TimeManager.Instance.AddTime(30);
         AddCards("生贝肉", 2, true);
+
+        DestroyThis();
     }
 
     private void OnProgressFull()

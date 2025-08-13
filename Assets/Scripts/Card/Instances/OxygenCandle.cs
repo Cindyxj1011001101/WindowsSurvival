@@ -13,9 +13,12 @@ public class OxygenCandle : Card
 
     public void Event_Light(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         AddCard("点燃的氧烛", true);
         SoundManager.Instance.PlaySound("点火");
+
+        DestroyThis();
     }
 }

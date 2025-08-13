@@ -18,12 +18,15 @@ public class CoalGrilledMeat : Card
     }
     public void Event_Eat(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 94);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -10);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 8);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 5);
         TimeManager.Instance.AddTime(15);
+
+        DestroyThis();
     }
 }

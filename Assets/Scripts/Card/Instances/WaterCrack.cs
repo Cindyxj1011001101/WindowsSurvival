@@ -14,12 +14,15 @@ public class WaterCrack : Card
 
     public void Event_Fix(out string tip)
     {
-        SoundManager.Instance.PlaySound("堵住裂缝");
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
+        SoundManager.Instance.PlaySound("堵住裂缝");
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition,new SubscribeActionArgs("渗水裂缝","堵住"));
-        GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物").DestroyThis();
         TimeManager.Instance.AddTime(15);
+
+        GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物").DestroyThis();
+        DestroyThis();
     }
 
     public bool Jugde_Fix(out string hint)

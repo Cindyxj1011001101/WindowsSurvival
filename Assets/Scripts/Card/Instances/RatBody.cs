@@ -21,16 +21,16 @@ public class RatBody : Card
 
     private void OnRotton()
     {
-        DestroyThis();
         AddCard("腐烂物", true);
+        DestroyThis();
     }
 
     #region 食用
     public void Event_Eat(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        //销毁老鼠尸体
-        DestroyThis();
         // 播放吃的音效
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
@@ -42,15 +42,18 @@ public class RatBody : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -8);
         //消耗30分钟
         TimeManager.Instance.AddTime(30);
+
+        //销毁老鼠尸体
+        DestroyThis();
     }
     #endregion
 
     #region 用手剥
     public void Event_PeelByHand(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        //销毁老鼠尸体
-        DestroyThis();
         //-3精神值
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         //-2健康
@@ -68,19 +71,24 @@ public class RatBody : Card
             //掉落提示：“肉被糟蹋了，什么都没得到”
             tip = "肉被糟蹋了，什么都没得到";
         }
+
+        //销毁老鼠尸体
+        DestroyThis();
     }
     #endregion
 
     #region 用刀切割
     public void Event_PeelByKnife(out string tip)
     {
+        StopUpdating();
+
         tip = string.Empty;
-        DestroyThis();
-        var card = GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut);
-        card.TryUse();
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
         AddCard("小块生肉", true);
+
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).TryUse();
+        DestroyThis();
     }
 
     public bool Judge_PeelByKnife(out string hint)
