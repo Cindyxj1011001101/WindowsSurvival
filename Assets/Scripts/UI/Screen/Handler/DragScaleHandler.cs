@@ -1,9 +1,8 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
+public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IEndDragHandler
 {
     public enum ScaleDirection
     {
@@ -26,6 +25,7 @@ public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
     private Vector2 startOffsetMax;
 
     private bool isDragging = false;
+    private bool isDirty = false;
 
     public void Awake()
     {
@@ -158,5 +158,28 @@ public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
             Mathf.Clamp(targetRect.offsetMax.x, rectMask.rect.xMin, rectMask.rect.xMax),
             Mathf.Clamp(targetRect.offsetMax.y, rectMask.rect.yMin, rectMask.rect.yMax)
         );
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        isDragging = false;
+    }
+
+    private void OnRectTransformDimensionsChange()
+    {
+        isDirty = true;
+    }
+
+    private void FixedUpdate()
+    {
+        if (isDragging && isDirty)
+        {
+            // 更新
+            foreach (var item in targetRect.GetComponentsInChildren<IAdaptiveSize>())
+            {
+                item.UpdateSize();
+            }
+            isDirty = false;
+        }
     }
 }
