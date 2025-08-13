@@ -76,7 +76,7 @@ public class StudyWindow : WindowBase
         //}
         //GameDataManager.Instance.SaveTechnologyData();
 
-        if (GameDataManager.Instance.UnlockedShortcuts.Contains(AppName))
+        if (GameDataManager.Instance.CurLoad.SkipGuide || GameDataManager.Instance.UnlockedShortcuts.Contains(AppName))
             DisplayStudyState(2, null);
         else
             studyStateButton.SetVisiable(false);
