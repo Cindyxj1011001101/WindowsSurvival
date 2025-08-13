@@ -94,6 +94,22 @@ public class HoverTip : MonoBehaviour
 
             foreach (var (type, delta) in envEffects)
             {
+                if (type == EnvironmentStateEnum.Electricity)
+                {
+                    var stateTip = transform.Find($"E_{type}").GetComponent<UIStateTip>();
+                    stateTip.SetValue(StateManager.Instance.Electricity, delta);
+                    stateTip.gameObject.SetActive(true);
+                    continue;
+                }
+
+                if (type == EnvironmentStateEnum.WaterLevel)
+                {
+                    var stateTip = transform.Find($"E_{type}").GetComponent<UIStateTip>();
+                    stateTip.SetValue(StateManager.Instance.WaterLevel, delta);
+                    stateTip.gameObject.SetActive(true);
+                    continue;
+                }
+
                 if (GameManager.Instance.CurEnvironmentBag.StateDict.TryGetValue(type, out var state))
                 {
                     var stateTip = transform.Find($"E_{type}").GetComponent<UIStateTip>();
