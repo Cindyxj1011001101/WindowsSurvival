@@ -19,6 +19,15 @@ public class UITechNode : HoverableButton
 
     public void DisplayTechNode(ScriptableTechnologyNode techNode)
     {
+        bool complished = TechnologyManager.Instance.IsTechNodeComplished(techNode);
+        bool beingStudied = TechnologyManager.Instance.IsTechNodeBeingStudied(techNode);
+        bool locked = TechnologyManager.Instance.IsTechNodeLocked(techNode);
+
+        if (techNode.techName == "修理" && !complished && !beingStudied)
+        {
+            StartBlinking();
+        }
+
         // 显示必要信息
         techName.text = techNode.techName;
         costText.text = $"{techNode.cost}科技点";
@@ -37,7 +46,7 @@ public class UITechNode : HoverableButton
         }
 
         // 已完成
-        if (TechnologyManager.Instance.IsTechNodeComplished(techNode))
+        if (complished)
         {
             background.SetActive(false);
             foreground_inProgress.SetActive(false);
@@ -49,7 +58,7 @@ public class UITechNode : HoverableButton
             }
         }
         // 未解锁
-        else if (TechnologyManager.Instance.IsTechNodeLocked(techNode))
+        else if (locked)
         {
             background.SetActive(true);
             foreground_inProgress.SetActive(false);
@@ -62,7 +71,7 @@ public class UITechNode : HoverableButton
             techName.color = ColorManager.DarkGrey;
         }
         // 正在研究
-        else if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
+        else if (beingStudied)
         {
             background.SetActive(false);
             foreground_inProgress.SetActive(true);
