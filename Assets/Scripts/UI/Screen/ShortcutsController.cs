@@ -48,14 +48,20 @@ public class ShortcutsController : MonoBehaviour
 
     private void Start()
     {
-        // 显示已解锁的快捷方式
-        foreach (var appName in shortcuts.Keys)
+        #region 新手教程
+        bool skipTutorial = false;
+        if (!skipTutorial)
         {
-            SetLocked(appName, !GameDataManager.Instance.UnlockedShortcuts.Contains(appName), false);
-        }
+            // 显示已解锁的快捷方式
+            foreach (var appName in shortcuts.Keys)
+            {
+                SetLocked(appName, !GameDataManager.Instance.UnlockedShortcuts.Contains(appName), false);
+            }
 
-        #region 临时
-        restButton.SetActive(GameDataManager.Instance.UnlockedShortcuts.Contains("Rest"));
+            #region 临时
+            restButton.SetActive(GameDataManager.Instance.UnlockedShortcuts.Contains("Rest"));
+            #endregion
+        }
         #endregion
     }
 

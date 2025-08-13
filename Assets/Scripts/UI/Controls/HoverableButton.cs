@@ -174,7 +174,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             .SetEase(Ease.Linear);
     }
 
-    private void StopBlinking()
+    public void StopBlinking()
     {
         if (!isBlinking) return;
 
