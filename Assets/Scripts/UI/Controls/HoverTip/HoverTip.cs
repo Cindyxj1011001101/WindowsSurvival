@@ -30,8 +30,9 @@ public class HoverTip : MonoBehaviour
         Dictionary<PlayerStateEnum, float> playerEffects,
         Dictionary<EnvironmentStateEnum, float> envEffects)
     {
-
         bool textTipOnly = true;
+
+        (verticalLayout.transform as RectTransform).sizeDelta = new Vector2((verticalLayout.transform as RectTransform).sizeDelta.x, 1000);
 
         foreach (Transform child in transform)
         {
@@ -105,6 +106,7 @@ public class HoverTip : MonoBehaviour
         {
             forEnvironment.SetActive(false);
         }
+
 
         // 如果仅显示文本
         if (textTipOnly)
