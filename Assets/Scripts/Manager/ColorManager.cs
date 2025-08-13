@@ -23,4 +23,12 @@ public static class ColorManager
         { typeof(ProgressComponent), Green },
         { typeof(GrowthComponent), White },
     };
+
+    public static Dictionary<int, Color32> LoadColors = new()
+    {
+        { 0,  Green },
+        { 1,  Yellow },
+        { 2,  Orange },
+        { 3,  Red },
+    };
 }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class UILoadState : UIStateSlider
 {
     public Sprite[] levels;
-    public Color[] colors;
+    //public Color[] colors;
 
     public override void SetValue(float value, float maxValue)
     {
@@ -16,11 +16,11 @@ public class UILoadState : UIStateSlider
         int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
         icon.sprite = levels[level];
 
-        var color = colors[level];
+        var color = ColorManager.LoadColors[level];
         if (button != null)
         {
             button.hoveredColor = color;
         }
-        stateNameText.color = valueText.color = slider.fillRect.GetComponent<Image>().color = color;
+        button.currentColor = icon.color = stateNameText.color = valueText.color = slider.fillRect.GetComponent<Image>().color = color;
     }
 }
