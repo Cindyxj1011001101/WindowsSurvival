@@ -42,7 +42,7 @@ public class ChatManager : MonoBehaviour
     //当前选项数据
     public ChatData ChoosedChatData;
     //是否在段落中
-    private bool inParagraph = false;
+    public bool inParagraph = false;
     //打断的段落数据
     public ParagraphData InterruptParagraphData = null;
     //当前是否在选择中
@@ -64,13 +64,23 @@ public class ChatManager : MonoBehaviour
         GameDataManager.Instance.LoadGeneratedChatData();
         //添加对话段落触发监听
         EventManager.Instance.AddListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
-        //没有生成过对话时
-        if (GeneratedChatDataList.Count == 0)
+        if (GameDataManager.Instance.GeneratedChatData.init)
         {
-            //触发新手引导对话
-            ParagraphToTriggeer.Add(ParagraphDataList[0]);
+            GameDataManager.Instance.GeneratedChatData.init = false;
+            if (!GameDataManager.Instance.LoadData.loads[GameDataManager.Instance.curLoadIndex].SkipGuide)
+            {
+                ParagraphToTriggeer.Add(ParagraphDataList[0]);
+            }
         }
-
+        else
+        {
+            GeneratedChatDataList=GameDataManager.Instance.GeneratedChatData.GeneratedChatDataList;
+            ParagraphToTriggeer=GameDataManager.Instance.GeneratedChatData.ParagraphToTriggeer;
+            CurrentParagraphData=GameDataManager.Instance.GeneratedChatData.CurrentParagraphData;
+            inParagraph=GameDataManager.Instance.GeneratedChatData.inParagraph;
+            InterruptParagraphData=GameDataManager.Instance.GeneratedChatData.InterruptParagraphData;
+            Choosing=GameDataManager.Instance.GeneratedChatData.Choosing;
+        }
     }
 
     private void Start()
@@ -98,8 +108,10 @@ public class ChatManager : MonoBehaviour
         EventManager.Instance.RemoveListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
     }
 
+    //改一下，根据bool判断是否要加新手教程
     public void InitChat()
     {
+
         if (GeneratedChatDataList.Count > 0)
         {
             LoadGeneratedChatData();
@@ -150,11 +162,21 @@ public class ChatManager : MonoBehaviour
         inParagraph = true;
         CurrentParagraphData = ParagraphDataList[GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID];
         //从GeneratedChatDataList中加载已触发的对话数据
-        for (int i = 0; i < GeneratedChatDataList.Count - 1; i++)
+        for (int i = 0; i < GeneratedChatDataList.Count; i++)
         {
             chatWindow.CreateMessage(GeneratedChatDataList[i].MessageSender, GeneratedChatDataList[i].Message);
         }
-        TriggerMessage(GeneratedChatDataList[GeneratedChatDataList.Count - 1]);
+        int NextMessage= GeneratedChatDataList[GeneratedChatDataList.Count - 1].NextMessageID;
+        int ParagrapghID= GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID;
+        if (NextMessage == -1)
+        {
+            NextParagraph();
+        }
+        else
+        {
+            TriggerMessage(ParagraphDataList[ParagrapghID].ChatDataList[NextMessage-1]);
+        }
+
     }
     //根据下一条消息的类型决定触发消息类型为选项还是消息
     public void TriggerMessage(ChatData chatData)

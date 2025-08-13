@@ -702,6 +702,8 @@ public class StateManager : MonoBehaviour
         WaterLevel.CurValue += delta;
         // 触发水平面变化事件
         EventManager.Instance.TriggerEvent(EventType.ChangeWaterLevel, WaterLevel.CurValue);
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition,new SubscribeActionArgs("WaterLevel",WaterLevel.CurValue.ToString()));
+        if(WaterLevel.CurValue==100)Die();
         // 刷新前端显示
         var env = GameManager.Instance.CurEnvironmentBag;
         EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.WaterLevel)

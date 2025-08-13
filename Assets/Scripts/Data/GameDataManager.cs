@@ -24,8 +24,10 @@ public class GameDataManager
         environmentBagDataDict = new();
         foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
         {
-            environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
+            environmentBagDataDict.Add(place,
+                JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
         }
+
         // 状态数据
         stateData = JsonManager.LoadData<StateData>(CurLoadName, "State");
         // 音频数据
@@ -44,12 +46,12 @@ public class GameDataManager
         unlockedShortcuts = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedShortcuts");
     }
 
-    public void LoadAllData(int index)
+    public void LoadAllData(int index,bool skipGuide=true)
     {
         LoadLoadData();
         curLoadIndex = index;
-        loadData.loads[index] = new Load(new DateTime(2020, 1, 1, 0, 0, 0));
-
+        loadData.loads[index] = new Load(new DateTime(2020, 1, 1, 0, 0, 0), skipGuide);
+        SaveLoadData();
         // 玩家背包
         playerBagData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "PlayerBag");
         // 上次地点
@@ -58,8 +60,10 @@ public class GameDataManager
         environmentBagDataDict = new();
         foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
         {
-            environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
+            environmentBagDataDict.Add(place,
+                JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
         }
+
         // 状态数据
         stateData = JsonManager.LoadData<StateData>(CurLoadName, "State");
         // 音频数据
@@ -111,6 +115,7 @@ public class GameDataManager
                 loadData.loads[i] = new Load();
             }
         }
+
         // 保存时间
         loadData.loads[curLoadIndex].GameTime = timeData.curTime;
         // 保存存档数据
@@ -119,20 +124,25 @@ public class GameDataManager
     }
 
     #region 存档数据
+
     private LoadData loadData;
 
     public LoadData LoadData => loadData;
+
     public void SaveLoadData()
     {
         JsonManager.SaveData(loadData, "LoadData", "LoadData");
     }
+
     public void LoadLoadData()
     {
         loadData = JsonManager.LoadData<LoadData>("LoadData", "LoadData");
     }
+
     #endregion
 
     #region 玩家背包
+
     private BagRuntimeData playerBagData;
 
     public BagRuntimeData PlayerBagData => playerBagData;
@@ -149,6 +159,7 @@ public class GameDataManager
         {
             playerBagData.cardSlots.Add(new List<Card>(slot.Cards));
         }
+
         JsonManager.SaveData(playerBagData, CurLoadName, "PlayerBag");
     }
 
@@ -156,6 +167,7 @@ public class GameDataManager
     {
         playerBagData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "PlayerBag");
     }
+
     #endregion
 
     #region 地点
@@ -174,6 +186,7 @@ public class GameDataManager
     {
         lastPlace = JsonManager.LoadData<int>(CurLoadName, "LastPlace");
     }
+
     #endregion
 
     #region 环境背包
@@ -190,7 +203,8 @@ public class GameDataManager
         environmentBagDataDict = new();
         foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
         {
-            environmentBagDataDict.Add(place, JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
+            environmentBagDataDict.Add(place,
+                JsonManager.LoadData<EnvironmentBagRuntimeData>(CurLoadName, place.ToString() + "Bag"));
         }
     }
 
@@ -221,6 +235,7 @@ public class GameDataManager
                 //data.cardSlotsRuntimeData.Add(new() { cardList = slot.Cards });
                 data.cardSlots.Add(new List<Card>(slot.Cards));
             }
+
             JsonManager.SaveData(data, CurLoadName, place.ToString() + "Bag");
         }
     }
@@ -228,6 +243,7 @@ public class GameDataManager
     #endregion
 
     #region 音频
+
     private AudioData audioData;
     public AudioData AudioData => audioData;
 
@@ -238,11 +254,13 @@ public class GameDataManager
         audioData.masterVolume = Mathf.Clamp01(volume);
         onBGMVolumeChanged?.Invoke();
     }
+
     public void SetBGMVolume(float volume)
     {
         audioData.bgmVolume = Mathf.Clamp01(volume);
         onBGMVolumeChanged?.Invoke();
     }
+
     public void SetSFXVolume(float volume)
     {
         audioData.sfxVolume = Mathf.Clamp01(volume);
@@ -261,6 +279,7 @@ public class GameDataManager
     #endregion
 
     #region 合成
+
     private List<string> unlockedRecipes;
 
     public List<string> UnlockedRecipes => unlockedRecipes;
@@ -274,9 +293,11 @@ public class GameDataManager
     {
         unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
     }
+
     #endregion
 
     #region 科技
+
     private TechnologyData technologyData;
 
     public TechnologyData TechnologyData => technologyData;
@@ -290,9 +311,11 @@ public class GameDataManager
     {
         technologyData = JsonManager.LoadData<TechnologyData>(CurLoadName, "Technology");
     }
+
     #endregion
 
     #region 装备
+
     private BagRuntimeData equipmentData;
     public BagRuntimeData EquipmentData => equipmentData;
 
@@ -307,6 +330,7 @@ public class GameDataManager
         {
             equipmentData.cardSlots.Add(new List<Card>(slot.Cards));
         }
+
         JsonManager.SaveData(equipmentData, CurLoadName, "Equipment");
     }
 
@@ -314,15 +338,25 @@ public class GameDataManager
     {
         equipmentData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "Equipment");
     }
+
     #endregion
 
     #region 已生成的对话
+
     private GeneratedChatData generatedChatData;
     public GeneratedChatData GeneratedChatData => generatedChatData;
 
-    public void SaveGeneratedChatData() 
+    public void SaveGeneratedChatData()
     {
+        generatedChatData.DetectedParagraphConditions =
+            new Dictionary<string, ParagraphCondition>(ChatConditionManager.Instance.DetectedParagraphConditions);
         generatedChatData.GeneratedChatDataList = new List<ChatData>(ChatManager.Instance.GeneratedChatDataList);
+        generatedChatData.ParagraphToTriggeer = new List<ParagraphData>(ChatManager.Instance.ParagraphToTriggeer);
+        generatedChatData.CurrentParagraphData = ChatManager.Instance.CurrentParagraphData;
+        generatedChatData.ChoosedChatData = ChatManager.Instance.ChoosedChatData;
+        generatedChatData.inParagraph = ChatManager.Instance.inParagraph;
+        generatedChatData.InterruptParagraphData = ChatManager.Instance.InterruptParagraphData;
+        generatedChatData.Choosing = ChatManager.Instance.Choosing;
         JsonManager.SaveData(generatedChatData, CurLoadName, "GeneratedChatData");
     }
 
@@ -331,9 +365,11 @@ public class GameDataManager
         generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
         ChatManager.Instance.GeneratedChatDataList = generatedChatData.GeneratedChatDataList;
     }
+
     #endregion
 
     #region 游戏时间数据
+
     private TimeData timeData;
     public TimeData TimeData => timeData;
 
@@ -349,9 +385,11 @@ public class GameDataManager
     {
         timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
     }
+
     #endregion
 
     #region 状态数据
+
     private StateData stateData;
     public StateData StateData => stateData;
 
@@ -371,9 +409,11 @@ public class GameDataManager
         };
         JsonManager.SaveData(stateData, CurLoadName, "State");
     }
+
     #endregion
 
     #region 已解锁的快捷方式
+
     private List<string> unlockedShortcuts = new();
 
     public List<string> UnlockedShortcuts => unlockedShortcuts;
@@ -382,5 +422,6 @@ public class GameDataManager
     {
         JsonManager.SaveData(WindowsManager.Instance.GetUnlockedShortcuts(), CurLoadName, "UnlockedShortcuts");
     }
+
     #endregion
 }
