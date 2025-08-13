@@ -52,12 +52,9 @@ public class GameDataManager
         unlockedShortcuts = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedShortcuts");
     }
 
-    public void LoadAllData(int index,bool skipGuide=true)
+    public void LoadAllData(int index)
     {
-        LoadLoadData();
         curLoadIndex = index;
-        loadData.loads[index] = new Load(new DateTime(2020, 1, 1, 0, 0, 0), skipGuide);
-        SaveLoadData();
         // 玩家背包
         playerBagData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "PlayerBag");
         // 上次地点
@@ -143,6 +140,12 @@ public class GameDataManager
     public void LoadLoadData()
     {
         loadData = JsonManager.LoadData<LoadData>("LoadData", "LoadData");
+    }
+
+    public void CreateNewLoad(int index, bool skipGuide)
+    {
+        loadData.loads[index] = new Load(new DateTime(2020, 1, 1, 0, 0, 0), skipGuide);
+        SaveLoadData();
     }
 
     #endregion
