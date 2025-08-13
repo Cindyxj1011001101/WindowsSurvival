@@ -12,9 +12,9 @@ public class StartSceneManager : MonoBehaviour
     private Button EnterGame;
     private Button Setting;
     private Button Exit;
-    
+
     private Button ReturnStart;
-    
+
     private Button SkipGuide;
     private Button DontSkipGuide;
     private Button ReturnLoad;
@@ -23,12 +23,12 @@ public class StartSceneManager : MonoBehaviour
         EnterGame = StartButton.transform.Find("EnterGame").GetComponent<Button>();
         Setting = StartButton.transform.Find("Setting").GetComponent<Button>();
         Exit = StartButton.transform.Find("Exit").GetComponent<Button>();
-        ReturnStart=LoadButton.transform.Find("ReturnStart").GetComponent<Button>();
-    
-        SkipGuide=ChooseSkipGuide.transform.Find("SkipGuide").GetComponent<Button>();
-        DontSkipGuide=ChooseSkipGuide.transform.Find("DontSkipGuide").GetComponent<Button>();
-        ReturnLoad=ChooseSkipGuide.transform.Find("ReturnLoad").GetComponent<Button>();    
-        
+        ReturnStart = LoadButton.transform.Find("ReturnStart").GetComponent<Button>();
+
+        SkipGuide = ChooseSkipGuide.transform.Find("SkipGuide").GetComponent<Button>();
+        DontSkipGuide = ChooseSkipGuide.transform.Find("DontSkipGuide").GetComponent<Button>();
+        ReturnLoad = ChooseSkipGuide.transform.Find("ReturnLoad").GetComponent<Button>();
+
         EnterGame.onClick.AddListener(OnEnterGameClick);
         Exit.onClick.AddListener(OnExitClick);
         Setting.onClick.AddListener(OnSettingClick);
@@ -47,13 +47,13 @@ public class StartSceneManager : MonoBehaviour
         {
             GameObject button = LoadButton.transform.GetChild(i).gameObject;
             //显示存档名（存档1，存档2，存档3，存档4，无）
-            if (GameDataManager.Instance.LoadData.loads[i]!= null && GameDataManager.Instance.LoadData.loads[i].GameTime != DateTime.MinValue)
+            if (GameDataManager.Instance.LoadData.loads[i] != null && GameDataManager.Instance.LoadData.loads[i].GameTime != DateTime.MinValue)
             {
                 button.transform.GetChild(0).transform.Find("Name").GetComponent<Text>().text = "存档" + (i + 1);
                 //显示存档时间
                 DateTime now = GameDataManager.Instance.LoadData.loads[i].GameTime;
                 DateTime target = new DateTime(2020, 1, 1, 0, 0, 0);
-                TimeSpan span = now-target;
+                TimeSpan span = now - target;
                 int days = span.Days;
                 int hours = now.Hour;
                 int minutes = now.Minute;
@@ -85,8 +85,8 @@ public class StartSceneManager : MonoBehaviour
         {
             LoadButton.SetActive(false);
             ChooseSkipGuide.SetActive(true);
-            SkipGuide.onClick.AddListener(() => EnterNewGame(index,true));
-            DontSkipGuide.onClick.AddListener(() => EnterNewGame(index,false));
+            SkipGuide.onClick.AddListener(() => EnterNewGame(index, true));
+            DontSkipGuide.onClick.AddListener(() => EnterNewGame(index, false));
             ReturnLoad.onClick.AddListener(() =>
             {
                 ChooseSkipGuide.SetActive(false);
@@ -102,13 +102,13 @@ public class StartSceneManager : MonoBehaviour
             SceneManager.LoadScene(1);
         }
     }
-    
+
     //创建新存档
-    public void EnterNewGame(int index,bool SkipGuide)
+    public void EnterNewGame(int index, bool skipGuide)
     {
         //创建新存档    
-        CreateNewLoad(index);
-        GameDataManager.Instance.LoadAllData(index,SkipGuide);
+        CreateNewLoad(index, skipGuide);
+        GameDataManager.Instance.LoadAllData(index);
 
         //进入游戏
         SceneManager.LoadScene(1);
@@ -126,6 +126,7 @@ public class StartSceneManager : MonoBehaviour
             StartButton.SetActive(true);
             LoadButton.SetActive(false);
         });
+        // 读取存档数据
         GameDataManager.Instance.LoadLoadData();
         //显示现在的存档情况
         RefreshLoadButton();
@@ -173,7 +174,7 @@ public class StartSceneManager : MonoBehaviour
     #region 创建新存档
 
     //创建新存档(从初始存档位置复制)
-    void CreateNewLoad(int Index)
+    void CreateNewLoad(int Index, bool skipGuide)
     {
         //源路径
         string sourcePath = Path.Combine(Application.streamingAssetsPath, "GameData0");
@@ -188,11 +189,9 @@ public class StartSceneManager : MonoBehaviour
         {
             File.Copy(file, Path.Combine(targetFolder, Path.GetFileName(file)), true);
         }
+
+        GameDataManager.Instance.CreateNewLoad(Index, skipGuide);
     }
 
     #endregion
-    
-
-
-
 }
