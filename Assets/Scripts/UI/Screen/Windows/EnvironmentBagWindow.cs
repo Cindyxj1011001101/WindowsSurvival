@@ -63,7 +63,7 @@ public class EnvironmentBagWindow : BagWindow
 
     private void OnPlayerBagCardsChanged(ChangePlayerBagCardsArgs args)
     {
-        exploreButton.Interactable = exploreButton.Interactable && GameManager.Instance.CanMoveExplore();
+        DisplayDiscoveryDegree((GameManager.Instance.CurEnvironmentBag.DiscoveryDegree, GameManager.Instance.CurEnvironmentBag.ExploreCompleted));
     }
 
     protected override void Init()
@@ -121,9 +121,6 @@ public class EnvironmentBagWindow : BagWindow
 
         // 探索事件
         DisplayDiscoveryDegree((curEnvironmentBag.DiscoveryDegree, curEnvironmentBag.ExploreCompleted));
-
-        // 按钮是否能够交互
-        //exploreButton.Interactable = GameManager.Instance.CanMoveExplore();
 
         // 显示图片
         environmentImage.sprite = curEnvironmentBag.PlaceData.placeImage;
@@ -206,8 +203,5 @@ public class EnvironmentBagWindow : BagWindow
 
         // 按钮是否能够交互
         exploreButton.Interactable = exploreButton.Interactable && GameManager.Instance.CanMoveExplore();
-
-        //// 显示牌堆数量
-        //frontCard.anchoredPosition = new Vector2(frontCard.anchoredPosition.x, -Mathf.FloorToInt(args.degree * 4) * 4);
     }
 }
