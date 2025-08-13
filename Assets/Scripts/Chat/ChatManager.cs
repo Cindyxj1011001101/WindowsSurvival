@@ -134,6 +134,7 @@ public class ChatManager : MonoBehaviour
                 {
                     chatWindow.InterruptChoose();
                     Choosing = false;
+                    TriggerMessage( null);
                 }
             }
             else
@@ -148,7 +149,6 @@ public class ChatManager : MonoBehaviour
     }
     public void TriggerParagraph(ParagraphData paragraphData)
     {
-        InterruptParagraphData = null;
         CurrentParagraphData = paragraphData;
         inParagraph = true;
         TriggerMessage(paragraphData.ChatDataList[0]);
@@ -165,7 +165,7 @@ public class ChatManager : MonoBehaviour
             chatWindow.CreateMessage(GeneratedChatDataList[i].MessageSender, GeneratedChatDataList[i].Message);
         }
         int NextMessage= GeneratedChatDataList[GeneratedChatDataList.Count - 1].NextMessageID;
-        int ParagrapghID= GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID;
+        int ParagrapghID= GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID+1;
         if (NextMessage == -1)
         {
             NextParagraph();
@@ -183,7 +183,7 @@ public class ChatManager : MonoBehaviour
         if (InterruptParagraphData != null)
         {
             TriggerParagraph(InterruptParagraphData);
-            InterruptParagraphData = null;
+
             return;
         }
         if (chatData == null) return;

@@ -213,6 +213,8 @@ public class ChatWindow : WindowBase
         inputFieldText.text = "";
         MonoUtility.DestroyAllChildren(optionLayout);
         ChatManager.Instance.ChoosedChatData = null;
+        optionSubmitted = true;
+        HideDialogueOptions();
     }
 
     private void CreateChatTip(MessageSenderEnum sender, string text, float lifeTime)

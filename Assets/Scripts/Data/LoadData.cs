@@ -13,13 +13,13 @@ public class LoadData
 public class Load
 {
     public DateTime GameTime;
-    public bool SkipGuide;
+    public bool SkipGuide=true;
     // public Sprite NPCSprite;
     // public DateTime LastPlayTime;
     public Load()
     {
         GameTime=DateTime.MinValue;
-        SkipGuide=false;
+        SkipGuide=true;
     }
     public Load(DateTime time,bool SkipGuide)
     {

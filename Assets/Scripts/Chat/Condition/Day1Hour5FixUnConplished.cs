@@ -13,7 +13,6 @@ public class Day1Hour5FixUnConplished:ParagraphCondition
 
         if (type == "Day1Hour5" && value=="FixUnConplished")
         {
-            Debug.Log("通过检测");
             return true;
         }
         return false;
