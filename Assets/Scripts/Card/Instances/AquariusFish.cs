@@ -16,14 +16,18 @@ public class AquariusFish : Card
 
     private void OnProgressFull()
     {
-        AddCard("有产物的水瓶鱼", Slot.Bag is PlayerBag);
         DestroyThis();
+        AddCard("有产物的水瓶鱼", Slot.Bag is PlayerBag);
     }
 
     #region 用捕网捉
     public void Event_CatchByNet(out string tip)
     {
-        StopUpdating();
+        // 销毁卡牌
+        DestroyThis();
+
+        // “捞网”耐久-1
+        GameManager.Instance.PlayerBag.FindCardOfName("捞网").TryUse();
 
         tip = string.Empty;
         // 1. 时间变化
@@ -35,11 +39,6 @@ public class AquariusFish : Card
         // 继承产物进度
         // 添加到玩家背包
         AddCard("被捉住的水瓶鱼", true).InheritComponent<ProgressComponent>(this);
-
-        // “捞网”耐久-1
-        GameManager.Instance.PlayerBag.FindCardOfName("捞网").TryUse();
-        // 销毁卡牌
-        DestroyThis();
     }
 
     public bool Judge_CatchByNet(out string hint)
@@ -57,7 +56,7 @@ public class AquariusFish : Card
     #region 用手捉
     public void Event_CatchByHand(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
 
@@ -82,8 +81,6 @@ public class AquariusFish : Card
             // 添加到玩家背包
             AddCard("被捉住的水瓶鱼", true).InheritComponent<ProgressComponent>(this);
         }
-
-        DestroyThis();
     }
     #endregion
 

@@ -17,7 +17,8 @@ public class LoveBeadWithProduct : Card
     #region 事件
     public void Event_OpenByTool(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
+        GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }).TryUse();
 
         tip = string.Empty;
         var sourceBag = Slot.Bag;
@@ -48,9 +49,6 @@ public class LoveBeadWithProduct : Card
         {
             AddCard("白爆矿", true);
         }
-
-        GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }).TryUse();
-        DestroyThis();
     }
 
     public bool Judge_OpenByTool(out string hint)

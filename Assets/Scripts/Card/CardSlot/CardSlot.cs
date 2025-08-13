@@ -359,7 +359,7 @@ public class CardSlot : MonoBehaviour
         if (!cards.Contains(card)) return;
 
         cards.Remove(card);
-        card.SetCardSlot(null);
+        //card.SetCardSlot(null);
 
         // 当卡牌从玩家背包移除时
         if (bag is PlayerBag || bag is EquipmentBag)

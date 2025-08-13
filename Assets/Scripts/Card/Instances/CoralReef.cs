@@ -22,14 +22,14 @@ public class CoralReef : Card
     }
     public void Event_Dig(out string tip)
     {
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).TryUse();
+
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("挖掘废料_01", true);
         tip = string.Empty;
         TimeManager.Instance.AddTime(45);
         RandomDropByHand();
         RandomDropByHand();
-
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).TryUse();
 
     }
     public bool Judge_Dig(out string hint)

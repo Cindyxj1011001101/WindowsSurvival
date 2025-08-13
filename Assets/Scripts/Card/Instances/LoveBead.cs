@@ -15,19 +15,17 @@ public class LoveBead : Card
 
     public void Event_GetMeat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         TimeManager.Instance.AddTime(30);
         AddCards("生贝肉", 2, true);
-
-        DestroyThis();
     }
 
     private void OnProgressFull()
     {
-        AddCard("有产物的爱情贝", Slot.Bag is PlayerBag);
         DestroyThis();
+        AddCard("有产物的爱情贝", Slot.Bag is PlayerBag);
     }
 
     protected override Action OnUpdate => () =>

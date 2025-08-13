@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -71,21 +72,51 @@ public class DetailsWindow : WindowBase
     private void RefreshCurrentDisplay()
     {
         if (currentDisplayedCard != null)
-            slot.DisplayCard(currentDisplayedCard, 1, false);
+            DisplayCard();
     }
 
     private void RefreshCurrentDisplay(Card card)
     {
-        if (currentDisplayedCard == card)
+        if (currentDisplayedCard != card) return;
+
+        // 如果卡牌要被销毁
+        if (currentDisplayedCard.Destroyed)
+        {
+            // 尝试从这个卡牌的slotCount里取出同类卡牌并刷新
+            if (currentDisplayedCard.SlotCards.Count > 0 &&
+                currentDisplayedCard.SlotCards[0].CardId == currentDisplayedCard.CardId)
+            DisplayCardDetails(currentDisplayedCard.SlotCards);
+            // 否则清空显示
+            else
+                Clear();
+        }
+        // 正常刷新显示
+        else
+        {
             RefreshCurrentDisplay();
+        }
     }
 
     bool moved = false;
     private void OnMove(EnvironmentBag curEnvironmentBag)
     {
         // 切地点时清除显示
-        //Clear();
         moved = true;
+    }
+
+    public void DisplayCardDetails(List<Card> slotCards, bool onlyDetails = false)
+    {
+        // 清除原数据
+        Clear();
+
+        if (slotCards == null || slotCards.Count == 0) return;
+
+        // 记录当前显示的卡牌
+        currentDisplayedCard = slotCards[0];
+
+        currentDisplayedCard.TempSlotTransform = slot.transform;
+
+        DisplayCardDetails(onlyDetails);
     }
 
     public void DisplayCardDetails(Card card, bool onlyDetails = false)
@@ -93,13 +124,21 @@ public class DetailsWindow : WindowBase
         // 清除原数据
         Clear();
 
+        if (card == null) return;
+
         // 记录当前显示的卡牌
         currentDisplayedCard = card;
 
         currentDisplayedCard.TempSlotTransform = slot.transform;
 
+        DisplayCardDetails(onlyDetails);
+    }
+
+    private void DisplayCardDetails(bool onlyDetails = false)
+    {
         // 显示卡牌
-        slot.DisplayCard(currentDisplayedCard, 1, false);
+        DisplayCard();
+
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 
         if (!onlyDetails)
@@ -123,10 +162,18 @@ public class DetailsWindow : WindowBase
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
+
+        // 显示详情
         DisplayDetails();
+
         // 打开详情如果卡牌有循环音
         if (currentDisplayedCard.HasLoopSound)
             currentDisplayedCard.OnDetailOpen();
+    }
+
+    private void DisplayCard()
+    {
+        slot.DisplayCard(currentDisplayedCard, 1, false);
     }
 
     private void DisplayDetails()
@@ -167,15 +214,21 @@ public class DetailsWindow : WindowBase
                 button.onClick.AddListener(() =>
                 {
                     var originalSlot = currentDisplayedCard.Slot;
+                    var originalSlotCards = currentDisplayedCard.SlotCards;
                     // 先执行事件
                     e.Inovke(out string tip);
+
                     DynamicEffectUtility.ShowTip(tip, button.transform.position + (button.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
+                    
                     if (originalSlot != null)
                         originalSlot.RefreshCurrentDisplay();
-                    if (moved) Clear();
-                    else if (!currentDisplayedCard.Destroyed)
+
+                    // 改变场景了就清空详情
+                    if (moved)
+                        Clear();
+                    // 否则尝试刷新
+                    else if (currentDisplayedCard != null && !currentDisplayedCard.Destroyed)
                         DisplayCardDetails(currentDisplayedCard);
-                    else Clear();
                 });
             }
             else

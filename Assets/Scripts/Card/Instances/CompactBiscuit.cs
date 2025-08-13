@@ -16,7 +16,7 @@ public class CompactBiscuit : Card
 
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         // 播放吃的音效
@@ -24,7 +24,5 @@ public class CompactBiscuit : Card
             SoundManager.Instance.PlaySound("吃_01",true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 12);
         TimeManager.Instance.AddTime(3);
-
-        DestroyThis();
     }
 }

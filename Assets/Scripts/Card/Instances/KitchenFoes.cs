@@ -18,14 +18,12 @@ public class KitchenFoes : Card
 
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 10);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -6);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -4);
         TimeManager.Instance.AddTime(15);
-
-        DestroyThis();
     }
 }
