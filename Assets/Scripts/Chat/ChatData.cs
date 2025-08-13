@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 public enum MessageSenderEnum
@@ -6,7 +7,7 @@ public enum MessageSenderEnum
     Player,//玩家
     Aside//旁白
 }
-
+[Serializable]
 public class ChatData
 {
     public int MessageID; //消息ID

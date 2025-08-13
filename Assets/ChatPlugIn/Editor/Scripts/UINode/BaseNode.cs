@@ -20,25 +20,27 @@ namespace ChatPlugIn
         public List<PortData> inputPortData=new List<PortData>();
         public List<PortData> outputPortData=new List<PortData>();
         //节点GUID
-        [SerializeField] private string _GUID;
-        public string GUID
-        {
-            get => _GUID;
-            set => _GUID = value;
-        }
+        public string GUID;
         //节点类型
-        [SerializeField] private NodeType _Type;
-        public NodeType Type
-        {
-            get => _Type;
-            set => _Type = value;
-        }
+        public NodeType Type;
         //节点标题
-        [SerializeField] private string _Title;
-        public string Title
+        public string Title;
+
+        public virtual void Init(StoryGraphView graphView, DialogueGraphData.DialogueNodeData nodeData)
         {
-            get => _Title;
-            set => _Title = value;
+            this.graphView = graphView;
+            SetPosition(new Rect(nodeData.position, Vector2.zero));
+            GUID = nodeData.GUID;
+            Type = nodeData.type;
+            Title = nodeData.title;
+            InitPort();
+            capabilities |= Capabilities.Resizable;
+            //添加USS类名
+            mainContainer.AddToClassList("node__main-container");
+            titleContainer.AddToClassList("node__title-container");
+            inputContainer.AddToClassList("node__input-container");
+            outputContainer.AddToClassList("node__output-container");
+            extensionContainer.AddToClassList("node__extension-container");
         }
         public virtual void Init(StoryGraphView graphView, string title, Vector2 position,ChatData chatData)
         {

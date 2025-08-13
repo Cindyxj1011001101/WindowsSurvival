@@ -149,7 +149,7 @@ public class ChatManager : MonoBehaviour
         InterruptParagraphData = null;
         CurrentParagraphData = paragraphData;
         inParagraph = true;
-        TriggerMessage(paragraphData.ChatDataList[0]);
+        // TriggerMessage(paragraphData.ChatDataList[0]);
     }
     //生成所有被记录的数据
     public void LoadGeneratedChatData()

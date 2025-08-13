@@ -54,6 +54,21 @@ namespace ChatPlugIn
     
             return floatField;
         }
+        public static IntegerField CreateIntField(int value = 0, string label = null, EventCallback<ChangeEvent<int>> onValueChanged = null)
+        {
+            IntegerField floatField = new IntegerField()
+            {
+                value = value,
+                label = label,
+            };
+    
+            if (onValueChanged != null)
+            {
+                floatField.RegisterValueChangedCallback(onValueChanged);
+            }
+    
+            return floatField;
+        }
         public static TextField CreateTextArea(string value = null, string label = null, EventCallback<ChangeEvent<string>> onValueChanged = null)
         {
             TextField textArea = CreateTextField(value, label, onValueChanged);

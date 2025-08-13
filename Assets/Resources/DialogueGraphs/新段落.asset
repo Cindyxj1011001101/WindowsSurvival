@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acb91488cccc428db932c74d3b62d890, type: 3}
+  m_Name: "\u65B0\u6BB5\u843D"
+  m_EditorClassIdentifier: 
+  nodeData:
+  - GUID: 86cbb4b554c9f124a9a6add17ddc8e12
+    title: "\u5F00\u59CB"
+    type: 21
+    position: {x: 216.8, y: 144}
+    chatData:
+      MessageID: 0
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      WaitTime: 0
+      TriggerMessageEffect: 
+  - GUID: 9565009e05bda6d44b4e1e7c018ff54b
+    title: "\u7ED3\u675F"
+    type: 41
+    position: {x: 469.6, y: 144}
+    chatData:
+      MessageID: 0
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      WaitTime: 0
+      TriggerMessageEffect: 
+  linkData:
+  - outputNodeGUID: 86cbb4b554c9f124a9a6add17ddc8e12
+    portName: "\u8F93\u51FA"
+    inputNodeGUID: 9565009e05bda6d44b4e1e7c018ff54b

@@ -90,6 +90,16 @@ namespace ChatPlugIn
             AddElement(node);
             return node;
         }
+
+        public BaseNode CreateNode(DialogueGraphData.DialogueNodeData nodeData)
+        {
+            Type nodeType = Type.GetType($"ChatPlugIn.{nodeData.type}Node");
+            BaseNode node = Activator.CreateInstance(nodeType) as BaseNode;
+            node.Init(this, nodeData);
+            node.Draw();
+            AddElement(node);
+            return node;
+        }
         public new void DeleteElements(IEnumerable<GraphElement> elements)
         {
             // 记录将要删除的连接，以便通知节点
@@ -140,28 +150,36 @@ namespace ChatPlugIn
         public void SaveGraph(string filename)
         {
             var graph = ScriptableObject.CreateInstance<DialogueGraphData>();
-            foreach (BaseEdge edge in edges)
+            foreach (var edge in edges)
             {
                 var outputNode =edge.output.node as BaseNode;
                 var inputNode = edge.input.node as BaseNode;
-                graph.linkData.Add(new DialogueGraphData.NodeLinkData()
+                graph.linkData.Add(new DialogueGraphData.NodeLinkData
                 {
                     outputNodeGUID = outputNode.GUID,
                     portName = edge.output.portName,
                     inputNodeGUID = inputNode.GUID
                 });
             }
-            foreach (BaseNode node in nodes)
-            { 
+            // 获取所有端口
+            List<BaseNode> nodelist =nodes.Cast<BaseNode>().ToList();
+            foreach (var node in nodelist)
+            {
+                if (node.Type == NodeType.Start)
+                {
+                    StartNode startnode = node as StartNode;
+                    graph.ParagraphData = startnode.paragraphData;
+                }
                 graph.nodeData.Add(new DialogueGraphData.DialogueNodeData()
                 {
                     GUID = node.GUID,
                     position = node.GetPosition().position,
                     type=node.Type,
+                    title = node.Title,
                     chatData = node.chatData
                 });
             }
-
+            
             // 确保目录存在
             if (!Directory.Exists("Assets/Resources/DialogueGraphs"))
                 Directory.CreateDirectory("Assets/Resources/DialogueGraphs");
@@ -190,26 +208,34 @@ namespace ChatPlugIn
             foreach (var node in currentGraph.nodeData)
             {
                 //创建节点
-                CreateNode(node.title,node.type,node.position,node.chatData);
+                CreateNode(node);
             }
         }
 
         private void ConnectNodes()
         {
-            foreach (BaseNode node in nodes)
+            List<BaseNode> Nodes = nodes.Cast<BaseNode>().ToList();
+            for (int i = 0; i < Nodes.Count; i++)
             {
-                var connections = currentGraph.linkData.Where(x => x.outputNodeGUID ==node.GUID).ToList();
+                var connections = currentGraph.linkData.Where(x => x.outputNodeGUID == Nodes[i].GUID).ToList();
+                Debug.Log(connections.Count);
                 for (int j = 0; j < connections.Count; j++)
                 {
-                    var inputNodeGUID = connections[j].inputNodeGUID;
-                    nodeMap.TryGetValue(inputNodeGUID, out var inputNode);
-                    LinkNodes(node.outputContainer[j].Q<Port>(), (Port)inputNode.inputContainer[0]);
+                    var targetNodeGuid = connections[j].inputNodeGUID;
+                    var targetNode = Nodes.First(x => x.GUID == targetNodeGuid);
+
+                    LinkNodes(Nodes[i].outputContainer[j].Q<Port>(), (Port)targetNode.inputContainer[0]);
+                
+                    targetNode.SetPosition(new Rect(
+                        currentGraph.nodeData.First(x => x.GUID == targetNodeGuid).position,
+                        new Vector2(200, 150)));
                 }
             }
         }
 
         private void LinkNodes(Port output, Port input)
         {
+
             var tempEdge = new Edge
             {
                 output = output,

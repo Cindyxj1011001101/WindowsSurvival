@@ -26,7 +26,7 @@ namespace ChatPlugIn
             public ChatData chatData;
         }
         public ParagraphData ParagraphData;
-        public List<DialogueNodeData> nodeData;
-        public List<NodeLinkData> linkData;
+        public List<DialogueNodeData> nodeData=new List<DialogueNodeData>();
+        public List<NodeLinkData> linkData=new List<NodeLinkData>();
     }
 }
