@@ -24,6 +24,12 @@ public class StudyButton : HoverableButton
             return;
         }
 
+        if (techNode.techName == "修理" && !TechnologyManager.Instance.IsTechNodeComplished("修理") &&
+            !TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
+        {
+            StartBlinking();
+        }
+
         beingStudied = TechnologyManager.Instance.IsTechNodeBeingStudied(techNode);
 
         if (!beingStudied)
