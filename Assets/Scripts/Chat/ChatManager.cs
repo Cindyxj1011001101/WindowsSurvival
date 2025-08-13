@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ChatManager : MonoBehaviour
@@ -310,5 +312,26 @@ public class ChatManager : MonoBehaviour
     {
         curSpeed = speed;
         chatSpeedButton.GetComponentInChildren<Text>().text = $"x{speed}";
+    }
+    public void ReturnToMainMenuAndDeleteSave()
+    {
+        int index = GameDataManager.Instance.curLoadIndex;
+        //删除本存档
+        GameDataManager.Instance.LoadData.loads[index] = null;
+        GameDataManager.Instance.SaveLoadData();
+        //目标路径
+        string targetFolder = Application.persistentDataPath + "/GameData" + index + "/";
+        // 如果目标文件夹不存在，先创建
+        if (Directory.Exists(targetFolder))
+        {
+            Directory.Delete(targetFolder, true);
+        }
+        else
+        {
+            Debug.Log("存档不存在");
+            return;
+        }
+        //返回初始界面
+        SceneManager.LoadScene(0);
     }
 }
