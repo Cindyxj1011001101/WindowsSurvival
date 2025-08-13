@@ -355,7 +355,7 @@ public class GameManager : MonoBehaviour
         {
             bag.gameObject.SetActive(place == targetPlace);
         }
-
+        SoundManager.Instance.PlayPlaceMusic(environmentBags[targetPlace]);
         
         // 离开旧地点：关闭有循环音的卡牌的循环音
         foreach (var slot in curEnvironmentBag.Slots)
@@ -370,7 +370,7 @@ public class GameManager : MonoBehaviour
         }
 
         curEnvironmentBag = environmentBags[targetPlace];
-        SoundManager.Instance.PlayCurEnvironmentMusic();
+        
         // 进入新地点：播放新地点离有循环音的卡牌
         foreach (var slot in curEnvironmentBag.Slots)
         {

@@ -815,13 +815,11 @@ public class StateManager : MonoBehaviour
         switch (currentLevel)
         {
             case DangerLevelEnum.None:
-                SoundManager.Instance.PlayCurEnvironmentMusic();
+                SoundManager.Instance.PlayPlaceMusic(GameManager.Instance.CurEnvironmentBag);
                 break;
-
             case DangerLevelEnum.Low:
                 SoundManager.Instance.PlayBGM("心跳_01", true, 2f, 1f);
                 break;
-
             case DangerLevelEnum.High:
                 SoundManager.Instance.PlayBGM("心跳_01", true, 2f, 1.5f);
                 break;
