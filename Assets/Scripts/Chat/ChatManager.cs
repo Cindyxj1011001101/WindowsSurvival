@@ -64,9 +64,9 @@ public class ChatManager : MonoBehaviour
         GameDataManager.Instance.LoadGeneratedChatData();
         //添加对话段落触发监听
         EventManager.Instance.AddListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
-        if (GameDataManager.Instance.GeneratedChatData.init)
+        if (!GameDataManager.Instance.GeneratedChatData.init)
         {
-            GameDataManager.Instance.GeneratedChatData.init = false;
+            GameDataManager.Instance.GeneratedChatData.init = true;
             if (!GameDataManager.Instance.LoadData.loads[GameDataManager.Instance.curLoadIndex].SkipGuide)
             {
                 ParagraphToTriggeer.Add(ParagraphDataList[0]);
@@ -107,11 +107,9 @@ public class ChatManager : MonoBehaviour
         //移除对话段落监听
         EventManager.Instance.RemoveListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
     }
-
-    //改一下，根据bool判断是否要加新手教程
+    
     public void InitChat()
     {
-
         if (GeneratedChatDataList.Count > 0)
         {
             LoadGeneratedChatData();
