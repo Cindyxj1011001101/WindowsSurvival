@@ -79,9 +79,9 @@ public class SoundManager : MonoBehaviour
                 _lowPassFilter.cutoffFrequency = 1000f; // 低沉闷响
                 _distortionFilter.enabled = true;
                 _distortionFilter.distortionLevel = 0.8f; // 高失真
-                sfxSource.pitch = 0.85f; // 轻微降调
+                sfxSource.pitch = 0.9f; // 轻微降调
                 
-                HrartbeatVolumeMultiplier = 0.25f; // 心跳时音效音量大幅降低
+                //HrartbeatVolumeMultiplier = 0.25f; // 心跳时音效音量大幅降低
                 
                 break;
 
@@ -90,8 +90,8 @@ public class SoundManager : MonoBehaviour
                 _lowPassFilter.cutoffFrequency = 2200f; // 中等闷响
                 _distortionFilter.enabled = true;
                 _distortionFilter.distortionLevel = 0.55f; // 轻微失真
-                sfxSource.pitch = 0.9f; // 轻微降调
-                HrartbeatVolumeMultiplier = 0.55f; // 心跳时音效音量降低
+                sfxSource.pitch = 0.95f; // 轻微降调
+                //HrartbeatVolumeMultiplier = 0.55f; // 心跳时音效音量降低
                 break;
 
             case DangerLevelEnum.None:
@@ -332,16 +332,17 @@ public class SoundManager : MonoBehaviour
         switch (GameDataManager.Instance.LastPlace)
         {
             case PlaceEnum.PowerCabin:
-                SoundManager.Instance.PlayBGM("飞船内_01", true);
-                break;
             case PlaceEnum.Cockpit:
-                SoundManager.Instance.PlayBGM("飞船内_01", true);
-                break;
             case PlaceEnum.LifeSupportCabin:
                 SoundManager.Instance.PlayBGM("飞船内_01", true);
                 break;
             case PlaceEnum.CoralCoast:
-                
+                SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
+                break;
+            case PlaceEnum.PhosphorTomb:
+                SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
+                break;
+            case PlaceEnum.SpaceshipOuterHull:
                 SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
                 break;
         }

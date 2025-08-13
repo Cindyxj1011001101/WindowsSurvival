@@ -806,7 +806,7 @@ public class StateManager : MonoBehaviour
     }
 
     //处于危险状态时，就播放心跳声，离开就播放环境音乐
-    private void PlayDangerLevelMusic(DangerLevelEnum currentLevel)
+    public void PlayDangerLevelMusic(DangerLevelEnum currentLevel)
     {
         // 应用低通滤波等音效变化
         SoundManager.Instance.ApplyDangerEffects(currentLevel);
