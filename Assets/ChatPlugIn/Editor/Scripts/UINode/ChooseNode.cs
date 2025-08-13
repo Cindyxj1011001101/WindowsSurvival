@@ -11,10 +11,10 @@ namespace ChatPlugIn
     [Serializable]
     public class ChooseNode:SingleInMulti0utNode
     {
-        public override void Init(StoryGraphView graphView, string title, Vector2 position)
+        public override void Init(StoryGraphView graphView, string title, Vector2 position,ChatData chatData)
         {
             if(inputPortData.Count==0) inputPortData.Add(new PortData("输入"));
-            base.Init(graphView, title, position);
+            base.Init(graphView, title, position,chatData);
             Type = NodeType.Choose;
         }
       

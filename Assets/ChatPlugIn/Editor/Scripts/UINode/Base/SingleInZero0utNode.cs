@@ -9,9 +9,9 @@ namespace ChatPlugIn
     [Serializable]
     public class SingleInZero0utNode : BaseNode
     {
-        public override void Init(StoryGraphView graphView, string title, Vector2 position)
+        public override void Init(StoryGraphView graphView, string title, Vector2 position,ChatData chatData)
         {
-            base.Init(graphView, title, position);
+            base.Init(graphView, title, position,chatData);
             Type = NodeType.SingleInZero0ut;
             outputPortData.Clear();
         }

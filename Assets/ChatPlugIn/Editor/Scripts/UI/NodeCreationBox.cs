@@ -68,7 +68,7 @@ namespace ChatPlugIn
                 case NodeType.PassCondition:
                 case NodeType.Dialogue:
                 case NodeType.Choose:
-                    graphView.CreateNode(SearchTreeEntry.content.text, type, localMousePosition);
+                    graphView.CreateNode(SearchTreeEntry.content.text, type, localMousePosition,new ChatData());
                     return true;
                 default:
                     return false;

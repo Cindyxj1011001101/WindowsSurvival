@@ -11,10 +11,10 @@ namespace ChatPlugIn
     public class StartNode : ZeroInSingleOutNode
     {
         private ParagraphData paragraphData;
-        public override void Init(StoryGraphView graphView, string title, Vector2 position)
+        public override void Init(StoryGraphView graphView, string title, Vector2 position,ChatData chatData)
         {
             if(outputPortData.Count==0)outputPortData.Add(new PortData("输出"));
-            base.Init(graphView, title, position);
+            base.Init(graphView, title, position,chatData);
             Type = NodeType.Start;
             paragraphData = new ParagraphData("Start", "", 0, new List<SentenceData>());
         }

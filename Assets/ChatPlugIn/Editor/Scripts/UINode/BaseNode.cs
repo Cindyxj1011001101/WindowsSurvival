@@ -13,6 +13,7 @@ namespace ChatPlugIn
         protected StoryGraphView graphView;
         protected VisualElement customDataContainer;
         protected Foldout foldout;
+        public ChatData chatData;
         public List<Port> input=new List<Port>();
         public List<Port> output=new List<Port>();
 
@@ -39,7 +40,7 @@ namespace ChatPlugIn
             get => _Title;
             set => _Title = value;
         }
-        public virtual void Init(StoryGraphView graphView, string title, Vector2 position)
+        public virtual void Init(StoryGraphView graphView, string title, Vector2 position,ChatData chatData)
         {
             this.graphView = graphView;
             SetPosition(new Rect(position, Vector2.zero));
@@ -47,6 +48,7 @@ namespace ChatPlugIn
             Type=NodeType.Base;
             GUID=UnityEditor.GUID.Generate().ToString();
             Title = title;
+            this.chatData=chatData;
             InitPort();
             capabilities |= Capabilities.Resizable;
             //添加USS类名

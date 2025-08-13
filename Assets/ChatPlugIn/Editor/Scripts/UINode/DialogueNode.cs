@@ -14,11 +14,11 @@ namespace ChatPlugIn
         public string RoleName {get;set; }
         public List<SentenceData> SentenceDatas {get;set; }
 
-        public override void Init(StoryGraphView graphView, string title, Vector2 position)
+        public override void Init(StoryGraphView graphView, string title, Vector2 position,ChatData chatData)
         {
             if(inputPortData.Count==0)inputPortData.Add(new PortData("输入"));
             if(outputPortData.Count==0)outputPortData.Add(new PortData("输出"));
-            base.Init(graphView, title, position);
+            base.Init(graphView, title, position,chatData);
             Type = NodeType.Dialogue;
             RoleName = "角色名称";
             SentenceDatas = new()

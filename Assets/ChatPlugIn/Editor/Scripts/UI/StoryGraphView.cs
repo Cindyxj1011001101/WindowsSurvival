@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -16,6 +14,11 @@ namespace ChatPlugIn
         //关联窗口
         private StoryEditorWindow storyEditorWindow;
         private NodeCreationBox nodeCreationBox;
+        //图数据
+        private DialogueGraphData currentGraph;
+        // 节点GUID到实例的映射
+        Dictionary<string, BaseNode> nodeMap = new Dictionary<string, BaseNode>();
+        
         string directoryPath = "Assets/Resources/ChatData";
         //构造器
         public StoryGraphView(StoryEditorWindow storyEditorWindow)
@@ -78,21 +81,11 @@ namespace ChatPlugIn
             //添加框选组件
             this.AddManipulator(new RectangleSelector());
         }
-
-        public BaseNode CreateNodeFromJson(Type type, Vector2 position, string json)
-        {
-            BaseNode node = Activator.CreateInstance(type) as BaseNode;
-            node.Deserialize(json);
-            node.Init(this,node.Title, position);
-            node.Draw();
-            AddElement(node);
-            return node;
-        }
-        public BaseNode CreateNode(string title,NodeType type, Vector2 position)
+        public BaseNode CreateNode(string title,NodeType type, Vector2 position,ChatData chatData)
         {
             Type nodeType = Type.GetType($"ChatPlugIn.{type}Node");
             BaseNode node = Activator.CreateInstance(nodeType) as BaseNode;
-            node.Init(this, title, position);
+            node.Init(this, title, position,chatData);
             node.Draw();
             AddElement(node);
             return node;
@@ -146,37 +139,91 @@ namespace ChatPlugIn
         #region 保存相关功能实现
         public void SaveGraph(string filename)
         {
-            string json= GraphJsonSerializer.SerializeGraph(this, filename);
-            
-            // 保存文件
-            string filePath =directoryPath+"/"+filename + ".json";
-            File.WriteAllText(filePath, json);
-            
-            // 刷新资源数据库
-            AssetDatabase.Refresh();
-            
-            Debug.Log($"对话图已保存到: {filePath}");
+            var graph = ScriptableObject.CreateInstance<DialogueGraphData>();
+            foreach (BaseEdge edge in edges)
+            {
+                var outputNode =edge.output.node as BaseNode;
+                var inputNode = edge.input.node as BaseNode;
+                graph.linkData.Add(new DialogueGraphData.NodeLinkData()
+                {
+                    outputNodeGUID = outputNode.GUID,
+                    portName = edge.output.portName,
+                    inputNodeGUID = inputNode.GUID
+                });
+            }
+            foreach (BaseNode node in nodes)
+            { 
+                graph.nodeData.Add(new DialogueGraphData.DialogueNodeData()
+                {
+                    GUID = node.GUID,
+                    position = node.GetPosition().position,
+                    type=node.Type,
+                    chatData = node.chatData
+                });
+            }
+
+            // 确保目录存在
+            if (!Directory.Exists("Assets/Resources/DialogueGraphs"))
+                Directory.CreateDirectory("Assets/Resources/DialogueGraphs");
+
+            // 保存Asset
+            AssetDatabase.CreateAsset(graph, $"Assets/Resources/DialogueGraphs/{filename}.asset");
+            AssetDatabase.SaveAssets();
         }
         
         // 加载图数据
         public void LoadGraph(string filename)
         {
-            string filePath =directoryPath+"/"+filename + ".json";
-            
-            if (!File.Exists(filePath))
+            currentGraph = Resources.Load<DialogueGraphData>($"DialogueGraphs/{filename}");
+            if (currentGraph == null)
             {
-                Debug.LogWarning($"找不到文件: {filePath}");
+                EditorUtility.DisplayDialog("File Not Found", "Target dialogue graph does not exist!", "OK");
                 return;
             }
-            // 尝试以文本形式读取
-            string fileContent = File.ReadAllText(filePath);
-            GraphJsonSerializer.DeserializeGraph(this, fileContent, CreateNodeFromJson);
+            ClearGraph(filename);
+            CreateNodes();
+            ConnectNodes();
+        }
+
+        private void CreateNodes()
+        {
+            foreach (var node in currentGraph.nodeData)
+            {
+                //创建节点
+                CreateNode(node.title,node.type,node.position,node.chatData);
+            }
+        }
+
+        private void ConnectNodes()
+        {
+            foreach (BaseNode node in nodes)
+            {
+                var connections = currentGraph.linkData.Where(x => x.outputNodeGUID ==node.GUID).ToList();
+                for (int j = 0; j < connections.Count; j++)
+                {
+                    var inputNodeGUID = connections[j].inputNodeGUID;
+                    nodeMap.TryGetValue(inputNodeGUID, out var inputNode);
+                    LinkNodes(node.outputContainer[j].Q<Port>(), (Port)inputNode.inputContainer[0]);
+                }
+            }
+        }
+
+        private void LinkNodes(Port output, Port input)
+        {
+            var tempEdge = new Edge
+            {
+                output = output,
+                input = input
+            };
+
+            tempEdge.input.Connect(tempEdge);
+            tempEdge.output.Connect(tempEdge);
+            Add(tempEdge);
         }
         
         // 清空图
         public void ClearGraph(string filename)
         {
-            // SaveGraph(filename);
             // 删除所有节点和连线
             List<GraphElement> elementsToDelete = graphElements.ToList();
             DeleteElements(elementsToDelete);

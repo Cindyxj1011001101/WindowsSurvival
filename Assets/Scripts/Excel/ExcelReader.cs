@@ -324,30 +324,6 @@ public static class ExcelReader
         //Debug.Log("Repeatable drop list generated successfully!");
         return dict;
     }
-
-    #region 读取对话配置
-    public static void ReadChat(string filename)
-    {
-        // 打开Excel文件
-        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
-        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
-        DataSet result = excelReader.AsDataSet();
-        foreach (DataTable table in result.Tables)
-        {
-            DataRow row;
-            //读取第一行段落信息
-            ParagraphData paragraphData = new ParagraphData(ChatManager.Instance.ParagraphDataList.Count, int.Parse(table.Rows[1][6].ToString()), new List<ChatData>(), table.Rows[1][4].ToString());
-            List<ChatData> chatDataList = new List<ChatData>();
-            for (int i = 2; i < table.Rows.Count; i++)
-            {
-                row = table.Rows[i];
-                chatDataList.Add(new ChatData(paragraphData.ParagraphID, row));
-            }
-            paragraphData.ChatDataList = chatDataList;
-            ChatManager.Instance.ParagraphDataList.Add(paragraphData);
-        }
-    }
-    #endregion
     #region 读取加工表配置
     public static List<ProcessData> ReadProcess(string filename)
     {

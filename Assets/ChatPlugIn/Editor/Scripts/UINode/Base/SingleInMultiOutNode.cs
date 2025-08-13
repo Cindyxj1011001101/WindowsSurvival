@@ -11,10 +11,10 @@ namespace ChatPlugIn
     {
         private bool hasInited;
 
-        public override void Init(StoryGraphView graphView, string title, Vector2 position)
+        public override void Init(StoryGraphView graphView, string title, Vector2 position,ChatData chatData)
         {
             hasInited = false;
-            base.Init(graphView, title, position);
+            base.Init(graphView, title, position,chatData);
             Type = NodeType.SingleInMulti0ut;
         }
 
