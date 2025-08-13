@@ -13,6 +13,7 @@ public class CookedSeaLizard : Card
 
     public void Event_Eat(out string tip)
     {
+        SoundManager.Instance.PlaySound("吃_01",true);
         StopUpdating();
 
         tip = string.Empty;
