@@ -2,6 +2,8 @@
 using DanielLochner.Assets.SimpleScrollSnap;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using System;
+using System.Collections.Generic;
 
 public class TimeSelectWindow : WindowBase
 {
@@ -15,6 +17,8 @@ public class TimeSelectWindow : WindowBase
     private int minute = 0;
 
     public UnityAction<int> onConfirm;
+
+    public Func<int, (string, int, Dictionary<PlayerStateEnum, float>, Dictionary<EnvironmentStateEnum, float>)> getConfirmEffects;
 
     protected override void Init()
     {
@@ -54,6 +58,15 @@ public class TimeSelectWindow : WindowBase
         cancelButton.onClick.AddListener(() =>
         {
             WindowsManager.Instance.CloseWindow(AppName);
+        });
+
+        if (getConfirmEffects == null) return;
+
+        var tipController = confirmButton.GetComponent<HoverTipController>();
+        tipController.onPointerEnter.AddListener(() =>
+        {
+            (string textTip, int time, Dictionary<PlayerStateEnum, float> p, Dictionary<EnvironmentStateEnum, float> e) = getConfirmEffects.Invoke(hour * 60 + minute);
+            tipController.SetTip(textTip, time, p, e);
         });
     }
 }

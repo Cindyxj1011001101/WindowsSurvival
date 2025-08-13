@@ -42,10 +42,24 @@ public class WindowsManager : MonoBehaviour
 
         restButton.onClick.AddListener(() =>
         {
-            (OpenWindow("TimeSelect", true) as TimeSelectWindow).onConfirm += (time) =>
+            var window = (OpenWindow("TimeSelect", true) as TimeSelectWindow);
+            window.onConfirm += (time) =>
             {
                 StateManager.Instance.Sleep(time);
                 Debug.Log($"休息了{time}分钟");
+            };
+            window.getConfirmEffects += (t) =>
+            {
+                Dictionary<PlayerStateEnum, float> p = null;
+                float sobrietyChange = t / TimeManager.Instance.SettleInterval * StateManager.Instance.SobrietyChangeRateWhileSleeping;
+                if (sobrietyChange > 0)
+                {
+                    p = new()
+                    {
+                        { PlayerStateEnum.Sobriety, sobrietyChange }
+                    };
+                }
+                return ($"休息{t}分钟", t, p, null);
             };
         });
     }

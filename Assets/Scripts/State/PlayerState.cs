@@ -149,6 +149,11 @@ public class PlayerState
         return effects[stateLevel];
     }
 
+    public void SetBasicChangeRate(float value)
+    {
+        BasicChangeRate = value;
+    }
+
     public PlayerState(float value, float maxValue, PlayerStateEnum state, float basicChangeRate,
         List<StateThreshold> thresholds, List<StateEffect> effects,
         List<int> lowDangerLevels, List<int> highDangerLevels)

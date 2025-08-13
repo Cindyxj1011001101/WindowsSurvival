@@ -151,7 +151,7 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.Thirst, InitThirstState());
         PlayerStateDict.Add(PlayerStateEnum.San, InitSanityState());
         PlayerStateDict.Add(PlayerStateEnum.Oxygen, InitOxygenState());
-        PlayerStateDict.Add(PlayerStateEnum.Sobriety, InitSorbriety());
+        PlayerStateDict.Add(PlayerStateEnum.Sobriety, InitSobriety());
         PlayerStateDict.Add(PlayerStateEnum.Load, InitLoadState());
         PlayerStateDict.Add(PlayerStateEnum.BodyTemperature, InitBodyTemperatureState());
         PlayerStateDict.Add(PlayerStateEnum.CarbonMonoxidePoisoning, InitCarbonMonoxideState());
@@ -354,7 +354,7 @@ public class StateManager : MonoBehaviour
         return new PlayerState(60, 60, PlayerStateEnum.Oxygen, -6f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
-    private PlayerState InitSorbriety()
+    private PlayerState InitSobriety()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -723,12 +723,6 @@ public class StateManager : MonoBehaviour
         ExtraPlayerIntervalSettle();
 
         EnvironmentIntervalSettle();
-
-        // 睡眠时每回合+3.5清醒
-        if (isSleeping)
-        {
-            ChangePlayerState(PlayerStateEnum.Sobriety, 3.5f);
-        }
     }
 
     public void EnvironmentIntervalSettle()
@@ -768,13 +762,15 @@ public class StateManager : MonoBehaviour
     #endregion
 
     #region 睡觉
-    private bool isSleeping;
+    public float SobrietyChangeRateWhileSleeping = +3.5f;
 
     public void Sleep(int time)
     {
-        isSleeping = true;
+        var state = PlayerStateDict[PlayerStateEnum.Sobriety];
+        float rate = state.BasicChangeRate;
+        state.SetBasicChangeRate(SobrietyChangeRateWhileSleeping);
         TimeManager.Instance.AddTime(time);
-        isSleeping = false;
+        state.SetBasicChangeRate(rate);
     }
     #endregion
 
