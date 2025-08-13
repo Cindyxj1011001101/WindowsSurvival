@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 // 挂载在文本和图片的父对象下，用于自动调整大小
-public class CustomTextBox : MonoBehaviour
+public class CustomTextBox : MonoBehaviour, IAdaptiveSize
 {
     public float textPaddingHorizontal = 10;
     public float textPaddingVertical = 10;
@@ -54,10 +54,5 @@ public class CustomTextBox : MonoBehaviour
 
         // 设置文本偏移
         textRectTransform.anchoredPosition = new Vector2(textRectTransform.pivot.x == 0.5 ? 0 : textPaddingHorizontal, -textPaddingVertical);
-    }
-
-    private void FixedUpdate()
-    {
-        UpdateSize();
     }
 }

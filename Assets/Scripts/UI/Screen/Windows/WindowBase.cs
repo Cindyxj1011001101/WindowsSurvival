@@ -308,4 +308,12 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     }
 
     protected virtual void OnFocused() { }
+
+    private void OnRectTransformDimensionsChange()
+    {
+        foreach (var item in GetComponentsInChildren<IAdaptiveSize>())
+        {
+            item.UpdateSize();
+        }
+    }
 }

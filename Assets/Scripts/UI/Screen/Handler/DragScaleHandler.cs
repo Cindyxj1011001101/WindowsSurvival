@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IEndDragHandler
+public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
 {
     public enum ScaleDirection
     {
@@ -158,15 +158,5 @@ public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
             Mathf.Clamp(targetRect.offsetMax.x, rectMask.rect.xMin, rectMask.rect.xMax),
             Mathf.Clamp(targetRect.offsetMax.y, rectMask.rect.yMin, rectMask.rect.yMax)
         );
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        var window = GetComponentInParent<WindowBase>();
-        var scrollRects = window.transform.GetComponentsInChildren<ScrollRect>();
-        foreach (var s in scrollRects)
-        {
-            MonoUtility.UpdateLayoutSize(s.content.GetComponent<ILayoutGroup>());
-        }
     }
 }
