@@ -1932,14 +1932,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8356294659441100970, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
       propertyPath: m_Interactable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8356294659441100970, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
       propertyPath: m_BlocksRaycasts
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 527027144953067077, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
+    - {fileID: 6690425000989068104, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
+    - {fileID: 8014396052288948562, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
     m_RemovedGameObjects:
     - {fileID: 6592329264820763252, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
     m_AddedGameObjects: []

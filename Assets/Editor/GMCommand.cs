@@ -255,6 +255,12 @@ public class GMCommand
         AddCard("爱情贝");
     }
 
+    [MenuItem("Command/添加/人力发电机")]
+    public static void U()
+    {
+        AddCard("人力发电机");
+    }
+
     [MenuItem("Command/GC")]
     public static void GC()
     {
