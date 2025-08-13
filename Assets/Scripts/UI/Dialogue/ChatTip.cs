@@ -62,10 +62,10 @@ public class ChatTip : HoverableButton
                 this.text.color = narrationTextColor;
                 bubble.color = narrationBubbleColor;
                 break;
-            case MessageSenderEnum.Alert:
-                this.text.color = alertTextColor;
-                bubble.color = alertBubbleColor;
-                break;
+            // case MessageSenderEnum.Alert:
+            //     this.text.color = alertTextColor;
+            //     bubble.color = alertBubbleColor;
+            //     break;
         }
         string newStr = text;
         if (text.Length > 10)

@@ -58,8 +58,6 @@ public class ChatManager : MonoBehaviour
             return;
         }
         instance = this;
-        //读取对话数据
-        ExcelReader.ReadChat("ChatData");
         //读取已生成的对话数据
         GameDataManager.Instance.LoadGeneratedChatData();
         //添加对话段落触发监听
@@ -156,24 +154,24 @@ public class ChatManager : MonoBehaviour
     //生成所有被记录的数据
     public void LoadGeneratedChatData()
     {
-        //进入对话
-        inParagraph = true;
-        CurrentParagraphData = ParagraphDataList[GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID];
-        //从GeneratedChatDataList中加载已触发的对话数据
-        for (int i = 0; i < GeneratedChatDataList.Count; i++)
-        {
-            chatWindow.CreateMessage(GeneratedChatDataList[i].MessageSender, GeneratedChatDataList[i].Message);
-        }
-        int NextMessage= GeneratedChatDataList[GeneratedChatDataList.Count - 1].NextMessageID;
-        int ParagrapghID= GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID;
-        if (NextMessage == -1)
-        {
-            NextParagraph();
-        }
-        else
-        {
-            TriggerMessage(ParagraphDataList[ParagrapghID].ChatDataList[NextMessage-1]);
-        }
+        // //进入对话
+        // inParagraph = true;
+        // CurrentParagraphData = ParagraphDataList[GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID];
+        // //从GeneratedChatDataList中加载已触发的对话数据
+        // for (int i = 0; i < GeneratedChatDataList.Count; i++)
+        // {
+        //     chatWindow.CreateMessage(GeneratedChatDataList[i].MessageSender, GeneratedChatDataList[i].Message);
+        // }
+        // int NextMessage= GeneratedChatDataList[GeneratedChatDataList.Count - 1].NextMessageID;
+        // int ParagrapghID= GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID;
+        // if (NextMessage == -1)
+        // {
+        //     NextParagraph();
+        // }
+        // else
+        // {
+        //     TriggerMessage(ParagraphDataList[ParagrapghID].ChatDataList[NextMessage-1]);
+        // }
 
     }
     //根据下一条消息的类型决定触发消息类型为选项还是消息
@@ -188,56 +186,56 @@ public class ChatManager : MonoBehaviour
         }
         if (chatData == null) return;
         //非分支对话且有条件时开始该条件判断，不生成对话
-        if (chatData.MessageCondition != "" && chatData.MessageType != "分支对话")
-        {
-            inParagraph = false;
-            ChatConditionManager.Instance.StartChatConditionDetection(chatData);
-            return;
-        }
+        // if (chatData.MessageCondition != "" && chatData.MessageType != "分支对话")
+        // {
+        //     inParagraph = false;
+        //     ChatConditionManager.Instance.StartChatConditionDetection(chatData);
+        //     return;
+        // }
         //根据类型生成消息
-        switch (chatData.MessageType)
-        {
-            case "对话":
-                CreateMessage(chatData);
-                break;
-            case "选项":
-                // 先收集所有选项消息
-                List<ChatData> optionsList = new List<ChatData>();
-                for (int i = chatData.MessageID - 1; i < ParagraphDataList[chatData.ParagraphID].ChatDataList.Count; i++)
-                {
-                    if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "选项")
-                    {
-                        optionsList.Add(ParagraphDataList[chatData.ParagraphID].ChatDataList[i]);
-                    }
-                    else break;
-                }
-                Choosing = true;
-                chatWindow.SetDialogueOptions(optionsList);
-                break;
-            case "分支对话":
-                // 先收集所有选项消息
-                List<ChatData> branchOptionsList = new List<ChatData>();
-                for (int i = chatData.MessageID - 1; i < ParagraphDataList[chatData.ParagraphID - 1].ChatDataList.Count; i++)
-                {
-                    if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "分支对话")
-                    {
-                        branchOptionsList.Add(ParagraphDataList[chatData.ParagraphID].ChatDataList[i]);
-                    }
-                    else break;
-                }
-                foreach (var option in branchOptionsList)
-                {
-                    if (option.MessageCondition != "" && ChatConditionManager.Instance.CanTriggerBranchCondition(option))
-                    {
-                        CreateMessage(option);
-                        break;
-                    }
-                }
-                break;
-            case "提示":
-                CreateMessage(chatData);
-                break;
-        }
+        // switch (chatData.MessageType)
+        // {
+        //     case "对话":
+        //         CreateMessage(chatData);
+        //         break;
+        //     case "选项":
+        //         // 先收集所有选项消息
+        //         List<ChatData> optionsList = new List<ChatData>();
+        //         for (int i = chatData.MessageID - 1; i < ParagraphDataList[chatData.ParagraphID].ChatDataList.Count; i++)
+        //         {
+        //             if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "选项")
+        //             {
+        //                 optionsList.Add(ParagraphDataList[chatData.ParagraphID].ChatDataList[i]);
+        //             }
+        //             else break;
+        //         }
+        //         Choosing = true;
+        //         chatWindow.SetDialogueOptions(optionsList);
+        //         break;
+        //     case "分支对话":
+        //         // 先收集所有选项消息
+        //         List<ChatData> branchOptionsList = new List<ChatData>();
+        //         for (int i = chatData.MessageID - 1; i < ParagraphDataList[chatData.ParagraphID - 1].ChatDataList.Count; i++)
+        //         {
+        //             if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "分支对话")
+        //             {
+        //                 branchOptionsList.Add(ParagraphDataList[chatData.ParagraphID].ChatDataList[i]);
+        //             }
+        //             else break;
+        //         }
+        //         foreach (var option in branchOptionsList)
+        //         {
+        //             if (option.MessageCondition != "" && ChatConditionManager.Instance.CanTriggerBranchCondition(option))
+        //             {
+        //                 CreateMessage(option);
+        //                 break;
+        //             }
+        //         }
+        //         break;
+        //     case "提示":
+        //         CreateMessage(chatData);
+        //         break;
+        // }
     }
 
     public void AddToGenerated(ChatData chatData)
@@ -273,15 +271,15 @@ public class ChatManager : MonoBehaviour
         SoundManager.Instance.PlaySound("消息提示音_02", true);
         AfterChatFactory.TriggerEffect(chatData.TriggerMessageEffect);
 
-        //触发对话效果
-        if (chatData.NextMessageID != -1)
-        {
-            TriggerMessage(ParagraphDataList[chatData.ParagraphID].ChatDataList[chatData.NextMessageID - 1]);
-        }
-        else
-        {
-            NextParagraph();
-        }
+        // //触发对话效果
+        // if (chatData.NextMessageID != -1)
+        // {
+        //     TriggerMessage(ParagraphDataList[chatData.ParagraphID].ChatDataList[chatData.NextMessageID - 1]);
+        // }
+        // else
+        // {
+        //     NextParagraph();
+        // }
     }
 
     public void NextParagraph()

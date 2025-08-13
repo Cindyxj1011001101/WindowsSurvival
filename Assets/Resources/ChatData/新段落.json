@@ -2,27 +2,27 @@
   "graphViewName": "新段落",
   "nodes": [
     {
-      "guid": "f46c6db8ea496414abc445208618d2dc",
+      "guid": "9b5fc9bf3340d6d47b301b28ea132d88",
       "typeName": "ChatPlugIn.StartNode",
       "NodePos": {
-        "x": 48.0,
-        "y": 64.8,
+        "x": 101.6,
+        "y": 68.0,
         "normalized": {
-          "x": 0.59522754,
-          "y": 0.803557158,
+          "x": 0.8310422,
+          "y": 0.5562093,
           "normalized": {
-            "x": 0.5952276,
-            "y": 0.8035572,
+            "x": 0.83104223,
+            "y": 0.5562094,
             "magnitude": 1.0,
             "sqrMagnitude": 1.00000012
           },
           "magnitude": 0.99999994,
-          "sqrMagnitude": 0.99999994
+          "sqrMagnitude": 0.9999999
         },
-        "magnitude": 80.64143,
-        "sqrMagnitude": 6503.04053
+        "magnitude": 122.256126,
+        "sqrMagnitude": 14946.56
       },
-      "nodeData": "{\"inputPortData\":[],\"outputPortData\":[{\"PortName\":\"输出\",\"PortCondition\":\"\"}],\"_GUID\":\"f46c6db8ea496414abc445208618d2dc\",\"_Type\":21,\"_Title\":\"开始\"}",
+      "nodeData": "{\"inputPortData\":[],\"outputPortData\":[{\"PortName\":\"输出\",\"PortCondition\":\"\"}],\"_GUID\":\"9b5fc9bf3340d6d47b301b28ea132d88\",\"_Type\":21,\"_Title\":\"开始\"}",
       "ports": [
         {
           "name": "输出",
@@ -33,64 +33,21 @@
       ]
     },
     {
-      "guid": "d5cf071e92774f54393af900d50538e4",
-      "typeName": "ChatPlugIn.BranchConditionNode",
-      "NodePos": {
-        "x": 300.0,
-        "y": 64.8,
-        "normalized": {
-          "x": 0.9774578,
-          "y": 0.2111309,
-          "magnitude": 1.0,
-          "sqrMagnitude": 1.0
-        },
-        "magnitude": 306.9186,
-        "sqrMagnitude": 94199.04
-      },
-      "nodeData": "{\"inputPortData\":[{\"PortName\":\"输入\",\"PortCondition\":\"\"}],\"outputPortData\":[{\"PortName\":\"选项\",\"PortCondition\":\"\"},{\"PortName\":\"选项\",\"PortCondition\":\"\"},{\"PortName\":\"选项\",\"PortCondition\":\"\"}],\"_GUID\":\"d5cf071e92774f54393af900d50538e4\",\"_Type\":61,\"_Title\":\"分支条件\"}",
-      "ports": [
-        {
-          "name": "输入",
-          "portType": "System.Boolean",
-          "direction": 0,
-          "capacity": 1
-        },
-        {
-          "name": "选项",
-          "portType": "System.Boolean",
-          "direction": 1,
-          "capacity": 1
-        },
-        {
-          "name": "选项",
-          "portType": "System.Boolean",
-          "direction": 1,
-          "capacity": 1
-        },
-        {
-          "name": "选项",
-          "portType": "System.Boolean",
-          "direction": 1,
-          "capacity": 0
-        }
-      ]
-    },
-    {
-      "guid": "4fb477a4809a245408c88dab6d86e7a9",
+      "guid": "28990bae17e2c1147b0a32214177d151",
       "typeName": "ChatPlugIn.EndNode",
       "NodePos": {
-        "x": 852.0,
-        "y": 64.8,
+        "x": 374.4,
+        "y": 68.0,
         "normalized": {
-          "x": 0.9971202,
-          "y": 0.0758373141,
+          "x": 0.9839035,
+          "y": 0.178700432,
           "magnitude": 1.0,
           "sqrMagnitude": 1.0
         },
-        "magnitude": 854.4607,
-        "sqrMagnitude": 730103.063
+        "magnitude": 380.525116,
+        "sqrMagnitude": 144799.359
       },
-      "nodeData": "{\"inputPortData\":[{\"PortName\":\"输入\",\"PortCondition\":\"\"}],\"outputPortData\":[],\"_GUID\":\"4fb477a4809a245408c88dab6d86e7a9\",\"_Type\":41,\"_Title\":\"结束\"}",
+      "nodeData": "{\"inputPortData\":[{\"PortName\":\"输入\",\"PortCondition\":\"\"}],\"outputPortData\":[],\"_GUID\":\"28990bae17e2c1147b0a32214177d151\",\"_Type\":41,\"_Title\":\"结束\"}",
       "ports": [
         {
           "name": "输入",
@@ -103,15 +60,9 @@
   ],
   "edges": [
     {
-      "outputNodeGUID": "f46c6db8ea496414abc445208618d2dc",
+      "outputNodeGUID": "9b5fc9bf3340d6d47b301b28ea132d88",
       "outputPortName": "输出",
-      "inputNodeGUID": "d5cf071e92774f54393af900d50538e4",
-      "inputPortName": "输入"
-    },
-    {
-      "outputNodeGUID": "d5cf071e92774f54393af900d50538e4",
-      "outputPortName": "选项",
-      "inputNodeGUID": "4fb477a4809a245408c88dab6d86e7a9",
+      "inputNodeGUID": "28990bae17e2c1147b0a32214177d151",
       "inputPortName": "输入"
     }
   ]

@@ -242,7 +242,7 @@ public class ChatWindow : WindowBase
             timer += Time.deltaTime;
             if (timer >= alertTimeInterval)
             {
-                if (!focused) CreateChatTip(MessageSenderEnum.Alert, "您有一条待发送消息", int.MaxValue);
+                //if (!focused) CreateChatTip(MessageSenderEnum.Alert, "您有一条待发送消息", int.MaxValue);
             }
         }
     }
