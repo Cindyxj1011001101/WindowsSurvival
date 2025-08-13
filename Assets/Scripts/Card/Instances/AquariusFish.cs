@@ -16,8 +16,8 @@ public class AquariusFish : Card
 
     private void OnProgressFull()
     {
+        AddCard("有产物的水瓶鱼", Slot.Bag is PlayerBag);
         DestroyThis();
-        AddCard("有产物的水瓶鱼", true);
     }
 
     #region 用捕网捉

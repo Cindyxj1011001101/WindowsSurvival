@@ -15,8 +15,8 @@ public class Siphonophyllum : Card
 
     private void OnProgressFull()
     {
+        AddCard("有产物的虹吸海葵", Slot.Bag is PlayerBag);
         DestroyThis();
-        AddCard("有产物的虹吸海葵", true);
     }
 
     public void Event_Cut(out string tip)

@@ -243,6 +243,18 @@ public class GMCommand
         AddCard("白爆矿");
     }
 
+    [MenuItem("Command/添加/矿石释氧机")]
+    public static void S()
+    {
+        AddCard("矿石释氧机");
+    }
+
+    [MenuItem("Command/添加/爱情贝")]
+    public static void T()
+    {
+        AddCard("爱情贝");
+    }
+
     [MenuItem("Command/GC")]
     public static void GC()
     {

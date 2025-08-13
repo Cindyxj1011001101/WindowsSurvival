@@ -21,15 +21,15 @@ public class LoveBead : Card
         AddCards("生贝肉", 2, true);
     }
 
-    private void OnProgressChanged()
+    private void OnProgressFull()
     {
+        AddCard("有产物的爱情贝", Slot.Bag is PlayerBag);
         DestroyThis();
-        AddCard("有产物的爱情贝", true);
     }
 
     protected override Action OnUpdate => () =>
     {
         TryGetComponent<ProgressComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval, OnProgressChanged);
+        component.Update(TimeManager.Instance.SettleInterval, OnProgressFull);
     };
 }

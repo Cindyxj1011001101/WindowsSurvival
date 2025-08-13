@@ -178,6 +178,7 @@ public abstract class Card : IComparable<Card>
             Slot.RemoveCard(this);
             temp.RefreshCurrentDisplay();
         }
+
         StopUpdating();
     }
     /// <summary>
