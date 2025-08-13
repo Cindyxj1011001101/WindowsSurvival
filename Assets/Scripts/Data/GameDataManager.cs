@@ -13,9 +13,14 @@ public class GameDataManager
 
     public string CurLoadName => "GameData" + curLoadIndex.ToString(); // 当前存档名称
 
+    public Load CurLoad => loadData.loads[curLoadIndex]; // 当前存档
+
     private GameDataManager()
     {
         curLoadIndex = 0;
+        // 加载存档数据
+        LoadLoadData();
+        loadData.loads[0] = new Load(new DateTime(2020, 1, 1, 0, 0, 0), false);
         // 玩家背包
         playerBagData = JsonManager.LoadData<BagRuntimeData>(CurLoadName, "PlayerBag");
         // 上次地点

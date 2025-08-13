@@ -46,7 +46,6 @@ public class WindowsManager : MonoBehaviour
             window.onConfirm += (time) =>
             {
                 StateManager.Instance.Sleep(time);
-                Debug.Log($"休息了{time}分钟");
             };
             window.getConfirmEffects += (t) =>
             {
