@@ -1,18 +1,21 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
 using DG.Tweening;
 using UnityEngine.UI;
 
 public enum WindowState
 {
-    Normal = 0,
+    Default = 0,
     Maximized = 1,
     Minimized = 2,
     Closed = 3,
 }
 
-public abstract class WindowBase : PanelBase, IPointerDownHandler
+public abstract class WindowBase : PanelBase
 {
+    [SerializeField] private bool ignoreThisWhenSave;
+
+    public bool IgnoreThisWhenSave => ignoreThisWhenSave;
+
     [SerializeField] private bool destroyAfterClosed = false;
 
     [SerializeField] private float animDuration = 0.2f;
@@ -27,26 +30,38 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     [SerializeField] private Sprite maximize_hovered;
     [SerializeField] private Sprite restore_default;
     [SerializeField] private Sprite restore_hovered;
+
+    [SerializeField] private Vector3 defaultPosition;
+    [SerializeField] private Vector3 defaultSizeDelta;
+    
     private Image focusFrameImage;
 
     private DragMoveHandler dragMoveHandler;
 
-    protected WindowState lastState = WindowState.Closed;
-    protected WindowState state = WindowState.Closed;
+
+    private WindowState lastState = WindowState.Closed;
+    private WindowState state = WindowState.Closed;
 
     private Vector3 lastPosition;
-    private Vector3 lastScale;
     private Vector3 lastSizeDelta;
 
     protected bool focused = false;
 
-    private Sequence anim;
-
-    public bool IsPlayingAnim => anim != null && anim.IsActive();
-
     private bool isModal;
 
     public bool IsModal => isModal;
+
+    public WindowState LastState => lastState;
+    public WindowState State => state;
+
+    public Vector3 LastPosition => lastPosition;
+    public Vector3 LastSizeDelta => lastSizeDelta;
+
+    public RectTransform RectTransform => transform as RectTransform;
+
+    private Sequence anim;
+
+    public bool IsPlayingAnim => anim != null && anim.IsActive();
 
     public void SetModal(bool isModal)
     {
@@ -66,7 +81,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         Transform topBar = transform.Find("TopBar");
         if (topBar.TryGetComponent(out dragMoveHandler))
         {
-            dragMoveHandler.targetToMove = transform as RectTransform;
+            dragMoveHandler.targetToMove = RectTransform;
             dragMoveHandler.onPointerDown.AddListener(Focus);
         }
 
@@ -109,6 +124,19 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     {
         lastState = this.state;
         this.state = state;
+
+        var isMaximized = state == WindowState.Maximized;
+
+        // 启用窗口拖拽
+        if (dragMoveHandler != null)
+            dragMoveHandler.enabled = !isMaximized;
+
+        // 最大化按钮图标改变
+        if (maximizeButton.gameObject.activeSelf)
+        {
+            maximizeButton.normalImage.sprite = isMaximized ? restore_default : maximize_default;
+            (maximizeButton.hoveredGraphics[0] as Image).sprite = isMaximized ? restore_hovered : maximize_hovered;
+        }
     }
 
     public void Open()
@@ -116,7 +144,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("AwakeWindow", AppName));
         switch (state)
         {
-            case WindowState.Normal:
+            case WindowState.Default:
             case WindowState.Maximized:
                 return;
 
@@ -129,15 +157,43 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         }
     }
 
+    public void InitFromWindowData(WindowData data)
+    {
+        Create();
+
+        SetState(data.state);
+
+        SetModal(data.isModal);
+
+        if (state == WindowState.Minimized || state == WindowState.Closed)
+        {
+            canvasGroup.alpha = 0;
+            canvasGroup.interactable = canvasGroup.blocksRaycasts = false;
+        }
+
+        RectTransform.anchoredPosition = data.position;
+        RectTransform.sizeDelta = data.sizeDelta;
+        RectTransform.localScale = data.scale;
+
+        lastState = data.lastState;
+        lastPosition = data.lastPosition;
+        lastSizeDelta = data.lastSizeDelta;
+    }
+
     public void Create()
     {
-        SetState(WindowState.Normal);
+        SetState(WindowState.Default);
+
+        // 设置默认位置
+        lastPosition = RectTransform.anchoredPosition = defaultPosition;
+        lastSizeDelta = RectTransform.sizeDelta = defaultSizeDelta;
+
         Show();
     }
 
     public void Restore()
     {
-        if (state == WindowState.Normal) return;
+        if (state == WindowState.Default) return;
 
         if (lastState == WindowState.Maximized)
         {
@@ -145,18 +201,9 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
             return;
         }
 
-        // 启用窗口拖拽
-        if (dragMoveHandler != null)
-            dragMoveHandler.enabled = true;
-        // 最大化按钮图标改变
-        if (maximizeButton.gameObject.activeSelf)
-        {
-            maximizeButton.normalImage.sprite = maximize_default;
-            (maximizeButton.hoveredGraphics[0] as Image).sprite = maximize_hovered;
-        }
+        SetState(WindowState.Default);
 
-        SetState(WindowState.Normal);
-
+        canvasGroup.alpha = 1;
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = true;
 
@@ -166,8 +213,8 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         anim = DOTween.Sequence();
 
         anim.Join(transform.DOMove(lastPosition, animDuration));
-        anim.Join(transform.DOScale(lastScale, animDuration));
-        anim.Join(GetComponent<RectTransform>().DOSizeDelta(lastSizeDelta, animDuration));
+        anim.Join(transform.DOScale(Vector3.one, animDuration));
+        anim.Join(RectTransform.DOSizeDelta(lastSizeDelta, animDuration));
 
         anim.OnComplete(() =>
         {
@@ -194,7 +241,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         if (state == WindowState.Minimized) return;
 
         // 保存当前状态以便恢复
-        // 保存当前状态的代码一定要卸载SetState之前
+        // 保存当前状态的代码一定要在SetState之前
         RecordLastTransformInfo();
 
         SetState(WindowState.Minimized);
@@ -212,7 +259,11 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         anim.Join(transform.DOScale(Vector3.one * .01f, animDuration));
         anim.Join(transform.DOMove(shortcut.position, animDuration));
 
-        anim.OnComplete(() => { canvasGroup.blocksRaycasts = false; });
+        anim.OnComplete(() =>
+        {
+            canvasGroup.alpha = 0;
+            canvasGroup.blocksRaycasts = false;
+        });
 
         // 播放动画
         anim.Play();
@@ -239,9 +290,10 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         SetState(WindowState.Maximized);
 
 
-        //// 获取桌面的RectTransform作为最大化的参考尺寸
+        // 获取桌面的RectTransform作为最大化的参考尺寸
         RectTransform targetRect = GameObject.Find("Desktop").transform as RectTransform;
 
+        canvasGroup.alpha = 1;
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = true;
 
@@ -254,7 +306,7 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
         // 同时执行移动和缩放动画
         anim.Join(transform.DOMove(targetRect.position, animDuration));
         anim.Join(transform.DOScale(Vector3.one, animDuration));
-        anim.Join(GetComponent<RectTransform>().DOSizeDelta(targetRect.rect.size, animDuration));
+        anim.Join(RectTransform.DOSizeDelta(targetRect.rect.size, animDuration));
         anim.OnComplete(() =>
         {
             canvasGroup.interactable = true;
@@ -269,28 +321,22 @@ public abstract class WindowBase : PanelBase, IPointerDownHandler
     {
         if (state == WindowState.Maximized)
             Restore();
-        else if (state == WindowState.Normal)
+        else if (state == WindowState.Default)
             Maximize();
     }
 
     private void RecordLastTransformInfo()
     {
         // 只保存Normal状态下窗口的信息
-        if (state != WindowState.Normal) return;
+        if (state != WindowState.Default) return;
         
         lastPosition = transform.position;
-        lastScale = transform.localScale;
-        lastSizeDelta = (transform as RectTransform).sizeDelta;
+        lastSizeDelta = RectTransform.sizeDelta;
     }
 
     private void Focus()
     {
         WindowsManager.Instance.FocusWindow(this);
-    }
-
-    public virtual void OnPointerDown(PointerEventData eventData)
-    {
-        Focus();
     }
 
     // 不要由自己调用

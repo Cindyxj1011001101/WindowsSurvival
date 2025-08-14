@@ -198,6 +198,12 @@ public class GMCommand
     {
         GameDataManager.Instance.SaveStateData();
     }
+
+    [MenuItem("Command/保存/窗口数据")]
+    public static void SaveWindowsData()
+    {
+        GameDataManager.Instance.SaveWindowsData();
+    }
     #endregion
 
 

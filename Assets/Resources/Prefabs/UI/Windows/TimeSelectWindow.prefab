@@ -7678,12 +7678,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d16cff729cfb3f243a3fc61876f5070e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyAfterClosed: 0
+  ignoreThisWhenSave: 1
+  destroyAfterClosed: 1
   animDuration: 0.2
   maximize_default: {fileID: 0}
   maximize_hovered: {fileID: 0}
   restore_default: {fileID: 0}
   restore_hovered: {fileID: 0}
+  defaultPosition: {x: 0, y: 0, z: 0}
+  defaultSizeDelta: {x: 618, y: 446, z: 0}
   hourScroll: {fileID: 864722772450046470}
   minuteScroll: {fileID: 526620886767359506}
   confirmButton: {fileID: 3141552153253765498}

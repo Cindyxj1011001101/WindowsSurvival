@@ -22,14 +22,28 @@ public class WindowGroup : MonoBehaviour
         if (window == null) return;
         if (window.IsModal)
         {
-            window.transform.SetParent(modal);
-            modal.gameObject.SetActive(true);
+            SetModal(window);
         }
         else
         {
-            window.transform.SetParent(opened);
+            SetOpened(window);
         }
         window.transform.SetAsLastSibling();
+    }
+
+    public void SetModal(WindowBase window)
+    {
+        if (window == null) return;
+
+        window.transform.SetParent(modal);
+        modal.gameObject.SetActive(true);
+    }
+
+    public void SetOpened(WindowBase window)
+    {
+        if (window == null) return;
+
+        window.transform.SetParent(opened);
     }
 
     public void SetClosed(WindowBase window)

@@ -62,7 +62,6 @@ public class StudyWindow : WindowBase
     {
         curSelectedTechNode = techNode;
         RefreshCurrentDisplay();
-        //StopStudy();
 
         DisplayStudyState(0, techNode);
     }
@@ -76,7 +75,7 @@ public class StudyWindow : WindowBase
         //}
         //GameDataManager.Instance.SaveTechnologyData();
 
-        if (GameDataManager.Instance.CurLoad.SkipGuide || GameDataManager.Instance.UnlockedShortcuts.Contains(AppName))
+        if (GameDataManager.Instance.CurLoad.SkipGuide || GameDataManager.Instance.WindowsData.unlockedShortcuts.Contains(AppName))
             DisplayStudyState(2, null);
         else
             studyStateButton.SetVisiable(false);
