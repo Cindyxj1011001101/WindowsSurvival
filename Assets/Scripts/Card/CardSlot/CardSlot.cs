@@ -381,14 +381,6 @@ public class CardSlot : MonoBehaviour
             RemoveCard();
     }
 
-    public void TransferCardsTo(CardSlot other, int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            other.AddCard(RemoveCard());
-        }
-    }
-
     public Card PeekCard() => cards[0];
 
     public void ClearSlot()
