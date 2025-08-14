@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -326,14 +327,24 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    protected Card AddCard(string cardId, bool toPlayerBag)
+    protected Tween AddCard(string cardId, bool toPlayerBag, out Card card)
     {
-        return GameManager.Instance.AddCardWithTween(cardId, TempSlotTransform.position, toPlayerBag);
+        return GameManager.Instance.AddCardWithTween(cardId, TempSlotTransform.position, toPlayerBag, out card);
     }
 
-    protected List<Card> AddCards(string cardId, int count, bool toPlayerBag)
+    protected Tween AddCard(string cardId, bool toPlayerBag)
     {
-        return GameManager.Instance.AddCardsWithTween(cardId, count, TempSlotTransform.position, toPlayerBag);
+        return GameManager.Instance.AddCardWithTween(cardId, TempSlotTransform.position, toPlayerBag, out _);
+    }
+
+    protected Tween AddCards(string cardId, int count, bool toPlayerBag, out List<Card> cards)
+    {
+        return GameManager.Instance.AddCardsWithTween(cardId, count, TempSlotTransform.position, toPlayerBag, out cards);
+    }
+
+    protected Tween AddCards(string cardId, int count, bool toPlayerBag)
+    {
+        return GameManager.Instance.AddCardsWithTween(cardId, count, TempSlotTransform.position, toPlayerBag, out _);
     }
 }
 

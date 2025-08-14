@@ -109,7 +109,7 @@ public class DetailsWindow : WindowBase
         // 清除原数据
         Clear();
 
-        if (slotCards == null || slotCards.Count == 0) return;
+        if (slotCards.IsNullOrEmpty()) return;
 
         // 记录当前显示的卡牌
         currentDisplayedCard = slotCards[0];
@@ -215,10 +215,12 @@ public class DetailsWindow : WindowBase
                 {
                     var originalSlot = currentDisplayedCard.Slot;
                     var originalSlotCards = currentDisplayedCard.SlotCards;
+
                     // 先执行事件
                     e.Inovke(out string tip);
 
-                    DynamicEffectUtility.ShowTip(tip, button.transform.position + (button.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
+                    // 显示提示
+                    button.ShowTip(tip);
                     
                     if (originalSlot != null)
                         originalSlot.RefreshCurrentDisplay();

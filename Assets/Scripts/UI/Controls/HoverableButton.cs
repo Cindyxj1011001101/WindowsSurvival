@@ -3,7 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using DG.Tweening;
-using System.Collections.Generic; // 引入DOTween命名空间
+using System.Collections.Generic;
 
 public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -45,6 +45,9 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             {
                 ChangeColor(currentColor);
             }
+
+            var changeMouse = GetComponentInChildren<ChangeMouse>();
+            if (changeMouse != null) changeMouse.enabled = value;
         }
     }
 
@@ -181,5 +184,11 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         isBlinking = false;
         canvasGroup.DOKill();
         canvasGroup.alpha = 1f;
+    }
+
+    public void ShowTip(string tip)
+    {
+
+        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
     }
 }

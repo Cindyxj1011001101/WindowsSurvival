@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 
@@ -58,6 +56,12 @@ public class MouseManager : MonoBehaviour
     public void Update()
     {
         SetCursor();
+
+        
+        if (_isWaiting && Time.time >= _endTime)
+        {
+            EndWaiting();
+        }
     }
 
     private void SetCursor()
@@ -145,27 +149,30 @@ public class MouseManager : MonoBehaviour
 
     public void ResetRotation(MouseState mouseState)
     {
-        switch (mouseState)
+        GetComponent<RectTransform>().rotation = mouseState switch
         {
-            case MouseState.ResizeCounterDiagonal:
-                GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, 90);
-                break;
-            case MouseState.ResizeX:
-                GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, 90);
-                break;
-            default:
-                GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, 0);
-                break;
-        }
+            MouseState.ResizeCounterDiagonal => Quaternion.Euler(0, 0, 90),
+            MouseState.ResizeX => Quaternion.Euler(0, 0, 90),
+            _ => Quaternion.Euler(0, 0, 0),
+        };
     }
 
-    public void Wait(float waitTime = BasicWaitTime, UnityAction callBack = null)
-    {
-        StartCoroutine(PlayWaitingAnim(waitTime, callBack));
-    }
+    #region 等待
 
-    private IEnumerator PlayWaitingAnim(float waitTime, UnityAction callBack)
+    private float _endTime;  // 等待结束时间
+    private bool _isWaiting; // 当前是否在等待
+
+    /// <summary>
+    /// 当前是否处于等待状态
+    /// </summary>
+    public bool IsWaiting => _isWaiting;
+
+    private void StartWaiting()
     {
+        if (_isWaiting) return;
+
+        _isWaiting = true;
+
         // 禁用鼠标
         SetMouseEnabled(false);
 
@@ -175,13 +182,13 @@ public class MouseManager : MonoBehaviour
         // 播放动画
         animator.gameObject.SetActive(true);
         animator.Play("Waiting");
+    }
 
-        // 等待动画播放完毕
-        yield return new WaitForSeconds(waitTime);
+    private void EndWaiting()
+    {
+        if (!_isWaiting) return;
 
-        // 执行回调
-        callBack?.Invoke();
-
+        _isWaiting = false;
         // 停止动画
         animator.Play("");
         animator.gameObject.SetActive(false);
@@ -193,6 +200,20 @@ public class MouseManager : MonoBehaviour
         SetMouseEnabled(true);
     }
 
+    /// <summary>
+    /// 设置等待时间（如果已经在等待，则延长等待时间）
+    /// </summary>
+    /// <param name="waitTime">等待时间（秒）</param>
+    public void Wait(float waitTime = BasicWaitTime)
+    {
+        float currentTime = Time.time;
+
+        _endTime = Mathf.Max(_endTime, currentTime + waitTime);
+
+        // 如果当前不在等待，或者新的等待时间比剩余时间更长，则更新结束时间
+        StartWaiting();
+    }
+
     private void SetMouseVisible(bool visible)
     {
         mouseCanvasGroup.alpha = visible ? 1 : 0;
@@ -200,7 +221,8 @@ public class MouseManager : MonoBehaviour
 
     private void SetMouseEnabled(bool enabled)
     {
-       mouseCanvasGroup.interactable = !enabled;
+        mouseCanvasGroup.interactable = !enabled;
     }
+    #endregion
 }
 

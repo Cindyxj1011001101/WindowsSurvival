@@ -25,7 +25,7 @@ public class CardSlot : MonoBehaviour
     private Dictionary<Type, Slider> componentSliders = new(); // 用于存储组件的滑动条
 
     private List<Card> cards = new();
-    public bool IsEmpty => cards.Count == 0;
+    public bool IsEmpty => cards.IsNullOrEmpty();
     public int StackNum => cards.Count;
 
     public List<Card> Cards => cards;
@@ -273,12 +273,12 @@ public class CardSlot : MonoBehaviour
             groups.Add((deltaValue > 0, CalcLevel(deltaValue), ColorManager.CardComponentColors[type]));
         }
 
-        DynamicEffectUtility.ShowArrows(particleDisplayRect, groups);
+        MFXUtility.ShowArrows(particleDisplayRect, groups);
     }
 
     public void DisplayComponentValueChange(Type componentType, float value)
     {
-        DynamicEffectUtility.ShowArrows(particleDisplayRect, value > 0, CalcLevel(value), ColorManager.CardComponentColors[componentType]);
+        MFXUtility.ShowArrows(particleDisplayRect, value > 0, CalcLevel(value), ColorManager.CardComponentColors[componentType]);
     }
 
     private  int CalcLevel(float value)
@@ -417,6 +417,11 @@ public class CardSlot : MonoBehaviour
 
     public void ShowTip(string tip, Color color)
     {
-        DynamicEffectUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, color);
+        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, color);
+    }
+
+    public void ShowTip(string tip)
+    {
+        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up);
     }
 }

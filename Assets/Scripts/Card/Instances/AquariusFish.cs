@@ -38,7 +38,8 @@ public class AquariusFish : Card
         // 获得一张“被捉住的水瓶鱼”
         // 继承产物进度
         // 添加到玩家背包
-        AddCard("被捉住的水瓶鱼", true).InheritComponent<ProgressComponent>(this);
+        AddCard("被捉住的水瓶鱼", true, out var card);
+        card.InheritComponent<ProgressComponent>(this);
     }
 
     public bool Judge_CatchByNet(out string hint)
@@ -79,7 +80,8 @@ public class AquariusFish : Card
             // 获得一张“被捉住的水瓶鱼”
             // 继承产物进度
             // 添加到玩家背包
-            AddCard("被捉住的水瓶鱼", true).InheritComponent<ProgressComponent>(this);
+            AddCard("被捉住的水瓶鱼", true, out var card);
+            card.InheritComponent<ProgressComponent>(this);
         }
     }
     #endregion

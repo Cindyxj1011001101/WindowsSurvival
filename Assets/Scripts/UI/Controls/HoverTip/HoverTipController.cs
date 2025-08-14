@@ -79,7 +79,7 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         hoverTip = null;
     }
 
-    public void OnDestroy()
+    public void OnDisable()
     {
         HideTip();
     }

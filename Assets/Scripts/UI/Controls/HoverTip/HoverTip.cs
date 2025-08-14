@@ -67,7 +67,11 @@ public class HoverTip : MonoBehaviour
         }
 
         // 玩家状态变化
-        if (playerEffects != null && playerEffects.Count > 0)
+        if (playerEffects.IsNullOrEmpty())
+        {
+            forPlayer.SetActive(false);
+        }
+        else
         {
             textTipOnly = false;
 
@@ -83,13 +87,13 @@ public class HoverTip : MonoBehaviour
                 }
             }
         }
-        else
-        {
-            forPlayer.SetActive(false);
-        }
 
         // 环境状态变化
-        if (envEffects != null && envEffects.Count > 0)
+        if (envEffects.IsNullOrEmpty())
+        {
+            forEnvironment.SetActive(false);
+        }
+        else
         {
             textTipOnly = false;
 
@@ -120,10 +124,6 @@ public class HoverTip : MonoBehaviour
                     stateTip.gameObject.SetActive(true);
                 }
             }
-        }
-        else
-        {
-            forEnvironment.SetActive(false);
         }
 
 
