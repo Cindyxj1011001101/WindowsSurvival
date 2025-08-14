@@ -12,6 +12,8 @@ public class LightenedOxygenCandle : Card
 
     protected override Action OnUpdate => () =>
     {
+        TryUse();
+
         // 每回合消耗耐久
         BagBase bag;
         if (ParentCard != null)
@@ -32,7 +34,5 @@ public class LightenedOxygenCandle : Card
             // 给环境加氧气
             environmentBag.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, +10);
         }
-
-        TryUse();
     };
 }

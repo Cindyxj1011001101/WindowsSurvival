@@ -56,7 +56,7 @@ public static class AfterChatFactory
 
     private static void AddCardEvent(string PlayerOrScene, string CardName)
     {
-        GameManager.Instance.AddCardWithTween(CardName, new Vector2(0,-700), PlayerOrScene=="玩家");
+        GameManager.Instance.AddCardWithTween(CardName, new Vector2(0,-700), PlayerOrScene=="玩家", out _);
     }
 
     private static void UnlockWindow(string WindowName,string blink)

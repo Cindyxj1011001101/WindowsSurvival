@@ -18,7 +18,7 @@ public class DisposableDropList
     public List<Drop> dropList = new List<Drop>();
 
     [JsonIgnore]
-    public bool IsEmpty => dropList.Count == 0;
+    public bool IsEmpty => dropList.IsNullOrEmpty();
 
     /// <summary>
     /// 剩余掉落占比
@@ -35,7 +35,7 @@ public class DisposableDropList
         if (dropList.Count == 0)
         {
             Debug.LogWarning("No drops remaining in disposable drop list!");
-            return null;
+            return new();
         }
 
         // 计算总概率

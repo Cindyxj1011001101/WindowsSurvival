@@ -29,8 +29,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         MouseManager.Instance.StartDragging();
 
         // 在鼠标位置创建图标
-        var screenPosition = DynamicEffectUtility.ScreenPointToLocalPointInRectangle(eventData.position);
-        cursorSlot = DynamicEffectUtility.CreateSlot(screenPosition);
+        var screenPosition = MFXUtility.ScreenPointToLocalPointInRectangle(eventData.position);
+        cursorSlot = MFXUtility.CreateSlot(screenPosition);
 
         if (eventData.button == PointerEventData.InputButton.Left)
             // 左键拖拽
@@ -55,7 +55,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         MouseManager.Instance.EndDragging();
 
-        dragEndPosition = DynamicEffectUtility.ScreenPointToLocalPointInRectangle(eventData.position);
+        dragEndPosition = MFXUtility.ScreenPointToLocalPointInRectangle(eventData.position);
         Destroy(cursorSlot.gameObject);
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
@@ -148,7 +148,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 // 显示详情
                 //(WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot);
-                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot.PeekCard());
+                //(WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot.PeekCard());
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot.Cards);
                 return;
             }
         }
@@ -189,7 +190,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="count"></param>
     private void AnimateCardPlacement(Card card, UnityAction placementAction, Vector3 startPos, Vector3 endPos, int count)
     {
-        DynamicEffectUtility.MoveCard(
+        MFXUtility.MoveCard(
             card,
             count,
             startPos,
@@ -209,7 +210,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// </summary>
     private void AnimateCardReturn(int count, string tip = "")
     {
-        DynamicEffectUtility.MoveCard(
+        MFXUtility.MoveCard(
                 sourceSlot.PeekCard(),
                 count,
                 dragEndPosition,

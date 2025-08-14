@@ -17,13 +17,13 @@ public class LittleRawMeat : Card
 
     private void OnRotton()
     {
-        AddCard("腐烂物", true);
         DestroyThis();
+        AddCard("腐烂物", true);
     }
 
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         // 播放吃的音效
@@ -37,8 +37,6 @@ public class LittleRawMeat : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -3);
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
-
-        DestroyThis();
     }
 
     protected override Action OnUpdate => () =>

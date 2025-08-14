@@ -16,7 +16,7 @@ public class BottledWater : Card
 
     public void Event_Drink(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         // 播放喝水的音效
@@ -24,7 +24,5 @@ public class BottledWater : Card
             SoundManager.Instance.PlaySound("喝_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 20);
         TimeManager.Instance.AddTime(3);
-
-        DestroyThis();
     }
 }

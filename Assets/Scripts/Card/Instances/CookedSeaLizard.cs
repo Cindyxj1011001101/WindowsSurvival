@@ -13,15 +13,14 @@ public class CookedSeaLizard : Card
 
     public void Event_Eat(out string tip)
     {
+        DestroyThis();
+
         SoundManager.Instance.PlaySound("吃_01",true);
-        StopUpdating();
 
         tip = string.Empty;
 
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 9);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Itchiness, 8);
         TimeManager.Instance.AddTime(15);
-
-        DestroyThis();
     }
 }

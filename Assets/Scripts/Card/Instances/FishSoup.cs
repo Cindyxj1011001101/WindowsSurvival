@@ -20,7 +20,7 @@ public class FishSoup : Card
 
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 15);
@@ -29,7 +29,5 @@ public class FishSoup : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 12);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, -25);
         TimeManager.Instance.AddTime(15);
-
-        DestroyThis();
     }
 }

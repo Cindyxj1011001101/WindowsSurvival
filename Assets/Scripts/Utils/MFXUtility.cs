@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class DynamicEffectUtility
+public class MFXUtility
 {
     private static Canvas canvas;
 
@@ -66,10 +66,9 @@ public class DynamicEffectUtility
     }
 
     /// <summary>
-    /// 移动卡牌并执行回调
+    /// 移动卡牌
     /// </summary>
-    /// <param name="onStart">动画开始回调（可选）</param>
-    public static void MoveCard(
+    public static Tween MoveCard(
         Card card,
         int count,
         Vector3 sourcePosition,
@@ -82,45 +81,65 @@ public class DynamicEffectUtility
         var slot = CreateSlot(sourcePosition);
         slot.DisplayCard(card, count);
 
-        slot.transform.DOMove(targetPosition, duration)
-            .SetEase(ease)
-            .OnStart(() => onStart?.Invoke())
-            .OnComplete(() =>
-            {
-                onComplete?.Invoke();
-                Object.Destroy(slot.gameObject);
-                SoundManager.Instance.PlaySound("放置卡牌", true);
-            });
+        return slot.transform.DOMove(targetPosition, duration)
+             .SetEase(ease)
+             .OnStart(() => onStart?.Invoke())
+             .OnComplete(() =>
+             {
+                 onComplete?.Invoke();
+                 Object.Destroy(slot.gameObject);
+                 SoundManager.Instance.PlaySound("放置卡牌", true);
+             });
     }
 
-    public static async void MoveCardsWithDelay(
+    /// <summary>
+    /// 一次移动多张卡牌
+    /// </summary>
+    /// <param name="cards"></param>
+    /// <param name="sourcePosition"></param>
+    /// <param name="duration"></param>
+    /// <param name="interval"></param>
+    /// <param name="onStart"></param>
+    /// <param name="onComplete"></param>
+    /// <param name="ease"></param>
+    /// <returns></returns>
+    public static Tween MoveCards(
         List<Card> cards,
         Vector3 sourcePosition,
         float duration = 0.3f,
-        int millisecondsDelay = 100,
+        float interval = 0.1f,
         System.Action onStart = null,
         System.Action<Card> onComplete = null,
         Ease ease = Ease.OutQuad
         )
     {
-        foreach (var card in cards)
-        {
-            MoveCard(
-               card,
-               1,
-               sourcePosition,
-               card.Slot.transform.position,
-               duration,
-               onStart,
-               () =>
-               {
-                   onComplete?.Invoke(card);
-               },
-               ease
-               );
+        var seq = DOTween.Sequence();
 
-            await Task.Delay(millisecondsDelay);
+        Card card;
+        for (int i = 0; i < cards.Count; i++)
+        {
+            card = cards[i];
+            seq.Join(MoveCard(
+                card,
+                1,
+                sourcePosition,
+                card.Slot.transform.position,
+                duration,
+                onStart,
+                () =>
+                {
+                    onComplete?.Invoke(card);
+                },
+                ease
+                ).SetDelay(i * interval));
         }
+
+        return seq;
+    }
+
+    public static void ShowTip(string tip, Vector3 position, float duration = 1f)
+    {
+        ShowTip(tip, position, ColorManager.Yellow, duration);
     }
 
     public static void ShowTip(string tip, Vector3 position, Color textColor, float duration = 1f)
@@ -160,7 +179,7 @@ public class DynamicEffectUtility
 
             animator = obj.GetComponentInChildren<Animator>();
             animator.Play(up ? "Up" : "Down");
-            
+
             Object.Destroy(obj, animator.GetCurrentAnimatorStateInfo(0).length);
         }
     }

@@ -18,7 +18,7 @@ public class IronMeal : Card
     }
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 35);
@@ -26,7 +26,5 @@ public class IronMeal : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -7);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Itchiness, 50);
         TimeManager.Instance.AddTime(30);
-
-        DestroyThis();
     }
 }   

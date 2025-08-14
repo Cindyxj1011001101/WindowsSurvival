@@ -13,14 +13,13 @@ public class CaughtAquariusFish : Card
 
     public void Event_Release(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         // 地点中增加一个水瓶鱼
         // 继承产物进度
-        AddCard("水瓶鱼", true).InheritComponent<ProgressComponent>(this);
-
-        DestroyThis();
+        AddCard("水瓶鱼", true, out var card);
+        card.InheritComponent<ProgressComponent>(this);
     }
 
     public bool Judge_Release(out string hint)

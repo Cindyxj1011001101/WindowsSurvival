@@ -22,7 +22,7 @@ public class RawOysterMeat : Card
     #region 食用
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         // 播放吃的音效
@@ -34,8 +34,6 @@ public class RawOysterMeat : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -1.2f);
         //消耗5分钟
         TimeManager.Instance.AddTime(5);
-
-        DestroyThis();
     }
     #endregion
 

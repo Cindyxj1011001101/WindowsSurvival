@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 public class FriedInsectStick : Card
 {
@@ -19,14 +18,12 @@ public class FriedInsectStick : Card
 
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 46);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -4);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 8);
         TimeManager.Instance.AddTime(15);
-
-        DestroyThis();
     }
 }

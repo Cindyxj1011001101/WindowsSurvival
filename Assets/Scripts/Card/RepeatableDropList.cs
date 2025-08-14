@@ -49,7 +49,7 @@ public class RepeatableDropList
     public List<Population> populationList = new(); // 种群列表
 
     [JsonIgnore]
-    public bool IsEmpty => populationList.Count == 0;
+    public bool IsEmpty => populationList.IsNullOrEmpty();
 
     public void Init(List<Population> populationList)
     {

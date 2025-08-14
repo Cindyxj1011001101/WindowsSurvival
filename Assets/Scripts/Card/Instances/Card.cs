@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,9 @@ public abstract class Card : IComparable<Card>
     [JsonIgnore]
     /// 是否有循环音效，默认无
     public virtual bool HasLoopSound => false;
+
+    [JsonIgnore]
+    public List<Card> SlotCards { get; protected set; } = null;
     #endregion
 
     /// <summary>
@@ -93,6 +97,13 @@ public abstract class Card : IComparable<Card>
     public void SetCardSlot(CardSlot slot)
     {
         Slot = slot;
+        if (slot != null)
+            SetSlotCards(slot.Cards);
+    }
+
+    public void SetSlotCards(List<Card> slotCards)
+    {
+        SlotCards = slotCards;
     }
 
     public void SetParentCard(Card parentCard)
@@ -131,6 +142,7 @@ public abstract class Card : IComparable<Card>
                 foreach (var c in list)
                 {
                     c.SetParentCard(this);
+                    c.SetSlotCards(list);
                     c.StartUpdating();
                 }
             }
@@ -167,20 +179,26 @@ public abstract class Card : IComparable<Card>
         if (Destroyed) return;
 
         Destroyed = true;
-        if (ParentCard != null)
-        {
-            ParentCard.TryGetComponent<InnerContentsComponent>(out var component);
-            component.RemoveCard(this);
-        }
+
+        StopUpdating();
+
         var temp = Slot;
         if (temp != null)
         {
             Slot.RemoveCard(this);
             temp.RefreshCurrentDisplay();
         }
+        else
+        {
+            SlotCards.Remove(this);
+        }
 
-        StopUpdating();
+        if (ParentCard != null && ParentCard.Slot != null)
+            ParentCard.Slot.RefreshCurrentDisplay();
+
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
+
     /// <summary>
     /// 进入当前环境时（如玩家进入该卡牌所在地点）（通常用于播放卡牌对应的循环音）
     /// </summary>
@@ -309,14 +327,24 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    protected Card AddCard(string cardId, bool toPlayerBag)
+    protected Tween AddCard(string cardId, bool toPlayerBag, out Card card)
     {
-        return GameManager.Instance.AddCardWithTween(cardId, TempSlotTransform.position, toPlayerBag);
+        return GameManager.Instance.AddCardWithTween(cardId, TempSlotTransform.position, toPlayerBag, out card);
     }
 
-    protected List<Card> AddCards(string cardId, int count, bool toPlayerBag)
+    protected Tween AddCard(string cardId, bool toPlayerBag)
     {
-        return GameManager.Instance.AddCardsWithTween(cardId, count, TempSlotTransform.position, toPlayerBag);
+        return GameManager.Instance.AddCardWithTween(cardId, TempSlotTransform.position, toPlayerBag, out _);
+    }
+
+    protected Tween AddCards(string cardId, int count, bool toPlayerBag, out List<Card> cards)
+    {
+        return GameManager.Instance.AddCardsWithTween(cardId, count, TempSlotTransform.position, toPlayerBag, out cards);
+    }
+
+    protected Tween AddCards(string cardId, int count, bool toPlayerBag)
+    {
+        return GameManager.Instance.AddCardsWithTween(cardId, count, TempSlotTransform.position, toPlayerBag, out _);
     }
 }
 

@@ -10,24 +10,20 @@ public class SeaGrass : Card
     }
     public void Event_CollectByHand(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         TimeManager.Instance.AddTime(30);
         AddCard("纤维", true);
-
-        DestroyThis();
     }
     public void Event_CollectByKnife(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).TryUse();
 
         tip = string.Empty;
         TimeManager.Instance.AddTime(15);
         AddCard("纤维", true);
-
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).TryUse();
-        DestroyThis();
     }
     public bool Judge_CollectByKnife(out string hint)
     {

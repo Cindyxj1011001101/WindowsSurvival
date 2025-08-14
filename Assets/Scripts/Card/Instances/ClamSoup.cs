@@ -17,14 +17,12 @@ public class ClamSoup : Card
     }
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 30);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 60);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 10);
         TimeManager.Instance.AddTime(15);
-
-        DestroyThis();
     }
 }

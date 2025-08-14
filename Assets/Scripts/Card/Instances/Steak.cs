@@ -16,13 +16,11 @@ public class Steak : Card
     }
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 68);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 5);
         TimeManager.Instance.AddTime(15);
-
-        DestroyThis();
     }
 }

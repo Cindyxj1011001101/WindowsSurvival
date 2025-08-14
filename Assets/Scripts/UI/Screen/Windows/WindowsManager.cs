@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class WindowsManager : MonoBehaviour
@@ -30,6 +31,11 @@ public class WindowsManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        pointerData = new(EventSystem.current)
+        {
+            // 设置指针位置为鼠标位置
+            position = Input.mousePosition
+        };
     }
 
     private void Start()
@@ -205,5 +211,33 @@ public class WindowsManager : MonoBehaviour
     public List<string> GetUnlockedShortcuts()
     {
         return shortcutsController.GetUnlockedShortcuts();
+    }
+
+
+    PointerEventData pointerData;
+    List<RaycastResult> results;
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0)) // 检测鼠标左键点击
+        {
+            // 创建接收结果的列表
+            results = new List<RaycastResult>();
+
+            // 执行射线检测
+            EventSystem.current.RaycastAll(pointerData, results);
+
+            // 处理检测结果
+            if (results.Count > 0)
+            {
+                foreach (var result in results)
+                {
+                    if (result.gameObject.TryGetComponent<WindowBase>(out var window))
+                    {
+                        FocusWindow(window);
+                        return;
+                    }
+                }
+            }
+        }
     }
 }

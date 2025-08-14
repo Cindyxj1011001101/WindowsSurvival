@@ -100,12 +100,18 @@ MonoBehaviour:
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: 154959178, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  pDuration: 0.8
+  pStrength: {x: 2.3, y: 1.2, z: 0}
+  pVibrato: 20
+  rDuration: 0.8
+  rStrength: {x: 0, y: 0, z: 0.5}
+  rVibrato: 10
   discoveryDegreeSlider: {fileID: 5093666953090071289}
   placeNameText: {fileID: 8591096256896571305}
   environmentImage: {fileID: 7258778455591954335}
   exploreButton: {fileID: 8812851150234041334}
   stateLayout: {fileID: 2494506249633345055}
-  envCard: {fileID: 563359815834039883}
+  envCardTransform: {fileID: 563359815834039883}
 --- !u!1 &668017741854125996
 GameObject:
   m_ObjectHideFlags: 0
@@ -675,7 +681,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 24.999985}
+  m_AnchoredPosition: {x: 0, y: 25}
   m_SizeDelta: {x: 136, y: 198}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8399457523511742360

@@ -15,20 +15,18 @@ public class Siphonophyllum : Card
 
     private void OnProgressFull()
     {
-        AddCard("有产物的虹吸海葵", Slot.Bag is PlayerBag);
         DestroyThis();
+        AddCard("有产物的虹吸海葵", Slot.Bag is PlayerBag);
     }
 
     public void Event_Cut(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).TryUse();
 
         tip = string.Empty;
         TimeManager.Instance.AddTime(45);
         AddCards("磁性触手", 2, true);
-
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).TryUse();
-        DestroyThis();
     }
 
     public bool Judge_Cut(out string hint)

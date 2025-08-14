@@ -19,7 +19,7 @@ public class ShellSashimi : Card
 
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 44);
@@ -27,7 +27,5 @@ public class ShellSashimi : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 10);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -3);
         TimeManager.Instance.AddTime(15);
-
-        DestroyThis();
     }
 }

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,20 +14,31 @@ public enum PressureLevel
 
 public class EnvironmentBagWindow : BagWindow
 {
+    [Header("抖动参数")]
+    [Header("位置")]
+    public float pDuration;
+    public Vector3 pStrength;
+    public int pVibrato;
+
+    [Header("旋转")]
+    public float rDuration;
+    public Vector3 rStrength;
+    public int rVibrato;
+
+
+    [Header("")]
     [SerializeField] private UIStateSlider discoveryDegreeSlider; // 探索度显示
     [SerializeField] private Text placeNameText; // 环境名称
     [SerializeField] private Image environmentImage; // 环境图片
     [SerializeField] private HoverableButton exploreButton; // 探索按钮
     [SerializeField] private RectTransform stateLayout;
-    [SerializeField] private RectTransform envCard;
+    [SerializeField] private RectTransform envCardTransform;
 
     private UIStateToggle hasCabbleToggle; // 是否铺设电缆
     private UIPressureLevel pressureLevel; // 压强等级
     private Dictionary<EnvironmentStateEnum, UIStateSlider> stateSliders = new(); // 环境状态显示
 
     private HoverTipController hoveredTipController;
-
-    public RectTransform EnvCard => envCard;
 
     protected override void Awake()
     {
@@ -68,7 +80,33 @@ public class EnvironmentBagWindow : BagWindow
 
     protected override void Init()
     {
+        exploreButton.onClick.RemoveAllListeners();
+        exploreButton.onClick.AddListener(() =>
+        {
+            var pos = envCardTransform.anchoredPosition;
 
+            var seq = DOTween.Sequence();
+
+            // 1. 牌堆抖动
+            seq.Join(envCardTransform.DOShakePosition(pDuration, pStrength, vibrato: pVibrato, fadeOut: false)); // 位置抖动
+            seq.Join(envCardTransform.DOShakeRotation(rDuration, rStrength, vibrato: rVibrato, fadeOut: false)); // 旋转抖动
+
+            // 2. 抽牌
+            seq.AppendCallback(() =>
+            {
+                GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
+                GameManager.Instance.AddCardsWithTween(droppedCards, envCardTransform.position, false);
+                // 提示
+                exploreButton.ShowTip(tip);
+            });
+
+            // 3. 归位
+            seq.Append(envCardTransform.DOAnchorPos(pos, .1f));
+            seq.Join(envCardTransform.DORotateQuaternion(Quaternion.identity, .1f));
+
+            // 等待抽牌动画完成
+            MouseManager.Instance.Wait(seq.Duration());
+        });
     }
 
     /// <summary>
@@ -156,9 +194,6 @@ public class EnvironmentBagWindow : BagWindow
         // 显示探索度
         discoveryDegreeSlider.SetValue(args.degree, 1);
 
-        // 显示探索按钮
-        exploreButton.onClick.RemoveAllListeners(); // 清除之前的监听器
-
         var text = exploreButton.GetComponentInChildren<Text>();
         if (args.completed)
         {
@@ -168,7 +203,6 @@ public class EnvironmentBagWindow : BagWindow
             text.color = ColorManager.Cyan;
 
             // 不再显示探索提示
-            hoveredTipController.HideTip();
             hoveredTipController.enabled = false;
         }
         else if (args.degree == 1)
@@ -176,11 +210,6 @@ public class EnvironmentBagWindow : BagWindow
             // 深入探索
             exploreButton.normalImage.gameObject.SetActive(true);
             exploreButton.Interactable = true;
-            exploreButton.onClick.AddListener(() =>
-            {
-                GameManager.Instance.HandleExplore(out string tip);
-                DynamicEffectUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
-            });
             text.text = "深入探索";
             text.color = ColorManager.White;
 
@@ -190,11 +219,6 @@ public class EnvironmentBagWindow : BagWindow
         {
             exploreButton.normalImage.gameObject.SetActive(true);
             exploreButton.Interactable = true;
-            exploreButton.onClick.AddListener(() =>
-            {
-                GameManager.Instance.HandleExplore(out string tip);
-                DynamicEffectUtility.ShowTip(tip, exploreButton.transform.position + (exploreButton.transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
-            });
             text.text = "开始探索";
             text.color = ColorManager.White;
 

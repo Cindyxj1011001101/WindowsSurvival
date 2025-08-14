@@ -17,13 +17,11 @@ public class ScaldedClaw : Card
 
     public void Event_Eat(out string tip)
     {
-        StopUpdating();
+        DestroyThis();
 
         tip = string.Empty;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 66);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         TimeManager.Instance.AddTime(45);
-
-        DestroyThis();
     }
 }

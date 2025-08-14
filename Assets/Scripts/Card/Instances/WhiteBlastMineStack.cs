@@ -15,14 +15,14 @@ public class WhiteBlastMineStack : Card
 
     public void Event_Dig(out string tip)
     {
+        TryUse();
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).TryUse();
+
         tip = string.Empty;
         TimeManager.Instance.AddTime(30);
         //掉落卡牌
         RandomDrop();
         RandomDrop();
-
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).TryUse();
-        TryUse();
     }
     public bool Judge_Dig(out string hint)
     {

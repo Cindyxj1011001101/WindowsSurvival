@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -100,11 +101,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void AddCardWithTween(Card card, Vector2 startPos, bool toPlayerBag)
+    public Tween AddCardWithTween(Card card, Vector2 startPos, bool toPlayerBag)
     {
         AddCard(card, toPlayerBag);
 
-        DynamicEffectUtility.MoveCard(
+        return MFXUtility.MoveCard(
             card,
             1,
             startPos,
@@ -116,35 +117,33 @@ public class GameManager : MonoBehaviour
             });
     }
 
-    public Card AddCardWithTween(string cardId, Vector2 startPos, bool toPlayerBag)
+    public Tween AddCardWithTween(string cardId, Vector2 startPos, bool toPlayerBag, out Card card)
     {
-        var card = CardFactory.CreateCard(cardId);
-        AddCardWithTween(card, startPos, toPlayerBag);
-        return card;
+        card = CardFactory.CreateCard(cardId);
+        
+        return AddCardWithTween(card, startPos, toPlayerBag);
     }
 
-    public List<Card> AddCardsWithTween(string cardId, int count, Vector2 startPos, bool toPlayerBag)
+    public Tween AddCardsWithTween(string cardId, int count, Vector2 startPos, bool toPlayerBag, out List<Card> cards)
     {
-        List<Card> cards = new();
+        cards = new();
 
         for (int i = 0; i < count; i++)
         {
             cards.Add(CardFactory.CreateCard(cardId));
         }
 
-        AddCardsWithTween(cards, startPos, toPlayerBag);
-
-        return cards;
+        return AddCardsWithTween(cards, startPos, toPlayerBag);
     }
 
-    public void AddCardsWithTween(List<Card> cards, Vector2 startPos, bool toPlayerBag)
+    public Tween AddCardsWithTween(List<Card> cards, Vector2 startPos, bool toPlayerBag)
     {
         foreach (var card in cards)
         {
             AddCard(card, toPlayerBag);
         }
 
-        DynamicEffectUtility.MoveCardsWithDelay(
+        return MFXUtility.MoveCards(
             cards,
             startPos,
             addCardAnimDuration,
@@ -172,7 +171,7 @@ public class GameManager : MonoBehaviour
 
         // 添加到装备格子里
         EquipmentBag.AddCard(equipment);
-        DynamicEffectUtility.MoveCard(
+        MFXUtility.MoveCard(
             equipment,
             1,
             originalSlot.transform.position,
@@ -260,10 +259,10 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 处理探索事件
     /// </summary>
-    /// <param name="startPos">抽牌动效的开始位置，即环境窗口牌堆的位置</param>
-    public void HandleExplore(out string tip)
+    public void HandleExplore(out string tip, out List<Card> droppedCards)
     {
         tip = string.Empty;
+        droppedCards = new List<Card>();
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
 
         var disposableDropList = curEnvironmentBag.DisposableDropList;
@@ -290,12 +289,13 @@ public class GameManager : MonoBehaviour
         TimeManager.Instance.AddTime(time);
 
         // 掉落卡牌
-        HandeleExploreDrop(out tip);
+        HandeleExploreDrop(out tip, out droppedCards);
     }
 
-    private void HandeleExploreDrop(out string tip)
+    private void HandeleExploreDrop(out string tip, out List<Card> droppedCards)
     {
         tip = string.Empty;
+        droppedCards = new List<Card>();
         var disposableDropList = curEnvironmentBag.DisposableDropList;
         var repeatableDropList = curEnvironmentBag.RepeatableDropList;
 
@@ -303,15 +303,12 @@ public class GameManager : MonoBehaviour
         if (!disposableDropList.IsEmpty)
         {
             // 掉落卡牌
-            var droppedCards = disposableDropList.RandomDrop();
-            if (droppedCards == null || droppedCards.Count == 0)
+            droppedCards = disposableDropList.RandomDrop();
+            if (droppedCards.IsNullOrEmpty())
             {
                 tip = "什么也没有得到";
                 return;
             }
-
-
-            AddCardsWithTween(droppedCards, envWindow.EnvCard.position, false);
 
             // 探索完成后让环境生态开始更新
             if (disposableDropList.IsEmpty)
@@ -323,14 +320,12 @@ public class GameManager : MonoBehaviour
         // 如果还可以重复探索
         else if (!repeatableDropList.IsEmpty)
         {
-            var droppedCards = repeatableDropList.RandomDrop();
-            if (droppedCards == null || droppedCards.Count == 0)
+            droppedCards = repeatableDropList.RandomDrop();
+            if (droppedCards.IsNullOrEmpty())
             {
                 tip = "什么也没有得到";
                 return;
             }
-
-            AddCardsWithTween(droppedCards, envWindow.EnvCard.position, false);
         }
     }
     #endregion
@@ -384,7 +379,7 @@ public class GameManager : MonoBehaviour
         }
         //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
         var door = curEnvironmentBag.DisposableDropList.CertainDrop($"从{ParsePlaceEnum(targetPlace)}到{ParsePlaceEnum(lastPlace)}");
-        if (door != null)
+        if (!door.IsNullOrEmpty())
         {
             AddCard(door[0], false);
             door[0].Slot.RefreshCurrentDisplay();
