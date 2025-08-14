@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class WindowsManager : MonoBehaviour
@@ -205,5 +206,37 @@ public class WindowsManager : MonoBehaviour
     public List<string> GetUnlockedShortcuts()
     {
         return shortcutsController.GetUnlockedShortcuts();
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonDown(0)) // 检测鼠标左键点击
+        {
+            // 创建指针事件数据
+            PointerEventData pointerData = new(EventSystem.current)
+            {
+                // 设置指针位置为鼠标位置
+                position = Input.mousePosition
+            };
+
+            // 创建接收结果的列表
+            var results = new List<RaycastResult>();
+
+            // 执行射线检测
+            EventSystem.current.RaycastAll(pointerData, results);
+
+            // 处理检测结果
+            if (results.Count > 0)
+            {
+                foreach (var result in results)
+                {
+                    if (result.gameObject.TryGetComponent<WindowBase>(out var window))
+                    {
+                        FocusWindow(window);
+                        return;
+                    }
+                }
+            }
+        }
     }
 }
