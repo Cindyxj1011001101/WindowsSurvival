@@ -17,7 +17,7 @@ public class WasteHeap : Card
     public void Event_Dig(out string tip)
     {
         //消耗1点耐久度
-        TryUse();
+        Use();
 
         tip = string.Empty;
         if (SoundManager.Instance != null)
@@ -32,9 +32,9 @@ public class WasteHeap : Card
     public void Event_DigByTool(out string tip)
     {
         //消耗1点耐久度
-        TryUse();
+        Use();
         // 工具消耗耐久
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).TryUse();
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).Use();
 
         tip = string.Empty;
         if (SoundManager.Instance != null)

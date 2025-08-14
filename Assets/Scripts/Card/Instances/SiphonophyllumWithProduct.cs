@@ -17,7 +17,7 @@ public class SiphonophyllumWithProduct : Card
     public void Event_Cut(out string tip)
     {
         DestroyThis();
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).TryUse();
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).Use();
 
         tip = string.Empty;
         TimeManager.Instance.AddTime(45);

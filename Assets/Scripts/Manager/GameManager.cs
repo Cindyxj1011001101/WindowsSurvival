@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
             addCardAnimDuration,
             onComplete: () =>
             {
-                card.Slot.RefreshCurrentDisplay();
+                card.RefreshSlot();
             });
     }
 
@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
             addCardAnimDuration,
             onComplete: (card) =>
             {
-                card.Slot.RefreshCurrentDisplay();
+                card.RefreshSlot();
             });
     }
 
@@ -178,7 +178,7 @@ public class GameManager : MonoBehaviour
             equipment.Slot.transform.position,
             onComplete: () =>
             {
-                equipment.Slot.RefreshCurrentDisplay();
+                equipment.RefreshSlot();
             }
             );
     }
@@ -382,7 +382,7 @@ public class GameManager : MonoBehaviour
         if (!door.IsNullOrEmpty())
         {
             AddCard(door[0], false);
-            door[0].Slot.RefreshCurrentDisplay();
+            door[0].RefreshSlot();
         }
 
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);

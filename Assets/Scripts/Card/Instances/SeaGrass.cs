@@ -19,7 +19,7 @@ public class SeaGrass : Card
     public void Event_CollectByKnife(out string tip)
     {
         DestroyThis();
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).TryUse();
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).Use();
 
         tip = string.Empty;
         TimeManager.Instance.AddTime(15);

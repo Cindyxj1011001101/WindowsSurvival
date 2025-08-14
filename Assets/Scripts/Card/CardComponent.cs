@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -37,10 +36,13 @@ public class FreshnessComponent : CardComponent
 
         // 随时间自动减少新鲜度
         freshness -= (int)(deltaTime * updateRate);
+        freshness = Mathf.Max(freshness, 0);
+
+        BelongedCard.RefreshSlot();
+
         if (freshness <= 0)
         {
-            if (BelongedCard.Slot != null)
-                BelongedCard.Slot.ShowTip($"{BelongedCard.CardName}腐烂了", ColorManager.Yellow);
+            BelongedCard.ShowTip($"{BelongedCard.CardName}腐烂了", ColorManager.Yellow);
             freshness = 0;
             onRotton?.Invoke();
         }
@@ -76,6 +78,9 @@ public class GrowthComponent : CardComponent
 
         // 随时间自动增加生长度
         growth += (int)(deltaTime * updateRate);
+        growth = Mathf.Min(growth, maxGrowth);
+
+        BelongedCard.RefreshSlot();
 
         if (growth >= maxGrowth)
         {
@@ -114,6 +119,10 @@ public class ProgressComponent : CardComponent
 
         // 随时间自动增加产物进度
         progress += (int)(deltaTime * updateRate);
+        progress = Mathf.Min(progress, maxProgress);
+
+        BelongedCard.RefreshSlot();
+
         if (progress >= maxProgress)
         {
             progress = maxProgress;
@@ -201,6 +210,22 @@ public class DurabilityComponent : CardComponent
         durability = this.maxDurability = maxDurability;
     }
 
+    public void Use(UnityAction onBroken)
+    {
+        if (durability <= 0) return;
+
+        durability--;
+        durability = Mathf.Max(durability, 0);
+
+        BelongedCard.RefreshSlot();
+
+        if (durability <= 0)
+        {
+            durability = 0;
+            onBroken?.Invoke();
+        }
+    }
+
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
@@ -271,31 +296,14 @@ public class InnerContentsComponent : CardComponent
             {
                 if (slot[j].CardId == cardId)
                 {
-                    if (slot[j].Slot != null)
-                        // 刷新显示
-                        slot[j].Slot.RefreshCurrentDisplay();
                     slot.RemoveAt(j);
+                    // 刷新显示
+                    slot[j].RefreshSlot();
                     removedCount++;
                 }
             }
         }
         return removedCount;
-    }
-
-    public void RemoveCard(Card card)
-    {
-        // 遍历外层列表
-        foreach (var slot in innerContents)
-        {
-            for (int i = slot.Count - 1; i >= 0; i--)
-            {
-                if (slot[i] == card)
-                {
-                    slot.RemoveAt(i);
-                    break;
-                }
-            }
-        }
     }
 
     public override string ToString()

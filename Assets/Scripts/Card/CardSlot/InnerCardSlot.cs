@@ -11,7 +11,7 @@
     {
         base.AddCard(card);
         card.SetParentCard(component.BelongedCard);
-        component.BelongedCard.Slot.RefreshCurrentDisplay();
+        component.BelongedCard.RefreshSlot();
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
     }
 
@@ -19,7 +19,7 @@
     {
         base.RemoveCard(card);
         card.SetParentCard(null);
-        component.BelongedCard.Slot.RefreshCurrentDisplay();
+        component.BelongedCard.RefreshSlot();
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
     }
 }

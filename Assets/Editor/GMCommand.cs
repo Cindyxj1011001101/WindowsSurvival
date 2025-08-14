@@ -3,14 +3,15 @@ using UnityEditor;
 using UnityEngine;
 public class GMCommand
 {
-    private static void AddCard(string cardName)
+    private static Card AddCard(string cardName)
     {
         var card = CardFactory.CreateCard(cardName);
         card.StartUpdating();
         var bag = GetFocusedBag();
         if (bag != null && bag.CanAddCard(card, out _)) bag.AddCard(card);
-        if (card.Slot != null)
-            card.Slot.RefreshCurrentDisplay();
+        card.RefreshSlot();
+
+        return card;
     }
 
     private static BagBase GetFocusedBag()
@@ -87,10 +88,13 @@ public class GMCommand
         AddCard("韧性胶管");
     }
 
-    [MenuItem("Command/添加/老鼠尸体")]
+    [MenuItem("Command/添加/20新鲜度的老鼠尸体")]
     public static void H()
     {
-        AddCard("老鼠尸体");
+        var card = AddCard("老鼠尸体");
+        card.TryGetComponent<FreshnessComponent>(out var c);
+        c.freshness = 20;
+        card.RefreshSlot();
     }
 
     [MenuItem("Command/添加/小块生肉")]
@@ -265,6 +269,12 @@ public class GMCommand
     public static void U()
     {
         AddCard("人力发电机");
+    }
+
+    [MenuItem("Command/添加/通往动力舱")]
+    public static void X()
+    {
+        AddCard("通往动力舱");
     }
 
     [MenuItem("Command/GC")]

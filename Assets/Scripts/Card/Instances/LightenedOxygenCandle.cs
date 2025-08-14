@@ -12,7 +12,7 @@ public class LightenedOxygenCandle : Card
 
     protected override Action OnUpdate => () =>
     {
-        TryUse();
+        Use();
 
         // 每回合消耗耐久
         BagBase bag;
