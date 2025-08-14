@@ -2,11 +2,10 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ChatWindow : WindowBase
+public class ChatWindow : WindowBase, IPointerDownHandler
 {
     [SerializeField] private GameObject playerChatPrefab;
     [SerializeField] private GameObject othersChatPrefab;
