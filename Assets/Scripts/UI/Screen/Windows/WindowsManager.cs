@@ -31,6 +31,11 @@ public class WindowsManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        pointerData = new(EventSystem.current)
+        {
+            // 设置指针位置为鼠标位置
+            position = Input.mousePosition
+        };
     }
 
     private void Start()
@@ -208,19 +213,15 @@ public class WindowsManager : MonoBehaviour
         return shortcutsController.GetUnlockedShortcuts();
     }
 
+
+    PointerEventData pointerData;
+    List<RaycastResult> results;
     private void Update()
     {
         if (Input.GetMouseButtonDown(0)) // 检测鼠标左键点击
         {
-            // 创建指针事件数据
-            PointerEventData pointerData = new(EventSystem.current)
-            {
-                // 设置指针位置为鼠标位置
-                position = Input.mousePosition
-            };
-
             // 创建接收结果的列表
-            var results = new List<RaycastResult>();
+            results = new List<RaycastResult>();
 
             // 执行射线检测
             EventSystem.current.RaycastAll(pointerData, results);
