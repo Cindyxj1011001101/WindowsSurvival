@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 
 public class CraftWindow : WindowBase
@@ -17,6 +18,7 @@ public class CraftWindow : WindowBase
     [SerializeField] private RectTransform recipeLibrarySelectRect; // 配方库选择框
     [SerializeField] private RectTransform recipeItemSelectRect; // 配方选择框
     [SerializeField] private RectTransform limitationLayout; // 建筑放置限制
+    [SerializeField] private GameObject cannotMove; // 不能移动的标志
 
     [SerializeField] private GameObject recipeMaterialPrefab;
     [SerializeField] private GameObject recipeItemPrefab;
@@ -50,7 +52,8 @@ public class CraftWindow : WindowBase
         {
             child.gameObject.AddComponent<HoverTipController>().SetTip(child.GetComponentInChildren<Text>(true).text);
         }
-
+        cannotMove.AddComponent<HoverTipController>().SetTip(cannotMove.GetComponentInChildren<Text>(true).text);
+        cannotMove.SetActive(false);
         limitationLayout.gameObject.SetActive(false);
 
         currentRecipeType = (RecipeType)Enum.Parse(typeof(RecipeType), recipeLibraryLayout.GetChild(0).name);
@@ -263,6 +266,9 @@ public class CraftWindow : WindowBase
         {
             limitationLayout.gameObject.SetActive(false);
         }
+
+        // 显示能否移动
+        cannotMove.SetActive(!recipe.CardInstance.Moveable);
 
         // 播放选择动效
         SelectRecipeWithTween(recipe.cardId);
