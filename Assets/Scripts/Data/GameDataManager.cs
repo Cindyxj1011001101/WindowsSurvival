@@ -363,7 +363,6 @@ public class GameDataManager
             new List<ParagraphData>(ChatConditionManager.Instance.ParagraphConditionsToTrigger);
         generatedChatData.GeneratedChatDataList = new List<ChatData>(ChatManager.Instance.GeneratedChatDataList);
         generatedChatData.ParagraphToTriggeer = new List<string>(ChatManager.Instance.ParagraphToTriggeer);
-        generatedChatData.CurrentParagraphData = ChatManager.Instance.CurrentParagraphData;
         generatedChatData.ChoosedChatData = ChatManager.Instance.ChoosedChatData;
         generatedChatData.inParagraph = ChatManager.Instance.inParagraph;
         generatedChatData.InterruptParagraphData = ChatManager.Instance.InterruptParagraphData;

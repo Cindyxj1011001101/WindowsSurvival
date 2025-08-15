@@ -7,8 +7,6 @@ public class GeneratedChatData
     public List<ChatData> GeneratedChatDataList = new();
     //需要触发的段落列表
     public List<string> ParagraphToTriggeer = new List<string>();
-    //当前段落数据
-    public ParagraphData CurrentParagraphData;
     //当前选项数据
     public string ChoosedChatData;
     //是否在段落中
