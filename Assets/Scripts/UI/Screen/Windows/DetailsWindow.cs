@@ -16,20 +16,21 @@ public class DetailsWindow : BagWindow
     [SerializeField] private RectTransform selectRect; // 选择框
 
     private Card currentDisplayedCard;
+    private Bag innerBag;
 
     protected override void Awake()
     {
         base.Awake();
-        EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
-        EventManager.Instance.AddListener<Card>(EventType.ChangeCardProperty, RefreshCurrentDisplay);
+        EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCard);
+        EventManager.Instance.AddListener<Card>(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
-        EventManager.Instance.RemoveListener<Card>(EventType.ChangeCardProperty, RefreshCurrentDisplay);
+        EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCard);
+        EventManager.Instance.RemoveListener<Card>(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
@@ -68,14 +69,13 @@ public class DetailsWindow : BagWindow
             DisplayEventButtons();
     }
 
-    public override void RefreshCurrentDisplay()
+    public void RefreshCard()
     {
-        base.RefreshCurrentDisplay();
         if (currentDisplayedCard != null)
             DisplayCard();
     }
 
-    private void RefreshCurrentDisplay(Card card)
+    private void RefreshCard(Card card)
     {
         if (currentDisplayedCard != card) return;
 
@@ -92,7 +92,7 @@ public class DetailsWindow : BagWindow
         // 正常刷新显示
         else
         {
-            RefreshCurrentDisplay();
+            RefreshCard();
         }
     }
 
@@ -111,9 +111,9 @@ public class DetailsWindow : BagWindow
         if (slotCards.IsEmpty) return;
 
         // 记录当前显示的卡牌
-        currentDisplayedCard = slotCards[0];
+        currentDisplayedCard = slotCards.PeekCard();
 
-        currentDisplayedCard.TempSlotTransform = slot.transform;
+        currentDisplayedCard.Transform = slot.transform;
 
         DisplayCardDetails(onlyDetails);
     }
@@ -128,7 +128,7 @@ public class DetailsWindow : BagWindow
         // 记录当前显示的卡牌
         currentDisplayedCard = card;
 
-        currentDisplayedCard.TempSlotTransform = slot.transform;
+        currentDisplayedCard.Transform = slot.transform;
 
         DisplayCardDetails(onlyDetails);
     }
@@ -137,6 +137,9 @@ public class DetailsWindow : BagWindow
     {
         // 显示卡牌
         DisplayCard();
+
+        // 显示详情
+        DisplayDetails();
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 
@@ -151,19 +154,14 @@ public class DetailsWindow : BagWindow
             if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component))
             {
                 innerContentsButton.gameObject.SetActive(true);
-                DisplayBag(component.bag);
                 innerContentsButton.Interactable = true;
+                innerBag = component.bag;
             }
             else
             {
                 innerContentsButton.gameObject.SetActive(false);
             }
         }
-
-        LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
-
-        // 显示详情
-        DisplayDetails();
 
         // 打开详情如果卡牌有循环音
         if (currentDisplayedCard.HasLoopSound)
@@ -177,19 +175,25 @@ public class DetailsWindow : BagWindow
 
     private void DisplayDetails()
     {
+        // 清除内容物卡牌的显示
+        ClearBag();
+
         detailsText.gameObject.SetActive(true);
-        //innerBag.gameObject.SetActive(false);
         contentsView.gameObject.SetActive(false);
+
         // 显示卡牌详细信息
         detailsText.text = currentDisplayedCard.CardDesc;
+
         SelectWithTween(detailsButton.GetComponent<RectTransform>());
     }
 
     private void DisplayInnerContents()
     {
         detailsText.gameObject.SetActive(false);
-        //innerBag.gameObject.SetActive(true);
         contentsView.gameObject.SetActive(true);
+
+        DisplayBag(innerBag);
+
         SelectWithTween(innerContentsButton.GetComponent<RectTransform>());
     }
 
@@ -241,9 +245,9 @@ public class DetailsWindow : BagWindow
         }
     }
 
-    public override void Clear()
+    public void Clear()
     {
-        base.Clear();
+        ClearBag();
 
         moved = false;
         slot.Clear();
@@ -253,12 +257,11 @@ public class DetailsWindow : BagWindow
             currentDisplayedCard.OnDetailClose();
 
         if (currentDisplayedCard != null)
-            currentDisplayedCard.TempSlotTransform = null;
+            currentDisplayedCard.Transform = null;
 
         currentDisplayedCard = null;
+        innerBag = null;
         detailsText.text = "";
-        //innerBag.Clear();
-        //innerBag.gameObject.SetActive(false);
         contentsView.gameObject.SetActive(false);
         innerContentsButton.gameObject.SetActive(false);
         MonoUtility.DestroyAllChildren(buttonLayout);
@@ -266,6 +269,8 @@ public class DetailsWindow : BagWindow
 
     private void SelectWithTween(RectTransform target)
     {
+        LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
+
         Vector2 targetPos = new(target.anchoredPosition.x, selectRect.anchoredPosition.y);
 
         selectRect.DOKill();

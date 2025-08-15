@@ -58,7 +58,6 @@ public class MFXUtility
         // 设置CardSlot组件
         CardSlot slot = slotObj.GetComponent<CardSlot>();
         slot.GetComponent<CanvasGroup>().blocksRaycasts = false;
-        slot.dontRefresh = true;
 
         slot.GetComponentInChildren<ChangeMouse>().changeMouseType = ChangeMouseType.Drag;
 

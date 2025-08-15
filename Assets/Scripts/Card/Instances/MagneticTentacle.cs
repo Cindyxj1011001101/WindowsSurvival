@@ -18,7 +18,7 @@ public class MagneticTentacle : Card
     private void OnRotton()
     {
         DestroyThis();
-        AddCard("废金属", true);
+        AddCard("废金属", Bag);
     }
 
     public void Event_Eat(out string tip)

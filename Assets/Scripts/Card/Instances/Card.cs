@@ -142,7 +142,7 @@ public abstract class Card : IComparable<Card>
             //        c.StartUpdating();
             //    }
             //}
-            component.bag.Init();
+            component.Init();
         }
     }
 
@@ -314,43 +314,79 @@ public abstract class Card : IComparable<Card>
     }
 
     // 卡牌的临时位置，用来处理从临时位置处发出一张卡牌的动效，例如从详情窗口的slot处
-    private Transform tempSlotTransform;
+    private Transform transform;
 
     [JsonIgnore]
-    public Transform TempSlotTransform
+    public Transform Transform
     {
         get
         {
-            if (tempSlotTransform != null)
-                return tempSlotTransform;
+            if (transform != null)
+                return transform;
 
 
             return Slot == null ? null : Slot.transform;
         }
         set
         {
-            tempSlotTransform = value;
+            transform = value;
         }
     }
 
     protected Tween AddCard(string cardId, bool toPlayerBag, out Card card)
     {
-        return GameManager.Instance.AddCardWithTween(cardId, TempSlotTransform.position, toPlayerBag, out card);
+        return GameManager.Instance.AddCardWithTween(cardId, Transform.position, toPlayerBag, out card);
     }
 
     protected Tween AddCard(string cardId, bool toPlayerBag)
     {
-        return GameManager.Instance.AddCardWithTween(cardId, TempSlotTransform.position, toPlayerBag, out _);
+        return GameManager.Instance.AddCardWithTween(cardId, Transform.position, toPlayerBag, out _);
     }
 
     protected Tween AddCards(string cardId, int count, bool toPlayerBag, out List<Card> cards)
     {
-        return GameManager.Instance.AddCardsWithTween(cardId, count, TempSlotTransform.position, toPlayerBag, out cards);
+        return GameManager.Instance.AddCardsWithTween(cardId, count, Transform.position, toPlayerBag, out cards);
     }
 
     protected Tween AddCards(string cardId, int count, bool toPlayerBag)
     {
-        return GameManager.Instance.AddCardsWithTween(cardId, count, TempSlotTransform.position, toPlayerBag, out _);
+        return GameManager.Instance.AddCardsWithTween(cardId, count, Transform.position, toPlayerBag, out _);
+    }
+
+    protected void AddCard(string cardId, Bag targetBag)
+    {
+        AddCard(CardFactory.CreateCard(cardId), targetBag);
+    }
+
+    protected void AddCard(Card card, Bag targetBag)
+    {
+        // 尝试放在targetBag里
+        if (targetBag.CanAddCard(card, out _))
+        {
+            // 成功放置
+            var transform = Transform;
+            if (transform == null && ParentCard != null)
+                transform = ParentCard.Transform;
+            // 当前卡牌和其父卡牌都没有显示在场景里
+            if (transform == null)
+                // 没有动效直接添加
+                GameManager.Instance.AddCard(card, targetBag);
+            else
+                // 添加并且播放动效
+                GameManager.Instance.AddCardWithTween(card, targetBag, transform.position);
+
+        }
+        // 放不下看targetBag是不是内容物背包
+        else if (targetBag is InnerBag innerBag)
+        {
+            // 是的话尝试放在内容物背包的父物体所在的背包里
+            AddCard(card, innerBag.BelongCard.Bag);
+        }
+        // 否则放在当前环境里
+        else
+        {
+            AddCard(card, GameManager.Instance.CurEnvironmentBag);
+        }
     }
 }
 

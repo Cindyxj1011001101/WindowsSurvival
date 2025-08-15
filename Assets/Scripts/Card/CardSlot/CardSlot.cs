@@ -18,8 +18,6 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private CanvasGroup cardCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
     [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
-    public bool dontRefresh; // 是否不刷新显示（用于某些特殊情况）
-
 
     private Dictionary<Type, float> lastComponentValues = new();
     private Dictionary<Type, Slider> componentSliders = new(); // 用于存储组件的滑动条
@@ -30,8 +28,6 @@ public class CardSlot : MonoBehaviour
 
     private void Awake()
     {
-        if (!dontRefresh)
-            EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
         EventManager.Instance.AddListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
     }
@@ -40,7 +36,6 @@ public class CardSlot : MonoBehaviour
     {
         Cards?.SetCardSlot(null);
 
-        EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
         EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
     }
@@ -175,7 +170,7 @@ public class CardSlot : MonoBehaviour
         for (int i = 0; i < innerContentsComponentLayout.childCount; i++)
         {
             innerContentsComponentLayout.GetChild(i).gameObject.SetActive(i < component.bag.SlotCount);
-            innerContentsComponentLayout.GetChild(i).GetComponent<Image>().color = i < component.bag.EmptySlotCount ? ColorManager.White : ColorManager.DarkGrey;
+            innerContentsComponentLayout.GetChild(i).GetComponent<Image>().color = i < component.bag.SlotCount - component.bag.EmptySlotCount ? ColorManager.White : ColorManager.DarkGrey;
         }
     }
 

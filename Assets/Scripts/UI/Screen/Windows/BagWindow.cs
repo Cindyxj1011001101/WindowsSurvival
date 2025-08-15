@@ -12,14 +12,14 @@ public abstract class BagWindow : WindowBase
 
     public Bag Bag {  get; protected set; }
 
-    public virtual void RefreshCurrentDisplay()
+    public virtual void RefreshBagDisplay()
     {
         if (Bag != null) DisplayBag(Bag);
     }
 
     public virtual void DisplayBag(Bag bag)
     {
-        Clear();
+        ClearBag();
 
         Bag = bag;
         bag.SetBagWindow(this);
@@ -40,7 +40,7 @@ public abstract class BagWindow : WindowBase
                 else
                     SoundManager.Instance.PlaySound("低沉泡泡音", true, 1.3f);
 
-                RefreshCurrentDisplay();
+                RefreshBagDisplay();
 
             });
         }
@@ -70,7 +70,7 @@ public abstract class BagWindow : WindowBase
         MonoUtility.UpdateLayoutSize(slotLayout.GetComponent<ILayoutGroup>());
     }
 
-    public virtual void Clear()
+    public virtual void ClearBag()
     {
         Bag?.SetBagWindow(null);
         Bag = null;

@@ -2,6 +2,8 @@ using UnityEditor;
 using UnityEngine;
 public class GMCommand
 {
+    static Card testCard;
+
     private static Card AddCard(string cardName)
     {
         var card = CardFactory.CreateCard(cardName);
@@ -93,8 +95,6 @@ public class GMCommand
         AddCard("韧性胶管");
     }
 
-    static Card testcard;
-
     [MenuItem("Command/添加/20新鲜度的老鼠尸体")]
     public static void H()
     {
@@ -102,13 +102,6 @@ public class GMCommand
         card.TryGetComponent<FreshnessComponent>(out var c);
         c.freshness = 20;
         card.RefreshSlot();
-
-        testcard = card;
-        PublicMono.Instance.AddUpdateListener(() =>
-        {
-            testcard.TryGetComponent<FreshnessComponent>(out var c);
-            Debug.Log(c.freshness);
-        });
     }
 
     [MenuItem("Command/添加/小块生肉")]
