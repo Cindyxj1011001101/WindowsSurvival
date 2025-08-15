@@ -37,7 +37,7 @@ public class HumanPoweredGenerator : Card
     {
         hint = string.Empty;
 
-        var env = Slot.Bag as EnvironmentBag;
+        var env = Bag as EnvironmentBag;
         if (!env.HasCable)
         {
             hint = "需要将该地区连入电网";

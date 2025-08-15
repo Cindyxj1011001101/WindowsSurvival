@@ -1,91 +1,70 @@
-using System.Collections.Generic;
-using UnityEngine;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using UnityEditor.PackageManager.UI;
+using UnityEngine;
 
-public class EnvironmentBag : BagBase
+public class EnvironmentBag : Bag
 {
-    public DisposableDropList DisposableDropList { get; private set; } = new();
-    public RepeatableDropList RepeatableDropList { get; private set; } = new();
+    [JsonProperty] private string placeName;
+    [JsonProperty] private bool hasCable;
+    [JsonProperty] private PressureLevel pressureLevel;
+    [JsonProperty] private DisposableDropList disposableDropList = new();
+    [JsonProperty] private RepeatableDropList repeatableDropList = new();
+    [JsonProperty] private Dictionary<EnvironmentStateEnum, EnvironmentState> stateDict = new();
 
-    [Header("探索用时")]
-    public int explorationTime;
+    private PlaceData placeData;
 
-    [Header("地点数据")]
-    [SerializeField] private PlaceData placeData;
+    [JsonIgnore] public bool HasCable => hasCable;
+    [JsonIgnore] public PressureLevel PressureLevel => pressureLevel;
+    [JsonIgnore] public string PlaceName => placeName;
+    [JsonIgnore] public DisposableDropList DisposableDropList => disposableDropList;
+    [JsonIgnore] public RepeatableDropList RepeatableDropList => repeatableDropList;
+    [JsonIgnore] public Dictionary<EnvironmentStateEnum, EnvironmentState> StateDict => stateDict;
 
-    [Header("是否铺设电缆")]
-    [SerializeField] private bool hasCable;
+    [JsonIgnore]
+    public PlaceData PlaceData
+    {
+        get
+        {
+            placeData ??= Resources.Load<PlaceData>("ScriptableObject/Place/" + placeName);
+            return placeData;
+        }
+    }
 
-    [Header("压强等级")]
-    [SerializeField] private PressureLevel pressureLevel;
-
-    // 环境状态字典
-    public Dictionary<EnvironmentStateEnum, EnvironmentState> StateDict { get; private set; } = new();
-
-    // 是否铺设电缆
-    public bool HasCable => hasCable;
-
-    public PressureLevel PressureLevel => pressureLevel;
-
-    public PlaceData PlaceData => placeData;
-
+    [JsonIgnore]
     public float DiscoveryDegree => 1 - DisposableDropList.RemainingDropsRate;
 
+    [JsonIgnore]
     public bool ExploreCompleted => DisposableDropList.IsEmpty && RepeatableDropList.IsEmpty;
 
-    private void Awake()
+    protected override void FirstInit()
     {
-        // 如果是飞船环境，要考虑水平面变化
-        if (placeData.isInSpacecraft)
-            EventManager.Instance.AddListener<float>(EventType.ChangeWaterLevel, OnWaterLevelChanged);
+        AddSlot(9);
+
+        InitState();
+        InitDropList();
+        if (PlaceData.isInSpacecraft)
+            hasCable = true;
+        pressureLevel = PressureLevel.Standard;
     }
 
     public override void Init()
     {
-        InitBag(GameDataManager.Instance.GetEnvironmentBagDataByPlace(placeData.placeType));
-    }
-
-    private void OnDestroy()
-    {
-        // 如果是飞船环境，要考虑水平面变化
-        if (placeData.isInSpacecraft)
-            EventManager.Instance.RemoveListener<float>(EventType.ChangeWaterLevel, OnWaterLevelChanged);
-    }
-
-    protected override void InitBag(BagRuntimeData runtimeData)
-    {
-        // 初始化背包中的物品，探索度，环境状态值
-        base.InitBag(runtimeData);
-        var data = (runtimeData as EnvironmentBagRuntimeData);
-
-        if (!data.init)
-        {
-            InitState();
-            InitDropList();
-        }
-        else
-        {
-            StateDict = data.environmentStateDict;
-            DisposableDropList = data.disposableDropList;
-            RepeatableDropList = data.repeatableDropList;
-            pressureLevel = data.pressureLevel;
-            hasCable = data.hasCable;
-        }
-
+        base.Init();
         RepeatableDropList.StartUpdating();
     }
-
     private void InitState()
     {
         // 在室内显示氧气
-        if (placeData.isIndoor)
+        if (PlaceData.isIndoor)
             StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(UnityEngine.Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
     }
 
     private void InitDropList()
     {
-        DisposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(placeData.placeType));
-        RepeatableDropList = JsonManager.DeepCopy(CardFactory.GetRepeatableDropList(placeData.placeType));
+        disposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(placeData.placeType));
+        repeatableDropList = JsonManager.DeepCopy(CardFactory.GetRepeatableDropList(placeData.placeType));
     }
 
     /// <summary>
@@ -125,24 +104,25 @@ public class EnvironmentBag : BagBase
         }
     }
 
-    private void OnWaterLevelChanged(float level)
-    {
-        // 如果当前是水域环境
-        if (placeData.isInWater)
-        {
-            // 如果水平面下降
-            if (level < StateManager.Instance.WaterLevel.MaxValue)
-                // 变回陆地环境
-                placeData.isInWater = false;
-        }
-        // 如果当前是陆地环境
-        else
-        {
-            if (level >= StateManager.Instance.WaterLevel.MaxValue)
-                // 变成水域环境
-                placeData.isInWater = true;
-        }
-    }
+    // TODO
+    //private void OnWaterLevelChanged(float level)
+    //{
+    //    // 如果当前是水域环境
+    //    if (placeData.isInWater)
+    //    {
+    //        // 如果水平面下降
+    //        if (level < StateManager.Instance.WaterLevel.MaxValue)
+    //            // 变回陆地环境
+    //            placeData.isInWater = false;
+    //    }
+    //    // 如果当前是陆地环境
+    //    else
+    //    {
+    //        if (level >= StateManager.Instance.WaterLevel.MaxValue)
+    //            // 变成水域环境
+    //            placeData.isInWater = true;
+    //    }
+    //}
 
     public override bool CanAddCard(Card card, out string tip)
     {
@@ -162,21 +142,33 @@ public class EnvironmentBag : BagBase
         base.AddCard(card);
 
         // 如果剩余格子数量小于3个
-        if (UnusedSlotsCount < 3)
+        if (EmptySlotCount < 3)
         {
             // 暂定每次新增3个格子
             AddSlot(3);
         }
     }
 
-    public override void CompactCards()
+    public override bool CompactCards()
     {
-        base.CompactCards();
-        while (slots.Count - 3 >= 9 && UnusedSlotsCount - 3 >= 3)
+        var hasChanged = base.CompactCards();
+        while (Slots.Count - 3 >= 9 && EmptySlotCount - 3 >= 3)
         {
-            RemoveSlot(slots[^1]);
-            RemoveSlot(slots[^1]);
-            RemoveSlot(slots[^1]);
+            RemoveSlot(Slots[^1]);
+            RemoveSlot(Slots[^1]);
+            RemoveSlot(Slots[^1]);
         }
+        if (window != null) window.RefreshCurrentDisplay();
+        return hasChanged;
+    }
+
+    public override void OnAddCard(Card card)
+    {
+
+    }
+
+    public override void OnRemoveCard(Card card)
+    {
+
     }
 }

@@ -25,7 +25,7 @@ public class LoveBead : Card
     private void OnProgressFull()
     {
         DestroyThis();
-        AddCard("有产物的爱情贝", Slot.Bag is PlayerBag);
+        AddCard("有产物的爱情贝", Bag is PlayerBag);
     }
 
     protected override Action OnUpdate => () =>

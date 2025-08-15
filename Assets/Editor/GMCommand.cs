@@ -1,4 +1,3 @@
-using System;
 using UnityEditor;
 using UnityEngine;
 public class GMCommand
@@ -6,33 +5,39 @@ public class GMCommand
     private static Card AddCard(string cardName)
     {
         var card = CardFactory.CreateCard(cardName);
-        card.StartUpdating();
-        var bag = GetFocusedBag();
-        if (bag != null && bag.CanAddCard(card, out _)) bag.AddCard(card);
+        var window = GetFocusedBagWindow();
+        if (window != null && window.Bag != null && window.Bag.CanAddCard(card, out _))
+            window.Bag.AddCard(card);
         card.RefreshSlot();
 
         return card;
     }
 
-    private static BagBase GetFocusedBag()
+    private static BagWindow GetFocusedBagWindow()
     {
         var window = WindowsManager.Instance.GetCurrentFocusedWindow();
         if (window == null) return null;
-        return window.GetComponentInChildren<BagBase>(false);
+        return window.GetComponentInChildren<BagWindow>(false);
     }
 
     [MenuItem("Command/添加/格子")]
     public static void AddSlot()
     {
-        var bag = GetFocusedBag();
-        if (bag != null) bag.AddSlot();
+        var window = GetFocusedBagWindow();
+        if (window != null) window.Bag.AddSlot();
     }
 
     [MenuItem("Command/添加/9个格子")]
     public static void AddNineSlots()
     {
-        var bag = GetFocusedBag();
-        if (bag != null) bag.AddSlot(9);
+        var window = GetFocusedBagWindow();
+        if (window != null)
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                window.Bag.AddSlot();
+            }
+        }
     }
 
     [MenuItem("Command/添加/压缩饼干")]
@@ -88,6 +93,8 @@ public class GMCommand
         AddCard("韧性胶管");
     }
 
+    static Card testcard;
+
     [MenuItem("Command/添加/20新鲜度的老鼠尸体")]
     public static void H()
     {
@@ -95,6 +102,13 @@ public class GMCommand
         card.TryGetComponent<FreshnessComponent>(out var c);
         c.freshness = 20;
         card.RefreshSlot();
+
+        testcard = card;
+        PublicMono.Instance.AddUpdateListener(() =>
+        {
+            testcard.TryGetComponent<FreshnessComponent>(out var c);
+            Debug.Log(c.freshness);
+        });
     }
 
     [MenuItem("Command/添加/小块生肉")]
@@ -150,13 +164,13 @@ public class GMCommand
     [MenuItem("Command/保存/玩家背包")]
     public static void SavePlayerBag()
     {
-        GameDataManager.Instance.SavePlayerBagRuntimeData();
+        GameDataManager.Instance.SavePlayerBag();
     }
 
     [MenuItem("Command/保存/环境背包")]
     public static void SaveEnvironmentBag()
     {
-        GameDataManager.Instance.SaveEnvironmentBagRuntimeData();
+        GameDataManager.Instance.SaveEnvironmentBag();
     }
 
     [MenuItem("Command/保存/当前地点")]

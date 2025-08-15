@@ -187,7 +187,7 @@ public class CraftWindow : WindowBase
         MonoUtility.DestroyAllChildren(materialLayout);
 
         // 显示卡牌
-        slot.ClearSlot();
+        slot.Clear();
         slot.DisplayCard(recipe.CardInstance, 1, false);
 
         slot.GetComponentInChildren<HoverableButton>().onClick.RemoveAllListeners();

@@ -24,14 +24,9 @@ public class CardSlot : MonoBehaviour
     private Dictionary<Type, float> lastComponentValues = new();
     private Dictionary<Type, Slider> componentSliders = new(); // 用于存储组件的滑动条
 
-    private List<Card> cards = new();
-    public bool IsEmpty => cards.IsNullOrEmpty();
-    public int StackNum => cards.Count;
-
-    public List<Card> Cards => cards;
-
-    private BagBase bag;
-    public BagBase Bag => bag;
+    public SlotCards Cards { get; protected set; }
+    public bool IsEmpty => Cards.IsEmpty;
+    public int StackNum => Cards.StackNum;
 
     private void Awake()
     {
@@ -43,26 +38,22 @@ public class CardSlot : MonoBehaviour
 
     private void OnDestroy()
     {
+        Cards?.SetCardSlot(null);
+
         EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCurrentDisplay);
         EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
     }
 
-    public void Init(List<Card> cardList)
+    public void Init(SlotCards slotCards)
     {
-        cards = cardList;
-        foreach (var card in cards)
-        {
-            card.SetCardSlot(this);
-            card.StartUpdating();
-        }
+        Cards = slotCards;
+        slotCards.SetCardSlot(this);
+        //Debug.Log(slotCards.CardSlot);
         RefreshCurrentDisplay();
     }
 
-    public void SetBag(BagBase bag)
-    {
-        this.bag = bag;
-    }
+    #region 显示
 
     private void OnChangeTimeStarted()
     {
@@ -78,7 +69,7 @@ public class CardSlot : MonoBehaviour
     {
         // 计算组件的变化值
         Dictionary<Type, float> deltaValues = new();
-        foreach (var(type, lastValue) in lastComponentValues)
+        foreach (var (type, lastValue) in lastComponentValues)
         {
             if (componentSliders.TryGetValue(type, out var slider))
             {
@@ -89,11 +80,9 @@ public class CardSlot : MonoBehaviour
 
         if (deltaValues.Count > 0)
             DisplayComponentValuesChange(deltaValues);
-        
+
         lastComponentValues.Clear();
     }
-
-    #region 显示
 
     /// <summary>
     /// 刷新当前显示
@@ -102,7 +91,7 @@ public class CardSlot : MonoBehaviour
     {
         if (IsEmpty)
         {
-            DisableDisplay();
+            Clear();
             return;
         }
 
@@ -148,7 +137,7 @@ public class CardSlot : MonoBehaviour
             componentSliders.Add(component.GetType(), slider);
         }
 
-        
+
         if (!slider.TryGetComponent<HoverTipController>(out var tipController))
             tipController = slider.gameObject.AddComponent<HoverTipController>();
 
@@ -185,8 +174,8 @@ public class CardSlot : MonoBehaviour
         innerContentsComponentLayout.gameObject.SetActive(true);
         for (int i = 0; i < innerContentsComponentLayout.childCount; i++)
         {
-            innerContentsComponentLayout.GetChild(i).gameObject.SetActive(i < component.innerContents.Count);
-            innerContentsComponentLayout.GetChild(i).GetComponent<Image>().color = i < component.UsedSlotCount ? ColorManager.White : ColorManager.DarkGrey;
+            innerContentsComponentLayout.GetChild(i).gameObject.SetActive(i < component.bag.SlotCount);
+            innerContentsComponentLayout.GetChild(i).GetComponent<Image>().color = i < component.bag.EmptySlotCount ? ColorManager.White : ColorManager.DarkGrey;
         }
     }
 
@@ -200,7 +189,7 @@ public class CardSlot : MonoBehaviour
         // 如果要显示的数量小于等于零，则什么也不显示
         if (stackNum <= 0)
         {
-            DisableDisplay();
+            Clear();
             return;
         }
 
@@ -208,10 +197,6 @@ public class CardSlot : MonoBehaviour
 
         DisplayCardImage(card.CardImage, card.IsBigIcon);
         nameText.text = card.CardName;
-
-        // 销毁旧的组件显示
-        //MonoUtility.DestroyAllChildren(componentLayout.transform);
-        //componentSliders.Clear();
 
         // 显示堆叠数量
         DisplayStackNum(stackNum, card.MaxStackNum, displayStack);
@@ -239,7 +224,7 @@ public class CardSlot : MonoBehaviour
     /// <summary>
     /// 不显示卡牌
     /// </summary>
-    private void DisableDisplay()
+    public void Clear()
     {
         cardCanvasGroup.alpha = 0;
         cardCanvasGroup.blocksRaycasts = false;
@@ -248,6 +233,7 @@ public class CardSlot : MonoBehaviour
         if (innerContentsComponentLayout != null)
             innerContentsComponentLayout.gameObject.SetActive(false);
         componentSliders.Clear();
+        lastComponentValues.Clear();
     }
 
     /// <summary>
@@ -258,6 +244,16 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.alpha = 1;
         cardCanvasGroup.blocksRaycasts = true;
         cardCanvasGroup.interactable = true;
+    }
+
+    public void ShowTip(string tip, Color color)
+    {
+        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, color);
+    }
+
+    public void ShowTip(string tip)
+    {
+        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up);
     }
 
     /// <summary>
@@ -281,7 +277,7 @@ public class CardSlot : MonoBehaviour
         MFXUtility.ShowArrows(particleDisplayRect, value > 0, CalcLevel(value), ColorManager.CardComponentColors[componentType]);
     }
 
-    private  int CalcLevel(float value)
+    private int CalcLevel(float value)
     {
         var absValue = Mathf.Abs(value);
         if (absValue <= 0.1)
@@ -298,109 +294,48 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     /// <param name="cardName"></param>
     /// <returns></returns>
-    public bool ContainsByCardName(string cardName) => !IsEmpty && cardName == cards[0].CardName;
+    public bool ContainsByCardName(string cardName) => Cards.ContainsByCardName(cardName);
 
     /// <summary>
     /// 判断该卡牌格是否放有相同卡牌（ID相同）
     /// </summary>
     /// <param name="cardId"></param>
     /// <returns></returns>
-    public bool ContainsByCardId(string cardId) => !IsEmpty && cardId == cards[0].CardId;
+    public bool ContainsByCardId(string cardId) => Cards.ContainsByCardId(cardId);
 
     /// <summary>
     /// 能否添加指定卡牌，只有id相同才能堆叠
     /// </summary>
     /// <returns></returns>
-    public virtual bool CanAddCard(Card card)
-    {
-        return IsEmpty || (card.CardId == cards[0].CardId && StackNum < card.MaxStackNum);
-    }
+    public virtual bool CanAddCard(Card card) => Cards.CanAddCard(card);
 
     /// <summary>
     /// 添加一张卡牌
     /// </summary>
     /// <param name="card"></param>
-    public virtual void AddCard(Card card)
-    {
-        cards.Add(card);
-        cards.Sort((a, b) => a.CompareTo(b));
-
-        card.SetCardSlot(this);
-
-        // 当卡牌添加到玩家背包时
-        if (bag is PlayerBag || bag is EquipmentBag)
-        {
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, card.Weight);
-
-            EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
-                new ChangePlayerBagCardsArgs { card = card, add = 1 });
-        }
-    }
+    public virtual void AddCard(Card card) => Cards.AddCard(card);
 
     /// <summary>
     /// 移除指定的一张卡牌
     /// </summary>
     /// <param name="card"></param>
-    public virtual void RemoveCard(Card card)
-    {
-        if (!cards.Contains(card)) return;
-
-        cards.Remove(card);
-        //card.SetCardSlot(null);
-
-        // 当卡牌从玩家背包移除时
-        if (bag is PlayerBag || bag is EquipmentBag)
-        {
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -card.Weight);
-
-            EventManager.Instance.TriggerEvent(EventType.ChangePlayerBagCards,
-                new ChangePlayerBagCardsArgs { card = card, add = -1 });
-        }
-    }
+    public virtual void RemoveCard(Card card) => Cards.RemoveCard(card);
 
     /// <summary>
     /// 移除最优先显示的卡牌
     /// </summary>
     /// <returns></returns>
-    public Card RemoveCard()
-    {
-        var cardToRemove = cards[0];
-
-        RemoveCard(cardToRemove);
-
-        return cardToRemove;
-    }
+    public Card RemoveCard() => Cards.RemoveCard();
 
     /// <summary>
     /// 移除指定数量的卡牌
     /// </summary>
     /// <param name="amount"></param>
-    public void RemoveCards(int amount)
-    {
-        for (int i = 0; i < amount; i++)
-            RemoveCard();
-    }
+    public void RemoveCards(int amount) => Cards.RemoveCards(amount);
 
-    public Card PeekCard() => cards[0];
-
-    public void ClearSlot()
-    {
-        foreach (var card in cards)
-        {
-            card.SetCardSlot(null);
-        }
-        cards = new List<Card>(); // 避免影响其他引用
-        lastComponentValues.Clear();
-        DisableDisplay();
-    }
-
-    public void ShowTip(string tip, Color color)
-    {
-        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, color);
-    }
-
-    public void ShowTip(string tip)
-    {
-        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up);
-    }
+    /// <summary>
+    /// 取得优先级最高的卡牌
+    /// </summary>
+    /// <returns></returns>
+    public Card PeekCard() => Cards.PeekCard();
 }

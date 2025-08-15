@@ -10,6 +10,7 @@ public class PlaceData : ScriptableObject
     public bool isInWater;
     public bool isInSpacecraft;
     public Sprite placeImage;
+    public int exploreTime;
 
     private void OnValidate()
     {

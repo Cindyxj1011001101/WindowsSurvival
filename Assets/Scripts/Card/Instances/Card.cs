@@ -38,9 +38,6 @@ public abstract class Card : IComparable<Card>
     public List<Event> Events { get; protected set; } = new(); // 可交互事件
 
     [JsonIgnore]
-    public CardSlot Slot { get; private set; }
-
-    [JsonIgnore]
     public string CardName => CardFactory.GetCardName(CardId);
 
     [JsonIgnore]
@@ -81,7 +78,13 @@ public abstract class Card : IComparable<Card>
     public virtual bool HasLoopSound => false;
 
     [JsonIgnore]
-    public List<Card> SlotCards { get; protected set; } = null;
+    public SlotCards SlotCards { get; protected set; } = null;
+
+    [JsonIgnore]
+    public Bag Bag => SlotCards?.Bag;
+
+    [JsonIgnore]
+    public CardSlot Slot => SlotCards?.CardSlot;
     #endregion
 
     /// <summary>
@@ -94,14 +97,7 @@ public abstract class Card : IComparable<Card>
         CardId = cardId;
     }
 
-    public void SetCardSlot(CardSlot slot)
-    {
-        Slot = slot;
-        if (slot != null)
-            SetSlotCards(slot.Cards);
-    }
-
-    public void SetSlotCards(List<Card> slotCards)
+    public void SetSlotCards(SlotCards slotCards)
     {
         SlotCards = slotCards;
     }
@@ -137,15 +133,16 @@ public abstract class Card : IComparable<Card>
         // 如果有内部内容组件，则开始监听内部内容的更新
         if (TryGetComponent<InnerContentsComponent>(out var component))
         {
-            foreach (var list in component.innerContents)
-            {
-                foreach (var c in list)
-                {
-                    c.SetParentCard(this);
-                    c.SetSlotCards(list);
-                    c.StartUpdating();
-                }
-            }
+            //foreach (var slot in component.bag.Slots)
+            //{
+            //    foreach (var c in slot.Cards)
+            //    {
+            //        c.SetParentCard(this);
+            //        c.SetSlotCards(slot);
+            //        c.StartUpdating();
+            //    }
+            //}
+            component.bag.Init();
         }
     }
 
@@ -189,16 +186,19 @@ public abstract class Card : IComparable<Card>
 
         StopUpdating();
 
-        var temp = Slot;
-        if (temp != null)
-        {
-            Slot.RemoveCard(this);
-            temp.RefreshCurrentDisplay();
-        }
-        else
-        {
-            SlotCards.Remove(this);
-        }
+        //var temp = Slot;
+        //if (temp != null)
+        //{
+        //    Slot.RemoveCard(this);
+        //    temp.RefreshCurrentDisplay();
+        //}
+        //else
+        //{
+        //    SlotCards.Remove(this);
+        //}
+
+        SlotCards.RemoveCard(this);
+        RefreshSlot();
 
         ParentCard?.RefreshSlot();
 

@@ -1,22 +1,22 @@
-﻿public class InnerBag : BagBase
+﻿public class InnerBag : Bag
 {
     private InnerContentsComponent component;
 
-    public void InitFromInnerContentComponent(InnerContentsComponent component)
+    public override void Init()
     {
-        // 清除原来的信息
-        Clear();
-
-        this.component = component;
-
-        // 初始化新的信息
-        AddSlot(component.slotCount);
-        for (int i = 0; i < component.slotCount; i++)
+        base.Init();
+        foreach (var slot in Slots)
         {
-            var cardList = component.innerContents[i];
-            slots[i].Init(cardList);
-            (slots[i] as InnerCardSlot).SetInnerContentsComponent(component);
+            foreach (var c in slot.Cards)
+            {
+                c.SetParentCard(component.BelongedCard);
+            }
         }
+    }
+
+    public void SetComponent(InnerContentsComponent component)
+    {
+        this.component = component;
     }
 
     public override bool CanAddCard(Card card, out string tip)
@@ -33,14 +33,18 @@
 
         return base.CanAddCard(card, out tip);
     }
-    public override void Init()
+
+    public override void OnAddCard(Card card)
     {
-        
+        card.SetParentCard(component.BelongedCard);
+        component.BelongedCard.RefreshSlot();
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
     }
 
-    public override void Clear()
+    public override void OnRemoveCard(Card card)
     {
-        base.Clear();
-        component = null;
+        card.SetParentCard(null);
+        component.BelongedCard.RefreshSlot();
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
     }
 }

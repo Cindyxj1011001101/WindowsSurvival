@@ -1,14 +1,13 @@
 using DG.Tweening;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DetailsWindow : WindowBase
+public class DetailsWindow : BagWindow
 {
     [SerializeField] private Text detailsText;
     [SerializeField] private Transform buttonLayout;
     [SerializeField] private CardSlot slot;
-    [SerializeField] private InnerBag innerBag;
+    [SerializeField] private RectTransform contentsView;
 
     [SerializeField] private Transform menuLayout; // 菜单布局
     [SerializeField] private HoverableButton detailsButton; // 显示详细信息按钮
@@ -69,8 +68,9 @@ public class DetailsWindow : WindowBase
             DisplayEventButtons();
     }
 
-    private void RefreshCurrentDisplay()
+    public override void RefreshCurrentDisplay()
     {
+        base.RefreshCurrentDisplay();
         if (currentDisplayedCard != null)
             DisplayCard();
     }
@@ -83,9 +83,8 @@ public class DetailsWindow : WindowBase
         if (currentDisplayedCard.Destroyed)
         {
             // 尝试从这个卡牌的slotCount里取出同类卡牌并刷新
-            if (currentDisplayedCard.SlotCards.Count > 0 &&
-                currentDisplayedCard.SlotCards[0].CardId == currentDisplayedCard.CardId)
-            DisplayCardDetails(currentDisplayedCard.SlotCards);
+            if (currentDisplayedCard.SlotCards.ContainsByCardId(currentDisplayedCard.CardId))
+                DisplayCardDetails(currentDisplayedCard.SlotCards);
             // 否则清空显示
             else
                 Clear();
@@ -104,12 +103,12 @@ public class DetailsWindow : WindowBase
         moved = true;
     }
 
-    public void DisplayCardDetails(List<Card> slotCards, bool onlyDetails = false)
+    public void DisplayCardDetails(SlotCards slotCards, bool onlyDetails = false)
     {
         // 清除原数据
         Clear();
 
-        if (slotCards.IsNullOrEmpty()) return;
+        if (slotCards.IsEmpty) return;
 
         // 记录当前显示的卡牌
         currentDisplayedCard = slotCards[0];
@@ -152,7 +151,7 @@ public class DetailsWindow : WindowBase
             if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component))
             {
                 innerContentsButton.gameObject.SetActive(true);
-                innerBag.InitFromInnerContentComponent(component);
+                DisplayBag(component.bag);
                 innerContentsButton.Interactable = true;
             }
             else
@@ -179,7 +178,8 @@ public class DetailsWindow : WindowBase
     private void DisplayDetails()
     {
         detailsText.gameObject.SetActive(true);
-        innerBag.gameObject.SetActive(false);
+        //innerBag.gameObject.SetActive(false);
+        contentsView.gameObject.SetActive(false);
         // 显示卡牌详细信息
         detailsText.text = currentDisplayedCard.CardDesc;
         SelectWithTween(detailsButton.GetComponent<RectTransform>());
@@ -188,7 +188,8 @@ public class DetailsWindow : WindowBase
     private void DisplayInnerContents()
     {
         detailsText.gameObject.SetActive(false);
-        innerBag.gameObject.SetActive(true);
+        //innerBag.gameObject.SetActive(true);
+        contentsView.gameObject.SetActive(true);
         SelectWithTween(innerContentsButton.GetComponent<RectTransform>());
     }
 
@@ -240,10 +241,12 @@ public class DetailsWindow : WindowBase
         }
     }
 
-    private void Clear()
+    public override void Clear()
     {
+        base.Clear();
+
         moved = false;
-        slot.ClearSlot();
+        slot.Clear();
 
         // 关闭时如果卡牌有循环音将循环音减小
         if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
@@ -254,8 +257,9 @@ public class DetailsWindow : WindowBase
 
         currentDisplayedCard = null;
         detailsText.text = "";
-        innerBag.Clear();
-        innerBag.gameObject.SetActive(false);
+        //innerBag.Clear();
+        //innerBag.gameObject.SetActive(false);
+        contentsView.gameObject.SetActive(false);
         innerContentsButton.gameObject.SetActive(false);
         MonoUtility.DestroyAllChildren(buttonLayout);
     }
