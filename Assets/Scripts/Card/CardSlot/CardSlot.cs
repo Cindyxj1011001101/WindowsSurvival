@@ -45,7 +45,7 @@ public class CardSlot : MonoBehaviour
         Cards = slotCards;
         slotCards.SetCardSlot(this);
         //Debug.Log(slotCards.CardSlot);
-        RefreshCurrentDisplay();
+        RefreshDisplay();
     }
 
     #region 显示
@@ -82,7 +82,7 @@ public class CardSlot : MonoBehaviour
     /// <summary>
     /// 刷新当前显示
     /// </summary>
-    public void RefreshCurrentDisplay()
+    public void RefreshDisplay()
     {
         if (IsEmpty)
         {

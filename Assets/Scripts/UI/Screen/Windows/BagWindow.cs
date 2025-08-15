@@ -12,7 +12,7 @@ public abstract class BagWindow : WindowBase
 
     public Bag Bag {  get; protected set; }
 
-    public virtual void RefreshBagDisplay()
+    public virtual void RefreshDisplay()
     {
         if (Bag != null) DisplayBag(Bag);
     }
@@ -40,7 +40,7 @@ public abstract class BagWindow : WindowBase
                 else
                     SoundManager.Instance.PlaySound("低沉泡泡音", true, 1.3f);
 
-                RefreshBagDisplay();
+                RefreshDisplay();
 
             });
         }

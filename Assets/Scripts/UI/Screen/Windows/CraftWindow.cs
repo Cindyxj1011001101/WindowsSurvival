@@ -32,16 +32,16 @@ public class CraftWindow : WindowBase
         base.Awake();
 
         // 注册背包变化事件
-        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshCurrentDisplay);
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, RefreshCurrentDisplay);
-        EventManager.Instance.AddListener(EventType.UnlockRecipe, RefreshCurrentDisplay);
+        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshDisplay);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, RefreshDisplay);
+        EventManager.Instance.AddListener(EventType.UnlockRecipe, RefreshDisplay);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshCurrentDisplay);
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, RefreshCurrentDisplay);
-        EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshCurrentDisplay);
+        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshDisplay);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, RefreshDisplay);
+        EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshDisplay);
     }
 
     protected override void Init()
@@ -57,17 +57,17 @@ public class CraftWindow : WindowBase
         DisplayRecipeLibraries();
     }
 
-    private void RefreshCurrentDisplay(ChangePlayerBagCardsArgs args)
+    private void RefreshDisplay(ChangePlayerBagCardsArgs args)
     {
-        RefreshCurrentDisplay();
+        RefreshDisplay();
     }
 
-    private void RefreshCurrentDisplay(EnvironmentBag env)
+    private void RefreshDisplay(EnvironmentBag env)
     {
-        RefreshCurrentDisplay();
+        RefreshDisplay();
     }
 
-    private void RefreshCurrentDisplay()
+    private void RefreshDisplay()
     {
         DisplayRecipesByType(currentRecipeType, true); // 传递true表示是刷新操作
     }
@@ -235,7 +235,7 @@ public class CraftWindow : WindowBase
             // 合成卡牌
             CraftManager.Instance.Craft(recipe, slot.transform.position);
             // 刷新显示
-            RefreshCurrentDisplay();
+            RefreshDisplay();
         });
 
         // 显示放置限制

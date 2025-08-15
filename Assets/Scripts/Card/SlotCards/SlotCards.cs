@@ -62,6 +62,8 @@ public class SlotCards
         Cards.Remove(card);
 
         Bag.OnRemoveCard(card);
+
+        if (CardSlot != null) CardSlot.RefreshDisplay();
     }
 
     /// <summary>
