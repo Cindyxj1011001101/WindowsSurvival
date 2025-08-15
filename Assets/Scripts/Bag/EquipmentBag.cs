@@ -62,6 +62,8 @@
 
         // 触发穿上装备事件
         (card as EquipmentCard).OnEquipped();
+
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -card.Weight);
     }
 
     public override void OnRemoveCard(Card card)
@@ -72,5 +74,7 @@
 
         // 触发脱下装备事件
         (card as EquipmentCard).OnUnEquipped();
+
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, card.Weight);
     }
 }

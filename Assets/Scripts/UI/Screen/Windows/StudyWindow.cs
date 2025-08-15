@@ -41,14 +41,14 @@ public class StudyWindow : WindowBase
     protected override void Awake()
     {
         base.Awake();
-        EventManager.Instance.AddListener(EventType.ChangeStudyProgress, RefreshCurrentDisplay);
+        EventManager.Instance.AddListener(EventType.ChangeStudyProgress, RefreshDisplay);
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener(EventType.ChangeStudyProgress, RefreshCurrentDisplay);
+        EventManager.Instance.RemoveListener(EventType.ChangeStudyProgress, RefreshDisplay);
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
     }
@@ -61,7 +61,7 @@ public class StudyWindow : WindowBase
     private void OnStudiedComplished(ScriptableTechnologyNode techNode)
     {
         curSelectedTechNode = techNode;
-        RefreshCurrentDisplay();
+        RefreshDisplay();
 
         DisplayStudyState(0, techNode);
     }
@@ -165,7 +165,7 @@ public class StudyWindow : WindowBase
         selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad);
     }
 
-    public void RefreshCurrentDisplay()
+    public void RefreshDisplay()
     {
         if (curSelectedTechNode != null)
             DisplayTechTree(curSelectedTechNode.techType);
@@ -214,14 +214,14 @@ public class StudyWindow : WindowBase
             // 研究当前科技节点
             TechnologyManager.Instance.Study(techNode);
             // 刷新显示
-            RefreshCurrentDisplay();
+            RefreshDisplay();
         }, () =>
         {
             // 暂停当前研究
             DisplayStudyState(2, null);
             TechnologyManager.Instance.StopStudy();
             // 刷新显示
-            RefreshCurrentDisplay();
+            RefreshDisplay();
         });
 
         // 显示研究进度和研究时间
@@ -304,7 +304,7 @@ public class StudyWindow : WindowBase
                 studyStateButton.onClick.AddListener(() =>
                 {
                     curSelectedTechNode = techNode;
-                    RefreshCurrentDisplay();
+                    RefreshDisplay();
                 });
                 break;
             // 未在研究

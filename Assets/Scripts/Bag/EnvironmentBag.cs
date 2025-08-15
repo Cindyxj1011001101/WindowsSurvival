@@ -158,7 +158,7 @@ public class EnvironmentBag : Bag
             RemoveSlot(Slots[^1]);
             RemoveSlot(Slots[^1]);
         }
-        if (Window != null) Window.RefreshBagDisplay();
+        if (Window != null) Window.RefreshDisplay();
         return hasChanged;
     }
 

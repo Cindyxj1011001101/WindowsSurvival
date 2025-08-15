@@ -31,7 +31,7 @@ public class EquipmentWindow : BagWindow
         //        else
         //            SoundManager.Instance.PlaySound("µÕ≥¡≈›≈›“Ù", true, 1.3f);
 
-        //        RefreshCurrentDisplay();
+        //        RefreshDisplay();
 
         //    });
         //}

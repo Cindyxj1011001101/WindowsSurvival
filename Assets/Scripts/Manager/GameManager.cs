@@ -184,7 +184,7 @@ public class GameManager : MonoBehaviour
         // 从原来的格子里移除
         var originalSlot = equipment.Slot;
         originalSlot.RemoveCard(equipment);
-        originalSlot.RefreshCurrentDisplay();
+        originalSlot.RefreshDisplay();
 
         // 打开装备窗口
         if (!WindowsManager.Instance.IsWindowOpen("Equipment"))
@@ -213,7 +213,7 @@ public class GameManager : MonoBehaviour
         // 从装备格子中移除
         var originalSlot = equipment.Slot;
         originalSlot.RemoveCard(equipment);
-        originalSlot.RefreshCurrentDisplay();
+        originalSlot.RefreshDisplay();
 
         // 添加到背包(优先)或环境中
         AddCardWithTween(equipment, originalSlot.transform.position, true);

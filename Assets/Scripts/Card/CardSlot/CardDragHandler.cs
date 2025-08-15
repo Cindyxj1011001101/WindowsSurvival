@@ -178,7 +178,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (targetBag != null)
         {
             PlaceCardInDifferentBag(targetBag, pickedCount, sourceSlot.transform.position, false);
-            sourceSlot.RefreshCurrentDisplay();
+            sourceSlot.RefreshDisplay();
         }
     }
 
@@ -201,7 +201,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             onComplete: () =>
             {
                 placementAction.Invoke();
-                sourceSlot.RefreshCurrentDisplay();
+                sourceSlot.RefreshDisplay();
             }
         );
     }
@@ -221,7 +221,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 onComplete: () =>
                 {
                     // 刷新源卡槽显示
-                    sourceSlot.RefreshCurrentDisplay();
+                    sourceSlot.RefreshDisplay();
                     // 显示提示
                     sourceSlot.ShowTip(tip, ColorManager.Yellow);
                 }
@@ -251,7 +251,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 () =>
                 {
                     // 再刷新显示
-                    targetSlot.RefreshCurrentDisplay();
+                    targetSlot.RefreshDisplay();
                 },
                 dragEndPosition,
                 targetSlot.transform.position,
@@ -294,7 +294,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     () =>
                     {
                         // 再刷新显示
-                        group.Key.RefreshCurrentDisplay();
+                        group.Key.RefreshDisplay();
                     },
                     startPos,
                     group.Key.transform.position,

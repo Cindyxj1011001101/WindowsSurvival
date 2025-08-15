@@ -164,7 +164,7 @@ public abstract class Card : IComparable<Card>
 
     public void RefreshSlot()
     {
-        if (Slot != null) Slot.RefreshCurrentDisplay();
+        if (Slot != null) Slot.RefreshDisplay();
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
 
@@ -190,7 +190,7 @@ public abstract class Card : IComparable<Card>
         //if (temp != null)
         //{
         //    Slot.RemoveCard(this);
-        //    temp.RefreshCurrentDisplay();
+        //    temp.RefreshDisplay();
         //}
         //else
         //{
