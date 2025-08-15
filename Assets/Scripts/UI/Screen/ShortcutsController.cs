@@ -44,6 +44,8 @@ public class ShortcutsController : MonoBehaviour
             }
         }
         selectRect.gameObject.SetActive(false);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
     }
 
     private void Start()
@@ -54,11 +56,11 @@ public class ShortcutsController : MonoBehaviour
             // 显示已解锁的快捷方式
             foreach (var appName in shortcuts.Keys)
             {
-                SetLocked(appName, !GameDataManager.Instance.UnlockedShortcuts.Contains(appName), false);
+                SetLocked(appName, !GameDataManager.Instance.WindowsData.unlockedShortcuts.Contains(appName), false);
             }
 
             #region 临时
-            restButton.SetActive(GameDataManager.Instance.UnlockedShortcuts.Contains("Rest"));
+            restButton.SetActive(GameDataManager.Instance.WindowsData.unlockedShortcuts.Contains("Rest"));
             #endregion
         }
         #endregion

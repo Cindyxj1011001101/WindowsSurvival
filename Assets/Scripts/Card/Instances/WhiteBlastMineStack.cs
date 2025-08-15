@@ -15,8 +15,8 @@ public class WhiteBlastMineStack : Card
 
     public void Event_Dig(out string tip)
     {
-        TryUse();
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).TryUse();
+        Use();
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).Use();
 
         tip = string.Empty;
         TimeManager.Instance.AddTime(30);

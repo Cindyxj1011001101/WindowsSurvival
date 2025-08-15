@@ -18,7 +18,7 @@ public class LoveBeadWithProduct : Card
     public void Event_OpenByTool(out string tip)
     {
         DestroyThis();
-        GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }).TryUse();
+        GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }).Use();
 
         tip = string.Empty;
         var sourceBag = Slot.Bag;

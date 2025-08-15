@@ -20,7 +20,7 @@ public class AquariusFishWithProduct : Card
         // 销毁卡牌
         DestroyThis();
         // 1. 消耗耐久
-        GameManager.Instance.PlayerBag.FindCardOfName("捞网").TryUse();
+        GameManager.Instance.PlayerBag.FindCardOfName("捞网").Use();
 
         tip = string.Empty;
 

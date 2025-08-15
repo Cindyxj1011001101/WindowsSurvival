@@ -79,7 +79,7 @@ public class TimeManager : MonoBehaviour
                 curInterval = SettleInterval;
                 // ChatConditionManager.Instance.TrackCurrentStatus();
                 EventManager.Instance.TriggerEvent(EventType.IntervalSettle);
-                EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
+                //EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
             }
             else
             {

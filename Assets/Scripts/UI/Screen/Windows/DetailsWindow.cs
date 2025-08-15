@@ -213,17 +213,11 @@ public class DetailsWindow : WindowBase
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() =>
                 {
-                    var originalSlot = currentDisplayedCard.Slot;
-                    var originalSlotCards = currentDisplayedCard.SlotCards;
-
                     // 先执行事件
                     e.Inovke(out string tip);
 
                     // 显示提示
                     button.ShowTip(tip);
-                    
-                    if (originalSlot != null)
-                        originalSlot.RefreshCurrentDisplay();
 
                     // 改变场景了就清空详情
                     if (moved)

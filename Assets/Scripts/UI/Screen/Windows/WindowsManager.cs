@@ -31,11 +31,7 @@ public class WindowsManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        pointerData = new(EventSystem.current)
-        {
-            // 设置指针位置为鼠标位置
-            position = Input.mousePosition
-        };
+        pointerData = new(EventSystem.current);
     }
 
     private void Start()
@@ -67,6 +63,33 @@ public class WindowsManager : MonoBehaviour
                 return ($"休息{t}分钟", t, p, null);
             };
         });
+
+        // 恢复窗口
+        foreach (var (name, data) in GameDataManager.Instance.WindowsData.openedWindows)
+        {
+            // 如果窗口不在closedGroup里，则创建实例
+            if (!windowGroup.TeyGetWindowInClosedGroup(name, out var window))
+            {
+                // 实例化窗口对象
+                GameObject windowPrefab = Resources.Load<GameObject>($"Prefabs/UI/Windows/{name}Window");
+                window = Instantiate(windowPrefab, windowGroup.transform).GetComponent<WindowBase>();
+            }
+
+            window.InitFromWindowData(data);
+
+            if (data.isModal)
+                windowGroup.SetModal(window);
+            else if (data.state == WindowState.Minimized)
+                windowGroup.SetMinimized(window);
+            else
+                windowGroup.SetOpened(window);
+
+            openedWindows.Add(name, window);
+
+            shortcutsController.SetOpened(name, true);
+        }
+
+        FocusWindow(GameDataManager.Instance.WindowsData.focusedWindow);
     }
 
     public WindowBase OpenWindow(string appName, bool isModal = false)
@@ -186,6 +209,8 @@ public class WindowsManager : MonoBehaviour
 
     public void FocusWindow(string appName)
     {
+        if (string.IsNullOrEmpty(appName)) return;
+
         if (!IsWindowOpen(appName)) return;
 
         FocusWindow(openedWindows[appName]);
@@ -213,6 +238,8 @@ public class WindowsManager : MonoBehaviour
         return shortcutsController.GetUnlockedShortcuts();
     }
 
+    public Dictionary<string, WindowBase> GetOpenedWindows() => openedWindows;
+
 
     PointerEventData pointerData;
     List<RaycastResult> results;
@@ -220,6 +247,8 @@ public class WindowsManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0)) // 检测鼠标左键点击
         {
+            pointerData.position = Input.mousePosition;
+            
             // 创建接收结果的列表
             results = new List<RaycastResult>();
 
@@ -231,6 +260,7 @@ public class WindowsManager : MonoBehaviour
             {
                 foreach (var result in results)
                 {
+                    if (result.gameObject.name == "Modal") return;
                     if (result.gameObject.TryGetComponent<WindowBase>(out var window))
                     {
                         FocusWindow(window);

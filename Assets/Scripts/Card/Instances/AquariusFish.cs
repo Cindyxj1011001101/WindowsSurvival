@@ -27,7 +27,7 @@ public class AquariusFish : Card
         DestroyThis();
 
         // “捞网”耐久-1
-        GameManager.Instance.PlayerBag.FindCardOfName("捞网").TryUse();
+        GameManager.Instance.PlayerBag.FindCardOfName("捞网").Use();
 
         tip = string.Empty;
         // 1. 时间变化

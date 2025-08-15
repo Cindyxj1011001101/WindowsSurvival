@@ -75,7 +75,7 @@ public class RatBody : Card
     public void Event_PeelByKnife(out string tip)
     {
         DestroyThis();
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).TryUse();
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).Use();
 
         tip = string.Empty;
         //消耗15分钟

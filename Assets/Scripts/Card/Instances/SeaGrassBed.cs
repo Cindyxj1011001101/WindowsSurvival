@@ -13,7 +13,7 @@ public class SeaGrassBed : Card
 
     public void Event_CollectByHand(out string tip)
     {
-        TryUse();
+        Use();
 
         TimeManager.Instance.AddTime(30);
         RandomDropByHand(out tip);
@@ -32,8 +32,8 @@ public class SeaGrassBed : Card
 
     public void Event_CollectByKnife(out string tip)
     {
-        TryUse();
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).TryUse();
+        Use();
+        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).Use();
 
         tip = string.Empty;
         RandomDropByKnife();

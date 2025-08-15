@@ -2,11 +2,10 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ChatWindow : WindowBase
+public class ChatWindow : WindowBase, IPointerDownHandler
 {
     [SerializeField] private GameObject playerChatPrefab;
     [SerializeField] private GameObject othersChatPrefab;
@@ -185,9 +184,8 @@ public class ChatWindow : WindowBase
            .Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, (inputFieldButton.transform as RectTransform).sizeDelta.y), optionAnimDuration));
     }
 
-    public override void OnPointerDown(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
-        base.OnPointerDown(eventData);
         // 点击到聊天区域，隐藏选项
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
         if (currentObject.name == chatScrollViewRect.gameObject.name)

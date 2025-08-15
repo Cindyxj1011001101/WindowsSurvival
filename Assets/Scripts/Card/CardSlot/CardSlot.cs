@@ -317,19 +317,6 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
-    /// 得到对于某张卡牌的剩余容量
-    /// </summary>
-    /// <param name="card"></param>
-    /// <returns></returns>
-    public int GetRemainingCapacity(Card card)
-    {
-        // 如果不可以堆叠该卡牌，则剩余容量为0
-        if (!CanAddCard(card)) return 0;
-        // 否则返回剩余容量
-        return card.MaxStackNum - StackNum;
-    }
-
-    /// <summary>
     /// 添加一张卡牌
     /// </summary>
     /// <param name="card"></param>
@@ -392,14 +379,6 @@ public class CardSlot : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
             RemoveCard();
-    }
-
-    public void TransferCardsTo(CardSlot other, int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            other.AddCard(RemoveCard());
-        }
     }
 
     public Card PeekCard() => cards[0];

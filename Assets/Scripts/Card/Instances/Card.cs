@@ -157,21 +157,28 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
     }
 
-    public virtual void TryUse()
+    public virtual void Use()
     {
         if (TryGetComponent<DurabilityComponent>(out var component))
         {
-            if (component.durability <= 0) return;
-
-            component.durability--;
-            if (component.durability <= 0)
-                DestroyThis();
-            else if (Slot != null)
-            {
-                Slot.RefreshCurrentDisplay();
-                Slot.DisplayComponentValueChange(typeof(DurabilityComponent), -1f / component.maxDurability);
-            }
+            component.Use(DestroyThis);
         }
+    }
+
+    public void RefreshSlot()
+    {
+        if (Slot != null) Slot.RefreshCurrentDisplay();
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
+    }
+
+    public void ShowTip(string tip)
+    {
+        if (Slot != null) Slot.ShowTip(tip);
+    }
+
+    public void ShowTip(string tip, Color textColor)
+    {
+        if (Slot != null) Slot.ShowTip(tip, textColor);
     }
 
     public virtual void DestroyThis()
@@ -193,8 +200,7 @@ public abstract class Card : IComparable<Card>
             SlotCards.Remove(this);
         }
 
-        if (ParentCard != null && ParentCard.Slot != null)
-            ParentCard.Slot.RefreshCurrentDisplay();
+        ParentCard?.RefreshSlot();
 
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }

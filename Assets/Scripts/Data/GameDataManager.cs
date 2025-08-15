@@ -48,8 +48,8 @@ public class GameDataManager
         generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
         // 其他数据
         timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
-        // 已解锁的快捷方式
-        unlockedShortcuts = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedShortcuts");
+        // 窗口数据
+        windowsData = JsonManager.LoadData<WindowsData>(CurLoadName, "WindowsData");
     }
 
     public void LoadAllData(int index)
@@ -81,8 +81,8 @@ public class GameDataManager
         generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
         // 时间数据
         timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
-        // 已解锁的快捷方式
-        unlockedShortcuts = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedShortcuts");
+        // 窗口数据
+        windowsData = JsonManager.LoadData<WindowsData>(CurLoadName, "WindowsData");
     }
 
     public void SaveAllData()
@@ -107,8 +107,8 @@ public class GameDataManager
         SaveGeneratedChatData();
         // 时间数据
         SaveTimeData();
-        // 已解锁的快捷方式
-        SaveUnlockedShortcuts();
+        // 窗口数据
+        SaveWindowsData();
 
         if (loadData == null)
         {
@@ -426,13 +426,38 @@ public class GameDataManager
 
     #region 已解锁的快捷方式
 
-    private List<string> unlockedShortcuts = new();
+    private WindowsData windowsData;
 
-    public List<string> UnlockedShortcuts => unlockedShortcuts;
+    public WindowsData WindowsData => windowsData;
 
-    public void SaveUnlockedShortcuts()
+    public void SaveWindowsData()
     {
-        JsonManager.SaveData(WindowsManager.Instance.GetUnlockedShortcuts(), CurLoadName, "UnlockedShortcuts");
+        windowsData = new();
+
+        windowsData.unlockedShortcuts = WindowsManager.Instance.GetUnlockedShortcuts();
+
+        var f = WindowsManager.Instance.GetCurrentFocusedWindow();
+        windowsData.focusedWindow = f == null ? string.Empty : f.AppName;
+
+        foreach (var (name, window) in WindowsManager.Instance.GetOpenedWindows())
+        {
+            if (window.IgnoreThisWhenSave) continue;
+
+            var rectTransform = window.transform as RectTransform;
+            windowsData.openedWindows.Add(name, new()
+            {
+                position = rectTransform.anchoredPosition,
+                scale = rectTransform.localScale,
+                sizeDelta = rectTransform.sizeDelta,
+                lastState = window.LastState,
+                state = window.State,
+                lastPosition = window.LastPosition,
+                lastSizeDelta = window.LastSizeDelta,
+                isModal = window.IsModal,
+            });
+        }
+
+        JsonManager.SaveData(windowsData, CurLoadName, "WindowsData");
     }
 
     #endregion

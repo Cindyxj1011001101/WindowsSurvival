@@ -98,6 +98,8 @@ MonoBehaviour:
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: 154959178, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  defaultPosition: {x: -389, y: -14, z: 0}
+  defaultSizeDelta: {x: 344, y: 530, z: 0}
   stateLayout: {fileID: 8027470427699736110}
   buffLayout: {fileID: 5267377757230563222}
 --- !u!1 &826949332779858646
@@ -1686,11 +1688,6 @@ MonoBehaviour:
   - {fileID: 1850425268, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
   - {fileID: -89833634, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
   - {fileID: 509707120, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
-  colors:
-  - {r: 0, g: 0.8196079, b: 0.24705884, a: 1}
-  - {r: 1, g: 0.909804, b: 0.050980397, a: 1}
-  - {r: 1, g: 0.5019608, b: 0.043137256, a: 1}
-  - {r: 1, g: 0.03529412, b: 0.03529412, a: 1}
 --- !u!224 &5565155891694101097 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1729387763690093786, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
