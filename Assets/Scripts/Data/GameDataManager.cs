@@ -360,12 +360,15 @@ public class GameDataManager
         generatedChatData.ParagraphConditionsToTrigger =
             new List<ParagraphData>(ChatConditionManager.Instance.ParagraphConditionsToTrigger);
         generatedChatData.GeneratedChatDataList = new List<ChatData>(ChatManager.Instance.GeneratedChatDataList);
-        generatedChatData.ParagraphToTriggeer = new List<ParagraphData>(ChatManager.Instance.ParagraphToTriggeer);
+        generatedChatData.ParagraphToTriggeer = new List<string>(ChatManager.Instance.ParagraphToTriggeer);
         generatedChatData.CurrentParagraphData = ChatManager.Instance.CurrentParagraphData;
         generatedChatData.ChoosedChatData = ChatManager.Instance.ChoosedChatData;
         generatedChatData.inParagraph = ChatManager.Instance.inParagraph;
         generatedChatData.InterruptParagraphData = ChatManager.Instance.InterruptParagraphData;
         generatedChatData.Choosing = ChatManager.Instance.Choosing;
+        generatedChatData.CurrentNodeData = ReadChatParagraph.Instance.CurNode;
+        generatedChatData.CurrentGraphData = ReadChatParagraph.Instance.CurGraphData;
+        if (!generatedChatData.init) generatedChatData.init = true;
         JsonManager.SaveData(generatedChatData, CurLoadName, "GeneratedChatData");
     }
 

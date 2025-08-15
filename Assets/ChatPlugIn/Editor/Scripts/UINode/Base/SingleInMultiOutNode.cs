@@ -24,7 +24,7 @@ namespace ChatPlugIn
             customDataContainer = new();
             Button btnAdd = ElementUtility.CreateButton("添加选项", () =>
             {
-                PortData portData = new("选项");
+                PortData portData = new("选项","条件");
                 outputPortData.Add(portData);
                 VisualElement lineContainer = CreatePortData(portData);
                 foldout.Add(lineContainer);

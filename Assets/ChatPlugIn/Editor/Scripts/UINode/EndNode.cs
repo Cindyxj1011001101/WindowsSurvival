@@ -13,7 +13,7 @@ namespace ChatPlugIn
     {
         public override void Init(StoryGraphView graphView, string title, Vector2 position)
         {
-            if(inputPortData.Count==0)inputPortData.Add(new PortData("输入"));
+            if(inputPortData==null)inputPortData=new PortData("输入","条件");
             base.Init(graphView, title, position);
             Type = NodeType.End;
         }

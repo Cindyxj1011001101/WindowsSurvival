@@ -17,43 +17,51 @@ public class ChatConditionManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
+    
         Instance = this;
         EventManager.Instance.AddListener<SubscribeActionArgs>(EventType.DialogueCondition, TriggerAction);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards,
             ChangeCardCondition);
-        DetectParagraph();
+        if (!GameDataManager.Instance.GeneratedChatData.init)
+        {
+            StartDetectAllParagraph();
+        }
+        else
+        {
+            DetectParagraph();
+        }
     }
-
+    
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<SubscribeActionArgs>(EventType.DialogueCondition, TriggerAction);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards,
             ChangeCardCondition);
     }
-
+    
     #region 开始与结束检测
-    private void DetectParagraph()
-    {
-        //添加对话段落触发监听
-        if (GameDataManager.Instance.GeneratedChatData.init)
-        {
-            //订阅所有段落的触发
-            foreach (var paragraph in ChatManager.Instance.ParagraphDataList)
-            {
-                ParagraphConditionsToTrigger.Add(paragraph);
-            }
-        }
-        else
-        {
-            ParagraphConditionsToTrigger=GameDataManager.Instance.GeneratedChatData.ParagraphConditionsToTrigger;
-        }
 
+    public void StartDetectAllParagraph()
+    {
+        //订阅所有段落的触发
+        foreach (var paragraph in ReadChatParagraph.Instance.FindAllParagraphData())
+        {
+            ParagraphConditionsToTrigger.Add(paragraph);
+        }
         foreach (var paragraphData in ParagraphConditionsToTrigger)
         {
             AddParagraphCondition(paragraphData);
         }
+    }
 
+    public void DetectParagraph()
+    {
+        ParagraphConditionsToTrigger=GameDataManager.Instance.GeneratedChatData.ParagraphConditionsToTrigger;
+        foreach (var paragraphData in ParagraphConditionsToTrigger)
+        {
+            AddParagraphCondition(paragraphData);
+        }
+    
     }
 
     public void DetectChatCondition(ChatData chatData)
@@ -61,14 +69,14 @@ public class ChatConditionManager : MonoBehaviour
         //对话判断触发条件，本句有条件时进入，订阅段落触发
         AddChatCondition(chatData);
     }
-
+    
     public void PassParagraphCondition(List<ParagraphData> paragraphData)
     {
         //通过对话条件检测时判断该对话是否会打断
         ChatManager.Instance.AddTriggerParagraph(paragraphData[Random.Range(0, paragraphData.Count)]);
     }
-
-
+    
+    
     public void PassChatCondition(List<ChatData> chatDatas)
     {
         foreach (var chatData in chatDatas)
@@ -77,10 +85,10 @@ public class ChatConditionManager : MonoBehaviour
         }
     }
     
-
+    
     #endregion
     #region 触发行为
-
+    
     public void TriggerAction(SubscribeActionArgs args)
     {
         Dictionary<string, ParagraphCondition> tmpParagraphDic = new Dictionary<string, ParagraphCondition>(DetectedParagraphConditions);
@@ -95,7 +103,7 @@ public class ChatConditionManager : MonoBehaviour
         }
         
     }
-
+    
     public void ChangeCardCondition(ChangePlayerBagCardsArgs args)
     {
         Dictionary<string, ParagraphCondition> tmpParagraphDic = new Dictionary<string, ParagraphCondition>(DetectedParagraphConditions);
@@ -109,74 +117,74 @@ public class ChatConditionManager : MonoBehaviour
             condition.UpdateProgress(args.card, args.add);
         }
     }
-
+    
     #endregion
     #region 检测
 
     //开始检测
-    public void StartChatConditionDetection(ChatData chatData)
+    public void StartChatConditionDetection(GraphData.SerializedNode nodeData)
     {
-        AddChatCondition(chatData);
+        AddChatCondition(nodeData.chatData);
     }
-
+    
     public void AddParagraphCondition(ParagraphData paragraphData)
     {
-        if (DetectedParagraphConditions.ContainsKey(paragraphData.TriggerParagraphCondition))
+        if (DetectedParagraphConditions.ContainsKey(paragraphData.ParagraphCondition))
         {
-            DetectedParagraphConditions[paragraphData.TriggerParagraphCondition].AddData(paragraphData);
+            DetectedParagraphConditions[paragraphData.ParagraphCondition].AddData(paragraphData);
         }
         else
         {
-            switch (paragraphData.TriggerParagraphCondition)
+            switch (paragraphData.ParagraphCondition)
             {
                 case "健康<=0":
-                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
-                        new HealthZero(paragraphData.TriggerParagraphCondition, true, false,
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new HealthZero(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
                 case "修理研究完毕":
-                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
-                        new FinishResearchFix(paragraphData.TriggerParagraphCondition, true, false,
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new FinishResearchFix(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
                 case "首次点开气密舱门":
-                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
-                        new FirstOpenAirtightDoor(paragraphData.TriggerParagraphCondition, true, false,
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new FirstOpenAirtightDoor(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
                 case "第一次进入珊瑚礁海域":
-                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
-                        new FirstEnterCoralIsland(paragraphData.TriggerParagraphCondition, true, false,
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new FirstEnterCoralIsland(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
                 case "每次清醒度<=30":
-                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
-                        new SobrietyLessThan30(paragraphData.TriggerParagraphCondition, true, false,
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new SobrietyLessThan30(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
                 case "第一天5点时未完成修理的研究":
-                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
-                        new Day1Hour5FixUnConplished(paragraphData.TriggerParagraphCondition, true, false,
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new Day1Hour5FixUnConplished(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
                 case "第一天11点时未完成修理的研究":
-                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
-                        new Day1Hour11FixUnConplished(paragraphData.TriggerParagraphCondition, true, false,
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new Day1Hour11FixUnConplished(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
                 case "第一次堵住渗水裂缝":
-                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
-                        new SealCracks(paragraphData.TriggerParagraphCondition, true, false,
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new SealCracks(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
                 case "水平面高度每次达到70":
-                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
-                        new WaterLevel70(paragraphData.TriggerParagraphCondition, true, false,
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new WaterLevel70(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
                 case "水平面高度达到100":
-                    DetectedParagraphConditions.Add(paragraphData.TriggerParagraphCondition,
-                        new WaterLevel100(paragraphData.TriggerParagraphCondition, true, false,
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new WaterLevel100(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
             }

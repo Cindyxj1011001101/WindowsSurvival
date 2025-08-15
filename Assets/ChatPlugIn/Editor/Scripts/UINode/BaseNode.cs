@@ -13,48 +13,39 @@ namespace ChatPlugIn
         protected StoryGraphView graphView;
         protected VisualElement customDataContainer;
         protected Foldout foldout;
-        public List<Port> input=new List<Port>();
+        public Port input;
         public List<Port> output=new List<Port>();
-
-        public List<PortData> inputPortData=new List<PortData>();
+        public PortData inputPortData;
         public List<PortData> outputPortData=new List<PortData>();
-        //节点GUID
-        [SerializeField] private string _GUID;
-        public string GUID
-        {
-            get => _GUID;
-            set => _GUID = value;
-        }
-        //节点类型
-        [SerializeField] private NodeType _Type;
-        public NodeType Type
-        {
-            get => _Type;
-            set => _Type = value;
-        }
-        //节点标题
-        [SerializeField] private string _Title;
-        public string Title
-        {
-            get => _Title;
-            set => _Title = value;
-        }
+        public string GUID;
+        public NodeType Type;
+        public string Title;
         public virtual void Init(StoryGraphView graphView, string title, Vector2 position)
         {
             this.graphView = graphView;
             SetPosition(new Rect(position, Vector2.zero));
-            
             Type=NodeType.Base;
             GUID=UnityEditor.GUID.Generate().ToString();
             Title = title;
             InitPort();
-            capabilities |= Capabilities.Resizable;
             //添加USS类名
             mainContainer.AddToClassList("node__main-container");
             titleContainer.AddToClassList("node__title-container");
             inputContainer.AddToClassList("node__input-container");
             outputContainer.AddToClassList("node__output-container");
             extensionContainer.AddToClassList("node__extension-container");
+        }
+
+        public void InitPortData(List<GraphData.SerializedPort> ports)
+        {
+            foreach (var port in ports)
+            {
+                outputPortData.Add(new PortData(port.name, port.PortCondition));
+            }
+        }
+        public void InitPortData(GraphData.SerializedPort port)
+        {
+            inputPortData=new PortData(port.name, port.PortCondition);
         }
         // 绘制上下文菜单
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -111,10 +102,7 @@ namespace ChatPlugIn
 
         protected virtual void DrawInputContainer()
         {
-            foreach (var port in input)
-            {
-                inputContainer.Add(port);
-            }
+            inputContainer.Add(input);
         }
 
         protected virtual void DrawTopContainer()
@@ -224,17 +212,6 @@ namespace ChatPlugIn
                 GUID = Guid.NewGuid().ToString();
             }
         }
-        // 返回节点特定的可序列化数据
-        public virtual string Serialize()
-        {
-            return JsonUtility.ToJson(this);
-        }
-    
-        // 从JSON加载节点数据
-        public virtual void Deserialize(string json)
-        {
-            JsonUtility.FromJsonOverwrite(json, this);
-        }
            public VisualElement CreatePortData(object userData)
         {
             PortData portData=(PortData)userData;
@@ -329,25 +306,25 @@ namespace ChatPlugIn
             outputContainer.Remove(portToRemove);
         }
 
-        public void InitPort()
+        private void InitPort()
         {
             InitInput();
             InitOutput();
         }
-
         public void InitInput()
         {
-            foreach (var inputdata in inputPortData)
+            if (inputPortData == null)
             {
-                Port newPort = this.CreatePort(inputdata.PortName, Orientation.Horizontal, Direction.Input, Port.Capacity.Multi);
-                input.Add(newPort);
+                input = null;
+                return;
             }
+            input = ElementUtility.CreatePort(this,inputPortData.PortName, Orientation.Horizontal, Direction.Input, Port.Capacity.Multi);
         }
         public void InitOutput()
         {
             foreach (var outputdata in outputPortData)
             {
-                Port newPort = this.CreatePort(outputdata.PortName, Orientation.Horizontal, Direction.Output, Port.Capacity.Multi);
+                Port newPort = ElementUtility.CreatePort(this,outputdata.PortName, Orientation.Horizontal, Direction.Output, Port.Capacity.Multi);
                 output.Add(newPort);
             }
         }
