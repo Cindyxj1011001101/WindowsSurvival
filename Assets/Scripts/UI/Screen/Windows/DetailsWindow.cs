@@ -13,6 +13,8 @@ public class DetailsWindow : BagWindow
     [SerializeField] private HoverableButton detailsButton; // 显示详细信息按钮
     [SerializeField] private HoverableButton innerContentsButton; // 显示内部内容按钮
 
+    [SerializeField] private GameObject eventButtonPrefab;
+
     [SerializeField] private RectTransform selectRect; // 选择框
 
     private Card currentDisplayedCard;
@@ -208,7 +210,7 @@ public class DetailsWindow : BagWindow
         bool interactable;
         foreach (var e in currentDisplayedCard.Events)
         {
-            button = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls", "CardEventButton", buttonLayout).GetComponent<HoverableButton>();
+            button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
             btnText = button.GetComponentInChildren<Text>();
             btnText.text = e.name;
 
