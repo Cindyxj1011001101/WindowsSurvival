@@ -12,66 +12,109 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acb91488cccc428db932c74d3b62d890, type: 3}
   m_Name: "\u65B0\u6BB5\u843D"
   m_EditorClassIdentifier: 
-  graphViewName: 
+  paragraphData:
+    ParagraphName: Start
+    ParagraphPriority: 0
+    ParagraphCondition: "\u6761\u4EF6"
   nodes:
-  - guid: 5eec178702edc214bbcbdf1fd588c0d4
-    Title: "\u5F00\u59CB"
-    typeName: Start
-    NodePos: {x: 246, y: 140}
-    ChatDatas: []
-    ports:
-    - name: "\u8F93\u51FA"
-      direction: 1
-      PortCondition: "\u6761\u4EF6"
-  - guid: d5c238c49aafcf74eaf5ed5318aae3aa
-    Title: "\u5BF9\u8BDD"
-    typeName: Dialogue
-    NodePos: {x: 478, y: 140}
-    ChatDatas:
-    - MessageSender: 0
+  - guid: af6160fc0bc5c4545a9bb1fad0f27d92
+    Title: "\u9009\u9879"
+    typeName: Choose
+    NodePos: {x: 572, y: 234}
+    chatData:
+      MessageSender: 0
       MessageCondition: 
       Message: 
       preWaitTime: 0
       lateWaitTime: 0
       TriggerMessageEffect: 
-    ports:
-    - name: "\u8F93\u5165"
+    inputport:
+      name: "\u8F93\u5165"
       direction: 0
       PortCondition: "\u6761\u4EF6"
-    - name: "\u8F93\u51FA"
-      direction: 1
-      PortCondition: "\u6761\u4EF6"
-  - guid: 97f9cb0a16aff3b4a9e89158fc29a6eb
-    Title: "\u5206\u652F\u6761\u4EF6"
-    typeName: BranchCondition
-    NodePos: {x: 729, y: 140}
-    ChatDatas: []
-    ports:
-    - name: "\u8F93\u5165"
-      direction: 0
-      PortCondition: "\u6761\u4EF6"
+    outputports:
     - name: "\u9009\u9879"
       direction: 1
       PortCondition: "\u6761\u4EF6"
-  - guid: 465c3cb29cc134442a45bde2322d590b
+  - guid: d49286f18ace97b4683ca7c80a9b33b6
     Title: "\u7ED3\u675F"
     typeName: End
-    NodePos: {x: 1250, y: 140}
-    ChatDatas: []
-    ports:
-    - name: "\u8F93\u5165"
+    NodePos: {x: 1092, y: 234}
+    chatData:
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: "\u8F93\u5165"
       direction: 0
       PortCondition: "\u6761\u4EF6"
+    outputports: []
+  - guid: b7c68708186293f4eb0324fd27dd4e5c
+    Title: "\u5206\u652F\u6761\u4EF6"
+    typeName: BranchCondition
+    NodePos: {x: 101, y: 234}
+    chatData:
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: "\u8F93\u5165"
+      direction: 0
+      PortCondition: "\u6761\u4EF6"
+    outputports:
+    - name: "\u9009\u9879"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
+  - guid: 247689ab3beed5044962dc0a1d32e5d7
+    Title: "\u5BF9\u8BDD"
+    typeName: Dialogue
+    NodePos: {x: -156, y: 234}
+    chatData:
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: "\u8F93\u5165"
+      direction: 0
+      PortCondition: "\u6761\u4EF6"
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
+  - guid: 0ad08a7b71c057d4eb7e8a77d9f0d6a5
+    Title: "\u5F00\u59CB"
+    typeName: Start
+    NodePos: {x: -387, y: 234}
+    chatData:
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: 
+      direction: 0
+      PortCondition: 
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
   edges:
-  - outputNodeGUID: 5eec178702edc214bbcbdf1fd588c0d4
+  - outputNodeGUID: 0ad08a7b71c057d4eb7e8a77d9f0d6a5
     outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: d5c238c49aafcf74eaf5ed5318aae3aa
+    inputNodeGUID: 247689ab3beed5044962dc0a1d32e5d7
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: d5c238c49aafcf74eaf5ed5318aae3aa
+  - outputNodeGUID: 247689ab3beed5044962dc0a1d32e5d7
     outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 97f9cb0a16aff3b4a9e89158fc29a6eb
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 97f9cb0a16aff3b4a9e89158fc29a6eb
-    outputPortName: "\u9009\u9879"
-    inputNodeGUID: 465c3cb29cc134442a45bde2322d590b
+    inputNodeGUID: b7c68708186293f4eb0324fd27dd4e5c
     inputPortName: "\u8F93\u5165"

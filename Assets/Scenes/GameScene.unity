@@ -7613,6 +7613,7 @@ GameObject:
   - component: {fileID: 1241781953}
   - component: {fileID: 1241781961}
   - component: {fileID: 1241781962}
+  - component: {fileID: 1241781963}
   m_Layer: 0
   m_Name: DestroyOnLoad
   m_TagString: Untagged
@@ -7632,6 +7633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 929627c5de191f74595f1d95b51ade01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ParagraphConditionsToTrigger: []
 --- !u!114 &1241781954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7659,17 +7661,13 @@ MonoBehaviour:
   chatWindow: {fileID: 1948704488}
   chatSpeedButton: {fileID: 1235680388}
   GeneratedChatDataList: []
-  ChoosedChatData:
-    MessageID: 0
-    ParagraphID: 0
-    MessageSender: 0
-    MessageType: 
-    MessageCondition: 
-    Message: 
-    NextMessageID: 0
-    WaitTime: 0
-    TriggerMessageEffect: 
+  ParagraphToTriggeer: []
+  ChoosedChatData: 
   inParagraph: 0
+  InterruptParagraphData:
+    ParagraphName: 
+    ParagraphPriority: 0
+    ParagraphCondition: 
   Choosing: 0
 --- !u!114 &1241781957
 MonoBehaviour:
@@ -7749,6 +7747,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1f57fd86bf16fa40a60e2f46ee8a670, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1241781963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241781950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf2c72e1d80443db52c99cb9059bc98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GraphDatas:
+  - {fileID: 0}
+  CurGraphData: {fileID: 0}
+  CurNode:
+    guid: 
+    Title: 
+    typeName: 
+    NodePos: {x: 0, y: 0}
+    chatData:
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: 
+      direction: 0
+      PortCondition: 
+    outputports: []
 --- !u!1 &1248705056
 GameObject:
   m_ObjectHideFlags: 0
