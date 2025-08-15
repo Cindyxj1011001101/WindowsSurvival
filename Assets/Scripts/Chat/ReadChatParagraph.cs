@@ -23,7 +23,7 @@ public class ReadChatParagraph:MonoBehaviour
         }
     }
     #endregion
-    public List<GraphData> GraphDatas;
+    public List<GraphData> GraphDatas=new List<GraphData>();
     public GraphData CurGraphData;
     public GraphData.SerializedNode CurNode;
 
