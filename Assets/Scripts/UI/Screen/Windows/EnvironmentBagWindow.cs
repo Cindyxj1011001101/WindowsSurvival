@@ -57,7 +57,7 @@ public class EnvironmentBagWindow : BagWindow
         // 注册探索度变化事件
         EventManager.Instance.AddListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         // 注册环境移动事件
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, DisplayBag);
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         // 玩家背包卡牌变化
@@ -68,7 +68,7 @@ public class EnvironmentBagWindow : BagWindow
     {
         // 移除事件
         EventManager.Instance.RemoveListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, DisplayBag);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerBagCardsChanged);
     }
@@ -81,55 +81,64 @@ public class EnvironmentBagWindow : BagWindow
     protected override void Init()
     {
         exploreButton.onClick.RemoveAllListeners();
-        exploreButton.onClick.AddListener(() =>
+        exploreButton.onClick.AddListener(Explore);
+    }
+
+    /// <summary>
+    /// 探索
+    /// </summary>
+    private void Explore()
+    {
+        var pos = envCardTransform.anchoredPosition;
+
+        var seq = DOTween.Sequence();
+
+        // 1. 牌堆抖动
+        seq.Join(envCardTransform.DOShakePosition(pDuration, pStrength, vibrato: pVibrato, fadeOut: false)); // 位置抖动
+        seq.Join(envCardTransform.DOShakeRotation(rDuration, rStrength, vibrato: rVibrato, fadeOut: false)); // 旋转抖动
+
+        // 2. 抽牌
+        seq.AppendCallback(() =>
         {
-            var pos = envCardTransform.anchoredPosition;
-
-            var seq = DOTween.Sequence();
-
-            // 1. 牌堆抖动
-            seq.Join(envCardTransform.DOShakePosition(pDuration, pStrength, vibrato: pVibrato, fadeOut: false)); // 位置抖动
-            seq.Join(envCardTransform.DOShakeRotation(rDuration, rStrength, vibrato: rVibrato, fadeOut: false)); // 旋转抖动
-
-            // 2. 抽牌
-            seq.AppendCallback(() =>
-            {
-                GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
-                GameManager.Instance.AddCardsWithTween(droppedCards, envCardTransform.position, false);
-                // 提示
-                exploreButton.ShowTip(tip);
-            });
-
-            // 3. 归位
-            seq.Append(envCardTransform.DOAnchorPos(pos, .1f));
-            seq.Join(envCardTransform.DORotateQuaternion(Quaternion.identity, .1f));
-
-            // 等待抽牌动画完成
-            MouseManager.Instance.Wait(seq.Duration());
+            GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
+            GameManager.Instance.AddCardsWithTween(droppedCards, envCardTransform.position, false);
+            // 提示
+            exploreButton.ShowTip(tip);
         });
+
+        // 3. 归位
+        seq.Append(envCardTransform.DOAnchorPos(pos, .1f));
+        seq.Join(envCardTransform.DORotateQuaternion(Quaternion.identity, .1f));
+
+        // 等待抽牌动画完成
+        MouseManager.Instance.Wait(seq.Duration());
     }
 
     /// <summary>
     /// 移动到指定环境
     /// </summary>
-    private void OnMove(EnvironmentBag curEnvironmentBag)
+    public override void DisplayBag(Bag bag)
     {
+        base.DisplayBag(bag);
+
+        var env = bag as EnvironmentBag;
+
         stateSliders.Clear();
 
         MonoUtility.DestroyAllChildren(stateLayout);
 
         // 压强都显示
         pressureLevel = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/PressureLevel"), stateLayout).GetComponent<UIPressureLevel>();
-        pressureLevel.SetValue(curEnvironmentBag.PressureLevel);
+        pressureLevel.SetValue(env.PressureLevel);
 
         // 是否铺设电缆都显示
         hasCabbleToggle = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/HasCable"), stateLayout).GetComponent<UIStateToggle>();
         hasCabbleToggle.SetStateName("铺设电缆");
-        hasCabbleToggle.SetValue(curEnvironmentBag.HasCable);
+        hasCabbleToggle.SetValue(env.HasCable);
 
         // 铺设电缆才显示电力
         UIStateSlider slider;
-        if (curEnvironmentBag.HasCable)
+        if (env.HasCable)
         {
             slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/Electricity"), stateLayout).GetComponent<UIStateSlider>();
             slider.SetValue(StateManager.Instance.Electricity);
@@ -137,7 +146,7 @@ public class EnvironmentBagWindow : BagWindow
         }
 
         // 在飞船内显示水平面高度
-        if (curEnvironmentBag.PlaceData.isInSpacecraft)
+        if (env.PlaceData.isInSpacecraft)
         {
             slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/WaterLevel"), stateLayout).GetComponent<UIStateSlider>();
             slider.SetValue(StateManager.Instance.WaterLevel);
@@ -145,7 +154,7 @@ public class EnvironmentBagWindow : BagWindow
         }
 
         // 其他状态显示
-        foreach (var (state, value) in curEnvironmentBag.StateDict)
+        foreach (var (state, value) in env.StateDict)
         {
             slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/" + state.ToString()), stateLayout).GetComponent<UIStateSlider>();
             slider.SetValue(value);
@@ -155,13 +164,13 @@ public class EnvironmentBagWindow : BagWindow
         MonoUtility.UpdateLayoutSize(stateLayout.GetComponent<VerticalLayoutGroup>());
 
         // 显示环境名称
-        placeNameText.text = $"{curEnvironmentBag.PlaceData.placeName}";
+        placeNameText.text = $"{env.PlaceData.placeName}";
 
         // 探索事件
-        DisplayDiscoveryDegree((curEnvironmentBag.DiscoveryDegree, curEnvironmentBag.ExploreCompleted));
+        DisplayDiscoveryDegree((env.DiscoveryDegree, env.ExploreCompleted));
 
         // 显示图片
-        environmentImage.sprite = curEnvironmentBag.PlaceData.placeImage;
+        environmentImage.sprite = env.PlaceData.placeImage;
         environmentImage.SetNativeSize();
     }
 

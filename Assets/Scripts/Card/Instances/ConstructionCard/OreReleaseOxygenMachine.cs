@@ -131,7 +131,7 @@ public class OreReleaseOxygenMachine : Card
     // 释放氧气
     private void ReleaseOxygen()
     {
-        var env = Slot.Bag as EnvironmentBag;
+        var env = Bag as EnvironmentBag;
         // 不是室内环境不释放氧气
         if (!env.PlaceData.isIndoor) return;
 
@@ -169,7 +169,7 @@ public class OreReleaseOxygenMachine : Card
         }
 
         // 没连接到电网不制氧
-        var env = Slot.Bag as EnvironmentBag;
+        var env = Bag as EnvironmentBag;
         if (!env.HasCable) return;
 
         // 电力不足不制氧
@@ -195,7 +195,7 @@ public class OreReleaseOxygenMachine : Card
         // 白爆矿的数量多余消耗量
         if (oreCount > amount)
         {
-            component.RemoveContentsByCardId("白爆矿", amount);
+            component.RemoveCardsByCardId("白爆矿", amount);
             return true;
         }
         return false;

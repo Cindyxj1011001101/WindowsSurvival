@@ -39,7 +39,7 @@ public class SiphonophyllumWithProduct : Card
     {
         // 变回虹吸海葵
         DestroyThis();
-        AddCard("虹吸海葵", Slot.Bag is PlayerBag);
+        AddCard("虹吸海葵", Bag is PlayerBag);
 
         tip = string.Empty;
         TimeManager.Instance.AddTime(15);

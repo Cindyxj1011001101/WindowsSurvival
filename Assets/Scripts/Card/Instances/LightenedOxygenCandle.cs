@@ -15,20 +15,20 @@ public class LightenedOxygenCandle : Card
         Use();
 
         // 每回合消耗耐久
-        BagBase bag;
+        Bag targetBag;
         if (ParentCard != null)
             // 自身作为内容物
-            bag = ParentCard.Slot.Bag;
+            targetBag = ParentCard.Bag;
         else
-            bag = Slot.Bag;
+            targetBag = Bag;
 
-        if (bag is PlayerBag playerBag)
+        if (targetBag is PlayerBag playerBag)
         {
             // 氧烛在玩家背包里
             // 给玩家加氧气
             StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, +10);
         }
-        else if (bag is EnvironmentBag environmentBag)
+        else if (targetBag is EnvironmentBag environmentBag)
         {
             // 氧烛在环境里
             // 给环境加氧气

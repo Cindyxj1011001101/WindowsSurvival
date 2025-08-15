@@ -51,11 +51,6 @@ public class RepeatableDropList
     [JsonIgnore]
     public bool IsEmpty => populationList.IsNullOrEmpty();
 
-    public void Init(List<Population> populationList)
-    {
-        this.populationList = populationList;
-    }
-
     /// <summary>
     /// 种群数量开始变化
     /// </summary>

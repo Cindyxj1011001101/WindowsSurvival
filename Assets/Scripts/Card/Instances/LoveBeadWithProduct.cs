@@ -21,11 +21,10 @@ public class LoveBeadWithProduct : Card
         GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }).Use();
 
         tip = string.Empty;
-        var sourceBag = Slot.Bag;
 
         // 变回爱情贝
         // 如果原来在玩家背包，则优先添加到玩家背包，否则添加到环境里
-        AddCard("爱情贝", sourceBag is PlayerBag);
+        AddCard("爱情贝", Bag is PlayerBag);
         TimeManager.Instance.AddTime(15);
         //撬开概率
         int random = Random.Range(0, 15);

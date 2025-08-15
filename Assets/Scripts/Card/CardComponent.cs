@@ -240,87 +240,46 @@ public delegate bool CardFilterDelegate(Card card, out string s);
 
 public class InnerContentsComponent : CardComponent
 {
-    public List<List<Card>> innerContents = new();
+    //public List<List<Card>> innerContents = new();
 
-    public int slotCount;
+    //public int slotCount;
+
+    public InnerBag bag = new();
 
     [JsonIgnore]
     public CardFilterDelegate contentFilter;
 
-    [JsonIgnore]
-    public int UsedSlotCount
-    {
-        get
-        {
-            int count = 0;
-            foreach (var slot in innerContents)
-            {
-                if (slot.Count > 0)
-                    count++;
-            }
-            return count;
-        }
-    }
-
     public InnerContentsComponent(int slotCount)
     {
-        this.slotCount = slotCount;
-        innerContents = new();
-        for (int i = 0; i < slotCount; i++)
-        {
-            innerContents.Add(new List<Card>());
-        }
+        //this.slotCount = slotCount;
+        //innerContents = new();
+        //for (int i = 0; i < slotCount; i++)
+        //{
+        //    innerContents.Add(new List<Card>());
+        //}
+        bag.AddSlot(slotCount);
+        bag.SetComponent(this);
     }
 
-    public int GetTotalCountByCardId(string cardId)
-    {
-        int totalCount = 0;
-        foreach (var slot in innerContents)
-        {
-            foreach (var card in slot)
-            {
-                if (card.CardId == cardId)
-                    totalCount++;
-            }
-        }
-        return totalCount;
-    }
+    public int GetTotalCountByCardId(string cardId) => bag.GetTotalCountByCardId(cardId);
 
-    public int RemoveContentsByCardId(string cardId, int count)
-    {
-        int removedCount = 0;
-        for (int i = 0; i < innerContents.Count && removedCount < count; i++)
-        {
-            var slot = innerContents[i];
-            for (int j = slot.Count - 1; j >= 0 && removedCount < count; j--)
-            {
-                if (slot[j].CardId == cardId)
-                {
-                    slot.RemoveAt(j);
-                    // 刷新显示
-                    slot[j].RefreshSlot();
-                    removedCount++;
-                }
-            }
-        }
-        return removedCount;
-    }
+    public int RemoveCardsByCardId(string cardId, int count) => bag.RemoveCardsByCardId(cardId, count);
 
     public override string ToString()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.Append($"内容物槽位数: {slotCount}\t");
+        StringBuilder sb = new ();
+        sb.Append($"内容物槽位数: {bag.SlotCount}\t");
         sb.Append("内容物: \n");
-        for (int i = 0; i < innerContents.Count; i++)
+        for (int i = 0; i < bag.SlotCount; i++)
         {
             sb.Append($"槽位 {i}: ");
-            if (innerContents[i].Count == 0)
+            if (bag[i].IsEmpty)
             {
                 sb.Append("空");
             }
             else
             {
-                foreach (var card in innerContents[i])
+                foreach (var card in bag.Slots[i].Cards)
                 {
                     sb.Append($"{card.CardId} ");
                 }

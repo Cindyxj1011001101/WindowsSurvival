@@ -65,8 +65,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             return;
         }
 
-        BagBase targetBag = currentObject.GetComponentInParent<BagBase>();
-        BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
+        BagWindow targetBag = currentObject.GetComponentInParent<BagWindow>();
+        BagWindow sourceBag = sourceSlot.GetComponentInParent<BagWindow>();
 
         // 能够放置
         if (targetBag != null)
@@ -89,7 +89,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 跨背包放置
             else if (sourceSlot.PeekCard().Moveable)
             {
-                PlaceCardInDifferentBag(targetBag, pickedCount, dragEndPosition);
+                PlaceCardInDifferentBag(targetBag.Bag, pickedCount, dragEndPosition);
             }
             // 卡牌的moveable为false
             else
@@ -149,6 +149,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 // 显示详情
                 //(WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot);
                 //(WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot.PeekCard());
+                //(WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot.Cards);
                 (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot.Cards);
                 return;
             }
@@ -162,14 +163,14 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             return;
         }
 
-        BagBase sourceBag = sourceSlot.GetComponentInParent<BagBase>();
-        BagBase targetBag = null;
+        BagWindow sourceBag = sourceSlot.GetComponentInParent<BagWindow>();
+        Bag targetBag = null;
 
-        if (sourceBag is PlayerBag && WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))
+        if (sourceBag is PlayerBagWindow && WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))
         {
             targetBag = GameManager.Instance.CurEnvironmentBag;
         }
-        else if (sourceBag is EnvironmentBag && WindowsManager.Instance.IsWindowOpen("PlayerBag"))
+        else if (sourceBag is EnvironmentBagWindow && WindowsManager.Instance.IsWindowOpen("PlayerBag"))
         {
             targetBag = GameManager.Instance.PlayerBag;
         }
@@ -269,7 +270,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="targetBag"></param>
     /// <param name="count"></param>
     /// <param name="startPos"></param>
-    private void PlaceCardInDifferentBag(BagBase targetBag, int count, Vector3 startPos, bool needReturnAnim = true)
+    private void PlaceCardInDifferentBag(Bag targetBag, int count, Vector3 startPos, bool needReturnAnim = true)
     {
         string tip = string.Empty;
         List<Card> movedCard = new();
