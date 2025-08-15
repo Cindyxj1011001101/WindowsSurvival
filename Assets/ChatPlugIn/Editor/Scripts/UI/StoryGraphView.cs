@@ -86,6 +86,10 @@ namespace ChatPlugIn
             BaseNode node = Activator.CreateInstance(nodeType) as BaseNode;
             node.InitPortData(nodeData.inputport);
             node.InitPortData(nodeData.outputports);
+            if (nodeData.typeName == "Start")
+            {
+                ((StartNode)node).paragraphData=graphData.paragraphData;
+            }
             node.Init(this,nodeData.Title,nodeData.NodePos);
             node.GUID = nodeData.guid;
             if(nodeType==typeof(DialogueNode))
@@ -194,6 +198,7 @@ namespace ChatPlugIn
                 };
                 if (node.Type == NodeType.Start)
                 {
+                    Debug.Log( ((StartNode)node).paragraphData);
                     graph.paragraphData = ((StartNode)node).paragraphData;
                 }
                 if (node.Type == NodeType.Dialogue)
@@ -254,6 +259,7 @@ namespace ChatPlugIn
             foreach (var nodeData in graphData.nodes)
             {
                 var tempNode = CreateNodeFromSO(nodeData);
+
             }
         }
 

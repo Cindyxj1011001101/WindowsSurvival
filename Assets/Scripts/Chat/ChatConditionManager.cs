@@ -245,9 +245,9 @@ public class ChatConditionManager : MonoBehaviour
         }
     }
 
-    public bool CanTriggerBranchCondition(ChatData chatData)
+    public bool CanTriggerBranchCondition(string name)
     {
-        switch (chatData.MessageCondition)
+        switch (name)
         {
             case "身上有废金属":
                 return GameManager.Instance.PlayerBag.FindCardOfName("废金属") != null;

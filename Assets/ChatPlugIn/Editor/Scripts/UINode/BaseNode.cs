@@ -223,11 +223,11 @@ namespace ChatPlugIn
                 portData.PortName = callback.newValue;
                 OnEditPortName(portData);
             });
-            TextField tfdPortCondition = ElementUtility.CreateTextArea(portData.PortCondition, null, callback =>
-            {
-                portData.PortCondition = callback.newValue;
-                OnEditPortName(portData);
-            });
+            // TextField tfdPortCondition = ElementUtility.CreateTextArea(portData.PortCondition, null, callback =>
+            // {
+            //     portData.PortCondition = callback.newValue;
+            //     OnEditPortName(portData);
+            // });
             Button btnDelete = ElementUtility.CreateButton("X", () =>
             {
                 if (outputPortData.Count == 1)
@@ -241,7 +241,7 @@ namespace ChatPlugIn
 
             });
             lineContainer.Add(tfdPortName);
-            lineContainer.Add(tfdPortCondition);
+            // lineContainer.Add(tfdPortCondition);
             lineContainer.Add(btnDelete);
             portContainer.Add(lineContainer);
             // 添加USS类名
@@ -259,12 +259,12 @@ namespace ChatPlugIn
                 "textfield__quote",
                 "row-item__left-center"
             );
-            tfdPortCondition.AddClasses
-            (
-                "textfield",
-                "textfield__quote",
-                "row-item__left-center"
-            );
+            // tfdPortCondition.AddClasses
+            // (
+            //     "textfield",
+            //     "textfield__quote",
+            //     "row-item__left-center"
+            // );
             btnDelete.AddClasses
             (
                 "row-item__right"
