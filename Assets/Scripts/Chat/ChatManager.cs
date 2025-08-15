@@ -79,7 +79,7 @@ public class ChatManager : MonoBehaviour
         {
             if (!GameDataManager.Instance.LoadData.loads[GameDataManager.Instance.curLoadIndex].SkipGuide)
             {
-                ParagraphToTriggeer.Add("1");
+                ParagraphToTriggeer.Add("一切的开始");
             }
         }
         else
