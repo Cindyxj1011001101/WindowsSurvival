@@ -13,33 +13,14 @@ MonoBehaviour:
   m_Name: "\u65B0\u6BB5\u843D"
   m_EditorClassIdentifier: 
   paragraphData:
-    ParagraphName: "\u4E00\u5207\u7684\u5F00\u59CB"
-    ParagraphPriority: 9
-    ParagraphCondition: "\u6E38\u620F\u5F00\u59CB"
+    ParagraphName: 1
+    ParagraphPriority: 1
+    ParagraphCondition: 1
   nodes:
-  - guid: 0ad08a7b71c057d4eb7e8a77d9f0d6a5
-    Title: "\u5F00\u59CB"
-    typeName: Start
-    NodePos: {x: -579.2, y: 234.40001}
-    chatData:
-      MessageSender: 0
-      MessageCondition: 
-      Message: 
-      preWaitTime: 0
-      lateWaitTime: 0
-      TriggerMessageEffect: 
-    inputport:
-      name: 
-      direction: 0
-      PortCondition: 
-    outputports:
-    - name: "\u8F93\u51FA"
-      direction: 1
-      PortCondition: "\u6761\u4EF6"
   - guid: 247689ab3beed5044962dc0a1d32e5d7
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: -281.6, y: 234.40001}
+    NodePos: {x: -282, y: 234}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -58,7 +39,7 @@ MonoBehaviour:
   - guid: cbf531e8db3e4e34e984d23b54fbb859
     Title: "\u9009\u9879"
     typeName: Choose
-    NodePos: {x: 360.8, y: 177.59999}
+    NodePos: {x: 361, y: 178}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -80,7 +61,7 @@ MonoBehaviour:
   - guid: 5b47abca9889a50479d6007bb5f49ca7
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 885.6, y: 185.59999}
+    NodePos: {x: 886, y: 186}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -99,7 +80,7 @@ MonoBehaviour:
   - guid: e5ff5a6546975be4dae4010f21376c40
     Title: "\u9009\u9879"
     typeName: Choose
-    NodePos: {x: 1319.2, y: 173.59999}
+    NodePos: {x: 1319, y: 174}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -118,7 +99,7 @@ MonoBehaviour:
   - guid: 5104cc2c999fe8b40a9dc608d543968e
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 1816.8, y: 173.59999}
+    NodePos: {x: 1817, y: 174}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -137,7 +118,7 @@ MonoBehaviour:
   - guid: d1520f6fbc0cd5d4ca64965d029e5614
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 1816.8, y: 374.40002}
+    NodePos: {x: 1817, y: 374}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -156,7 +137,7 @@ MonoBehaviour:
   - guid: fd9a4e413f929924aa58dbeeb7a3a265
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 1816.8, y: 575.2}
+    NodePos: {x: 1817, y: 575}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -175,7 +156,7 @@ MonoBehaviour:
   - guid: 739f5d45fa228ea48a28bef3b51ac1f4
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 1816.8, y: 976.8}
+    NodePos: {x: 1817, y: 977}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -194,7 +175,7 @@ MonoBehaviour:
   - guid: 30339b690bfd23245999125f8708c336
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 885.6, y: 386.40002}
+    NodePos: {x: 886, y: 386}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -213,7 +194,7 @@ MonoBehaviour:
   - guid: a8e06d037de0ac84e827e62f70737ee4
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 881.6, y: 588.8}
+    NodePos: {x: 882, y: 589}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -232,7 +213,7 @@ MonoBehaviour:
   - guid: 6581b0b5a68766f4d9df14683f0811d3
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 881.6, y: 789.60004}
+    NodePos: {x: 882, y: 790}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -251,7 +232,7 @@ MonoBehaviour:
   - guid: acbb5f22e904a9e40858159719ef9c0f
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 881.6, y: 989.60004}
+    NodePos: {x: 882, y: 990}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -270,7 +251,7 @@ MonoBehaviour:
   - guid: cc311e8eb828144489237f05b6a90170
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 881.6, y: 1190.3999}
+    NodePos: {x: 882, y: 1190}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -289,7 +270,7 @@ MonoBehaviour:
   - guid: 6688654e09758e54ebaf890233a9c3da
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 881.6, y: 1391.2}
+    NodePos: {x: 882, y: 1391}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -308,7 +289,7 @@ MonoBehaviour:
   - guid: 17de240b248c0dd4da67c82b2f59aeab
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 881.6, y: 1592}
+    NodePos: {x: 882, y: 1592}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -327,7 +308,7 @@ MonoBehaviour:
   - guid: 2f2ad04186eea7044be9005e24fa31c1
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: -281.6, y: 435.2}
+    NodePos: {x: -282, y: 435}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -346,7 +327,7 @@ MonoBehaviour:
   - guid: babd738133bdec248b1fe75fd1ff0810
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: -281.6, y: 636}
+    NodePos: {x: -282, y: 636}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -365,7 +346,7 @@ MonoBehaviour:
   - guid: 7913896cab179764eb7dcca9013750ad
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: -281.6, y: 836.8}
+    NodePos: {x: -282, y: 837}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -384,7 +365,7 @@ MonoBehaviour:
   - guid: e7f4de0c05fbd194caba255d9e03b606
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: -281.6, y: 1037.6}
+    NodePos: {x: -282, y: 1038}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -403,7 +384,7 @@ MonoBehaviour:
   - guid: 4507a351c76ecb941991b2d510e83013
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 1816.8, y: 1177.6}
+    NodePos: {x: 1817, y: 1178}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -422,7 +403,7 @@ MonoBehaviour:
   - guid: 65c2a280721a5be4b9822f1e8021194b
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 1816.8, y: 1378.3999}
+    NodePos: {x: 1817, y: 1378}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -441,7 +422,7 @@ MonoBehaviour:
   - guid: 0999176e00128e249a77caa7b707150c
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 1816.8, y: 776}
+    NodePos: {x: 1817, y: 776}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -460,7 +441,7 @@ MonoBehaviour:
   - guid: ed843df41dbb3614587f788b42b11312
     Title: "\u9009\u9879"
     typeName: Choose
-    NodePos: {x: 2280.8, y: 173.59999}
+    NodePos: {x: 2281, y: 174}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -482,7 +463,7 @@ MonoBehaviour:
   - guid: a23493b32341cb04bb0ad0a9f9cfe167
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 2834.4, y: 173.59999}
+    NodePos: {x: 2834, y: 174}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -501,7 +482,7 @@ MonoBehaviour:
   - guid: fdc2b07c106704948860bfcfa53742f4
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 2834.4, y: 374.40002}
+    NodePos: {x: 2834, y: 374}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -520,7 +501,7 @@ MonoBehaviour:
   - guid: 2c68a26873ad7764cb150ee484148a82
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 2834.4, y: 575.2}
+    NodePos: {x: 2834, y: 575}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -539,7 +520,7 @@ MonoBehaviour:
   - guid: 7d20c867ff8561445ab29c7b8625d85c
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 2834.4, y: 776}
+    NodePos: {x: 2834, y: 776}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -558,7 +539,7 @@ MonoBehaviour:
   - guid: 62445c9fca6116e48a1c34749378d674
     Title: "\u9009\u9879"
     typeName: Choose
-    NodePos: {x: 3298.4, y: 173.59999}
+    NodePos: {x: 3298, y: 174}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -577,7 +558,7 @@ MonoBehaviour:
   - guid: 11bf4fc9feee72842bf193a20f19bdf0
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 3767.2, y: 173.59999}
+    NodePos: {x: 3767, y: 174}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -596,7 +577,7 @@ MonoBehaviour:
   - guid: 84f82703387b85f4bbb2dece53cb282b
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 3767.2, y: 374.40002}
+    NodePos: {x: 3767, y: 374}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -615,7 +596,7 @@ MonoBehaviour:
   - guid: d1e9b2d94662e8149a697d00ee3c343f
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 3767.2, y: 575.2}
+    NodePos: {x: 3767, y: 575}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -634,7 +615,7 @@ MonoBehaviour:
   - guid: 31214fd7a54fc354eba13392bdb2098c
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 3767.2, y: 776}
+    NodePos: {x: 3767, y: 776}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -653,7 +634,7 @@ MonoBehaviour:
   - guid: dd70561207eb1464c84533f3e79e151d
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 3767.2, y: 976.8}
+    NodePos: {x: 3767, y: 977}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -672,7 +653,7 @@ MonoBehaviour:
   - guid: b2688eed9f2569b4c8665b0d0cf81804
     Title: "\u9009\u9879"
     typeName: Choose
-    NodePos: {x: 4268.8, y: 173.59999}
+    NodePos: {x: 4269, y: 174}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -691,7 +672,7 @@ MonoBehaviour:
   - guid: fac7ddacf8bebb4478d1cd4d17e6e100
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 4268.8, y: 348}
+    NodePos: {x: 4269, y: 348}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -710,7 +691,7 @@ MonoBehaviour:
   - guid: 3823e32a1051e7c4f95add01f8052d81
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 4268.8, y: 548.8}
+    NodePos: {x: 4269, y: 549}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -729,7 +710,7 @@ MonoBehaviour:
   - guid: eabd3090c8cd9e844b4fa299d7364fbb
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 4268.8, y: 749.60004}
+    NodePos: {x: 4269, y: 750}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -748,7 +729,7 @@ MonoBehaviour:
   - guid: 1e12dd931e15ef047975010302759dcb
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 4268.8, y: 950.4}
+    NodePos: {x: 4269, y: 950}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -767,7 +748,7 @@ MonoBehaviour:
   - guid: 9923d9f997f86db478a87784b43adceb
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 4268.8, y: 1151.2}
+    NodePos: {x: 4269, y: 1151}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -786,7 +767,7 @@ MonoBehaviour:
   - guid: 70cc59b8deb98e946bd12c6fa25f0e50
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
-    NodePos: {x: 4268.8, y: 1352}
+    NodePos: {x: 4269, y: 1352}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -805,7 +786,7 @@ MonoBehaviour:
   - guid: 67c6f8b799aa2684bafa232151f1848c
     Title: "\u7ED3\u675F"
     typeName: End
-    NodePos: {x: 5221.6, y: 394.40002}
+    NodePos: {x: 5222, y: 394}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -818,6 +799,25 @@ MonoBehaviour:
       direction: 0
       PortCondition: "\u6761\u4EF6"
     outputports: []
+  - guid: 0ad08a7b71c057d4eb7e8a77d9f0d6a5
+    Title: "\u5F00\u59CB"
+    typeName: Start
+    NodePos: {x: -579, y: 234}
+    chatData:
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: 
+      direction: 0
+      PortCondition: 
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
   edges:
   - outputNodeGUID: 0ad08a7b71c057d4eb7e8a77d9f0d6a5
     outputPortName: "\u8F93\u51FA"
@@ -826,22 +826,6 @@ MonoBehaviour:
   - outputNodeGUID: 247689ab3beed5044962dc0a1d32e5d7
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 2f2ad04186eea7044be9005e24fa31c1
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 2f2ad04186eea7044be9005e24fa31c1
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: babd738133bdec248b1fe75fd1ff0810
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: babd738133bdec248b1fe75fd1ff0810
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 7913896cab179764eb7dcca9013750ad
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 7913896cab179764eb7dcca9013750ad
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: e7f4de0c05fbd194caba255d9e03b606
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: e7f4de0c05fbd194caba255d9e03b606
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: cbf531e8db3e4e34e984d23b54fbb859
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: cbf531e8db3e4e34e984d23b54fbb859
     outputPortName: "\u60A8\u597D?\u60A8\u600E\u4E48\u4E86?"
@@ -854,6 +838,26 @@ MonoBehaviour:
   - outputNodeGUID: 5b47abca9889a50479d6007bb5f49ca7
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 30339b690bfd23245999125f8708c336
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: e5ff5a6546975be4dae4010f21376c40
+    outputPortName: "\u4F60\u627E\u9519\u4EBA\u4E86,\u6211\u4E0D\u662F\u4EC0\u4E48\"\u603B\u53F0\""
+    inputNodeGUID: 5104cc2c999fe8b40a9dc608d543968e
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 5104cc2c999fe8b40a9dc608d543968e
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: d1520f6fbc0cd5d4ca64965d029e5614
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: d1520f6fbc0cd5d4ca64965d029e5614
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: fd9a4e413f929924aa58dbeeb7a3a265
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: fd9a4e413f929924aa58dbeeb7a3a265
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 0999176e00128e249a77caa7b707150c
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 739f5d45fa228ea48a28bef3b51ac1f4
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 4507a351c76ecb941991b2d510e83013
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 30339b690bfd23245999125f8708c336
     outputPortName: "\u8F93\u51FA"
@@ -883,29 +887,21 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: e5ff5a6546975be4dae4010f21376c40
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: e5ff5a6546975be4dae4010f21376c40
-    outputPortName: "\u4F60\u627E\u9519\u4EBA\u4E86,\u6211\u4E0D\u662F\u4EC0\u4E48\"\u603B\u53F0\""
-    inputNodeGUID: 5104cc2c999fe8b40a9dc608d543968e
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 5104cc2c999fe8b40a9dc608d543968e
+  - outputNodeGUID: 2f2ad04186eea7044be9005e24fa31c1
     outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: d1520f6fbc0cd5d4ca64965d029e5614
+    inputNodeGUID: babd738133bdec248b1fe75fd1ff0810
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: d1520f6fbc0cd5d4ca64965d029e5614
+  - outputNodeGUID: babd738133bdec248b1fe75fd1ff0810
     outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: fd9a4e413f929924aa58dbeeb7a3a265
+    inputNodeGUID: 7913896cab179764eb7dcca9013750ad
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: fd9a4e413f929924aa58dbeeb7a3a265
+  - outputNodeGUID: 7913896cab179764eb7dcca9013750ad
     outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 0999176e00128e249a77caa7b707150c
+    inputNodeGUID: e7f4de0c05fbd194caba255d9e03b606
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 0999176e00128e249a77caa7b707150c
+  - outputNodeGUID: e7f4de0c05fbd194caba255d9e03b606
     outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 739f5d45fa228ea48a28bef3b51ac1f4
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 739f5d45fa228ea48a28bef3b51ac1f4
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 4507a351c76ecb941991b2d510e83013
+    inputNodeGUID: cbf531e8db3e4e34e984d23b54fbb859
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 4507a351c76ecb941991b2d510e83013
     outputPortName: "\u8F93\u51FA"
@@ -915,13 +911,9 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: ed843df41dbb3614587f788b42b11312
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: a23493b32341cb04bb0ad0a9f9cfe167
+  - outputNodeGUID: 0999176e00128e249a77caa7b707150c
     outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: fdc2b07c106704948860bfcfa53742f4
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: fdc2b07c106704948860bfcfa53742f4
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 2c68a26873ad7764cb150ee484148a82
+    inputNodeGUID: 739f5d45fa228ea48a28bef3b51ac1f4
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: ed843df41dbb3614587f788b42b11312
     outputPortName: "\u4EE5\u540E\u7684\u4E8B\u8C01\u77E5\u9053?\u4F60\u8FD8\u662F\u76F4\u63A5\u6253\u94B1\u7ED9\u6211\u5427,\u652F\u4ED8\u5B9D\u8FD8\u662F\u5FAE\u4FE1?"
@@ -929,6 +921,14 @@ MonoBehaviour:
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: ed843df41dbb3614587f788b42b11312
     outputPortName: "\u8FD9\u548C\u94B1\u65E0\u5173\u5427,\u5173\u952E\u662F\u4F60\u627E\u9519\u4EBA\u4E86"
+    inputNodeGUID: 2c68a26873ad7764cb150ee484148a82
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: a23493b32341cb04bb0ad0a9f9cfe167
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: fdc2b07c106704948860bfcfa53742f4
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: fdc2b07c106704948860bfcfa53742f4
+    outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 2c68a26873ad7764cb150ee484148a82
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 2c68a26873ad7764cb150ee484148a82

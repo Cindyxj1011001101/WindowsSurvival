@@ -222,24 +222,15 @@ public class ChatManager : MonoBehaviour
                 chatWindow.SetDialogueOptions(nodeData);
                 break;
             case "BranchCondition":
-                // // 先收集所有选项消息
-                // List<ChatData> branchOptionsList = new List<ChatData>();
-                // for (int i = chatData.MessageID - 1; i < ParagraphDataList[chatData.ParagraphID - 1].ChatDataList.Count; i++)
-                // {
-                //     if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "分支对话")
-                //     {
-                //         branchOptionsList.Add(ParagraphDataList[chatData.ParagraphID].ChatDataList[i]);
-                //     }
-                //     else break;
-                // }
-                // foreach (var option in branchOptionsList)
-                // {
-                //     if (option.MessageCondition != "" && ChatConditionManager.Instance.CanTriggerBranchCondition(option))
-                //     {
-                //         CreateMessage(option);
-                //         break;
-                //     }
-                // }
+                // 先收集所有选项消息
+                foreach (var portData in nodeData.outputports)
+                {
+                    if (portData.name != "" && ChatConditionManager.Instance.CanTriggerBranchCondition(name))
+                    {
+                        TriggerMessage(ReadChatParagraph.Instance.FindNextNode(portData.name));
+                        break;
+                    }
+                }
                 break;
             case "End":
                 NextParagraph();
