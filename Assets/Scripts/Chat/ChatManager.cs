@@ -145,6 +145,7 @@ public class ChatManager : MonoBehaviour
                 //如果当前在等待选择则删除选项，直接进入对话
                 if (Choosing)
                 {
+                    ChoosedChatData = null;
                     chatWindow.InterruptChoose();
                     Choosing = false;
                     TriggerMessage(null);

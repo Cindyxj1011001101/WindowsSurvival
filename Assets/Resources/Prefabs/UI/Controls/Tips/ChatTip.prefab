@@ -364,6 +364,7 @@ GameObject:
   - component: {fileID: 7538608460550718420}
   - component: {fileID: 7738105126497442469}
   - component: {fileID: 2970175338789680711}
+  - component: {fileID: -8970670841709819104}
   m_Layer: 5
   m_Name: ChatTip
   m_TagString: Untagged
@@ -489,6 +490,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   changeMouseType: 0
   InButton: 0
+--- !u!114 &-8970670841709819104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6962859369273640820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 8
 --- !u!1 &7876841124288516156
 GameObject:
   m_ObjectHideFlags: 0

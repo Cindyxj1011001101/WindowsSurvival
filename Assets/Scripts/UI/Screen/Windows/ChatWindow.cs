@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using DG.Tweening;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -66,7 +65,7 @@ public class ChatWindow : WindowBase, IPointerDownHandler
     public void RemoveFirstMessage()
     {
         var first = chatLayoutGroup.transform.GetChild(0);
-        DestroyImmediate(first.gameObject);
+        ObjectBufferPool.Instance.Restore(first.gameObject);
         // 更新组件高度
         MonoUtility.UpdateChatLayoutSize(chatLayoutGroup);
         ResetScroll();
@@ -93,8 +92,7 @@ public class ChatWindow : WindowBase, IPointerDownHandler
         }
 
         // 创建聊天气泡
-        var textBox = Instantiate(prefab, chatLayoutGroup.transform).GetComponent<CustomTextBox>();
-        textBox.SetText(content);
+        ObjectBufferPool.Instance.Get(prefab, chatLayoutGroup.transform).GetComponent<CustomTextBox>().SetText(content);
 
         // 更新组件高度
         MonoUtility.UpdateChatLayoutSize(chatLayoutGroup);
@@ -114,19 +112,26 @@ public class ChatWindow : WindowBase, IPointerDownHandler
     /// <summary>
     /// 设置对话选项
     /// </summary>
-    /// <param name="options"></param>
     public void SetDialogueOptions(GraphData.SerializedNode nodeData)
     {
-        MonoUtility.DestroyAllChildren(optionLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(optionLayout);
+
+        GameObject obj;
+        HoverableButton button;
         foreach (var outputport in nodeData.outputports)
         {
-            var obj = Instantiate(optionPrefab, optionLayout);
+            obj = ObjectBufferPool.Instance.Get(optionPrefab, optionLayout);
             obj.GetComponent<CustomTextBox>().SetText(outputport.name);
-            obj.GetComponent<HoverableButton>().onClick.AddListener(() =>
+
+            button = obj.GetComponent<HoverableButton>();
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() =>
             {
                 inputFieldText.text = outputport.name;
-                ChatManager.Instance.ChoosedChatData = outputport.name;
+                //ChatManager.Instance.ChoosedChatData = outputport.name;
             });
+
+            obj.transform.SetAsLastSibling();
         }
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(optionLayout);
@@ -198,21 +203,17 @@ public class ChatWindow : WindowBase, IPointerDownHandler
     private void Submit()
     {
         if (string.IsNullOrEmpty(inputFieldText.text)) return;
-        inputFieldText.text = "";
-        MonoUtility.DestroyAllChildren(optionLayout);
-        optionSubmitted = true;
-        HideDialogueOptions();
+        InterruptChoose();
         ChatManager.Instance.Submit();
-        timer = int.MaxValue;
     }
 
     public void InterruptChoose()
     {
         inputFieldText.text = "";
-        MonoUtility.DestroyAllChildren(optionLayout);
-        ChatManager.Instance.ChoosedChatData = null;
+        ObjectBufferPool.Instance.RestoreAllChildren(optionLayout);
         optionSubmitted = true;
         HideDialogueOptions();
+        timer = int.MaxValue;
     }
 
     private void CreateChatTip(MessageSenderEnum sender, string text, float lifeTime)

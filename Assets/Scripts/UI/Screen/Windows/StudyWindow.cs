@@ -176,7 +176,8 @@ public class StudyWindow : WindowBase
         // 销毁前置研究和解锁配方对应的预制体
         foreach (var obj in temp)
         {
-            DestroyImmediate(obj);
+            //DestroyImmediate(obj);
+            ObjectBufferPool.Instance.Restore(obj);
         }
         temp.Clear();
 
@@ -187,22 +188,28 @@ public class StudyWindow : WindowBase
         // 显示科技的前置研究项目
         prerequisite.SetActive(techNode.prerequisites.Count != 0);
 
+        UIStateToggle toggle;
         foreach (var prerequisite in techNode.prerequisites)
         {
-            var toggle = Instantiate(prerequisitePrefab, detailLayout).GetComponentInChildren<UIStateToggle>();
+            toggle = ObjectBufferPool.Instance.Get(prerequisitePrefab, detailLayout).GetComponentInChildren<UIStateToggle>();
             unlockRecipe.transform.SetAsLastSibling();
             toggle.SetStateName(prerequisite.techName);
             toggle.SetValue(TechnologyManager.Instance.IsTechNodeComplished(prerequisite));
             temp.Add(toggle.gameObject);
+
+            toggle.transform.SetAsLastSibling();
         }
 
+        HoverableButton button;
         // 显示可以解锁的配方
         foreach (var recipe in techNode.recipes)
         {
-            var button = Instantiate(recipeItem, detailLayout).GetComponent<HoverableButton>();
+            button = ObjectBufferPool.Instance.Get(recipeItem, detailLayout).GetComponent<HoverableButton>();
             button.normalImage.sprite = recipe.CardImage;
             button.GetComponentsInChildren<Text>()[1].text = recipe.cardId;
             temp.Add(button.gameObject);
+
+            button.transform.SetAsLastSibling();
         }
 
         // 显示研究按钮

@@ -29,7 +29,7 @@ public class FloatingTip : MonoBehaviour
         seq.Join(transform.DOMove(position, 0.2f).SetEase(Ease.OutQuad));
         seq.Join(canvasGroup.DOFade(1, 0.2f));
         seq.AppendInterval(duration);
-        seq.Append(canvasGroup.DOFade(0, 0.2f).OnComplete(() => Destroy(gameObject)));
+        seq.Append(canvasGroup.DOFade(0, 0.2f).OnComplete(() => ObjectBufferPool.Instance.Restore(gameObject)));
 
         seq.Play();
     }

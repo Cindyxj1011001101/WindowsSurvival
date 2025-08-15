@@ -13,7 +13,7 @@ public class UITechNode : HoverableButton
     public Text costText;
     public GameObject gifObject;
 
-    public GameObject recipeItem;
+    public GameObject recipeItemPrefab;
 
     private List<HoverableButton> recipeButtons = new();
 
@@ -30,12 +30,13 @@ public class UITechNode : HoverableButton
         progressSlider.SetValue(TechnologyManager.Instance.GetStudyProgress(techNode), techNode.cost);
 
         // 显示解锁配方
-        MonoUtility.DestroyAllChildren(recipeLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(recipeLayout);
         recipeButtons.Clear();
+
+        HoverableButton button;
         foreach (var recipe in techNode.recipes)
         {
-            var obj = Instantiate(recipeItem, recipeLayout);
-            var button = obj.GetComponent<HoverableButton>();
+            button = ObjectBufferPool.Instance.Get(recipeItemPrefab, recipeLayout).GetComponent<HoverableButton>();
             button.normalImage.sprite = recipe.CardImage;
             recipeButtons.Add(button);
         }

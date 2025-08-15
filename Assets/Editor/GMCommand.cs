@@ -281,7 +281,7 @@ public class GMCommand
     [MenuItem("Command/添加/通往动力舱")]
     public static void X()
     {
-        AddCard("通往动力舱");
+        AddCard("从驾驶室到动力舱");
     }
 
     [MenuItem("Command/GC")]

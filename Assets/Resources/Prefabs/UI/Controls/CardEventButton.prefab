@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7700665487795521149}
   - component: {fileID: 4939259059235914899}
   - component: {fileID: 9087857122178927711}
+  - component: {fileID: -3268525742222571903}
   m_Layer: 5
   m_Name: CardEventButton
   m_TagString: Untagged
@@ -67,6 +68,8 @@ MonoBehaviour:
   textsNeedToReverseColor:
   - {fileID: 576773620984651417}
   imagseNeedToReverseColor: []
+  hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
+  playHoverSound: 1
 --- !u!114 &4939259059235914899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,6 +100,19 @@ MonoBehaviour:
   onPointerEnter:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &-3268525742222571903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 853790556351804927}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 8
 --- !u!1 &1273064475476806626
 GameObject:
   m_ObjectHideFlags: 0

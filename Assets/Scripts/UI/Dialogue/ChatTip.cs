@@ -153,7 +153,7 @@ public class ChatTip : HoverableButton
            .OnComplete(() =>
            {
                canvasGroup.alpha = 0f;
-               Destroy(gameObject);
+               ObjectBufferPool.Instance.Restore(gameObject);
            });
     }
 

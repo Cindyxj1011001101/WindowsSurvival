@@ -125,22 +125,21 @@ public class EnvironmentBagWindow : BagWindow
 
         stateSliders.Clear();
 
-        MonoUtility.DestroyAllChildren(stateLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(stateLayout);
 
         // 压强都显示
-        pressureLevel = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/PressureLevel"), stateLayout).GetComponent<UIPressureLevel>();
+        pressureLevel = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/EnvironmentState", "PressureLevel", stateLayout).GetComponent<UIPressureLevel>();
         pressureLevel.SetValue(env.PressureLevel);
 
         // 是否铺设电缆都显示
-        hasCabbleToggle = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/HasCable"), stateLayout).GetComponent<UIStateToggle>();
-        hasCabbleToggle.SetStateName("铺设电缆");
+        hasCabbleToggle = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/EnvironmentState", "HasCable", stateLayout).GetComponent<UIStateToggle>();
         hasCabbleToggle.SetValue(env.HasCable);
 
         // 铺设电缆才显示电力
         UIStateSlider slider;
         if (env.HasCable)
         {
-            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/Electricity"), stateLayout).GetComponent<UIStateSlider>();
+            slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/EnvironmentState", "Electricity", stateLayout).GetComponent<UIStateSlider>();
             slider.SetValue(StateManager.Instance.Electricity);
             stateSliders.Add(EnvironmentStateEnum.Electricity, slider);
         }
@@ -148,7 +147,7 @@ public class EnvironmentBagWindow : BagWindow
         // 在飞船内显示水平面高度
         if (env.PlaceData.isInSpacecraft)
         {
-            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/WaterLevel"), stateLayout).GetComponent<UIStateSlider>();
+            slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/EnvironmentState", "WaterLevel", stateLayout).GetComponent<UIStateSlider>();
             slider.SetValue(StateManager.Instance.WaterLevel);
             stateSliders.Add(EnvironmentStateEnum.WaterLevel, slider);
         }
@@ -156,7 +155,7 @@ public class EnvironmentBagWindow : BagWindow
         // 其他状态显示
         foreach (var (state, value) in env.StateDict)
         {
-            slider = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/EnvironmentState/" + state.ToString()), stateLayout).GetComponent<UIStateSlider>();
+            slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/EnvironmentState", state.ToString(), stateLayout).GetComponent<UIStateSlider>();
             slider.SetValue(value);
             stateSliders.Add(state, slider);
         }

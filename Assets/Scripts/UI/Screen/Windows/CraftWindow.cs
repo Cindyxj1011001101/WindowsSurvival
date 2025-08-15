@@ -133,29 +133,27 @@ public class CraftWindow : WindowBase
             }
         }).ToList();
 
+        UIRecipeItem recipeItem;
         // 创建所有配方按钮
         foreach (var recipe in sortedRecipes)
         {
-            ObjectBufferPool.Instance.Get(recipeItemPrefab, recipieLayout, (obj) =>
+            recipeItem = ObjectBufferPool.Instance.Get(recipeItemPrefab, recipieLayout).GetComponent<UIRecipeItem>();
+            recipeItem.DisplayRecipe(
+                recipe.CardImage,
+                CraftManager.Instance.IsRecipeLocked(recipe),
+                CraftManager.Instance.CanCrfat(recipe, out _)
+                );
+            recipeItem.button.onClick.RemoveAllListeners();
+            recipeItem.button.onClick.AddListener(() =>
             {
-                // 记录配方的位置
-                recipeItemTransforms.Add(recipe.cardId, obj.transform as RectTransform);
-
-                var recipeItem = obj.GetComponent<UIRecipeItem>();
-                recipeItem.DisplayRecipe(
-                    recipe.CardImage,
-                    CraftManager.Instance.IsRecipeLocked(recipe),
-                    CraftManager.Instance.CanCrfat(recipe, out _)
-                    );
-                recipeItem.button.onClick.RemoveAllListeners();
-                recipeItem.button.onClick.AddListener(() =>
-                {
-                    currentSelectedRecipe = recipe; // 记录选中的配方
-                    DisplayRecipeDetails(recipe);
-                });
-
-                obj.transform.SetAsLastSibling();
+                currentSelectedRecipe = recipe; // 记录选中的配方
+                DisplayRecipeDetails(recipe);
             });
+
+            recipeItem.transform.SetAsLastSibling();
+
+            // 记录配方的位置
+            recipeItemTransforms.Add(recipe.cardId, recipeItem.transform as RectTransform);
         }
 
         MonoUtility.UpdateLayoutSize(recipieLayout.GetComponent<GridLayoutGroup>());
@@ -201,27 +199,25 @@ public class CraftWindow : WindowBase
             (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(recipe.CardInstance, true);
         });
 
+        UIRecipeMaterial recipeMaterial;
         // 显示所需材料
         foreach (var material in recipe.materials)
         {
-            ObjectBufferPool.Instance.Get(recipeMaterialPrefab, materialLayout, (obj) =>
+            recipeMaterial = ObjectBufferPool.Instance.Get(recipeMaterialPrefab, materialLayout).GetComponent<UIRecipeMaterial>();
+            recipeMaterial.DisplayMaterial(
+                material.CardImage,
+                material.requiredNum,
+                GameManager.Instance.PlayerBag.GetTotalCountByCardId(material.cardId)
+                );
+
+            recipeMaterial.tipController.SetTip(material.CardInstance.CardName);
+            recipeMaterial.button.onClick.RemoveAllListeners();
+            recipeMaterial.button.onClick.AddListener(() =>
             {
-                var recipeMaterial = obj.GetComponent<UIRecipeMaterial>();
-                recipeMaterial.DisplayMaterial(
-                    material.CardImage,
-                    material.requiredNum,
-                    GameManager.Instance.PlayerBag.GetTotalCountByCardId(material.cardId)
-                    );
-
-                recipeMaterial.tipController.SetTip(material.CardInstance.CardName);
-                recipeMaterial.button.onClick.RemoveAllListeners();
-                recipeMaterial.button.onClick.AddListener(() =>
-                {
-                    (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(material.CardInstance, true);
-                });
-
-                obj.transform.SetAsLastSibling();
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(material.CardInstance, true);
             });
+
+            recipeMaterial.transform.SetAsLastSibling();
         }
 
         // 显示制作时间

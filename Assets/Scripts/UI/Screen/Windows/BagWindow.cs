@@ -52,9 +52,10 @@ public abstract class BagWindow : WindowBase
     /// <param name="amount"></param>
     public CardSlot AddSlot()
     {
-        GameObject slotObj = Instantiate(slotPrefab, slotLayout.transform);
-        CardSlot slot = slotObj.GetComponent<CardSlot>();
+        CardSlot slot = ObjectBufferPool.Instance.Get(slotPrefab, slotLayout.transform).GetComponent<CardSlot>();
         slots.Add(slot);
+
+        slot.transform.SetAsLastSibling();
 
         // 添加格子后更新容器高度
         MonoUtility.UpdateLayoutSize(slotLayout.GetComponent<ILayoutGroup>());
@@ -74,6 +75,7 @@ public abstract class BagWindow : WindowBase
     {
         Bag?.SetBagWindow(null);
         Bag = null;
-        MonoUtility.DestroyAllChildren(slotLayout);
+        //MonoUtility.DestroyAllChildren(slotLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(slotLayout);
     }
 }

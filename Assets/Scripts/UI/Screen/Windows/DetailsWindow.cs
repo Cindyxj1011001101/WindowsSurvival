@@ -201,15 +201,18 @@ public class DetailsWindow : BagWindow
     {
         if (currentDisplayedCard == null) return;
 
-        MonoUtility.DestroyAllChildren(buttonLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(buttonLayout);
+
+        HoverableButton button;
+        Text btnText;
+        bool interactable;
         foreach (var e in currentDisplayedCard.Events)
         {
-            GameObject buttonPrefab = Resources.Load<GameObject>("Prefabs/UI/Controls/CardEventButton");
-            var button = Instantiate(buttonPrefab, buttonLayout).GetComponent<HoverableButton>();
-            var btnText = button.GetComponentInChildren<Text>();
+            button = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls", "CardEventButton", buttonLayout).GetComponent<HoverableButton>();
+            btnText = button.GetComponentInChildren<Text>();
             btnText.text = e.name;
 
-            bool interactable = e.Judge();
+            interactable = e.Judge();
             button.Interactable = interactable;
 
             // 判断cardEvent是否满足条件
@@ -242,6 +245,8 @@ public class DetailsWindow : BagWindow
                 button.GetComponent<HoverTipController>().SetTip(e.Description, e.GetTimeEffect(), e.GetPlayerEffects(), e.GetEnvEffects());
             else
                 button.GetComponent<HoverTipController>().SetTip(e.Description);
+
+            button.transform.SetAsLastSibling();
         }
     }
 
@@ -264,7 +269,7 @@ public class DetailsWindow : BagWindow
         detailsText.text = "";
         contentsView.gameObject.SetActive(false);
         innerContentsButton.gameObject.SetActive(false);
-        MonoUtility.DestroyAllChildren(buttonLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(buttonLayout);
     }
 
     private void SelectWithTween(RectTransform target)

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 805937896332881844}
   - component: {fileID: 8538479986556539874}
   - component: {fileID: 6937117900483513137}
+  - component: {fileID: -6589855660249227758}
   m_Layer: 5
   m_Name: HasCable
   m_TagString: Untagged
@@ -80,6 +81,19 @@ MonoBehaviour:
   - {fileID: 1907492799402236762}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
+--- !u!114 &-6589855660249227758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 74954495231397701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 4
 --- !u!1 &1122670032423260638
 GameObject:
   m_ObjectHideFlags: 0

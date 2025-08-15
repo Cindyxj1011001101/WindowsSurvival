@@ -440,6 +440,7 @@ GameObject:
   - component: {fileID: 2107520126265139256}
   - component: {fileID: 8916704683397684090}
   - component: {fileID: 5940551326346771810}
+  - component: {fileID: -7594048043711254572}
   m_Layer: 5
   m_Name: Electricity
   m_TagString: Untagged
@@ -509,6 +510,19 @@ MonoBehaviour:
   - {fileID: 3812325341303168497}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
+--- !u!114 &-7594048043711254572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6891911501007868230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 4
 --- !u!1 &8076237245240601423
 GameObject:
   m_ObjectHideFlags: 0

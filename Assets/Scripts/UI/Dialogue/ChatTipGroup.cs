@@ -8,7 +8,7 @@ public class ChatTipGroup : MonoBehaviour
 
     public void AddTip(MessageSenderEnum sender, string text, float lifeTime)
     {
-        var tip = Instantiate(chatTipPrefab, transform).GetComponent<ChatTip>();
+        var tip = ObjectBufferPool.Instance.Get(chatTipPrefab, transform).GetComponent<ChatTip>();
         tip.SetText(sender, text);
         tip.SetLifeTime(lifeTime);
         LayoutRebuilder.ForceRebuildLayoutImmediate(transform as RectTransform);

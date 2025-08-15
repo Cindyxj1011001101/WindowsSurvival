@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 3941989480024682367}
   - component: {fileID: 7873686437012498378}
   - component: {fileID: 5509695988427369322}
+  - component: {fileID: 6284310023666087598}
   m_Layer: 5
   m_Name: Narration
   m_TagString: Untagged
@@ -188,3 +189,16 @@ MonoBehaviour:
   boxPaddingHorizontal: 42
   minWidth: 0
   alwaysMaxWidth: 0
+--- !u!114 &6284310023666087598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7349522975583447898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 64

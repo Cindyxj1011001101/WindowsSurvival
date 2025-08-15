@@ -240,6 +240,7 @@ GameObject:
   - component: {fileID: 2455580414756031242}
   - component: {fileID: 6282268402213214590}
   - component: {fileID: 932648459123498138}
+  - component: {fileID: 6984778953023062945}
   m_Layer: 5
   m_Name: WaterLevel
   m_TagString: Untagged
@@ -309,6 +310,19 @@ MonoBehaviour:
   - {fileID: 8117056046635997347}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
+--- !u!114 &6984778953023062945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2742252984630247375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 4
 --- !u!1 &3753768780140565515
 GameObject:
   m_ObjectHideFlags: 0

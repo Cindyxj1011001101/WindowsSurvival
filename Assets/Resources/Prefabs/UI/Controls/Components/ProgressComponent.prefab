@@ -196,6 +196,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5704863211754360567}
   - component: {fileID: 3675586245809034848}
+  - component: {fileID: -3714039144888386102}
   m_Layer: 5
   m_Name: ProgressComponent
   m_TagString: Untagged
@@ -276,6 +277,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &-3714039144888386102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7749161031965873952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 128
 --- !u!1 &8610931911015130018
 GameObject:
   m_ObjectHideFlags: 0

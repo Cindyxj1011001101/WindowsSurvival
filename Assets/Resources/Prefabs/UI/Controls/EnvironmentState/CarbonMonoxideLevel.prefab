@@ -594,6 +594,7 @@ GameObject:
   - component: {fileID: 8393849292335155173}
   - component: {fileID: 8201799216188131137}
   - component: {fileID: 908665623887865547}
+  - component: {fileID: -2453971179312133584}
   m_Layer: 5
   m_Name: CarbonMonoxideLevel
   m_TagString: Untagged
@@ -663,3 +664,16 @@ MonoBehaviour:
   - {fileID: 4665854258731208605}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
+--- !u!114 &-2453971179312133584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9133023818695776748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 4

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4762995777388314580}
   - component: {fileID: 1819273773754300149}
   - component: {fileID: 3973208755699802528}
+  - component: {fileID: -1616840915052374294}
   m_Layer: 5
   m_Name: RoomTemperature
   m_TagString: Untagged
@@ -80,6 +81,19 @@ MonoBehaviour:
   - {fileID: 3770729932018948590}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
+--- !u!114 &-1616840915052374294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279906134226212519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 4
 --- !u!1 &1618794779004365283
 GameObject:
   m_ObjectHideFlags: 0

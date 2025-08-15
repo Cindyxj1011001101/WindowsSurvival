@@ -250,6 +250,7 @@ GameObject:
   - component: {fileID: 8690349513955907721}
   - component: {fileID: 733586258120607693}
   - component: {fileID: 992477560616566004}
+  - component: {fileID: 1495617670063160397}
   m_Layer: 5
   m_Name: Oxygen
   m_TagString: Untagged
@@ -319,6 +320,19 @@ MonoBehaviour:
   - {fileID: 3614640106018710516}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
+--- !u!114 &1495617670063160397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2017362870690446870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 4
 --- !u!1 &2562110785737598383
 GameObject:
   m_ObjectHideFlags: 0
