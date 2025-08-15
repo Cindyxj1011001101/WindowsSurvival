@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using DG.Tweening;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
@@ -45,9 +44,7 @@ public class MFXUtility
     public static CardSlot CreateSlot(Vector2 screenPosition)
     {
         // 实例化预制体
-        GameObject slotObj = Object.Instantiate(
-            Resources.Load<GameObject>("Prefabs/UI/Controls/CardSlot/CardSlot"),
-            WindowsManager.Instance.TempCardSlotLayer);
+        GameObject slotObj = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/CardSlot", "CardSlot", WindowsManager.Instance.TempCardSlotLayer);
 
         // 获取RectTransform并设置位置
         RectTransform slotRect = slotObj.GetComponent<RectTransform>();
@@ -86,7 +83,7 @@ public class MFXUtility
              .OnComplete(() =>
              {
                  onComplete?.Invoke();
-                 Object.Destroy(slot.gameObject);
+                 ObjectBufferPool.Instance.Restore(slot.gameObject);
                  SoundManager.Instance.PlaySound("放置卡牌", true);
              });
     }
@@ -145,8 +142,9 @@ public class MFXUtility
     {
         if (string.IsNullOrEmpty(tip)) return;
 
-        var obj = Object.Instantiate(Resources.Load<GameObject>("Prefabs/UI/Controls/Tips/FloatingTip"), WindowsManager.Instance.FloatingTipLayer);
-        var floatingTip = obj.GetComponent<FloatingTip>();
+        var floatingTip = ObjectBufferPool.Instance
+            .Get("Prefabs/UI/Controls/Tips", "FloatingTip", WindowsManager.Instance.FloatingTipLayer)
+            .GetComponent<FloatingTip>();
         floatingTip.ShowTip(tip, position, textColor, duration);
     }
 
@@ -165,21 +163,25 @@ public class MFXUtility
             yMin += rectTransform.rect.height / 2;
 
         Vector3 randomPos;
-        Animator animator;
         GameObject obj;
-        var prefab = Resources.Load<GameObject>($"Prefabs/UI/Controls/Arrow/{(up ? "Up" : "Down")}_Lv{level}");
+        Sequence seq = DOTween.Sequence();
+        float duration = 0.66f;
         for (int i = 0; i < arrowCount; i++)
         {
             randomPos = new(Random.Range(xMin, xMax), Random.Range(yMin, yMax));
-            obj = Object.Instantiate(prefab, rectTransform);
+            obj = ObjectBufferPool.Instance.Get($"Prefabs/UI/Controls/Arrow", $"{(up ? "Up" : "Down")}_Lv{level}", rectTransform);
             obj.transform.position = randomPos;
 
             obj.GetComponentInChildren<Image>().color = color;
 
-            animator = obj.GetComponentInChildren<Animator>();
-            animator.Play(up ? "Up" : "Down");
+            seq.Join(obj.transform.DOMove(new Vector3(obj.transform.position.x, obj.transform.position.y + (up ? 70f : -70f), obj.transform.position.z), duration)
+                                    .SetEase(Ease.OutQuad));
 
-            Object.Destroy(obj, animator.GetCurrentAnimatorStateInfo(0).length);
+            seq.Join(obj.transform.GetComponent<CanvasGroup>().DOFade(1, duration / 2)
+                                                    .From(0)
+                                                    .SetLoops(2, LoopType.Yoyo));
+
+            seq.OnComplete(() => ObjectBufferPool.Instance.Restore(obj));
         }
     }
 
