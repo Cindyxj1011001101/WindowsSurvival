@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using UnityEngine.InputSystem.HID;
 using UnityEngine.UI;
 
 public class CraftWindow : WindowBase
@@ -112,7 +111,7 @@ public class CraftWindow : WindowBase
         // 清空位置记录字典
         recipeItemTransforms.Clear();
 
-        MonoUtility.DestroyAllChildren(recipieLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(recipieLayout);
 
         // 获取当前类型的配方列表
         var recipes = CraftManager.Instance.LibraryDict[recipeType].recipes;
@@ -137,22 +136,25 @@ public class CraftWindow : WindowBase
         // 创建所有配方按钮
         foreach (var recipe in sortedRecipes)
         {
-            var recipeItemObj = Instantiate(recipeItemPrefab, recipieLayout);
-
-            // 记录配方的位置
-            recipeItemTransforms.Add(recipe.cardId, recipeItemObj.transform as RectTransform);
-
-            var button = recipeItemObj.GetComponent<HoverableButton>();
-            var recipeItem = recipeItemObj.GetComponent<UIRecipeItem>();
-            recipeItem.DisplayRecipe(
-                recipe.CardImage,
-                CraftManager.Instance.IsRecipeLocked(recipe),
-                CraftManager.Instance.CanCrfat(recipe, out _)
-                );
-            button.onClick.AddListener(() =>
+            ObjectBufferPool.Instance.Get(recipeItemPrefab, recipieLayout, (obj) =>
             {
-                currentSelectedRecipe = recipe; // 记录选中的配方
-                DisplayRecipeDetails(recipe);
+                // 记录配方的位置
+                recipeItemTransforms.Add(recipe.cardId, obj.transform as RectTransform);
+
+                var recipeItem = obj.GetComponent<UIRecipeItem>();
+                recipeItem.DisplayRecipe(
+                    recipe.CardImage,
+                    CraftManager.Instance.IsRecipeLocked(recipe),
+                    CraftManager.Instance.CanCrfat(recipe, out _)
+                    );
+                recipeItem.button.onClick.RemoveAllListeners();
+                recipeItem.button.onClick.AddListener(() =>
+                {
+                    currentSelectedRecipe = recipe; // 记录选中的配方
+                    DisplayRecipeDetails(recipe);
+                });
+
+                obj.transform.SetAsLastSibling();
             });
         }
 
@@ -187,7 +189,7 @@ public class CraftWindow : WindowBase
     /// <param name="recipe"></param>
     private void DisplayRecipeDetails(ScriptableRecipe recipe)
     {
-        MonoUtility.DestroyAllChildren(materialLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(materialLayout);
 
         // 显示卡牌
         slot.Clear();
@@ -202,17 +204,23 @@ public class CraftWindow : WindowBase
         // 显示所需材料
         foreach (var material in recipe.materials)
         {
-            var recipeMaterial = Instantiate(recipeMaterialPrefab, materialLayout).GetComponent<UIRecipeMaterial>();
-            recipeMaterial.DisplayMaterial(
-                material.CardImage,
-                material.requiredNum,
-                GameManager.Instance.PlayerBag.GetTotalCountByCardId(material.cardId)
-                );
-
-            recipeMaterial.gameObject.AddComponent<HoverTipController>().SetTip(material.CardInstance.CardName);
-            recipeMaterial.GetComponent<HoverableButton>().onClick.AddListener(() =>
+            ObjectBufferPool.Instance.Get(recipeMaterialPrefab, materialLayout, (obj) =>
             {
-                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(material.CardInstance, true);
+                var recipeMaterial = obj.GetComponent<UIRecipeMaterial>();
+                recipeMaterial.DisplayMaterial(
+                    material.CardImage,
+                    material.requiredNum,
+                    GameManager.Instance.PlayerBag.GetTotalCountByCardId(material.cardId)
+                    );
+
+                recipeMaterial.tipController.SetTip(material.CardInstance.CardName);
+                recipeMaterial.button.onClick.RemoveAllListeners();
+                recipeMaterial.button.onClick.AddListener(() =>
+                {
+                    (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(material.CardInstance, true);
+                });
+
+                obj.transform.SetAsLastSibling();
             });
         }
 

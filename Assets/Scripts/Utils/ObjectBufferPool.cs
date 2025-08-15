@@ -52,6 +52,29 @@ public class ObjectBufferPool
         /// </summary>
         public bool toBeDeleted;
 
+        public ObjectBuffer(GameObject prefab)
+        {
+            objectName = prefab.name;
+
+            this.prefab = prefab;
+
+            if (toBeDeleted) return;
+
+            // 获取对象最大同屏数量配置
+            if (!prefab.TryGetComponent(out ObjectBufferConfig config))
+            {
+                Debug.LogError($"请为使用缓存池功能的预设体对象添加{typeof(ObjectBufferConfig).Name}脚本");
+                maxCountOfObjectsInUse = 128;
+            }
+            else
+            {
+                maxCountOfObjectsInUse = config.maxCount;
+            }
+
+            onPrefabLoaded?.Invoke();
+            onPrefabLoaded = null;
+        }
+
         public ObjectBuffer(string bundleName, string assetName)
         {
             objectName = bundleName + "/" + assetName;
@@ -165,6 +188,72 @@ public class ObjectBufferPool
     /// <summary>
     /// 获取预设体实例
     /// </summary>
+    /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
+    public void Get(GameObject prefab, System.Func<GameObject, GameObject> instaniate, UnityAction<GameObject> onInstaniated = null)
+    {
+        // 如果不存在容器就创建
+        if (!pool.ContainsKey(prefab.name))
+            pool.Add(prefab.name, new ObjectBuffer(prefab));
+
+        // 取出游戏对象
+        // 处理游戏对象逻辑
+        pool[prefab.name].Get(instaniate, onInstaniated);
+    }
+
+    /// <summary>
+    /// 获取预设体实例
+    /// </summary>
+    /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
+    public void Get(GameObject prefab, UnityAction<GameObject> onInstaniated = null)
+    {
+        Get(prefab, (prefab) => Object.Instantiate(prefab), onInstaniated);
+    }
+
+    /// <summary>
+    /// 获取预设体实例，并设置其父对象(实例的位置、旋转和缩放变为相对父对象的)
+    /// </summary>
+    /// <param name="parent">预设体实例的父对象</param>
+    /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
+    public void Get(GameObject prefab, Transform parent, UnityAction<GameObject> onInstaniated = null)
+    {
+        Get(prefab, (prefab) => Object.Instantiate(prefab, parent), onInstaniated);
+    }
+
+    /// <summary>
+    /// 获取预设体实例，并设置其父对象
+    /// </summary>
+    /// <param name="parent">预设体实例的父对象</param>
+    /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
+    public void Get(GameObject prefab, Transform parent, bool instantiateInWorldSpace, UnityAction<GameObject> onInstaniated = null)
+    {
+        Get(prefab, (prefab) => Object.Instantiate(prefab, parent, instantiateInWorldSpace), onInstaniated);
+    }
+
+    /// <summary>
+    /// 获取预设体实例，并设置其在世界坐标下的位置和旋转
+    /// </summary>
+    /// <param name="position">位置</param>
+    /// <param name="rotation">旋转</param>
+    /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
+    public void Get(GameObject prefab, Vector3 position, Quaternion rotation, UnityAction<GameObject> onInstaniated = null)
+    {
+        Get(prefab, (prefab) => Object.Instantiate(prefab, position, rotation), onInstaniated);
+    }
+
+    /// <summary>
+    /// 获取预设体实例，并设置其父对象和在世界坐标下的位置和旋转(实例的缩放变为相对父对象的)
+    /// </summary>
+    /// <param name="position">位置</param>
+    /// <param name="rotation">旋转</param>
+    /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
+    public void Get(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent, UnityAction<GameObject> onInstaniated = null)
+    {
+        Get(prefab, (prefab) => Object.Instantiate(prefab, position, rotation, parent), onInstaniated);
+    }
+
+    /// <summary>
+    /// 获取预设体实例
+    /// </summary>
     /// <param name="bundleName">预设体所在文件夹相对Editor文件夹的路径 或者 预设体所在的AB包的名称</param>
     /// <param name="assetName">预设体名称</param>
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
@@ -262,5 +351,17 @@ public class ObjectBufferPool
             item.toBeDeleted = true;
         }
         pool.Clear();
+    }
+
+    /// <summary>
+    /// 回收所有子物体
+    /// </summary>
+    /// <param name="parent"></param>
+    public void RestoreAllChildren(Transform parent)
+    {
+        foreach (Transform child in parent)
+        {
+            Restore(child.gameObject);
+        }
     }
 }

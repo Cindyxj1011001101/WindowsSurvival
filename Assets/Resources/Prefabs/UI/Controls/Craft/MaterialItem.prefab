@@ -88,6 +88,8 @@ GameObject:
   - component: {fileID: 6443309137950036250}
   - component: {fileID: 5646945572789281356}
   - component: {fileID: 1690931536545078660}
+  - component: {fileID: 1584989301332702877}
+  - component: {fileID: 3478417628259196940}
   m_Layer: 5
   m_Name: MaterialItem
   m_TagString: Untagged
@@ -140,6 +142,7 @@ MonoBehaviour:
   icon: {fileID: 1703501114179676635}
   requiredNumText: {fileID: 5012085251614484177}
   button: {fileID: 5646945572789281356}
+  tipController: {fileID: 3478417628259196940}
 --- !u!114 &5646945572789281356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,7 +161,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 1703501114179676635}
-  canvasGroup: {fileID: 0}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
 --- !u!114 &1690931536545078660
@@ -175,6 +177,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   changeMouseType: 0
   InButton: 0
+--- !u!114 &1584989301332702877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6602357911263969448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 32
+--- !u!114 &3478417628259196940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6602357911263969448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40fa700f93e8d7446ad366bdfe799a7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 10, y: 0}
+  onPointerEnter:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &8277805548770378705
 GameObject:
   m_ObjectHideFlags: 0

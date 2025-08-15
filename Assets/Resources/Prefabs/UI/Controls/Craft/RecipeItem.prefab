@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7919662616530164511}
   - component: {fileID: 7510080309559268513}
   - component: {fileID: -999714604121133968}
+  - component: {fileID: -3190722599578772764}
   m_Layer: 5
   m_Name: RecipeItem
   m_TagString: Untagged
@@ -100,7 +101,6 @@ MonoBehaviour:
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 7750718355059619663}
-  canvasGroup: {fileID: 0}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
 --- !u!114 &7510080309559268513
@@ -137,6 +137,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   changeMouseType: 0
   InButton: 0
+--- !u!114 &-3190722599578772764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 410721657722700717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32f033ba0783a0458d798063d26eed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxCount: 32
 --- !u!1 &5280827813800850522
 GameObject:
   m_ObjectHideFlags: 0

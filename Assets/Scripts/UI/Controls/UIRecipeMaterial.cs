@@ -3,9 +3,10 @@ using UnityEngine.UI;
 
 public class UIRecipeMaterial : MonoBehaviour
 {
-    [SerializeField] private Image icon;
-    [SerializeField] private Text requiredNumText;
-    [SerializeField] private HoverableButton button;
+    public Image icon;
+    public Text requiredNumText;
+    public HoverableButton button;
+    public HoverTipController tipController;
 
     public void DisplayMaterial(Sprite icon, int requiredNum, int currentNum)
     {
