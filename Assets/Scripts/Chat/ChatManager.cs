@@ -2,13 +2,16 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ChatManager : MonoBehaviour
 {
     #region 单例
+
     private static ChatManager instance;
+
     public static ChatManager Instance
     {
         get
@@ -22,33 +25,40 @@ public class ChatManager : MonoBehaviour
                     instance = managerObj.AddComponent<ChatManager>();
                 }
             }
+
             return instance;
         }
     }
+
     #endregion
 
     public ChatWindow chatWindow;
-
     public HoverableButton chatSpeedButton;
     private int curSpeed = 1;
 
     #region 数据
-    //所有对话数据
-    public List<ParagraphData> ParagraphDataList = new List<ParagraphData>();
+
     //已生成的对话列表
     public List<ChatData> GeneratedChatDataList = new List<ChatData>();
-    //需要触发的段落列表
-    public List<ParagraphData> ParagraphToTriggeer = new List<ParagraphData>();
+
+    //需要触发的段落列表(存储段落名)
+    public List<string> ParagraphToTriggeer = new List<string>();
+
     //当前段落数据
-    public ParagraphData CurrentParagraphData;
+    public ParagraphData CurrentParagraphData=>ReadChatParagraph.Instance.CurGraphData.paragraphData;
+
     //当前选项数据
-    public ChatData ChoosedChatData;
+    public string ChoosedChatData;
+
     //是否在段落中
     public bool inParagraph = false;
+
     //打断的段落数据
     public ParagraphData InterruptParagraphData = null;
+
     //当前是否在选择中
     public bool Choosing = false;
+
     #endregion
 
     private void Awake()
@@ -59,29 +69,28 @@ public class ChatManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         instance = this;
-        //读取对话数据
-        ExcelReader.ReadChat("ChatData");
         //读取已生成的对话数据
         GameDataManager.Instance.LoadGeneratedChatData();
         //添加对话段落触发监听
         EventManager.Instance.AddListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
         if (!GameDataManager.Instance.GeneratedChatData.init)
         {
-            GameDataManager.Instance.GeneratedChatData.init = true;
             if (!GameDataManager.Instance.LoadData.loads[GameDataManager.Instance.curLoadIndex].SkipGuide)
             {
-                ParagraphToTriggeer.Add(ParagraphDataList[0]);
+                ParagraphToTriggeer.Add("1");
             }
         }
         else
         {
-            GeneratedChatDataList=GameDataManager.Instance.GeneratedChatData.GeneratedChatDataList;
-            ParagraphToTriggeer=GameDataManager.Instance.GeneratedChatData.ParagraphToTriggeer;
-            CurrentParagraphData=GameDataManager.Instance.GeneratedChatData.CurrentParagraphData;
-            inParagraph=GameDataManager.Instance.GeneratedChatData.inParagraph;
-            InterruptParagraphData=GameDataManager.Instance.GeneratedChatData.InterruptParagraphData;
-            Choosing=GameDataManager.Instance.GeneratedChatData.Choosing;
+            GeneratedChatDataList = GameDataManager.Instance.GeneratedChatData.GeneratedChatDataList;
+            ParagraphToTriggeer = GameDataManager.Instance.GeneratedChatData.ParagraphToTriggeer;
+            inParagraph = GameDataManager.Instance.GeneratedChatData.inParagraph;
+            InterruptParagraphData = GameDataManager.Instance.GeneratedChatData.InterruptParagraphData;
+            Choosing = GameDataManager.Instance.GeneratedChatData.Choosing;
+
+
         }
     }
 
@@ -104,12 +113,13 @@ public class ChatManager : MonoBehaviour
             }
         });
     }
+
     public void OnDestroy()
     {
         //移除对话段落监听
         EventManager.Instance.RemoveListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
     }
-    
+
     public void InitChat()
     {
         if (GeneratedChatDataList.Count > 0)
@@ -121,6 +131,7 @@ public class ChatManager : MonoBehaviour
             NextParagraph();
         }
     }
+
     //触发段落时判断是否需要打断，不打断则放弃该段对话
     public void AddTriggerParagraph(ParagraphData paragraphData)
     {
@@ -141,7 +152,7 @@ public class ChatManager : MonoBehaviour
             }
             else
             {
-                ParagraphToTriggeer.Add(paragraphData);
+                ParagraphToTriggeer.Add(paragraphData.ParagraphName);
             }
         }
         else
@@ -149,37 +160,39 @@ public class ChatManager : MonoBehaviour
             TriggerParagraph(paragraphData);
         }
     }
+
     public void TriggerParagraph(ParagraphData paragraphData)
     {
-        CurrentParagraphData = paragraphData;
         inParagraph = true;
-        TriggerMessage(paragraphData.ChatDataList[0]);
+        ReadChatParagraph.Instance.FindStartNodeOfParagraph(paragraphData.ParagraphName);
+        TriggerMessage(ReadChatParagraph.Instance.CurNode);
     }
+
     //生成所有被记录的数据
     public void LoadGeneratedChatData()
     {
         //进入对话
         inParagraph = true;
-        CurrentParagraphData = ParagraphDataList[GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID];
-        //从GeneratedChatDataList中加载已触发的对话数据
+        //从GeneratedChatDataList中加载所有已触发的对话数据
         for (int i = 0; i < GeneratedChatDataList.Count; i++)
         {
             chatWindow.CreateMessage(GeneratedChatDataList[i].MessageSender, GeneratedChatDataList[i].Message);
         }
-        int NextMessage= GeneratedChatDataList[GeneratedChatDataList.Count - 1].NextMessageID;
-        int ParagrapghID= GeneratedChatDataList[GeneratedChatDataList.Count - 1].ParagraphID+1;
-        if (NextMessage == -1)
+
+        //触发下一个对话（找到最后一句的下一句）
+        if (ReadChatParagraph.Instance.CurNode.typeName == "End")
         {
             NextParagraph();
         }
         else
         {
-            TriggerMessage(ParagraphDataList[ParagrapghID].ChatDataList[NextMessage-1]);
+            TriggerMessage(ReadChatParagraph.Instance.FindNextNode());
         }
 
     }
+
     //根据下一条消息的类型决定触发消息类型为选项还是消息
-    public void TriggerMessage(ChatData chatData)
+    public void TriggerMessage(GraphData.SerializedNode nodeData)
     {
         //如果打断对话非空时触发打断对话
         if (InterruptParagraphData != null)
@@ -189,56 +202,47 @@ public class ChatManager : MonoBehaviour
             TriggerParagraph(tmpParagraph);
             return;
         }
-        if (chatData == null) return;
-        //非分支对话且有条件时开始该条件判断，不生成对话
-        if (chatData.MessageCondition != "" && chatData.MessageType != "分支对话")
+
+        //如果需要判断通过条件
+        if (nodeData.chatData.MessageCondition != "")
         {
             inParagraph = false;
-            ChatConditionManager.Instance.StartChatConditionDetection(chatData);
+            ChatConditionManager.Instance.StartChatConditionDetection(nodeData);
             return;
         }
+
         //根据类型生成消息
-        switch (chatData.MessageType)
+        switch (nodeData.typeName)
         {
-            case "对话":
-                CreateMessage(chatData);
+            case "Dialogue":
+                CreateMessage(nodeData.chatData);
                 break;
-            case "选项":
-                // 先收集所有选项消息
-                List<ChatData> optionsList = new List<ChatData>();
-                for (int i = chatData.MessageID - 1; i < ParagraphDataList[chatData.ParagraphID].ChatDataList.Count; i++)
-                {
-                    if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "选项")
-                    {
-                        optionsList.Add(ParagraphDataList[chatData.ParagraphID].ChatDataList[i]);
-                    }
-                    else break;
-                }
+            case "Choose":
                 Choosing = true;
-                chatWindow.SetDialogueOptions(optionsList);
+                chatWindow.SetDialogueOptions(nodeData);
                 break;
-            case "分支对话":
-                // 先收集所有选项消息
-                List<ChatData> branchOptionsList = new List<ChatData>();
-                for (int i = chatData.MessageID - 1; i < ParagraphDataList[chatData.ParagraphID - 1].ChatDataList.Count; i++)
-                {
-                    if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "分支对话")
-                    {
-                        branchOptionsList.Add(ParagraphDataList[chatData.ParagraphID].ChatDataList[i]);
-                    }
-                    else break;
-                }
-                foreach (var option in branchOptionsList)
-                {
-                    if (option.MessageCondition != "" && ChatConditionManager.Instance.CanTriggerBranchCondition(option))
-                    {
-                        CreateMessage(option);
-                        break;
-                    }
-                }
+            case "BranchCondition":
+                // // 先收集所有选项消息
+                // List<ChatData> branchOptionsList = new List<ChatData>();
+                // for (int i = chatData.MessageID - 1; i < ParagraphDataList[chatData.ParagraphID - 1].ChatDataList.Count; i++)
+                // {
+                //     if (ParagraphDataList[chatData.ParagraphID].ChatDataList[i].MessageType == "分支对话")
+                //     {
+                //         branchOptionsList.Add(ParagraphDataList[chatData.ParagraphID].ChatDataList[i]);
+                //     }
+                //     else break;
+                // }
+                // foreach (var option in branchOptionsList)
+                // {
+                //     if (option.MessageCondition != "" && ChatConditionManager.Instance.CanTriggerBranchCondition(option))
+                //     {
+                //         CreateMessage(option);
+                //         break;
+                //     }
+                // }
                 break;
-            case "提示":
-                CreateMessage(chatData);
+            case "End":
+                NextParagraph();
                 break;
         }
     }
@@ -261,12 +265,14 @@ public class ChatManager : MonoBehaviour
     //创建消息（不包括选项）
     private IEnumerator CreateMessageCoroutine(ChatData chatData, float waitTime)
     {
+
         float finalWaitTime;
+
         if (waitTime > 0) finalWaitTime = waitTime;
-        else finalWaitTime = chatData.WaitTime == 0 ? 2.5f : chatData.WaitTime / 1000;
+        else finalWaitTime = chatData.preWaitTime == 0 ? 2.5f : chatData.preWaitTime;
 
         finalWaitTime /= curSpeed;
-        
+
         yield return new WaitForSeconds(finalWaitTime);
 
         //将该对话加入已生成列表
@@ -274,24 +280,24 @@ public class ChatManager : MonoBehaviour
         chatWindow.CreateMessage(chatData.MessageSender, chatData.Message);
 
         SoundManager.Instance.PlaySound("消息提示音_02", true);
+        //触发对话效果
         AfterChatFactory.TriggerEffect(chatData.TriggerMessageEffect);
 
-        //触发对话效果
-        if (chatData.NextMessageID != -1)
-        {
-            TriggerMessage(ParagraphDataList[chatData.ParagraphID].ChatDataList[chatData.NextMessageID - 1]);
-        }
-        else
-        {
-            NextParagraph();
-        }
+        //消息前置等待时间
+        if (waitTime > 0) finalWaitTime = waitTime;
+        else finalWaitTime = chatData.preWaitTime == 0 ? 2.5f : chatData.preWaitTime;
+        finalWaitTime /= curSpeed;
+        yield return new WaitForSeconds(finalWaitTime);
+
+        TriggerMessage(ReadChatParagraph.Instance.FindNextNode());
+
     }
 
     public void NextParagraph()
     {
         if (ParagraphToTriggeer.Count > 0)
         {
-            TriggerParagraph(ParagraphToTriggeer[0]);
+            TriggerParagraph(ReadChatParagraph.Instance.FindParagraphDataByName(ParagraphToTriggeer[0]));
             ParagraphToTriggeer.RemoveAt(0);
         }
         else
@@ -304,7 +310,7 @@ public class ChatManager : MonoBehaviour
     {
         if (ChoosedChatData == null) return;
         Choosing = false;
-        CreateMessage(ChoosedChatData, .1f); // 0.1f是玩家主动发送消息的发送延迟
+        TriggerMessage(ReadChatParagraph.Instance.FindNextNode(ChoosedChatData));
         ChoosedChatData = null;
     }
 
@@ -313,6 +319,7 @@ public class ChatManager : MonoBehaviour
         curSpeed = speed;
         chatSpeedButton.GetComponentInChildren<Text>().text = $"x{speed}";
     }
+
     public void ReturnToMainMenuAndDeleteSave()
     {
         int index = GameDataManager.Instance.curLoadIndex;
@@ -331,6 +338,7 @@ public class ChatManager : MonoBehaviour
             Debug.Log("存档不存在");
             return;
         }
+
         //返回初始界面
         SceneManager.LoadScene(0);
     }

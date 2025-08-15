@@ -32,11 +32,6 @@ namespace ChatPlugIn
                     level = 1,
                     userData = NodeType.BranchCondition
                 },
-                new SearchTreeEntry(new GUIContent("通过条件",indentationIcon))
-                {
-                    level = 1,
-                    userData = NodeType.PassCondition
-                },
                 new SearchTreeEntry(new GUIContent("开始",indentationIcon))
                 {
                     level = 1,

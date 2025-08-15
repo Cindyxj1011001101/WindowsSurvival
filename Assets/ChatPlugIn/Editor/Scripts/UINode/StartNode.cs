@@ -10,13 +10,13 @@ namespace ChatPlugIn
     [Serializable]
     public class StartNode : ZeroInSingleOutNode
     {
-        private ParagraphData paragraphData;
+        public ParagraphData paragraphData;
         public override void Init(StoryGraphView graphView, string title, Vector2 position)
         {
-            if(outputPortData.Count==0)outputPortData.Add(new PortData("输出"));
+            if(outputPortData.Count==0)outputPortData.Add(new PortData("输出","条件"));
             base.Init(graphView, title, position);
             Type = NodeType.Start;
-            paragraphData = new ParagraphData("Start", "", 0, new List<SentenceData>());
+            paragraphData = new ParagraphData("Start", 0, "条件");
         }
         protected override void DrawExtensionContainer()
         {

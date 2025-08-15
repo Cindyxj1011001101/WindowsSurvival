@@ -115,17 +115,17 @@ public class ChatWindow : WindowBase, IPointerDownHandler
     /// 设置对话选项
     /// </summary>
     /// <param name="options"></param>
-    public void SetDialogueOptions(List<ChatData> options)
+    public void SetDialogueOptions(GraphData.SerializedNode nodeData)
     {
         MonoUtility.DestroyAllChildren(optionLayout);
-        foreach (var option in options)
+        foreach (var outputport in nodeData.outputports)
         {
             var obj = Instantiate(optionPrefab, optionLayout);
-            obj.GetComponent<CustomTextBox>().SetText(option.Message);
+            obj.GetComponent<CustomTextBox>().SetText(outputport.name);
             obj.GetComponent<HoverableButton>().onClick.AddListener(() =>
             {
-                inputFieldText.text = option.Message;
-                ChatManager.Instance.ChoosedChatData = option;
+                inputFieldText.text = outputport.name;
+                ChatManager.Instance.ChoosedChatData = outputport.name;
             });
         }
 

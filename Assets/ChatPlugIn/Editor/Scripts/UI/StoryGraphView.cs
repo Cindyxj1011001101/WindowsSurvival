@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -16,7 +14,10 @@ namespace ChatPlugIn
         //关联窗口
         private StoryEditorWindow storyEditorWindow;
         private NodeCreationBox nodeCreationBox;
+        private GraphData graphData;
         string directoryPath = "Assets/Resources/ChatData";
+        private List<Edge> Edges => edges.ToList();
+        private List<BaseNode> Nodes => nodes.ToList().Cast<BaseNode>().ToList();
         //构造器
         public StoryGraphView(StoryEditorWindow storyEditorWindow)
         {
@@ -79,11 +80,16 @@ namespace ChatPlugIn
             this.AddManipulator(new RectangleSelector());
         }
 
-        public BaseNode CreateNodeFromJson(Type type, Vector2 position, string json)
+        public BaseNode CreateNodeFromSO(GraphData.SerializedNode nodeData)
         {
-            BaseNode node = Activator.CreateInstance(type) as BaseNode;
-            node.Deserialize(json);
-            node.Init(this,node.Title, position);
+            Type nodeType = Type.GetType($"ChatPlugIn.{nodeData.typeName}Node");
+            BaseNode node = Activator.CreateInstance(nodeType) as BaseNode;
+            node.InitPortData(nodeData.inputport);
+            node.InitPortData(nodeData.outputports);
+            node.Init(this,nodeData.Title,nodeData.NodePos);
+            node.GUID = nodeData.guid;
+            if(nodeType==typeof(DialogueNode))
+                (node as DialogueNode).chatData=nodeData.chatData;
             node.Draw();
             AddElement(node);
             return node;
@@ -97,19 +103,19 @@ namespace ChatPlugIn
             AddElement(node);
             return node;
         }
+        
         public new void DeleteElements(IEnumerable<GraphElement> elements)
         {
             // 记录将要删除的连接，以便通知节点
-            List<BaseEdge> edgesToDelete = new List<BaseEdge>();
+            List<Edge> edgesToDelete = new List<Edge>();
             
             foreach (GraphElement element in elements)
             {
-                if (element is BaseEdge edge)
+                if (element is Edge edge)
                 {
                     edgesToDelete.Add(edge);
                 }
             }
-            
             // 先调用基类方法删除元素
             base.DeleteElements(elements);
 
@@ -144,35 +150,6 @@ namespace ChatPlugIn
         #endregion
 
         #region 保存相关功能实现
-        public void SaveGraph(string filename)
-        {
-            string json= GraphJsonSerializer.SerializeGraph(this, filename);
-            
-            // 保存文件
-            string filePath =directoryPath+"/"+filename + ".json";
-            File.WriteAllText(filePath, json);
-            
-            // 刷新资源数据库
-            AssetDatabase.Refresh();
-            
-            Debug.Log($"对话图已保存到: {filePath}");
-        }
-        
-        // 加载图数据
-        public void LoadGraph(string filename)
-        {
-            string filePath =directoryPath+"/"+filename + ".json";
-            
-            if (!File.Exists(filePath))
-            {
-                Debug.LogWarning($"找不到文件: {filePath}");
-                return;
-            }
-            // 尝试以文本形式读取
-            string fileContent = File.ReadAllText(filePath);
-            GraphJsonSerializer.DeserializeGraph(this, fileContent, CreateNodeFromJson);
-        }
-        
         // 清空图
         public void ClearGraph(string filename)
         {
@@ -181,7 +158,137 @@ namespace ChatPlugIn
             List<GraphElement> elementsToDelete = graphElements.ToList();
             DeleteElements(elementsToDelete);
         }
-        #endregion
-    }
+        public void SaveGraph(string fileName)
+        {
+            var graph = ScriptableObject.CreateInstance<GraphData>();
+            
+            // 保存连接数据
+            var connectedPorts = Edges.Where(x => x.input.node != null).ToArray();
+            graph.edges = new List<GraphData.SerializedEdge>();
+            
+            for (int i = 0; i < connectedPorts.Length; i++)
+            {
+                var outputNode = connectedPorts[i].output.node as BaseNode;
+                var inputNode = connectedPorts[i].input.node as BaseNode;
+                
+                graph.edges.Add(new GraphData.SerializedEdge
+                {
+                    outputNodeGUID = outputNode.GUID,
+                    outputPortName = connectedPorts[i].output.portName,
+                    inputNodeGUID = inputNode.GUID,
+                    inputPortName = connectedPorts[i].input.portName
+                });
+            }
+            
+            // 保存节点数据
+            graph.nodes =  new List<GraphData.SerializedNode>();
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                var node = Nodes[i];
+                GraphData.SerializedNode nodeData = new GraphData.SerializedNode()
+                {
+                    Title = node.Title,
+                    guid = node.GUID,
+                    typeName = node.Type.ToString(),
+                    NodePos = node.GetPosition().position,
+                };
+                if (node.Type == NodeType.Start)
+                {
+                    graph.paragraphData = ((StartNode)node).paragraphData;
+                }
+                if (node.Type == NodeType.Dialogue)
+                {
+                    nodeData.chatData = ((DialogueNode)node).chatData;
+                }
+
+                if(node.inputPortData==null) nodeData.inputport=null;
+                else
+                {
+                    nodeData.inputport=new GraphData.SerializedPort()
+                    {
+                        name = node.inputPortData.PortName,
+                        direction = Direction.Input,
+                        PortCondition =node.inputPortData.PortCondition
+                        
+                    };
+                }
+
+                foreach (var portData in node.outputPortData)
+                {
+                    nodeData.outputports.Add(new GraphData.SerializedPort()
+                    {
+                        name = portData.PortName,
+                        direction = Direction.Output,
+                        PortCondition = portData.PortCondition
+                        
+                    });
+                }
+
+                graph.nodes.Add(nodeData);
+            }
+            Debug.Log("保存成功");
+            // 确保目录存在
+            if (!Directory.Exists("Assets/Resources/DialogueGraphs"))
+                Directory.CreateDirectory("Assets/Resources/DialogueGraphs");
+            
+            // 保存Asset
+            AssetDatabase.CreateAsset(graph, $"Assets/Resources/DialogueGraphs/{fileName}.asset");
+            AssetDatabase.SaveAssets();
+        }
+
+        public void LoadGraph(string fileName)
+        {
+            graphData = Resources.Load<GraphData>($"DialogueGraphs/{fileName}");
+            if (graphData == null)
+            {
+                EditorUtility.DisplayDialog("File Not Found", "Target dialogue graph does not exist!", "OK");
+                return;
+            }
+            
+            ClearGraph(fileName);
+            CreateNodes();
+            ConnectNodes();
+        }
+        private void CreateNodes()
+        {
+            foreach (var nodeData in graphData.nodes)
+            {
+                var tempNode = CreateNodeFromSO(nodeData);
+            }
+        }
+
+        private void ConnectNodes()
+        {
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                var connections = graphData.edges.Where(x => x.outputNodeGUID == Nodes[i].GUID).ToList();
+                for (int j = 0; j < connections.Count; j++)
+                {
+                    var InputNodeGuid = connections[j].inputNodeGUID;
+                    var targetNode = Nodes.First(x => x.GUID == InputNodeGuid);
+                    
+                    LinkNodes(Nodes[i].outputContainer[j].Q<Port>(), (Port)targetNode.inputContainer[0]);
+                    
+                    targetNode.SetPosition(new Rect(
+                        graphData.nodes.First(x => x.guid == InputNodeGuid).NodePos,
+                        Vector2.zero));
+                }
+            }
+        }
+
+        private void LinkNodes(Port output, Port input)
+        {
+            var tempEdge = new Edge
+            {
+                output = output,
+                input = input
+            };
+            
+            tempEdge.input.Connect(tempEdge);
+            tempEdge.output.Connect(tempEdge);
+            Add(tempEdge);
+        }
+         }
+    #endregion
 }
 
