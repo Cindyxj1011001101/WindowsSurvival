@@ -249,6 +249,12 @@ public class InnerContentsComponent : CardComponent
     [JsonIgnore]
     public CardFilterDelegate contentFilter;
 
+    public void Init()
+    {
+        bag.SetComponent(this);
+        bag.Init();
+    }
+
     public InnerContentsComponent(int slotCount)
     {
         //this.slotCount = slotCount;
@@ -258,7 +264,7 @@ public class InnerContentsComponent : CardComponent
         //    innerContents.Add(new List<Card>());
         //}
         bag.AddSlot(slotCount);
-        bag.SetComponent(this);
+        Init();
     }
 
     public int GetTotalCountByCardId(string cardId) => bag.GetTotalCountByCardId(cardId);

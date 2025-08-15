@@ -2,6 +2,8 @@
 {
     private InnerContentsComponent component;
 
+    public Card BelongCard => component.BelongedCard;
+
     public override void Init()
     {
         base.Init();

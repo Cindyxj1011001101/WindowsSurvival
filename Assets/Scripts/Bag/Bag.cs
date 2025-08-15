@@ -2,30 +2,27 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public abstract class Bag
 {
     [JsonProperty] private bool firstInit; // 是否第一次初始化
-    public List<SlotCards> Slots { get; protected set; } = new();
+    [JsonProperty] private List<SlotCards> slots = new();
 
-    [JsonIgnore]
-    public int SlotCount => Slots.Count;
+    [JsonIgnore] public List<SlotCards> Slots => slots;
 
-    [JsonIgnore]
-    public int EmptySlotCount => Slots.Count(s => s.IsEmpty);
+    [JsonIgnore] public int SlotCount => Slots.Count;
 
-    [JsonIgnore]
-    public bool IsBagFull => EmptySlotCount == 0; // 背包是否已满
+    [JsonIgnore] public int EmptySlotCount => Slots.Count(s => s.IsEmpty);
 
-    [JsonIgnore]
-    public SlotCards this[int index] => Slots[index];
+    [JsonIgnore] public bool IsBagFull => EmptySlotCount == 0; // 背包是否已满
 
-    protected BagWindow window;
+    [JsonIgnore] public SlotCards this[int index] => Slots[index];
+
+    [JsonIgnore] public BagWindow Window {  get; protected set; }
 
     public void SetBagWindow(BagWindow window)
     {
-        this.window = window;
+        Window = window;
     }
 
     public virtual void Init()
@@ -57,14 +54,14 @@ public abstract class Bag
             var newSlot = new SlotCards();
             newSlot.SetBag(this);
             Slots.Add(newSlot);
-            if (window != null) window.AddSlot().Init(newSlot);
+            if (Window != null) Window.AddSlot().Init(newSlot);
         }
     }
 
     public void RemoveSlot(SlotCards slot)
     {
         Slots.Remove(slot);
-        if (window != null && slot.CardSlot != null) window.RemoveSlot(slot.CardSlot);
+        if (Window != null && slot.CardSlot != null) Window.RemoveSlot(slot.CardSlot);
     }
 
     /// <summary>

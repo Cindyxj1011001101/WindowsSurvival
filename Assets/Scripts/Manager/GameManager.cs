@@ -114,6 +114,36 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddCard(Card card, Bag targetBag)
+    {
+        targetBag.AddCard(card);
+    }
+
+    /// <summary>
+    /// 添加卡牌到指定背包
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="targetBag"></param>
+    /// <returns></returns>
+    public Tween AddCardWithTween(Card card, Bag targetBag, Vector2 startPos)
+    {
+        if (targetBag.Window != null && !WindowsManager.Instance.IsWindowOpen(targetBag.Window.AppName))
+            WindowsManager.Instance.OpenWindow(targetBag.Window.AppName);
+
+        AddCard(card, targetBag);
+
+        return MFXUtility.MoveCard(
+            card,
+            1,
+            startPos,
+            card.Slot.transform.position,
+            addCardAnimDuration,
+            onComplete: () =>
+            {
+                card.RefreshSlot();
+            });
+    }
+
     public Tween AddCardWithTween(Card card, Vector2 startPos, bool toPlayerBag)
     {
         AddCard(card, toPlayerBag);

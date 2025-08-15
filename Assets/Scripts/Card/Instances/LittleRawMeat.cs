@@ -18,7 +18,7 @@ public class LittleRawMeat : Card
     private void OnRotton()
     {
         DestroyThis();
-        AddCard("腐烂物", true);
+        AddCard("腐烂物", Bag);
     }
 
     public void Event_Eat(out string tip)

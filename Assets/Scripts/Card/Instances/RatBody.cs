@@ -22,7 +22,7 @@ public class RatBody : Card
     private void OnRotton()
     {
         DestroyThis();
-        AddCard("腐烂物", true);
+        AddCard("腐烂物", Bag);
     }
 
     #region 食用
