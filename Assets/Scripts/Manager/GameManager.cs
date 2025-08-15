@@ -41,7 +41,6 @@ public class GameManager : MonoBehaviour
     private Dictionary<PlaceEnum, EnvironmentBag> environmentBags = new();
     private EnvironmentBag curEnvironmentBag;
     private EquipmentBag equipmentBag;
-    //private EnvironmentBagWindow envWindow;
 
     public PlayerBag PlayerBag => playerBag;
     public Dictionary<PlaceEnum, EnvironmentBag> EnvironmentBags => environmentBags;
@@ -50,35 +49,14 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        //instance = this;
-        //// 玩家背包
-        //playerBag = FindObjectOfType<PlayerBag>(true);
-        //// 所有环境背包
-        //foreach (var bag in FindObjectsOfType<EnvironmentBag>(true))
-        //{
-        //    environmentBags.Add(bag.PlaceData.placeType, bag);
-        //}
-        //// 当前环境背包
-        //curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
-        //equipmentBag = FindObjectOfType<EquipmentBag>(true);
-
-        //envWindow = FindObjectOfType<EnvironmentBagWindow>(true);
-
-
         instance = this;
         // 玩家背包
         playerBag = GameDataManager.Instance.PlayerBagData;
         // 所有环境背包
         environmentBags = GameDataManager.Instance.EnvironmentBagDataDict;
-        //foreach (var bag in FindObjectsOfType<EnvironmentBag>(true))
-        //{
-        //    environmentBags.Add(bag.PlaceData.placeType, bag);
-        //}
         // 当前环境背包
         curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
         equipmentBag = GameDataManager.Instance.EquipmentData;
-
-        //envWindow = FindObjectOfType<EnvironmentBagWindow>(true);
     }
 
     private void Start()
@@ -353,10 +331,6 @@ public class GameManager : MonoBehaviour
                 return;
             }
 
-            // 探索完成后让环境生态开始更新
-            if (disposableDropList.IsEmpty)
-                repeatableDropList.StartUpdating();
-
             // 探索度变化
             EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, (curEnvironmentBag.DiscoveryDegree, curEnvironmentBag.ExploreCompleted));
         }
@@ -389,11 +363,6 @@ public class GameManager : MonoBehaviour
         //拿到原先场景是哪个
         PlaceEnum lastPlace = curEnvironmentBag.PlaceData.placeType;
 
-        //foreach (var (place, bag) in environmentBags)
-        //{
-        //    bag.gameObject.SetActive(place == targetPlace);
-        //}
-
         SoundManager.Instance.PlayPlaceMusic(environmentBags[targetPlace]);
         
         // 离开旧地点：关闭有循环音的卡牌的循环音
@@ -404,7 +373,6 @@ public class GameManager : MonoBehaviour
                 var card = slot.PeekCard();
                 if (card.HasLoopSound) 
                     card.OnLeaveEnvironment();
-
             }
         }
 
