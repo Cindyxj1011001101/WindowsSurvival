@@ -128,7 +128,7 @@ public class ChatWindow : WindowBase, IPointerDownHandler
             button.onClick.AddListener(() =>
             {
                 inputFieldText.text = outputport.name;
-                //ChatManager.Instance.ChoosedChatData = outputport.name;
+                ChatManager.Instance.ChoosedChatData = outputport.name;
             });
 
             obj.transform.SetAsLastSibling();

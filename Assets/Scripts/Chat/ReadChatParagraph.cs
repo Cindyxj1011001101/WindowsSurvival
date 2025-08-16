@@ -63,10 +63,16 @@ public class ReadChatParagraph:MonoBehaviour
     
     public GraphData.SerializedNode FindStartNodeOfParagraph(string paragraphName)
     {
+        if (paragraphName == "")
+        {
+            Debug.Log("段落名为空字符串");
+            return null;
+        }
         GraphData graphData =
             GraphDatas.Find(x => x.paragraphData.ParagraphName ==paragraphName);
         CurGraphData=graphData;
         GraphData.SerializedNode nodeData = graphData.nodes.Find(x => x.typeName == "Start");
+        
         CurNode = nodeData;
         if (nodeData != null)
         {

@@ -236,6 +236,9 @@ public class ChatManager : MonoBehaviour
             case "End":
                 NextParagraph();
                 break;
+            case "Start":
+                TriggerMessage(ReadChatParagraph.Instance.FindNextNode());
+                break;
         }
     }
 
@@ -289,7 +292,8 @@ public class ChatManager : MonoBehaviour
     {
         if (ParagraphToTriggeer.Count > 0)
         {
-            TriggerParagraph(ReadChatParagraph.Instance.FindParagraphDataByName(ParagraphToTriggeer[0]));
+            ParagraphData tmpParagraphData=ReadChatParagraph.Instance.FindParagraphDataByName(ParagraphToTriggeer[0]);
+            TriggerParagraph(tmpParagraphData);
             ParagraphToTriggeer.RemoveAt(0);
         }
         else
