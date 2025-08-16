@@ -12,7 +12,7 @@
     GameOver, // 游戏结束
     TriggerParagraph, // 触发对话
     DialogueCondition, // 触发对话条件
-    ChangeWaterLevel, // 水平面变化
+    //ChangeWaterLevel, // 水平面变化
     StudyComplished,
     AnotherDay,//跨天行为触发
     StudyStarted,

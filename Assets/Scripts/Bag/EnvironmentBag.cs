@@ -86,7 +86,36 @@ public class EnvironmentBag : Bag
                 // 没有这个状态不处理
                 if (!StateDict.ContainsKey(stateEnum)) return;
                 var state = StateDict[stateEnum];
-                state.CurValue += delta;
+                state.AddValue(delta);
+                // 刷新前端显示
+                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, stateEnum)
+                {
+                    stateValue = state
+                });
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 改变环境状态的变化率，电力变化不要在这里处理
+    /// </summary>
+    /// <param name="stateEnum"></param>
+    /// <param name="delta"></param>
+    public void ChangeEnvironmentStateChangeRate(EnvironmentStateEnum stateEnum, float delta)
+    {
+        switch (stateEnum)
+        {
+            case EnvironmentStateEnum.Electricity:
+            case EnvironmentStateEnum.WaterLevel:
+                throw new ArgumentException("修改电力或水平面请通过StateManager.Instance.ChangeElectricityChangeRate/ChangeWaterLevelChangeRate方法");
+            case EnvironmentStateEnum.HasCable:
+            case EnvironmentStateEnum.PressureLevel:
+                throw new ArgumentException("修改是否铺设电缆或压强请通过ChangeHasCableChangeRate/ChangePressureLevelChangeRate方法");
+            default:
+                // 没有这个状态不处理
+                if (!StateDict.ContainsKey(stateEnum)) return;
+                var state = StateDict[stateEnum];
+                state.AddChangeRate(delta);
                 // 刷新前端显示
                 EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, stateEnum)
                 {

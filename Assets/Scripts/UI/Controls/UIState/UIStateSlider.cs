@@ -13,6 +13,9 @@ public class UIStateSlider : MonoBehaviour
 
     public bool displayPercentage;
 
+    private DangerLevelEnum curDangerLevel;
+    private bool init;
+
     public void SetStateName(string name)
     {
         stateNameText.text = name;
@@ -42,6 +45,11 @@ public class UIStateSlider : MonoBehaviour
 
     private void PlayerStateDangerAlert(DangerLevelEnum dangerLevel)
     {
+        if (init && curDangerLevel == dangerLevel) return;
+
+        init = true;
+        curDangerLevel = dangerLevel;
+
         button.transform.DOKill();
         button.transform.localScale = Vector3.one;
         switch (dangerLevel)

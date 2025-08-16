@@ -32,30 +32,34 @@ public enum DangerLevelEnum
 /// </summary>
 public class EnvironmentState
 {
-    [JsonProperty]
-    private float curValue;
-    [JsonProperty]
-    public float MaxValue { get; set; }
-    [JsonProperty]
-    public EnvironmentStateEnum stateEnum;
-    [JsonIgnore]
-    public float RemainingCapacity => MaxValue - CurValue;
+    [JsonProperty] private float curValue;
+    [JsonProperty] private float maxValue;
+    [JsonProperty] private float changeRate;
+    [JsonProperty] private EnvironmentStateEnum stateEnum;
 
-    [JsonIgnore]
-    public float CurValue
-    {
-        get => curValue;
-        set
-        {
-            curValue = Mathf.Clamp(value, 0, MaxValue);
-        }
-    }
+    [JsonIgnore] public float RemainingCapacity => MaxValue - CurValue;
+    [JsonIgnore] public float CurValue => curValue;
+    [JsonIgnore] public float MaxValue => maxValue;
+    [JsonIgnore] public float ChangeRate => changeRate;
+    [JsonIgnore] public EnvironmentStateEnum StateEnum => stateEnum;
 
-    public EnvironmentState(float value, float maxValue, EnvironmentStateEnum state)
+    public EnvironmentState(float value, float maxValue, EnvironmentStateEnum state, float changeRate = 0)
     {
         curValue = value;
-        MaxValue = maxValue;
+        this.maxValue = maxValue;
         stateEnum = state;
+        this.changeRate = changeRate;
+    }
+
+    public void AddValue(float delta)
+    {
+        curValue += delta;
+        curValue = Mathf.Clamp(curValue, 0, MaxValue);
+    }
+
+    public void AddChangeRate(float delta)
+    {
+        changeRate += delta;
     }
 }
 
@@ -122,12 +126,18 @@ public class StateManager : MonoBehaviour
             PlayerStateDict = stateData.playerState;
         }
 
-        SetupPlayerStateEvents();
+        //SetupPlayerStateEvents();
 
         // 监听回合结算
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
         // 当环境改变时尝试获取氧气
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
+    }
+
+    private void CheckPlayerState(PlayerStateEnum stateEnum)
+    {
+        if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0) Die();
     }
 
     private void Start()
@@ -140,6 +150,7 @@ public class StateManager : MonoBehaviour
     {
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
+        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
     }
 
     #region 初始化玩家状态
@@ -159,94 +170,94 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.PainLevel, InitPainState());
     }
 
-    /// <summary>
-    /// 设置玩家状态等级变化的事件
-    /// </summary>
-    private void SetupPlayerStateEvents()
-    {
-        PlayerStateDict[PlayerStateEnum.Health].SetUpEvent(
-            onEnterLevel: level =>
-            {
-                if (level == 0)
-                {
-                    Die();
-                }
-            }, onExitLevel: null);
-        PlayerStateDict[PlayerStateEnum.BodyTemperature].SetUpEvent(
-            onEnterLevel: level =>
-            {
-                // 极度寒冷
-                if (level == 0)
-                    ChangePlayerConstState(PlayerStateEnum.PainLevel, +50);
-                // 极度炎热
-                else if (level == 4)
-                    ChangePlayerConstState(PlayerStateEnum.PainLevel, +50);
-            }, onExitLevel: level =>
-            {
-                if (level == 0)
-                    ChangePlayerConstState(PlayerStateEnum.PainLevel, -50);
-                else if (level == 4)
-                    ChangePlayerConstState(PlayerStateEnum.PainLevel, -50);
-            });
-        PlayerStateDict[PlayerStateEnum.CarbonMonoxidePoisoning].SetUpEvent(
-            onEnterLevel: level =>
-            {
-                // 轻度
-                if (level == 1)
-                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, -10);
-                // 中度
-                else if (level == 2)
-                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, -30);
-                // 重度
-                else if (level == 3)
-                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, -50);
-            }, onExitLevel: level =>
-            {
-                // 轻度
-                if (level == 1)
-                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, +10);
-                // 中度
-                else if (level == 2)
-                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, +30);
-                // 重度
-                else if (level == 3)
-                    ChangePlayerMaxState(PlayerStateEnum.Oxygen, +50);
-            });
-        PlayerStateDict[PlayerStateEnum.Itchiness].SetUpEvent(
-            onEnterLevel: level =>
-            {
-                // 很痒
-                if (level == 1)
-                {
-                    ChangePlayerConstState(PlayerStateEnum.PainLevel, +20);
-                }
-                // 极度瘙痒
-                else if (level == 2)
-                {
-                    ChangePlayerMaxState(PlayerStateEnum.PainLevel, +75);
-                }
-            }, onExitLevel: level =>
-            {
-                // 很痒
-                if (level == 1)
-                {
-                    ChangePlayerConstState(PlayerStateEnum.PainLevel, -20);
-                }
-                // 极度瘙痒
-                else if (level == 2)
-                {
-                    ChangePlayerMaxState(PlayerStateEnum.PainLevel, -75);
-                }
-            });
+    ///// <summary>
+    ///// 设置玩家状态等级变化的事件
+    ///// </summary>
+    //private void SetupPlayerStateEvents()
+    //{
+    //    PlayerStateDict[PlayerStateEnum.Health].SetUpEvent(
+    //        onEnterLevel: level =>
+    //        {
+    //            if (level == 0)
+    //            {
+    //                Die();
+    //            }
+    //        }, onExitLevel: null);
+    //    PlayerStateDict[PlayerStateEnum.BodyTemperature].SetUpEvent(
+    //        onEnterLevel: level =>
+    //        {
+    //            // 极度寒冷
+    //            if (level == 0)
+    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, +50);
+    //            // 极度炎热
+    //            else if (level == 4)
+    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, +50);
+    //        }, onExitLevel: level =>
+    //        {
+    //            if (level == 0)
+    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, -50);
+    //            else if (level == 4)
+    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, -50);
+    //        });
+    //    PlayerStateDict[PlayerStateEnum.CarbonMonoxidePoisoning].SetUpEvent(
+    //        onEnterLevel: level =>
+    //        {
+    //            // 轻度
+    //            if (level == 1)
+    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, -10);
+    //            // 中度
+    //            else if (level == 2)
+    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, -30);
+    //            // 重度
+    //            else if (level == 3)
+    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, -50);
+    //        }, onExitLevel: level =>
+    //        {
+    //            // 轻度
+    //            if (level == 1)
+    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, +10);
+    //            // 中度
+    //            else if (level == 2)
+    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, +30);
+    //            // 重度
+    //            else if (level == 3)
+    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, +50);
+    //        });
+    //    PlayerStateDict[PlayerStateEnum.Itchiness].SetUpEvent(
+    //        onEnterLevel: level =>
+    //        {
+    //            // 很痒
+    //            if (level == 1)
+    //            {
+    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, +20);
+    //            }
+    //            // 极度瘙痒
+    //            else if (level == 2)
+    //            {
+    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, +75);
+    //            }
+    //        }, onExitLevel: level =>
+    //        {
+    //            // 很痒
+    //            if (level == 1)
+    //            {
+    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, -20);
+    //            }
+    //            // 极度瘙痒
+    //            else if (level == 2)
+    //            {
+    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, -75);
+    //            }
+    //        });
 
-        PlayerStateDict[PlayerStateEnum.Fullness].SetUpEvent();
-        PlayerStateDict[PlayerStateEnum.Thirst].SetUpEvent();
-        PlayerStateDict[PlayerStateEnum.San].SetUpEvent();
-        PlayerStateDict[PlayerStateEnum.Sobriety].SetUpEvent();
-        PlayerStateDict[PlayerStateEnum.Load].SetUpEvent();
-        PlayerStateDict[PlayerStateEnum.PainLevel].SetUpEvent();
-        PlayerStateDict[PlayerStateEnum.Oxygen].SetUpEvent();
-    }
+    //    PlayerStateDict[PlayerStateEnum.Fullness].SetUpEvent();
+    //    PlayerStateDict[PlayerStateEnum.Thirst].SetUpEvent();
+    //    PlayerStateDict[PlayerStateEnum.San].SetUpEvent();
+    //    PlayerStateDict[PlayerStateEnum.Sobriety].SetUpEvent();
+    //    PlayerStateDict[PlayerStateEnum.Load].SetUpEvent();
+    //    PlayerStateDict[PlayerStateEnum.PainLevel].SetUpEvent();
+    //    PlayerStateDict[PlayerStateEnum.Oxygen].SetUpEvent();
+    //}
 
     private PlayerState InitHealthState()
     {
@@ -281,9 +292,9 @@ public class StateManager : MonoBehaviour
         };
         var effects = new List<StateEffect>()
         {
-            new () { sanityEffect = -1, healthEffect = -8 },
-            new () { sanityEffect = -0.7f ,healthEffect = -0.5f},
-            new () { sanityEffect = -0.1f },
+            new () { sanityRate = -1, healthRate = -8 },
+            new () { sanityRate = -0.7f ,healthRate = -0.5f},
+            new () { sanityRate = -0.1f },
             StateEffect.NoEffect
         };
         var lowDangerLevels = new List<int>() { 2 };
@@ -302,9 +313,9 @@ public class StateManager : MonoBehaviour
         };
         var effects = new List<StateEffect>()
         {
-            new () { sanityEffect = -1, healthEffect = -8 },
-            new () { sanityEffect = -0.7f ,healthEffect = -0.5f},
-            new () { sanityEffect = -0.1f },
+            new () { sanityRate = -1, healthRate = -8 },
+            new () { sanityRate = -0.7f ,healthRate = -0.5f},
+            new () { sanityRate = -0.1f },
             StateEffect.NoEffect
         };
         var lowDangerLevels = new List<int>() { 2 };
@@ -346,7 +357,7 @@ public class StateManager : MonoBehaviour
         var highDangerLevels = new List<int>() { 0, 1 };
         var effects = new List<StateEffect>()
         {
-            new () { healthEffect = -7 },
+            new () { healthRate = -7 },
             StateEffect.NoEffect,
             StateEffect.NoEffect,
             StateEffect.NoEffect,
@@ -365,9 +376,9 @@ public class StateManager : MonoBehaviour
         };
         var effects = new List<StateEffect>()
         {
-            new () { sanityEffect = -4, healthEffect = -3 },
-            new () { sanityEffect = -1.5f, healthEffect = -0.8f },
-            new () { sanityEffect = -0.3f },
+            new () { sanityRate = -4, healthRate = -3 },
+            new () { sanityRate = -1.5f, healthRate = -0.8f },
+            new () { sanityRate = -0.3f },
             StateEffect.NoEffect
         };
         var lowDangerLevels = new List<int>() { 2 };
@@ -408,11 +419,11 @@ public class StateManager : MonoBehaviour
         };
         var effects = new List<StateEffect>()
         {
-            new () { fulnessEffect = -1.2f, healthEffect = -1 },
-            new () { fulnessEffect = -0.4f },
-            new () { sanityEffect = +0.2f },
-            new () { thirstEffect = -0.5f },
-            new () { thirstEffect = -1.5f, healthEffect = -1 },
+            new () { fulnessRate = -1.2f, healthRate = -1, painConst = +50 },
+            new () { fulnessRate = -0.4f },
+            new () { sanityRate = +0.2f },
+            new () { thirstRate = -0.5f },
+            new () { thirstRate = -1.5f, healthRate = -1, painConst = +50 },
         };
         var lowDangerLevels = new List<int>() { 1, 3 };
         var highDangerLevels = new List<int>() { 0, 4 };
@@ -432,9 +443,9 @@ public class StateManager : MonoBehaviour
         var effects = new List<StateEffect>()
         {
             StateEffect.NoEffect,
-            new () { healthEffect = -0.1f },
-            new () { healthEffect = -0.4f },
-            new () { healthEffect = -1.2f },
+            new () { healthRate = -0.1f, oxygenMax = -10 },
+            new () { healthRate = -0.4f, oxygenMax = -30 },
+            new () { healthRate = -1.2f, oxygenMax = -50 },
         };
         var lowDangerLevels = new List<int>() { 1, 2 };
         var highDangerLevels = new List<int>() { 3 };
@@ -453,8 +464,8 @@ public class StateManager : MonoBehaviour
         var effects = new List<StateEffect>()
         {
             StateEffect.NoEffect,
-            new () { sanityEffect = -0.1f },
-            new () { sanityEffect = -0.3f },
+            new () { sanityRate = -0.1f, painConst = +20 },
+            new () { sanityRate = -0.3f, painConst = +75 },
         };
         var lowDangerLevels = new List<int>() { 1 };
         var highDangerLevels = new List<int>() { 2 };
@@ -473,9 +484,9 @@ public class StateManager : MonoBehaviour
         var effects = new List<StateEffect>()
         {
             StateEffect.NoEffect,
-            new () { sanityEffect = -0.2f },
-            new () { sanityEffect = -0.6f, sorbrietyEffect = +0.5f, healthEffect = -0.5f },
-            new () { sanityEffect = -2f, sorbrietyEffect = +1f, healthEffect = -1f },
+            new () { sanityRate = -0.2f },
+            new () { sanityRate = -0.6f, sorbrietyRate = +0.5f, healthRate = -0.5f },
+            new () { sanityRate = -2f, sorbrietyRate = +1f, healthRate = -1f },
         };
         var lowDangerLevels = new List<int>() { 1, 2 };
         var highDangerLevels = new List<int>() { 3 };
@@ -485,7 +496,7 @@ public class StateManager : MonoBehaviour
 
     private void InitElectricity()
     {
-        Electricity = new EnvironmentState(Random.Range(30, 45), 50, EnvironmentStateEnum.Electricity);
+        Electricity = new EnvironmentState(Random.Range(30, 45), 50, EnvironmentStateEnum.Electricity, -0.2f);
     }
 
     private void InitWaterLevel()
@@ -514,8 +525,8 @@ public class StateManager : MonoBehaviour
             PlayerStateDict[stateEnum].AddValue(delta);
         //记录改值前的危险等级
         var curStateLevel = PlayerStateDict[stateEnum].StateLevelName;
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Player"+stateEnum, PlayerStateDict[stateEnum].CurValue.ToString()));
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Player"+stateEnum, lastStateLevel+"-"+curStateLevel));
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Player" + stateEnum, PlayerStateDict[stateEnum].CurValue.ToString()));
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Player" + stateEnum, lastStateLevel + "-" + curStateLevel));
         // 刷新前端显示
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
 
@@ -523,7 +534,28 @@ public class StateManager : MonoBehaviour
         EvaluateDangerLevel();
     }
 
-    public void ApplyPlayerEffects(Dictionary<PlayerStateEnum, float> playerEffects)
+    private void Update()
+    {
+        Debug.Log(PlayerStateDict[PlayerStateEnum.Health].ChangeRate);
+        Debug.Log(PlayerStateDict[PlayerStateEnum.Thirst].StateLevel);
+        Debug.Log(PlayerStateDict[PlayerStateEnum.Thirst].CurValue);
+    }
+
+    public void ChangePlayerStateChangeRate(PlayerStateEnum stateEnum, float delta)
+    {
+        if (!PlayerStateDict.ContainsKey(stateEnum)) return;
+        PlayerStateDict[stateEnum].AddChangeRate(delta);
+        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
+    }
+
+    public void SetPlayerStateBasicChangeRate(PlayerStateEnum stateEnum, float value)
+    {
+        if (!PlayerStateDict.ContainsKey(stateEnum)) return;
+        PlayerStateDict[stateEnum].SetBasicChangeRate(value);
+        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
+    }
+
+    public void ApplyPlayerStateChange(Dictionary<PlayerStateEnum, float> playerEffects)
     {
         foreach (var (state, delta) in playerEffects)
         {
@@ -536,13 +568,14 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void TryGainOxygenFromEnvironment(EnvironmentBag env)
     {
-        // 室外环境里没有氧气
-        if (!env.PlaceData.isIndoor) return;
-        if (!env.StateDict.TryGetValue(EnvironmentStateEnum.Oxygen, out var oxygen)) return;
-        var gain = Mathf.Min(PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity, env.StateDict[EnvironmentStateEnum.Oxygen].CurValue);
+        // 没有氧气则返回
+        if (!env.StateDict.TryGetValue(EnvironmentStateEnum.Oxygen, out var envOxygen)) return;
+
+        var playerOxygen = PlayerStateDict[PlayerStateEnum.Oxygen];
+        var gain = Mathf.Min(playerOxygen.RemainingCapacity, envOxygen.CurValue);
         if (gain > 0)
         {
-            PlayerStateDict[PlayerStateEnum.Oxygen].AddValue(gain);
+            playerOxygen.AddValue(gain);
             env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -gain);
         }
 
@@ -552,8 +585,8 @@ public class StateManager : MonoBehaviour
     private void HandlePlayerOxygenChange(float delta)
     {
         var env = GameManager.Instance.CurEnvironmentBag;
-        // 室外环境直接改变玩家氧气，多余的就浪费
-        if (!env.PlaceData.isIndoor)
+        // 环境没有氧气属性，则直接改变玩家氧气，多余的就浪费
+        if (!env.StateDict.TryGetValue(EnvironmentStateEnum.Oxygen, out var envOxygen))
         {
             PlayerStateDict[PlayerStateEnum.Oxygen].AddValue(delta);
             return;
@@ -571,9 +604,8 @@ public class StateManager : MonoBehaviour
         {
             delta = -delta;
             // 环境氧气剩余量
-            var envOxygen = env.StateDict[EnvironmentStateEnum.Oxygen].CurValue;
             // 要消耗的环境氧气量
-            var envConsume = Mathf.Min(envOxygen, delta);
+            var envConsume = Mathf.Min(envOxygen.CurValue, delta);
             if (envConsume > 0)
             {
                 // 消耗环境氧气
@@ -684,7 +716,7 @@ public class StateManager : MonoBehaviour
     /// <param name="delta"></param>
     public void ChangeElectricity(float delta)
     {
-        Electricity.CurValue += delta;
+        Electricity.AddValue(delta);
         // 刷新前端显示
         var env = GameManager.Instance.CurEnvironmentBag;
         EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.Electricity)
@@ -699,12 +731,25 @@ public class StateManager : MonoBehaviour
     /// <param name="delta"></param>
     public void ChangeWaterLevel(float delta)
     {
-        WaterLevel.CurValue += delta;
+        WaterLevel.AddValue(delta);
         // 触发水平面变化事件
-        EventManager.Instance.TriggerEvent(EventType.ChangeWaterLevel, WaterLevel.CurValue);
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition,new SubscribeActionArgs("WaterLevel",WaterLevel.CurValue.ToString()));
-        if(WaterLevel.CurValue==100)Die();
+        //EventManager.Instance.TriggerEvent(EventType.ChangeWaterLevel, WaterLevel.CurValue);
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("WaterLevel", WaterLevel.CurValue.ToString()));
+
+        if (WaterLevel.CurValue >= 100) Die(); // 水平面升高至100，游戏结束
+
         // 刷新前端显示
+        var env = GameManager.Instance.CurEnvironmentBag;
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.WaterLevel)
+        {
+            stateValue = WaterLevel
+        });
+    }
+
+    public void ChangeWaterLevelChangeRate(float delta)
+    {
+        WaterLevel.AddChangeRate(delta);
+
         var env = GameManager.Instance.CurEnvironmentBag;
         EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.WaterLevel)
         {
@@ -722,45 +767,50 @@ public class StateManager : MonoBehaviour
     {
         PlayerIntervalSettle();
         
-        ExtraPlayerIntervalSettle();
+        //ExtraPlayerIntervalSettle();
 
         EnvironmentIntervalSettle();
     }
 
     public void EnvironmentIntervalSettle()
     {
-        // 每回合减少0.2电力
-        ChangeElectricity(-0.2f);
+        ChangeElectricity(Electricity.ChangeRate);
+        ChangeWaterLevel(WaterLevel.ChangeRate);
     }
 
+    private Dictionary<PlayerStateEnum, float> temp = new(); // 记录玩家状态的当前变化率，防止玩家状态的结算顺序影响结算结果
     public void PlayerIntervalSettle()
     {
+        temp.Clear();
         foreach (var (type, state) in PlayerStateDict)
         {
-            if (state.BasicChangeRate != 0)
+            if (state.ChangeRate != 0)
             {
-                ChangePlayerState(type, state.BasicChangeRate);
+                //ChangePlayerState(type, state.ChangeRate);
+                temp.Add(type, state.ChangeRate);
             }
         }
+
+        ApplyPlayerStateChange(temp);
     }
 
-    /// <summary>
-    /// 定时结算状态异常导致的额外变化
-    /// </summary>
-    public void ExtraPlayerIntervalSettle()
-    {
-        // 统计最终状态影响效果
-        StateEffect finalEffect = StateEffect.NoEffect;
-        foreach (var state in PlayerStateDict.Values)
-        {
-            finalEffect += state.GetStateEffect();
-        }
-        ChangePlayerState(PlayerStateEnum.Health, finalEffect.healthEffect);
-        ChangePlayerState(PlayerStateEnum.San, finalEffect.sanityEffect);
-        ChangePlayerState(PlayerStateEnum.Fullness, finalEffect.fulnessEffect);
-        ChangePlayerState(PlayerStateEnum.Thirst, finalEffect.thirstEffect);
-        ChangePlayerState(PlayerStateEnum.Sobriety, finalEffect.sorbrietyEffect);
-    }
+    ///// <summary>
+    ///// 定时结算状态异常导致的额外变化
+    ///// </summary>
+    //public void ExtraPlayerIntervalSettle()
+    //{
+    //    // 统计最终状态影响效果
+    //    StateEffect finalEffect = StateEffect.NoEffect;
+    //    foreach (var state in PlayerStateDict.Values)
+    //    {
+    //        finalEffect += state.GetStateEffect();
+    //    }
+    //    ChangePlayerState(PlayerStateEnum.Health, finalEffect.healthRate);
+    //    ChangePlayerState(PlayerStateEnum.San, finalEffect.sanityRate);
+    //    ChangePlayerState(PlayerStateEnum.Fullness, finalEffect.fulnessRate);
+    //    ChangePlayerState(PlayerStateEnum.Thirst, finalEffect.thirstRate);
+    //    ChangePlayerState(PlayerStateEnum.Sobriety, finalEffect.sorbrietyRate);
+    //}
     #endregion
 
     #region 睡觉
@@ -768,11 +818,10 @@ public class StateManager : MonoBehaviour
 
     public void Sleep(int time)
     {
-        var state = PlayerStateDict[PlayerStateEnum.Sobriety];
-        float rate = state.BasicChangeRate;
-        state.SetBasicChangeRate(SobrietyChangeRateWhileSleeping);
+        float rate = PlayerStateDict[PlayerStateEnum.Sobriety].ChangeRate;
+        SetPlayerStateBasicChangeRate(PlayerStateEnum.Sobriety, SobrietyChangeRateWhileSleeping);
         TimeManager.Instance.AddTime(time);
-        state.SetBasicChangeRate(rate);
+        SetPlayerStateBasicChangeRate(PlayerStateEnum.Sobriety, rate);
     }
     #endregion
 

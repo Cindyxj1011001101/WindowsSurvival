@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// 玩家状态
@@ -26,38 +25,27 @@ public enum PlayerStateEnum
 /// </summary>
 public class PlayerState
 {
-    [JsonProperty]
-    private float extraValue; // 额外值
+    [JsonProperty] private float extraValue; // 额外值
+    [JsonProperty] private float maxValue; // 最大值
+    [JsonProperty] private float constValue; // 固定值
+    [JsonProperty] private float variableValue; // 可变值
+    [JsonProperty] public PlayerStateEnum stateEnum;
+    [JsonProperty] private List<StateThreshold> thresholds = new();
+    [JsonProperty] private List<StateEffect> effects = new();
+    [JsonProperty] private int stateLevel = -1;
+    [JsonProperty] public float basicChangeRate;
+    [JsonProperty] private float extraChangeRate;
+    [JsonProperty] private List<int> lowDangerLevels = new();
+    [JsonProperty] private List<int> highDangerLevels = new();
 
-    [JsonProperty]
-    private float maxValue; // 最大值
-
-    [JsonProperty]
-    private float constValue; // 固定值
-
-    [JsonProperty]
-    private float variableValue; // 可变值
-
-    [JsonProperty]
-    public PlayerStateEnum stateEnum;
-
-    [JsonProperty]
-    private List<StateThreshold> thresholds = new();
-
-    [JsonProperty]
-    private List<StateEffect> effects = new();
-
-    [JsonProperty]
-    private int stateLevel = -1;
-
-    [JsonProperty]
-    public float BasicChangeRate { get; private set; }
-
-    [JsonProperty]
-    private List<int> lowDangerLevels = new();
-
-    [JsonProperty]
-    private List<int> highDangerLevels = new();
+    [JsonIgnore] public string StateLevelName => thresholds[stateLevel].levelName;
+    [JsonIgnore] public int StateLevel => stateLevel;
+    [JsonIgnore] public float CurValue => Mathf.Clamp(variableValue + constValue, 0, MaxValue);
+    [JsonIgnore] public float ExtraValue => extraValue;
+    [JsonIgnore] public float MaxValue => maxValue + extraValue;
+    [JsonIgnore] public float RemainingCapacity => MaxValue - CurValue;
+    [JsonProperty] public float BasicChangeRate => basicChangeRate;
+    [JsonIgnore] public float ChangeRate => basicChangeRate + extraChangeRate;
 
     [JsonIgnore]
     public DangerLevelEnum DangerLevel
@@ -70,29 +58,11 @@ public class PlayerState
         }
     }
 
-    [JsonIgnore]
-    public string StateLevelName => thresholds[stateLevel].levelName;
+    //[JsonIgnore]
+    //private UnityAction<int> onEnterLevel;
 
-    [JsonIgnore]
-    public int StateLevel => stateLevel;
-
-    [JsonIgnore]
-    public float CurValue => Mathf.Clamp(variableValue + constValue, 0, MaxValue);
-
-    [JsonIgnore]
-    public float ExtraValue => extraValue;
-
-    [JsonIgnore]
-    public float MaxValue => maxValue + extraValue;
-
-    [JsonIgnore]
-    public float RemainingCapacity => MaxValue - CurValue;
-
-    [JsonIgnore]
-    private UnityAction<int> onEnterLevel;
-
-    [JsonIgnore]
-    private UnityAction<int> onExitLevel;
+    //[JsonIgnore]
+    //private UnityAction<int> onExitLevel;
 
     public void AddValue(float delta)
     {
@@ -126,6 +96,8 @@ public class PlayerState
 
     private void CalcStateLevel()
     {
+        if (CurValue < 30)
+            Debug.Log("");
         for (int i = 0; i < thresholds.Count; i++)
         {
             if (CurValue > thresholds[i].minValue && CurValue <= thresholds[i].maxValue)
@@ -134,24 +106,33 @@ public class PlayerState
                 if (stateLevel != i)
                 {
                     // 离开stateLevel事件
-                    onExitLevel?.Invoke(stateLevel);
+                    //onExitLevel?.Invoke(stateLevel);
+                    if (stateLevel != -1)
+                        effects[stateLevel].Revoke();
                     // 进入i事件
-                    onEnterLevel?.Invoke(i);
+                    //onEnterLevel?.Invoke(i);
+                    effects[i].Apply();
+                    stateLevel = i;
+                    Debug.Log($"状态从{stateLevel}变成{i}");
                 }
-                stateLevel = i;
                 break;
             }
         }
     }
 
-    public StateEffect GetStateEffect()
+    //public StateEffect GetStateEffect()
+    //{
+    //    return effects[stateLevel];
+    //}
+
+    public void AddChangeRate(float delta)
     {
-        return effects[stateLevel];
+        extraChangeRate += delta;
     }
 
     public void SetBasicChangeRate(float value)
     {
-        BasicChangeRate = value;
+        basicChangeRate = value;
     }
 
     public PlayerState(float value, float maxValue, PlayerStateEnum state, float basicChangeRate,
@@ -165,17 +146,19 @@ public class PlayerState
         stateEnum = state;
         this.thresholds = thresholds;
         this.effects = effects;
-        BasicChangeRate = basicChangeRate;
+        this.basicChangeRate = basicChangeRate;
+        extraChangeRate = 0;
         this.lowDangerLevels = lowDangerLevels;
         this.highDangerLevels = highDangerLevels;
-    }
-
-    public void SetUpEvent(UnityAction<int> onEnterLevel = null, UnityAction<int> onExitLevel = null)
-    {
-        this.onEnterLevel = onEnterLevel;
-        this.onExitLevel = onExitLevel;
         CalcStateLevel();
     }
+
+    //public void SetUpEvent(UnityAction<int> onEnterLevel = null, UnityAction<int> onExitLevel = null)
+    //{
+    //    this.onEnterLevel = onEnterLevel;
+    //    this.onExitLevel = onExitLevel;
+    //    CalcStateLevel();
+    //}
 }
 
 // 状态阈值配置
@@ -200,21 +183,38 @@ public class StateEffect
 {
     public static StateEffect NoEffect = new();
 
-    public float healthEffect;      // 健康影响
-    public float sanityEffect;      // 精神影响
-    public float fulnessEffect;     // 饱食影响
-    public float thirstEffect;      // 水分影响
-    public float sorbrietyEffect;   // 清醒度影响
+    // 每回合变化
+    public float healthRate;      // 健康影响
+    public float sanityRate;      // 精神影响
+    public float fulnessRate;     // 饱食影响
+    public float thirstRate;      // 水分影响
+    public float sorbrietyRate;   // 清醒度影响
 
-    public static StateEffect operator +(StateEffect a, StateEffect b)
+    // 瞬间变化
+    public float oxygenMax;       // 氧气上限
+    public float painConst;       // 疼痛固定值
+
+    private void ApplyEffects(bool forward)
     {
-        return new StateEffect()
-        {
-            healthEffect = a.healthEffect + b.healthEffect,
-            sanityEffect = a.sanityEffect + b.sanityEffect,
-            fulnessEffect = a.fulnessEffect + b.fulnessEffect,
-            thirstEffect = a.thirstEffect + b.thirstEffect,
-            sorbrietyEffect = a.sorbrietyEffect + b.sorbrietyEffect,
-        };
+        int signal = forward ? 1 : -1;
+
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, healthRate * signal);
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.San, sanityRate * signal);
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Fullness, fulnessRate * signal);
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Thirst, thirstRate * signal);
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, sorbrietyRate * signal);
+
+        StateManager.Instance.ChangePlayerMaxState(PlayerStateEnum.Oxygen, oxygenMax * signal);
+        StateManager.Instance.ChangePlayerConstState(PlayerStateEnum.PainLevel, painConst * signal);
+    }
+
+    public void Apply()
+    {
+        ApplyEffects(true);
+    }
+
+    public void Revoke()
+    {
+        ApplyEffects(false);
     }
 }

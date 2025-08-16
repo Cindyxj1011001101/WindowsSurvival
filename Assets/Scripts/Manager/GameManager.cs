@@ -59,6 +59,11 @@ public class GameManager : MonoBehaviour
         equipmentBag = GameDataManager.Instance.EquipmentData;
     }
 
+    private void OnDestroy()
+    {
+        ObjectBufferPool.Instance.Clear(); // 清空对象池
+    }
+
     private void Start()
     {
         Init();
@@ -301,7 +306,7 @@ public class GameManager : MonoBehaviour
             Dictionary<EnvironmentStateEnum, float> envEffects) = GetExploreEffects();
 
         // 玩家状态变化
-        StateManager.Instance.ApplyPlayerEffects(playerEffects);
+        StateManager.Instance.ApplyPlayerStateChange(playerEffects);
 
         // 环境状态变化
         curEnvironmentBag.ApplyEnvEffects(envEffects);
@@ -353,7 +358,7 @@ public class GameManager : MonoBehaviour
         ChangeEnv(targetPlace);
 
         // 移动消耗
-        StateManager.Instance.ApplyPlayerEffects(GetMoveExplorePlayerEffects());
+        StateManager.Instance.ApplyPlayerStateChange(GetMoveExplorePlayerEffects());
         TimeManager.Instance.AddTime(bsaicMoveTime + GetExtraMoveExploreTime(bsaicMoveTime));
     }
 
