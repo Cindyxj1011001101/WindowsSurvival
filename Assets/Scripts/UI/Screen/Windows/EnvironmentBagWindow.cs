@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,9 +35,9 @@ public class EnvironmentBagWindow : BagWindow
     [SerializeField] private RectTransform stateLayout;
     [SerializeField] private RectTransform envCardTransform;
 
-    private UIStateToggle hasCabbleToggle; // 是否铺设电缆
-    private UIPressureLevel pressureLevel; // 压强等级
-    private Dictionary<EnvironmentStateEnum, UIStateSlider> stateSliders = new(); // 环境状态显示
+    [SerializeField] private UIStateToggle hasCabble; // 是否铺设电缆
+    [SerializeField] private UIPressureLevel pressureLevel; // 压强等级
+    private Dictionary<EnvironmentStateEnum, UIStateSlider> continuousValueStates = new(); // 环境状态显示
 
     private HoverTipController hoveredTipController;
 
@@ -82,6 +83,12 @@ public class EnvironmentBagWindow : BagWindow
     {
         exploreButton.onClick.RemoveAllListeners();
         exploreButton.onClick.AddListener(Explore);
+
+        foreach (Transform c in stateLayout)
+        {
+            if (c.TryGetComponent<UIStateSlider>(out var s))
+                continuousValueStates.Add((EnvironmentStateEnum)Enum.Parse(typeof(EnvironmentStateEnum), c.name), s);
+        }
     }
 
     /// <summary>
@@ -123,41 +130,36 @@ public class EnvironmentBagWindow : BagWindow
 
         var env = bag as EnvironmentBag;
 
-        stateSliders.Clear();
-
-        ObjectBufferPool.Instance.RestoreAllChildren(stateLayout);
+        foreach (var s in continuousValueStates.Values)
+        {
+            s.gameObject.SetActive(false);
+        }
 
         // 压强都显示
-        pressureLevel = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/EnvironmentState", "PressureLevel", stateLayout).GetComponent<UIPressureLevel>();
         pressureLevel.SetValue(env.PressureLevel);
 
         // 是否铺设电缆都显示
-        hasCabbleToggle = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/EnvironmentState", "HasCable", stateLayout).GetComponent<UIStateToggle>();
-        hasCabbleToggle.SetValue(env.HasCable);
+        hasCabble.SetValue(env.HasCable);
 
         // 铺设电缆才显示电力
-        UIStateSlider slider;
         if (env.HasCable)
         {
-            slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/EnvironmentState", "Electricity", stateLayout).GetComponent<UIStateSlider>();
-            slider.SetValue(StateManager.Instance.Electricity);
-            stateSliders.Add(EnvironmentStateEnum.Electricity, slider);
+            continuousValueStates[EnvironmentStateEnum.Electricity].gameObject.SetActive(true);
+            continuousValueStates[EnvironmentStateEnum.Electricity].SetValue(StateManager.Instance.Electricity);
         }
 
         // 在飞船内显示水平面高度
         if (env.PlaceData.isInSpacecraft)
         {
-            slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/EnvironmentState", "WaterLevel", stateLayout).GetComponent<UIStateSlider>();
-            slider.SetValue(StateManager.Instance.WaterLevel);
-            stateSliders.Add(EnvironmentStateEnum.WaterLevel, slider);
+            continuousValueStates[EnvironmentStateEnum.WaterLevel].gameObject.SetActive(true);
+            continuousValueStates[EnvironmentStateEnum.WaterLevel].SetValue(StateManager.Instance.WaterLevel);
         }
 
         // 其他状态显示
         foreach (var (state, value) in env.StateDict)
         {
-            slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/EnvironmentState", state.ToString(), stateLayout).GetComponent<UIStateSlider>();
-            slider.SetValue(value);
-            stateSliders.Add(state, slider);
+            continuousValueStates[state].gameObject.SetActive(true);
+            continuousValueStates[state].SetValue(value);
         }
 
         MonoUtility.UpdateLayoutSize(stateLayout.GetComponent<VerticalLayoutGroup>());
@@ -184,15 +186,15 @@ public class EnvironmentBagWindow : BagWindow
         switch (args.stateEnum)
         {
             case EnvironmentStateEnum.HasCable:
-                hasCabbleToggle.SetValue(args.hasCable);
+                hasCabble.SetValue(args.hasCable);
                 break;
             case EnvironmentStateEnum.PressureLevel:
                 pressureLevel.SetValue(args.pressureLevel);
                 break;
             default:
                 // 不存在这个状态不显示
-                if (!stateSliders.ContainsKey(args.stateEnum)) return;
-                stateSliders[args.stateEnum].SetValue(args.stateValue);
+                if (!continuousValueStates.ContainsKey(args.stateEnum)) return;
+                continuousValueStates[args.stateEnum].GetComponent<UIStateSlider>().SetValue(args.stateValue);
                 break;
         }
     }
