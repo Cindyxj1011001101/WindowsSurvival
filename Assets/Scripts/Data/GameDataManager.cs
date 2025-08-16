@@ -123,7 +123,6 @@ public class GameDataManager
         loadData.loads[curLoadIndex].GameTime = timeData.curTime;
         // 保存存档数据
         SaveLoadData();
-        SceneManager.LoadScene(0);
     }
 
     #region 存档数据

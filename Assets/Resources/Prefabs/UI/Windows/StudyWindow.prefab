@@ -3319,6 +3319,7 @@ MonoBehaviour:
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   defaultPosition: {x: 0, y: 0, z: 0}
   defaultSizeDelta: {x: 1900, y: 936, z: 0}
+  isModal: 0
   techName: {fileID: 8945132623818001378}
   techDescription: {fileID: 5959164360792706851}
   studyButton: {fileID: 7474850890593426519}
@@ -6625,6 +6626,11 @@ MonoBehaviour:
   slider: {fileID: 3332071088527538743}
   button: {fileID: 0}
   displayPercentage: 0
+  arrow: {fileID: 0}
+  ceil: {fileID: 0}
+  floor: {fileID: 0}
+  arrowSprites: []
+  tipController: {fileID: 0}
 --- !u!1 &9209863965113051950
 GameObject:
   m_ObjectHideFlags: 0

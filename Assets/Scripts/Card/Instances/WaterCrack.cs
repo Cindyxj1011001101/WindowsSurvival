@@ -34,14 +34,19 @@ public class WaterCrack : Card
         return true;
     }
 
-    protected override System.Action OnUpdate => () =>
+    public override void OnAdded(Bag bag)
     {
-        var bag = Bag as EnvironmentBag;
         // 渗水裂缝所在的地点每回合-3氧气
-        bag.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -3);
-        // 每个渗水裂缝每回合会使飞船水平面高度+0.3
-        StateManager.Instance.ChangeWaterLevel(+0.3f);
-    };
+        (bag as EnvironmentBag).ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -3);
+        StateManager.Instance.ChangeWaterLevelChangeRate(+0.3f);
+    }
+
+    public override void OnRemoved(Bag bag)
+    {
+        (bag as EnvironmentBag).ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +3);
+        StateManager.Instance.ChangeWaterLevelChangeRate(-0.3f);
+    }
+
     public override void OnEnterEnvironment()
     {
         SoundManager.Instance.PlayCardLoopSound(CardId, "渗水声", 0.3f);

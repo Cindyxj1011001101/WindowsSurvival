@@ -92,6 +92,9 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     protected virtual Action OnUpdate { get; } = null;
 
+    public virtual void OnAdded(Bag bag) { }
+    public virtual void OnRemoved(Bag bag) { }
+
     public void SetCardId(string cardId)
     {
         CardId = cardId;
@@ -133,15 +136,6 @@ public abstract class Card : IComparable<Card>
         // 如果有内部内容组件，则开始监听内部内容的更新
         if (TryGetComponent<InnerContentsComponent>(out var component))
         {
-            //foreach (var slot in component.bag.Slots)
-            //{
-            //    foreach (var c in slot.Cards)
-            //    {
-            //        c.SetParentCard(this);
-            //        c.SetSlotCards(slot);
-            //        c.StartUpdating();
-            //    }
-            //}
             component.Init();
         }
     }
@@ -185,17 +179,6 @@ public abstract class Card : IComparable<Card>
         Destroyed = true;
 
         StopUpdating();
-
-        //var temp = Slot;
-        //if (temp != null)
-        //{
-        //    Slot.RemoveCard(this);
-        //    temp.RefreshDisplay();
-        //}
-        //else
-        //{
-        //    SlotCards.Remove(this);
-        //}
 
         SlotCards.RemoveCard(this);
         RefreshSlot();
