@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1038032435644399952}
   - component: {fileID: 2702938030676040731}
+  - component: {fileID: 9060380922214320611}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -58,6 +59,22 @@ MonoBehaviour:
   - {fileID: 9124262639958647883}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
+--- !u!114 &9060380922214320611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 168399278863438889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40fa700f93e8d7446ad366bdfe799a7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 10, y: 0}
+  onPointerEnter:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1552428347235755743
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,6 +215,7 @@ MonoBehaviour:
   - {fileID: -1364170369, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: 688397521, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: -1067156244, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  tipController: {fileID: 9060380922214320611}
 --- !u!1 &3795846205233472800
 GameObject:
   m_ObjectHideFlags: 0

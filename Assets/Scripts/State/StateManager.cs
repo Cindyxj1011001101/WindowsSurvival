@@ -170,95 +170,6 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.PainLevel, InitPainState());
     }
 
-    ///// <summary>
-    ///// 设置玩家状态等级变化的事件
-    ///// </summary>
-    //private void SetupPlayerStateEvents()
-    //{
-    //    PlayerStateDict[PlayerStateEnum.Health].SetUpEvent(
-    //        onEnterLevel: level =>
-    //        {
-    //            if (level == 0)
-    //            {
-    //                Die();
-    //            }
-    //        }, onExitLevel: null);
-    //    PlayerStateDict[PlayerStateEnum.BodyTemperature].SetUpEvent(
-    //        onEnterLevel: level =>
-    //        {
-    //            // 极度寒冷
-    //            if (level == 0)
-    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, +50);
-    //            // 极度炎热
-    //            else if (level == 4)
-    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, +50);
-    //        }, onExitLevel: level =>
-    //        {
-    //            if (level == 0)
-    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, -50);
-    //            else if (level == 4)
-    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, -50);
-    //        });
-    //    PlayerStateDict[PlayerStateEnum.CarbonMonoxidePoisoning].SetUpEvent(
-    //        onEnterLevel: level =>
-    //        {
-    //            // 轻度
-    //            if (level == 1)
-    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, -10);
-    //            // 中度
-    //            else if (level == 2)
-    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, -30);
-    //            // 重度
-    //            else if (level == 3)
-    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, -50);
-    //        }, onExitLevel: level =>
-    //        {
-    //            // 轻度
-    //            if (level == 1)
-    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, +10);
-    //            // 中度
-    //            else if (level == 2)
-    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, +30);
-    //            // 重度
-    //            else if (level == 3)
-    //                ChangePlayerMaxState(PlayerStateEnum.Oxygen, +50);
-    //        });
-    //    PlayerStateDict[PlayerStateEnum.Itchiness].SetUpEvent(
-    //        onEnterLevel: level =>
-    //        {
-    //            // 很痒
-    //            if (level == 1)
-    //            {
-    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, +20);
-    //            }
-    //            // 极度瘙痒
-    //            else if (level == 2)
-    //            {
-    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, +75);
-    //            }
-    //        }, onExitLevel: level =>
-    //        {
-    //            // 很痒
-    //            if (level == 1)
-    //            {
-    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, -20);
-    //            }
-    //            // 极度瘙痒
-    //            else if (level == 2)
-    //            {
-    //                ChangePlayerConstState(PlayerStateEnum.PainLevel, -75);
-    //            }
-    //        });
-
-    //    PlayerStateDict[PlayerStateEnum.Fullness].SetUpEvent();
-    //    PlayerStateDict[PlayerStateEnum.Thirst].SetUpEvent();
-    //    PlayerStateDict[PlayerStateEnum.San].SetUpEvent();
-    //    PlayerStateDict[PlayerStateEnum.Sobriety].SetUpEvent();
-    //    PlayerStateDict[PlayerStateEnum.Load].SetUpEvent();
-    //    PlayerStateDict[PlayerStateEnum.PainLevel].SetUpEvent();
-    //    PlayerStateDict[PlayerStateEnum.Oxygen].SetUpEvent();
-    //}
-
     private PlayerState InitHealthState()
     {
         var thresholds = new List<StateThreshold>()
@@ -711,6 +622,17 @@ public class StateManager : MonoBehaviour
     {
         Electricity.AddValue(delta);
         // 刷新前端显示
+        var env = GameManager.Instance.CurEnvironmentBag;
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.Electricity)
+        {
+            stateValue = Electricity
+        });
+    }
+
+    public void ChangeElectricityChangeRate(float delta)
+    {
+        Electricity.AddChangeRate(delta);
+
         var env = GameManager.Instance.CurEnvironmentBag;
         EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.Electricity)
         {

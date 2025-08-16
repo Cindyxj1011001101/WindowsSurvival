@@ -136,15 +136,6 @@ public abstract class Card : IComparable<Card>
         // 如果有内部内容组件，则开始监听内部内容的更新
         if (TryGetComponent<InnerContentsComponent>(out var component))
         {
-            //foreach (var slot in component.bag.Slots)
-            //{
-            //    foreach (var c in slot.Cards)
-            //    {
-            //        c.SetParentCard(this);
-            //        c.SetSlotCards(slot);
-            //        c.StartUpdating();
-            //    }
-            //}
             component.Init();
         }
     }

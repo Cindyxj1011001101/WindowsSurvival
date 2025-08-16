@@ -549,6 +549,7 @@ MonoBehaviour:
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   defaultPosition: {x: -532, y: 151, z: 0}
   defaultSizeDelta: {x: 836, y: 634, z: 0}
+  isModal: 0
   slotPrefab: {fileID: 8250425150690940461, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
   slotLayout: {fileID: 5471198114392509026}
   organizeButton: {fileID: 3004231969791096285}
@@ -1227,6 +1228,7 @@ MonoBehaviour:
   ceil: {fileID: 0}
   floor: {fileID: 0}
   arrowSprites: []
+  tipController: {fileID: 0}
 --- !u!1 &5177177482958789841
 GameObject:
   m_ObjectHideFlags: 0

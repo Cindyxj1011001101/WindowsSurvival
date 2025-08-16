@@ -27,6 +27,11 @@ public class ElectricDrainageMachine : Card
     {
         tip = string.Empty;
         isWorking = true;
+
+        // 每回合消耗0.5电力
+        StateManager.Instance.ChangeElectricityChangeRate(-0.5f);
+        // 每回合水平面-2
+        StateManager.Instance.ChangeWaterLevelChangeRate(-2f);
     }
 
     public bool Judge_Open(out string hint)
@@ -39,6 +44,9 @@ public class ElectricDrainageMachine : Card
     {
         tip = string.Empty;
         isWorking = false;
+
+        StateManager.Instance.ChangeElectricityChangeRate(+0.5f);
+        StateManager.Instance.ChangeWaterLevelChangeRate(+2f);
     }
 
     public bool Judge_Close(out string hint)
@@ -50,19 +58,12 @@ public class ElectricDrainageMachine : Card
 
     protected override System.Action OnUpdate => () =>
     {
-        Work();
-    };
-
-    private void Work()
-    {
-        if (!isWorking) return;
+        // 电力小于0.5或者水平面小于0时，自动停止工作
         if (StateManager.Instance.Electricity.CurValue < 0.5f || StateManager.Instance.WaterLevel.CurValue <= 0)
         {
             isWorking = false;
             EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
             return;
         }
-        StateManager.Instance.ChangeElectricity(-0.5f);
-        StateManager.Instance.ChangeWaterLevel(-2);
-    }
+    };
 }

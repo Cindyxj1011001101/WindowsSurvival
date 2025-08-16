@@ -101,6 +101,7 @@ MonoBehaviour:
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   defaultPosition: {x: 778, y: -203, z: 0}
   defaultSizeDelta: {x: 344, y: 530, z: 0}
+  isModal: 0
   stateLayout: {fileID: 8027470427699736110}
   buffLayout: {fileID: 5267377757230563222}
 --- !u!1 &826949332779858646
@@ -1646,6 +1647,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2920464235495511888 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9060380922214320611, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+  m_PrefabInstance: {fileID: 6141611155526704819}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40fa700f93e8d7446ad366bdfe799a7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3144786088936389368 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9124262639958647883, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
@@ -1692,6 +1704,7 @@ MonoBehaviour:
   - {fileID: -1364170369, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: 688397521, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: -1067156244, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  tipController: {fileID: 2920464235495511888}
   levels:
   - {fileID: 1537160113, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
   - {fileID: 1850425268, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
@@ -1902,6 +1915,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3153343630951894431 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9060380922214320611, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+  m_PrefabInstance: {fileID: 6232450968876696700}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40fa700f93e8d7446ad366bdfe799a7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4167847538276400343 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8046022005471590571, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
@@ -1937,6 +1961,7 @@ MonoBehaviour:
   - {fileID: -1364170369, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: 688397521, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: -1067156244, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  tipController: {fileID: 3153343630951894431}
   levels:
   - {fileID: 720461001, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
   - {fileID: 1676266322, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
