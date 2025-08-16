@@ -41,6 +41,9 @@ public class SlotCards
 
     public virtual void AddCard(Card card)
     {
+        // 记录卡牌原来的背包
+        var oBag = card.Bag;
+
         Cards.Add(card);
         Cards.Sort((a, b) => a.CompareTo(b));
 
@@ -49,6 +52,14 @@ public class SlotCards
         card.StartUpdating();
 
         Bag.OnAddCard(card);
+        
+        // 如果卡牌从不同的背包添加而来
+        if (oBag != Bag)
+        {
+            // oBag为空说明卡牌是第一次创建
+            if (oBag != null) card.OnRemoved(oBag); // 不必担心卡牌被销毁时执行不到这里的onremoved方法，它会转而在RemoveCard中执行
+            card.OnAdded(Bag);
+        }
     }
 
     /// <summary>
@@ -62,6 +73,9 @@ public class SlotCards
         Cards.Remove(card);
 
         Bag.OnRemoveCard(card);
+
+        // 如果卡牌要被销毁，说明它不会进入AddCard方法，需要在这里执行onremoved
+        if (card.Destroyed) card.OnRemoved(Bag);
 
         if (CardSlot != null) CardSlot.RefreshDisplay();
     }

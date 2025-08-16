@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class EnvironmentBag : Bag
@@ -27,7 +26,7 @@ public class EnvironmentBag : Bag
     {
         get
         {
-            placeData ??= Resources.Load<PlaceData>("ScriptableObject/Place/" + placeName);
+            placeData = placeData != null ? placeData : Resources.Load<PlaceData>("ScriptableObject/Place/" + placeName);
             return placeData;
         }
     }
@@ -45,7 +44,10 @@ public class EnvironmentBag : Bag
         InitState();
         InitDropList();
         if (PlaceData.isInSpacecraft)
+        {
             hasCable = true;
+            AddCard(CardFactory.CreateCard("渗水裂缝"));
+        }
         pressureLevel = PressureLevel.Standard;
     }
 

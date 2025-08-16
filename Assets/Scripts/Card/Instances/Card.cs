@@ -92,6 +92,9 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     protected virtual Action OnUpdate { get; } = null;
 
+    public virtual void OnAdded(Bag bag) { }
+    public virtual void OnRemoved(Bag bag) { }
+
     public void SetCardId(string cardId)
     {
         CardId = cardId;
@@ -185,17 +188,6 @@ public abstract class Card : IComparable<Card>
         Destroyed = true;
 
         StopUpdating();
-
-        //var temp = Slot;
-        //if (temp != null)
-        //{
-        //    Slot.RemoveCard(this);
-        //    temp.RefreshDisplay();
-        //}
-        //else
-        //{
-        //    SlotCards.Remove(this);
-        //}
 
         SlotCards.RemoveCard(this);
         RefreshSlot();
