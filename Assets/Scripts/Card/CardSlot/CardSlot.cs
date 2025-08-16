@@ -44,7 +44,6 @@ public class CardSlot : MonoBehaviour
     {
         Cards = slotCards;
         slotCards.SetCardSlot(this);
-        //Debug.Log(slotCards.CardSlot);
         RefreshDisplay();
     }
 
@@ -127,8 +126,8 @@ public class CardSlot : MonoBehaviour
     {
         if (!componentSliders.TryGetValue(component.GetType(), out Slider slider))
         {
-            var prefab = Resources.Load<GameObject>("Prefabs/UI/Controls/Components/" + component.GetType().Name);
-            slider = Instantiate(prefab, valueComponentLayout).GetComponent<Slider>();
+            slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", component.GetType().Name, valueComponentLayout).GetComponent<Slider>();
+            slider.transform.SetAsLastSibling();
             componentSliders.Add(component.GetType(), slider);
         }
 
@@ -224,7 +223,8 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.alpha = 0;
         cardCanvasGroup.blocksRaycasts = false;
         cardCanvasGroup.interactable = false;
-        MonoUtility.DestroyAllChildren(valueComponentLayout);
+        //MonoUtility.DestroyAllChildren(valueComponentLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(valueComponentLayout);
         if (innerContentsComponentLayout != null)
             innerContentsComponentLayout.gameObject.SetActive(false);
         componentSliders.Clear();
