@@ -61,16 +61,6 @@ public class ObjectBufferPool
 
         private void Init(GameObject prefab, string objectName)
         {
-            PublicMono.Instance.AddUpdateListener(() =>
-            {
-                if (objectName == "TempCardSlot")
-                {
-                    Debug.Log(objectsInUse.Count);
-                    if (objectsInUse.Count > 0) Debug.Log(objectsInUse[0]);
-                }
-                
-            });
-
             if (toBeDeleted) return;
 
             this.objectName = objectName;
