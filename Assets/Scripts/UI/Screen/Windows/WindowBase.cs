@@ -47,7 +47,7 @@ public abstract class WindowBase : PanelBase
 
     protected bool focused = false;
 
-    private bool isModal;
+    [SerializeField] private bool isModal;
 
     public bool IsModal => isModal;
 
