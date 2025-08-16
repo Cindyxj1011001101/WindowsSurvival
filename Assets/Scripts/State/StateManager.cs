@@ -534,13 +534,6 @@ public class StateManager : MonoBehaviour
         EvaluateDangerLevel();
     }
 
-    private void Update()
-    {
-        Debug.Log(PlayerStateDict[PlayerStateEnum.Health].ChangeRate);
-        Debug.Log(PlayerStateDict[PlayerStateEnum.Thirst].StateLevel);
-        Debug.Log(PlayerStateDict[PlayerStateEnum.Thirst].CurValue);
-    }
-
     public void ChangePlayerStateChangeRate(PlayerStateEnum stateEnum, float delta)
     {
         if (!PlayerStateDict.ContainsKey(stateEnum)) return;

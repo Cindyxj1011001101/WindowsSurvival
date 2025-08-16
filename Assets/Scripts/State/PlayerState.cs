@@ -96,8 +96,6 @@ public class PlayerState
 
     private void CalcStateLevel()
     {
-        if (CurValue < 30)
-            Debug.Log("");
         for (int i = 0; i < thresholds.Count; i++)
         {
             if (CurValue > thresholds[i].minValue && CurValue <= thresholds[i].maxValue)
@@ -113,7 +111,6 @@ public class PlayerState
                     //onEnterLevel?.Invoke(i);
                     effects[i].Apply();
                     stateLevel = i;
-                    Debug.Log($"状态从{stateLevel}变成{i}");
                 }
                 break;
             }
