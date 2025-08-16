@@ -25,6 +25,8 @@ public class UIStateSlider : MonoBehaviour
 
     private int curChangeLavel;
 
+    public HoverTipController tipController;
+
     public void SetStateName(string name)
     {
         stateNameText.text = name;
@@ -44,7 +46,7 @@ public class UIStateSlider : MonoBehaviour
         SetValue(state.CurValue, state.MaxValue);
 
         // 显示变化率
-        DisplayChangeRate(state.ChangeRate / state.MaxValue);
+        DisplayChangeRate(state.ChangeRate, state.MaxValue);
 
         // 根据状态的危险程度，给予提示
         PlayerStateDangerAlert(state.DangerLevel);
@@ -54,7 +56,7 @@ public class UIStateSlider : MonoBehaviour
     {
         SetValue(state.CurValue, state.MaxValue);
 
-        DisplayChangeRate(state.ChangeRate / state.MaxValue);
+        DisplayChangeRate(state.ChangeRate, state.MaxValue);
     }
 
     private void PlayerStateDangerAlert(DangerLevelEnum dangerLevel)
@@ -86,15 +88,32 @@ public class UIStateSlider : MonoBehaviour
             .SetEase(Ease.InOutSine);    // 设置缓动效果
     }
 
-    private void DisplayChangeRate(float value)
+    private void DisplayChangeRate(float changeRate, float maxValue)
     {
+        var value = changeRate / maxValue;
         if (value == 0)
         {
             arrow.rectTransform.DOKill();
             arrow.gameObject.SetActive(false);
+            tipController.enabled = false;
             return;
         }
 
+        // 悬浮显示
+        tipController.enabled = true;
+        string tip;
+
+        if (displayPercentage)
+            tip = $"{changeRate / maxValue * 100:0.0}%";
+        else
+            tip = changeRate.ToString();
+
+        tip = (changeRate > 0 ? "+" : "") + tip + "/15min";
+
+        tipController.SetTip(tip);
+
+
+        // 箭头显示
         int level = CalcLevel(value);
         if (curChangeLavel == level) return;
 
