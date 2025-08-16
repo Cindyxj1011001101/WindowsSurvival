@@ -145,6 +145,10 @@ public static class ProcessManager
         ProcessDataList = ExcelReader.ReadProcess("Process");
     }
 
+    public static string GetProcessOutcomeID(List<Card> cards,List<TempertureData> TemptureDatas)
+    {
+        return FindProcessByPriority(FindProcessByCardsAndTemperture(cards, TemptureDatas)).OutcomeID;
+    }
     //根据传入卡牌判断可加工配方
     public static List<ProcessData> FindProcessByCards(List<Card> cardList)
     {
