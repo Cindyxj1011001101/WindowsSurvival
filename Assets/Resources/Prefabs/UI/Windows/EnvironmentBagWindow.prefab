@@ -2887,6 +2887,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1307717986450091551}
     m_Modifications:
+    - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+      propertyPath: displayPercentage
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1680979510513311346, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
       propertyPath: m_Name
       value: CarbonMonoxideLevel
@@ -3998,6 +4002,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1307717986450091551}
     m_Modifications:
+    - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+      propertyPath: displayPercentage
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1680979510513311346, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
       propertyPath: m_Name
       value: WaterLevel
