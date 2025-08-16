@@ -11,6 +11,8 @@ public class ObjectBufferPool
 
     public static ObjectBufferPool Instance => instance;
 
+    public Transform Root {  get; private set; }
+
 
     /// <summary>
     /// 游戏对象容器
@@ -48,22 +50,42 @@ public class ObjectBufferPool
         private UnityAction onPrefabLoaded;
 
         /// <summary>
+        /// 回收后的统一放置位置
+        /// </summary>
+        private Transform root;
+
+        /// <summary>
         /// 缓存是否待删除
         /// </summary>
         public bool toBeDeleted;
 
-        public ObjectBuffer(GameObject prefab)
+        private void Init(GameObject prefab, string objectName)
         {
-            objectName = prefab.name;
-
-            this.prefab = prefab;
+            PublicMono.Instance.AddUpdateListener(() =>
+            {
+                if (objectName == "TempCardSlot")
+                {
+                    Debug.Log(objectsInUse.Count);
+                    if (objectsInUse.Count > 0) Debug.Log(objectsInUse[0]);
+                }
+                
+            });
 
             if (toBeDeleted) return;
+
+            this.objectName = objectName;
+
+            root = new GameObject("Root_" +  objectName).transform;
+            root.SetParent(Instance.Root);
+            root.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            root.transform.localScale = Vector3.one;
+
+            this.prefab = prefab;
 
             // 获取对象最大同屏数量配置
             if (!prefab.TryGetComponent(out ObjectBufferConfig config))
             {
-                Debug.LogError($"请为使用缓存池功能的预设体对象添加{typeof(ObjectBufferConfig).Name}脚本");
+                Debug.LogError($"请为使用缓存池功能的预设体对象{prefab.name}添加{nameof(ObjectBufferConfig)}脚本");
                 maxCountOfObjectsInUse = 128;
             }
             else
@@ -75,50 +97,26 @@ public class ObjectBufferPool
             onPrefabLoaded = null;
         }
 
-        public ObjectBuffer(string bundleName, string assetName, bool sync = false)
+        public ObjectBuffer(GameObject prefab, string objectName)
         {
-            objectName = bundleName + "/" + assetName;
+            Init(prefab, objectName);
+        }
+
+        public ObjectBuffer(string bundleName, string assetName, string objectName, bool sync = false)
+        {
+            string path = bundleName + "/" + assetName;
 
             // 同步加载预制体
             if (sync)
             {
-                // 记录预设体 方便以后实例化
-                prefab = ResourcesManager.Instance.Load<GameObject>(objectName);
-
-                // 获取对象最大同屏数量配置
-                if (!prefab.TryGetComponent(out ObjectBufferConfig config))
-                {
-                    Debug.LogError($"请为使用缓存池功能的预设体对象添加{typeof(ObjectBufferConfig).Name}脚本");
-                    maxCountOfObjectsInUse = 128;
-                }
-                else
-                {
-                    maxCountOfObjectsInUse = config.maxCount;
-                }
+                Init(ResourcesManager.Instance.Load<GameObject>(path), objectName);
             }
             // 异步加载预制体
             else
             {
-                ResourcesManager.Instance.LoadAsync<GameObject>(objectName, (asset) =>
+                ResourcesManager.Instance.LoadAsync<GameObject>(path, (asset) =>
                 {
-                    // 记录预设体 方便以后实例化
-                    prefab = asset;
-                    // 若该缓存待删除 则不执行后续逻辑
-                    if (toBeDeleted) return;
-
-                    // 获取对象最大同屏数量配置
-                    if (!prefab.TryGetComponent(out ObjectBufferConfig config))
-                    {
-                        Debug.LogError($"请为使用缓存池功能的预设体对象添加{typeof(ObjectBufferConfig).Name}脚本");
-                        maxCountOfObjectsInUse = 128;
-                    }
-                    else
-                    {
-                        maxCountOfObjectsInUse = config.maxCount;
-                    }
-
-                    onPrefabLoaded?.Invoke();
-                    onPrefabLoaded = null;
+                    Init(asset, objectName);
                 });
             }
         }
@@ -127,19 +125,19 @@ public class ObjectBufferPool
         /// 从未使用的或者正在使用的游戏对象中获取一个
         /// </summary>
         /// <returns></returns>
-        public void Get(System.Func<GameObject, GameObject> instaniate, UnityAction<GameObject> onInstaniated)
+        public void Get(UnityAction<GameObject> onInstaniated)
         {
             if (prefab == null)
             {
                 onPrefabLoaded += () =>
                 {
-                    Get(instaniate, onInstaniated);
+                    Get(onInstaniated);
                 };
                 return;
             }
 
             // 执行游戏对象实例化完毕后的回调
-            onInstaniated?.Invoke(Get(instaniate));
+            onInstaniated?.Invoke(Get());
         }
 
         /// <summary>
@@ -147,7 +145,7 @@ public class ObjectBufferPool
         /// </summary>
         /// <param name="instaniate"></param>
         /// <returns></returns>
-        public GameObject Get(System.Func<GameObject, GameObject> instaniate)
+        public GameObject Get()
         {
             GameObject obj;
 
@@ -167,11 +165,10 @@ public class ObjectBufferPool
             else
             {
                 // 实例化对象
-                obj = instaniate(prefab);
+                obj = GameObject.Instantiate(prefab, Instance.Root);
                 // 设置对象的名称
                 obj.name = objectName;
             }
-
             // 将该物体添加到正在使用的物体列表的尾部
             objectsInUse.Add(obj);
 
@@ -197,6 +194,9 @@ public class ObjectBufferPool
                 return;
             }
 
+            // 将对象归类
+            obj.transform.SetParent(root);
+
             // 对象失活
             obj.SetActive(false);
             // 将对象存入池中
@@ -213,21 +213,25 @@ public class ObjectBufferPool
 
     private ObjectBufferPool()
     {
+        Root = GameObject.Find(nameof(ObjectBufferPool)).transform;
+        Root.SetAsFirstSibling();
     }
 
     #region 同步——已知预制体
     /// <summary>
     /// 获取预设体实例
     /// </summary>
-    public GameObject Get(GameObject prefab, System.Func<GameObject, GameObject> instaniate)
+    public GameObject Get(GameObject prefab, UnityAction<Transform> setTransform)
     {
         // 如果不存在容器就创建
         if (!pool.ContainsKey(prefab.name))
-            pool.Add(prefab.name, new ObjectBuffer(prefab));
+            pool.Add(prefab.name, new ObjectBuffer(prefab, prefab.name));
 
         // 取出游戏对象
         // 处理游戏对象逻辑
-        return pool[prefab.name].Get(instaniate);
+        var obj = pool[prefab.name].Get();
+        setTransform?.Invoke(obj.transform);
+        return obj;
     }
 
     /// <summary>
@@ -235,7 +239,7 @@ public class ObjectBufferPool
     /// </summary>
     public GameObject Get(GameObject prefab)
     {
-        return Get(prefab, (prefab) => Object.Instantiate(prefab));
+        return Get(prefab, setTransform: null);
     }
 
     /// <summary>
@@ -244,16 +248,16 @@ public class ObjectBufferPool
     /// <param name="parent">预设体实例的父对象</param>
     public GameObject Get(GameObject prefab, Transform parent)
     {
-        return Get(prefab, (prefab) => Object.Instantiate(prefab, parent));
+        return Get(prefab, t => t.SetParent(parent));
     }
 
     /// <summary>
     /// 获取预设体实例，并设置其父对象
     /// </summary>
     /// <param name="parent">预设体实例的父对象</param>
-    public GameObject Get(GameObject prefab, Transform parent, bool instantiateInWorldSpace)
+    public GameObject Get(GameObject prefab, Transform parent, bool worldPositionStays)
     {
-        return Get(prefab, (prefab) => Object.Instantiate(prefab, parent, instantiateInWorldSpace));
+        return Get(prefab, t => t.SetParent(parent, worldPositionStays));
     }
 
     /// <summary>
@@ -263,7 +267,7 @@ public class ObjectBufferPool
     /// <param name="rotation">旋转</param>
     public GameObject Get(GameObject prefab, Vector3 position, Quaternion rotation)
     {
-        return Get(prefab, (prefab) => Object.Instantiate(prefab, position, rotation));
+        return Get(prefab, t => t.SetPositionAndRotation(position, rotation));
     }
 
     /// <summary>
@@ -273,7 +277,11 @@ public class ObjectBufferPool
     /// <param name="rotation">旋转</param>
     public GameObject Get(GameObject prefab, Vector3 position, Quaternion rotation, Transform parent)
     {
-        return Get(prefab, (prefab) => Object.Instantiate(prefab, position, rotation, parent));
+        return Get(prefab, t =>
+        {
+            t.SetParent(parent);
+            t.SetPositionAndRotation(position, rotation);
+        });
     }
     #endregion
 
@@ -281,16 +289,17 @@ public class ObjectBufferPool
     /// <summary>
     /// 获取预设体实例
     /// </summary>
-    public GameObject Get(string bundleName, string assetName, System.Func<GameObject, GameObject> instaniate)
+    public GameObject Get(string bundleName, string assetName, UnityAction<Transform> setTransform)
     {
-        string path = bundleName + "/" + assetName;
         // 如果不存在容器就创建
-        if (!pool.ContainsKey(path))
-            pool.Add(path, new ObjectBuffer(bundleName, assetName, true));
+        if (!pool.ContainsKey(assetName))
+            pool.Add(assetName, new ObjectBuffer(bundleName, assetName, assetName, true));
 
         // 取出游戏对象
         // 处理游戏对象逻辑
-        return pool[path].Get(instaniate);
+        var obj = pool[assetName].Get();
+        setTransform?.Invoke(obj.transform);
+        return obj;
     }
 
     /// <summary>
@@ -300,7 +309,7 @@ public class ObjectBufferPool
     /// <param name="assetName">预设体名称</param>
     public GameObject Get(string bundleName, string assetName)
     {
-        return Get(bundleName, assetName, (prefab) => Object.Instantiate(prefab));
+        return Get(bundleName, assetName,setTransform: null);
     }
 
     /// <summary>
@@ -311,7 +320,7 @@ public class ObjectBufferPool
     /// <param name="parent">预设体实例的父对象</param>
     public GameObject Get(string bundleName, string assetName, Transform parent)
     {
-        return Get(bundleName, assetName, (prefab) => Object.Instantiate(prefab, parent));
+        return Get(bundleName, assetName, t => t.SetParent(parent));
     }
 
     /// <summary>
@@ -321,9 +330,9 @@ public class ObjectBufferPool
     /// <param name="assetName">预设体名称</param>
     /// <param name="parent">预设体实例的父对象</param>
     /// <param name="worldPositionStays">是否保持预设体在世界坐标系下的位置</param>
-    public GameObject Get(string bundleName, string assetName, Transform parent, bool instantiateInWorldSpace)
+    public GameObject Get(string bundleName, string assetName, Transform parent, bool worldPositionStays)
     {
-        return Get(bundleName, assetName, (prefab) => Object.Instantiate(prefab, parent, instantiateInWorldSpace));
+        return Get(bundleName, assetName, t => t.SetParent(parent, worldPositionStays));
     }
 
     /// <summary>
@@ -335,7 +344,7 @@ public class ObjectBufferPool
     /// <param name="rotation">旋转</param>
     public GameObject Get(string bundleName, string assetName, Vector3 position, Quaternion rotation)
     {
-        return Get(bundleName, assetName, (prefab) => Object.Instantiate(prefab, position, rotation));
+        return Get(bundleName, assetName, t => t.SetPositionAndRotation(position, rotation));
     }
 
     /// <summary>
@@ -347,7 +356,11 @@ public class ObjectBufferPool
     /// <param name="rotation">旋转</param>
     public GameObject Get(string bundleName, string assetName, Vector3 position, Quaternion rotation, Transform parent)
     {
-        return Get(bundleName, assetName, (prefab) => Object.Instantiate(prefab, position, rotation, parent));
+        return Get(bundleName, assetName, t =>
+        {
+            t.SetParent(parent);
+            t.SetPositionAndRotation(position, rotation);
+        });
     }
 
     #endregion
@@ -359,16 +372,16 @@ public class ObjectBufferPool
     /// <param name="bundleName">预设体所在文件夹相对Editor文件夹的路径 或者 预设体所在的AB包的名称</param>
     /// <param name="assetName">预设体名称</param>
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
-    public void Get(string bundleName, string assetName, System.Func<GameObject, GameObject> instaniate, UnityAction<GameObject> onInstaniated = null)
+    public void Get(string bundleName, string assetName, UnityAction<Transform> setTransform, UnityAction<GameObject> onInstaniated = null)
     {
-        string path = bundleName + "/" + assetName;
         // 如果不存在容器就创建
-        if (!pool.ContainsKey(path))
-            pool.Add(path, new ObjectBuffer(bundleName, assetName));
+        if (!pool.ContainsKey(assetName))
+            pool.Add(assetName, new ObjectBuffer(bundleName, assetName, assetName));
 
         // 取出游戏对象
         // 处理游戏对象逻辑
-        pool[path].Get(instaniate, onInstaniated);
+        onInstaniated += obj => setTransform?.Invoke(obj.transform);
+        pool[assetName].Get(onInstaniated);
     }
 
     /// <summary>
@@ -379,7 +392,7 @@ public class ObjectBufferPool
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
     public void Get(string bundleName, string assetName, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, (prefab) => Object.Instantiate(prefab), onInstaniated);
+        Get(bundleName, assetName, setTransform: null, onInstaniated);
     }
 
     /// <summary>
@@ -391,7 +404,7 @@ public class ObjectBufferPool
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
     public void Get(string bundleName, string assetName, Transform parent, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, (prefab) => Object.Instantiate(prefab, parent), onInstaniated);
+        Get(bundleName, assetName, t => t.SetParent(parent), onInstaniated);
     }
 
     /// <summary>
@@ -402,9 +415,9 @@ public class ObjectBufferPool
     /// <param name="parent">预设体实例的父对象</param>
     /// <param name="worldPositionStays">是否保持预设体在世界坐标系下的位置</param>
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
-    public void Get(string bundleName, string assetName, Transform parent, bool instantiateInWorldSpace, UnityAction<GameObject> onInstaniated = null)
+    public void Get(string bundleName, string assetName, Transform parent, bool worldPositionStays, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, (prefab) => Object.Instantiate(prefab, parent, instantiateInWorldSpace), onInstaniated);
+        Get(bundleName, assetName, t => t.SetParent(parent, worldPositionStays), onInstaniated);
     }
 
     /// <summary>
@@ -417,7 +430,7 @@ public class ObjectBufferPool
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
     public void Get(string bundleName, string assetName, Vector3 position, Quaternion rotation, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, (prefab) => Object.Instantiate(prefab, position, rotation), onInstaniated);
+        Get(bundleName, assetName, t => t.SetPositionAndRotation(position, rotation), onInstaniated);
     }
 
     /// <summary>
@@ -430,7 +443,11 @@ public class ObjectBufferPool
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
     public void Get(string bundleName, string assetName, Vector3 position, Quaternion rotation, Transform parent, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, (prefab) => Object.Instantiate(prefab, position, rotation, parent), onInstaniated);
+        Get(bundleName, assetName, t =>
+        {
+            t.SetParent(parent);
+            t.SetPositionAndRotation(position, rotation);
+        }, onInstaniated);
     }
     #endregion
 

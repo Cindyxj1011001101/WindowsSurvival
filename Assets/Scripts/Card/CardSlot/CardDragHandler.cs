@@ -56,7 +56,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         MouseManager.Instance.EndDragging();
 
         dragEndPosition = MFXUtility.ScreenPointToLocalPointInRectangle(eventData.position);
-        Destroy(cursorSlot.gameObject);
+        ObjectBufferPool.Instance.Restore(cursorSlot.gameObject);
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
         if (currentObject == null)
