@@ -44,6 +44,10 @@ namespace ChatPlugIn
             {
                 chatData.Message = callback.newValue;
             });
+            TextField tfdCondition = ElementUtility.CreateTextArea(chatData.MessageCondition, "触发对话条件", callback =>
+            {
+                chatData.MessageCondition = callback.newValue;
+            });
             FloatField tfdPreDelay = ElementUtility.CreateFloatField(chatData.preWaitTime, "触发前延迟时间", callback =>
             {
                 chatData.preWaitTime = callback.newValue;
@@ -58,6 +62,7 @@ namespace ChatPlugIn
             });
             lineContainer.Add(RoleDropdown);
             lineContainer.Add(tfdSentence);
+            lineContainer.Add(tfdCondition);
             lineContainer.Add(tfdPreDelay);
             lineContainer.Add(tfdLateDelay);
             lineContainer.Add(tfdEffect);
