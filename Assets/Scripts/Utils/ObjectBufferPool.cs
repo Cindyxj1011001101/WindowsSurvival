@@ -200,7 +200,8 @@ public class ObjectBufferPool
 
     private ObjectBufferPool()
     {
-        Root = MonoUtility.GetStandardGameObject(nameof(ObjectBufferPool)).transform;
+        //Root = MonoUtility.GetStandardGameObject(nameof(ObjectBufferPool)).transform;
+        Root = GameObject.Find(nameof(ObjectBufferPool)).transform;
         Root.SetAsFirstSibling();
     }
 

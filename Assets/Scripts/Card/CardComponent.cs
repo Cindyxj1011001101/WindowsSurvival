@@ -257,14 +257,8 @@ public class InnerContentsComponent : CardComponent
 
     public InnerContentsComponent(int slotCount)
     {
-        //this.slotCount = slotCount;
-        //innerContents = new();
-        //for (int i = 0; i < slotCount; i++)
-        //{
-        //    innerContents.Add(new List<Card>());
-        //}
         bag.AddSlot(slotCount);
-        Init();
+        bag.SetComponent(this);
     }
 
     public int GetTotalCountByCardId(string cardId) => bag.GetTotalCountByCardId(cardId);

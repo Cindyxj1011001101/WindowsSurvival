@@ -1,8 +1,11 @@
-﻿public class InnerBag : Bag
+﻿using Newtonsoft.Json;
+
+public class InnerBag : Bag
 {
     private InnerContentsComponent component;
 
-    public Card BelongCard => component.BelongedCard;
+    [JsonIgnore]
+    public Card BelongedCard => component.BelongedCard;
 
     public override void Init()
     {

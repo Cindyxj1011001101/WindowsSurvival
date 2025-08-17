@@ -110,7 +110,6 @@ public abstract class Bag
         return false;
     }
 
-
     /// <summary>
     /// 添加一张卡牌
     /// </summary>

@@ -20,7 +20,7 @@ public class LightenedOxygenCandle : Card
             env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +10);
 
         if (bag is InnerBag innerBag)
-            OnAdded(innerBag.BelongCard.Bag);
+            OnAdded(innerBag.BelongedCard.Bag);
     }
 
     public override void OnRemoved(Bag bag)
@@ -32,7 +32,7 @@ public class LightenedOxygenCandle : Card
             env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -10);
 
         if (bag is InnerBag innerBag)
-            OnRemoved(innerBag.BelongCard.Bag);
+            OnRemoved(innerBag.BelongedCard.Bag);
     }
 
     protected override Action OnUpdate => () =>

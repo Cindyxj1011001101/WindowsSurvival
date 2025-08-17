@@ -17,39 +17,14 @@ public class GameDataManager
 
     private GameDataManager()
     {
-        curLoadIndex = 0;
+        Scene currentScene = SceneManager.GetActiveScene();
+        if (currentScene.buildIndex == 0) return;
+
         // 加载存档数据
         LoadLoadData();
         // 从UIScene直接打开默认跳过新手教程
         loadData.loads[0] = new Load(new DateTime(2020, 1, 1, 0, 0, 0), true);
-        // 玩家背包
-        playerBagData = JsonManager.LoadData<PlayerBag>(CurLoadName, "PlayerBag");
-        // 上次地点
-        lastPlace = JsonManager.LoadData<int>(CurLoadName, "LastPlace");
-        // 环境
-        environmentBagDataDict = new();
-        foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
-        {
-            environmentBagDataDict.Add(place,
-                JsonManager.LoadData<EnvironmentBag>(CurLoadName, place.ToString() + "Bag"));
-        }
-
-        // 状态数据
-        stateData = JsonManager.LoadData<StateData>(CurLoadName, "State");
-        // 音频数据
-        audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
-        // 已解锁的配方
-        unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
-        // 科技数据
-        technologyData = JsonManager.LoadData<TechnologyData>(CurLoadName, "Technology");
-        // 装备数据
-        equipmentData = JsonManager.LoadData<EquipmentBag>(CurLoadName, "Equipment");
-        // 已生成的对话
-        generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
-        // 其他数据
-        timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
-        // 窗口数据
-        windowsData = JsonManager.LoadData<WindowsData>(CurLoadName, "WindowsData");
+        LoadAllData(0);
     }
 
     public void LoadAllData(int index)

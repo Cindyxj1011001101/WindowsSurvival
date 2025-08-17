@@ -48,8 +48,6 @@ public class SlotCards
         Cards.Sort((a, b) => a.CompareTo(b));
 
         card.SetSlotCards(this);
-     
-        card.StartUpdating();
 
         Bag.OnAddCard(card);
         

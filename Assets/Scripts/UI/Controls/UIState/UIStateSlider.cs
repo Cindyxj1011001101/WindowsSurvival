@@ -117,6 +117,8 @@ public class UIStateSlider : MonoBehaviour
         int level = CalcLevel(value);
         if (curChangeLavel == level) return;
 
+        curChangeLavel = level;
+
         arrow.gameObject.SetActive(true);
         arrow.rectTransform.DOKill();
 

@@ -177,6 +177,9 @@ public static class ExcelReader
             for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
             {
                 row = table.Rows[i];
+
+                if (string.IsNullOrEmpty(row[0].ToString())) break; // 遇到空行说明读取完毕了，后续是内容物的配置
+
                 // 读取掉落配置
                 DropConfig config = new()
                 {
@@ -186,34 +189,41 @@ public static class ExcelReader
                     OverwriteFreshness = bool.Parse(row[3].ToString()),
                     OverwriteDurability = bool.Parse(row[5].ToString()),
                     OverwriteGrowth = bool.Parse(row[7].ToString()),
-                    OverwriteProgress = bool.Parse(row[9].ToString())
+                    OverwriteProgress = bool.Parse(row[9].ToString()),
+                    OverwriteInnerContents = bool.Parse(row[11].ToString())
                 };
                 // 创建卡牌实例
                 var card = CardFactory.CreateCard(config.CardId);
                 // 覆写卡牌属性
                 if (config.OverwriteFreshness)
                 {
-                    config.freshness = int.Parse(row[4].ToString());
                     if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                        freshnessComponent.freshness = config.freshness; // 设置新鲜度
+                        freshnessComponent.freshness = int.Parse(row[4].ToString()); // 设置新鲜度
                 }
                 if (config.OverwriteDurability)
                 {
-                    config.Durability = int.Parse(row[6].ToString());
                     if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                        durabilityComponent.durability = config.Durability; // 设置耐久度
+                        durabilityComponent.durability = int.Parse(row[6].ToString()); // 设置耐久度
                 }
                 if (config.OverwriteGrowth)
                 {
-                    config.Growth = int.Parse(row[8].ToString());
                     if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                        growthComponent.growth = config.Growth; // 设置生长进度
+                        growthComponent.growth = int.Parse(row[8].ToString()); // 设置生长进度
                 }
                 if (config.OverwriteProgress)
                 {
-                    config.Progress = int.Parse(row[10].ToString());
                     if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                        progressComponent.progress = config.Progress; // 设置产物进度
+                        progressComponent.progress = int.Parse(row[10].ToString()); // 设置产物进度
+                }
+                if (config.OverwriteInnerContents)
+                {
+                    var startRowIndex = int.Parse(row[12].ToString());
+                    var endRowIndex = int.Parse(row[13].ToString());
+                    if (card.TryGetComponent<InnerContentsComponent>(out var innerContentsComponent))
+                        foreach (var c in ReadInnerContents(table, startRowIndex, endRowIndex))
+                        {
+                            innerContentsComponent.bag.AddCard(c);
+                        }
                 }
                 // 添加到掉落列表
                 dropList.Add(new Drop
@@ -226,10 +236,61 @@ public static class ExcelReader
             // 保存为Json
             DisposableDropList disposableDropList = new() { maxCount = dropList.Count, dropList = dropList };
             dict.Add((PlaceEnum)Enum.Parse(typeof(PlaceEnum), table.TableName), disposableDropList);
-            //JsonManager.SaveData(disposableDropList, "Excel", table.TableName + "一次性掉落列表");
         }
-        //Debug.Log("Disposable drop list generated successfully!");
         return dict;
+    }
+
+    private static List<Card> ReadInnerContents(DataTable table, int startRowIndex, int endRowIndex)
+    {
+        List<Card> result = new();
+
+        DataRow row;
+        for (int i = startRowIndex - 1; i < endRowIndex; i++) // 从1开始跳过表头
+        {
+            row = table.Rows[i];
+            // 读取掉落配置
+            DropConfig config = new()
+            {
+                CardId = row[0].ToString(),
+                DropNum = int.Parse(row[1].ToString()),
+                //DropProb = int.Parse(row[2].ToString()),
+                OverwriteFreshness = bool.Parse(row[3].ToString()),
+                OverwriteDurability = bool.Parse(row[5].ToString()),
+                OverwriteGrowth = bool.Parse(row[7].ToString()),
+                OverwriteProgress = bool.Parse(row[9].ToString()),
+                //OverwriteInnerContents = bool.Parse(row[11].ToString())
+            };
+            // 创建卡牌实例
+            var card = CardFactory.CreateCard(config.CardId);
+            // 覆写卡牌属性
+            if (config.OverwriteFreshness)
+            {
+                if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
+                    freshnessComponent.freshness = int.Parse(row[4].ToString()); // 设置新鲜度
+            }
+            if (config.OverwriteDurability)
+            {
+                if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
+                    durabilityComponent.durability = int.Parse(row[6].ToString()); // 设置耐久度
+            }
+            if (config.OverwriteGrowth)
+            {
+                if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
+                    growthComponent.growth = int.Parse(row[8].ToString()); // 设置生长进度
+            }
+            if (config.OverwriteProgress)
+            {
+                if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
+                    progressComponent.progress = int.Parse(row[10].ToString()); // 设置产物进度
+            }
+            // 添加到掉落列表
+            for (int j = 0; j < config.DropNum; j++)
+            {
+                result.Add(JsonManager.DeepCopy(card));
+            }
+        }
+
+        return result;
     }
 
     public static Dictionary<PlaceEnum, RepeatableDropList> GenerateRepeatableDropList()
@@ -278,27 +339,23 @@ public static class ExcelReader
                 // 覆写卡牌属性
                 if (config.OverwriteFreshness)
                 {
-                    config.freshness = int.Parse(row[8].ToString());
                     if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                        freshnessComponent.freshness = config.freshness; // 设置新鲜度
+                        freshnessComponent.freshness = int.Parse(row[8].ToString()); // 设置新鲜度
                 }
                 if (config.OverwriteDurability)
                 {
-                    config.Durability = int.Parse(row[10].ToString());
                     if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                        durabilityComponent.durability = config.Durability; // 设置耐久度
+                        durabilityComponent.durability = int.Parse(row[10].ToString()); // 设置耐久度
                 }
                 if (config.OverwriteGrowth)
                 {
-                    config.Growth = int.Parse(row[12].ToString());
                     if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                        growthComponent.growth = config.Growth; // 设置生长进度
+                        growthComponent.growth = int.Parse(row[12].ToString()); // 设置生长进度
                 }
                 if (config.OverwriteProgress)
                 {
-                    config.Progress = int.Parse(row[14].ToString());
                     if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                        progressComponent.progress = config.Progress; // 设置产物进度
+                        progressComponent.progress = int.Parse(row[14].ToString()); // 设置产物进度
                 }
                 // 添加到掉落列表
                 populationList.Add(new Population()
@@ -319,9 +376,7 @@ public static class ExcelReader
                 populationList = populationList
             };
             dict.Add((PlaceEnum)Enum.Parse(typeof(PlaceEnum), table.TableName), repeatableDropList);
-            //JsonManager.SaveData(repeatableDropList, "Excel", table.TableName + "重复掉落列表");
         }
-        //Debug.Log("Repeatable drop list generated successfully!");
         return dict;
     }
     
@@ -390,13 +445,10 @@ public class DropConfig
     public int DropNum; // 掉落数量
     public int DropProb;
     public bool OverwriteFreshness; // 是否覆盖新鲜度
-    public int freshness; // 新鲜度
     public bool OverwriteDurability; // 是否覆盖耐久度
-    public int Durability; // 耐久度
     public bool OverwriteGrowth;
-    public int Growth; // 生长进度
     public bool OverwriteProgress; // 是否覆盖产物进度
-    public int Progress;
+    public bool OverwriteInnerContents; // 是否覆盖内容物
 }
 
 public class PopulationConfig
@@ -408,11 +460,7 @@ public class PopulationConfig
     public int SizeChangePerRound; // 每回合数量变化
     public int SizeChangeOnCaught; // 捕捞后的数量变化
     public bool OverwriteFreshness; // 是否覆盖新鲜度
-    public int freshness; // 新鲜度
     public bool OverwriteDurability; // 是否覆盖耐久度
-    public int Durability; // 耐久度
     public bool OverwriteGrowth;
-    public int Growth; // 生长进度
     public bool OverwriteProgress; // 是否覆盖产物进度
-    public int Progress;
 }

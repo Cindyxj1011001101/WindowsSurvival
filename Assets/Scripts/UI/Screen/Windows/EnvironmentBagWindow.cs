@@ -55,6 +55,12 @@ public class EnvironmentBagWindow : BagWindow
                 hoveredTipController.SetTip(desc);
         });
 
+        foreach (Transform c in stateLayout)
+        {
+            if (c.TryGetComponent<UIStateSlider>(out var s))
+                continuousValueStates.Add((EnvironmentStateEnum)Enum.Parse(typeof(EnvironmentStateEnum), c.name), s);
+        }
+
         // 注册探索度变化事件
         EventManager.Instance.AddListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         // 注册环境移动事件
@@ -83,12 +89,6 @@ public class EnvironmentBagWindow : BagWindow
     {
         exploreButton.onClick.RemoveAllListeners();
         exploreButton.onClick.AddListener(Explore);
-
-        foreach (Transform c in stateLayout)
-        {
-            if (c.TryGetComponent<UIStateSlider>(out var s))
-                continuousValueStates.Add((EnvironmentStateEnum)Enum.Parse(typeof(EnvironmentStateEnum), c.name), s);
-        }
     }
 
     /// <summary>

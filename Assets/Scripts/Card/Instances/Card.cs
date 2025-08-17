@@ -363,7 +363,7 @@ public abstract class Card : IComparable<Card>
         else if (targetBag is InnerBag innerBag)
         {
             // 是的话尝试放在内容物背包的父物体所在的背包里
-            AddCard(card, innerBag.BelongCard.Bag);
+            AddCard(card, innerBag.BelongedCard.Bag);
         }
         // 否则放在当前环境里
         else

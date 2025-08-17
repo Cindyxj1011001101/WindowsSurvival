@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 using System.IO;
+using System.Collections;
 
 public class StartSceneManager : MonoBehaviour
 {
@@ -85,8 +86,16 @@ public class StartSceneManager : MonoBehaviour
         {
             LoadButton.SetActive(false);
             ChooseSkipGuide.SetActive(true);
-            SkipGuide.onClick.AddListener(() => EnterNewGame(index, true));
-            DontSkipGuide.onClick.AddListener(() => EnterNewGame(index, false));
+            SkipGuide.onClick.AddListener(() =>
+            {
+                CreateNewLoad(index, true);
+                LoadGameScene(index);
+            });
+            DontSkipGuide.onClick.AddListener(() =>
+            {
+                CreateNewLoad(index, false);
+                LoadGameScene(index);
+            });
             ReturnLoad.onClick.AddListener(() =>
             {
                 ChooseSkipGuide.SetActive(false);
@@ -96,22 +105,16 @@ public class StartSceneManager : MonoBehaviour
         }
         else
         {
-            //读取存档数据
-            GameDataManager.Instance.LoadAllData(index);
-            //切换到游戏场景
-            SceneManager.LoadScene(1);
+            LoadGameScene(index);
         }
     }
 
-    //创建新存档
-    public void EnterNewGame(int index, bool skipGuide)
+    // 载入游戏场景
+    public void LoadGameScene(int index)
     {
-        //创建新存档    
-        CreateNewLoad(index, skipGuide);
         GameDataManager.Instance.LoadAllData(index);
-
         //进入游戏
-        SceneManager.LoadScene(1);
+        MySceneManager.LoadScene(1);
     }
     #endregion
 

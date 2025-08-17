@@ -3288,6 +3288,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1672926792}
   - component: {fileID: 1672926793}
+  - component: {fileID: 1672926794}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -3304,7 +3305,7 @@ Transform:
   m_GameObject: {fileID: 1672926791}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5828093, y: 0.03463757, z: 592.6251}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3325,6 +3326,18 @@ MonoBehaviour:
   StartButton: {fileID: 1742614714}
   LoadButton: {fileID: 1382763167}
   ChooseSkipGuide: {fileID: 2102003189}
+--- !u!114 &1672926794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672926791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b933084479350248bf1c2acb65f1d17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1722216797
 PrefabInstance:
   m_ObjectHideFlags: 0

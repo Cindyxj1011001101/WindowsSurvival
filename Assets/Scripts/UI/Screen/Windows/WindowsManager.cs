@@ -39,7 +39,7 @@ public class WindowsManager : MonoBehaviour
         saveButton.onClick.AddListener(() =>
         {
             GameDataManager.Instance.SaveAllData();
-            SceneManager.LoadScene(0);
+            MySceneManager.LoadScene(0);
         });
 
         restButton.onClick.AddListener(() =>
