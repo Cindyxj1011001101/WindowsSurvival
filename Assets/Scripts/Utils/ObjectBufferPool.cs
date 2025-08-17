@@ -65,10 +65,7 @@ public class ObjectBufferPool
 
             this.objectName = objectName;
 
-            root = new GameObject("Root_" +  objectName).transform;
-            root.SetParent(Instance.Root);
-            root.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
-            root.transform.localScale = Vector3.one;
+            root = MonoUtility.GetStandardGameObject("Root_" + prefab.name, Instance.Root).transform;
 
             this.prefab = prefab;
 
@@ -203,7 +200,7 @@ public class ObjectBufferPool
 
     private ObjectBufferPool()
     {
-        Root = GameObject.Find(nameof(ObjectBufferPool)).transform;
+        Root = MonoUtility.GetStandardGameObject(nameof(ObjectBufferPool)).transform;
         Root.SetAsFirstSibling();
     }
 

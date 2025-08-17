@@ -24,7 +24,6 @@ public class CustomTextBox : MonoBehaviour, IAdaptiveSize
         rectTransform = transform as RectTransform;
         text = GetComponentInChildren<Text>();
         textRectTransform = text.transform as RectTransform;
-        layoutTransform = (GetComponentInParent<ILayoutGroup>() as MonoBehaviour).transform as RectTransform;
     }
 
     public void SetText(string text)
@@ -36,6 +35,7 @@ public class CustomTextBox : MonoBehaviour, IAdaptiveSize
     // 根据内容和父物体宽度动态刷新尺寸
     public void UpdateSize()
     {
+        if (layoutTransform == null) layoutTransform = (GetComponentInParent<ILayoutGroup>() as MonoBehaviour).transform as RectTransform;
         textRectTransform.sizeDelta = new Vector2(layoutTransform.rect.width - boxPaddingHorizontal - textPaddingHorizontal * 2, textRectTransform.sizeDelta.y);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(textRectTransform);

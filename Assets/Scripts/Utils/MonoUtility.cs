@@ -24,6 +24,15 @@ public static class MonoUtility
         }
     }
 
+    public static GameObject GetStandardGameObject(string name, Transform parent = null)
+    {
+        var obj = new GameObject(name);
+        obj.transform.SetParent(parent);
+        obj.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+        obj.transform.localScale = Vector3.one;
+        return obj;
+    }
+
     /// <summary>
     /// 更新容器高度
     /// </summary>
