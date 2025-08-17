@@ -399,7 +399,7 @@ public class GameDataManager
 
     #endregion
 
-    #region 已解锁的快捷方式
+    #region 窗口数据
 
     private WindowsData windowsData;
 
@@ -408,6 +408,8 @@ public class GameDataManager
     public void SaveWindowsData()
     {
         windowsData = new();
+
+        windowsData.currentPresetIndex = WindowsManager.Instance.CurrentPresetIndex;
 
         windowsData.unlockedShortcuts = WindowsManager.Instance.GetUnlockedShortcuts();
 

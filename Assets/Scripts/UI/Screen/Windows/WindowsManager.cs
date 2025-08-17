@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class WindowsManager : MonoBehaviour
 {
@@ -27,6 +27,14 @@ public class WindowsManager : MonoBehaviour
 
     [SerializeField] private HoverableButton saveButton;
     [SerializeField] private HoverableButton restButton;
+
+    [SerializeField] private List<HoverableButton> presetButtons = new(); // 预设按钮
+    [SerializeField] private List<WindowsLayoutPreset> presets = new(); // 预设配置
+
+    private Dictionary<string, PositionAndSizeDelta> defaultPositionAndSizeDeltas = new();
+
+    private int currentPresetIndex;
+    public int CurrentPresetIndex => currentPresetIndex;
 
     private void Awake()
     {
@@ -64,6 +72,24 @@ public class WindowsManager : MonoBehaviour
             };
         });
 
+        for (int i = 0; i < presetButtons.Count; i++)
+        {
+            var button = presetButtons[i];
+            int index = i; // 创建局部变量拷贝
+            string buttonText = button.GetComponentInChildren<Text>().text; // 提前捕获文本
+
+            button.onClick.AddListener(() =>
+            {
+                var window = (OpenWindow("Confirm", true) as ConfirmWindow);
+                window.SetText("是否要应用" + buttonText + "？"); // 使用局部变量
+                window.onConfirm += () =>
+                {
+                    ApplyPreset(index); // 使用局部变量 index
+                    ResetWindowsPositionAndSizeDelta();
+                };
+            });
+        }
+
         // 恢复窗口
         foreach (var (name, data) in GameDataManager.Instance.WindowsData.openedWindows)
         {
@@ -90,6 +116,49 @@ public class WindowsManager : MonoBehaviour
         }
 
         FocusWindow(GameDataManager.Instance.WindowsData.focusedWindow);
+
+        // 应用预设
+        currentPresetIndex = GameDataManager.Instance.WindowsData.currentPresetIndex;
+        ApplyPreset(currentPresetIndex);
+    }
+
+    /// <summary>
+    /// 应用窗口布局预设
+    /// </summary>
+    /// <param name="index"></param>
+    private void ApplyPreset(int index)
+    {
+        currentPresetIndex = index;
+
+        var preset = presets[index];
+
+        defaultPositionAndSizeDeltas = new()
+        {
+            { "State", preset.stateWindow },
+            { "Camera", preset.cameraWindow },
+            { "Chat", preset.chatWindow },
+            { "Craft", preset.craftWindow },
+            { "Details", preset.detailsWindow },
+            { "EnvironmentBag", preset.envBagWindow },
+            { "PlayerBag", preset.playerBagWindow },
+            { "Equipment", preset.equipmentWindow },
+        };
+    }
+
+    private void ResetWindowsPositionAndSizeDelta()
+    {
+        var focus = currentFocusedWindow;
+        foreach (var appName in GetUnlockedShortcuts())
+        {
+            #region 临时
+            if (appName == "Rest") continue;
+            #endregion
+
+            if (defaultPositionAndSizeDeltas.ContainsKey(appName))
+                OpenWindow(appName).SetPositionAndSizeDelta(defaultPositionAndSizeDeltas[appName]);
+        }
+
+        FocusWindow(focus);
     }
 
     public WindowBase OpenWindow(string appName, bool isModal = false)
@@ -106,26 +175,39 @@ public class WindowsManager : MonoBehaviour
                 window = Instantiate(windowPrefab, windowGroup.transform).GetComponent<WindowBase>();
                 windowGroup.SetClosed(window);
             }
+
             // 添加到已打开窗口中
             openedWindows.Add(appName, window);
+
             // 底边栏的快捷方式变亮
             shortcutsController.SetOpened(appName, true);
+
+            // 设置窗口的默认位置
+            if (defaultPositionAndSizeDeltas.ContainsKey(appName))
+            {
+                window.RectTransform.anchoredPosition = defaultPositionAndSizeDeltas[appName].position;
+                window.RectTransform.sizeDelta = defaultPositionAndSizeDeltas[appName].sizeDelta;
+            }
+
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("万能泡泡音", true);
         }
         else
         {
             window = openedWindows[appName];
         }
+
         if (window.IsPlayingAnim) return window;
 
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("万能泡泡音", true);
-
+        // 设置是否模态
         window.SetModal(isModal);
 
         // 打开窗口
         window.Open();
+        
         // 让窗口获得焦点
         FocusWindow(window);
+        
         return window;
     }
 

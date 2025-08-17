@@ -15,6 +15,8 @@ public class WindowData
 
 public class WindowsData
 {
+    public int currentPresetIndex; // 当前应用的窗口布局预设方案
+
     public string focusedWindow = string.Empty;
 
     public List<string> unlockedShortcuts = new(); // 已解锁的快捷方式
