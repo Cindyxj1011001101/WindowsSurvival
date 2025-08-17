@@ -50,6 +50,11 @@ public static class JsonManager
         if (!File.Exists(path))
             path = Application.streamingAssetsPath + "/" + loadName + "/" + fileName + ".json";
 
+        return LoadData<T>(path);
+    }
+
+    public static T LoadData<T>(string path) where T : new()
+    {
         // 都没有就返回默认值
         if (!File.Exists(path))
             return new T();

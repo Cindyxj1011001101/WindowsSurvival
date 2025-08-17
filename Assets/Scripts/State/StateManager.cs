@@ -168,6 +168,11 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.CarbonMonoxidePoisoning, InitCarbonMonoxideState());
         PlayerStateDict.Add(PlayerStateEnum.Itchiness, InitItchinessState());
         PlayerStateDict.Add(PlayerStateEnum.PainLevel, InitPainState());
+
+        foreach (var state in PlayerStateDict.Values)
+        {
+            state.CalcStateLevel();
+        }
     }
 
     private PlayerState InitHealthState()

@@ -11,7 +11,19 @@ public class ObjectBufferPool
 
     public static ObjectBufferPool Instance => instance;
 
-    public Transform Root {  get; private set; }
+    private Transform root;
+    public Transform Root
+    {
+        get
+        {
+            if (root == null)
+            {
+                root = GameObject.Find(nameof(ObjectBufferPool)).transform;
+                root.SetAsFirstSibling();
+            }
+            return root;
+        }
+    }
 
 
     /// <summary>
@@ -200,9 +212,6 @@ public class ObjectBufferPool
 
     private ObjectBufferPool()
     {
-        //Root = MonoUtility.GetStandardGameObject(nameof(ObjectBufferPool)).transform;
-        Root = GameObject.Find(nameof(ObjectBufferPool)).transform;
-        Root.SetAsFirstSibling();
     }
 
     #region 同步——已知预制体

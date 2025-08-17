@@ -94,7 +94,7 @@ public class PlayerState
         CalcStateLevel();
     }
 
-    private void CalcStateLevel()
+    public void CalcStateLevel()
     {
         for (int i = 0; i < thresholds.Count; i++)
         {
@@ -147,7 +147,6 @@ public class PlayerState
         extraChangeRate = 0;
         this.lowDangerLevels = lowDangerLevels;
         this.highDangerLevels = highDangerLevels;
-        CalcStateLevel();
     }
 
     //public void SetUpEvent(UnityAction<int> onEnterLevel = null, UnityAction<int> onExitLevel = null)
