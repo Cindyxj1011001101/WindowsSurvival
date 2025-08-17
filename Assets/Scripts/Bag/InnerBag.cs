@@ -1,8 +1,11 @@
-﻿public class InnerBag : Bag
+﻿using Newtonsoft.Json;
+
+public class InnerBag : Bag
 {
     private InnerContentsComponent component;
 
-    public Card BelongCard => component.BelongedCard;
+    [JsonIgnore]
+    public Card BelongedCard => component.BelongedCard;
 
     public override void Init()
     {
@@ -40,6 +43,13 @@
     {
         card.SetParentCard(component.BelongedCard);
         component.BelongedCard.RefreshSlot();
+        
+        // 计算重量
+        if (BelongedCard.Bag is PlayerBag)
+        {
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, card.Weight * component.weightLossRate);
+        }
+        
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
     }
 
@@ -47,6 +57,12 @@
     {
         card.SetParentCard(null);
         component.BelongedCard.RefreshSlot();
+
+        if (BelongedCard.Bag is PlayerBag)
+        {
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -card.Weight * component.weightLossRate);
+        }
+
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
     }
 }

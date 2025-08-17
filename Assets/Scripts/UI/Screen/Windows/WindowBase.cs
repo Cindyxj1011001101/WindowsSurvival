@@ -30,9 +30,6 @@ public abstract class WindowBase : PanelBase
     [SerializeField] private Sprite maximize_hovered;
     [SerializeField] private Sprite restore_default;
     [SerializeField] private Sprite restore_hovered;
-
-    [SerializeField] private Vector3 defaultPosition;
-    [SerializeField] private Vector3 defaultSizeDelta;
     
     private Image focusFrameImage;
 
@@ -139,6 +136,21 @@ public abstract class WindowBase : PanelBase
         }
     }
 
+    public void SetPositionAndSizeDelta(PositionAndSizeDelta args)
+    {
+        SetState(WindowState.Default);
+
+        if (anim != null && anim.IsActive())
+            anim.Kill();
+
+        canvasGroup.alpha = 1.0f;
+        canvasGroup.blocksRaycasts = canvasGroup.interactable = true;
+
+        RectTransform.anchoredPosition = args.position;
+        RectTransform.sizeDelta = args.sizeDelta;
+        RectTransform.localScale = Vector3.one;
+    }
+
     public void Open()
     {
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("AwakeWindow", AppName));
@@ -185,8 +197,8 @@ public abstract class WindowBase : PanelBase
         SetState(WindowState.Default);
 
         // 设置默认位置
-        lastPosition = RectTransform.anchoredPosition = defaultPosition;
-        lastSizeDelta = RectTransform.sizeDelta = defaultSizeDelta;
+        lastPosition = RectTransform.anchoredPosition;
+        lastSizeDelta = RectTransform.sizeDelta;
 
         Show();
     }

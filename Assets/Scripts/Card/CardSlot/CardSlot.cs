@@ -26,14 +26,15 @@ public class CardSlot : MonoBehaviour
     public bool IsEmpty => Cards.IsEmpty;
     public int StackNum => Cards.StackNum;
 
-    private void Awake()
+    private void OnEnable()
     {
         EventManager.Instance.AddListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
+        Clear();
         Cards?.SetCardSlot(null);
 
         EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);

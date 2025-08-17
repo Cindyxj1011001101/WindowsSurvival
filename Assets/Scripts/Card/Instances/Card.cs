@@ -56,7 +56,25 @@ public abstract class Card : IComparable<Card>
     public bool Moveable => CardFactory.GetMoveable(CardId);
 
     [JsonIgnore]
-    public float Weight => CardFactory.GetWeight(CardId);
+    public float Weight
+    {
+        get
+        {
+            // 卡牌重量 = 自身重量 + 内容物重量 * 减重率
+            float weight = CardFactory.GetWeight(CardId);
+            if (TryGetComponent<InnerContentsComponent>(out var component))
+            {
+                foreach (var slot in component.bag.Slots)
+                {
+                    foreach (var card in slot.Cards)
+                    {
+                        weight += card.Weight * component.weightLossRate;
+                    }
+                }
+            }
+            return weight;
+        }
+    }
 
     [JsonIgnore]
     public List<CardTag> Tags => CardFactory.GetTags(CardId);
@@ -366,7 +384,7 @@ public abstract class Card : IComparable<Card>
         else if (targetBag is InnerBag innerBag)
         {
             // 是的话尝试放在内容物背包的父物体所在的背包里
-            AddCard(card, innerBag.BelongCard.Bag);
+            AddCard(card, innerBag.BelongedCard.Bag);
         }
         // 否则放在当前环境里
         else

@@ -508,14 +508,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 326b08852f1cf334b9866627255afdea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ignoreThisWhenSave: 0
   destroyAfterClosed: 0
   animDuration: 0.2
   maximize_default: {fileID: -836057702, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: 154959178, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
-  defaultPosition: {x: 650, y: 74, z: 0}
-  defaultSizeDelta: {x: 600, y: 788, z: 0}
+  isModal: 0
   playerChatPrefab: {fileID: 6418562594633527997, guid: 9fe530e1f82c1dd41aefff189ab4e7cb, type: 3}
   othersChatPrefab: {fileID: 3244024689679666655, guid: 06ee3b3b5cd6ebd4fa79029386469510, type: 3}
   narrtionPrefab: {fileID: 7349522975583447898, guid: a34f8d8c640380e4494364d0c9fb210a, type: 3}
@@ -818,35 +818,35 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1065582681270328394, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 470
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 1065582681270328394, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 1113768014524737052, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 470
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 1113768014524737052, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 2224730111995872713, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 470
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 2224730111995872713, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 2677453288185900698, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 470
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 2677453288185900698, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 3372133531176856807, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: m_Name
@@ -858,11 +858,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4717627398990265235, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 470
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 4717627398990265235, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 4997966270239748422, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -950,27 +950,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6009868744749949120, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 470
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 6009868744749949120, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 6240264970601181780, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 470
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 6240264970601181780, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 7063507758247106707, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 470
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 7063507758247106707, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
-      value: 500
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 7762920398974859047, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: m_AnchoredPosition.y

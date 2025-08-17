@@ -241,9 +241,7 @@ public delegate bool CardFilterDelegate(Card card, out string s);
 
 public class InnerContentsComponent : CardComponent
 {
-    //public List<List<Card>> innerContents = new();
-
-    //public int slotCount;
+    public float weightLossRate = 1f; // 减重率
 
     public InnerBag bag = new();
 
@@ -258,14 +256,8 @@ public class InnerContentsComponent : CardComponent
 
     public InnerContentsComponent(int slotCount)
     {
-        //this.slotCount = slotCount;
-        //innerContents = new();
-        //for (int i = 0; i < slotCount; i++)
-        //{
-        //    innerContents.Add(new List<Card>());
-        //}
         bag.AddSlot(slotCount);
-        Init();
+        bag.SetComponent(this);
     }
 
     public int GetTotalCountByCardId(string cardId) => bag.GetTotalCountByCardId(cardId);

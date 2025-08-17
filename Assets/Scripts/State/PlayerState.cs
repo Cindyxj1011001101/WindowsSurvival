@@ -94,7 +94,7 @@ public class PlayerState
         CalcStateLevel();
     }
 
-    private void CalcStateLevel()
+    public void CalcStateLevel()
     {
         for (int i = 0; i < thresholds.Count; i++)
         {
@@ -103,24 +103,18 @@ public class PlayerState
                 // 如果状态等级发生了变化
                 if (stateLevel != i)
                 {
-                    // 离开stateLevel事件
-                    //onExitLevel?.Invoke(stateLevel);
-                    if (stateLevel != -1)
-                        effects[stateLevel].Revoke();
-                    // 进入i事件
-                    //onEnterLevel?.Invoke(i);
-                    effects[i].Apply();
+                    var oLevel = stateLevel; // 原来处于哪个等级
                     stateLevel = i;
+                    // 离开stateLevel事件
+                    if (oLevel != -1)
+                        effects[oLevel].Revoke();
+                    // 进入i事件
+                    effects[stateLevel].Apply();
                 }
                 break;
             }
         }
     }
-
-    //public StateEffect GetStateEffect()
-    //{
-    //    return effects[stateLevel];
-    //}
 
     public void AddChangeRate(float delta)
     {
@@ -147,15 +141,7 @@ public class PlayerState
         extraChangeRate = 0;
         this.lowDangerLevels = lowDangerLevels;
         this.highDangerLevels = highDangerLevels;
-        CalcStateLevel();
     }
-
-    //public void SetUpEvent(UnityAction<int> onEnterLevel = null, UnityAction<int> onExitLevel = null)
-    //{
-    //    this.onEnterLevel = onEnterLevel;
-    //    this.onExitLevel = onExitLevel;
-    //    CalcStateLevel();
-    //}
 }
 
 // 状态阈值配置
@@ -195,14 +181,15 @@ public class StateEffect
     {
         int signal = forward ? 1 : -1;
 
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, healthRate * signal);
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.San, sanityRate * signal);
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Fullness, fulnessRate * signal);
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Thirst, thirstRate * signal);
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, sorbrietyRate * signal);
+        if (healthRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, healthRate * signal);
+        if (sanityRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.San, sanityRate * signal);
+        if (fulnessRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Fullness, fulnessRate * signal);
+        if (thirstRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Thirst, thirstRate * signal);
+        if (sorbrietyRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, sorbrietyRate * signal);
 
-        StateManager.Instance.ChangePlayerMaxState(PlayerStateEnum.Oxygen, oxygenMax * signal);
-        StateManager.Instance.ChangePlayerConstState(PlayerStateEnum.PainLevel, painConst * signal);
+
+        if (oxygenMax != 0) StateManager.Instance.ChangePlayerMaxState(PlayerStateEnum.Oxygen, oxygenMax * signal);
+        if (painConst != 0) StateManager.Instance.ChangePlayerConstState(PlayerStateEnum.PainLevel, painConst * signal);
     }
 
     public void Apply()

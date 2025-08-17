@@ -342,6 +342,6 @@ public class ChatManager : MonoBehaviour
         }
 
         //返回初始界面
-        SceneManager.LoadScene(0);
+        MySceneManager.LoadScene(0);
     }
 }

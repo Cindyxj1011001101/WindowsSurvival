@@ -81,25 +81,26 @@ public class GameManager : MonoBehaviour
         SoundManager.Instance.PlayCurEnvironmentMusic();
     }
 
-    private void AddCard(Card card, bool toPlayerBag)
+    public void AddCard(Card card, Bag targetBag)
+    {
+        card.StartUpdating();
+        targetBag.AddCard(card);
+    }
+
+    public void AddCard(Card card, bool toPlayerBag)
     {
         if (toPlayerBag && playerBag.CanAddCard(card, out _))
         {
             if (!WindowsManager.Instance.IsWindowOpen("PlayerBag"))
                 WindowsManager.Instance.OpenWindow("PlayerBag");
-            playerBag.AddCard(card);
+            AddCard(card, playerBag);
         }
         else
         {
             if (!WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))
                 WindowsManager.Instance.OpenWindow("EnvironmentBag");
-            curEnvironmentBag.AddCard(card);
+            AddCard(card, curEnvironmentBag);
         }
-    }
-
-    public void AddCard(Card card, Bag targetBag)
-    {
-        targetBag.AddCard(card);
     }
 
     /// <summary>
