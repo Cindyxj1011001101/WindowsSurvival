@@ -216,6 +216,12 @@ public class ChatManager : MonoBehaviour
         switch (nodeData.typeName)
         {
             case "Dialogue":
+                if (nodeData.chatData.MessageCondition != "")
+                {
+                    inParagraph = false;
+                    ChatConditionManager.Instance.StartChatConditionDetection(nodeData);
+                    return;
+                }
                 CreateMessage(nodeData.chatData);
                 break;
             case "Choose":

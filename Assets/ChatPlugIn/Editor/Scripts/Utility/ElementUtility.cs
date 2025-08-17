@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 
@@ -57,7 +58,13 @@ namespace ChatPlugIn
         public static TextField CreateTextArea(string value = null, string label = null, EventCallback<ChangeEvent<string>> onValueChanged = null)
         {
             TextField textArea = CreateTextField(value, label, onValueChanged);
+            textArea.style.width = 300;
+            textArea.style.whiteSpace = WhiteSpace.Normal;
             textArea.multiline = true;
+            if (onValueChanged != null)
+            {
+                textArea.RegisterValueChangedCallback(onValueChanged);
+            }
             return textArea;
         }
         
@@ -76,12 +83,14 @@ namespace ChatPlugIn
 
             // 创建下拉菜单
             var dropdown = new DropdownField(typeof(T).ToString(), choices.ToList(), 0);
+            
+            dropdown.value = value.ToString();
+            //设置当前显示值
 
-            // 添加值改变回调
-            dropdown.RegisterValueChangedCallback(evt =>
+            if (onValueChanged != null)
             {
-                T newvalue = (T)System.Enum.Parse(typeof(T), evt.newValue);
-            });
+                dropdown.RegisterValueChangedCallback(onValueChanged);
+            }
             return dropdown;
         }
 
