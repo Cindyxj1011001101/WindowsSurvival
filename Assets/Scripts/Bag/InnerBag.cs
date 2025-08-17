@@ -43,6 +43,13 @@ public class InnerBag : Bag
     {
         card.SetParentCard(component.BelongedCard);
         component.BelongedCard.RefreshSlot();
+        
+        // 计算重量
+        if (BelongedCard.Bag is PlayerBag)
+        {
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, card.Weight * component.weightLossRate);
+        }
+        
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
     }
 
@@ -50,6 +57,12 @@ public class InnerBag : Bag
     {
         card.SetParentCard(null);
         component.BelongedCard.RefreshSlot();
+
+        if (BelongedCard.Bag is PlayerBag)
+        {
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -card.Weight * component.weightLossRate);
+        }
+
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
     }
 }

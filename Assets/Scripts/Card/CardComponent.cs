@@ -240,9 +240,7 @@ public delegate bool CardFilterDelegate(Card card, out string s);
 
 public class InnerContentsComponent : CardComponent
 {
-    //public List<List<Card>> innerContents = new();
-
-    //public int slotCount;
+    public float weightLossRate = 1f; // 减重率
 
     public InnerBag bag = new();
 
