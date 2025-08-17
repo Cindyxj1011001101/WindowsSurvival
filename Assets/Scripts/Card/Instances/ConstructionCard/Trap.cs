@@ -2,9 +2,6 @@ using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-/// <summary>
-/// 电动排水机
-/// </summary>
 public class Trap : Card
 {
     public bool isWorking; // 是否已打开

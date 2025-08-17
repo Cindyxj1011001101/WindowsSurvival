@@ -77,6 +77,25 @@ public class TechnologyManager
         EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
     }
 
+    public void AddStudyProcess(int  value)
+    {
+        // 进度增长
+        techData.CurStudiedTechNodeData.progress += CurStudyRate;
+        // 研究完成
+        if (techData.CurStudiedTechNodeData.progress >= CurStudiedTechNode.cost)
+        {
+            SoundManager.Instance.PlaySound("研究完成", true);
+            techData.CurStudiedTechNodeData.progress = CurStudiedTechNode.cost;
+            // 解锁该科技
+            UnlockTechNode(CurStudiedTechNode);
+            // 触发研究完成事件
+            EventManager.Instance.TriggerEvent(EventType.StudyComplished, CurStudiedTechNode);
+            // 停止研究
+            StopStudy();
+        }
+        EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
+    }
+
     private float CalcStudyRate()
     {
         return techData.basicStudyRate;

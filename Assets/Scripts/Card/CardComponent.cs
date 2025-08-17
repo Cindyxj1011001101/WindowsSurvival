@@ -175,6 +175,7 @@ public enum ToolType
 {
     Cut,//切割
     Dig,//挖掘
+    Hammer,//锤击
 }
 
 public class ToolComponent : CardComponent
@@ -357,4 +358,29 @@ public class ConstructionComponent : CardComponent
 
     public ConstructionComponent() { }
 }
+#endregion
+
+#region 烹饪组件
+
+public class CookComponent : CardComponent
+{
+    public int MaxProgress;
+    public int CurProgress=0;
+    public string OutcomeCard;
+
+    public string AddProgress()
+    {
+        string res = string.Empty;
+        CurProgress++;
+        if (CurProgress >= MaxProgress)
+        {
+            CurProgress= MaxProgress;
+            res= OutcomeCard;
+            return res;
+        }
+        return res;
+    }
+}
+
+
 #endregion

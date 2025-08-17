@@ -148,11 +148,14 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
     }
 
-    public virtual void Use()
+    public virtual void Use(int times=1)
     {
         if (TryGetComponent<DurabilityComponent>(out var component))
         {
-            component.Use(DestroyThis);
+            for (int i = 0; i < times; i++)
+            {
+                component.Use(DestroyThis);
+            }
         }
     }
 
