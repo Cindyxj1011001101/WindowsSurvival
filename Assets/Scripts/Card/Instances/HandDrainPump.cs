@@ -20,7 +20,16 @@ public class HandDrainPump : Card
     public bool Judge_Drain(out string hint)
     {
         hint = string.Empty;
-        //是否需要判断当前地点是否有水平面属性
+        if (!GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
+        {
+            hint = "该场景无水平面属性";
+            return false;
+        }
+        else if(StateManager.Instance.WaterLevel.CurValue==0)
+        {
+            hint = "当前场景水平面为0";
+            return false;
+        }
         return true;
     }
 }

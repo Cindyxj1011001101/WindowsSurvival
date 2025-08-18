@@ -27,7 +27,14 @@ public class GarbageDestroyer : Card
     public void Event_Destroy(out string tip)
     {
         tip = string.Empty;
-        //销毁内容物
+        TryGetComponent<InnerContentsComponent>(out InnerContentsComponent component);
+        foreach (var slot in component.bag.Slots)
+        {
+            foreach (var card in slot.Cards)
+            {
+                card.DestroyThis();
+            }
+        }
     }
 
     public bool Judge_Destroy(out string hint)

@@ -17,6 +17,8 @@ public class Population
     public int sizeChangePerRound; // 每回合数量变化
     public int sizeChangeOnCaught; // 捕捞后的数量变化
 
+    public bool Trappable;//是否可诱捕
+
     public int Proportion => Mathf.Clamp(curSize, 0, maxSize);
 
     /// <summary>
@@ -100,6 +102,52 @@ public class RepeatableDropList
         }
 
         // 抽中空种群
+
+        return null;
+    }
+    /// <summary>
+    /// 抽取可诱捕卡牌
+    /// </summary>
+    public List<Card> RandomDropTrappable()
+    {
+        // 计算总概率
+        int totalProb = emptyPopulation.Proportion;
+        foreach (var population in populationList)
+        {
+            if (population.Trappable)
+            {
+                totalProb += population.Proportion;
+            }
+        }
+
+        // 随机选择
+        int randomValue = Random.Range(0, totalProb);
+        int currentProb = 0;
+
+        foreach (var population in populationList)
+        {
+            if (population.Trappable)
+            {
+                currentProb += population.Proportion;
+                if (randomValue < currentProb)
+                {
+                    currentProb += population.Proportion;
+                    if (randomValue < currentProb)
+                    {
+                        // 抽中种群
+                        population.curSize -= 300;
+                        population.curSize=Mathf.Clamp(population.curSize, 0, population.maxSize);
+                        // 空种群数量增加
+                        emptyPopulation.curSize += emptyPopulationSizeChangeOnNotCaught;
+                        emptyPopulation.curSize = Mathf.Clamp(emptyPopulation.curSize, 0, emptyPopulation.maxSize);
+                        return DropCards(population);
+                    }
+                }
+            }
+        }
+
+        // 抽中空种群
+        emptyPopulation.curSize -= 1000;
 
         return null;
     }

@@ -735,7 +735,7 @@ public class StateManager : MonoBehaviour
 
     #region 睡觉
     public float SobrietyChangeRateWhileSleeping = +3.5f;
-
+    
     public void Sleep(int time)
     {
         float rate = PlayerStateDict[PlayerStateEnum.Sobriety].ChangeRate;

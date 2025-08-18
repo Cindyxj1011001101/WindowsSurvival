@@ -333,6 +333,7 @@ public static class ExcelReader
                     OverwriteDurability = bool.Parse(row[9].ToString()),
                     OverwriteGrowth = bool.Parse(row[11].ToString()),
                     OverwriteProgress = bool.Parse(row[13].ToString()),
+                    Trappable= bool.Parse(row[15].ToString()),
                 };
                 // 创建卡牌实例
                 var card = CardFactory.CreateCard(config.CardId);
@@ -364,6 +365,7 @@ public static class ExcelReader
                     dropNum = config.DropNum,
                     curSize = config.Size,
                     maxSize = config.MaxSize,
+                    Trappable = config.Trappable,
                     sizeChangePerRound = config.SizeChangePerRound,
                     sizeChangeOnCaught = config.SizeChangeOnCaught
                 });
@@ -463,4 +465,5 @@ public class PopulationConfig
     public bool OverwriteDurability; // 是否覆盖耐久度
     public bool OverwriteGrowth;
     public bool OverwriteProgress; // 是否覆盖产物进度
+    public bool Trappable;
 }

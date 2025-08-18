@@ -77,7 +77,7 @@ public class TechnologyManager
         EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
     }
 
-    public void AddStudyProcess(int  value)
+    public void AddStudyProcess(int value)
     {
         // 进度增长
         techData.CurStudiedTechNodeData.progress += CurStudyRate;

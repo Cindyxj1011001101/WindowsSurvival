@@ -15,6 +15,7 @@ public class Campfire : Card
             new Event("熄灭", "熄灭", Event_UnLight, Judge_UnLight)
         };
     }
+    //TODO:将拥有BurnableComponent卡牌拖拽到本卡牌上，增加燃料（和燃料炉逻辑一致）
     public void Event_Light(out string tip)
     {
         tip = string.Empty;
@@ -52,7 +53,11 @@ public class Campfire : Card
                 {
                     card.TryGetComponent<CookComponent>(out CookComponent cookComponent);
                     string outcomeID= cookComponent.AddProgress();
-                    AddCard(outcomeID,true);
+                    if (outcomeID != string.Empty)
+                    {
+                        component.bag.AddCard(component.bag.FindCardOfName(outcomeID));
+                    }
+
                 }
             }
         }

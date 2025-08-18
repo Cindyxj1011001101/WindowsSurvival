@@ -94,8 +94,5 @@ public class SleepInstrument : Card
         return false;
     }
 
-    protected override System.Action OnUpdate => () =>
-    {
-        //在工作时如果休息则进行额外数据结算
-    };
+    //YONG-TODO:实现睡眠开始与结束的数据处理
 }
