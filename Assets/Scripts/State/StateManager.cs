@@ -412,7 +412,7 @@ public class StateManager : MonoBehaviour
 
     private void InitElectricity()
     {
-        Electricity = new EnvironmentState(Random.Range(30, 45), 50, EnvironmentStateEnum.Electricity, -0.2f);
+        Electricity = new EnvironmentState(Random.Range(30, 45), 50, EnvironmentStateEnum.Electricity, 0);
     }
 
     private void InitWaterLevel()
