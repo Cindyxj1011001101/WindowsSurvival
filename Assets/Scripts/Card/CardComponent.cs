@@ -248,6 +248,11 @@ public class InnerContentsComponent : CardComponent
     [JsonIgnore]
     public CardFilterDelegate contentFilter;
 
+    [JsonIgnore]
+    public UnityAction<Card> onAddCard;
+    [JsonIgnore]
+    public UnityAction<Card> onRemoveCard;
+
     public void Init()
     {
         bag.SetComponent(this);

@@ -51,6 +51,8 @@ public class InnerBag : Bag
         }
         
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
+
+        component.onAddCard?.Invoke(card);
     }
 
     public override void OnRemoveCard(Card card)
@@ -64,5 +66,7 @@ public class InnerBag : Bag
         }
 
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
+
+        component.onRemoveCard?.Invoke(card);
     }
 }
