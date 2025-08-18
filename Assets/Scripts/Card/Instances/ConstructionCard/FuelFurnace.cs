@@ -2,10 +2,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 电动排水机
+/// 燃料炉
 /// </summary>
 public class FuelFurnace : Card
 {
+    private InnerContentsComponent innerContents;
     public bool isLightened; // 是否已打开
     public float Furl;//剩余燃料数
     public List<Card> CardsToProcesss;
@@ -13,11 +14,11 @@ public class FuelFurnace : Card
     public int MaxRound = 16;
     public bool IsProcessing;
     public float CurTempture;
-    public List<TempertureData> TempertureDatas= new List<TempertureData>();
+    public List<TempertureData> TempertureDatas = new List<TempertureData>();
     public string OutComeCardID;
-    
+
     //TODO:将拥有BurnableComponent卡牌拖拽到本卡牌上，增加燃料
-    
+
     private FuelFurnace()
     {
         Events = new()
@@ -37,10 +38,10 @@ public class FuelFurnace : Card
         });
     }
 
-    protected override void LateInit()
+    private bool ContentFilter(Card c, out string s)
     {
-        base.LateInit();
         //YONG-TODO：对过滤器做初始化，限制放入物体的可加工属性
+        throw new System.NotImplementedException();
     }
 
     public void Event_Lighting(out string tip)
@@ -49,61 +50,66 @@ public class FuelFurnace : Card
         GameManager.Instance.PlayerBag.FindCardOfName("燃料点火器").Use();
         isLightened = true;
     }
+
     public bool Judge_Lighting(out string hint)
     {
         hint = string.Empty;
-        if(Furl!=0&&StateManager.Instance.WaterLevel.CurValue<=30&&
-           GameManager.Instance.PlayerBag.FindCardOfName("燃料点火器")!=null&&
-           isLightened==false)
+        if (Furl != 0 && StateManager.Instance.WaterLevel.CurValue <= 30 &&
+           GameManager.Instance.PlayerBag.FindCardOfName("燃料点火器") != null &&
+           isLightened == false)
         {
             return true;
         }
         return false;
     }
+
     public void Event_TakeOut(out string tip)
     {
         tip = string.Empty;
         AddCard(OutComeCardID, true);
         OutComeCardID = null;
     }
+
     public bool Judge_TakeOut(out string hint)
     {
         hint = string.Empty;
         return OutComeCardID != null;
     }
 
-    
     public void Event_Process(out string tip)
-    { 
+    {
         tip = string.Empty;
         //TODO:限制InnerBag可放入拖出卡牌
-        if (TryGetComponent(out InnerContentsComponent component))
+        foreach (var slot in innerContents.bag.Slots)
         {
-            foreach (var slot in component.bag.Slots)
+            foreach (var card in slot.Cards)
             {
-                foreach (var card in slot.Cards)
-                {
-                    CardsToProcesss.Add(card);
-                }
+                CardsToProcesss.Add(card);
             }
         }
+
         IsProcessing = true;
         curRounds = MaxRound;
-        TempertureDatas= new List<TempertureData>();
-        TempertureDatas.Add(new TempertureData(TempertureType.Normal, 0));
-        TempertureDatas.Add(new TempertureData(TempertureType.Low, 0));
-        TempertureDatas.Add(new TempertureData(TempertureType.Medium, 0));
-        TempertureDatas.Add(new TempertureData(TempertureType.High, 0));
+        TempertureDatas = new List<TempertureData>
+        {
+            new (TempertureType.Normal, 0),
+            new (TempertureType.Low, 0),
+            new (TempertureType.Medium, 0),
+            new (TempertureType.High, 0)
+        };
     }
 
     public bool Judge_Process(out string hint)
     {
         hint = string.Empty;
+
         if (IsProcessing) return false;
+
         if (OutComeCardID != null) return false;
+
         if (TryGetComponent(out InnerContentsComponent component))
         {
-            if (component.bag.IsBagFull) return true;
+            if (component.bag.IsFull) return true;
         }
         return false;
     }
@@ -115,9 +121,10 @@ public class FuelFurnace : Card
     public bool Judge_Unlightened(out string hint)
     {
         hint = string.Empty;
-        if (isLightened)return true;
+        if (isLightened) return true;
         return false;
     }
+
     protected override System.Action OnUpdate => () =>
     {
         if (isLightened)
@@ -132,7 +139,7 @@ public class FuelFurnace : Card
             {
                 isLightened = false;
             }
-            Furl=Mathf.Clamp(Furl,0,96);
+            Furl = Mathf.Clamp(Furl, 0, 96);
             if (Furl <= 0)
             {
                 isLightened = false;
@@ -149,10 +156,10 @@ public class FuelFurnace : Card
             {
                 CurTempture -= 8;
             }
-            CurTempture = Mathf.Clamp(CurTempture,0, 300);
+            CurTempture = Mathf.Clamp(CurTempture, 0, 300);
         }
 
-        
+
         if (curRounds != 0)
         {
             if (CurTempture <= 50)
@@ -178,8 +185,8 @@ public class FuelFurnace : Card
             string outcomeID = ProcessManager.GetProcessOutcomeID(CardsToProcesss, TempertureDatas);
             IsProcessing = false;
             //TODO:恢复InnerBag可放入拖出卡牌
-            OutComeCardID= outcomeID;
+            OutComeCardID = outcomeID;
         }
     };
-    
+
 }

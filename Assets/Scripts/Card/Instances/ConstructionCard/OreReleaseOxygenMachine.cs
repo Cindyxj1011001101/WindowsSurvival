@@ -5,6 +5,7 @@ using UnityEngine;
 /// </summary>
 public class OreReleaseOxygenMachine : Card
 {
+    private InnerContentsComponent innerContents;
     public bool isWorking; // 是否已打开
     public float maxOxygenStorage; // 最大氧气存储
     public float curOxygenStorage; // 当前氧气存储数量
@@ -38,15 +39,6 @@ public class OreReleaseOxygenMachine : Card
         });
     }
 
-    protected override void LateInit()
-    {
-        base.LateInit();
-        if (TryGetComponent<InnerContentsComponent>(out var component))
-        {
-            component.contentFilter = ContentFilter;
-        }
-    }
-
     private bool ContentFilter(Card c, out string s)
     {
         s = string.Empty;
@@ -56,6 +48,16 @@ public class OreReleaseOxygenMachine : Card
             return false;
         }
         return true;
+    }
+
+    public override bool CanQuickInteract(Card card)
+    {
+        return innerContents.CanQuickInteract(card);
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        innerContents.QuickIneract(slot, count, out tip);
     }
 
     #region 开关

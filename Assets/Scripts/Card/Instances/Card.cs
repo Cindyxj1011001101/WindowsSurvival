@@ -128,7 +128,17 @@ public abstract class Card : IComparable<Card>
         ParentCard = parentCard;
     }
 
-    protected virtual void LateInit() { } // 用于在卡牌实例化后进行额外的初始化操作
+    /// <summary>
+    /// 用于在卡牌实例化后进行额外的初始化操作
+    /// </summary>
+    protected virtual void LateInit()
+    {
+        if (TryGetComponent<InnerContentsComponent>(out var i))
+        {
+            i.contentFilter = ReflectionUtility.BindToDelegate<CardFilterDelegate>(this, "ContentFilter", true);
+            ReflectionUtility.SetFieldValue(this, "innerContents", i, true);
+        }
+    }
 
     private bool isUpdating = false; // 是否已启用每回合更新
 

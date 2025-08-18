@@ -14,7 +14,9 @@ public abstract class Bag
 
     [JsonIgnore] public int EmptySlotCount => Slots.Count(s => s.IsEmpty);
 
-    [JsonIgnore] public bool IsBagFull => EmptySlotCount == 0; // 背包是否已满
+    [JsonIgnore] public bool IsFull => EmptySlotCount == 0; // 背包是否已满
+
+    [JsonIgnore] public bool IsEmpty => EmptySlotCount == SlotCount; // 背包是否为空
 
     [JsonIgnore] public SlotCards this[int index] => Slots[index];
 
@@ -135,6 +137,14 @@ public abstract class Bag
                 slot.AddCard(card);
                 return;
             }
+        }
+    }
+
+    public void Clear()
+    {
+        foreach (var slot in slots)
+        {
+            slot.Clear();
         }
     }
 

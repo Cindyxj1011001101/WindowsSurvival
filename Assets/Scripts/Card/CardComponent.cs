@@ -245,19 +245,17 @@ public class InnerContentsComponent : CardComponent
 
     public InnerBag bag = new();
 
-    [JsonIgnore]
-    public CardFilterDelegate contentFilter;
-
-    [JsonIgnore]
-    public UnityAction<Card> onAddCard;
-    [JsonIgnore]
-    public UnityAction<Card> onRemoveCard;
+    [JsonIgnore] public CardFilterDelegate contentFilter;
+    [JsonIgnore] public UnityAction<Card> onAddCard;
+    [JsonIgnore] public UnityAction<Card> onRemoveCard;
 
     public void Init()
     {
         bag.SetComponent(this);
         bag.Init();
     }
+
+    public void Clear() => bag.Clear();
 
     public InnerContentsComponent(int slotCount)
     {
@@ -268,6 +266,23 @@ public class InnerContentsComponent : CardComponent
     public int GetTotalCountByCardId(string cardId) => bag.GetTotalCountByCardId(cardId);
 
     public int RemoveCardsByCardId(string cardId, int count) => bag.RemoveCardsByCardId(cardId, count);
+
+    public bool CanQuickInteract(Card card)
+    {
+        return card.Moveable && card.Bag != bag && bag.CanAddCard(card, out _);
+    }
+
+    public void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        tip = string.Empty;
+        for (int i = 0; i < count; i++)
+        {
+            if (!bag.CanAddCard(slot.PeekCard(), out tip)) break;
+            var toAdd = slot.RemoveCard();
+            bag.AddCard(toAdd);
+            toAdd.RefreshSlot();
+        }
+    }
 
     public override string ToString()
     {
