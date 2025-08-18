@@ -222,7 +222,7 @@ public abstract class Bag
     /// <param name="dontRemoveAnyIfNotAdequate">当背包的卡牌不够移除时，true: 什么也不移除，false: 尽可能多地移除卡牌</param>
     /// <returns>成功移除的卡牌的数量</returns>
     /// <exception cref="ArgumentException">amount必须是正整数</exception>
-    public int RemoveCardsByCardId(string cardId, int amount, bool dontRemoveAnyIfNotAdequate = true)
+    public int DestroyCardsByCardId(string cardId, int amount, bool dontRemoveAnyIfNotAdequate = true)
     {
         if (amount <= 0) throw new ArgumentException("要移除的卡牌数量必须是正整数。");
 
@@ -261,7 +261,7 @@ public abstract class Bag
             // 则将这些卡牌移除，退出循环
             else
             {
-                slot.RemoveCards(leftAmount);
+                slot.DestroyCards(leftAmount);
                 leftAmount = 0;
                 break;
             }

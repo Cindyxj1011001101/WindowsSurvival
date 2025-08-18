@@ -192,12 +192,11 @@ public class OreReleaseOxygenMachine : Card
 
     private bool TryConsumeOre(int amount)
     {
-        TryGetComponent<InnerContentsComponent>(out var component);
-        int oreCount = component.GetTotalCountByCardId("白爆矿");
+        int oreCount = innerContents.GetTotalCountByCardId("白爆矿");
         // 白爆矿的数量多余消耗量
         if (oreCount > amount)
         {
-            component.RemoveCardsByCardId("白爆矿", amount);
+            innerContents.DestroyCardsByCardId("白爆矿", amount);
             return true;
         }
         return false;

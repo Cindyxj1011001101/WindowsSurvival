@@ -1,8 +1,8 @@
-
 using UnityEngine;
 
 public class Campfire : Card
 {
+    private InnerContentsComponent innerContents;
     public bool isLightened;
     public float Fuel;
     private Campfire()
@@ -15,11 +15,24 @@ public class Campfire : Card
             new Event("熄灭", "熄灭", Event_UnLight, Judge_UnLight)
         };
     }
+
+    private bool ContentFilter(Card c, out string s)
+    {
+        // TODO
+        throw new System.NotImplementedException();
+    }
+
     //TODO:将拥有BurnableComponent卡牌拖拽到本卡牌上，增加燃料（和燃料炉逻辑一致）
     public void Event_Light(out string tip)
     {
         tip = string.Empty;
-        isLightened=true;
+
+        var env = Bag as EnvironmentBag;
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -4);
+        env.ChangeEnvironmentState(EnvironmentStateEnum.CarbonMonoxideLevel, +2);
+
+
+        isLightened = true;
     }
 
     public bool Judge_Light(out string hint)
@@ -30,7 +43,12 @@ public class Campfire : Card
     public void Event_UnLight(out string tip)
     {
         tip = string.Empty;
-        isLightened=false;
+
+        var env = Bag as EnvironmentBag;
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +4);
+        env.ChangeEnvironmentState(EnvironmentStateEnum.CarbonMonoxideLevel, -2);
+
+        isLightened = false;
     }
 
     public bool Judge_UnLight(out string hint)
@@ -44,23 +62,19 @@ public class Campfire : Card
         {
             Fuel -= 2;
             Fuel = Mathf.Clamp(Fuel, 0, 100);
-            GameManager.Instance.CurEnvironmentBag.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -4);
-            GameManager.Instance.CurEnvironmentBag.ChangeEnvironmentState(EnvironmentStateEnum.CarbonMonoxideLevel, 2);
-            TryGetComponent<InnerContentsComponent>(out InnerContentsComponent component);
-            foreach (var slot in component.bag.Slots)
+            foreach (var slot in innerContents.bag.Slots)
             {
                 foreach (var card in slot.Cards)
                 {
-                    card.TryGetComponent<CookComponent>(out CookComponent cookComponent);
-                    string outcomeID= cookComponent.AddProgress();
-                    if (outcomeID != string.Empty)
+                    card.TryGetComponent(out CookComponent cookComponent);
+                    string outcomeID = cookComponent.AddProgress();
+                    if (!string.IsNullOrEmpty(outcomeID))
                     {
-                        component.bag.AddCard(component.bag.FindCardOfName(outcomeID));
+                        // 获得煮熟产物
+                        AddCard(outcomeID, innerContents.bag);
                     }
-
                 }
             }
         }
-
     };
 }

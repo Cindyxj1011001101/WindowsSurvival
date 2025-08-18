@@ -150,7 +150,7 @@ public class CraftManager
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
         foreach (var material in recipe.materials)
         {
-            playerBag.RemoveCardsByCardId(material.cardId, material.requiredNum);
+            playerBag.DestroyCardsByCardId(material.cardId, material.requiredNum);
         }
 
         // 消耗时间

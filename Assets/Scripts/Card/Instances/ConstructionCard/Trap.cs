@@ -29,6 +29,7 @@ public class Trap : Card
 
     private bool ContentFilter(Card c, out string s)
     {
+        // TODO
         throw new System.NotImplementedException();
     }
 

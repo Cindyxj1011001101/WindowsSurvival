@@ -101,6 +101,27 @@ public class SlotCards
             RemoveCard();
     }
 
+    /// <summary>
+    /// 销毁最优先的卡牌
+    /// </summary>
+    public void DestroyCard()
+    {
+        PeekCard().DestroyThis();
+    }
+
+    /// <summary>
+    /// 销毁指定数量的卡牌
+    /// </summary>
+    public void DestroyCards(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+            DestroyCard();
+    }
+
+    /// <summary>
+    /// 最优先的卡牌
+    /// </summary>
+    /// <returns></returns>
     public Card PeekCard() => Cards[0];
 
     /// <summary>
@@ -126,12 +147,12 @@ public class SlotCards
         return IsEmpty || (card.CardId == PeekCard().CardId && StackNum < card.MaxStackNum);
     }
 
+    /// <summary>
+    /// 销毁所有卡牌
+    /// </summary>
     public virtual void Clear()
     {
-        while (!IsEmpty)
-        {
-            RemoveCard();
-        }
+        DestroyCards(StackNum);
         Cards.Clear();
     }
 }

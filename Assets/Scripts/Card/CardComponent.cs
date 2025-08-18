@@ -265,7 +265,7 @@ public class InnerContentsComponent : CardComponent
 
     public int GetTotalCountByCardId(string cardId) => bag.GetTotalCountByCardId(cardId);
 
-    public int RemoveCardsByCardId(string cardId, int count) => bag.RemoveCardsByCardId(cardId, count);
+    public int DestroyCardsByCardId(string cardId, int count) => bag.DestroyCardsByCardId(cardId, count);
 
     public bool CanQuickInteract(Card card)
     {
