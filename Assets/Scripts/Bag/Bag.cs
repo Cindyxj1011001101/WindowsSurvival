@@ -27,14 +27,14 @@ public abstract class Bag
 
     public virtual void Init()
     {
-        if (!firstInit)
-            FirstInit();
-
         foreach (var slot in Slots)
         {
             slot.SetBag(this);
             slot.Init();
         }
+
+        if (!firstInit)
+            FirstInit();
 
         firstInit = true;
     }

@@ -11,6 +11,7 @@ public class GMCommand
         if (window != null && window.Bag != null && window.Bag.CanAddCard(card, out _))
             window.Bag.AddCard(card);
         card.RefreshSlot();
+        card.StartUpdating();
 
         return card;
     }
