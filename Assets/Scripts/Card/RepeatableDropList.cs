@@ -21,13 +21,18 @@ public class Population
 
     public int Proportion => Mathf.Clamp(curSize, 0, maxSize);
 
+    public void AddSize(int size)
+    {
+        curSize += size;
+        if (curSize > maxSize) curSize = maxSize;
+    }
+
     /// <summary>
     /// 每回合更新种群数量
     /// </summary>
     public void Update()
     {
-        curSize += sizeChangePerRound;
-        if (curSize > maxSize) curSize = maxSize;
+        AddSize(sizeChangePerRound);
     }
 
     /// <summary>
@@ -35,8 +40,7 @@ public class Population
     /// </summary>
     public void GetCaught()
     {
-        curSize += sizeChangeOnCaught;
-        if (curSize > maxSize) curSize = maxSize;
+        AddSize(sizeChangeOnCaught);
     }
 }
 
@@ -94,9 +98,7 @@ public class RepeatableDropList
                 // 抽中种群
                 population.GetCaught();
                 // 空种群数量增加
-                emptyPopulation.curSize += emptyPopulationSizeChangeOnNotCaught;
-                if (emptyPopulation.curSize > emptyPopulation.maxSize)
-                    emptyPopulation.curSize = emptyPopulation.maxSize;
+                emptyPopulation.AddSize(emptyPopulationSizeChangeOnNotCaught);
                 return DropCards(population);
             }
         }
@@ -131,23 +133,17 @@ public class RepeatableDropList
                 currentProb += population.Proportion;
                 if (randomValue < currentProb)
                 {
-                    currentProb += population.Proportion;
-                    if (randomValue < currentProb)
-                    {
-                        // 抽中种群
-                        population.curSize -= 300;
-                        population.curSize=Mathf.Clamp(population.curSize, 0, population.maxSize);
-                        // 空种群数量增加
-                        emptyPopulation.curSize += emptyPopulationSizeChangeOnNotCaught;
-                        emptyPopulation.curSize = Mathf.Clamp(emptyPopulation.curSize, 0, emptyPopulation.maxSize);
-                        return DropCards(population);
-                    }
+                    // 抽中种群
+                    population.AddSize(-300);
+                    // 空种群数量增加
+                    emptyPopulation.AddSize(300);
+                    return DropCards(population);
                 }
             }
         }
 
         // 抽中空种群
-        emptyPopulation.curSize -= 1000;
+        emptyPopulation.AddSize(-1000);
 
         return null;
     }
