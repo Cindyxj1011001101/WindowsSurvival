@@ -136,12 +136,12 @@ public class WindowsManager : MonoBehaviour
         {
             { "State", preset.stateWindow },
             { "Camera", preset.cameraWindow },
-            { "Chat", preset.chatWindow },
-            { "Craft", preset.craftWindow },
+            //{ "Chat", preset.chatWindow },
+            //{ "Craft", preset.craftWindow },
             { "Details", preset.detailsWindow },
             { "EnvironmentBag", preset.envBagWindow },
             { "PlayerBag", preset.playerBagWindow },
-            { "Equipment", preset.equipmentWindow },
+            //{ "Equipment", preset.equipmentWindow },
         };
     }
 

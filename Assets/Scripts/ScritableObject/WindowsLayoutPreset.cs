@@ -12,11 +12,11 @@ public class PositionAndSizeDelta
 public class WindowsLayoutPreset : ScriptableObject
 {
     public PositionAndSizeDelta cameraWindow;
-    public PositionAndSizeDelta chatWindow;
-    public PositionAndSizeDelta craftWindow;
+    //public PositionAndSizeDelta chatWindow;
+    //public PositionAndSizeDelta craftWindow;
     public PositionAndSizeDelta detailsWindow;
     public PositionAndSizeDelta envBagWindow;
     public PositionAndSizeDelta playerBagWindow;
-    public PositionAndSizeDelta equipmentWindow;
+    //public PositionAndSizeDelta equipmentWindow;
     public PositionAndSizeDelta stateWindow;
 }
