@@ -209,6 +209,22 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
 
+    #region 拖动交互
+    /// <summary>
+    /// 能否拖动交互
+    /// </summary>
+    /// <param name="card">被拿起的卡牌</param>
+    /// <returns></returns>
+    public virtual bool CanQuickInteract(Card card) { return false; }
+
+    /// <summary>
+    /// 拖动交互的具体逻辑
+    /// </summary>
+    /// <param name="slot">被拿起的卡牌对应的SlotCards</param>
+    /// <param name="count">需要快捷交互的卡牌数量</param>
+    public virtual void QuickIneract(SlotCards slot, int count) { }
+    #endregion
+
     /// <summary>
     /// 进入当前环境时（如玩家进入该卡牌所在地点）（通常用于播放卡牌对应的循环音）
     /// </summary>
