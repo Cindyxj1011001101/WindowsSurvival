@@ -27,7 +27,19 @@ public class CardSlot : MonoBehaviour
     public bool IsEmpty => Cards.IsEmpty;
     public int StackNum => Cards.StackNum;
 
-    public bool CanInteract {  get; protected set; }
+    public bool Interactable {  get; protected set; }
+
+    private bool dontRefresh;
+
+    public bool DontRefresh
+    {
+        get => dontRefresh;
+        set
+        {
+            dontRefresh = value;
+            if (!value) RefreshDisplay();
+        }
+    }
 
     private void OnEnable()
     {
@@ -74,19 +86,19 @@ public class CardSlot : MonoBehaviour
         if (PeekCard().CanQuickInteract(card))
         {
             thisCanvasGroup.alpha = 1f;
-            CanInteract = true;
+            Interactable = true;
         }
         else
         {
             thisCanvasGroup.alpha = .14f;
-            CanInteract = false;
+            Interactable = false;
         }
     }
 
     private void OnCardPutDown()
     {
         thisCanvasGroup.alpha = 1f;
-        CanInteract = true;
+        Interactable = false;
     }
 
     private void OnChangeTimeStarted()
@@ -123,6 +135,11 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     public void RefreshDisplay()
     {
+        if (dontRefresh) return;
+
+        thisCanvasGroup.alpha = 1f;
+        Interactable = false;
+
         if (IsEmpty)
         {
             Clear();

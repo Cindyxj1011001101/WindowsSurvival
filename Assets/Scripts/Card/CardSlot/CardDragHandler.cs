@@ -44,6 +44,9 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         sourceSlot.DisplayCard(card, sourceSlot.StackNum - pickedCount);
         cursorSlot.DisplayCard(card, pickedCount);
 
+        // 让sourceSlot暂时不要刷新显示
+        sourceSlot.DontRefresh = true;
+
         SoundManager.Instance.PlaySound("拿起卡牌", true);
 
         EventManager.Instance.TriggerEvent(EventType.PickUpCard, card);
@@ -56,6 +59,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnEndDrag(PointerEventData eventData)
     {
+
         MouseManager.Instance.EndDragging();
 
         dragEndPosition = MFXUtility.ScreenPointToLocalPointInRectangle(eventData.position);
@@ -65,6 +69,16 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (currentObject == null)
         {
             AnimateCardReturn(pickedCount);
+            EventManager.Instance.TriggerEvent(EventType.PutDownCard);
+            return;
+        }
+
+        // 处理快捷交互
+        var targetSlot = currentObject.GetComponentInParent<CardSlot>();
+        if (targetSlot != null && targetSlot.Interactable)
+        {
+            HandleQuickInteract(targetSlot);
+            EventManager.Instance.TriggerEvent(EventType.PutDownCard);
             return;
         }
 
@@ -77,7 +91,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 同背包放置
             if (targetBag == sourceBag)
             {
-                CardSlot targetSlot = currentObject.GetComponentInParent<CardSlot>();
                 // 放在同背包的不同格子里
                 if (targetSlot != null && targetSlot != sourceSlot)
                 {
@@ -107,6 +120,18 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         EventManager.Instance.TriggerEvent(EventType.PutDownCard);
+    }
+
+    private void HandleQuickInteract(CardSlot targetSlot)
+    {
+        var left = sourceSlot.StackNum - pickedCount;
+        targetSlot.PeekCard().QuickIneract(sourceSlot.Cards, pickedCount, out var tip);
+        targetSlot.ShowTip(tip, ColorManager.Yellow);
+        var toReturn = sourceSlot.StackNum - left; // toReturn一定>=0
+        if (toReturn > 0)
+            AnimateCardReturn(toReturn);
+        else
+            sourceSlot.DontRefresh = false;
     }
 
     /// <summary>
@@ -152,9 +177,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             else
             {
                 // 显示详情
-                //(WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot);
-                //(WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot.PeekCard());
-                //(WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot.Cards);
                 (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot.Cards);
                 return;
             }
@@ -206,7 +228,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             onComplete: () =>
             {
                 placementAction.Invoke();
-                sourceSlot.RefreshDisplay();
+                sourceSlot.DontRefresh = false;
             }
         );
     }
@@ -226,7 +248,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 onComplete: () =>
                 {
                     // 刷新源卡槽显示
-                    sourceSlot.RefreshDisplay();
+                    sourceSlot.DontRefresh = false;
                     // 显示提示
                     sourceSlot.ShowTip(tip, ColorManager.Yellow);
                 }

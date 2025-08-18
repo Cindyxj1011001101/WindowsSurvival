@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -74,13 +75,7 @@ public class RatBody : Card
     #region 用刀切割
     public void Event_PeelByKnife(out string tip)
     {
-        DestroyThis();
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).Use();
-
-        tip = string.Empty;
-        //消耗15分钟
-        TimeManager.Instance.AddTime(15);
-        AddCard("小块生肉", true);
+        PeelByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
 
     public bool Judge_PeelByKnife(out string hint)
@@ -93,6 +88,17 @@ public class RatBody : Card
         }
         return true;
     }
+
+    private void PeelByKnife(Card knife, out string tip)
+    {
+        tip = string.Empty;
+        DestroyThis();
+        knife.Use();
+
+        //消耗15分钟
+        TimeManager.Instance.AddTime(15);
+        AddCard("小块生肉", true);
+    }
     #endregion
 
     protected override System.Action OnUpdate => () =>
@@ -100,4 +106,19 @@ public class RatBody : Card
         TryGetComponent<FreshnessComponent>(out var component);
         component.Update(TimeManager.Instance.SettleInterval, OnRotton);
     };
+
+    public override bool CanQuickInteract(Card card)
+    {
+        // 允许和带有切割标签的卡牌快速交互
+        if (card.TryGetComponent<ToolComponent>(out var component))
+        {
+            if (component.toolTypes.Contains(ToolType.Cut)) return true;
+        }
+        return false;
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        PeelByKnife(slot.PeekCard(), out tip);
+    }
 }

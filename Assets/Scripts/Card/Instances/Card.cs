@@ -166,7 +166,7 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
     }
 
-    public virtual void Use(int times=1)
+    public virtual void Use(int times = 1)
     {
         if (TryGetComponent<DurabilityComponent>(out var component))
         {
@@ -222,7 +222,7 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     /// <param name="slot">被拿起的卡牌对应的SlotCards</param>
     /// <param name="count">需要快捷交互的卡牌数量</param>
-    public virtual void QuickIneract(SlotCards slot, int count) { }
+    public virtual void QuickIneract(SlotCards slot, int count, out string tip) { tip = string.Empty; }
     #endregion
 
     /// <summary>
