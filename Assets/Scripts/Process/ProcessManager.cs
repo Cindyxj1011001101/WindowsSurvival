@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using System.Linq;
+
 public enum TempertureType
 {
     Normal,//常温
@@ -196,7 +198,23 @@ public static class ProcessManager
     //根据配方列表的优先度判断结算的加工
     public static ProcessData FindProcessByPriority(List<ProcessData> processDataList)
     {
-        return processDataList.OrderByDescending(processData => processData.Priority).FirstOrDefault();
+        processDataList.Sort((x, y) => y.Priority.CompareTo(x.Priority));
+        int MaxPriority=processDataList[0].Priority;
+        List<ProcessData> resList = new List<ProcessData>();
+        foreach (var data in processDataList)
+        {
+            if (data.Priority == MaxPriority)
+            {
+                resList.Add(data);
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        return resList[Random.Range(0,resList.Count)];
+
     }
     //判断食物属性是否符合条件
     public static bool IsFoodPropertyMatch(FoodPropertyCalculate foodPropertyCalculate, List<Card> cardList)

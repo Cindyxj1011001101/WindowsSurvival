@@ -13,9 +13,11 @@ public class HandDrainPump : Card
     public void Event_Drain(out string tip)
     {
         tip=string.Empty;
+        Use();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -3);
         StateManager.Instance.ChangeWaterLevel(-7);
         TimeManager.Instance.AddTime(30);
+
     }
     public bool Judge_Drain(out string hint)
     {
