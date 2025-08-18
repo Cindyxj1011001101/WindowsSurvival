@@ -62,14 +62,18 @@ public class Campfire : Card
         {
             Fuel -= 2;
             Fuel = Mathf.Clamp(Fuel, 0, 100);
+            Card card;
             foreach (var slot in innerContents.bag.Slots)
             {
-                foreach (var card in slot.Cards)
+                for (int i = slot.Cards.Count; i >= 0; i--)
                 {
+                    card = slot.Cards[i];
                     card.TryGetComponent(out CookComponent cookComponent);
                     string outcomeID = cookComponent.AddProgress();
                     if (!string.IsNullOrEmpty(outcomeID))
                     {
+                        // 销毁原卡牌
+                        card.DestroyThis();
                         // 获得煮熟产物
                         AddCard(outcomeID, innerContents.bag);
                     }
