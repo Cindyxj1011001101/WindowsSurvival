@@ -136,7 +136,7 @@ public abstract class WindowBase : PanelBase
         }
     }
 
-    public void SetPositionAndSizeDelta(PositionAndSizeDelta args)
+    public void ForceSetPositionAndSizeDelta(PositionAndSizeDelta args)
     {
         SetState(WindowState.Default);
 
@@ -146,9 +146,19 @@ public abstract class WindowBase : PanelBase
         canvasGroup.alpha = 1.0f;
         canvasGroup.blocksRaycasts = canvasGroup.interactable = true;
 
+        RectTransform.localScale = Vector3.one;
+        SetPositionAndSizeDelta(args);
+    }
+
+    public void SetPositionAndSizeDelta(PositionAndSizeDelta args)
+    {
         RectTransform.anchoredPosition = args.position;
         RectTransform.sizeDelta = args.sizeDelta;
-        RectTransform.localScale = Vector3.one;
+
+        foreach (var item in GetComponentsInChildren<IAdaptiveSize>())
+        {
+            item.UpdateSize();
+        }
     }
 
     public void Open()

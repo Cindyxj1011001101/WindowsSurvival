@@ -16,6 +16,7 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private RectTransform valueComponentLayout; // 用于显示新鲜度、耐久等组件的布局
     [SerializeField] private RectTransform innerContentsComponentLayout; // 用于显示内容物组件
     [SerializeField] private CanvasGroup cardCanvasGroup;
+    [SerializeField] private CanvasGroup thisCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
     [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
 
@@ -26,10 +27,14 @@ public class CardSlot : MonoBehaviour
     public bool IsEmpty => Cards.IsEmpty;
     public int StackNum => Cards.StackNum;
 
+    public bool CanInteract {  get; protected set; }
+
     private void OnEnable()
     {
         EventManager.Instance.AddListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
+        EventManager.Instance.AddListener<Card>(EventType.PickUpCard, OnCardPickedUp);
+        EventManager.Instance.AddListener(EventType.PutDownCard, OnCardPutDown);
     }
 
     private void OnDisable()
@@ -39,6 +44,8 @@ public class CardSlot : MonoBehaviour
 
         EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
+        EventManager.Instance.AddListener<Card>(EventType.PickUpCard, OnCardPickedUp);
+        EventManager.Instance.AddListener(EventType.PutDownCard, OnCardPutDown);
     }
 
     public void Init(SlotCards slotCards)
@@ -49,6 +56,38 @@ public class CardSlot : MonoBehaviour
     }
 
     #region 显示
+
+    private void OnCardPickedUp(Card card)
+    {
+        if (Cards == null) return;
+
+        if (IsEmpty)
+        {
+            // 同背包或者卡牌可以放置到不同背包
+            if (card.Bag == Cards.Bag || card.Moveable && Cards.Bag.CanAddCard(card, out _))
+                thisCanvasGroup.alpha = 1f;
+            else 
+                thisCanvasGroup.alpha = .14f;
+            return;
+        }
+
+        if (PeekCard().CanQuickInteract(card))
+        {
+            thisCanvasGroup.alpha = 1f;
+            CanInteract = true;
+        }
+        else
+        {
+            thisCanvasGroup.alpha = .14f;
+            CanInteract = false;
+        }
+    }
+
+    private void OnCardPutDown()
+    {
+        thisCanvasGroup.alpha = 1f;
+        CanInteract = true;
+    }
 
     private void OnChangeTimeStarted()
     {

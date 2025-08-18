@@ -18,6 +18,8 @@
     StudyStarted,
     StartChangeTime,
     EndChangeTime,
+    PickUpCard, // 拿起一张卡牌
+    PutDownCard, // 放下一张卡牌
 }
 
 public class ChangeStateArgs

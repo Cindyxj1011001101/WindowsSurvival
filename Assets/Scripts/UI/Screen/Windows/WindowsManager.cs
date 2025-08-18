@@ -155,7 +155,7 @@ public class WindowsManager : MonoBehaviour
             #endregion
 
             if (defaultPositionAndSizeDeltas.ContainsKey(appName))
-                OpenWindow(appName).SetPositionAndSizeDelta(defaultPositionAndSizeDeltas[appName]);
+                OpenWindow(appName).ForceSetPositionAndSizeDelta(defaultPositionAndSizeDeltas[appName]);
         }
 
         FocusWindow(focus);
@@ -185,8 +185,7 @@ public class WindowsManager : MonoBehaviour
             // 设置窗口的默认位置
             if (defaultPositionAndSizeDeltas.ContainsKey(appName))
             {
-                window.RectTransform.anchoredPosition = defaultPositionAndSizeDeltas[appName].position;
-                window.RectTransform.sizeDelta = defaultPositionAndSizeDeltas[appName].sizeDelta;
+                window.SetPositionAndSizeDelta(defaultPositionAndSizeDeltas[appName]);
             }
 
             if (SoundManager.Instance != null)
