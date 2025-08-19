@@ -48,6 +48,7 @@ public static class ExcelReader
                 // HasBurn = bool.Parse(row[25].ToString()),
                 // HasFoodProperty = bool.Parse(row[27].ToString()),
                 IsPassage = bool.Parse(row[36].ToString()),
+                CanCook = bool.Parse(row[40].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
@@ -98,6 +99,11 @@ public static class ExcelReader
                 cardConfig.MoveTime = int.Parse(row[37].ToString());
                 cardConfig.TargetPlace = ParsePlaceEnum(row[38].ToString());
                 cardConfig.InteractAudio = row[39].ToString();
+            }
+            if (cardConfig.CanCook)
+            {
+                cardConfig.CookTime = int.Parse(row[41].ToString());
+                cardConfig.OutcomeCardId = row[42].ToString();
             }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
@@ -439,6 +445,9 @@ public class CardConfig
     public int MoveTime; // 移动时间
     public PlaceEnum TargetPlace; // 目标地点
     public string InteractAudio; // 交互音效
+    public bool CanCook; // 能否烹饪
+    public int CookTime; // 烹饪时长
+    public string OutcomeCardId; // 烹饪产物
 }
 
 public class DropConfig
