@@ -270,7 +270,7 @@ public class ChatManager : MonoBehaviour
         float finalWaitTime;
 
         if (waitTime > 0) finalWaitTime = waitTime;
-        else finalWaitTime = chatData.preWaitTime == 0 ? 2.5f : chatData.preWaitTime;
+        else finalWaitTime = chatData.preWaitTime == 0 ? 0.2f : chatData.preWaitTime;
 
         finalWaitTime /= curSpeed;
 
@@ -286,7 +286,7 @@ public class ChatManager : MonoBehaviour
 
         //消息前置等待时间
         if (waitTime > 0) finalWaitTime = waitTime;
-        else finalWaitTime = chatData.preWaitTime == 0 ? 2.5f : chatData.preWaitTime;
+        else finalWaitTime = chatData.lateWaitTime == 0 ? 2.1f : chatData.lateWaitTime;
         finalWaitTime /= curSpeed;
         yield return new WaitForSeconds(finalWaitTime);
 
