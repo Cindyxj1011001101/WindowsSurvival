@@ -740,7 +740,12 @@ public class StateManager : MonoBehaviour
     {
         float rate = PlayerStateDict[PlayerStateEnum.Sobriety].ChangeRate;
         SetPlayerStateBasicChangeRate(PlayerStateEnum.Sobriety, SobrietyChangeRateWhileSleeping);
+
+        EventManager.Instance.TriggerEvent(EventType.StartSleeping);
+
         TimeManager.Instance.AddTime(time);
+
+        EventManager.Instance.TriggerEvent(EventType.StartSleeping);
         SetPlayerStateBasicChangeRate(PlayerStateEnum.Sobriety, rate);
     }
     #endregion

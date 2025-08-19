@@ -20,6 +20,8 @@
     EndChangeTime,
     PickUpCard, // 拿起一张卡牌
     PutDownCard, // 放下一张卡牌
+    StartSleeping, // 开始睡觉
+    StopSleeping, // 停止睡觉
 }
 
 public class ChangeStateArgs
