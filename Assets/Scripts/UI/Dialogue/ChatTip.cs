@@ -46,6 +46,8 @@ public class ChatTip : HoverableButton
         isHiding = false;
         timer = 0;
         lifeTime = 10f;
+        iconEnter.alpha = 0f;
+        iconExit.alpha = 1f;
         // 播放出现动画
         Show();
     }

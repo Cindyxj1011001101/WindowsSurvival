@@ -26,6 +26,11 @@ public class CustomTextBox : MonoBehaviour, IAdaptiveSize
         textRectTransform = text.transform as RectTransform;
     }
 
+    private void OnDisable()
+    {
+        layoutTransform = null; // 清除引用，避免内存泄漏
+    }
+
     public void SetText(string text)
     {
         this.text.text = text;
@@ -35,6 +40,8 @@ public class CustomTextBox : MonoBehaviour, IAdaptiveSize
     // 根据内容和父物体宽度动态刷新尺寸
     public void UpdateSize()
     {
+        rectTransform.localScale = Vector3.one; // 确保缩放为1，避免影响布局计算
+
         if (layoutTransform == null) layoutTransform = (GetComponentInParent<ILayoutGroup>() as MonoBehaviour).transform as RectTransform;
         textRectTransform.sizeDelta = new Vector2(layoutTransform.rect.width - boxPaddingHorizontal - textPaddingHorizontal * 2, textRectTransform.sizeDelta.y);
 
