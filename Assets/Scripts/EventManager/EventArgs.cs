@@ -13,9 +13,10 @@
     TriggerParagraph, // 触发对话
     DialogueCondition, // 触发对话条件
     //ChangeWaterLevel, // 水平面变化
-    StudyComplished,
     AnotherDay,//跨天行为触发
-    StudyStarted,
+    StudyStarted, // 研究开始
+    StudyStoped, // 研究暂停
+    StudyComplished, // 研究完成
     StartChangeTime,
     EndChangeTime,
     PickUpCard, // 拿起一张卡牌

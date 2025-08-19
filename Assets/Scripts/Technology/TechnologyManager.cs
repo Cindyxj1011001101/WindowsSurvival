@@ -49,6 +49,7 @@ public class TechnologyManager
         techData.curStudiedTechNodeName = "";
         // 移除监听
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnStudy);
+        EventManager.Instance.TriggerEvent(EventType.StudyStoped);
     }
 
     /// <summary>

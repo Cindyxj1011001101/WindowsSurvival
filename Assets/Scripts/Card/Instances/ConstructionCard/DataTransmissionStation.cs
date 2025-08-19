@@ -5,6 +5,9 @@ public class DataTransmissionStation : Card
 {
     public int MaxTimes;
     public int curTimes;
+
+    public bool isWorking;
+
     private DataTransmissionStation()
     {
         MaxTimes = 2;
@@ -23,6 +26,46 @@ public class DataTransmissionStation : Card
             onlyOutWater = true
         });
     }
+
+    protected override void LateInit()
+    {
+        base.LateInit();
+        EventManager.Instance.AddListener(EventType.StudyStarted, StartWorking);
+        EventManager.Instance.AddListener(EventType.StudyStoped, StopWorking);
+        // 当前有科技在研究
+        if (TechnologyManager.Instance.CurStudiedTechNode != null && !isWorking)
+        {
+            StartWorking();
+        }
+    }
+
+    public override void DestroyThis()
+    {
+        base.DestroyThis();
+
+        // 当前有科技在研究
+        if (isWorking)
+        {
+            StopWorking();
+        }
+        EventManager.Instance.RemoveListener(EventType.StudyStarted, StartWorking);
+        EventManager.Instance.RemoveListener(EventType.StudyStoped, StopWorking);
+    }
+
+    private void StartWorking()
+    {
+        isWorking = true;
+
+        StateManager.Instance.ChangeElectricityChangeRate(-0.5f);
+    }
+
+    private void StopWorking()
+    {
+        isWorking = false;
+
+        StateManager.Instance.ChangeElectricityChangeRate(+0.5f);
+    }
+
     public void Event_Tech(out string tip)
     {
         tip = string.Empty;
@@ -46,7 +89,6 @@ public class DataTransmissionStation : Card
         }
         return true;
     }
-
 
     public void Event_CompleteTearDown(out string tip)
     {
@@ -91,9 +133,5 @@ public class DataTransmissionStation : Card
     protected override System.Action OnUpdate => () =>
     {
         if (TimeManager.Instance.AnotherDay()) curTimes = 0;
-        if (TechnologyManager.Instance.CurStudiedTechNode != null)
-        {
-            StateManager.Instance.ChangeElectricity(-0.5f);
-        }
     };
 }
