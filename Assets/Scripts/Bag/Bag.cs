@@ -112,6 +112,35 @@ public abstract class Bag
         return false;
     }
 
+    protected bool CanAddCardConsideringWeight(Card card, out string tip)
+    {
+        tip = string.Empty;
+        float curLoad = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].CurValue;
+        float maxLoad = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].MaxValue;
+
+        if (card.Bag != null)
+        {
+            if (card.Bag is PlayerBag || card.Bag is EquipmentBag)
+            {
+                curLoad -= card.Weight; // 如果是从背包或装备包中添加，先减去当前重量
+            }
+            else if (card.Bag is InnerBag innerBag && (innerBag.BelongedCard.Bag is PlayerBag || innerBag.BelongedCard.Bag is EquipmentBag))
+            {
+                curLoad -= card.Weight * (1 - innerBag.WeightLossRate); // 如果是从内包中添加，减去当前重量并考虑损失率
+            }
+        }
+
+        float cardWeight = this is InnerBag b ? card.Weight * (1 - b.WeightLossRate) : card.Weight;
+
+        if (curLoad + cardWeight > maxLoad)
+        {
+            tip = "再带上它就太重了";
+            return false;
+        }
+
+        return true;
+    }
+
     /// <summary>
     /// 添加一张卡牌
     /// </summary>

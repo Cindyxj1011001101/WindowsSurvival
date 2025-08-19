@@ -63,6 +63,7 @@ public abstract class Card : IComparable<Card>
         {
             // 卡牌重量 = 自身重量 + 内容物重量 * 减重率
             float weight = CardFactory.GetWeight(CardId);
+
             if (TryGetComponent<InnerContentsComponent>(out var component))
             {
                 foreach (var slot in component.bag.Slots)
@@ -85,9 +86,6 @@ public abstract class Card : IComparable<Card>
 
     [JsonIgnore]
     public bool IsBigIcon => CardFactory.GetIsBigIcon(CardId);
-
-    [JsonIgnore]
-    public Card ParentCard { get; protected set; } = null; // 父卡牌，用于被作为内容物的卡牌
 
     [JsonIgnore]
     public bool Destroyed { get; private set; } = false;
@@ -122,11 +120,6 @@ public abstract class Card : IComparable<Card>
     public void SetSlotCards(SlotCards slotCards)
     {
         SlotCards = slotCards;
-    }
-
-    public void SetParentCard(Card parentCard)
-    {
-        ParentCard = parentCard;
     }
 
     /// <summary>
@@ -218,9 +211,6 @@ public abstract class Card : IComparable<Card>
         StopUpdating();
 
         SlotCards.RemoveCard(this);
-        RefreshSlot();
-
-        ParentCard?.RefreshSlot();
 
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
@@ -401,8 +391,8 @@ public abstract class Card : IComparable<Card>
         {
             // 成功放置
             var transform = Transform;
-            if (transform == null && ParentCard != null)
-                transform = ParentCard.Transform;
+            if (transform == null && Bag is InnerBag innerBag && innerBag.BelongedCard != null)
+                transform = innerBag.BelongedCard.Transform;
             // 当前卡牌和其父卡牌都没有显示在场景里
             if (transform == null)
                 // 没有动效直接添加

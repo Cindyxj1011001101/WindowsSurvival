@@ -11,6 +11,13 @@ public class FishingNetBag : EquipmentCard
             new Event("切割", "切割塑料袋", Event_Cut, Judge_Cut)
         };
     }
+
+    protected override void LateInit()
+    {
+        base.LateInit();
+        innerContents.weightLossRate = 0.6f;
+    }
+
     public override void OnEquipped()
     {
     }

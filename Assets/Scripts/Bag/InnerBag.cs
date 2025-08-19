@@ -7,17 +7,8 @@ public class InnerBag : Bag
     [JsonIgnore]
     public Card BelongedCard => component.BelongedCard;
 
-    public override void Init()
-    {
-        base.Init();
-        foreach (var slot in Slots)
-        {
-            foreach (var c in slot.Cards)
-            {
-                c.SetParentCard(component.BelongedCard);
-            }
-        }
-    }
+    [JsonIgnore]
+    public float WeightLossRate => component.weightLossRate;
 
     public void SetComponent(InnerContentsComponent component)
     {
@@ -33,21 +24,29 @@ public class InnerBag : Bag
             return false;
         }
 
-        // 不能放置这种卡牌，直接返回空列表
+        // 卡牌不满足过滤器限制
         if (component.contentFilter != null && !component.contentFilter(card, out tip)) return false;
+
+        // 考虑重量
+        if (BelongedCard.Bag is PlayerBag || BelongedCard.Bag is EquipmentBag)
+        {
+            if (!CanAddCardConsideringWeight(card, out tip))
+            {
+                return false;
+            }
+        }
 
         return base.CanAddCard(card, out tip);
     }
 
     public override void OnAddCard(Card card)
     {
-        card.SetParentCard(component.BelongedCard);
         component.BelongedCard.RefreshSlot();
 
         // 计算重量
         if (BelongedCard.Bag is PlayerBag || BelongedCard.Bag is EquipmentBag)
         {
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, card.Weight * component.weightLossRate);
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, card.Weight * (1 - component.weightLossRate));
         }
         
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
@@ -57,12 +56,11 @@ public class InnerBag : Bag
 
     public override void OnRemoveCard(Card card)
     {
-        card.SetParentCard(null);
         component.BelongedCard.RefreshSlot();
 
         if (BelongedCard.Bag is PlayerBag || BelongedCard.Bag is EquipmentBag)
         {
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -card.Weight * component.weightLossRate);
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -card.Weight * (1 - component.weightLossRate));
         }
 
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);

@@ -19,7 +19,6 @@
 
     public override bool CanAddCard(Card card, out string tip)
     {
-        tip = string.Empty;
         // 不是装备卡无法添加
         if (!card.TryGetComponent<EquipmentComponent>(out var component))
         {
@@ -33,24 +32,18 @@
             return false;
         }
 
-        float curLoad = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].CurValue;
-        float maxLoad = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].MaxValue;
-
-        // 不是从玩家背包装备的，要看载重够不够
-        if ((card.Bag == null || card.Bag is not PlayerBag) &&
-            curLoad + card.Weight > maxLoad)
-        {
-            tip = "再穿上它就太重了";
-            return false;
-        }
-
         if (!Slots[(int)component.equipmentType].IsEmpty)
         {
             tip = "同样的部位上已经有一件装备了";
             return false;
         }
-        
-        // 最后看装备格子有没有位置
+
+        // 考虑重量
+        if (!CanAddCardConsideringWeight(card, out tip))
+        {
+            return false;
+        }
+
         return true;
     }
 
