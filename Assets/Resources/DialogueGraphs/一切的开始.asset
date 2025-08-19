@@ -1423,7 +1423,7 @@ MonoBehaviour:
       Message: "\u70B9\u51FB\u80CC\u5305\u7A97\u53E3\u4E2D\u7684\"\u538B\u7F29\u997C\u5E72\"\u3002\u6253\u5F00\u8BE6\u60C5\u7A97\u53E3"
       preWaitTime: 0
       lateWaitTime: 0
-      TriggerMessageEffect: "\u6DFB\u52A0_\u73A9\u5BB6_\u538B\u7F29\u997C\u5E72;\u89E3\u9501_\u8BE6\u60C5_false"
+      TriggerMessageEffect: "\u6DFB\u52A0_\u73A9\u5BB6_\u538B\u7F29\u997C\u5E72"
     inputport:
       name: "\u8F93\u5165"
       direction: 0
@@ -1841,7 +1841,7 @@ MonoBehaviour:
       Message: "\u70B9\u51FB\u5E95\u8FB9\u680F\u7684\u7814\u7A76\u56FE\u6807,\u6253\u5F00\"\u7814\u7A76\"\u7A97\u53E3"
       preWaitTime: 0
       lateWaitTime: 0
-      TriggerMessageEffect: 
+      TriggerMessageEffect: "\u89E3\u9501_\u7814\u7A76"
     inputport:
       name: "\u8F93\u5165"
       direction: 0
@@ -2826,7 +2826,7 @@ MonoBehaviour:
       Message: "\u7EE7\u7EED\u63A2\u7D22\u5730\u70B9,\u6536\u96C6\u8D44\u6E90\u5427"
       preWaitTime: 0
       lateWaitTime: 1
-      TriggerMessageEffect: 
+      TriggerMessageEffect: "\u89E3\u9501_\u8BE6\u60C5_false;\u89E3\u9501_\u4F11\u606F_false;\u89E3\u9501_\u88C5\u5907_false"
     inputport:
       name: "\u8F93\u5165"
       direction: 0
@@ -3178,14 +3178,6 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: c5a0b956e7edb3347a9cac35b19684ba
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: c5a0b956e7edb3347a9cac35b19684ba
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 52538834bf942e649a3fe66489a4c31e
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 52538834bf942e649a3fe66489a4c31e
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 7f6d16c9617f6b247bac8d7c5daad272
-    inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 7f6d16c9617f6b247bac8d7c5daad272
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: a908ec8eb36728e46bf223abe20f940f
@@ -3473,4 +3465,12 @@ MonoBehaviour:
   - outputNodeGUID: 6e78f4d9208a8e84ea9e616d9a78eb24
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 63169b8c507bcde47be1f9536e9ed385
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 52538834bf942e649a3fe66489a4c31e
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 7f6d16c9617f6b247bac8d7c5daad272
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: c5a0b956e7edb3347a9cac35b19684ba
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 52538834bf942e649a3fe66489a4c31e
     inputPortName: "\u8F93\u5165"
