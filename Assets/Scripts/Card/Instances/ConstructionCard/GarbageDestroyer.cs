@@ -1,7 +1,3 @@
-using Unity.Mathematics;
-using UnityEngine;
-using Random = UnityEngine.Random;
-
 public class GarbageDestroyer : Card
 {
     public bool isWorking; // 是否已打开

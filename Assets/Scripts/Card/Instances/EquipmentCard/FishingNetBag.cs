@@ -12,31 +12,28 @@ public class FishingNetBag : EquipmentCard
     }
     public override void OnEquipped()
     {
-        //减重50%
-        //在水域环境时减重率变为75%
     }
 
     public override void OnUnEquipped()
     {
-        //恢复减重50%
-        //恢复在水域环境时减重率变为75%
     }
+
     public void Event_Cut(out string tip)
     {
-        tip =string.Empty;
+        tip = string.Empty;
         Use();
         GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).Use();
         AddCard("韧性胶管", true);
-        AddCards("纤维", 4,true);
+        AddCards("纤维", 4, true);
         TimeManager.Instance.AddTime(15);
     }
-    
+
     public bool Judge_Cut(out string hint)
     {
         hint = string.Empty;
         if (TryGetComponent<InnerContentsComponent>(out InnerContentsComponent component))
         {
-            if (component.bag.SlotCount == component.bag.EmptySlotCount&&GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) != null)
+            if (component.bag.SlotCount == component.bag.EmptySlotCount && GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) != null)
             {
                 return true;
             }

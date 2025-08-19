@@ -23,23 +23,7 @@ public class AquariusFish : Card
     #region 用捕网捉
     public void Event_CatchByNet(out string tip)
     {
-        // 销毁卡牌
-        DestroyThis();
-
-        // “捞网”耐久-1
-        GameManager.Instance.PlayerBag.FindCardOfName("捞网").Use();
-
-        tip = string.Empty;
-        // 1. 时间变化
-        TimeManager.Instance.AddTime(15);
-
-        // 2. 掉落卡牌
-
-        // 获得一张“被捉住的水瓶鱼”
-        // 继承产物进度
-        // 添加到玩家背包
-        AddCard("被捉住的水瓶鱼", true, out var card);
-        card.InheritComponent<ProgressComponent>(this);
+        Catch(GameManager.Instance.PlayerBag.FindCardOfName("捞网"), out tip);
     }
 
     public bool Judge_CatchByNet(out string hint)
@@ -91,4 +75,33 @@ public class AquariusFish : Card
         TryGetComponent<ProgressComponent>(out var component);
         component.Update(TimeManager.Instance.SettleInterval, OnProgressFull);
     };
+
+
+    private void Catch(Card tool, out string tip)
+    {
+        // 销毁卡牌
+        DestroyThis();
+        // 1. 消耗耐久
+        tool.Use();
+
+        tip = string.Empty;
+
+        // 2. 时间变化
+        TimeManager.Instance.AddTime(15);
+
+        // 3. 掉落卡牌
+        // 获得一张“被捉住的水瓶鱼”
+        AddCard("被捉住的水瓶鱼", true, out var card);
+        card.InheritComponent<ProgressComponent>(this);
+    }
+
+    public override bool CanQuickInteract(Card card)
+    {
+        return card.CardId == "捞网";
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        Catch(slot.PeekCard(), out tip);
+    }
 }

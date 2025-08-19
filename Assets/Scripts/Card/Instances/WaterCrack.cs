@@ -14,13 +14,7 @@ public class WaterCrack : Card
 
     public void Event_Fix(out string tip)
     {
-        DestroyThis();
-        GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物").DestroyThis();
-
-        tip = string.Empty;
-        SoundManager.Instance.PlaySound("堵住裂缝");
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition,new SubscribeActionArgs("渗水裂缝","堵住"));
-        TimeManager.Instance.AddTime(15);
+        Fix(GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物"), out tip);
     }
 
     public bool Jugde_Fix(out string hint)
@@ -32,6 +26,27 @@ public class WaterCrack : Card
             return false;
         }
         return true;
+    }
+
+    private void Fix(Card patch, out string tip)
+    {
+        DestroyThis();
+        patch.DestroyThis();
+
+        tip = string.Empty;
+        SoundManager.Instance.PlaySound("堵住裂缝");
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("渗水裂缝", "堵住"));
+        TimeManager.Instance.AddTime(15);
+    }
+
+    public override bool CanQuickInteract(Card card)
+    {
+        return card.CardId == "裂缝填充物";
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        Fix(slot.PeekCard(), out tip);
     }
 
     public override void OnAdded(Bag bag)

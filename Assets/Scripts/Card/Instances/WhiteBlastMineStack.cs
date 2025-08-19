@@ -15,14 +15,7 @@ public class WhiteBlastMineStack : Card
 
     public void Event_Dig(out string tip)
     {
-        Use();
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).Use();
-
-        tip = string.Empty;
-        TimeManager.Instance.AddTime(30);
-        //掉落卡牌
-        RandomDrop();
-        RandomDrop();
+        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
     }
     public bool Judge_Dig(out string hint)
     {
@@ -49,5 +42,32 @@ public class WhiteBlastMineStack : Card
         {
             AddCard("玻璃沙", true);
         }
+    }
+
+    private void DigByTool(Card tool, out string tip)
+    {
+        Use();
+        tool.Use();
+
+        tip = string.Empty;
+        TimeManager.Instance.AddTime(30);
+        //掉落卡牌
+        RandomDrop();
+        RandomDrop();
+    }
+
+    public override bool CanQuickInteract(Card card)
+    {
+        // 允许和带有切割标签的卡牌快速交互
+        if (card.TryGetComponent<ToolComponent>(out var component))
+        {
+            if (component.toolTypes.Contains(ToolType.Dig)) return true;
+        }
+        return false;
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        DigByTool(slot.PeekCard(), out tip);
     }
 }

@@ -16,12 +16,7 @@ public class SiphonophyllumWithProduct : Card
 
     public void Event_Cut(out string tip)
     {
-        DestroyThis();
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).Use();
-
-        tip = string.Empty;
-        TimeManager.Instance.AddTime(45);
-        AddCards("磁性触手", 3, true);
+        Cut(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
 
     public bool Judge_Cut(out string hint)
@@ -56,5 +51,30 @@ public class SiphonophyllumWithProduct : Card
         {
             AddCard("磁性触手", true);
         }
+    }
+
+    private void Cut(Card tool, out string tip)
+    {
+        DestroyThis();
+        tool.Use();
+
+        tip = string.Empty;
+        TimeManager.Instance.AddTime(45);
+        AddCards("磁性触手", 3, true);
+    }
+
+    public override bool CanQuickInteract(Card card)
+    {
+        // 允许和带有切割标签的卡牌快速交互
+        if (card.TryGetComponent<ToolComponent>(out var component))
+        {
+            if (component.toolTypes.Contains(ToolType.Cut)) return true;
+        }
+        return false;
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        Cut(slot.PeekCard(), out tip);
     }
 }

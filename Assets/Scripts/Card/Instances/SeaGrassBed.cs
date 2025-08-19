@@ -32,11 +32,7 @@ public class SeaGrassBed : Card
 
     public void Event_CollectByKnife(out string tip)
     {
-        Use();
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).Use();
-
-        tip = string.Empty;
-        RandomDropByKnife();
+        CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
 
     public void RandomDropByHand(out string tip)
@@ -92,5 +88,30 @@ public class SeaGrassBed : Card
                 AddCard("海麻线根", true);
             }
         }
+    }
+
+    private void CollectByKnife(Card tool, out string tip)
+    {
+        Use();
+        tool.Use();
+
+        tip = string.Empty;
+        TimeManager.Instance.AddTime(15);
+        RandomDropByKnife();
+    }
+
+    public override bool CanQuickInteract(Card card)
+    {
+        // 允许和带有切割标签的卡牌快速交互
+        if (card.TryGetComponent<ToolComponent>(out var component))
+        {
+            if (component.toolTypes.Contains(ToolType.Cut)) return true;
+        }
+        return false;
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        CollectByKnife(slot.PeekCard(), out tip);
     }
 }

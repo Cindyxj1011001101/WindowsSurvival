@@ -29,6 +29,7 @@ public class FoodScrap : Card
             RemainRound--;
             if (RemainRound <= 0)
             {
+                ShowTip("食物残渣被水冲走了");
                 DestroyThis();
             }
         }

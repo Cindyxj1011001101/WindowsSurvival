@@ -17,19 +17,7 @@ public class AquariusFishWithProduct : Card
     #region 用捕网捉
     public void Event_CatchByNet(out string tip)
     {
-        // 销毁卡牌
-        DestroyThis();
-        // 1. 消耗耐久
-        GameManager.Instance.PlayerBag.FindCardOfName("捞网").Use();
-
-        tip = string.Empty;
-
-        // 2. 时间变化
-        TimeManager.Instance.AddTime(15);
-
-        // 3. 掉落卡牌
-        // 获得一张“有产物的被捉住的水瓶鱼”
-        AddCard("有产物的被捉住的水瓶鱼", true);
+        Catch(GameManager.Instance.PlayerBag.FindCardOfName("捞网"), out tip);
     }
 
     public bool Judge_CatchByNet(out string hint)
@@ -73,4 +61,32 @@ public class AquariusFishWithProduct : Card
         }
     }
     #endregion
+
+
+    private void Catch(Card tool, out string tip)
+    {
+        // 销毁卡牌
+        DestroyThis();
+        // 1. 消耗耐久
+        tool.Use();
+
+        tip = string.Empty;
+
+        // 2. 时间变化
+        TimeManager.Instance.AddTime(15);
+
+        // 3. 掉落卡牌
+        // 获得一张“有产物的被捉住的水瓶鱼”
+        AddCard("有产物的被捉住的水瓶鱼", true);
+    }
+
+    public override bool CanQuickInteract(Card card)
+    {
+        return card.CardId == "捞网";
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        Catch(slot.PeekCard(), out tip);
+    }
 }

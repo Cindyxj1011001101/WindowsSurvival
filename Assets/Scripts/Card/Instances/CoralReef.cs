@@ -22,16 +22,9 @@ public class CoralReef : Card
     }
     public void Event_Dig(out string tip)
     {
-        GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig).Use();
-
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("挖掘废料_01", true);
-        tip = string.Empty;
-        TimeManager.Instance.AddTime(45);
-        RandomDropByHand();
-        RandomDropByHand();
-
+        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
     }
+
     public bool Judge_Dig(out string hint)
     {
         hint = string.Empty;
@@ -42,12 +35,13 @@ public class CoralReef : Card
         }
         return true;
     }
-    public void Event_Enjoy(out string tip) 
+
+    public void Event_Enjoy(out string tip)
     {
         tip = string.Empty;
-        Debug.Log("珊瑚礁"+curReduceCount);
+        Debug.Log("珊瑚礁" + curReduceCount);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 6 * Mathf.Pow(ReduceRate, curReduceCount));
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4* Mathf.Pow(ReduceRate, curReduceCount));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4 * Mathf.Pow(ReduceRate, curReduceCount));
         TimeManager.Instance.AddTime(15);
         curReduceCount++;
         if (curReduceCount >= maxReduceCount) curReduceCount = maxReduceCount;
@@ -55,9 +49,9 @@ public class CoralReef : Card
     }
     protected override Action OnUpdate => () =>
     {
-        if (TimeManager.Instance.AnotherDay()) curReduceCount = 0;  
+        if (TimeManager.Instance.AnotherDay()) curReduceCount = 0;
     };
-    public void RandomDropByHand()
+    public void RandomDrop()
     {
         int rand = Random.Range(0, 45);
         if (rand < 30)
@@ -76,5 +70,32 @@ public class CoralReef : Card
         {
             AddCard("有产物的水瓶鱼", false);
         }
+    }
+
+    private void DigByTool(Card tool, out string tip)
+    {
+        tool.Use();
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("挖掘废料_01", true);
+        tip = string.Empty;
+        TimeManager.Instance.AddTime(45);
+        RandomDrop();
+        RandomDrop();
+    }
+
+    public override bool CanQuickInteract(Card card)
+    {
+        // 允许和带有切割标签的卡牌快速交互
+        if (card.TryGetComponent<ToolComponent>(out var component))
+        {
+            if (component.toolTypes.Contains(ToolType.Dig)) return true;
+        }
+        return false;
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        DigByTool(slot.PeekCard(), out tip);
     }
 }

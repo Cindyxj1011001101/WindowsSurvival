@@ -1,7 +1,5 @@
-using UnityEngine;
-
 /// <summary>
-/// 矿石释氧机
+/// 数据传输台
 /// </summary>
 public class DataTransmissionStation : Card
 {
@@ -28,12 +26,10 @@ public class DataTransmissionStation : Card
     public void Event_Tech(out string tip)
     {
         tip = string.Empty;
-        GameManager.Instance.PlayerBag.FindCardOfName("钢锤").Use();
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety,-10);
         curTimes++;
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -10);
         TechnologyManager.Instance.AddStudyProcess(28);
         TimeManager.Instance.AddTime(60);
-        
     }
 
     public bool Judge_Tech(out string hint)
@@ -43,7 +39,7 @@ public class DataTransmissionStation : Card
         {
             return false;
         }
-    
+
         if (TechnologyManager.Instance.CurStudiedTechNode == null)
         {
             return false;
@@ -57,14 +53,14 @@ public class DataTransmissionStation : Card
         tip = string.Empty;
         GameManager.Instance.PlayerBag.FindCardOfName("精密扳手").Use();
         DestroyThis();
-        AddCard("建筑工程包(数据传输台)",true);
+        AddCard("建筑工程包(数据传输台)", true);
         TimeManager.Instance.AddTime(60);
     }
 
     public bool Judge_CompleteTearDown(out string hint)
     {
         hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfName("精密扳手")!=null)
+        if (GameManager.Instance.PlayerBag.FindCardOfName("精密扳手") != null)
         {
             return true;
         }
@@ -75,23 +71,22 @@ public class DataTransmissionStation : Card
         tip = string.Empty;
         GameManager.Instance.PlayerBag.FindCardOfName("钢锤").Use();
         DestroyThis();
-        AddCards("珊瑚", 2,true);
+        AddCards("珊瑚", 2, true);
         AddCard("韧性胶管", true);
-        AddCard("废金属",true);
+        AddCard("废金属", true);
         TimeManager.Instance.AddTime(15);
-        
+
     }
 
     public bool Judge_ViolentTearDown(out string hint)
     {
         hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfName("钢锤")!=null)
+        if (GameManager.Instance.PlayerBag.FindCardOfName("钢锤") != null)
         {
             return true;
         }
         return false;
     }
-    
 
     protected override System.Action OnUpdate => () =>
     {
@@ -101,5 +96,4 @@ public class DataTransmissionStation : Card
             StateManager.Instance.ChangeElectricity(-0.5f);
         }
     };
-    
 }

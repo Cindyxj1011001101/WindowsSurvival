@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -17,8 +18,24 @@ public class LoveBeadWithProduct : Card
     #region 事件
     public void Event_OpenByTool(out string tip)
     {
+        OpenByTool(GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }), out tip);
+    }
+
+    public bool Judge_OpenByTool(out string hint)
+    {
+        hint = string.Empty;
+        if (GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }) == null)
+        {
+            hint = "需要切割类或挖掘类工具";
+            return false;
+        }
+        return true;
+    }
+
+    private void OpenByTool(Card tool, out string tip)
+    {
         DestroyThis();
-        GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }).Use();
+        tool.Use();
 
         tip = string.Empty;
 
@@ -50,15 +67,20 @@ public class LoveBeadWithProduct : Card
         }
     }
 
-    public bool Judge_OpenByTool(out string hint)
+    public override bool CanQuickInteract(Card card)
     {
-        hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }) == null)
+        if (card.TryGetComponent<ToolComponent>(out var component))
         {
-            hint = "需要切割类或挖掘类工具";
-            return false;
+            if (component.toolTypes.Intersect(new List<ToolType> { ToolType.Cut, ToolType.Dig }).Any()) return true;
         }
-        return true;
+        return false;
     }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        OpenByTool(slot.PeekCard(), out tip);
+    }
+
+
     #endregion
 }

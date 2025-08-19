@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum CardTag
 {
@@ -176,13 +177,18 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
     }
 
-    public virtual void Use(int times = 1)
+    public virtual void Use(int times = 1, UnityAction onBroken = null)
     {
         if (TryGetComponent<DurabilityComponent>(out var component))
         {
-            for (int i = 0; i < times; i++)
+            int usedTimes = Mathf.Min(times, component.durability);
+            for (int i = 0; i < usedTimes; i++)
             {
-                component.Use(DestroyThis);
+                component.Use(() =>
+                {
+                    DestroyThis();
+                    onBroken?.Invoke();
+                });
             }
         }
     }

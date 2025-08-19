@@ -188,5 +188,4 @@ public class FuelFurnace : Card
             OutComeCardID = outcomeID;
         }
     };
-
 }
