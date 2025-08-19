@@ -248,6 +248,7 @@ public class DetailsWindow : BagWindow
             else
                 button.GetComponent<HoverTipController>().SetTip(e.Description);
 
+            button.transform.localScale = Vector3.one; // 确保按钮缩放为1
             button.transform.SetAsLastSibling();
         }
     }
