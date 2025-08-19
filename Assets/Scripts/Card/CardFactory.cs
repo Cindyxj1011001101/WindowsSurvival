@@ -256,6 +256,10 @@ public static class CardFactory
         {
             card.AddComponent(new PassageComponent(config.TargetPlace, config.MoveTime, config.InteractAudio));
         }
+        if (config.CanCook)
+        {
+            card.AddComponent(new CookComponent(config.CookTime, config.OutcomeCardId));
+        }
 
         return card;
     }

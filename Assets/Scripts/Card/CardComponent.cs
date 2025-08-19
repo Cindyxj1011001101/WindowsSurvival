@@ -289,7 +289,7 @@ public class InnerContentsComponent : CardComponent
 
     public override string ToString()
     {
-        StringBuilder sb = new ();
+        StringBuilder sb = new();
         sb.Append($"内容物槽位数: {bag.SlotCount}\t");
         sb.Append("内容物: \n");
         for (int i = 0; i < bag.SlotCount; i++)
@@ -376,26 +376,29 @@ public class ConstructionComponent : CardComponent
 #endregion
 
 #region 烹饪组件
-
 public class CookComponent : CardComponent
 {
-    public int MaxProgress;
-    public int CurProgress=0;
-    public string OutcomeCard;
+    public int totalCookTime;
+    public int leftCookTime;
+    public string outcomeCardId;
 
-    public string AddProgress()
+    public CookComponent(int totalCookTime, string outcomeCardId)
     {
-        string res = string.Empty;
-        CurProgress++;
-        if (CurProgress >= MaxProgress)
+        this.totalCookTime = leftCookTime = totalCookTime;
+        this.outcomeCardId = outcomeCardId;
+    }
+
+    public void Update(int deltaTime, UnityAction<string> onCooked)
+    {
+        if (leftCookTime <= 0) return;
+
+        leftCookTime -= deltaTime;
+        leftCookTime = Mathf.Max(leftCookTime, 0);
+        if (leftCookTime <= 0)
         {
-            CurProgress= MaxProgress;
-            res= OutcomeCard;
-            return res;
+            leftCookTime = 0;
+            onCooked?.Invoke(outcomeCardId);
         }
-        return res;
     }
 }
-
-
 #endregion

@@ -62,20 +62,22 @@ public class Campfire : Card
         {
             Fuel -= 2;
             Fuel = Mathf.Clamp(Fuel, 0, 100);
-            Card card;
             foreach (var slot in innerContents.bag.Slots)
             {
-                for (int i = slot.Cards.Count; i >= 0; i--)
+                for (int i = slot.Cards.Count - 1; i >= 0; i--)
                 {
-                    card = slot.Cards[i];
-                    card.TryGetComponent(out CookComponent cookComponent);
-                    string outcomeID = cookComponent.AddProgress();
-                    if (!string.IsNullOrEmpty(outcomeID))
+                    var card = slot.Cards[i];
+                    if (card != null && card.TryGetComponent(out CookComponent cookComponent))
                     {
-                        // 销毁原卡牌
-                        card.DestroyThis();
-                        // 获得煮熟产物
-                        AddCard(outcomeID, innerContents.bag);
+                        // 使用局部变量捕获当前的值
+                        Card currentCard = card;
+
+                        cookComponent.Update(TimeManager.Instance.SettleInterval, (outcomeId) =>
+                        {
+                            // 处理煮熟的逻辑
+                            currentCard.DestroyThis();
+                            AddCard(outcomeId, innerContents.bag);
+                        });
                     }
                 }
             }
