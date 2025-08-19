@@ -249,6 +249,8 @@ public class InnerContentsComponent : CardComponent
     [JsonIgnore] public UnityAction<Card> onAddCard;
     [JsonIgnore] public UnityAction<Card> onRemoveCard;
 
+    public bool display; // 是否显示内容物
+
     public void Init()
     {
         bag.SetComponent(this);
@@ -261,6 +263,7 @@ public class InnerContentsComponent : CardComponent
     {
         bag.AddSlot(slotCount);
         bag.SetComponent(this);
+        display = true; // 默认显示内容物
     }
 
     public int GetTotalCountByCardId(string cardId) => bag.GetTotalCountByCardId(cardId);

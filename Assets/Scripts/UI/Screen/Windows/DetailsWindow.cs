@@ -153,7 +153,7 @@ public class DetailsWindow : BagWindow
             innerContentsButton.Interactable = false;
 
             // 初始化内容物
-            if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component))
+            if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component) && component.display)
             {
                 innerContentsButton.gameObject.SetActive(true);
                 innerContentsButton.Interactable = true;
