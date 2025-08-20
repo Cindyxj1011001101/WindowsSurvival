@@ -61,25 +61,27 @@ public class OreReleaseOxygenMachine : Card
     }
 
     #region 开关
-    public void Event_Open(out string tip)
+    private void Event_Open(out string tip)
     {
         tip = string.Empty;
         isWorking = true;
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
 
-    public bool Judge_Open(out string hint)
+    private bool Judge_Open(out string hint)
     {
         hint = string.Empty;
         return !isWorking;
     }
 
-    public void Event_Close(out string tip)
+    private void Event_Close(out string tip)
     {
         tip = string.Empty;
         isWorking = false;
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
 
-    public bool Judge_Close(out string hint)
+    private bool Judge_Close(out string hint)
     {
         hint = string.Empty;
         return isWorking;
@@ -106,7 +108,7 @@ public class OreReleaseOxygenMachine : Card
         return true;
     }
 
-    public void Event_GetOxygen(out string tip)
+    private void Event_GetOxygen(out string tip)
     {
         tip = string.Empty;
         // 玩家氧气剩余容量

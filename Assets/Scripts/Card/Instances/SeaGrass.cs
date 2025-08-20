@@ -1,3 +1,6 @@
+/// <summary>
+/// 海麻线
+/// </summary>
 public class SeaGrass : Card
 {
     private SeaGrass()
@@ -8,7 +11,7 @@ public class SeaGrass : Card
             new Event("用刀提取", "用刀提取纤维", Event_CollectByKnife, Judge_CollectByKnife, () => 15),
         };
     }
-    public void Event_CollectByHand(out string tip)
+    private void Event_CollectByHand(out string tip)
     {
         DestroyThis();
 
@@ -16,11 +19,11 @@ public class SeaGrass : Card
         TimeManager.Instance.AddTime(30);
         AddCard("纤维", true);
     }
-    public void Event_CollectByKnife(out string tip)
+    private void Event_CollectByKnife(out string tip)
     {
         CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
-    public bool Judge_CollectByKnife(out string hint)
+    private bool Judge_CollectByKnife(out string hint)
     {
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) == null)

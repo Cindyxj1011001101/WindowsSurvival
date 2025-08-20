@@ -21,7 +21,7 @@ public class LittleRawMeat : Card
         AddCard("腐烂物", Bag);
     }
 
-    public void Event_Eat(out string tip)
+    private void Event_Eat(out string tip)
     {
         DestroyThis();
 

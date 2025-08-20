@@ -13,7 +13,7 @@ public class LoveBead : Card
         };
     }
 
-    public void Event_GetMeat(out string tip)
+    private void Event_GetMeat(out string tip)
     {
         DestroyThis();
 

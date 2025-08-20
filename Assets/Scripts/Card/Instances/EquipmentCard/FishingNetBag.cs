@@ -26,12 +26,12 @@ public class FishingNetBag : EquipmentCard
     {
     }
 
-    public void Event_Cut(out string tip)
+    private void Event_Cut(out string tip)
     {
         CutThis(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
 
-    public bool Judge_Cut(out string hint)
+    private bool Judge_Cut(out string hint)
     {
         hint = string.Empty;
         if (!innerContents.bag.IsEmpty)

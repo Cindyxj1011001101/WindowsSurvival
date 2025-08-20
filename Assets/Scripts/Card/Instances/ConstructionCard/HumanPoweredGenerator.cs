@@ -20,7 +20,7 @@ public class HumanPoweredGenerator : Card
         });
     }
 
-    public void Event_Generate(out string tip)
+    private void Event_Generate(out string tip)
     {
         tip = string.Empty;
         // 电力+10
@@ -33,14 +33,14 @@ public class HumanPoweredGenerator : Card
         TimeManager.Instance.AddTime(60);
     }
 
-    public bool Judge_Generate(out string hint)
+    private bool Judge_Generate(out string hint)
     {
         hint = string.Empty;
 
         var env = Bag as EnvironmentBag;
         if (!env.HasCable)
         {
-            hint = "需要将该地区连入电网";
+            hint = "需要将该地点连入电网";
             return false;
         }
         return true;

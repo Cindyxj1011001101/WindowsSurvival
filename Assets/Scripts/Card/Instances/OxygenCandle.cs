@@ -11,12 +11,12 @@ public class OxygenCandle : Card
         };
     }
 
-    public void Event_Light(out string tip)
+    private void Event_Light(out string tip)
     {
         DestroyThis();
 
         tip = string.Empty;
-        AddCard("点燃的氧烛", true);
+        AddCard("点燃的氧烛", Bag);
         SoundManager.Instance.PlaySound("点火");
     }
 }

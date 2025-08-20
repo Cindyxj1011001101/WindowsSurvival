@@ -23,7 +23,7 @@ public class ElectricDrainageMachine : Card
     }
 
     #region 开关
-    public void Event_Open(out string tip)
+    private void Event_Open(out string tip)
     {
         tip = string.Empty;
         isWorking = true;
@@ -34,13 +34,13 @@ public class ElectricDrainageMachine : Card
         StateManager.Instance.ChangeWaterLevelChangeRate(-2f);
     }
 
-    public bool Judge_Open(out string hint)
+    private bool Judge_Open(out string hint)
     {
         hint = string.Empty;
         return !isWorking;
     }
 
-    public void Event_Close(out string tip)
+    private void Event_Close(out string tip)
     {
         tip = string.Empty;
         isWorking = false;
@@ -49,7 +49,7 @@ public class ElectricDrainageMachine : Card
         StateManager.Instance.ChangeWaterLevelChangeRate(+2f);
     }
 
-    public bool Judge_Close(out string hint)
+    private bool Judge_Close(out string hint)
     {
         hint = string.Empty;
         return isWorking;

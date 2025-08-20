@@ -12,12 +12,12 @@ public class WaterCrack : Card
         };
     }
 
-    public void Event_Fix(out string tip)
+    private void Event_Fix(out string tip)
     {
         Fix(GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物"), out tip);
     }
 
-    public bool Jugde_Fix(out string hint)
+    private bool Jugde_Fix(out string hint)
     {
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物") == null)

@@ -21,7 +21,7 @@ public class MagneticTentacle : Card
         AddCard("废金属", Bag);
     }
 
-    public void Event_Eat(out string tip)
+    private void Event_Eat(out string tip)
     {
         DestroyThis();
 

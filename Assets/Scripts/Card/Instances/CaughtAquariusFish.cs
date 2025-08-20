@@ -11,7 +11,7 @@ public class CaughtAquariusFish : Card
         };
     }
 
-    public void Event_Release(out string tip)
+    private void Event_Release(out string tip)
     {
         DestroyThis();
 
@@ -22,7 +22,7 @@ public class CaughtAquariusFish : Card
         card.InheritComponent<ProgressComponent>(this);
     }
 
-    public bool Judge_Release(out string hint)
+    private bool Judge_Release(out string hint)
     {
         hint = string.Empty;
         if (!GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)

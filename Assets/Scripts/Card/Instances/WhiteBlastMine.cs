@@ -14,7 +14,7 @@ public class WhiteBlastMine : Card
         };
     }
 
-    public void Event_Break(out string tip)
+    private void Event_Break(out string tip)
     {
         DestroyThis();
 

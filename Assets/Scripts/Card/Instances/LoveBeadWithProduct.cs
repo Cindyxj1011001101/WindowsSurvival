@@ -16,12 +16,12 @@ public class LoveBeadWithProduct : Card
     }
 
     #region 事件
-    public void Event_OpenByTool(out string tip)
+    private void Event_OpenByTool(out string tip)
     {
         OpenByTool(GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }), out tip);
     }
 
-    public bool Judge_OpenByTool(out string hint)
+    private bool Judge_OpenByTool(out string hint)
     {
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }) == null)
@@ -41,7 +41,7 @@ public class LoveBeadWithProduct : Card
 
         // 变回爱情贝
         // 如果原来在玩家背包，则优先添加到玩家背包，否则添加到环境里
-        AddCard("爱情贝", Bag is PlayerBag);
+        AddCard("爱情贝", Bag);
         TimeManager.Instance.AddTime(15);
         //撬开概率
         int random = Random.Range(0, 15);

@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 
+/// <summary>
+/// 白灼触手
+/// </summary>
 public class ScaldedClaw : Card
 {
     private ScaldedClaw()
     {
-        Events=new()
+        Events = new()
         {
             new Event("食用", "食用白灼触手", Event_Eat, null, () => 45,
             () => new Dictionary<PlayerStateEnum, float>()
@@ -15,7 +18,7 @@ public class ScaldedClaw : Card
         };
     }
 
-    public void Event_Eat(out string tip)
+    private void Event_Eat(out string tip)
     {
         DestroyThis();
 

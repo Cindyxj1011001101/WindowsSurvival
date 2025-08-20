@@ -5,9 +5,9 @@ public class SafeInsurance : Card
     {
         Events = new()
         {
-            new Event("用手砸", "用手砸", Event_UseHand, Judge_UseHand),
-            new Event("用铲子凿", "用铲子凿", Event_UseShovel, Judge_UseShovel),
-            new Event("用锤子砸", "用锤子砸", Event_UseHammer, Judge_UseHammer)
+            new Event("用手砸", "用手砸", Event_UseHand, Judge_UseHand, () => 15, () => new() { { PlayerStateEnum.Sobriety, -5 }, { PlayerStateEnum.PainLevel, 15 } }),
+            new Event("用铲子凿", "用铲子凿", Event_UseShovel, Judge_UseShovel, () => 15, () => new() { { PlayerStateEnum.Sobriety, -4 } }),
+            new Event("用锤子砸", "用锤子砸", Event_UseHammer, Judge_UseHammer, () => 15)
         };
 
         AddComponent(new ConstructionComponent()
@@ -21,46 +21,49 @@ public class SafeInsurance : Card
         innerContents.display = false; // 不显示内容物
     }
 
-    public void Event_UseHand(out string tip)
+    private void Event_UseHand(out string tip)
     {
         tip = string.Empty;
         Use(3);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -5);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 15);
+        TimeManager.Instance.AddTime(15);
     }
 
-    public bool Judge_UseHand(out string hint)
+    private bool Judge_UseHand(out string hint)
     {
         hint = string.Empty;
         return true;
     }
-    public void Event_UseShovel(out string tip)
+    private void Event_UseShovel(out string tip)
     {
         UseShovel(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
     }
 
-    public bool Judge_UseShovel(out string hint)
+    private bool Judge_UseShovel(out string hint)
     {
         hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) != null)
+        if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) == null)
         {
-            return true;
+            hint = "需要挖掘类工具";
+            return false;
         }
-        return false;
+        return true;
     }
-    public void Event_UseHammer(out string tip)
+    private void Event_UseHammer(out string tip)
     {
         UseHammer(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), out tip);
     }
 
-    public bool Judge_UseHammer(out string hint)
+    private bool Judge_UseHammer(out string hint)
     {
         hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfName("钢锤") != null)
+        if (GameManager.Instance.PlayerBag.FindCardOfName("钢锤") == null)
         {
-            return true;
+            hint = "需要钢锤";
+            return false;
         }
-        return false;
+        return true;
     }
 
     private void OnBroken()

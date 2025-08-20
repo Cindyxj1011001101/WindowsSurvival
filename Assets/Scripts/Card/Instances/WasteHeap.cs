@@ -14,7 +14,7 @@ public class WasteHeap : Card
         };
     }
 
-    public void Event_Dig(out string tip)
+    private void Event_Dig(out string tip)
     {
         //消耗1点耐久度
         Use();
@@ -29,7 +29,7 @@ public class WasteHeap : Card
         RandomDrop();
     }
 
-    public void Event_DigByTool(out string tip)
+    private void Event_DigByTool(out string tip)
     {
         DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
     }
@@ -45,7 +45,7 @@ public class WasteHeap : Card
         return true;
     }
 
-    public void RandomDrop()
+    private void RandomDrop()
     {
         int rand = Random.Range(0, 26);
         if (rand < 5)

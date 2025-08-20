@@ -16,7 +16,7 @@ public class CaughtAquariusFishWithProduct : Card
         };
     }
 
-    public void Event_Drink(out string tip)
+    private void Event_Drink(out string tip)
     {
         DestroyThis();
 
@@ -29,7 +29,7 @@ public class CaughtAquariusFishWithProduct : Card
         TimeManager.Instance.AddTime(15);
     }
 
-    public void Event_Release(out string tip)
+    private void Event_Release(out string tip)
     {
         DestroyThis();
 
@@ -38,7 +38,7 @@ public class CaughtAquariusFishWithProduct : Card
         AddCard("有产物的水瓶鱼", true);
     }
 
-    public bool Judge_Release(out string hint)
+    private bool Judge_Release(out string hint)
     {
         hint = string.Empty;
         if (!GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)

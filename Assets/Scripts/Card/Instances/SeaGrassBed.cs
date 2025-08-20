@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// 海麻线丛
+/// </summary>
 public class SeaGrassBed : Card
 {
     private SeaGrassBed()
@@ -11,7 +14,7 @@ public class SeaGrassBed : Card
         };
     }
 
-    public void Event_CollectByHand(out string tip)
+    private void Event_CollectByHand(out string tip)
     {
         Use();
 
@@ -19,7 +22,7 @@ public class SeaGrassBed : Card
         RandomDropByHand(out tip);
     }
 
-    public bool Judge_CollectByKnife(out string hint)
+    private bool Judge_CollectByKnife(out string hint)
     {
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) == null)
@@ -30,17 +33,17 @@ public class SeaGrassBed : Card
         return true;
     }
 
-    public void Event_CollectByKnife(out string tip)
+    private void Event_CollectByKnife(out string tip)
     {
         CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
 
-    public void RandomDropByHand(out string tip)
+    private void RandomDropByHand(out string tip)
     {
         tip = string.Empty;
         for (int i = 0; i < 2; i++)
         {
-            int rand = Random.Range(0, 22);
+            int rand = Random.Range(0, 20);
             if (rand < 4)
             {
                 AddCards("海麻线", 2, true);
@@ -53,10 +56,6 @@ public class SeaGrassBed : Card
             {
                 AddCard("海爬虫", true);
             }
-            else if (rand < 21)
-            {
-                AddCard("海麻线根", true);
-            }
             else
             {
                 tip = "手被划伤了";
@@ -66,11 +65,11 @@ public class SeaGrassBed : Card
             }
         }
     }
-    public void RandomDropByKnife()
+    private void RandomDropByKnife()
     {
         for (int i = 0; i < 3; i++)
         {
-            int rand = Random.Range(0, 20);
+            int rand = Random.Range(0, 18);
             if (rand < 10)
             {
                 AddCards("海麻线", 2, true);
@@ -79,13 +78,9 @@ public class SeaGrassBed : Card
             {
                 AddCard("海麻线", true);
             }
-            else if (rand < 18)
-            {
-                AddCard("海爬虫", true);
-            }
             else
             {
-                AddCard("海麻线根", true);
+                AddCard("海爬虫", true);
             }
         }
     }

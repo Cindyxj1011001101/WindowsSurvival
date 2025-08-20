@@ -1,4 +1,6 @@
-
+/// <summary>
+/// 手压排水泵
+/// </summary>
 public class HandDrainPump : Card
 {
     private HandDrainPump()
@@ -7,29 +9,24 @@ public class HandDrainPump : Card
         {
             new Event("手压排水", "手压排水", Event_Drain, Judge_Drain),
         };
-        
+
     }
 
-    public void Event_Drain(out string tip)
+    private void Event_Drain(out string tip)
     {
-        tip=string.Empty;
+        tip = string.Empty;
         Use();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -3);
         StateManager.Instance.ChangeWaterLevel(-7);
         TimeManager.Instance.AddTime(30);
 
     }
-    public bool Judge_Drain(out string hint)
+    private bool Judge_Drain(out string hint)
     {
         hint = string.Empty;
-        if (!GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
+        if (!GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft || StateManager.Instance.WaterLevel.CurValue <= 0)
         {
-            hint = "该场景无水平面属性";
-            return false;
-        }
-        else if(StateManager.Instance.WaterLevel.CurValue==0)
-        {
-            hint = "当前场景水平面为0";
+            hint = "你无需在此地排水";
             return false;
         }
         return true;

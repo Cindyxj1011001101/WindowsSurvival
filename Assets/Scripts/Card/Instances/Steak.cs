@@ -14,7 +14,7 @@ public class Steak : Card
             })
         };
     }
-    public void Event_Eat(out string tip)
+    private void Event_Eat(out string tip)
     {
         DestroyThis();
 

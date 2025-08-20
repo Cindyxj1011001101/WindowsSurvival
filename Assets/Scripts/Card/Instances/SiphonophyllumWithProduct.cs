@@ -14,12 +14,12 @@ public class SiphonophyllumWithProduct : Card
         };
     }
 
-    public void Event_Cut(out string tip)
+    private void Event_Cut(out string tip)
     {
         Cut(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
 
-    public bool Judge_Cut(out string hint)
+    private bool Judge_Cut(out string hint)
     {
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) == null)
@@ -30,11 +30,11 @@ public class SiphonophyllumWithProduct : Card
         return true;
     }
 
-    public void Event_Collect(out string tip)
+    private void Event_Collect(out string tip)
     {
         // 变回虹吸海葵
         DestroyThis();
-        AddCard("虹吸海葵", Bag is PlayerBag);
+        AddCard("虹吸海葵", Bag);
 
         tip = string.Empty;
         TimeManager.Instance.AddTime(15);

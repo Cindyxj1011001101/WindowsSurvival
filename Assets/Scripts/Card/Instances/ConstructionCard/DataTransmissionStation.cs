@@ -14,7 +14,7 @@ public class DataTransmissionStation : Card
         curTimes = 0;
         Events = new()
         {
-            new Event("数据传输", "数据传输", Event_Tech, Judge_Tech),
+            new Event("数据传输", "数据传输", Event_Tech, Judge_Tech, () => 60, () => new() { { PlayerStateEnum.Sobriety, -10 } }),
             new Event("完整拆卸", "完整拆卸", Event_CompleteTearDown, Judge_CompleteTearDown),
             new Event("暴力拆毁", "暴力拆毁", Event_ViolentTearDown, Judge_ViolentTearDown)
         };
@@ -66,7 +66,7 @@ public class DataTransmissionStation : Card
         StateManager.Instance.ChangeElectricityChangeRate(+0.5f);
     }
 
-    public void Event_Tech(out string tip)
+    private void Event_Tech(out string tip)
     {
         tip = string.Empty;
         curTimes++;
@@ -75,16 +75,18 @@ public class DataTransmissionStation : Card
         TimeManager.Instance.AddTime(60);
     }
 
-    public bool Judge_Tech(out string hint)
+    private bool Judge_Tech(out string hint)
     {
         hint = string.Empty;
         if (curTimes >= MaxTimes)
         {
+            hint = "当日内可以进行的数据传输次数已达上限";
             return false;
         }
 
         if (TechnologyManager.Instance.CurStudiedTechNode == null)
         {
+            hint = "当前没有科技在研究中，无法进行数据传输";
             return false;
         }
         return true;

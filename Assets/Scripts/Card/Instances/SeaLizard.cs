@@ -1,6 +1,8 @@
-///海爬虫
 using System.Collections.Generic;
 
+/// <summary>
+/// 海爬虫
+/// </summary>
 public class SeaLizard : Card
 {
     private SeaLizard()
@@ -12,11 +14,11 @@ public class SeaLizard : Card
         };
     }
 
-    public void Event_Eat(out string tip)
+    private void Event_Eat(out string tip)
     {
         DestroyThis();
 
-        SoundManager.Instance.PlaySound("吃_01",true);
+        SoundManager.Instance.PlaySound("吃_01", true);
 
         tip = string.Empty;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 6);

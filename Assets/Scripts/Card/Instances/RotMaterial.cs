@@ -14,7 +14,7 @@ public class RotMaterial : Card
         };
     }
 
-    public void Event_Eat(out string tip)
+    private void Event_Eat(out string tip)
     {
         DestroyThis();
 

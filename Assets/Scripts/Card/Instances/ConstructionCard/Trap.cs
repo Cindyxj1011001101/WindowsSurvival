@@ -8,29 +8,26 @@ public class Trap : Card
 {
     private InnerContentsComponent innerContents;
     public bool isWorking; // 是否已打开
-    public string OutcomeCardID;
+    public string outcomeCardId;
     private Trap()
     {
         isWorking = false;
         Events = new()
         {
-            new Event("布置", "布置", Event_Arrange, Judge_Arrange),
-            new Event("收获", "收获", Event_TakeOut, Judge_TakeOut),
+            new Event("布置", "布置陷阱", Event_Arrange, Judge_Arrange, () => 15),
+            new Event("收获", "取出捕捉到的生物", Event_TakeOut, Judge_TakeOut),
         };
-
-        // 仅在室内、非水域地点建造
-        AddComponent(new ConstructionComponent()
-        {
-            onlyInDoor = true,
-            onlyOutWater = true,
-            needCable = true,
-        });
     }
 
     private bool ContentFilter(Card c, out string s)
     {
-        // TODO
-        throw new System.NotImplementedException();
+        s = string.Empty;
+        if (c.CardType != CardType.Food)
+        {
+            s = "只能放入食物";
+            return false;
+        }
+        return true;
     }
 
     public override bool CanQuickInteract(Card card)
@@ -43,30 +40,29 @@ public class Trap : Card
         innerContents.QuickIneract(slot, count, out tip);
     }
 
-    public void Event_TakeOut(out string tip)
+    private void Event_TakeOut(out string tip)
     {
         tip = string.Empty;
-        if (OutcomeCardID != null)
-        {
-            AddCard(OutcomeCardID, true);
-            OutcomeCardID = null;
-            Use();
-        }
+        Use();
+        AddCard(outcomeCardId, true);
+        outcomeCardId = null;
+        isWorking = false;
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
-    public bool Judge_TakeOut(out string hint)
+    private bool Judge_TakeOut(out string hint)
     {
         hint = string.Empty;
-        return OutcomeCardID != null;
+        return string.IsNullOrEmpty(outcomeCardId);
     }
-    public void Event_Arrange(out string tip)
+    private void Event_Arrange(out string tip)
     {
         tip = string.Empty;
         TimeManager.Instance.AddTime(15);
         isWorking = true;
-
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
 
-    public bool Judge_Arrange(out string hint)
+    private bool Judge_Arrange(out string hint)
     {
         hint = string.Empty;
         return !isWorking;
@@ -86,20 +82,19 @@ public class Trap : Card
 
         if (dropCards.IsNullOrEmpty()) return; // 没抽中
 
-        isWorking = false;
-        Use();
+        // 抽中，清空内容物中的诱饵
         innerContents.Clear();
 
         foreach (var card in dropCards)
         {
             if (card.CardId == "有产物的水瓶鱼")
             {
-                OutcomeCardID = "有产物的被捉住的水瓶鱼";
+                outcomeCardId = "有产物的被捉住的水瓶鱼";
                 //WAIT:可能需要处理生长度等的继承
             }
             else
             {
-                OutcomeCardID = card.CardId;
+                outcomeCardId = card.CardId;
             }
         }
     };

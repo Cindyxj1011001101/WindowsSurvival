@@ -5,8 +5,8 @@ public class HeavyOxygenCan : EquipmentCard
     {
         Events = new()
         {
-            new Event("装备", "装备脚蹼", Event_Equip, Judge_Equip),
-            new Event("卸下", "卸下脚蹼", Event_UnEquip, Judge_UnEquip)
+            new Event("装备", "装备重型氧气罐", Event_Equip, Judge_Equip),
+            new Event("卸下", "卸下重型氧气罐", Event_UnEquip, Judge_UnEquip)
         };
     }
     protected override void LateInit()

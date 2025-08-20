@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -27,7 +26,7 @@ public class RatBody : Card
     }
 
     #region 食用
-    public void Event_Eat(out string tip)
+    private void Event_Eat(out string tip)
     {
         DestroyThis();
 
@@ -47,7 +46,7 @@ public class RatBody : Card
     #endregion
 
     #region 用手剥
-    public void Event_PeelByHand(out string tip)
+    private void Event_PeelByHand(out string tip)
     {
         DestroyThis();
 
@@ -64,7 +63,7 @@ public class RatBody : Card
         {
             AddCard("小块生肉", true);
         }
-        else if (rand < 4)
+        else
         {
             //掉落提示：“肉被糟蹋了，什么都没得到”
             tip = "肉被糟蹋了，什么都没得到";
@@ -73,12 +72,12 @@ public class RatBody : Card
     #endregion
 
     #region 用刀切割
-    public void Event_PeelByKnife(out string tip)
+    private void Event_PeelByKnife(out string tip)
     {
         PeelByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
 
-    public bool Judge_PeelByKnife(out string hint)
+    private bool Judge_PeelByKnife(out string hint)
     {
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) == null)

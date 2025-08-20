@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 
+/// <summary>
+/// 贝类刺身
+/// </summary>
 public class ShellSashimi : Card
 {
     private ShellSashimi()
     {
-        Events=new()
+        Events = new()
         {
             new Event("食用", "食用贝类刺身", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>()
@@ -17,7 +20,7 @@ public class ShellSashimi : Card
         };
     }
 
-    public void Event_Eat(out string tip)
+    private void Event_Eat(out string tip)
     {
         DestroyThis();
 

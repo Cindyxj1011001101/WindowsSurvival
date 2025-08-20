@@ -19,12 +19,12 @@ public class Siphonophyllum : Card
         AddCard("有产物的虹吸海葵", Bag);
     }
 
-    public void Event_Cut(out string tip)
+    private void Event_Cut(out string tip)
     {
         Cut(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
 
-    public bool Judge_Cut(out string hint)
+    private bool Judge_Cut(out string hint)
     {
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) == null)

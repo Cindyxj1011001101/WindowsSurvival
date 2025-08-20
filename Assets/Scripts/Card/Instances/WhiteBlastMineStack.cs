@@ -13,11 +13,11 @@ public class WhiteBlastMineStack : Card
         };
     }
 
-    public void Event_Dig(out string tip)
+    private void Event_Dig(out string tip)
     {
         DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
     }
-    public bool Judge_Dig(out string hint)
+    private bool Judge_Dig(out string hint)
     {
         hint = string.Empty;
         if(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) == null)
@@ -27,7 +27,7 @@ public class WhiteBlastMineStack : Card
         }
         return true;
     }
-    public void RandomDrop()
+    private void RandomDrop()
     {
         int rand = Random.Range(0,16);
         if (rand < 4)

@@ -21,12 +21,12 @@ public class AquariusFish : Card
     }
 
     #region 用捕网捉
-    public void Event_CatchByNet(out string tip)
+    private void Event_CatchByNet(out string tip)
     {
         Catch(GameManager.Instance.PlayerBag.FindCardOfName("捞网"), out tip);
     }
 
-    public bool Judge_CatchByNet(out string hint)
+    private bool Judge_CatchByNet(out string hint)
     {
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfName("捞网") == null)
@@ -39,7 +39,7 @@ public class AquariusFish : Card
     #endregion
 
     #region 用手捉
-    public void Event_CatchByHand(out string tip)
+    private void Event_CatchByHand(out string tip)
     {
         DestroyThis();
 

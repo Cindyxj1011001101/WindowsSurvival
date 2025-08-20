@@ -18,12 +18,17 @@ public class Campfire : Card
 
     private bool ContentFilter(Card c, out string s)
     {
-        // TODO
-        throw new System.NotImplementedException();
+        s = string.Empty;
+        if (!c.TryGetComponent<BurnableComponent>(out _))
+        {
+            s = "只能放置可燃烧的物品";
+            return false;
+        }
+        return true;
     }
 
     //TODO:将拥有BurnableComponent卡牌拖拽到本卡牌上，增加燃料（和燃料炉逻辑一致）
-    public void Event_Light(out string tip)
+    private void Event_Light(out string tip)
     {
         tip = string.Empty;
 
@@ -35,12 +40,12 @@ public class Campfire : Card
         isLightened = true;
     }
 
-    public bool Judge_Light(out string hint)
+    private bool Judge_Light(out string hint)
     {
         hint = string.Empty;
         return !isLightened;
     }
-    public void Event_UnLight(out string tip)
+    private void Event_UnLight(out string tip)
     {
         tip = string.Empty;
 
@@ -50,8 +55,7 @@ public class Campfire : Card
 
         isLightened = false;
     }
-
-    public bool Judge_UnLight(out string hint)
+    private bool Judge_UnLight(out string hint)
     {
         hint = string.Empty;
         return isLightened;

@@ -20,7 +20,7 @@ public class RawOysterMeat : Card
     }
 
     #region 食用
-    public void Event_Eat(out string tip)
+    private void Event_Eat(out string tip)
     {
         DestroyThis();
 
