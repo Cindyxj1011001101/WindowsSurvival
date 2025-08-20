@@ -150,13 +150,14 @@ public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
         targetRect.offsetMin = newOffsetMin;
         targetRect.offsetMax = newOffsetMax;
 
-        targetRect.offsetMin = new Vector2(
-            Mathf.Clamp(targetRect.offsetMin.x, rectMask.rect.xMin, rectMask.rect.xMax),
-            Mathf.Clamp(targetRect.offsetMin.y, rectMask.rect.yMin, rectMask.rect.yMax)
-        );
+        //targetRect.offsetMin = new Vector2(
+        //    Mathf.Clamp(targetRect.offsetMin.x, rectMask.rect.xMin, rectMask.rect.xMax),
+        //    Mathf.Clamp(targetRect.offsetMin.y, rectMask.rect.yMin, rectMask.rect.yMax)
+        //);
         targetRect.offsetMax = new Vector2(
-            Mathf.Clamp(targetRect.offsetMax.x, rectMask.rect.xMin, rectMask.rect.xMax),
-            Mathf.Clamp(targetRect.offsetMax.y, rectMask.rect.yMin, rectMask.rect.yMax)
+            targetRect.offsetMax.x,
+            //Mathf.Clamp(targetRect.offsetMax.x, rectMask.rect.xMin, rectMask.rect.xMax),
+            Mathf.Clamp(targetRect.offsetMax.y, rectMask.rect.yMin + 60, rectMask.rect.yMax)
         );
     }
 
