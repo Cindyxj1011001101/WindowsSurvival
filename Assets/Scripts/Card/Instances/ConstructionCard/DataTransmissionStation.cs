@@ -1,30 +1,19 @@
 /// <summary>
 /// 数据传输台
 /// </summary>
-public class DataTransmissionStation : Card
+public class DataTransmissionStation : ConstructionCard
 {
-    public int MaxTimes;
-    public int curTimes;
+    public int maxTimes = 2;
+    public int curTimes = 0;
 
-    public bool isWorking;
+    public bool isWorking = false;
 
     private DataTransmissionStation()
     {
-        MaxTimes = 2;
-        curTimes = 0;
         Events = new()
         {
-            new Event("数据传输", "数据传输", Event_Tech, Judge_Tech, () => 60, () => new() { { PlayerStateEnum.Sobriety, -10 } }),
-            new Event("完整拆卸", "完整拆卸", Event_CompleteTearDown, Judge_CompleteTearDown),
-            new Event("暴力拆毁", "暴力拆毁", Event_ViolentTearDown, Judge_ViolentTearDown)
+            new Event("数据传输", "使当前研究科技的研究进度加28", Event_Transmit, Judge_Transmit, () => 60, () => new() { { PlayerStateEnum.Sobriety, -10 } }, () => new() { { EnvironmentStateEnum.Electricity, -5f } }),
         };
-
-        AddComponent(new ConstructionComponent()
-        {
-            needCable = true,
-            onlyInDoor = true,
-            onlyOutWater = true
-        });
     }
 
     protected override void LateInit()
@@ -66,19 +55,20 @@ public class DataTransmissionStation : Card
         StateManager.Instance.ChangeElectricityChangeRate(+0.5f);
     }
 
-    private void Event_Tech(out string tip)
+    private void Event_Transmit(out string tip)
     {
         tip = string.Empty;
         curTimes++;
+        StateManager.Instance.ChangeElectricity(-5f);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -10);
         TechnologyManager.Instance.AddStudyProcess(28);
         TimeManager.Instance.AddTime(60);
     }
 
-    private bool Judge_Tech(out string hint)
+    private bool Judge_Transmit(out string hint)
     {
         hint = string.Empty;
-        if (curTimes >= MaxTimes)
+        if (curTimes >= maxTimes)
         {
             hint = "当日内可以进行的数据传输次数已达上限";
             return false;
@@ -89,47 +79,14 @@ public class DataTransmissionStation : Card
             hint = "当前没有科技在研究中，无法进行数据传输";
             return false;
         }
+
+        if (StateManager.Instance.Electricity.CurValue < 5f)
+        {
+            hint = "当前电力过低，无法进行数据传输";
+            return false;
+        }
+
         return true;
-    }
-
-    public void Event_CompleteTearDown(out string tip)
-    {
-        tip = string.Empty;
-        GameManager.Instance.PlayerBag.FindCardOfName("精密扳手").Use();
-        DestroyThis();
-        AddCard("建筑工程包(数据传输台)", true);
-        TimeManager.Instance.AddTime(60);
-    }
-
-    public bool Judge_CompleteTearDown(out string hint)
-    {
-        hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfName("精密扳手") != null)
-        {
-            return true;
-        }
-        return false;
-    }
-    public void Event_ViolentTearDown(out string tip)
-    {
-        tip = string.Empty;
-        GameManager.Instance.PlayerBag.FindCardOfName("钢锤").Use();
-        DestroyThis();
-        AddCards("珊瑚", 2, true);
-        AddCard("韧性胶管", true);
-        AddCard("废金属", true);
-        TimeManager.Instance.AddTime(15);
-
-    }
-
-    public bool Judge_ViolentTearDown(out string hint)
-    {
-        hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfName("钢锤") != null)
-        {
-            return true;
-        }
-        return false;
     }
 
     protected override System.Action OnUpdate => () =>

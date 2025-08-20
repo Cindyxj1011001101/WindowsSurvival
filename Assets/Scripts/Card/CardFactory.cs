@@ -252,6 +252,10 @@ public static class CardFactory
         {
             card.AddComponent(new InnerContentsComponent(config.InnerContentSlotCount));
         }
+        if (config.IsFlammable)
+        {
+            card.AddComponent(new FlammableComponent(config.FuelValue));
+        }
         if (config.IsPassage)
         {
             card.AddComponent(new PassageComponent(config.TargetPlace, config.MoveTime, config.InteractAudio));
@@ -259,6 +263,10 @@ public static class CardFactory
         if (config.CanCook)
         {
             card.AddComponent(new CookComponent(config.CookTime, config.OutcomeCardId));
+        }
+        if (config.IsConstruction)
+        {
+            card.AddComponent(new ConstructionComponent(config.OnlyInWater, config.OnlyOutWater, config.OnlyInDoor, config.OnlyOutDoor, config.NeedCable, config.CanBeDemolished, config.DemolitionDebris));
         }
 
         return card;

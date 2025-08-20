@@ -45,10 +45,11 @@ public static class ExcelReader
                 IsTool = bool.Parse(row[20].ToString()),
                 IsBigIcon = bool.Parse(row[22].ToString()),
                 HasInnerContents = bool.Parse(row[23].ToString()),
-                // HasBurn = bool.Parse(row[25].ToString()),
+                IsFlammable = bool.Parse(row[25].ToString()),
                 // HasFoodProperty = bool.Parse(row[27].ToString()),
                 IsPassage = bool.Parse(row[36].ToString()),
                 CanCook = bool.Parse(row[40].ToString()),
+                IsConstruction = bool.Parse(row[43].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
@@ -78,10 +79,10 @@ public static class ExcelReader
             {
                 cardConfig.InnerContentSlotCount = int.Parse(row[24].ToString());
             }
-            // if (cardConfig.HasBurn)
-            // {
-            //     cardConfig.BurnTime = int.Parse(row[26].ToString());
-            // }
+             if (cardConfig.IsFlammable)
+            {
+                cardConfig.FuelValue = int.Parse(row[26].ToString());
+            }
             // if (cardConfig.HasFoodProperty)
             // {
             //     cardConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>();
@@ -104,6 +105,16 @@ public static class ExcelReader
             {
                 cardConfig.CookTime = int.Parse(row[41].ToString());
                 cardConfig.OutcomeCardId = row[42].ToString();
+            }
+            if (cardConfig.IsConstruction)
+            {
+                cardConfig.OnlyInWater = bool.Parse(row[44].ToString());
+                cardConfig.OnlyOutWater = bool.Parse(row[45].ToString());
+                cardConfig.OnlyInDoor = bool.Parse(row[46].ToString());
+                cardConfig.OnlyOutDoor = bool.Parse(row[47].ToString());
+                cardConfig.NeedCable = bool.Parse(row[48].ToString());
+                cardConfig.CanBeDemolished = bool.Parse(row[49].ToString());
+                cardConfig.DemolitionDebris = row[50].ToString();
             }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
@@ -437,8 +448,8 @@ public class CardConfig
     public bool IsBigIcon; // 是否是大图标
     public bool HasInnerContents; // 是否有内部内容（如生物、建筑等）
     public int InnerContentSlotCount; // 内部内容槽位数量
-    public bool HasBurn; // 是否有可燃烧组件
-    public int BurnTime; // 可燃烧时间
+    public bool IsFlammable; // 是否有可燃烧组件
+    public int FuelValue; // 可燃烧时间
     public bool HasFoodProperty; // 是否有食物属性
     public Dictionary<FoodProperty, int> FoodPropertyDict; // 食物属性
     public bool IsPassage; // 是否是通道
@@ -448,6 +459,14 @@ public class CardConfig
     public bool CanCook; // 能否烹饪
     public int CookTime; // 烹饪时长
     public string OutcomeCardId; // 烹饪产物
+    public bool IsConstruction; // 是否是建筑
+    public bool OnlyInWater; // 是否仅建造在水域地点
+    public bool OnlyOutWater; // 是否仅建造在陆地地点
+    public bool OnlyInDoor; // 是否仅建造在室内
+    public bool OnlyOutDoor; // 是否仅建造在室外
+    public bool NeedCable; // 是否需要电缆
+    public bool CanBeDemolished; // 能否被拆毁
+    public string DemolitionDebris; // 拆毁后产物ID
 }
 
 public class DropConfig

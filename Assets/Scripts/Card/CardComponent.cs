@@ -250,6 +250,7 @@ public class InnerContentsComponent : CardComponent
     [JsonIgnore] public UnityAction<Card> onRemoveCard;
 
     public bool display; // 是否显示内容物
+    public bool canAddOrRemove; // 是否可以添加或移除内容物
 
     public void Init()
     {
@@ -264,6 +265,7 @@ public class InnerContentsComponent : CardComponent
         bag.AddSlot(slotCount);
         bag.SetComponent(this);
         display = true; // 默认显示内容物
+        canAddOrRemove = true; // 默认可以添加或移除内容物
     }
 
     public int GetTotalCountByCardId(string cardId) => bag.GetTotalCountByCardId(cardId);
@@ -326,13 +328,33 @@ public class FoodPropertyComponent : CardComponent
 #endregion
 
 #region 可燃烧组件
-public class BurnableComponent : CardComponent
+public class FlammableComponent : CardComponent
 {
-    public int burnTime;
+    public int fuelValue; // 燃料值
 
-    public BurnableComponent(int burnTime)
+    public FlammableComponent(int fuelValue)
     {
-        this.burnTime = burnTime;
+        this.fuelValue = fuelValue;
+    }
+}
+#endregion
+
+#region 燃料组件
+public class FuelComponent : CardComponent
+{
+    public int fuel; // 燃料值
+    public int maxFuel; // 最大燃料值
+    public FuelComponent(int maxFuel)
+    {
+        fuel = 0;
+        this.maxFuel = maxFuel;
+    }
+
+    public void AddFuel(int delta)
+    {
+        fuel += delta;
+        fuel = Mathf.Clamp(fuel, 0, maxFuel);
+        BelongedCard.RefreshSlot();
     }
 }
 #endregion
@@ -362,16 +384,19 @@ public class ConstructionComponent : CardComponent
     public bool onlyOutDoor;
     public bool needCable;
 
-    public ConstructionComponent(bool onlyInWater, bool onlyOutWater, bool onlyInDoor, bool onlyOutDoor, bool needCable)
+    public bool canBeDemolished; // 能否被拆毁
+    public string demolitionDebris; // 拆毁后产物ID
+
+    public ConstructionComponent(bool onlyInWater, bool onlyOutWater, bool onlyInDoor, bool onlyOutDoor, bool needCable, bool canBeDemolished, string demolitionDebris)
     {
         this.onlyInWater = onlyInWater;
         this.onlyOutWater = onlyOutWater;
         this.onlyInDoor = onlyInDoor;
         this.onlyOutDoor = onlyOutDoor;
         this.needCable = needCable;
+        this.canBeDemolished = canBeDemolished;
+        this.demolitionDebris = demolitionDebris;
     }
-
-    public ConstructionComponent() { }
 }
 #endregion
 

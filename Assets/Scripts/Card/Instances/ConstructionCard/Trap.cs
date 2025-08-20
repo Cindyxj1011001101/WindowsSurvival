@@ -14,8 +14,8 @@ public class Trap : Card
         isWorking = false;
         Events = new()
         {
-            new Event("布置", "布置陷阱", Event_Arrange, Judge_Arrange, () => 15),
-            new Event("收获", "取出捕捉到的生物", Event_TakeOut, Judge_TakeOut),
+            new Event("布置", "", Event_Arrange, Judge_Arrange, () => 15),
+            new Event("取出", "", Event_TakeOut, Judge_TakeOut),
         };
     }
 
@@ -30,16 +30,6 @@ public class Trap : Card
         return true;
     }
 
-    public override bool CanQuickInteract(Card card)
-    {
-        return innerContents.CanQuickInteract(card);
-    }
-
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
-    {
-        innerContents.QuickIneract(slot, count, out tip);
-    }
-
     private void Event_TakeOut(out string tip)
     {
         tip = string.Empty;
@@ -49,11 +39,13 @@ public class Trap : Card
         isWorking = false;
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
+
     private bool Judge_TakeOut(out string hint)
     {
         hint = string.Empty;
         return string.IsNullOrEmpty(outcomeCardId);
     }
+
     private void Event_Arrange(out string tip)
     {
         tip = string.Empty;
@@ -98,4 +90,14 @@ public class Trap : Card
             }
         }
     };
+
+    public override bool CanQuickInteract(Card card)
+    {
+        return innerContents.CanQuickInteract(card);
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        innerContents.QuickIneract(slot, count, out tip);
+    }
 }

@@ -379,6 +379,11 @@ public abstract class Card : IComparable<Card>
         return GameManager.Instance.AddCardsWithTween(cardId, count, Transform.position, toPlayerBag, out _);
     }
 
+    protected Tween AddCards(List<Card> cards, bool toPlayerBag)
+    {
+        return GameManager.Instance.AddCardsWithTween(cards, Transform.position, toPlayerBag);
+    }
+
     protected void AddCard(string cardId, Bag targetBag)
     {
         AddCard(CardFactory.CreateCard(cardId), targetBag);

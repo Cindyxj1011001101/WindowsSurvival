@@ -1,24 +1,21 @@
-public class SafeInsurance : Card
+public class SafeInsurance : ConstructionCard
 {
     private InnerContentsComponent innerContents;
     private SafeInsurance()
     {
         Events = new()
         {
-            new Event("用手砸", "用手砸", Event_UseHand, Judge_UseHand, () => 15, () => new() { { PlayerStateEnum.Sobriety, -5 }, { PlayerStateEnum.PainLevel, 15 } }),
-            new Event("用铲子凿", "用铲子凿", Event_UseShovel, Judge_UseShovel, () => 15, () => new() { { PlayerStateEnum.Sobriety, -4 } }),
-            new Event("用锤子砸", "用锤子砸", Event_UseHammer, Judge_UseHammer, () => 15)
+            new Event("用手砸", "你也太不心疼麦麦了", Event_UseHand, Judge_UseHand, () => 15, () => new() { { PlayerStateEnum.Sobriety, -5 }, { PlayerStateEnum.PainLevel, 15 } }),
+            new Event("用铲子凿", "还是有些费力，但是比用手好得多", Event_UseShovel, Judge_UseShovel, () => 15, () => new() { { PlayerStateEnum.Sobriety, -4 } }),
+            new Event("用锤子砸", "最有效的方式", Event_UseHammer, Judge_UseHammer, () => 15)
         };
-
-        AddComponent(new ConstructionComponent()
-        {
-        });
     }
 
     protected override void LateInit()
     {
         base.LateInit();
         innerContents.display = false; // 不显示内容物
+        innerContents.canAddOrRemove = false; // 不允许添加或移除内容物
     }
 
     private void Event_UseHand(out string tip)
@@ -93,24 +90,26 @@ public class SafeInsurance : Card
     public override bool CanQuickInteract(Card card)
     {
         // 允许和带有切割标签的卡牌快速交互
-        if (card.TryGetComponent<ToolComponent>(out var component))
+        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            if (component.toolTypes.Contains(ToolType.Dig)) return true;
+            return true;
         }
         return card.CardId == "钢锤";
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        base.QuickIneract(slot, count, out tip);
         var card = slot.PeekCard();
         if (slot.PeekCard().CardId == "钢锤")
         {
             UseHammer(card, out tip);
+            return;
         }
-        else
+        else if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
             UseShovel(card, out tip);
+            return;
         }
+        base.QuickIneract(slot, count, out tip);
     }
 }

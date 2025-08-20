@@ -1,14 +1,14 @@
 /// <summary>
 /// 垃圾销毁器
 /// </summary>
-public class GarbageDestroyer : Card
+public class GarbageDestroyer : ConstructionCard
 {
     private InnerContentsComponent innerContents;
     private GarbageDestroyer()
     {
         Events = new()
         {
-            new Event("销毁垃圾", "销毁垃圾", Event_Destroy, Judge_Destroy),
+            new Event("销毁", "销毁所有内容物", Event_Destroy, Judge_Destroy),
         };
     }
 

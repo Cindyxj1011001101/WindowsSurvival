@@ -79,7 +79,6 @@ public class TimeManager : MonoBehaviour
                 curInterval = SettleInterval;
                 // ChatConditionManager.Instance.TrackCurrentStatus();
                 EventManager.Instance.TriggerEvent(EventType.IntervalSettle);
-                //EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty);
             }
             else
             {
@@ -96,6 +95,4 @@ public class TimeManager : MonoBehaviour
     {
         return CurTime.Date != lastDay;
     }
-
-    
 }

@@ -3,40 +3,26 @@ using UnityEngine;
 /// <summary>
 /// 矿石释氧机
 /// </summary>
-public class OreReleaseOxygenMachine : Card
+public class OreReleaseOxygenMachine : ConstructionCard
 {
     private InnerContentsComponent innerContents;
-    public bool isWorking; // 是否已打开
-    public float maxOxygenStorage; // 最大氧气存储
-    public float curOxygenStorage; // 当前氧气存储数量
-    public int maxTimeProgress; // 最大时间进度
-    public int curTimeProgress; // 当前时间进度
-    public float oxygenRelease; // 氧气释放量
-    public int oreConsumption; // 白爆矿消耗量
-    public float electricityConsumption; // 电力消耗量
+    public bool isWorking = false; // 是否已打开
+    public float maxOxygenStorage = 360; // 最大氧气存储
+    public float curOxygenStorage = 0; // 当前氧气存储数量
+    public int maxTimeProgress = 360; // 最大时间进度
+    public int curTimeProgress = 0; // 当前时间进度
+    public float oxygenRelease = 180; // 氧气释放量
+    public int oreConsumption = 1; // 白爆矿消耗量
+    public float electricityConsumption = 1; // 电力消耗量
 
     private OreReleaseOxygenMachine()
     {
-        isWorking = false;
-        //图片及小标题切换为关闭状态
-        maxOxygenStorage = 360;
-        curOxygenStorage = 0;
-        maxTimeProgress = 360;
-        curTimeProgress = 0;
-        oxygenRelease = 180;
-        oreConsumption = 1;
-        electricityConsumption = 1;
         Events = new()
         {
-            new Event("打开", "打开矿石释氧机", Event_Open, Judge_Open),
-            new Event("关闭", "关闭矿石释氧机", Event_Close, Judge_Close),
-            new Event("获取氧气", "消耗矿石释氧机的氧气储存，充满自身氧气", Event_GetOxygen, Judge_GetOxygen)
+            new Event("打开", "", Event_Open, Judge_Open),
+            new Event("关闭", "", Event_Close, Judge_Close),
+            new Event("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气", Event_GetOxygen, Judge_GetOxygen)
         };
-
-        AddComponent(new ConstructionComponent()
-        {
-            needCable = true,
-        });
     }
 
     private bool ContentFilter(Card c, out string s)
