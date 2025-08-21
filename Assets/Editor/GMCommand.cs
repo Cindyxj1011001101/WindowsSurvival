@@ -84,10 +84,10 @@ public class GMCommand
         AddCard("从珊瑚礁海域到飞船外壳");
     }
 
-    [MenuItem("Command/添加/安全泡沫覆盖的废料堆")]
-    public static void F()
+    [MenuItem("Command/添加/野炊营火")]
+    public static void AddPicnicCampfire()
     {
-        AddCard("废料堆");
+        AddCard("野炊营火");
     }
 
     [MenuItem("Command/添加/韧性胶管")]
@@ -271,6 +271,16 @@ public class GMCommand
     public static void T()
     {
         AddCard("爱情贝");
+    }
+    [MenuItem("Command/添加/诱捕陷阱")]
+    public static void AddTrapTraps()
+    {
+        AddCard("诱捕陷阱");
+    }
+    [MenuItem("Command/添加/燃料炉")]
+    public static void AddFuelFurnace()
+    {
+        AddCard("燃料炉");
     }
 
     [MenuItem("Command/添加/人力发电机")]
