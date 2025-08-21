@@ -106,6 +106,12 @@ public abstract class Card : IComparable<Card>
     public CardSlot Slot => SlotCards?.CardSlot;
     #endregion
 
+    private void Update()
+    {
+        if (!isUpdatePaused)
+            OnUpdate?.Invoke();
+    }
+
     /// <summary>
     /// 每回合结算时执行
     /// </summary>
@@ -138,6 +144,8 @@ public abstract class Card : IComparable<Card>
 
     private bool isUpdating = false; // 是否已启用每回合更新
 
+    [JsonProperty] private bool isUpdatePaused = false; // 是否暂停每回合更新
+
     /// <summary>
     /// 开始监听每回合的结算
     /// </summary>
@@ -155,7 +163,7 @@ public abstract class Card : IComparable<Card>
         LateInit();
 
         if (OnUpdate != null)
-            EventManager.Instance.AddListener(EventType.IntervalSettle, OnUpdate);
+            EventManager.Instance.AddListener(EventType.IntervalSettle, Update);
 
         // 如果有内部内容组件，则开始监听内部内容的更新
         if (TryGetComponent<InnerContentsComponent>(out var component))
@@ -170,6 +178,16 @@ public abstract class Card : IComparable<Card>
     public void StopUpdating()
     {
         EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
+    }
+
+    public void PauseUpdating()
+    {
+        isUpdatePaused = true;
+    }
+
+    public void ContinueUpdating()
+    {
+        isUpdatePaused = false;
     }
 
     public virtual void Use(int times = 1, UnityAction onBroken = null)

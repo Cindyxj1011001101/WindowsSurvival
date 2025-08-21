@@ -24,6 +24,12 @@ public class HoverTip : MonoBehaviour
         maxWidth = rectTransform.sizeDelta.x;
     }
 
+    private void OnDisable()
+    {
+        canvasGroup.DOKill();
+        canvasGroup.alpha = 0;
+    }
+
     public void SetTip(
         string textTip,
         Color textColor,
@@ -152,11 +158,5 @@ public class HoverTip : MonoBehaviour
     {
         canvasGroup.DOKill();
         canvasGroup.DOFade(0, 0.1f).SetEase(Ease.OutQuad).OnComplete(() => ObjectBufferPool.Instance.Restore(gameObject));
-    }
-
-    public void SelfDestroy()
-    {
-        canvasGroup.DOKill();
-        Destroy(gameObject);
     }
 }

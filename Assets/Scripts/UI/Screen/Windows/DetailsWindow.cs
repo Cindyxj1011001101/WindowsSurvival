@@ -12,6 +12,7 @@ public class DetailsWindow : BagWindow
     [SerializeField] private Transform menuLayout; // 菜单布局
     [SerializeField] private HoverableButton detailsButton; // 显示详细信息按钮
     [SerializeField] private HoverableButton innerContentsButton; // 显示内部内容按钮
+    [SerializeField] private GameObject innerContentsMask; // 用来限制放置和取出内容物
 
     [SerializeField] private GameObject eventButtonPrefab;
 
@@ -91,7 +92,11 @@ public class DetailsWindow : BagWindow
         {
             slot.DisplayCard(currentDisplayedCard, 1, false);
             if (!onlyDetails)
+            {
                 DisplayEventButtons();
+                if (currentDisplay == "内容物" && innerBag != null)
+                    DisplayBag(innerBag);
+            }
         }
     }
 
@@ -154,6 +159,8 @@ public class DetailsWindow : BagWindow
                 innerContentsButton.gameObject.SetActive(true);
                 innerContentsButton.Interactable = true;
                 innerBag = component.bag;
+
+                innerContentsMask.SetActive(!component.canAddOrRemove);
             }
             else
             {

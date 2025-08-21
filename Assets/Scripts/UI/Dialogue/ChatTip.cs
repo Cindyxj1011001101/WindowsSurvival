@@ -39,8 +39,10 @@ public class ChatTip : HoverableButton
         pointerEnterSizeTarget = new Vector2(-(background.parent as RectTransform).anchoredPosition.x, background.sizeDelta.y);
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
+
         timer = 0;
         pointerEnter = false;
         isHiding = false;

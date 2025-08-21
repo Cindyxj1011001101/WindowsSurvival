@@ -28,6 +28,23 @@ public class Campfire : ConstructionCard
             fuelContainer = new FuelContainerComponent(96);
             AddComponent(fuelContainer);
         }
+
+        // 放入内容物时，暂停卡牌每回合更新
+        innerContents.onAddCard = (c) =>
+        {
+            if (isLightened) c.PauseUpdating();
+        };
+        // 取出时恢复每回合更新
+        innerContents.onRemoveCard = (c) =>
+        {
+            c.ContinueUpdating();
+        };
+
+        // 每个卡牌槽的最大堆叠数都为1
+        foreach (var slot in innerContents.bag.Slots)
+        {
+            slot.SetMaxStackNum(1);
+        }
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -52,6 +69,9 @@ public class Campfire : ConstructionCard
         var env = Bag as EnvironmentBag;
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -4); // 点燃后地点氧气每回合-4
         env.ChangeEnvironmentState(EnvironmentStateEnum.CarbonMonoxideLevel, +2); // 点燃后地点一氧化碳每回合+2
+
+        // 点燃后暂停所有卡牌每回合更新
+        innerContents.PauseUpdating();
 
         isLightened = true;
     }
@@ -84,6 +104,9 @@ public class Campfire : ConstructionCard
         var env = Bag as EnvironmentBag;
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +4);
         env.ChangeEnvironmentState(EnvironmentStateEnum.CarbonMonoxideLevel, -2);
+
+        // 熄灭后恢复所有卡牌每回合更新
+        innerContents.ContinueUpdating();
 
         isLightened = false;
     }
@@ -124,6 +147,7 @@ public class Campfire : ConstructionCard
                     // 处理煮熟的逻辑
                     currentCard.DestroyThis();
                     AddCard(outcomeId, innerContents.bag);
+                    ShowTip($"{currentCard.CardName}熟了");
                 });
             }
         }
@@ -132,7 +156,7 @@ public class Campfire : ConstructionCard
 
         if (fuelContainer.fuel < 2) // 燃料不足时自动熄灭
         {
-            isLightened = false;
+            Event_UnLight(out _);
             RefreshSlot();
             ShowTip("燃料不足，营火已自动熄灭");
             return;

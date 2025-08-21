@@ -27,6 +27,15 @@ public class UIStateSlider : MonoBehaviour
 
     public HoverTipController tipController;
 
+    public Color fillColor = ColorManager.White;
+
+    public float value => slider.value;
+
+    private void OnDisable()
+    {
+        fillColor = ColorManager.White;
+    }
+
     public void SetStateName(string name)
     {
         stateNameText.text = name;
@@ -34,7 +43,20 @@ public class UIStateSlider : MonoBehaviour
 
     public virtual void SetValue(float value, float maxValue)
     {
+        if (slider.fillRect.TryGetComponent<Image>(out var fill))
+        {
+            fill.color = fillColor;
+        }
+
+        if (slider.handleRect.TryGetComponent<Image>(out var handle))
+        {
+            handle.color = fillColor;
+        }
+
         slider.value = value / maxValue;
+
+        if (valueText == null) return;
+
         if (displayPercentage)
             valueText.text = $"{value * 100 / maxValue: 0.0}%";
         else

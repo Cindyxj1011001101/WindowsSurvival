@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// 燃料炉
@@ -8,13 +7,13 @@ public class FuelFurnace : ConstructionCard
 {
     private InnerContentsComponent innerContents;
     private FuelContainerComponent fuelContainer;
+    private TemperatureComponent temperatureComponent;
 
     public bool isLightened; // 是否已打开
     public List<Card> cardsToProcesss; // 待加工卡牌
     public int leftRounds = 0; // 当前加工轮数
     public int maxRound = 16; // 总加工轮数
     public bool isProcessing = false; // 是否正在加工
-    public float curTempture = 0; // 当前温度
     public List<TempertureData> tempertureData = new(); // 温度数据，用来处理产物获取
     public string outComeCardId = null; // 产物卡牌id
 
@@ -39,6 +38,17 @@ public class FuelFurnace : ConstructionCard
         {
             fuelContainer = new FuelContainerComponent(96);
             AddComponent(fuelContainer);
+        }
+        // 添加温度组件
+        if (!TryGetComponent(out temperatureComponent))
+        {
+            temperatureComponent = new TemperatureComponent(0, 300);
+            AddComponent(temperatureComponent);
+        }
+        // 每个卡牌槽的最大堆叠数都为1
+        foreach (var slot in innerContents.bag.Slots)
+        {
+            slot.SetMaxStackNum(1);
         }
     }
 
@@ -121,15 +131,17 @@ public class FuelFurnace : ConstructionCard
         isProcessing = true;
         leftRounds = maxRound;
 
-        // TODO: 不可以添加或移除内容物
+        // 暂停内容物的更新
+        innerContents.PauseUpdating();
 
+        // 不可以添加或移除内容物
+        innerContents.canAddOrRemove = false;
 
         // 记录当前炉内的卡牌，即需要加工的卡牌
         foreach (var slot in innerContents.bag.Slots)
         {
             foreach (var card in slot.Cards)
             {
-                card.StopUpdating(); // 停止更新卡牌状态
                 cardsToProcesss.Add(card);
             }
         }
@@ -198,7 +210,7 @@ public class FuelFurnace : ConstructionCard
         // 点燃状态下
         if (isLightened && fuelContainer.fuel >= 1)
         {
-            curTempture += 17; // 温度+17
+            temperatureComponent.AddTemperature(17); // 温度+17
             fuelContainer.AddFuel(-1); // 燃料-1
             if (considerWaterLevel && waterLevel > 0) // 水平面>0时，燃料额外-4
             {
@@ -208,18 +220,16 @@ public class FuelFurnace : ConstructionCard
         // 非点燃状态下
         else
         {
-            curTempture -= 4; // 温度-4
+            temperatureComponent.AddTemperature(-4); // 温度-4
             if (considerWaterLevel && waterLevel >= 30) // 水平面>=30时，温度额外-8
             {
-                curTempture -= 8;
+                temperatureComponent.AddTemperature(-8);
             }
             else if (considerWaterLevel && waterLevel > 0) // 水平面>=0时，温度额外-4
             {
-                curTempture -= 4;
+                temperatureComponent.AddTemperature(-4);
             }
         }
-
-        curTempture = Mathf.Clamp(curTempture, 0, 300); // 温度限制在0~300之间
 
         if (!isLightened) return;
 
@@ -231,6 +241,8 @@ public class FuelFurnace : ConstructionCard
             ShowTip("燃料不足，燃料炉已自动熄灭");
             return;
         }
+
+        if (!isLightened) return;
 
         // 水平面高于30，自动熄灭
         if (considerWaterLevel && waterLevel >= 30)
@@ -245,9 +257,9 @@ public class FuelFurnace : ConstructionCard
     {
         if (leftRounds <= 0) return;
 
-        if (curTempture <= 50) tempertureData[0].round++;
-        else if (curTempture <= 100) tempertureData[1].round++;
-        else if (curTempture <= 200) tempertureData[2].round++;
+        if (temperatureComponent.temperature <= 50) tempertureData[0].round++;
+        else if (temperatureComponent.temperature <= 100) tempertureData[1].round++;
+        else if (temperatureComponent.temperature <= 200) tempertureData[2].round++;
         else tempertureData[3].round++;
         leftRounds--;
 
@@ -261,9 +273,9 @@ public class FuelFurnace : ConstructionCard
             innerContents.Clear(); // 销毁内容物
             cardsToProcesss.Clear(); // 销毁加工列表
 
-            //TODO:恢复InnerBag可放入拖出卡牌
-
-
+            // 可放入拖出卡牌
+            innerContents.canAddOrRemove = true;
+            RefreshSlot();
             ShowTip("燃料炉加工完成");
         }
     }

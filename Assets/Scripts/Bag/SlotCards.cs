@@ -1,24 +1,23 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class SlotCards
 {
-    [JsonIgnore] // 序列化这个会造成循环引用
-    public Bag Bag { get; protected set; }
-
     public List<Card> Cards { get; protected set; } = new();
 
-    [JsonIgnore]
-    public bool IsEmpty => Cards.IsNullOrEmpty();
+    [JsonProperty] private int maxStackNum = int.MaxValue;
 
-    [JsonIgnore]
-    public int StackNum => Cards.Count;
+    // 序列化这个会造成循环引用
+    [JsonIgnore] public Bag Bag { get; protected set; }
 
-    [JsonIgnore]
-    public Card this[int index] => Cards[index];
+    [JsonIgnore] public bool IsEmpty => Cards.IsNullOrEmpty();
 
-    [JsonIgnore]
-    public CardSlot CardSlot { get; protected set; }
+    [JsonIgnore] public int StackNum => Cards.Count;
+
+    [JsonIgnore] public Card this[int index] => Cards[index];
+
+    [JsonIgnore] public CardSlot CardSlot { get; protected set; }
 
     public void Init()
     {
@@ -27,6 +26,11 @@ public class SlotCards
             card.SetSlotCards(this);
             card.StartUpdating();
         }
+    }
+
+    public void SetMaxStackNum(int maxStackNum)
+    {
+        this.maxStackNum = maxStackNum;
     }
 
     public void SetCardSlot(CardSlot slot)
@@ -144,7 +148,7 @@ public class SlotCards
     /// <returns></returns>
     public virtual bool CanAddCard(Card card)
     {
-        return IsEmpty || (card.CardId == PeekCard().CardId && StackNum < card.MaxStackNum);
+        return IsEmpty || (card.CardId == PeekCard().CardId && StackNum < Mathf.Min(card.MaxStackNum, maxStackNum));
     }
 
     /// <summary>
