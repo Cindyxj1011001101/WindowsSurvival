@@ -199,11 +199,6 @@ public abstract class Card : IComparable<Card>
         if (Slot != null) Slot.ShowTip(tip);
     }
 
-    public void ShowTip(string tip, Color textColor)
-    {
-        if (Slot != null) Slot.ShowTip(tip, textColor);
-    }
-
     public virtual void DestroyThis()
     {
         if (Destroyed) return;

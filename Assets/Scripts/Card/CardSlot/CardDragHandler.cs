@@ -82,14 +82,14 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             return;
         }
 
-        BagWindow targetBag = currentObject.GetComponentInParent<BagWindow>();
-        BagWindow sourceBag = sourceSlot.GetComponentInParent<BagWindow>();
+        BagWindow targetWindow = currentObject.GetComponentInParent<BagWindow>();
+        BagWindow sourceWindow = sourceSlot.GetComponentInParent<BagWindow>();
 
         // 能够放置
-        if (targetBag != null)
+        if (targetWindow != null && targetWindow.Bag != null)
         {
             // 同背包放置
-            if (targetBag == sourceBag)
+            if (targetWindow == sourceWindow)
             {
                 // 放在同背包的不同格子里
                 if (targetSlot != null && targetSlot != sourceSlot)
@@ -105,9 +105,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 跨背包放置
             else if (sourceSlot.PeekCard().Moveable)
             {
-                PlaceCardInDifferentBag(targetBag.Bag, pickedCount, dragEndPosition);
+                PlaceCardInDifferentBag(targetWindow.Bag, pickedCount, dragEndPosition);
             }
-            // 卡牌的moveable为false
             else
             {
                 AnimateCardReturn(pickedCount, "不能移动该卡牌");
@@ -126,7 +125,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         var left = sourceSlot.StackNum - pickedCount;
         targetSlot.PeekCard().QuickIneract(sourceSlot.Cards, pickedCount, out var tip);
-        targetSlot.ShowTip(tip, ColorManager.Yellow);
+        targetSlot.ShowTip(tip);
         var toReturn = sourceSlot.StackNum - left; // toReturn一定>=0
         if (toReturn > 0)
             AnimateCardReturn(toReturn);
@@ -168,7 +167,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     else if (component.isEquipped)
                         GameManager.Instance.Unequip(card);
                     else
-                        sourceSlot.ShowTip(tip, ColorManager.Yellow);
+                        sourceSlot.ShowTip(tip);
 
                     return;
                 }
@@ -177,7 +176,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             else
             {
                 // 显示详情
-                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(sourceSlot.Cards);
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(sourceSlot.Cards);
                 return;
             }
         }
@@ -186,7 +185,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // 不可移动的卡牌
         if (!sourceSlot.PeekCard().Moveable)
         {
-            sourceSlot.ShowTip("不能移动该卡牌", ColorManager.Yellow);
+            sourceSlot.ShowTip("不能移动该卡牌");
             return;
         }
 
@@ -250,7 +249,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     // 刷新源卡槽显示
                     sourceSlot.DontRefresh = false;
                     // 显示提示
-                    sourceSlot.ShowTip(tip, ColorManager.Yellow);
+                    sourceSlot.ShowTip(tip);
                 }
             );
     }

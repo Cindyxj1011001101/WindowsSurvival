@@ -188,7 +188,6 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public void ShowTip(string tip)
     {
-
-        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
+        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up);
     }
 }

@@ -16,10 +16,9 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private RectTransform valueComponentLayout; // 用于显示新鲜度、耐久等组件的布局
     [SerializeField] private RectTransform innerContentsComponentLayout; // 用于显示内容物组件
     [SerializeField] private CanvasGroup cardCanvasGroup;
-    [SerializeField] private CanvasGroup thisCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
     [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
-    [SerializeField] private Image emptySlotImage; // 不显示卡牌时显示的底图
+    [SerializeField] private GameObject mask;
 
     private Dictionary<Type, float> lastComponentValues = new();
     private Dictionary<Type, Slider> componentSliders = new(); // 用于存储组件的滑动条
@@ -44,6 +43,7 @@ public class CardSlot : MonoBehaviour
 
     private void OnEnable()
     {
+        Clear();
         EventManager.Instance.AddListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
         EventManager.Instance.AddListener<Card>(EventType.PickUpCard, OnCardPickedUp);
@@ -78,27 +78,27 @@ public class CardSlot : MonoBehaviour
         {
             // 同背包或者卡牌可以放置到不同背包
             if (card.Bag == Cards.Bag || card.Moveable && Cards.Bag.CanAddCard(card, out _))
-                thisCanvasGroup.alpha = 1f;
-            else 
-                thisCanvasGroup.alpha = .14f;
+                mask.SetActive(false);
+            else
+                mask.SetActive(true);
             return;
         }
 
         if (PeekCard().CanQuickInteract(card))
         {
-            thisCanvasGroup.alpha = 1f;
+            mask.SetActive(false);
             Interactable = true;
         }
         else
         {
-            thisCanvasGroup.alpha = .14f;
+            mask.SetActive(true);
             Interactable = false;
         }
     }
 
     private void OnCardPutDown()
     {
-        thisCanvasGroup.alpha = 1f;
+        mask.SetActive(false);
         Interactable = false;
     }
 
@@ -138,7 +138,7 @@ public class CardSlot : MonoBehaviour
     {
         if (dontRefresh) return;
 
-        thisCanvasGroup.alpha = 1f;
+        mask.SetActive(false);
         Interactable = false;
 
         if (IsEmpty)
@@ -278,7 +278,7 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     public void Clear()
     {
-        emptySlotImage.enabled = true;
+        mask.SetActive(false);
         cardCanvasGroup.alpha = 0;
         cardCanvasGroup.blocksRaycasts = false;
         cardCanvasGroup.interactable = false;
@@ -295,20 +295,15 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     private void EnableDisplay()
     {
-        emptySlotImage.enabled = false;
+        mask.SetActive(false);
         cardCanvasGroup.alpha = 1;
         cardCanvasGroup.blocksRaycasts = true;
         cardCanvasGroup.interactable = true;
     }
 
-    public void ShowTip(string tip, Color color)
-    {
-        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, color);
-    }
-
     public void ShowTip(string tip)
     {
-        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up);
+        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.35f * Vector3.up);
     }
 
     /// <summary>

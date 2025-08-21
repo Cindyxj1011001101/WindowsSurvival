@@ -196,7 +196,7 @@ public class CraftWindow : WindowBase
         slot.GetComponentInChildren<HoverableButton>().onClick.RemoveAllListeners();
         slot.GetComponentInChildren<HoverableButton>().onClick.AddListener(() =>
         {
-            (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(recipe.CardInstance, true);
+            (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(recipe.CardInstance, true);
         });
 
         UIRecipeMaterial recipeMaterial;
@@ -214,7 +214,7 @@ public class CraftWindow : WindowBase
             recipeMaterial.button.onClick.RemoveAllListeners();
             recipeMaterial.button.onClick.AddListener(() =>
             {
-                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).DisplayCardDetails(material.CardInstance, true);
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(material.CardInstance, true);
             });
 
             recipeMaterial.transform.SetAsLastSibling();
