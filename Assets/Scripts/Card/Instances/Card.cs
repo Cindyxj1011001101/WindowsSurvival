@@ -213,8 +213,6 @@ public abstract class Card : IComparable<Card>
         StopUpdating();
 
         SlotCards.RemoveCard(this);
-
-        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
 
     #region 拖动交互
@@ -451,10 +449,8 @@ public class Event
 
     public void Inovke(out string tip)
     {
-        if (action != null)
-            action.Invoke(out tip);
-        else
-            tip = string.Empty;
+        tip = string.Empty;
+        action?.Invoke(out tip);
     }
 
     public bool Judge()

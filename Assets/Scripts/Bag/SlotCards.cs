@@ -75,7 +75,7 @@ public class SlotCards
         // 如果卡牌要被销毁，说明它不会进入AddCard方法，需要在这里执行onremoved
         if (card.Destroyed) card.OnRemoved(Bag);
 
-        if (CardSlot != null) CardSlot.RefreshDisplay();
+        card.RefreshSlot();
     }
 
     /// <summary>

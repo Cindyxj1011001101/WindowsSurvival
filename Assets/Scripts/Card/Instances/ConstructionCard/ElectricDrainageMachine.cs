@@ -1,9 +1,13 @@
+using System;
+
 /// <summary>
 /// 电动排水机
 /// </summary>
 public class ElectricDrainageMachine : ConstructionCard
 {
     public bool isWorking = false; // 是否已打开
+    public float electricityConsume = 0.5f; // 每回合电力消耗
+
     private ElectricDrainageMachine()
     {
         Events = new()
@@ -13,51 +17,22 @@ public class ElectricDrainageMachine : ConstructionCard
         };
     }
 
-    protected override void LateInit()
-    {
-        base.LateInit();
-        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityOrWaterLevelChanged);
-    }
-
-    public override void DestroyThis()
-    {
-        base.DestroyThis();
-        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityOrWaterLevelChanged);
-    }
-
-    private void OnElectricityOrWaterLevelChanged(RefreshEnvironmentStateArgs args)
-    {
-        if (args.stateEnum != EnvironmentStateEnum.Electricity && args.stateEnum != EnvironmentStateEnum.WaterLevel) return;
-
-        if (!isWorking) return;
-
-        // 如果电力小于0.5或者水平面小于0时，自动停止工作
-        if (StateManager.Instance.Electricity.CurValue < 0.5f)
-        {
-            isWorking = false;
-            ShowTip("电力不足，排水机已自动停止工作");
-            StopWorking();
-            EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
-        }
-        else if (StateManager.Instance.WaterLevel.CurValue <= 0)
-        {
-            isWorking = false;
-            ShowTip("水平面已为0，排水机已自动停止工作");
-            StopWorking();
-            EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
-        }
-    }
-
     private void StartWorking()
     {
-        StateManager.Instance.ChangeElectricityChangeRate(-0.5f);
+        if (isWorking) return;
+
+        isWorking = true;
+        StateManager.Instance.ChangeElectricityChangeRate(-electricityConsume);
         StateManager.Instance.ChangeWaterLevelChangeRate(-2f);
     }
 
     private void StopWorking()
     {
+        if (!isWorking) return;
+
+        isWorking = false;
         // 停止工作时，恢复电力和水平面变化率
-        StateManager.Instance.ChangeElectricityChangeRate(+0.5f);
+        StateManager.Instance.ChangeElectricityChangeRate(+electricityConsume);
         StateManager.Instance.ChangeWaterLevelChangeRate(+2f);
     }
 
@@ -65,7 +40,6 @@ public class ElectricDrainageMachine : ConstructionCard
     private void Event_Open(out string tip)
     {
         tip = string.Empty;
-        isWorking = true;
 
         StartWorking();
     }
@@ -79,7 +53,6 @@ public class ElectricDrainageMachine : ConstructionCard
     private void Event_Close(out string tip)
     {
         tip = string.Empty;
-        isWorking = false;
 
         StopWorking();
     }
@@ -90,4 +63,23 @@ public class ElectricDrainageMachine : ConstructionCard
         return isWorking;
     }
     #endregion
+
+    protected override Action OnUpdate => () =>
+    {
+        if (!isWorking) return;
+
+        // 如果电力小于0.5或者水平面小于0时，自动停止工作
+        if (StateManager.Instance.Electricity.CurValue < electricityConsume)
+        {
+            StopWorking();
+            RefreshSlot();
+            ShowTip("电力不足，排水机已自动停止工作");
+        }
+        else if (StateManager.Instance.WaterLevel.CurValue <= 0)
+        {
+            StopWorking();
+            RefreshSlot();
+            ShowTip("水平面已为0，排水机已自动停止工作");
+        }
+    };
 }

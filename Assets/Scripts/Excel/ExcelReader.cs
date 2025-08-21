@@ -23,7 +23,6 @@ public static class ExcelReader
         for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
         {
             row = table.Rows[i];
-            Debug.Log(table.Columns.Count);
             if (string.IsNullOrEmpty(row[0].ToString())) continue; // 如果卡牌ID为空，跳过读取
             count++;
             CardConfig cardConfig = new()

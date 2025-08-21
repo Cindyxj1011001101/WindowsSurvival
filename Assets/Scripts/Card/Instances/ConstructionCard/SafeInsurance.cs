@@ -7,7 +7,7 @@ public class SafeInsurance : ConstructionCard
         {
             new Event("用手砸", "你也太不心疼麦麦了", Event_UseHand, Judge_UseHand, () => 15, () => new() { { PlayerStateEnum.Sobriety, -5 }, { PlayerStateEnum.PainLevel, 15 } }),
             new Event("用铲子凿", "还是有些费力，但是比用手好得多", Event_UseShovel, Judge_UseShovel, () => 15, () => new() { { PlayerStateEnum.Sobriety, -4 } }),
-            new Event("用锤子砸", "最有效的方式", Event_UseHammer, Judge_UseHammer, () => 15)
+            new Event("用锤子砸", "最有效的打开保险箱的方式", Event_UseHammer, Judge_UseHammer, () => 15)
         };
     }
 
@@ -18,6 +18,10 @@ public class SafeInsurance : ConstructionCard
         innerContents.canAddOrRemove = false; // 不允许添加或移除内容物
     }
 
+    /// <summary>
+    /// 用手砸
+    /// </summary>
+    /// <param name="tip"></param>
     private void Event_UseHand(out string tip)
     {
         tip = string.Empty;
@@ -32,6 +36,11 @@ public class SafeInsurance : ConstructionCard
         hint = string.Empty;
         return true;
     }
+
+    /// <summary>
+    /// 用铲子凿
+    /// </summary>
+    /// <param name="tip"></param>
     private void Event_UseShovel(out string tip)
     {
         UseShovel(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
@@ -47,6 +56,11 @@ public class SafeInsurance : ConstructionCard
         }
         return true;
     }
+
+    /// <summary>
+    /// 用锤子砸
+    /// </summary>
+    /// <param name="tip"></param>
     private void Event_UseHammer(out string tip)
     {
         UseHammer(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), out tip);
@@ -89,12 +103,12 @@ public class SafeInsurance : ConstructionCard
 
     public override bool CanQuickInteract(Card card)
     {
-        // 允许和带有切割标签的卡牌快速交互
-        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
-        {
-            return true;
-        }
-        return card.CardId == "钢锤";
+        // 用铲子凿
+        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig)) return true;
+
+        if (card.CardId == "钢锤") return true;
+
+        return base.CanQuickInteract(card);
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)

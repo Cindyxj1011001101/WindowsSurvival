@@ -32,11 +32,11 @@ public enum CalculateType
 public class TempertureData
 {
     public TempertureType TempertureType;//温度类型
-    public int Round;//回合数
+    public int round;//回合数
     public TempertureData(TempertureType tempertureType, int round)
     {
         TempertureType = tempertureType;
-        Round = round;
+        this.round = round;
     }
 }
 public class ProcessCardData
@@ -262,7 +262,7 @@ public static class ProcessManager
         {
             if (processData.TempertureTypeList.Contains(tempertureData.TempertureType))
             {
-                round += tempertureData.Round;
+                round += tempertureData.round;
             }
         }
         return round >= processData.Round;

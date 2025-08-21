@@ -3,10 +3,12 @@
 /// </summary>
 public class DataTransmissionStation : ConstructionCard
 {
-    public int maxTimes = 2;
-    public int curTimes = 0;
+    public int maxTimes = 2; // 一天内最多可使用次数
+    public int curTimes = 0; // 当前使用次数
 
     public bool isWorking = false;
+
+    public float electricityConsume = 0.5f; // 每回合电力消耗
 
     private DataTransmissionStation()
     {
@@ -22,7 +24,7 @@ public class DataTransmissionStation : ConstructionCard
         EventManager.Instance.AddListener(EventType.StudyStarted, StartWorking);
         EventManager.Instance.AddListener(EventType.StudyStoped, StopWorking);
         // 当前有科技在研究
-        if (TechnologyManager.Instance.CurStudiedTechNode != null && !isWorking)
+        if (TechnologyManager.Instance.CurStudiedTechNode != null)
         {
             StartWorking();
         }
@@ -32,29 +34,31 @@ public class DataTransmissionStation : ConstructionCard
     {
         base.DestroyThis();
 
-        // 当前有科技在研究
-        if (isWorking)
-        {
-            StopWorking();
-        }
+        StopWorking();
         EventManager.Instance.RemoveListener(EventType.StudyStarted, StartWorking);
         EventManager.Instance.RemoveListener(EventType.StudyStoped, StopWorking);
     }
 
     private void StartWorking()
     {
-        isWorking = true;
+        if (isWorking) return;
 
-        StateManager.Instance.ChangeElectricityChangeRate(-0.5f);
+        isWorking = true;
+        StateManager.Instance.ChangeElectricityChangeRate(-electricityConsume);
     }
 
     private void StopWorking()
     {
-        isWorking = false;
+        if (!isWorking) return;
 
-        StateManager.Instance.ChangeElectricityChangeRate(+0.5f);
+        isWorking = false;
+        StateManager.Instance.ChangeElectricityChangeRate(+electricityConsume);
     }
 
+    /// <summary>
+    /// 数据传输
+    /// </summary>
+    /// <param name="tip"></param>
     private void Event_Transmit(out string tip)
     {
         tip = string.Empty;
@@ -91,6 +95,6 @@ public class DataTransmissionStation : ConstructionCard
 
     protected override System.Action OnUpdate => () =>
     {
-        if (TimeManager.Instance.AnotherDay()) curTimes = 0;
+        if (TimeManager.Instance.AnotherDay()) curTimes = 0; // 隔天时刷新可使用次数
     };
 }

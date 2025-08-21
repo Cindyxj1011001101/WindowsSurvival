@@ -6,6 +6,7 @@ using UnityEngine;
 public class OreReleaseOxygenMachine : ConstructionCard
 {
     private InnerContentsComponent innerContents;
+
     public bool isWorking = false; // 是否已打开
     public float maxOxygenStorage = 360; // 最大氧气存储
     public float curOxygenStorage = 0; // 当前氧气存储数量
@@ -51,7 +52,6 @@ public class OreReleaseOxygenMachine : ConstructionCard
     {
         tip = string.Empty;
         isWorking = true;
-        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
 
     private bool Judge_Open(out string hint)
@@ -64,7 +64,6 @@ public class OreReleaseOxygenMachine : ConstructionCard
     {
         tip = string.Empty;
         isWorking = false;
-        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
 
     private bool Judge_Close(out string hint)

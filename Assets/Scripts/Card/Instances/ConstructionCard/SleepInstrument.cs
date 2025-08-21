@@ -1,9 +1,12 @@
+using System;
+
 /// <summary>
 /// 睡眠脉冲仪
 /// </summary>
-public class SleepInstrument : Card
+public class SleepInstrument : ConstructionCard
 {
     public bool isConnected = false; // 是否已接电
+    public float electricityConsume = .6f; // 每回合耗电量
     private SleepInstrument()
     {
         Events = new()
@@ -18,7 +21,6 @@ public class SleepInstrument : Card
         base.LateInit();
         EventManager.Instance.AddListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.AddListener(EventType.StopSleeping, OnStopSleeping);
-        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChanged);
     }
 
     public override void DestroyThis()
@@ -26,19 +28,6 @@ public class SleepInstrument : Card
         base.DestroyThis();
         EventManager.Instance.RemoveListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.RemoveListener(EventType.StopSleeping, OnStopSleeping);
-        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChanged);
-    }
-
-    private void OnElectricityChanged(RefreshEnvironmentStateArgs args)
-    {
-        if (args.stateEnum != EnvironmentStateEnum.Electricity) return;
-        if (args.stateValue.CurValue <= 0 && isConnected)
-        {
-            isConnected = false;
-            ShowTip("电力不足，睡眠脉冲仪已自动断电");
-            StopWorking();
-            EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
-        }
     }
 
 
@@ -60,16 +49,20 @@ public class SleepInstrument : Card
     {
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, +1.2f);
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, +1f);
-        StateManager.Instance.ChangeElectricityChangeRate(-.6f);
+        StateManager.Instance.ChangeElectricityChangeRate(-electricityConsume);
     }
 
     private void StopWorking()
     {
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, -1.2f);
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, -1f);
-        StateManager.Instance.ChangeElectricityChangeRate(.6f);
+        StateManager.Instance.ChangeElectricityChangeRate(+electricityConsume);
     }
 
+    /// <summary>
+    /// 接电
+    /// </summary>
+    /// <param name="tip"></param>
     private void Event_ConnectElectricity(out string tip)
     {
         tip = string.Empty;
@@ -80,7 +73,7 @@ public class SleepInstrument : Card
     {
         hint = string.Empty;
 
-        if (StateManager.Instance.Electricity.CurValue <= 0)
+        if (StateManager.Instance.Electricity.CurValue < electricityConsume)
         {
             hint = "电力不足";
             return false;
@@ -88,14 +81,33 @@ public class SleepInstrument : Card
 
         return !isConnected;
     }
+
+    /// <summary>
+    /// 断电
+    /// </summary>
+    /// <param name="tip"></param>
     private void Event_DisconnectElectricity(out string tip)
     {
         tip = string.Empty;
         isConnected = false;
     }
+
     private bool Judge_DisconnectElectricity(out string hint)
     {
         hint = string.Empty;
         return isConnected;
     }
+
+    protected override Action OnUpdate => () =>
+    {
+        if (!isConnected) return;
+
+        if (StateManager.Instance.Electricity.CurValue < electricityConsume)
+        {
+            isConnected = false;
+            StopWorking();
+            RefreshSlot();
+            ShowTip("电力不足，睡眠脉冲仪已自动断电");
+        }
+    };
 }

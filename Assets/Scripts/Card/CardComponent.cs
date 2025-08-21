@@ -339,12 +339,12 @@ public class FlammableComponent : CardComponent
 }
 #endregion
 
-#region 燃料组件
-public class FuelComponent : CardComponent
+#region 燃料存储组件
+public class FuelContainerComponent : CardComponent
 {
     public int fuel; // 燃料值
     public int maxFuel; // 最大燃料值
-    public FuelComponent(int maxFuel)
+    public FuelContainerComponent(int maxFuel)
     {
         fuel = 0;
         this.maxFuel = maxFuel;

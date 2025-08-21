@@ -1,11 +1,15 @@
+using System.Collections.Generic;
+
 /// <summary>
 /// 野炊营火
 /// </summary>
 public class Campfire : ConstructionCard
 {
-    private InnerContentsComponent innerContents;
-    private FuelComponent fuelComponent;
-    public bool isLightened = false;
+    private InnerContentsComponent innerContents; // 内容物组件
+    private FuelContainerComponent fuelContainer; // 燃料存储组件
+
+    public bool isLightened = false; // 是否点燃
+
     private Campfire()
     {
         Events = new()
@@ -18,10 +22,11 @@ public class Campfire : ConstructionCard
     protected override void LateInit()
     {
         base.LateInit();
-        if (!TryGetComponent(out fuelComponent))
+        // 手动添加燃料存储组件
+        if (!TryGetComponent(out fuelContainer))
         {
-            fuelComponent = new FuelComponent(96);
-            AddComponent(fuelComponent);
+            fuelContainer = new FuelContainerComponent(96);
+            AddComponent(fuelContainer);
         }
     }
 
@@ -36,6 +41,10 @@ public class Campfire : ConstructionCard
         return true;
     }
 
+    /// <summary>
+    /// 点燃
+    /// </summary>
+    /// <param name="tip"></param>
     private void Event_Light(out string tip)
     {
         tip = string.Empty;
@@ -55,7 +64,7 @@ public class Campfire : ConstructionCard
             return false;
         }
 
-        if (fuelComponent.fuel < 2)
+        if (fuelContainer.fuel < 2)
         {
             hint = "燃料不足，无法点燃篝火";
             return false;
@@ -64,6 +73,10 @@ public class Campfire : ConstructionCard
         return true;
     }
 
+    /// <summary>
+    /// 熄灭
+    /// </summary>
+    /// <param name="tip"></param>
     private void Event_UnLight(out string tip)
     {
         tip = string.Empty;
@@ -81,37 +94,46 @@ public class Campfire : ConstructionCard
         return isLightened;
     }
 
+    private List<Card> temp = new();
     protected override System.Action OnUpdate => () =>
     {
-        if (!isLightened || fuelComponent.fuel < 2) return;
+        // 没有点燃或者燃料不足
+        if (!isLightened || fuelContainer.fuel < 2) return;
 
-        fuelComponent.AddFuel(-2); // 每回合消耗2点燃料
+        fuelContainer.AddFuel(-2); // 每回合消耗2点燃料
 
-        Card card;
+        // 记录所有内容物
         foreach (var slot in innerContents.bag.Slots)
         {
             for (int i = slot.Cards.Count - 1; i >= 0; i--)
             {
-                card = slot.Cards[i];
-                if (card != null && card.TryGetComponent(out CookComponent cookComponent))
-                {
-                    // 使用局部变量捕获当前的值
-                    Card currentCard = card;
-
-                    cookComponent.Update(TimeManager.Instance.SettleInterval, (outcomeId) =>
-                    {
-                        // 处理煮熟的逻辑
-                        currentCard.DestroyThis();
-                        AddCard(outcomeId, innerContents.bag);
-                    });
-                }
+                temp.Add(slot.Cards[i]);
             }
         }
 
-        if (fuelComponent.fuel < 2) // 燃料不足时自动熄灭
+        // 内容物增加烹饪进度
+        foreach (var card in temp)
+        {
+            if (card != null && card.TryGetComponent(out CookComponent cookComponent))
+            {
+                // 使用局部变量捕获当前的值
+                Card currentCard = card;
+
+                cookComponent.Update(TimeManager.Instance.SettleInterval, (outcomeId) =>
+                {
+                    // 处理煮熟的逻辑
+                    currentCard.DestroyThis();
+                    AddCard(outcomeId, innerContents.bag);
+                });
+            }
+        }
+
+        temp.Clear();
+
+        if (fuelContainer.fuel < 2) // 燃料不足时自动熄灭
         {
             isLightened = false;
-            EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
+            RefreshSlot();
             ShowTip("燃料不足，营火已自动熄灭");
             return;
         }
@@ -120,10 +142,7 @@ public class Campfire : ConstructionCard
     public override bool CanQuickInteract(Card card)
     {
         // 添加燃料
-        if (card.TryGetComponent<FlammableComponent>(out _) && fuelComponent.fuel < fuelComponent.maxFuel)
-        {
-            return true;
-        }
+        if (card.TryGetComponent<FlammableComponent>(out _) && fuelContainer.fuel < fuelContainer.maxFuel) return true;
         // 放入内容物
         if (innerContents.CanQuickInteract(card)) return true;
         // 拆毁
@@ -136,10 +155,10 @@ public class Campfire : ConstructionCard
         var card = slot.PeekCard();
 
         // 添加燃料
-        if (card.TryGetComponent<FlammableComponent>(out var burnableComponent) && fuelComponent.fuel < fuelComponent.maxFuel)
+        if (card.TryGetComponent<FlammableComponent>(out var burnableComponent) && fuelContainer.fuel < fuelContainer.maxFuel)
         {
             card.DestroyThis();
-            fuelComponent.AddFuel(burnableComponent.fuelValue);
+            fuelContainer.AddFuel(burnableComponent.fuelValue);
             return;
         }
 
@@ -150,6 +169,7 @@ public class Campfire : ConstructionCard
             return;
         }
 
+        // 拆毁
         base.QuickIneract(slot, count, out tip);
     }
 }

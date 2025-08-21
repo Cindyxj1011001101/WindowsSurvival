@@ -23,7 +23,6 @@ public class DetailsWindow : BagWindow
     protected override void Awake()
     {
         base.Awake();
-        EventManager.Instance.AddListener(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.AddListener<Card>(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
@@ -31,7 +30,6 @@ public class DetailsWindow : BagWindow
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.RemoveListener<Card>(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
@@ -71,12 +69,6 @@ public class DetailsWindow : BagWindow
             DisplayEventButtons();
     }
 
-    public void RefreshCard()
-    {
-        if (currentDisplayedCard != null)
-            DisplayCard();
-    }
-
     private void RefreshCard(Card card)
     {
         if (currentDisplayedCard != card) return;
@@ -94,7 +86,7 @@ public class DetailsWindow : BagWindow
         // 正常刷新显示
         else
         {
-            RefreshCard();
+            DisplayCardDetails(currentDisplayedCard);
         }
     }
 
@@ -210,6 +202,7 @@ public class DetailsWindow : BagWindow
         bool interactable;
         foreach (var e in currentDisplayedCard.Events)
         {
+            var card = currentDisplayedCard;
             button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
             btnText = button.GetComponentInChildren<Text>();
             btnText.text = e.name;
@@ -230,23 +223,23 @@ public class DetailsWindow : BagWindow
                     button.ShowTip(tip);
 
                     // 改变场景了就清空详情
-                    if (moved)
-                        Clear();
+                    if (moved) Clear();
+                    // 否则刷新卡牌和详情
+                    else card?.RefreshSlot();
+
                     // 否则尝试刷新
-                    else if (currentDisplayedCard != null && !currentDisplayedCard.Destroyed)
-                        DisplayCardDetails(currentDisplayedCard);
+                    //else if (currentDisplayedCard != null && !currentDisplayedCard.Destroyed)
+                    //    DisplayCardDetails(currentDisplayedCard);
                 });
+
+                // 设置提示
+                button.GetComponent<HoverTipController>().SetTip(e.Description, e.GetTimeEffect(), e.GetPlayerEffects(), e.GetEnvEffects());
             }
             else
             {
                 btnText.color = ColorManager.DarkGrey;
-            }
-
-            // 设置提示
-            if (interactable)
-                button.GetComponent<HoverTipController>().SetTip(e.Description, e.GetTimeEffect(), e.GetPlayerEffects(), e.GetEnvEffects());
-            else
                 button.GetComponent<HoverTipController>().SetTip(e.Description);
+            }
 
             button.transform.localScale = Vector3.one; // 确保按钮缩放为1
             button.transform.SetAsLastSibling();
