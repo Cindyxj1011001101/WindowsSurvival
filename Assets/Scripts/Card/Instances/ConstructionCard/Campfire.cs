@@ -39,6 +39,12 @@ public class Campfire : ConstructionCard
         {
             c.ContinueUpdating();
         };
+
+        // 每个卡牌槽的最大堆叠数都为1
+        foreach (var slot in innerContents.bag.Slots)
+        {
+            slot.SetMaxStackNum(1);
+        }
     }
 
     private bool ContentFilter(Card c, out string s)
