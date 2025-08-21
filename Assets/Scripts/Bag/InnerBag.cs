@@ -17,6 +17,12 @@ public class InnerBag : Bag
 
     public override bool CanAddCard(Card card, out string tip)
     {
+        if (!component.canAddOrRemove)
+        {
+            tip = "当前不可以放入和取出卡牌";
+            return false;
+        }
+
         // 不能嵌套放置
         if (card.CardId == component.BelongedCard.CardId)
         {

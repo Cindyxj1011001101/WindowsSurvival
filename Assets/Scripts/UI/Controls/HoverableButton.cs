@@ -69,13 +69,22 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
     }
 
-    protected virtual void Start()
+    protected virtual void OnEnable()
     {
         // 初始化时确保hoveredImage是透明的
         foreach (var graphic in hoveredGraphics)
         {
             graphic.gameObject.SetActive(false); // 确保初始状态下图像不可见
             graphic.color = new Color(graphic.color.r, graphic.color.g, graphic.color.b, 0f); // 设置透明度为0
+        }
+    }
+
+    protected virtual void OnDisable()
+    {
+        // 清理DOTween动画
+        foreach (var graphic in hoveredGraphics)
+        {
+            graphic.DOKill(); // 停止所有正在进行的动画
         }
     }
 
@@ -125,15 +134,6 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                 .SetEase(Ease.InQuad)
                 .OnComplete(() => graphic.gameObject.SetActive(false)) // 动画完成后禁用图像
                 .OnStart(() => ChangeColor(currentColor));
-        }
-    }
-
-    protected virtual void OnDestroy()
-    {
-        // 清理DOTween动画
-        foreach (var graphic in hoveredGraphics)
-        {
-            graphic.DOKill(); // 停止所有正在进行的动画
         }
     }
 
@@ -188,7 +188,6 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     public void ShowTip(string tip)
     {
-
-        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up, ColorManager.Yellow);
+        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.55f * Vector3.up);
     }
 }

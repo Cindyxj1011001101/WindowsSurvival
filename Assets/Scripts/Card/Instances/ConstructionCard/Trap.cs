@@ -58,8 +58,10 @@ public class Trap : ConstructionCard
         tip = string.Empty;
 
         // 内容物停止更新
+        innerContents.PauseUpdating();
 
-        // TODO:不可添加或移除内容物
+        // 不可添加或移除内容物
+        innerContents.canAddOrRemove = false;
 
         TimeManager.Instance.AddTime(15);
         isArranged = true;
@@ -78,14 +80,15 @@ public class Trap : ConstructionCard
 
     protected override System.Action OnUpdate => () =>
     {
-        if (!isArranged) return;
+        if (!isArranged || Bag is not EnvironmentBag env || env.RepeatableDropList.IsEmpty) return;
 
         int probability = innerContents.bag.IsFull ? 3 : 48;
 
         // 这个回合不抽牌
         if (Random.Range(0, probability) != 0) return;
 
-        List<Card> dropCards = GameManager.Instance.CurEnvironmentBag.RepeatableDropList.RandomDropTrappable();
+        // 从所在环境的深度探索列表中抽牌
+        List<Card> dropCards = env.RepeatableDropList.RandomDropTrappable();
 
         if (dropCards.IsNullOrEmpty()) return; // 没抽中
 
@@ -106,8 +109,9 @@ public class Trap : ConstructionCard
         // 抽中，清空内容物中的诱饵
         innerContents.Clear();
 
-        // TODO:恢复内容物的可添加移除
-
+        // 恢复内容物的可添加移除
+        innerContents.canAddOrRemove = true;
+        RefreshSlot();
         ShowTip("捉到了好东西");
     };
 
