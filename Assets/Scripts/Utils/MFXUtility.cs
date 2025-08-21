@@ -135,7 +135,7 @@ public class MFXUtility
 
     public static void ShowTip(string tip, Vector3 position, float duration = 1f)
     {
-        ShowTip(tip, position, ColorManager.Yellow, duration);
+        ShowTip(tip, position, ColorManager.White, duration);
     }
 
     public static void ShowTip(string tip, Vector3 position, Color textColor, float duration = 1f)

@@ -17,8 +17,11 @@ public class DetailsWindow : BagWindow
 
     [SerializeField] private RectTransform selectRect; // 选择框
 
+    private string currentDisplay;
+
     private Card currentDisplayedCard;
     private Bag innerBag;
+    private bool onlyDetails;
 
     protected override void Awake()
     {
@@ -44,7 +47,7 @@ public class DetailsWindow : BagWindow
 
         detailsButton.onClick.AddListener(() =>
         {
-            if (currentDisplayedCard != null)
+            if (currentDisplayedCard != null && currentDisplay != "详情")
             {
                 DisplayDetails();
             }
@@ -52,7 +55,7 @@ public class DetailsWindow : BagWindow
 
         innerContentsButton.onClick.AddListener(() =>
         {
-            if (currentDisplayedCard != null)
+            if (currentDisplayedCard != null && currentDisplay != "内容物")
             {
                 DisplayInnerContents();
             }
@@ -78,7 +81,7 @@ public class DetailsWindow : BagWindow
         {
             // 尝试从这个卡牌的slotCount里取出同类卡牌并刷新
             if (currentDisplayedCard.SlotCards.ContainsByCardId(currentDisplayedCard.CardId))
-                DisplayCardDetails(currentDisplayedCard.SlotCards);
+                Display(currentDisplayedCard.SlotCards);
             // 否则清空显示
             else
                 Clear();
@@ -86,7 +89,9 @@ public class DetailsWindow : BagWindow
         // 正常刷新显示
         else
         {
-            DisplayCardDetails(currentDisplayedCard);
+            slot.DisplayCard(currentDisplayedCard, 1, false);
+            if (!onlyDetails)
+                DisplayEventButtons();
         }
     }
 
@@ -97,7 +102,7 @@ public class DetailsWindow : BagWindow
         moved = true;
     }
 
-    public void DisplayCardDetails(SlotCards slotCards, bool onlyDetails = false)
+    public void Display(SlotCards slotCards, bool onlyDetails = false)
     {
         // 清除原数据
         Clear();
@@ -109,10 +114,10 @@ public class DetailsWindow : BagWindow
 
         currentDisplayedCard.Transform = slot.transform;
 
-        DisplayCardDetails(onlyDetails);
+        Display(onlyDetails);
     }
 
-    public void DisplayCardDetails(Card card, bool onlyDetails = false)
+    public void Display(Card card, bool onlyDetails = false)
     {
         // 清除原数据
         Clear();
@@ -124,16 +129,15 @@ public class DetailsWindow : BagWindow
 
         currentDisplayedCard.Transform = slot.transform;
 
-        DisplayCardDetails(onlyDetails);
+        Display(onlyDetails);
     }
 
-    private void DisplayCardDetails(bool onlyDetails = false)
+    private void Display(bool onlyDetails = false)
     {
-        // 显示卡牌
-        DisplayCard();
+        this.onlyDetails = onlyDetails;
 
-        // 显示详情
-        DisplayDetails();
+        // 显示卡牌
+        slot.DisplayCard(currentDisplayedCard, 1, false);
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 
@@ -157,18 +161,18 @@ public class DetailsWindow : BagWindow
             }
         }
 
+        // 显示详情
+        DisplayDetails();
+
         // 打开详情如果卡牌有循环音
         if (currentDisplayedCard.HasLoopSound)
             currentDisplayedCard.OnDetailOpen();
     }
 
-    private void DisplayCard()
-    {
-        slot.DisplayCard(currentDisplayedCard, 1, false);
-    }
-
     private void DisplayDetails()
     {
+        currentDisplay = "详情";
+
         // 清除内容物卡牌的显示
         ClearBag();
 
@@ -183,6 +187,8 @@ public class DetailsWindow : BagWindow
 
     private void DisplayInnerContents()
     {
+        currentDisplay = "内容物";
+
         detailsText.gameObject.SetActive(false);
         contentsView.gameObject.SetActive(true);
 
@@ -248,6 +254,8 @@ public class DetailsWindow : BagWindow
 
     public void Clear()
     {
+        currentDisplay = null;
+
         ClearBag();
 
         moved = false;
@@ -260,6 +268,7 @@ public class DetailsWindow : BagWindow
         if (currentDisplayedCard != null)
             currentDisplayedCard.Transform = null;
 
+        onlyDetails = false;
         currentDisplayedCard = null;
         innerBag = null;
         detailsText.text = "";
