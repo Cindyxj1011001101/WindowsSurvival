@@ -14,6 +14,9 @@ public class StartSceneManager : MonoBehaviour
     private Button Setting;
     private Button Exit;
 
+    private bool isButtonCooldown = false;
+    private float buttonCooldownTime = 0.5f; // 0.5秒冷却时间
+    
     private Button ReturnStart;
 
     private Button SkipGuide;
@@ -80,6 +83,7 @@ public class StartSceneManager : MonoBehaviour
     //加载存档
     private void ClickLoad(string name)
     {
+        if (isButtonCooldown) return; // 如果在冷却中，忽略点击
         int index = int.Parse(name.Substring(name.Length - 1, 1)) - 1;
         // 加载存档
         if (GameDataManager.Instance.LoadData.loads[index] == null)
@@ -88,26 +92,39 @@ public class StartSceneManager : MonoBehaviour
             ChooseSkipGuide.SetActive(true);
             SkipGuide.onClick.AddListener(() =>
             {
+                if (isButtonCooldown) return;
+                isButtonCooldown = true;
                 CreateNewLoad(index, true);
                 LoadGameScene(index);
+                StartCoroutine(ResetCooldown());
             });
             DontSkipGuide.onClick.AddListener(() =>
             {
+                if (isButtonCooldown) return;
+                isButtonCooldown = true;
                 CreateNewLoad(index, false);
                 LoadGameScene(index);
+                StartCoroutine(ResetCooldown());
             });
             ReturnLoad.onClick.AddListener(() =>
             {
                 ChooseSkipGuide.SetActive(false);
                 LoadButton.SetActive(true);
             });
-            return;
         }
         else
         {
             LoadGameScene(index);
         }
     }
+    
+    
+    private IEnumerator ResetCooldown()
+    {
+        yield return new WaitForSeconds(buttonCooldownTime);
+        isButtonCooldown = false;
+    }
+    
 
     // 载入游戏场景
     public void LoadGameScene(int index)
