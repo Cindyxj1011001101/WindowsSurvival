@@ -15,7 +15,7 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private Image maxStackNumImage; // 显示最大堆叠数量的图标
     [SerializeField] private RectTransform valueComponentLayout; // 用于显示新鲜度、耐久等组件的布局
     [SerializeField] private RectTransform innerContentsComponent; // 用于显示内容物组件
-    [SerializeField] private UIStateSlider temperatureComponent; // 温度组件
+    [SerializeField] private UIStateSlider temperatureSlider; // 温度组件
     [SerializeField] private CanvasGroup cardCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
     [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
@@ -185,24 +185,25 @@ public class CardSlot : MonoBehaviour
     {
         if (component is TemperatureComponent t)
         {
-            temperatureComponent.gameObject.SetActive(true);
+            temperatureSlider.gameObject.SetActive(true);
             if (t.temperature <= 50)
             {
-                temperatureComponent.fillColor = ColorManager.Green;
+                temperatureSlider.fillColor = ColorManager.Green;
             }
             else if (t.temperature <= 100)
             {
-                temperatureComponent.fillColor = ColorManager.Yellow;
+                temperatureSlider.fillColor = ColorManager.Yellow;
             }
             else if (t.temperature <= 200)
             {
-                temperatureComponent.fillColor = ColorManager.Orange;
+                temperatureSlider.fillColor = ColorManager.Orange;
             }
             else
             {
-                temperatureComponent.fillColor = ColorManager.Red;
+                temperatureSlider.fillColor = ColorManager.Red;
             }
-            temperatureComponent.SetValue(t.temperature, t.maxTemperature);
+            temperatureSlider.SetValue(t.temperature, t.maxTemperature);
+            temperatureSlider.tipController.SetTip($"当前温度:    {t.temperature}/{t.maxTemperature}", temperatureSlider.fillColor);
             return;
         }
 
@@ -317,8 +318,8 @@ public class CardSlot : MonoBehaviour
         ObjectBufferPool.Instance.RestoreAllChildren(valueComponentLayout);
         if (innerContentsComponent != null)
             innerContentsComponent.gameObject.SetActive(false);
-        if (temperatureComponent != null)
-            temperatureComponent.gameObject.SetActive(false);
+        if (temperatureSlider != null)
+            temperatureSlider.gameObject.SetActive(false);
         componentSliders.Clear();
         lastComponentValues.Clear();
     }
