@@ -249,8 +249,8 @@ public class InnerContentsComponent : CardComponent
     [JsonIgnore] public UnityAction<Card> onAddCard;
     [JsonIgnore] public UnityAction<Card> onRemoveCard;
 
-    public bool display; // 是否显示内容物
-    public bool canAddOrRemove; // 是否可以添加或移除内容物
+    public bool display = true; // 是否显示内容物
+    public bool canAddOrRemove = true; // 是否可以添加或移除内容物
 
     public void Init()
     {
@@ -264,8 +264,6 @@ public class InnerContentsComponent : CardComponent
     {
         bag.AddSlot(slotCount);
         bag.SetComponent(this);
-        display = true; // 默认显示内容物
-        canAddOrRemove = true; // 默认可以添加或移除内容物
     }
 
     public int GetTotalCountByCardId(string cardId) => bag.GetTotalCountByCardId(cardId);
@@ -275,6 +273,28 @@ public class InnerContentsComponent : CardComponent
     public bool CanQuickInteract(Card card)
     {
         return card.Moveable && card.Bag != bag && bag.CanAddCard(card, out _);
+    }
+
+    public void PauseUpdating()
+    {
+        foreach (var slot in bag.Slots)
+        {
+            foreach (var card in slot.Cards)
+            {
+                card.PauseUpdating(); // 停止更新卡牌状态
+            }
+        }
+    }
+
+    public void ContinueUpdating()
+    {
+        foreach (var slot in bag.Slots)
+        {
+            foreach (var card in slot.Cards)
+            {
+                card.ContinueUpdating(); // 更新卡牌状态
+            }
+        }
     }
 
     public void QuickIneract(SlotCards slot, int count, out string tip)

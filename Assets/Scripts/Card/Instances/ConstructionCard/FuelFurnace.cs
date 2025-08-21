@@ -121,15 +121,17 @@ public class FuelFurnace : ConstructionCard
         isProcessing = true;
         leftRounds = maxRound;
 
-        // TODO: 不可以添加或移除内容物
+        // 暂停内容物的更新
+        innerContents.PauseUpdating();
 
+        // 不可以添加或移除内容物
+        innerContents.canAddOrRemove = false;
 
         // 记录当前炉内的卡牌，即需要加工的卡牌
         foreach (var slot in innerContents.bag.Slots)
         {
             foreach (var card in slot.Cards)
             {
-                card.StopUpdating(); // 停止更新卡牌状态
                 cardsToProcesss.Add(card);
             }
         }
@@ -232,6 +234,8 @@ public class FuelFurnace : ConstructionCard
             return;
         }
 
+        if (!isLightened) return;
+
         // 水平面高于30，自动熄灭
         if (considerWaterLevel && waterLevel >= 30)
         {
@@ -261,9 +265,9 @@ public class FuelFurnace : ConstructionCard
             innerContents.Clear(); // 销毁内容物
             cardsToProcesss.Clear(); // 销毁加工列表
 
-            //TODO:恢复InnerBag可放入拖出卡牌
-
-
+            // 可放入拖出卡牌
+            innerContents.canAddOrRemove = true;
+            RefreshSlot();
             ShowTip("燃料炉加工完成");
         }
     }
