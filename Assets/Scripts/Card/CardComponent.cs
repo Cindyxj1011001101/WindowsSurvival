@@ -447,3 +447,24 @@ public class CookComponent : CardComponent
     }
 }
 #endregion
+
+#region 温度组件
+public class TemperatureComponent : CardComponent
+{
+    public float temperature;
+    public float maxTemperature;
+
+    public TemperatureComponent(float temperature, float maxTemperature)
+    {
+        this.temperature = temperature;
+        this.maxTemperature = maxTemperature;
+    }
+
+    public void AddTemperature(float delta)
+    {
+        temperature += delta;
+        temperature = Mathf.Clamp(temperature, 0, maxTemperature);
+        BelongedCard.RefreshSlot();
+    }
+}
+#endregion

@@ -14,14 +14,15 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private Text stackNumText; // 显示数量
     [SerializeField] private Image maxStackNumImage; // 显示最大堆叠数量的图标
     [SerializeField] private RectTransform valueComponentLayout; // 用于显示新鲜度、耐久等组件的布局
-    [SerializeField] private RectTransform innerContentsComponentLayout; // 用于显示内容物组件
+    [SerializeField] private RectTransform innerContentsComponent; // 用于显示内容物组件
+    [SerializeField] private UIStateSlider temperatureComponent; // 温度组件
     [SerializeField] private CanvasGroup cardCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
     [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
     [SerializeField] private GameObject mask;
 
     private Dictionary<Type, float> lastComponentValues = new();
-    private Dictionary<Type, Slider> componentSliders = new(); // 用于存储组件的滑动条
+    private Dictionary<Type, UIStateSlider> componentSliders = new(); // 用于存储组件的滑动条
 
     public SlotCards Cards { get; protected set; }
     public bool IsEmpty => Cards.IsEmpty;
@@ -182,34 +183,59 @@ public class CardSlot : MonoBehaviour
     /// <param name="component"></param>
     private void DisplayValueComponent(CardComponent component)
     {
-        if (!componentSliders.TryGetValue(component.GetType(), out Slider slider))
+        if (component is TemperatureComponent t)
         {
-            slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", component.GetType().Name, valueComponentLayout).GetComponent<Slider>();
+            temperatureComponent.gameObject.SetActive(true);
+            if (t.temperature <= 50)
+            {
+                temperatureComponent.fillColor = ColorManager.Green;
+            }
+            else if (t.temperature <= 100)
+            {
+                temperatureComponent.fillColor = ColorManager.Yellow;
+            }
+            else if (t.temperature <= 200)
+            {
+                temperatureComponent.fillColor = ColorManager.Orange;
+            }
+            else
+            {
+                temperatureComponent.fillColor = ColorManager.Red;
+            }
+            temperatureComponent.SetValue(t.temperature, t.maxTemperature);
+            return;
+        }
+
+        if (!componentSliders.TryGetValue(component.GetType(), out UIStateSlider slider))
+        {
+            slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "Component", valueComponentLayout).GetComponent<UIStateSlider>();
             slider.transform.SetAsLastSibling();
             componentSliders.Add(component.GetType(), slider);
         }
 
-
-        if (!slider.TryGetComponent<HoverTipController>(out var tipController))
-            tipController = slider.gameObject.AddComponent<HoverTipController>();
+        slider.fillColor = ColorManager.CardComponentColors[component.GetType()];
 
         switch (component)
         {
             case DurabilityComponent durabilityComponent:
-                slider.value = (float)durabilityComponent.durability / durabilityComponent.maxDurability;
-                tipController.SetTip($"耐久度:    {slider.value * 100:0.0}%", ColorManager.CardComponentColors[component.GetType()]);
+                slider.SetValue(durabilityComponent.durability, durabilityComponent.maxDurability);
+                slider.tipController.SetTip($"耐久度:    {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case FreshnessComponent freshnessComponent:
-                slider.value = (float)freshnessComponent.freshness / freshnessComponent.maxFreshness;
-                tipController.SetTip($"新鲜度:    {slider.value * 100:0.0}%", ColorManager.CardComponentColors[component.GetType()]);
+                slider.SetValue(freshnessComponent.freshness, freshnessComponent.maxFreshness);
+                slider.tipController.SetTip($"新鲜度:    {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case GrowthComponent growthComponent:
-                slider.value = (float)growthComponent.growth / growthComponent.maxGrowth;
-                tipController.SetTip($"生长度:    {slider.value * 100:0.0}%", ColorManager.CardComponentColors[component.GetType()]);
+                slider.SetValue(growthComponent.growth, growthComponent.maxGrowth);
+                slider.tipController.SetTip($"生长度:    {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case ProgressComponent progressComponent:
-                slider.value = (float)progressComponent.progress / progressComponent.maxProgress;
-                tipController.SetTip($"产物进度:    {slider.value * 100:0.0}%", ColorManager.CardComponentColors[component.GetType()]);
+                slider.SetValue(progressComponent.progress, progressComponent.maxProgress);
+                slider.tipController.SetTip($"产物进度:    {slider.value * 100:0.0}%", slider.fillColor);
+                break;
+            case FuelContainerComponent fuelContainerComponent:
+                slider.SetValue(fuelContainerComponent.fuel, fuelContainerComponent.maxFuel);
+                slider.tipController.SetTip($"剩余燃料:    {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
@@ -223,11 +249,11 @@ public class CardSlot : MonoBehaviour
     /// <param name="component"></param>
     private void DisplayInnerContentsComponent(InnerContentsComponent component)
     {
-        innerContentsComponentLayout.gameObject.SetActive(true);
-        for (int i = 0; i < innerContentsComponentLayout.childCount; i++)
+        innerContentsComponent.gameObject.SetActive(true);
+        for (int i = 0; i < innerContentsComponent.childCount; i++)
         {
-            innerContentsComponentLayout.GetChild(i).gameObject.SetActive(i < component.bag.SlotCount);
-            innerContentsComponentLayout.GetChild(i).GetComponent<Image>().color = i < component.bag.SlotCount - component.bag.EmptySlotCount ? ColorManager.White : ColorManager.DarkGrey;
+            innerContentsComponent.GetChild(i).gameObject.SetActive(i < component.bag.SlotCount);
+            innerContentsComponent.GetChild(i).GetComponent<Image>().color = i < component.bag.SlotCount - component.bag.EmptySlotCount ? ColorManager.White : ColorManager.DarkGrey;
         }
     }
 
@@ -268,6 +294,12 @@ public class CardSlot : MonoBehaviour
         // 显示内容物数量
         if (card.TryGetComponent<InnerContentsComponent>(out var i))
             DisplayInnerContentsComponent(i);
+        // 显示燃料数量
+        if (card.TryGetComponent<FuelContainerComponent>(out var fc))
+            DisplayValueComponent(fc);
+        // 显示温度
+        if (card.TryGetComponent<TemperatureComponent>(out var t))
+            DisplayValueComponent(t);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;
@@ -283,8 +315,10 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.blocksRaycasts = false;
         cardCanvasGroup.interactable = false;
         ObjectBufferPool.Instance.RestoreAllChildren(valueComponentLayout);
-        if (innerContentsComponentLayout != null)
-            innerContentsComponentLayout.gameObject.SetActive(false);
+        if (innerContentsComponent != null)
+            innerContentsComponent.gameObject.SetActive(false);
+        if (temperatureComponent != null)
+            temperatureComponent.gameObject.SetActive(false);
         componentSliders.Clear();
         lastComponentValues.Clear();
     }
