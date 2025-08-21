@@ -19,6 +19,7 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private CanvasGroup thisCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
     [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
+    [SerializeField] private Image emptySlotImage; // 不显示卡牌时显示的底图
 
     private Dictionary<Type, float> lastComponentValues = new();
     private Dictionary<Type, Slider> componentSliders = new(); // 用于存储组件的滑动条
@@ -277,6 +278,7 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     public void Clear()
     {
+        emptySlotImage.enabled = true;
         cardCanvasGroup.alpha = 0;
         cardCanvasGroup.blocksRaycasts = false;
         cardCanvasGroup.interactable = false;
@@ -293,6 +295,7 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     private void EnableDisplay()
     {
+        emptySlotImage.enabled = false;
         cardCanvasGroup.alpha = 1;
         cardCanvasGroup.blocksRaycasts = true;
         cardCanvasGroup.interactable = true;
