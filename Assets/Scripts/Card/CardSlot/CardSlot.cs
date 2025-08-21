@@ -282,7 +282,6 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.alpha = 0;
         cardCanvasGroup.blocksRaycasts = false;
         cardCanvasGroup.interactable = false;
-        //MonoUtility.DestroyAllChildren(valueComponentLayout);
         ObjectBufferPool.Instance.RestoreAllChildren(valueComponentLayout);
         if (innerContentsComponentLayout != null)
             innerContentsComponentLayout.gameObject.SetActive(false);
