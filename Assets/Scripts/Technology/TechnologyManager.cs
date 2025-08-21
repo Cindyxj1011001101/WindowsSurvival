@@ -72,6 +72,7 @@ public class TechnologyManager
             UnlockTechNode(CurStudiedTechNode);
             // 触发研究完成事件
             EventManager.Instance.TriggerEvent(EventType.StudyComplished, CurStudiedTechNode);
+            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("FinishResearch", CurStudiedTechNode.techName));
             // 停止研究
             StopStudy();
         }
@@ -124,7 +125,7 @@ public class TechnologyManager
             CraftManager.Instance.UnlockRecipe(recipe);
         }
 
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("FinishResearch", techNode.techName));
+
     }
 
     /// <summary>

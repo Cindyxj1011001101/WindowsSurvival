@@ -47,6 +47,7 @@ public class ChatConditionManager : MonoBehaviour
         foreach (var paragraph in ReadChatParagraph.Instance.FindAllParagraphData())
         {
             ParagraphConditionsToTrigger.Add(paragraph);
+            Debug.Log(paragraph.ParagraphName);
         }
         foreach (var paragraphData in ParagraphConditionsToTrigger)
         {

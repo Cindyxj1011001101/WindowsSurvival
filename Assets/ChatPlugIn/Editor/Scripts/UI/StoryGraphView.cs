@@ -15,7 +15,6 @@ namespace ChatPlugIn
         private StoryEditorWindow storyEditorWindow;
         private NodeCreationBox nodeCreationBox;
         private GraphData graphData;
-        string directoryPath = "Assets/Resources/ChatData";
         private List<Edge> Edges => edges.ToList();
         private List<BaseNode> Nodes => nodes.ToList().Cast<BaseNode>().ToList();
         //构造器
@@ -243,6 +242,7 @@ namespace ChatPlugIn
 
         public void LoadGraph(string fileName)
         {
+            Debug.Log(fileName);
             graphData = Resources.Load<GraphData>($"DialogueGraphs/{fileName}");
             if (graphData == null)
             {
@@ -272,9 +272,14 @@ namespace ChatPlugIn
                 {
                     var InputNodeGuid = connections[j].inputNodeGUID;
                     var targetNode = Nodes.First(x => x.GUID == InputNodeGuid);
-                    
-                    LinkNodes(Nodes[i].outputContainer[j].Q<Port>(), (Port)targetNode.inputContainer[0]);
-                    
+                    foreach (var port in Nodes[i].outputContainer.Children())
+                    {
+                        if (port.Q<Port>().portName== connections[j].outputPortName)
+                        {
+                            LinkNodes(port.Q<Port>(), (Port)targetNode.inputContainer[0]);
+                            break;
+                        }
+                    }
                     targetNode.SetPosition(new Rect(
                         graphData.nodes.First(x => x.guid == InputNodeGuid).NodePos,
                         Vector2.zero));

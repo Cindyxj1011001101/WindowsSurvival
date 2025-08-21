@@ -12,6 +12,7 @@ public class FinishResearchFix : ParagraphCondition
     {
         if(type=="FinishResearch"&&value=="修理")
         {
+
             return true;
         }
         return false;
