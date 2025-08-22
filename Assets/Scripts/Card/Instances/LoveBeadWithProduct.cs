@@ -66,6 +66,7 @@ public class LoveBeadWithProduct : Card
             AddCard("白爆矿", true);
         }
     }
+    #endregion
 
     public override bool CanQuickInteract(Card card)
     {
@@ -80,7 +81,4 @@ public class LoveBeadWithProduct : Card
     {
         OpenByTool(slot.PeekCard(), out tip);
     }
-
-
-    #endregion
 }

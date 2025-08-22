@@ -10,7 +10,7 @@ public class MagneticTentacle : Card
     {
         Events = new()
         {
-            new Event("食用", "闻起来有铁锈味", Event_Eat,null,() => 30,
+            new Event("食用", "闻起来有铁锈味", Event_Eat, null, () => 30,
             () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 14 }, { PlayerStateEnum.San, -6 }, { PlayerStateEnum.Health, -5 } })
         };
     }

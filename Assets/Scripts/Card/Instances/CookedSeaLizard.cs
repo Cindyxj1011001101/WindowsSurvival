@@ -6,7 +6,7 @@ public class CookedSeaLizard : Card
     {
         Events = new()
         {
-            new Event("食用", "食用熟海爬虫", Event_Eat, null,() => 15,
+            new Event("食用", "食用熟海爬虫", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 9 },{ PlayerStateEnum.Itchiness, 8 } })
         };
     }

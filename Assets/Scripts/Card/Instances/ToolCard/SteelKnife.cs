@@ -1,4 +1,4 @@
-public class SteelKnife : Card
+public class SteelKnife : ToolCard
 {
     private SteelKnife()
     {

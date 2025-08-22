@@ -38,6 +38,9 @@ public class LightenedOxygenCandle : Card
     protected override Action OnUpdate => () =>
     {
         // 每回合消耗耐久
-        Use();
+        Use(1, () =>
+        {
+            ShowTip("氧烛燃烧殆尽了");
+        });
     };
 }

@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler, IEndDragHandler
+public class DragScaleHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public enum ScaleDirection
     {
@@ -67,7 +67,7 @@ public class DragScaleHandler : MonoBehaviour, IPointerDownHandler, IDragHandler
         }
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnBeginDrag(PointerEventData eventData)
     {
         if (targetRect == null || canvasRect == null) return;
 

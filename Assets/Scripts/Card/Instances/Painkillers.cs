@@ -6,14 +6,11 @@ using UnityEngine;
 /// </summary>
 public class Painkillers : Card
 {
-    public int maxReduceCount;
-    public int curReduceCount;
-    public float ReduceRate;
+    public int maxReduceCount = 2;
+    public int curReduceCount = 0;
+    public float ReduceRate = 0.5f;
     private Painkillers()
     {
-        maxReduceCount = 2;
-        curReduceCount = 0;
-        ReduceRate = 0.5f;
         Events = new()
         {
             new Event("使用", "使用", Event_Use, null, () => 5,  () => new () { { PlayerStateEnum.PainLevel, -50 * Mathf.Pow(ReduceRate, curReduceCount) } })

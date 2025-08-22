@@ -5,17 +5,14 @@ using Random = UnityEngine.Random;
 
 public class CoralReef : Card
 {
-    public int maxReduceCount;
-    public int curReduceCount;
-    public float reduceRate;
+    public int maxReduceCount = 2;
+    public int curReduceCount = 0;
+    public float reduceRate = 0.5f;
     private CoralReef()
     {
-        maxReduceCount = 2;
-        curReduceCount = 0;
-        reduceRate = 0.5f;
         Events = new()
         {
-            new Event("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig,() => 45),
+            new Event("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig, () => 45),
             new Event("欣赏", "一天内多次欣赏获得的数值会衰减", Event_Enjoy, null,() => 15,
             () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, 6 * Mathf.Pow(reduceRate, curReduceCount) }, { PlayerStateEnum.Sobriety, 4 * Mathf.Pow(reduceRate, curReduceCount) } })
         };

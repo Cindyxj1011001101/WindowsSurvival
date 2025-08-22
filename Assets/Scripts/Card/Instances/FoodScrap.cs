@@ -2,10 +2,9 @@ using System.Collections.Generic;
 
 public class FoodScrap : Card
 {
-    public int RemainRound;
+    public int remainRound = 4;
     private FoodScrap()
     {
-        RemainRound = 4;
         Events = new()
         {
             new Event("食用", "和鱼抢吃的", Event_Eat, null, () => 15,
@@ -24,14 +23,13 @@ public class FoodScrap : Card
     }
     protected override System.Action OnUpdate => () =>
     {
-        if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
+        if (remainRound <= 0 || GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater) return;
+
+        remainRound--;
+        if (remainRound <= 0)
         {
-            RemainRound--;
-            if (RemainRound <= 0)
-            {
-                ShowTip("食物残渣被水冲走了");
-                DestroyThis();
-            }
+            ShowTip("食物残渣被水冲走了");
+            DestroyThis();
         }
     };
 }

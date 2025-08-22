@@ -1,7 +1,7 @@
 /// <summary>
 /// ×ÔÈÈÅëâ¿´ü
 /// </summary>
-public class SelfHeatingCookingBag : Card
+public class SelfHeatingCookingBag : ToolCard
 {
     private SelfHeatingCookingBag()
     {

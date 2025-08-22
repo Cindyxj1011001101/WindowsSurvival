@@ -4,7 +4,7 @@ public class FriedInsectStick : Card
 {
     private FriedInsectStick()
     {
-        Events=new()
+        Events = new()
         {
             new Event("食用", "食用炸虫串", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>()

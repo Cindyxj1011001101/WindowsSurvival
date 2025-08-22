@@ -1,4 +1,4 @@
-public class StoneBrick:Card
+public class StoneBrick : Card
 {
     private StoneBrick()
     {
