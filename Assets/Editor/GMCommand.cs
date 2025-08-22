@@ -216,6 +216,12 @@ public class GMCommand
     {
         GameDataManager.Instance.SaveWindowsData();
     }
+
+    [MenuItem("Command/保存/额外探索移动消耗")]
+    public static void SaveBehaviourExtraEffectsData()
+    {
+        GameDataManager.Instance.SaveBehaviourExtraEffectsData();
+    }
     #endregion
 
 

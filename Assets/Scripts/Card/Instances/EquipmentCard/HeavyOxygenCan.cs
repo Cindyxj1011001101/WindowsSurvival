@@ -1,45 +1,18 @@
 
 public class HeavyOxygenCan : EquipmentCard
 {
-    private HeavyOxygenCan()
-    {
-        Events = new()
-        {
-            new Event("装备", "装备重型氧气罐", Event_Equip, Judge_Equip),
-            new Event("卸下", "卸下重型氧气罐", Event_UnEquip, Judge_UnEquip)
-        };
-    }
-    protected override void LateInit()
-    {
-        base.LateInit();
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move,OnMove);
-    }
-
-    public override void DestroyThis()
-    {
-        base.DestroyThis();
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move,OnMove);
-    }
-
-    public void OnMove(EnvironmentBag bag)
-    {
-        if (bag.PlaceData.isInWater)
-        {
-            Use();
-            //LIANG-TODO:额外消耗50%移动时间
-
-        }
-    }
-
     public override void OnEquipped()
     {
         StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, 800);
-        //LIANG-TODO:额外消耗探索时间
+        // 装备以后在地点移动额外消耗20%时间，探索额外消耗20%时间
+        GameManager.Instance.AddMoveExtraEffect("装备了重型氧气罐", +.2f, null);
+        GameManager.Instance.AddExploreExtraEffect("装备了重型氧气罐", +.2f, null);
     }
 
     public override void OnUnEquipped()
     {
-        //移除在地点移动额外消耗20%时间，探索额外消耗20%时间
         StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, -800);
+        GameManager.Instance.RemoveMoveExtraEffect("装备了重型氧气罐");
+        GameManager.Instance.RemoveExploreExtraEffect("装备了重型氧气罐");
     }
 }

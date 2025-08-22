@@ -22,19 +22,19 @@
         // 不是装备卡无法添加
         if (!card.TryGetComponent<EquipmentComponent>(out var component))
         {
-            tip = "这个不可以装备";
+            tip = "不可装备";
             return false;
         }
 
         if (component.isEquipped)
         {
-            tip = "你无需重复穿上该装备";
+            tip = "该装备已经穿上了";
             return false;
         }
 
         if (!Slots[(int)component.equipmentType].IsEmpty)
         {
-            tip = "同样的部位上已经有一件装备了";
+            tip = "相同部位上已有一件装备";
             return false;
         }
 

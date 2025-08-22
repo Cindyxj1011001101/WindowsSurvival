@@ -3,6 +3,22 @@
 /// </summary>
 public abstract class EquipmentCard : Card
 {
+    protected EquipmentComponent equipment;
+    protected EquipmentCard()
+    {
+        Events = new()
+        {
+            new Event("装备", "", Event_Equip, Judge_Equip),
+            new Event("卸下", "", Event_UnEquip, Judge_UnEquip)
+        };
+    }
+
+    protected override void LateInit()
+    {
+        base.LateInit();
+        TryGetComponent(out equipment);
+    }
+
     public abstract void OnEquipped();
     public abstract void OnUnEquipped();
 
@@ -26,6 +42,6 @@ public abstract class EquipmentCard : Card
     protected bool Judge_UnEquip(out string hint)
     {
         hint = string.Empty;
-        return TryGetComponent<EquipmentComponent>(out var component) && component.isEquipped;
+        return equipment.isEquipped;
     }
 }

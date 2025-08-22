@@ -126,8 +126,6 @@ public class StateManager : MonoBehaviour
             PlayerStateDict = stateData.playerState;
         }
 
-        //SetupPlayerStateEvents();
-
         // 监听回合结算
         EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
         // 当环境改变时尝试获取氧气
@@ -686,8 +684,6 @@ public class StateManager : MonoBehaviour
     public void IntervalSettle()
     {
         PlayerIntervalSettle();
-        
-        //ExtraPlayerIntervalSettle();
 
         EnvironmentIntervalSettle();
     }
@@ -713,24 +709,6 @@ public class StateManager : MonoBehaviour
 
         ApplyPlayerStateChange(temp);
     }
-
-    ///// <summary>
-    ///// 定时结算状态异常导致的额外变化
-    ///// </summary>
-    //public void ExtraPlayerIntervalSettle()
-    //{
-    //    // 统计最终状态影响效果
-    //    StateEffect finalEffect = StateEffect.NoEffect;
-    //    foreach (var state in PlayerStateDict.Values)
-    //    {
-    //        finalEffect += state.GetStateEffect();
-    //    }
-    //    ChangePlayerState(PlayerStateEnum.Health, finalEffect.healthRate);
-    //    ChangePlayerState(PlayerStateEnum.San, finalEffect.sanityRate);
-    //    ChangePlayerState(PlayerStateEnum.Fullness, finalEffect.fulnessRate);
-    //    ChangePlayerState(PlayerStateEnum.Thirst, finalEffect.thirstRate);
-    //    ChangePlayerState(PlayerStateEnum.Sobriety, finalEffect.sorbrietyRate);
-    //}
     #endregion
 
     #region 睡觉
@@ -809,4 +787,23 @@ public class StateManager : MonoBehaviour
         ChatManager.Instance.chatWindow = WindowsManager.Instance.OpenWindow("Chat",true) as ChatWindow;
     }
     #endregion
+
+    public static string ParsePlayerState(PlayerStateEnum playerState)
+    {
+        return playerState switch
+        {
+            PlayerStateEnum.Health => "健康",
+            PlayerStateEnum.Fullness => "饱食度",
+            PlayerStateEnum.Thirst => "水分",
+            PlayerStateEnum.San => "精神",
+            PlayerStateEnum.Oxygen => "氧气",
+            PlayerStateEnum.Sobriety => "清醒",
+            PlayerStateEnum.Load => "载重",
+            PlayerStateEnum.BodyTemperature => "体温",
+            PlayerStateEnum.CarbonMonoxidePoisoning => "一氧化碳中毒",
+            PlayerStateEnum.Itchiness => "瘙痒",
+            PlayerStateEnum.PainLevel => "疼痛",
+            _ => playerState.ToString(),
+        };
+    }
 }

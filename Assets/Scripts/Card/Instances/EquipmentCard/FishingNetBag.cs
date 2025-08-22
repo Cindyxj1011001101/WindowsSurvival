@@ -2,14 +2,9 @@
 public class FishingNetBag : EquipmentCard
 {
     private InnerContentsComponent innerContents;
-    private FishingNetBag()
+    private FishingNetBag() : base()
     {
-        Events = new()
-        {
-            new Event("装备", "装备塑料袋", Event_Equip, Judge_Equip),
-            new Event("卸下", "卸下塑料袋", Event_UnEquip, Judge_UnEquip),
-            new Event("切割", "切割塑料袋", Event_Cut, Judge_Cut)
-        };
+        Events.Add(new Event("切割", "切割渔获袋", Event_Cut, Judge_Cut));
     }
 
     protected override void LateInit()

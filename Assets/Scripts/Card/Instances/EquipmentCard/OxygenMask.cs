@@ -3,21 +3,15 @@
 /// </summary>
 public class OxygenMask : EquipmentCard
 {
-    private OxygenMask()
-    {
-        Events = new()
-        {
-            new Event("装备", "装备氧气面罩", Event_Equip, Judge_Equip),
-            new Event("卸下", "卸下氧气面罩", Event_UnEquip, Judge_UnEquip)
-        };
-    }
     public override void OnEquipped()
     {
         StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, 60);
+        GameManager.Instance.RemoveExploreInWaterExtraEffect("未装备氧气面罩");
     }
 
     public override void OnUnEquipped()
     {
         StateManager.Instance.ChangePlayerExtraState(PlayerStateEnum.Oxygen, -60);
+        GameManager.Instance.AddExploreInWaterExtraEffect("未装备氧气面罩", +.4f, new() { { PlayerStateEnum.Health, -4 } });
     }
 }

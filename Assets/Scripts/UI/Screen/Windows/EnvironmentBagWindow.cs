@@ -48,11 +48,13 @@ public class EnvironmentBagWindow : BagWindow
         hoveredTipController = exploreButton.gameObject.AddComponent<HoverTipController>();
         hoveredTipController.onPointerEnter.AddListener(() =>
         {
-            var (desc, time, playerEffects, envEffects) = GameManager.Instance.GetExploreEffects();
             if (GameManager.Instance.CanMoveExplore())
-                hoveredTipController.SetTip(desc, time, playerEffects, envEffects);
+            {
+                var (desc, time, playerEffects) = GameManager.Instance.GetExploreEffects();
+                hoveredTipController.SetTip(desc, time, playerEffects, null);
+            }
             else
-                hoveredTipController.SetTip(desc);
+                hoveredTipController.SetTip("身上太重了，无法探索");
         });
 
         foreach (Transform c in stateLayout)
@@ -68,7 +70,7 @@ public class EnvironmentBagWindow : BagWindow
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         // 玩家背包卡牌变化
-        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerBagCardsChanged);
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
     }
 
     private void OnDestroy()
@@ -77,11 +79,17 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.RemoveListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, DisplayBag);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
-        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerBagCardsChanged);
+        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
     }
 
-    private void OnPlayerBagCardsChanged(ChangePlayerBagCardsArgs args)
+    /// <summary>
+    /// 监听负重变化，负重变化会导致探索按钮的提示变化
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnLoadChanged(PlayerStateEnum state)
     {
+        if (state != PlayerStateEnum.Load) return;
+
         DisplayDiscoveryDegree((GameManager.Instance.CurEnvironmentBag.DiscoveryDegree, GameManager.Instance.CurEnvironmentBag.ExploreCompleted));
     }
 

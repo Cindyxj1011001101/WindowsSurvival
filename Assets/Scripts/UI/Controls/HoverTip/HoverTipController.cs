@@ -63,6 +63,12 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void ShowTip()
     {
+        if (string.IsNullOrEmpty(textTip) && time == 0 && playerEffects.IsNullOrEmpty() && envEffects.IsNullOrEmpty())
+        {
+            HideTip();
+            return;
+        }
+
         ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Tips", "HoverTip", WindowsManager.Instance.HoverTipLayer, (asset) =>
         {
             hoverTip = asset.GetComponent<HoverTip>();

@@ -1,6 +1,84 @@
 using DG.Tweening;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
+
+/// <summary>
+/// 探索、移动等行为的额外效果
+/// </summary>
+public class BehaviourExtraEffects
+{
+    // <原因，(最终时间倍率，玩家状态额外变化值)>
+    public Dictionary<string, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)> extraEffects = new();
+
+    [JsonIgnore]
+    public float FinalTimeMultiplier
+    {
+        get
+        {
+            float multiplier = 1f;
+            foreach (var (timeMultiplier, _) in extraEffects.Values)
+            {
+                multiplier *= 1 + timeMultiplier;
+            }
+            return multiplier;
+        }
+    }
+
+    public void AddEffect(string reason, float finalTimeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
+    {
+        if (extraEffects.ContainsKey(reason)) return; // 如果已经存在该原因的效果，则不添加
+        extraEffects.Add(reason, (finalTimeMultiplier, playerEffects));
+    }
+
+    public void RemoveEffect(string reason)
+    {
+        if (extraEffects.ContainsKey(reason))
+        {
+            extraEffects.Remove(reason);
+        }
+    }
+
+    public int GetFinalTime(int basicTime)
+    {
+        return Mathf.CeilToInt(basicTime * FinalTimeMultiplier);
+    }
+
+    public string GetEffectsDescription()
+    {
+        string desc = string.Empty;
+        foreach (var (reason, (timeMultiplier, playerEffects)) in extraEffects)
+        {
+            desc += $"\n{reason}，时间额外消耗{timeMultiplier * 100}%";
+            if (playerEffects.IsNullOrEmpty()) continue;
+            foreach (var (state, delta) in playerEffects)
+            {
+                desc += $"，{StateManager.ParsePlayerState(state)}额外{(delta > 0 ? "+" : "")}{delta}";
+            }
+        }
+        return desc.TrimEnd('\n');
+    }
+
+    public Dictionary<PlayerStateEnum, float> GetFinalPlayerEffects(Dictionary<PlayerStateEnum, float> currentEffects)
+    {
+        static void AddEffects(Dictionary<PlayerStateEnum, float> final, Dictionary<PlayerStateEnum, float> current)
+        {
+            if (current.IsNullOrEmpty()) return;
+            foreach (var (state, delta) in current)
+            {
+                if (final.ContainsKey(state)) final[state] += delta;
+                else final.Add(state, delta);
+            }
+        }
+        Dictionary<PlayerStateEnum, float> finalEffects = new();
+        foreach (var (_, playerEffects) in extraEffects.Values)
+        {
+            AddEffects(finalEffects, playerEffects);
+        }
+        AddEffects(finalEffects, currentEffects);
+        return finalEffects;
+    }
+}
 
 public enum PlaceEnum
 {
@@ -57,11 +135,14 @@ public class GameManager : MonoBehaviour
         // 当前环境背包
         curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
         equipmentBag = GameDataManager.Instance.EquipmentData;
+
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
 
     private void OnDestroy()
     {
         ObjectBufferPool.Instance.Clear(); // 清空对象池
+        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
 
     private void Start()
@@ -71,14 +152,28 @@ public class GameManager : MonoBehaviour
 
     private void Init()
     {
+        lastLoadLevel = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
         playerBag.Init();
         equipmentBag.Init();
         foreach (var bag in environmentBags.Values)
         {
             bag.Init();
         }
+        InitBehaviourExtraEffects();
         ChangeEnv(GameDataManager.Instance.LastPlace);
         SoundManager.Instance.PlayCurEnvironmentMusic();
+    }
+
+    private void InitBehaviourExtraEffects()
+    {
+        var data = GameDataManager.Instance.BehaviourExtraEffectsData;
+        if (data.init)
+        {
+            MoveExtraEffects = data.moveExtraEffects;
+            MoveToWaterExtraEffects = data.moveToWaterExtraEffects;
+            ExploreExtraEffects = data.exploreExtraEffects;
+            ExploreInWaterExtraEffects = data.exploreInWaterExtraEffects;
+        }
     }
 
     public void AddCard(Card card, Bag targetBag)
@@ -237,51 +332,137 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region 探索
+    // 探索额外消耗
+    public BehaviourExtraEffects ExploreExtraEffects { get; private set; } = new();
 
-    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects,
-        Dictionary<EnvironmentStateEnum, float> envEffects) GetExploreEffects()
+    // 探索水域额外消耗
+    public BehaviourExtraEffects ExploreInWaterExtraEffects { get; private set; } = new()
     {
-        string desc = "探索该区域";
-        int time = curEnvironmentBag.PlaceData.exploreTime;
-        Dictionary<PlayerStateEnum, float> playerEffects = new();
-        Dictionary<EnvironmentStateEnum, float> envEffects = new();
-        switch (curEnvironmentBag.PlaceData.placeType)
+        extraEffects = new Dictionary<string, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)>
         {
-            case PlaceEnum.PowerCabin:
-            case PlaceEnum.Cockpit:
-            case PlaceEnum.LifeSupportCabin:
-                break;
-            case PlaceEnum.CoralCoast:
-            case PlaceEnum.PhosphorTomb:
-            case PlaceEnum.SpaceshipOuterHull:
-                desc += "，最好佩戴上氧气面罩";
-                // 如果没有佩戴氧气面罩
-                if (equipmentBag.FindCardOfName("氧气面罩") == null)
-                {
-                    // 探索时间+40%
-                    time += Mathf.CeilToInt(curEnvironmentBag.PlaceData.exploreTime * .4f);
-                    // 健康值-4
-                    playerEffects.Add(PlayerStateEnum.Health, -4);
-                }
-                break;
+            { "未装备氧气面罩", (+0.4f, new() { { PlayerStateEnum.Health, -4 } }) }
         }
+    };
 
-        desc = GetMoveDesc(desc);
-        time += GetExtraMoveExploreTime(curEnvironmentBag.PlaceData.exploreTime);
-        foreach (var (state, delta) in GetMoveExplorePlayerEffects())
-        {
-            if (playerEffects.ContainsKey(state))
-            {
-                playerEffects[state] += delta;
-            }
-            else
-            {
-                playerEffects.Add(state, delta);
-            }
-        }
+    // 移动额外消耗
+    public BehaviourExtraEffects MoveExtraEffects { get; private set; } = new();
 
-        return (desc, time, playerEffects, envEffects);
+    // 移动到水域额外消耗
+    public BehaviourExtraEffects MoveToWaterExtraEffects { get; private set; } = new();
+
+    private int lastLoadLevel = -1;
+
+    private List<(string reason, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects) effect)> extraEffectsCausedByLoad = new()
+    {
+        { ("", (0f, new() { })) }, // 占位用
+        { ("身上有点重", (0.25f, new() { })) },
+        { ("身上很重", (1f, new() { { PlayerStateEnum.Health, -3 } })) },
+        { ("身上太重了", (0f, new() { })) },
+    };
+
+    public void AddExploreExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
+    {
+        ExploreExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
     }
+
+    public void RemoveExploreExtraEffect(string reason)
+    {
+        ExploreExtraEffects.RemoveEffect(reason);
+    }
+
+    public void AddMoveExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
+    {
+        MoveExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
+    }
+
+    public void RemoveMoveExtraEffect(string reason)
+    {
+        MoveExtraEffects.RemoveEffect(reason);
+    }
+
+    public void AddExploreInWaterExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
+    {
+        ExploreInWaterExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
+    }
+
+    public void RemoveExploreInWaterExtraEffect(string reason)
+    {
+        ExploreInWaterExtraEffects.RemoveEffect(reason);
+    }
+
+    public void AddMoveToWaterExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
+    {
+        MoveToWaterExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
+    }
+
+    public void RemoveMoveToWaterExtraEffect(string reason)
+    {
+        MoveToWaterExtraEffects.RemoveEffect(reason);
+    }
+
+    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects) GetExploreEffects()
+    {
+        string desc = "探索该地点" + ExploreExtraEffects.GetEffectsDescription();
+        int time = ExploreExtraEffects.GetFinalTime(curEnvironmentBag.PlaceData.exploreTime);
+        Dictionary<PlayerStateEnum, float> playerEffects = ExploreExtraEffects.GetFinalPlayerEffects(new());
+
+        // 对水域的探索额外消耗
+        if (CurEnvironmentBag.PlaceData.isInWater)
+        {
+            desc += ExploreInWaterExtraEffects.GetEffectsDescription();
+            time = ExploreInWaterExtraEffects.GetFinalTime(time);
+            playerEffects = ExploreInWaterExtraEffects.GetFinalPlayerEffects(playerEffects);
+        }
+
+        return (desc, time, playerEffects);
+    }
+
+    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects) GetMoveEffects(int basicMoveTime, PlaceEnum targetPlace)
+    {
+        string desc = "前往" + ParsePlaceEnum(targetPlace) + MoveExtraEffects.GetEffectsDescription();
+        int time = MoveExtraEffects.GetFinalTime(basicMoveTime);
+        Dictionary<PlayerStateEnum, float> playerEffects = MoveExtraEffects.GetFinalPlayerEffects(new());
+
+        // 前往水域的额外消耗
+        if (environmentBags[targetPlace].PlaceData.isInWater)
+        {
+            desc += MoveToWaterExtraEffects.GetEffectsDescription();
+            time = MoveToWaterExtraEffects.GetFinalTime(time);
+            playerEffects = MoveToWaterExtraEffects.GetFinalPlayerEffects(playerEffects);
+        }
+
+        return (desc, time, playerEffects);
+    }
+
+    /// <summary>
+    /// 载重变化触发的移动探索额外消耗变化
+    /// </summary>
+    /// <param name="state"></param>
+    private void OnLoadChange(PlayerStateEnum state)
+    {
+        if (state != PlayerStateEnum.Load || lastLoadLevel == StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel) return;
+
+        // 载重等级发生变化，更新额外消耗
+        int currentLoadLevel = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
+
+        if (lastLoadLevel != 0)
+        {
+            // 移除上一个载重等级的额外消耗
+            RemoveExploreExtraEffect(extraEffectsCausedByLoad[lastLoadLevel].reason);
+            RemoveMoveExtraEffect(extraEffectsCausedByLoad[lastLoadLevel].reason);
+        }
+
+        if (currentLoadLevel != 0)
+        {
+            // 添加当前载重等级的额外消耗
+            AddExploreExtraEffect(extraEffectsCausedByLoad[currentLoadLevel].reason, extraEffectsCausedByLoad[currentLoadLevel].effect.timeMultiplier, extraEffectsCausedByLoad[currentLoadLevel].effect.playerEffects);
+            AddMoveExtraEffect(extraEffectsCausedByLoad[currentLoadLevel].reason, extraEffectsCausedByLoad[currentLoadLevel].effect.timeMultiplier, extraEffectsCausedByLoad[currentLoadLevel].effect.playerEffects);
+        }
+
+        lastLoadLevel = currentLoadLevel;
+    }
+
+    public bool CanMoveExplore() => StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel < 3;
 
     /// <summary>
     /// 处理探索事件
@@ -290,6 +471,9 @@ public class GameManager : MonoBehaviour
     {
         tip = string.Empty;
         droppedCards = new List<Card>();
+
+        if (!CanMoveExplore()) return;
+
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
 
         var disposableDropList = curEnvironmentBag.DisposableDropList;
@@ -303,14 +487,10 @@ public class GameManager : MonoBehaviour
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("抽卡", true);
 
-        (_, int time, Dictionary<PlayerStateEnum, float> playerEffects,
-            Dictionary<EnvironmentStateEnum, float> envEffects) = GetExploreEffects();
+        (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) = GetExploreEffects();
 
         // 玩家状态变化
         StateManager.Instance.ApplyPlayerStateChange(playerEffects);
-
-        // 环境状态变化
-        curEnvironmentBag.ApplyEnvEffects(envEffects);
 
         // 消耗时间
         TimeManager.Instance.AddTime(time);
@@ -353,16 +533,28 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    // 移动到目标场景
-    public void Move(PlaceEnum targetPlace, int bsaicMoveTime)
+    /// <summary>
+    /// 移动到目标场景
+    /// </summary>
+    /// <param name="targetPlace"></param>
+    /// <param name="basicMoveTime"></param>
+    public void Move(PlaceEnum targetPlace, int basicMoveTime)
     {
+        if (!CanMoveExplore()) return;
+
         ChangeEnv(targetPlace);
 
+        (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) = GetMoveEffects(basicMoveTime, targetPlace);
+
         // 移动消耗
-        StateManager.Instance.ApplyPlayerStateChange(GetMoveExplorePlayerEffects());
-        TimeManager.Instance.AddTime(bsaicMoveTime + GetExtraMoveExploreTime(bsaicMoveTime));
+        StateManager.Instance.ApplyPlayerStateChange(playerEffects);
+        TimeManager.Instance.AddTime(time);
     }
 
+    /// <summary>
+    /// 变化场景
+    /// </summary>
+    /// <param name="targetPlace"></param>
     private void ChangeEnv(PlaceEnum targetPlace)
     {
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("EnterEnvironment", targetPlace.ToString()));
@@ -392,9 +584,9 @@ public class GameManager : MonoBehaviour
                 var card = slot.PeekCard();
                 if (card.HasLoopSound)
                     card.OnEnterEnvironment();
-
             }
         }
+
         //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
         var door = curEnvironmentBag.DisposableDropList.CertainDrop($"从{ParsePlaceEnum(targetPlace)}到{ParsePlaceEnum(lastPlace)}");
         if (!door.IsNullOrEmpty())
@@ -404,64 +596,6 @@ public class GameManager : MonoBehaviour
         }
 
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
-    }
-
-    public bool CanMoveExplore()
-    {
-        return StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel < 3;
-    }
-
-    public string GetMoveDesc(string origin)
-    {
-        string result = origin;
-        int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
-        switch (level)
-        {
-            case 0:
-                break;
-            case 1:
-                result += "\n身上有点重，额外消耗25%时间";
-                break;
-            case 2:
-                result += "\n身上很重，额外消耗100%时间";
-                break;
-            case 3:
-                result = "身上太重了，没法这么做";
-                break;
-        }
-        return result;
-    }
-
-    public int GetExtraMoveExploreTime(int basicTime)
-    {
-        int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
-        return level switch
-        {
-            0 => 0,
-            1 => Mathf.CeilToInt(basicTime * 0.25f),
-            2 => Mathf.CeilToInt(basicTime * 1f),
-            3 => 0,
-            _ => 0,
-        };
-    }
-
-    public Dictionary<PlayerStateEnum, float> GetMoveExplorePlayerEffects()
-    {
-        Dictionary<PlayerStateEnum, float> result = new();
-        int level = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
-        switch (level)
-        {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                result.Add(PlayerStateEnum.Health, -3);
-                break;
-            case 3:
-                break;
-        }
-        return result;
     }
 
     public static string ParsePlaceEnum(PlaceEnum place)
