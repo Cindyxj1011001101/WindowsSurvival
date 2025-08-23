@@ -6,9 +6,7 @@ using System.Collections.Generic;
 public class Campfire : ConstructionCard
 {
     private InnerContentsComponent innerContents; // 内容物组件
-    private FuelContainerComponent fuelContainer; // 燃料存储组件
-
-    public bool isLightened = false; // 是否点燃
+    private FuelStorageComponent fuelStorage; // 燃料存储组件
 
     private Campfire()
     {
@@ -23,16 +21,16 @@ public class Campfire : ConstructionCard
     {
         base.LateInit();
         // 手动添加燃料存储组件
-        if (!TryGetComponent(out fuelContainer))
+        if (!TryGetComponent(out fuelStorage))
         {
-            fuelContainer = new FuelContainerComponent(96);
-            AddComponent(fuelContainer);
+            fuelStorage = new FuelStorageComponent(96);
+            AddComponent(fuelStorage);
         }
 
         // 放入内容物时，暂停卡牌每回合更新
         innerContents.onAddCard = (c) =>
         {
-            if (isLightened) c.PauseUpdating();
+            if (fuelStorage.isFiring) c.PauseUpdating();
         };
         // 取出时恢复每回合更新
         innerContents.onRemoveCard = (c) =>
@@ -73,18 +71,18 @@ public class Campfire : ConstructionCard
         // 点燃后暂停所有卡牌每回合更新
         innerContents.PauseUpdating();
 
-        isLightened = true;
+        fuelStorage.SetIsFiring(true);
     }
 
     private bool Judge_Light(out string hint)
     {
         hint = string.Empty;
-        if (isLightened)
+        if (fuelStorage.isFiring)
         {
             return false;
         }
 
-        if (fuelContainer.fuel < 2)
+        if (fuelStorage.fuel < 2)
         {
             hint = "燃料不足，无法点燃篝火";
             return false;
@@ -108,22 +106,23 @@ public class Campfire : ConstructionCard
         // 熄灭后恢复所有卡牌每回合更新
         innerContents.ContinueUpdating();
 
-        isLightened = false;
+        fuelStorage.SetIsFiring(false);
     }
 
     private bool Judge_UnLight(out string hint)
     {
         hint = string.Empty;
-        return isLightened;
+        return fuelStorage.isFiring;
     }
 
     private List<Card> temp = new();
     protected override System.Action OnUpdate => () =>
     {
-        // 没有点燃或者燃料不足
-        if (!isLightened || fuelContainer.fuel < 2) return;
+        // 没有点燃
+        if (!fuelStorage.isFiring) return;
 
-        fuelContainer.AddFuel(-2); // 每回合消耗2点燃料
+        // 这里剩余燃料一定是>=2的，因为燃料<2时会自动熄灭并且无法点燃
+        fuelStorage.AddFuel(-2); // 每回合消耗2点燃料
 
         // 记录所有内容物
         foreach (var slot in innerContents.bag.Slots)
@@ -154,10 +153,9 @@ public class Campfire : ConstructionCard
 
         temp.Clear();
 
-        if (fuelContainer.fuel < 2) // 燃料不足时自动熄灭
+        if (fuelStorage.fuel < 2) // 燃料不足时自动熄灭
         {
             Event_UnLight(out _);
-            RefreshSlot();
             ShowTip("燃料不足，营火已自动熄灭");
             return;
         }
@@ -166,7 +164,7 @@ public class Campfire : ConstructionCard
     public override bool CanQuickInteract(Card card)
     {
         // 添加燃料
-        if (card.TryGetComponent<FlammableComponent>(out _) && fuelContainer.fuel < fuelContainer.maxFuel) return true;
+        if (card.TryGetComponent<FlammableComponent>(out _) && fuelStorage.fuel < fuelStorage.maxFuel) return true;
         // 放入内容物
         if (innerContents.CanQuickInteract(card)) return true;
         // 拆毁
@@ -179,10 +177,10 @@ public class Campfire : ConstructionCard
         var card = slot.PeekCard();
 
         // 添加燃料
-        if (card.TryGetComponent<FlammableComponent>(out var burnableComponent) && fuelContainer.fuel < fuelContainer.maxFuel)
+        if (card.TryGetComponent<FlammableComponent>(out var burnableComponent) && fuelStorage.fuel < fuelStorage.maxFuel)
         {
             card.DestroyThis();
-            fuelContainer.AddFuel(burnableComponent.fuelValue);
+            fuelStorage.AddFuel(burnableComponent.fuelValue);
             return;
         }
 

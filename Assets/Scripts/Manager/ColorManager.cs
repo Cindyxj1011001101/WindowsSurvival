@@ -23,7 +23,8 @@ public static class ColorManager
         { typeof(FreshnessComponent), Orange },
         { typeof(ProgressComponent), Green },
         { typeof(GrowthComponent), White },
-        { typeof(FuelContainerComponent), BurntOrange },
+        { typeof(FuelStorageComponent), BurntOrange },
+        { typeof(OxygenStorageComponent), SkyBlue },
     };
 
     public static Dictionary<int, Color32> LoadColors = new()

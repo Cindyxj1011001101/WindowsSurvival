@@ -82,8 +82,8 @@ public static class CardFactory
             { "鱼汤", typeof(FishSoup) },
             { "贝类刺身", typeof(ShellSashimi) },
             { "白爆矿堆", typeof(WhiteBlastMineStack) },
-            { "诱捕陷阱", typeof(FuelFurnace) },
-            { "燃料炉", typeof(Trap) },
+            { "燃料炉", typeof(FuelFurnace) },
+            { "诱捕陷阱", typeof(Trap) },
             { "手压排水泵", typeof(HandDrainPump) },
             { "变形的保险柜", typeof(SafeInsurance) },
             { "被撬开的保险柜", typeof(OpenedInsurance) },
@@ -113,6 +113,20 @@ public static class CardFactory
             var sprites = Resources.LoadAll<Sprite>("Sprites/" + config.CardType.ToString());
             // 找到图片的索引
             var index = int.Parse(config.CardImagePath);
+            return sprites[index];
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
+    public static Sprite GetCardImage(string cardId, string imagePath)
+    {
+        InitCardConfig();
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            // 获取图集的所有图片
+            var sprites = Resources.LoadAll<Sprite>("Sprites/" + config.CardType.ToString());
+            // 找到图片的索引
+            var index = int.Parse(imagePath);
             return sprites[index];
         }
         throw new ArgumentException($"不存在ID为{cardId}的卡牌");

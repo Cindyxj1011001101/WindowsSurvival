@@ -20,6 +20,10 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private Text moreInfoText; // 额外信息
     [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
     [SerializeField] private GameObject mask;
+    [SerializeField] private GameObject iconLayout; // 用于显示图标的布局
+    [SerializeField] private GameObject fireIcon; // 图标上的火焰
+    [SerializeField] private GameObject flashIcon; // 图标上的闪电
+    [SerializeField] private Animator cardAnimator;
 
     private Dictionary<Type, float> lastComponentValues = new();
     private Dictionary<Type, UIStateSlider> componentSliders = new(); // 用于存储组件的滑动条
@@ -234,9 +238,15 @@ public class CardSlot : MonoBehaviour
                 slider.SetValue(progressComponent.progress, progressComponent.maxProgress);
                 slider.tipController.SetTip($"产物进度:    {slider.value * 100:0.0}%", slider.fillColor);
                 break;
-            case FuelContainerComponent fuelContainerComponent:
-                slider.SetValue(fuelContainerComponent.fuel, fuelContainerComponent.maxFuel);
+            case FuelStorageComponent FuelStorageComponent:
+                slider.SetValue(FuelStorageComponent.fuel, FuelStorageComponent.maxFuel);
                 slider.tipController.SetTip($"剩余燃料:    {slider.value * 100:0.0}%", slider.fillColor);
+                iconLayout.SetActive(FuelStorageComponent.isFiring);
+                fireIcon.SetActive(FuelStorageComponent.isFiring);
+                break;
+            case OxygenStorageComponent oxygenStorageComponent:
+                slider.SetValue(oxygenStorageComponent.oxygen, oxygenStorageComponent.maxOxygen);
+                slider.tipController.SetTip($"剩余氧气:    {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
@@ -255,6 +265,27 @@ public class CardSlot : MonoBehaviour
         {
             innerContentsComponent.GetChild(i).gameObject.SetActive(i < component.bag.SlotCount);
             innerContentsComponent.GetChild(i).GetComponent<Image>().color = i < component.bag.SlotCount - component.bag.EmptySlotCount ? ColorManager.White : ColorManager.DarkGrey;
+        }
+    }
+
+    /// <summary>
+    /// 显示卡牌状态
+    /// </summary>
+    /// <param name="state"></param>
+    private void DisplayCardState(Card card, CardState state)
+    {
+        iconLayout.SetActive(state.comsumeElectricity);
+        flashIcon.SetActive(state.comsumeElectricity);
+        // 有动画的播放动画
+        if (state.isAnim)
+        {
+            cardAnimator.enabled = true;
+            cardAnimator.Play(card.CardId + state.name);
+        }
+        else if (cardAnimator.enabled)
+        {
+            cardAnimator.Play("");
+            cardAnimator.enabled = false;
         }
     }
 
@@ -295,12 +326,18 @@ public class CardSlot : MonoBehaviour
         // 显示内容物数量
         if (card.TryGetComponent<InnerContentsComponent>(out var i))
             DisplayInnerContentsComponent(i);
-        // 显示燃料数量
-        if (card.TryGetComponent<FuelContainerComponent>(out var fc))
+        // 显示燃料存储
+        if (card.TryGetComponent<FuelStorageComponent>(out var fc))
             DisplayValueComponent(fc);
         // 显示温度
         if (card.TryGetComponent<TemperatureComponent>(out var t))
             DisplayValueComponent(t);
+        // 显示状态
+        if (card.TryGetComponent<StateMachineComponent>(out var s))
+            DisplayCardState(card, s.CurrentState);
+        // 显示氧气存储
+        if (card.TryGetComponent<OxygenStorageComponent>(out var o))
+            DisplayValueComponent(o);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;
@@ -312,14 +349,21 @@ public class CardSlot : MonoBehaviour
     public void Clear()
     {
         mask.SetActive(false);
+
+        cardAnimator.enabled = false;
+
         cardCanvasGroup.alpha = 0;
         cardCanvasGroup.blocksRaycasts = false;
         cardCanvasGroup.interactable = false;
+
         ObjectBufferPool.Instance.RestoreAllChildren(valueComponentLayout);
-        if (innerContentsComponent != null)
-            innerContentsComponent.gameObject.SetActive(false);
-        if (temperatureSlider != null)
-            temperatureSlider.gameObject.SetActive(false);
+
+        if (innerContentsComponent != null) innerContentsComponent.gameObject.SetActive(false);
+        if (temperatureSlider != null) temperatureSlider.gameObject.SetActive(false);
+        if (iconLayout != null) iconLayout.SetActive(false);
+        if (fireIcon != null) fireIcon.SetActive(false);
+        if (flashIcon != null) flashIcon.SetActive(false);
+
         componentSliders.Clear();
         lastComponentValues.Clear();
     }
@@ -337,7 +381,7 @@ public class CardSlot : MonoBehaviour
 
     public void ShowTip(string tip)
     {
-        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.35f * Vector3.up);
+        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.4f * Vector3.up);
     }
 
     /// <summary>

@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// 电动排水机
 /// </summary>
 public class ElectricDrainageMachine : ConstructionCard
 {
-    public bool isWorking = false; // 是否已打开
+    private StateMachineComponent stateMachine;
+
     public float electricityConsume = 0.5f; // 每回合电力消耗
 
     private ElectricDrainageMachine()
@@ -17,20 +19,36 @@ public class ElectricDrainageMachine : ConstructionCard
         };
     }
 
+    protected override void LateInit()
+    {
+        base.LateInit();
+
+        if (!TryGetComponent(out stateMachine))
+        {
+            var states = new List<CardState>()
+            {
+                new ("已开启", "7", true, true),
+                new ("已关闭", "8"),
+            };
+            stateMachine = new StateMachineComponent("已关闭", states);
+            AddComponent(stateMachine);
+        }
+    }
+
     private void StartWorking()
     {
-        if (isWorking) return;
+        if (stateMachine.currentStateName == "已开启") return;
 
-        isWorking = true;
+        stateMachine.ChangeState("已开启");
         StateManager.Instance.ChangeElectricityChangeRate(-electricityConsume);
         StateManager.Instance.ChangeWaterLevelChangeRate(-2f);
     }
 
     private void StopWorking()
     {
-        if (!isWorking) return;
+        if (stateMachine.currentStateName == "已关闭") return;
 
-        isWorking = false;
+        stateMachine.ChangeState("已关闭");
         // 停止工作时，恢复电力和水平面变化率
         StateManager.Instance.ChangeElectricityChangeRate(+electricityConsume);
         StateManager.Instance.ChangeWaterLevelChangeRate(+2f);
@@ -47,7 +65,7 @@ public class ElectricDrainageMachine : ConstructionCard
     private bool Judge_Open(out string hint)
     {
         hint = string.Empty;
-        return !isWorking;
+        return stateMachine.currentStateName == "已关闭";
     }
 
     private void Event_Close(out string tip)
@@ -60,25 +78,23 @@ public class ElectricDrainageMachine : ConstructionCard
     private bool Judge_Close(out string hint)
     {
         hint = string.Empty;
-        return isWorking;
+        return stateMachine.currentStateName == "已开启";
     }
     #endregion
 
     protected override Action OnUpdate => () =>
     {
-        if (!isWorking) return;
+        if (stateMachine.currentStateName == "已关闭") return;
 
         // 如果电力小于0.5或者水平面小于0时，自动停止工作
         if (StateManager.Instance.Electricity.CurValue < electricityConsume)
         {
             StopWorking();
-            RefreshSlot();
             ShowTip("电力不足，排水机已自动停止工作");
         }
         else if (StateManager.Instance.WaterLevel.CurValue <= 0)
         {
             StopWorking();
-            RefreshSlot();
             ShowTip("水平面已为0，排水机已自动停止工作");
         }
     };

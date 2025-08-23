@@ -26,7 +26,6 @@ public enum CardType
     Seed, // 种子
 }
 
-
 //卡牌基类
 public abstract class Card : IComparable<Card>
 {
@@ -44,7 +43,20 @@ public abstract class Card : IComparable<Card>
     public string CardName => CardFactory.GetCardName(CardId);
 
     [JsonIgnore]
-    public string ExtraInfo => CardFactory.GetExtraInfo(CardId);
+    public virtual string ExtraInfo
+    {
+        get
+        {
+            if (TryGetComponent<StateMachineComponent>(out var s))
+            {
+                return s.currentStateName;
+            }
+            else
+            {
+                return CardFactory.GetExtraInfo(CardId);
+            }
+        }
+    }
 
     [JsonIgnore]
     public string CardDesc => CardFactory.GetCardDesc(CardId);
@@ -84,7 +96,20 @@ public abstract class Card : IComparable<Card>
     public List<CardTag> Tags => CardFactory.GetTags(CardId);
 
     [JsonIgnore]
-    public Sprite CardImage => CardFactory.GetCardImage(CardId);
+    public Sprite CardImage
+    {
+        get
+        {
+            if (TryGetComponent<StateMachineComponent>(out var stateMachine) && !string.IsNullOrEmpty(stateMachine.CurrentState.imagePath))
+            {
+                return CardFactory.GetCardImage(CardId, stateMachine.CurrentState.imagePath);
+            }
+            else
+            {
+                return CardFactory.GetCardImage(CardId);
+            }
+        }
+    }
 
     [JsonIgnore]
     public bool IsBigIcon => CardFactory.GetIsBigIcon(CardId);
@@ -155,12 +180,12 @@ public abstract class Card : IComparable<Card>
 
         isUpdating = true;
 
+        LateInit();
+
         foreach (var c in components.Values)
         {
             c.SetBelongedCard(this);
         }
-
-        LateInit();
 
         if (OnUpdate != null)
             EventManager.Instance.AddListener(EventType.IntervalSettle, Update);

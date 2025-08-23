@@ -25,6 +25,8 @@ public class FreshnessComponent : CardComponent
 
     public float updateRate = 1.0f;
 
+    public FreshnessComponent() { }
+
     public FreshnessComponent(int maxFreshness)
     {
         freshness = this.maxFreshness = maxFreshness;
@@ -66,6 +68,8 @@ public class GrowthComponent : CardComponent
 
     public float updateRate = 1.0f;
 
+    public GrowthComponent() { }
+
     public GrowthComponent(int maxGrowth)
     {
         this.maxGrowth = maxGrowth;
@@ -106,6 +110,8 @@ public class ProgressComponent : CardComponent
     public int maxProgress;
 
     public float updateRate = 1.0f;
+
+    public ProgressComponent() { }
 
     public ProgressComponent(int maxProgress)
     {
@@ -154,6 +160,8 @@ public class EquipmentComponent : CardComponent
     public EquipmentType equipmentType;
     public bool isEquipped;
 
+    public EquipmentComponent() { }
+
     public EquipmentComponent(EquipmentType equipmentType)
     {
         isEquipped = false;
@@ -180,7 +188,9 @@ public enum ToolType
 
 public class ToolComponent : CardComponent
 {
-    public List<ToolType> toolTypes;
+    public List<ToolType> toolTypes = new();
+
+    public ToolComponent() { }
 
     public ToolComponent(List<ToolType> toolTypes)
     {
@@ -205,6 +215,8 @@ public class DurabilityComponent : CardComponent
 {
     public int durability;
     public int maxDurability;
+
+    public DurabilityComponent() { }
 
     public DurabilityComponent(int maxDurability)
     {
@@ -252,6 +264,14 @@ public class InnerContentsComponent : CardComponent
     public bool display = true; // 是否显示内容物
     public bool canAddOrRemove = true; // 是否可以添加或移除内容物
 
+    public InnerContentsComponent() { }
+
+    public InnerContentsComponent(int slotCount)
+    {
+        bag.AddSlot(slotCount);
+        bag.SetComponent(this);
+    }
+
     public void Init()
     {
         bag.SetComponent(this);
@@ -259,12 +279,6 @@ public class InnerContentsComponent : CardComponent
     }
 
     public void Clear() => bag.Clear();
-
-    public InnerContentsComponent(int slotCount)
-    {
-        bag.AddSlot(slotCount);
-        bag.SetComponent(this);
-    }
 
     public int GetTotalCountByCardId(string cardId) => bag.GetTotalCountByCardId(cardId);
 
@@ -340,6 +354,8 @@ public class FoodPropertyComponent : CardComponent
 {
     public Dictionary<FoodProperty, int> foodPropertyDict;
 
+    public FoodPropertyComponent() { }
+
     public FoodPropertyComponent(Dictionary<FoodProperty, int> foodPropertyDict)
     {
         this.foodPropertyDict = foodPropertyDict;
@@ -352,6 +368,8 @@ public class FlammableComponent : CardComponent
 {
     public int fuelValue; // 燃料值
 
+    public FlammableComponent() { }
+
     public FlammableComponent(int fuelValue)
     {
         this.fuelValue = fuelValue;
@@ -360,20 +378,31 @@ public class FlammableComponent : CardComponent
 #endregion
 
 #region 燃料存储组件
-public class FuelContainerComponent : CardComponent
+public class FuelStorageComponent : CardComponent
 {
     public int fuel; // 燃料值
     public int maxFuel; // 最大燃料值
-    public FuelContainerComponent(int maxFuel)
+    public bool isFiring; // 是否正在燃烧
+
+    public FuelStorageComponent() { }
+
+    public FuelStorageComponent(int maxFuel)
     {
         fuel = 0;
         this.maxFuel = maxFuel;
+        isFiring = false;
     }
 
     public void AddFuel(int delta)
     {
         fuel += delta;
         fuel = Mathf.Clamp(fuel, 0, maxFuel);
+        BelongedCard.RefreshSlot();
+    }
+
+    public void SetIsFiring(bool firing)
+    {
+        isFiring = firing;
         BelongedCard.RefreshSlot();
     }
 }
@@ -385,6 +414,8 @@ public class PassageComponent : CardComponent
     public PlaceEnum targetPlace;
     public int time;
     public string audioClip;
+
+    public PassageComponent() { }
 
     public PassageComponent(PlaceEnum targetPlace, int time, string audioClip)
     {
@@ -407,6 +438,8 @@ public class ConstructionComponent : CardComponent
     public bool canBeDemolished; // 能否被拆毁
     public string demolitionDebris; // 拆毁后产物ID
 
+    public ConstructionComponent() { }
+
     public ConstructionComponent(bool onlyInWater, bool onlyOutWater, bool onlyInDoor, bool onlyOutDoor, bool needCable, bool canBeDemolished, string demolitionDebris)
     {
         this.onlyInWater = onlyInWater;
@@ -426,6 +459,8 @@ public class CookComponent : CardComponent
     public int totalCookTime;
     public int leftCookTime;
     public string outcomeCardId;
+
+    public CookComponent() { }
 
     public CookComponent(int totalCookTime, string outcomeCardId)
     {
@@ -454,6 +489,8 @@ public class TemperatureComponent : CardComponent
     public float temperature;
     public float maxTemperature;
 
+    public TemperatureComponent() { }
+
     public TemperatureComponent(float temperature, float maxTemperature)
     {
         this.temperature = temperature;
@@ -464,6 +501,73 @@ public class TemperatureComponent : CardComponent
     {
         temperature += delta;
         temperature = Mathf.Clamp(temperature, 0, maxTemperature);
+        BelongedCard.RefreshSlot();
+    }
+}
+#endregion
+
+#region 状态机组件
+public class CardState
+{
+    public string name; // 状态名称
+    public string imagePath; // 图片路径
+    public bool isAnim; // 是否为动画
+    public bool comsumeElectricity; // 是否消耗电力
+
+    public CardState() { }
+
+    public CardState(string name, string imagePath, bool isAnim = false, bool comsumeElectricity = false)
+    {
+        this.name = name;
+        this.imagePath = imagePath;
+        this.isAnim = isAnim;
+        this.comsumeElectricity = comsumeElectricity;
+    }
+}
+
+public class StateMachineComponent : CardComponent
+{
+    public string currentStateName;
+    public Dictionary<string, CardState> stateDict = new();
+
+    [JsonIgnore]
+    public CardState CurrentState => stateDict[currentStateName];
+
+    public StateMachineComponent() { }
+
+    public StateMachineComponent(string initialStateName, List<CardState> states)
+    {
+        currentStateName = initialStateName;
+        foreach (var state in states)
+        {
+            stateDict.Add(state.name, state);
+        }
+    }
+
+    public void ChangeState(string newStateName)
+    {
+        if (!stateDict.ContainsKey(newStateName)) return;
+        currentStateName = newStateName;
+        BelongedCard.RefreshSlot();
+    }
+}
+#endregion
+
+#region 氧气存储组件
+public class OxygenStorageComponent : CardComponent
+{
+    public float oxygen; // 氧气值
+    public float maxOxygen; // 最大氧气值
+    public OxygenStorageComponent() { }
+    public OxygenStorageComponent(float maxOxygen)
+    {
+        oxygen = 0;
+        this.maxOxygen = maxOxygen;
+    }
+    public void AddOxygen(float delta)
+    {
+        oxygen += delta;
+        oxygen = Mathf.Clamp(oxygen, 0, maxOxygen);
         BelongedCard.RefreshSlot();
     }
 }

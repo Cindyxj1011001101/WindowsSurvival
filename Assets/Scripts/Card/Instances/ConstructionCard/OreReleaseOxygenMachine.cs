@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -5,11 +6,10 @@ using UnityEngine;
 /// </summary>
 public class OreReleaseOxygenMachine : ConstructionCard
 {
+    private StateMachineComponent stateMachine;
     private InnerContentsComponent innerContents;
+    private OxygenStorageComponent oxygenStorage;
 
-    public bool isWorking = false; // 是否已打开
-    public float maxOxygenStorage = 360; // 最大氧气存储
-    public float curOxygenStorage = 0; // 当前氧气存储数量
     public int maxTimeProgress = 360; // 最大时间进度
     public int curTimeProgress = 0; // 当前时间进度
     public float oxygenRelease = 180; // 氧气释放量
@@ -24,6 +24,30 @@ public class OreReleaseOxygenMachine : ConstructionCard
             new Event("关闭", "", Event_Close, Judge_Close),
             new Event("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气", Event_GetOxygen, Judge_GetOxygen)
         };
+    }
+
+    protected override void LateInit()
+    {
+        base.LateInit();
+
+        // 未布置和已布置两种状态
+        if (!TryGetComponent(out stateMachine))
+        {
+            var states = new List<CardState>()
+            {
+                new ("已关闭", "0"),
+                new ("已开启", "1", true, true),
+            };
+            stateMachine = new StateMachineComponent("已关闭", states);
+            AddComponent(stateMachine);
+        }
+
+        // 添加氧气存储组件
+        if (!TryGetComponent(out oxygenStorage))
+        {
+            oxygenStorage = new OxygenStorageComponent(360);
+            AddComponent(oxygenStorage);
+        }
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -51,25 +75,25 @@ public class OreReleaseOxygenMachine : ConstructionCard
     private void Event_Open(out string tip)
     {
         tip = string.Empty;
-        isWorking = true;
+        stateMachine.ChangeState("已开启");
     }
 
     private bool Judge_Open(out string hint)
     {
         hint = string.Empty;
-        return !isWorking;
+        return stateMachine.currentStateName == "已关闭";
     }
 
     private void Event_Close(out string tip)
     {
         tip = string.Empty;
-        isWorking = false;
+        stateMachine.ChangeState("已关闭");
     }
 
     private bool Judge_Close(out string hint)
     {
         hint = string.Empty;
-        return isWorking;
+        return stateMachine.currentStateName == "已开启";
     }
     #endregion
 
@@ -84,7 +108,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
             hint = "麦麦的氧气已满";
             return false;
         }
-        var toRelease = Mathf.Min(curOxygenStorage, remainingCapacity);
+        var toRelease = Mathf.Min(oxygenStorage.oxygen, remainingCapacity);
         if (toRelease == 0)
         {
             hint = "机器的氧气存储不足";
@@ -99,13 +123,13 @@ public class OreReleaseOxygenMachine : ConstructionCard
         // 玩家氧气剩余容量
         var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
         // 计算释放量
-        var toRelease = Mathf.Min(curOxygenStorage, remainingCapacity);
+        var toRelease = Mathf.Min(oxygenStorage.oxygen, remainingCapacity);
         if (toRelease > 0)
             // 释放氧气
             StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, toRelease);
 
         // 氧气存量减少
-        curOxygenStorage -= toRelease;
+        oxygenStorage.AddOxygen(-toRelease);
     }
     #endregion
 
@@ -127,20 +151,20 @@ public class OreReleaseOxygenMachine : ConstructionCard
         // 室内氧气剩余容量
         var remainingCapacity = env.StateDict[EnvironmentStateEnum.Oxygen].RemainingCapacity;
         // 计算释放量
-        var toRelease = Mathf.Min(curOxygenStorage, remainingCapacity);
+        var toRelease = Mathf.Min(oxygenStorage.oxygen, remainingCapacity);
         if (toRelease > 0)
             // 释放氧气
             env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, toRelease);
 
         // 氧气存量减少
-        curOxygenStorage -= toRelease;
+        oxygenStorage.AddOxygen(-toRelease);
     }
 
     // 制氧
     private void GenerateOxygen()
     {
         // 不在工作状态不制氧
-        if (!isWorking) return;
+        if (stateMachine.currentStateName == "已关闭") return;
 
         // 制氧进度增加
         curTimeProgress += TimeManager.Instance.SettleInterval;
@@ -151,7 +175,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         // 时间进度达到最大时，开始释放氧气
 
         // 氧气存储要超了不制氧
-        if (curOxygenStorage + oxygenRelease > maxOxygenStorage)
+        if (oxygenStorage.oxygen + oxygenRelease > oxygenStorage.maxOxygen)
         {
             Debug.Log("氧气储存剩余空间不足");
             return;
@@ -174,7 +198,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         StateManager.Instance.ChangeElectricity(-electricityConsumption);
 
         // 氧气存量增加
-        curOxygenStorage += oxygenRelease;
+        oxygenStorage.AddOxygen(oxygenRelease);
     }
 
     private bool TryConsumeOre(int amount)

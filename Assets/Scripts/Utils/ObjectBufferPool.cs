@@ -477,16 +477,17 @@ public class ObjectBufferPool
     public void RestoreAllChildren(Transform parent)
     {
         // 解除父子关系并批量销毁
-        Transform[] children = new Transform[parent.transform.childCount];
-        for (int i = 0; i < children.Length; i++)
+        List<GameObject> children = new();
+        foreach (Transform child in parent)
         {
-            children[i] = parent.transform.GetChild(i);
+            if (pool.ContainsKey(child.gameObject.name))
+                children.Add(child.gameObject);
         }
-        parent.transform.DetachChildren(); // 解除所有父子关系
+        //parent.transform.DetachChildren(); // 解除所有父子关系
 
-        foreach (Transform child in children)
+        foreach (GameObject child in children)
         {
-            Restore(child.gameObject);
+            Restore(child);
         }
     }
 }

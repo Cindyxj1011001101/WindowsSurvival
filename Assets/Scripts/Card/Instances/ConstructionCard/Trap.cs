@@ -6,9 +6,18 @@ using Random = UnityEngine.Random;
 /// </summary>
 public class Trap : ConstructionCard
 {
-    private InnerContentsComponent innerContents;
+    public override string ExtraInfo
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(outcomeCardId)) return "已捉到";
+            else return base.ExtraInfo;
+        }
+    }
 
-    public bool isArranged = false; // 是否已布置
+    private InnerContentsComponent innerContents;
+    private StateMachineComponent stateMachine;
+
     public string outcomeCardId = null; // 诱捕产物
 
     private Trap()
@@ -28,6 +37,18 @@ public class Trap : ConstructionCard
         foreach (var slot in innerContents.bag.Slots)
         {
             slot.SetMaxStackNum(1);
+        }
+
+        // 未布置和已布置两种状态
+        if (!TryGetComponent(out stateMachine))
+        {
+            var states = new List<CardState>()
+            {
+                new ("未布置", "3"),
+                new ("已布置", "4"),
+            };
+            stateMachine = new StateMachineComponent("未布置", states);
+            AddComponent(stateMachine);
         }
     }
 
@@ -75,7 +96,7 @@ public class Trap : ConstructionCard
         innerContents.canAddOrRemove = false;
 
         TimeManager.Instance.AddTime(15);
-        isArranged = true;
+        stateMachine.ChangeState("已布置");
     }
 
     private bool Judge_Arrange(out string hint)
@@ -86,12 +107,12 @@ public class Trap : ConstructionCard
             hint = "请先取出捕捉到的生物";
             return false;
         }
-        return !isArranged;
+        return stateMachine.currentStateName == "未布置";
     }
 
     protected override System.Action OnUpdate => () =>
     {
-        if (!isArranged || Bag is not EnvironmentBag env || env.RepeatableDropList.IsEmpty) return;
+        if (stateMachine.currentStateName == "未布置" || Bag is not EnvironmentBag env || env.RepeatableDropList.IsEmpty) return;
 
         int probability = innerContents.bag.IsFull ? 3 : 48;
 
@@ -122,7 +143,9 @@ public class Trap : ConstructionCard
 
         // 恢复内容物的可添加移除
         innerContents.canAddOrRemove = true;
-        RefreshSlot();
+
+        // 变回未布置状态
+        stateMachine.ChangeState("未布置");
         ShowTip("捉到了好东西");
     };
 

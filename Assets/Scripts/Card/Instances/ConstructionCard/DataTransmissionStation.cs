@@ -1,12 +1,14 @@
+using System.Collections.Generic;
+
 /// <summary>
 /// 数据传输台
 /// </summary>
 public class DataTransmissionStation : ConstructionCard
 {
+    private StateMachineComponent stateMachine;
+
     public int maxTimes = 2; // 一天内最多可使用次数
     public int curTimes = 0; // 当前使用次数
-
-    public bool isWorking = false;
 
     public float electricityConsume = 0.5f; // 每回合电力消耗
 
@@ -23,6 +25,20 @@ public class DataTransmissionStation : ConstructionCard
         base.LateInit();
         EventManager.Instance.AddListener(EventType.StudyStarted, StartWorking);
         EventManager.Instance.AddListener(EventType.StudyStoped, StopWorking);
+
+
+        // 未布置和已布置两种状态
+        if (!TryGetComponent(out stateMachine))
+        {
+            var states = new List<CardState>()
+            {
+                new ("待机中", "17"),
+                new ("研究中", "17"),
+            };
+            stateMachine = new StateMachineComponent("待机中", states);
+            AddComponent(stateMachine);
+        }
+
         // 当前有科技在研究
         if (TechnologyManager.Instance.CurStudiedTechNode != null)
         {
@@ -41,17 +57,17 @@ public class DataTransmissionStation : ConstructionCard
 
     private void StartWorking()
     {
-        if (isWorking) return;
+        if (stateMachine.currentStateName == "研究中") return;
 
-        isWorking = true;
+        stateMachine.ChangeState("研究中");
         StateManager.Instance.ChangeElectricityChangeRate(-electricityConsume);
     }
 
     private void StopWorking()
     {
-        if (!isWorking) return;
+        if (stateMachine.currentStateName == "待机中") return;
 
-        isWorking = false;
+        stateMachine.ChangeState("待机中");
         StateManager.Instance.ChangeElectricityChangeRate(+electricityConsume);
     }
 
