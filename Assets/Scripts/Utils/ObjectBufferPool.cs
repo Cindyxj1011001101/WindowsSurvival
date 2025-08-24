@@ -228,6 +228,7 @@ public class ObjectBufferPool
         // 处理游戏对象逻辑
         var obj = pool[prefab.name].Get();
         setTransform?.Invoke(obj.transform);
+        obj.transform.localScale = Vector3.one;
         return obj;
     }
 
@@ -296,6 +297,7 @@ public class ObjectBufferPool
         // 处理游戏对象逻辑
         var obj = pool[assetName].Get();
         setTransform?.Invoke(obj.transform);
+        obj.transform.localScale = Vector3.one;
         return obj;
     }
 
@@ -377,7 +379,11 @@ public class ObjectBufferPool
 
         // 取出游戏对象
         // 处理游戏对象逻辑
-        onInstaniated += obj => setTransform?.Invoke(obj.transform);
+        onInstaniated += obj =>
+        {
+            setTransform?.Invoke(obj.transform);
+            obj.transform.localScale = Vector3.one;
+        };
         pool[assetName].Get(onInstaniated);
     }
 
