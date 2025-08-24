@@ -7,6 +7,7 @@ public class Campfire : ConstructionCard
 {
     private InnerContentsComponent innerContents; // 内容物组件
     private FuelStorageComponent fuelStorage; // 燃料存储组件
+    public override bool HasLoopSound => true;
 
     private Campfire()
     {
@@ -72,6 +73,11 @@ public class Campfire : ConstructionCard
         innerContents.PauseUpdating();
 
         fuelStorage.SetIsFiring(true);
+        SoundManager.Instance.PlaySound("点火_02");
+
+        // 只有玩家在同一地点时才播放循环音效
+        if (env == GameManager.Instance.CurEnvironmentBag)
+            SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 1f);
     }
 
     private bool Judge_Light(out string hint)
@@ -109,6 +115,10 @@ public class Campfire : ConstructionCard
         innerContents.ContinueUpdating();
 
         fuelStorage.SetIsFiring(false);
+
+        // 只有玩家在同一地点时才停止音效
+        if (env == GameManager.Instance.CurEnvironmentBag)
+            SoundManager.Instance.StopCardLoopSound(CardId);
     }
 
     private bool Judge_UnLight(out string hint)
@@ -208,5 +218,28 @@ public class Campfire : ConstructionCard
 
         // 拆毁
         base.QuickIneract(slot, count, out tip);
+    }
+    public override void OnEnterEnvironment()
+    {
+        // 只有点燃状态才播放音效
+        if (fuelStorage.isFiring)
+            SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 0.3f);
+    }
+    public override void OnLeaveEnvironment()
+    {
+        SoundManager.Instance.StopCardLoopSound(CardId);
+    }
+    public override void OnDetailOpen()
+    {
+        SoundManager.Instance.SetCardLoopVolume(CardId, 1.0f); // 音量调高
+    }
+    public override void OnDetailClose()
+    {
+        SoundManager.Instance.SetCardLoopVolume(CardId, 0.3f); // 恢复正常
+    }
+    public override void DestroyThis()
+    {
+        OnLeaveEnvironment();
+        base.DestroyThis();
     }
 }
