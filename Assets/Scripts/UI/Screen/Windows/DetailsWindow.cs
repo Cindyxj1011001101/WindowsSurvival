@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class DetailsWindow : BagWindow
 {
     [SerializeField] private Text detailsText;
+    [SerializeField] private GameObject detailsScrollView;
     [SerializeField] private Transform buttonLayout;
     [SerializeField] private CardSlot slot;
     [SerializeField] private RectTransform contentsView;
@@ -183,7 +184,7 @@ public class DetailsWindow : BagWindow
         // 清除内容物卡牌的显示
         ClearBag();
 
-        detailsText.gameObject.SetActive(true);
+        detailsScrollView.SetActive(true);
         contentsView.gameObject.SetActive(false);
 
         // 显示卡牌详细信息
@@ -196,7 +197,7 @@ public class DetailsWindow : BagWindow
     {
         currentDisplay = "内容物";
 
-        detailsText.gameObject.SetActive(false);
+        detailsScrollView.SetActive(false);
         contentsView.gameObject.SetActive(true);
 
         DisplayBag(innerBag);
@@ -257,6 +258,8 @@ public class DetailsWindow : BagWindow
             button.transform.localScale = Vector3.one; // 确保按钮缩放为1
             button.transform.SetAsLastSibling();
         }
+
+        MonoUtility.UpdateLayoutSize(buttonLayout.GetComponent<ILayoutGroup>());
     }
 
     public void Clear()
