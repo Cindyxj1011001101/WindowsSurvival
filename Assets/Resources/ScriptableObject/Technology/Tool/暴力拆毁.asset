@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 803290fb9841c6747abe99e7cd31ffcc, type: 3}
-  m_Name: "\u70F9\u996A\u4E0E\u7194\u70BC"
+  m_Name: "\u66B4\u529B\u62C6\u6BC1"
   m_EditorClassIdentifier: 
-  techName: "\u70F9\u996A\u4E0E\u7194\u70BC"
-  techDescription: "\u53EF\u968F\u8EAB\u643A\u5E26\u7684\u70F9\u996A\u5DE5\u5177\uFF0C\u70F9\u996A\u6D88\u8017\u7684\u71C3\u6599\u548C\u65F6\u95F4\u90FD\u66F4\u957F\uFF0C\u4F46\u80DC\u5728\u7B80\u5355\u65B9\u4FBF\u3002"
-  recipes: []
-  prerequisites: []
-  cost: 24
-  techType: 1
+  techName: "\u66B4\u529B\u62C6\u6BC1"
+  techDescription: "\u53EF\u6301\u7EED\u5316\u7684\u751F\u4EA7\u65B9\u6848\u3002"
+  recipes:
+  - {fileID: 11400000, guid: 0d46bfdc71ca3054cb94f1d6280a1598, type: 2}
+  prerequisites:
+  - {fileID: 11400000, guid: 4ea18de49e590dd4dbc3678a2346d521, type: 2}
+  cost: 96
+  techType: 3

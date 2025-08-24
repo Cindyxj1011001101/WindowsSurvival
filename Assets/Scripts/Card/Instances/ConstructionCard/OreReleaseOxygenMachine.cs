@@ -26,7 +26,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         };
     }
 
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
 

@@ -1,7 +1,7 @@
 
 public class WebbedFeet : EquipmentCard
 {
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);

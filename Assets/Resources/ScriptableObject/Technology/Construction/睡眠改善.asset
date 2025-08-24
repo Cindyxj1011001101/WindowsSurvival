@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 803290fb9841c6747abe99e7cd31ffcc, type: 3}
+  m_Name: "\u7761\u7720\u6539\u5584"
+  m_EditorClassIdentifier: 
+  techName: "\u7761\u7720\u6539\u5584"
+  techDescription: "\u5FEB\u5C06\u6C34\u6392\u51FA\u53BB\u5427\uFF0C\u9EA6\u9EA6\u4E0D\u80FD\u5728\u6C34\u91CC\u7761\u89C9\u3002"
+  recipes:
+  - {fileID: 11400000, guid: c1ba17dd1db11f645b202441bd73f51e, type: 2}
+  prerequisites:
+  - {fileID: 11400000, guid: 4325f8183526bbe4ba35095d70673bc1, type: 2}
+  cost: 288
+  techType: 0

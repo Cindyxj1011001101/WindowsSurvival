@@ -34,10 +34,13 @@ public class UITechNode : HoverableButton
         recipeButtons.Clear();
 
         HoverableButton button;
+        HoverTipController tipController;
         foreach (var recipe in techNode.recipes)
         {
             button = ObjectBufferPool.Instance.Get(recipeItemPrefab, recipeLayout).GetComponent<HoverableButton>();
             button.normalImage.sprite = recipe.CardImage;
+            tipController = button.GetComponent<HoverTipController>();
+            tipController.SetTip(recipe.CardInstance.CardName);
             recipeButtons.Add(button);
         }
 

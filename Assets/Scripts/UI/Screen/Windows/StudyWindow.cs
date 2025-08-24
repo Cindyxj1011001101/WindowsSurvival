@@ -197,7 +197,7 @@ public class StudyWindow : WindowBase
             toggle.SetValue(TechnologyManager.Instance.IsTechNodeComplished(prerequisite));
             temp.Add(toggle.gameObject);
 
-            toggle.transform.SetAsLastSibling();
+            //toggle.transform.SetAsLastSibling();
         }
 
         HoverableButton button;
@@ -209,7 +209,7 @@ public class StudyWindow : WindowBase
             button.GetComponentsInChildren<Text>()[1].text = recipe.cardId;
             temp.Add(button.gameObject);
 
-            button.transform.SetAsLastSibling();
+            //button.transform.SetAsLastSibling();
         }
 
         // 显示研究按钮

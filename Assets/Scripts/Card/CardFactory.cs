@@ -101,6 +101,11 @@ public static class CardFactory
             { "自热烹饪袋", typeof(SelfHeatingCookingBag) },
             { "止痛药", typeof(Painkillers) },
             { "数据传输台", typeof(DataTransmissionStation) },
+            { "冰箱", typeof(Refrigerator) },
+            { "凝胶装瓶器", typeof(GelBottler) },
+            { "钢材", typeof(Steel) },
+            { "烧焦的食物", typeof(BurntFood) },
+            { "蒸馏器", typeof(Distiller) },
         };
     }
 
@@ -334,6 +339,7 @@ public static class CardFactory
         else
         {
             var card = CreateCard(cardId);
+            card.LateInit();
             cardInstances.Add(cardId, card);
             return card;
         }

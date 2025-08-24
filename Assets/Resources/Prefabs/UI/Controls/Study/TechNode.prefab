@@ -187,7 +187,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 6, y: -4}
-  m_SizeDelta: {x: 160, y: 30}
+  m_SizeDelta: {x: 230, y: 30}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &2309201665198546014
 CanvasRenderer:
@@ -1017,6 +1017,8 @@ MonoBehaviour:
   ceil: {fileID: 0}
   floor: {fileID: 0}
   arrowSprites: []
+  tipController: {fileID: 0}
+  fillColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &6135513350366997236
 GameObject:
   m_ObjectHideFlags: 0

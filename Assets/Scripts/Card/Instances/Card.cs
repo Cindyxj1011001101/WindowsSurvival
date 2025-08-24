@@ -158,7 +158,7 @@ public abstract class Card : IComparable<Card>
     /// <summary>
     /// 用于在卡牌实例化后进行额外的初始化操作
     /// </summary>
-    protected virtual void LateInit()
+    public virtual void LateInit()
     {
         if (TryGetComponent<InnerContentsComponent>(out var i))
         {

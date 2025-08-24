@@ -2,7 +2,7 @@
 {
     private CookComponent cookComponent;
 
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
         TryGetComponent(out cookComponent);

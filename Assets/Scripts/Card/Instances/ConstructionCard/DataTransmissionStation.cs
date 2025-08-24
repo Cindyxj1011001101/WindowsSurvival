@@ -20,7 +20,7 @@ public class DataTransmissionStation : ConstructionCard
         };
     }
 
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
         EventManager.Instance.AddListener(EventType.StudyStarted, StartWorking);
