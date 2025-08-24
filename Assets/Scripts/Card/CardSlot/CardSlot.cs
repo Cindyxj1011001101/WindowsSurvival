@@ -21,8 +21,8 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
     [SerializeField] private GameObject mask;
     [SerializeField] private GameObject iconLayout; // 用于显示图标的布局
-    [SerializeField] private GameObject fireIcon; // 图标上的火焰
-    [SerializeField] private GameObject flashIcon; // 图标上的闪电
+    [SerializeField] private Image fireIcon; // 图标上的火焰
+    [SerializeField] private Image flashIcon; // 图标上的闪电
     [SerializeField] private Animator cardAnimator;
 
     private Dictionary<Type, float> lastComponentValues = new();
@@ -238,11 +238,12 @@ public class CardSlot : MonoBehaviour
                 slider.SetValue(progressComponent.progress, progressComponent.maxProgress);
                 slider.tipController.SetTip($"产物进度:    {slider.value * 100:0.0}%", slider.fillColor);
                 break;
-            case FuelStorageComponent FuelStorageComponent:
-                slider.SetValue(FuelStorageComponent.fuel, FuelStorageComponent.maxFuel);
+            case FuelStorageComponent fuelStorageComponent:
+                slider.SetValue(fuelStorageComponent.fuel, fuelStorageComponent.maxFuel);
                 slider.tipController.SetTip($"剩余燃料:    {slider.value * 100:0.0}%", slider.fillColor);
-                iconLayout.SetActive(FuelStorageComponent.isFiring);
-                fireIcon.SetActive(FuelStorageComponent.isFiring);
+                iconLayout.SetActive(true);
+                fireIcon.gameObject.SetActive(true);
+                fireIcon.color = fuelStorageComponent.isFiring ? ColorManager.BurntOrange : ColorManager.DarkGrey;
                 break;
             case OxygenStorageComponent oxygenStorageComponent:
                 slider.SetValue(oxygenStorageComponent.oxygen, oxygenStorageComponent.maxOxygen);
@@ -274,8 +275,13 @@ public class CardSlot : MonoBehaviour
     /// <param name="state"></param>
     private void DisplayCardState(Card card, CardState state)
     {
-        iconLayout.SetActive(state.comsumeElectricity);
-        flashIcon.SetActive(state.comsumeElectricity);
+        if (state.needElectricity)
+        {
+            iconLayout.SetActive(true);
+            flashIcon.gameObject.SetActive(true);
+            flashIcon.color = state.isConsumingElectricity ? ColorManager.Yellow : ColorManager.DarkGrey;
+        }
+
         // 有动画的播放动画
         if (state.isAnim)
         {
@@ -361,8 +367,8 @@ public class CardSlot : MonoBehaviour
         if (innerContentsComponent != null) innerContentsComponent.gameObject.SetActive(false);
         if (temperatureSlider != null) temperatureSlider.gameObject.SetActive(false);
         if (iconLayout != null) iconLayout.SetActive(false);
-        if (fireIcon != null) fireIcon.SetActive(false);
-        if (flashIcon != null) flashIcon.SetActive(false);
+        if (fireIcon != null) fireIcon.gameObject.SetActive(false);
+        if (flashIcon != null) flashIcon.gameObject.SetActive(false);
 
         componentSliders.Clear();
         lastComponentValues.Clear();

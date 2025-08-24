@@ -1006,7 +1006,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 49.999996, y: -20}
-  m_SizeDelta: {x: 100, y: 20}
+  m_SizeDelta: {x: 100, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6305836754920696955
 MonoBehaviour:
@@ -2044,11 +2044,11 @@ RectTransform:
   - {fileID: 4649822999811425668}
   m_Father: {fileID: 455938007580153851}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -14, y: -14}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 43, y: 33}
   m_SizeDelta: {x: 10, y: 92}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3572657967856736479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2946,8 +2946,8 @@ MonoBehaviour:
   particleDisplayRect: {fileID: 9169598366305317293}
   mask: {fileID: 2945458964197914477}
   iconLayout: {fileID: 3377219404809790521}
-  fireIcon: {fileID: 2971408729425572041}
-  flashIcon: {fileID: 7762794850790932791}
+  fireIcon: {fileID: 8890216482260854535}
+  flashIcon: {fileID: 1338489606823329423}
   cardAnimator: {fileID: 4070038817686797283}
 --- !u!225 &8356294659441100970
 CanvasGroup:

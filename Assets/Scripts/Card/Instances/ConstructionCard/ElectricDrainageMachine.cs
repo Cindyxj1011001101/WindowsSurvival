@@ -27,8 +27,8 @@ public class ElectricDrainageMachine : ConstructionCard
         {
             var states = new List<CardState>()
             {
-                new ("已开启", "7", true, true),
-                new ("已关闭", "8"),
+                new ("已开启", "7", true, true, true),
+                new ("已关闭", "8", false, true, false),
             };
             stateMachine = new StateMachineComponent("已关闭", states);
             AddComponent(stateMachine);

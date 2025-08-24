@@ -77,18 +77,20 @@ public class Campfire : ConstructionCard
     private bool Judge_Light(out string hint)
     {
         hint = string.Empty;
-        if (fuelStorage.isFiring)
+
+        if (StateManager.Instance.WaterLevel.CurValue >= 30)
         {
+            hint = "水位过高，无法点燃营火";
             return false;
         }
 
         if (fuelStorage.fuel < 2)
         {
-            hint = "燃料不足，无法点燃篝火";
+            hint = "燃料不足，无法点燃营火";
             return false;
         }
 
-        return true;
+        return !fuelStorage.isFiring;
     }
 
     /// <summary>
@@ -121,8 +123,14 @@ public class Campfire : ConstructionCard
         // 没有点燃
         if (!fuelStorage.isFiring) return;
 
+        var waterLevel = StateManager.Instance.WaterLevel.CurValue;
+
         // 这里剩余燃料一定是>=2的，因为燃料<2时会自动熄灭并且无法点燃
         fuelStorage.AddFuel(-2); // 每回合消耗2点燃料
+        if (waterLevel > 0) // 水平面>0时，燃料额外-4
+        {
+            fuelStorage.AddFuel(-4);
+        }
 
         // 记录所有内容物
         foreach (var slot in innerContents.bag.Slots)
@@ -153,11 +161,18 @@ public class Campfire : ConstructionCard
 
         temp.Clear();
 
-        if (fuelStorage.fuel < 2) // 燃料不足时自动熄灭
+        if (fuelStorage.isFiring && fuelStorage.fuel < 2) // 燃料不足时自动熄灭
         {
             Event_UnLight(out _);
             ShowTip("燃料不足，营火已自动熄灭");
             return;
+        }
+
+        // 水平面高于30，自动熄灭
+        if (fuelStorage.isFiring && waterLevel >= 30)
+        {
+            fuelStorage.SetIsFiring(false);
+            ShowTip("水位过高，营火已自动熄灭");
         }
     };
 

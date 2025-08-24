@@ -26,8 +26,6 @@ public class FuelFurnace : ConstructionCard
     public List<TempertureData> tempertureData = new(); // 温度数据，用来处理产物获取
     public string outcomeCardId = null; // 产物卡牌id
 
-    private bool considerWaterLevel => (Bag is EnvironmentBag env) && env.PlaceData.isInSpacecraft; // 是否考虑水平面，当不在飞船内时不考虑水平面
-
     private FuelFurnace()
     {
         Events = new()
@@ -68,36 +66,20 @@ public class FuelFurnace : ConstructionCard
     }
 
     /// <summary>
-    /// 点燃，需要燃料点火器
+    /// 点燃
     /// </summary>
     /// <param name="tip"></param>
     private void Event_Lighting(out string tip)
     {
-        LightFuelFurnace(GameManager.Instance.PlayerBag.FindCardOfName("燃料点火器"), out tip);
-    }
-
-    /// <summary>
-    /// 点燃燃料炉
-    /// </summary>
-    /// <param name="card"></param>
-    /// <param name="tip"></param>
-    private void LightFuelFurnace(Card card, out string tip)
-    {
         tip = string.Empty;
-        card.Use();
         fuelStorage.SetIsFiring(true);
     }
 
     private bool Judge_Lighting(out string hint)
     {
         hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfName("燃料点火器") == null)
-        {
-            hint = "需要燃料点火器";
-            return false;
-        }
 
-        if (considerWaterLevel && StateManager.Instance.WaterLevel.CurValue >= 30)
+        if (StateManager.Instance.WaterLevel.CurValue >= 30)
         {
             hint = "水位过高，无法点燃燃料炉";
             return false;
@@ -126,7 +108,12 @@ public class FuelFurnace : ConstructionCard
     private bool Judge_TakeOut(out string hint)
     {
         hint = string.Empty;
-        return !string.IsNullOrEmpty(outcomeCardId);
+        if (string.IsNullOrEmpty(outcomeCardId))
+        {
+            hint = "没有加工产物可取出";
+            return false;
+        }
+        return true;
     }
 
     /// <summary>
@@ -203,7 +190,7 @@ public class FuelFurnace : ConstructionCard
     private bool Judge_Unlightened(out string hint)
     {
         hint = string.Empty;
-        return !fuelStorage.isFiring;
+        return fuelStorage.isFiring;
     }
 
     protected override System.Action OnUpdate => () =>
@@ -213,6 +200,9 @@ public class FuelFurnace : ConstructionCard
         HandleProcessRound();
     };
 
+    /// <summary>
+    /// 处理每回合燃料和温度的变化
+    /// </summary>
     private void HandleFuelAndTemperatureChange()
     {
         var waterLevel = StateManager.Instance.WaterLevel.CurValue;
@@ -221,7 +211,7 @@ public class FuelFurnace : ConstructionCard
         {
             temperatureComponent.AddTemperature(17); // 温度+17
             fuelStorage.AddFuel(-1); // 燃料-1
-            if (considerWaterLevel && waterLevel > 0) // 水平面>0时，燃料额外-4
+            if (waterLevel > 0) // 水平面>0时，燃料额外-4
             {
                 fuelStorage.AddFuel(-4);
             }
@@ -230,36 +220,35 @@ public class FuelFurnace : ConstructionCard
         else
         {
             temperatureComponent.AddTemperature(-4); // 温度-4
-            if (considerWaterLevel && waterLevel >= 30) // 水平面>=30时，温度额外-8
+            if (waterLevel >= 30) // 水平面>=30时，温度额外-8
             {
                 temperatureComponent.AddTemperature(-8);
             }
-            else if (considerWaterLevel && waterLevel > 0) // 水平面>=0时，温度额外-4
+            else if (waterLevel > 0) // 水平面>=0时，温度额外-4
             {
                 temperatureComponent.AddTemperature(-4);
             }
         }
 
-        if (!fuelStorage.isFiring) return;
-
         // 燃料不足时自动熄灭
-        if (fuelStorage.fuel < 1)
+        if (fuelStorage.isFiring && fuelStorage.fuel < 1)
         {
             fuelStorage.SetIsFiring(false);
             ShowTip("燃料不足，燃料炉已自动熄灭");
             return;
         }
 
-        if (!fuelStorage.isFiring) return;
-
         // 水平面高于30，自动熄灭
-        if (considerWaterLevel && waterLevel >= 30)
+        if (fuelStorage.isFiring && waterLevel >= 30)
         {
             fuelStorage.SetIsFiring(false);
             ShowTip("水位过高，燃料炉已自动熄灭");
         }
     }
 
+    /// <summary>
+    /// 处理每回合加工进度变化
+    /// </summary>
     private void HandleProcessRound()
     {
         if (leftRounds <= 0) return;
@@ -289,12 +278,6 @@ public class FuelFurnace : ConstructionCard
 
     public override bool CanQuickInteract(Card card)
     {
-        // 点火
-        if (card.CardId == "燃料点火器" &&
-            !fuelStorage.isFiring &&
-            fuelStorage.fuel >= 1 &&
-            (!considerWaterLevel || StateManager.Instance.WaterLevel.CurValue < 30))
-            return true;
         // 添加燃料
         if (card.TryGetComponent<FlammableComponent>(out _) && fuelStorage.fuel < fuelStorage.maxFuel) return true;
         // 放入内容物
@@ -307,16 +290,6 @@ public class FuelFurnace : ConstructionCard
     {
         tip = string.Empty;
         var card = slot.PeekCard();
-
-        // 点火
-        if (card.CardId == "燃料点火器" &&
-            !fuelStorage.isFiring &&
-            fuelStorage.fuel >= 1 &&
-            (!considerWaterLevel || StateManager.Instance.WaterLevel.CurValue < 30))
-        {
-            LightFuelFurnace(card, out tip);
-            return;
-        }
 
         // 添加燃料
         if (card.TryGetComponent<FlammableComponent>(out var burnableComponent) && fuelStorage.fuel < fuelStorage.maxFuel)

@@ -78,7 +78,12 @@ public class Trap : ConstructionCard
     private bool Judge_TakeOut(out string hint)
     {
         hint = string.Empty;
-        return !string.IsNullOrEmpty(outcomeCardId);
+        if (string.IsNullOrEmpty(outcomeCardId))
+        {
+            hint = "尚未捕捉到任何生物";
+            return false;
+        }
+        return true;
     }
 
     /// <summary>
