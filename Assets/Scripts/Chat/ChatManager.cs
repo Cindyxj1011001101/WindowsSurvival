@@ -232,7 +232,7 @@ public class ChatManager : MonoBehaviour
                 // 先收集所有选项消息
                 foreach (var portData in nodeData.outputports)
                 {
-                    if (portData.name != "" && ChatConditionManager.Instance.CanTriggerBranchCondition(name))
+                    if (portData.name != "" && ChatConditionManager.Instance.CanTriggerBranchCondition(portData.name))
                     {
                         TriggerMessage(ReadChatParagraph.Instance.FindNextNode(portData.name));
                         break;
