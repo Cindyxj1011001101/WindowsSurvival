@@ -35,8 +35,8 @@ public class OreReleaseOxygenMachine : ConstructionCard
         {
             var states = new List<CardState>()
             {
-                new ("已关闭", "0"),
-                new ("已开启", "1", true, true),
+                new ("已关闭", "0", false, true, false),
+                new ("已开启", "1", true, true, true),
             };
             stateMachine = new StateMachineComponent("已关闭", states);
             AddComponent(stateMachine);

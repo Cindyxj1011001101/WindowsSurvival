@@ -30,8 +30,8 @@ public class SleepInstrument : ConstructionCard
         {
             var states = new List<CardState>()
             {
-                new ("已接电", "11"),
-                new ("未接电", "12"),
+                new ("已接电", "11", false, true, true),
+                new ("未接电", "12", false, true, false),
             };
             stateMachine = new StateMachineComponent("未接电", states);
             AddComponent(stateMachine);

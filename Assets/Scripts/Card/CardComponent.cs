@@ -512,16 +512,18 @@ public class CardState
     public string name; // 状态名称
     public string imagePath; // 图片路径
     public bool isAnim; // 是否为动画
-    public bool comsumeElectricity; // 是否消耗电力
+    public bool needElectricity; // 是否需要电力
+    public bool isConsumingElectricity; // 是否正在消耗电力
 
     public CardState() { }
 
-    public CardState(string name, string imagePath, bool isAnim = false, bool comsumeElectricity = false)
+    public CardState(string name, string imagePath, bool isAnim = false, bool needElectricity = false, bool isConsumingElectricity = false)
     {
         this.name = name;
         this.imagePath = imagePath;
         this.isAnim = isAnim;
-        this.comsumeElectricity = comsumeElectricity;
+        this.needElectricity = needElectricity;
+        this.isConsumingElectricity = isConsumingElectricity;
     }
 }
 
