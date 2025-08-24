@@ -166,7 +166,6 @@ public class OreReleaseOxygenMachine : ConstructionCard
         // 不在工作状态不制氧
         if (stateMachine.currentStateName == "已关闭")
         {
-            Debug.LogWarning("矿石释氧机未开启，无法制氧。");
             return;
         }
 
@@ -176,14 +175,12 @@ public class OreReleaseOxygenMachine : ConstructionCard
         // 进度不满不制氧
         if (curTimeProgress < maxTimeProgress)
         {
-            Debug.Log($"矿石释氧机进度{curTimeProgress}/{maxTimeProgress}，无法制氧。");
             return;
         }
 
         // 氧气存储要超了不制氧
         if (oxygenStorage.oxygen + oxygenRelease > oxygenStorage.maxOxygen)
         {
-            Debug.Log("氧气储存剩余空间不足，无法制氧。");
             return;
         }
 
@@ -191,21 +188,18 @@ public class OreReleaseOxygenMachine : ConstructionCard
         var env = Bag as EnvironmentBag;
         if (!env.HasCable)
         {
-            Debug.Log("矿石释氧机未连接电网，无法制氧。");
             return;
         }
 
         // 电力不足不制氧
         if (StateManager.Instance.Electricity.CurValue < electricityConsumption)
         {
-            Debug.Log("电力不足，无法制氧。");
             return;
         }
 
         // 白爆矿不够不制氧
         if (!TryConsumeOre(oreConsumption))
         {
-            Debug.LogWarning("白爆矿不足，无法制氧。");
             return;
         }
 
@@ -223,7 +217,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
     {
         int oreCount = innerContents.GetTotalCountByCardId("白爆矿");
         // 白爆矿的数量多于消耗量
-        if (oreCount > amount)
+        if (oreCount >= amount)
         {
             innerContents.DestroyCardsByCardId("白爆矿", amount);
             return true;
