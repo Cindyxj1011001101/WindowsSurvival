@@ -19,7 +19,7 @@ public class ElectricDrainageMachine : ConstructionCard
         };
     }
 
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
 

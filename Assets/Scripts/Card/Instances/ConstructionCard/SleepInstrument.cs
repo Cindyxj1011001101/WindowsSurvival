@@ -18,7 +18,7 @@ public class SleepInstrument : ConstructionCard
         };
     }
 
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
         EventManager.Instance.AddListener(EventType.StartSleeping, OnStartSleeping);

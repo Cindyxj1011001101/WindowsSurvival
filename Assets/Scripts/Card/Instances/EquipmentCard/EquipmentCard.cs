@@ -13,7 +13,7 @@ public abstract class EquipmentCard : Card
         };
     }
 
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
         TryGetComponent(out equipment);

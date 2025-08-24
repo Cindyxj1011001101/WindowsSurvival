@@ -18,7 +18,7 @@ public class Campfire : ConstructionCard
         };
     }
 
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
         // 手动添加燃料存储组件

@@ -38,7 +38,7 @@ public class FuelFurnace : ConstructionCard
         };
     }
 
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
         // 添加燃料存储组件

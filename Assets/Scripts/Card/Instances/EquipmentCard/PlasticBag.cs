@@ -7,7 +7,7 @@ public class PlasticBag : EquipmentCard
         Events.Add(new Event("切割", "切割塑料袋", Event_Cut, Judge_Cut));
     }
 
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
         innerContents.weightLossRate = 0.5f; // 塑料袋的减重率

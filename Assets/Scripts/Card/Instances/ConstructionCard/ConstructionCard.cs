@@ -3,7 +3,7 @@
 public abstract class ConstructionCard : Card
 {
     private ConstructionComponent construction;
-    protected override void LateInit()
+    public override void LateInit()
     {
         base.LateInit();
         TryGetComponent(out construction);
