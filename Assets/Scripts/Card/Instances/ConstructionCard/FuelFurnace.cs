@@ -63,7 +63,9 @@ public class FuelFurnace : ConstructionCard
     private bool ContentFilter(Card c, out string s)
     {
         //YONG-TODO：对过滤器做初始化，限制放入物体的可加工属性
-        throw new System.NotImplementedException();
+        UnityEngine.Debug.LogWarning("燃料炉放入待加工物的功能尚未实现");
+        s = "燃料炉放入待加工物的功能尚未实现";
+        return false;
     }
 
     /// <summary>
