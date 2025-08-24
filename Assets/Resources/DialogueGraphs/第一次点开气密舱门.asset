@@ -15,7 +15,7 @@ MonoBehaviour:
   paragraphData:
     ParagraphName: "\u7B2C\u4E00\u6B21\u70B9\u5F00\u6C14\u5BC6\u8231\u95E8"
     ParagraphPriority: 4
-    ParagraphCondition: " \u9996\u6B21\u70B9\u5F00\u6C14\u5BC6\u8231\u95E8"
+    ParagraphCondition: "\u9996\u6B21\u70B9\u5F00\u6C14\u5BC6\u8231\u95E8"
   nodes:
   - guid: 9ca6e2c4a2eadfa43b8d7b671988c417
     Title: "\u5BF9\u8BDD"
@@ -357,6 +357,14 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 7a44b5f428259ba4eae2de238b7644e5
     inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: e1e806214ad377e4e86d0c0d0ae79de5
+    outputPortName: "\u672A\u88C5\u5907\u6C27\u6C14\u9762\u7F69"
+    inputNodeGUID: a118beb2a33eafc48b99cb08e8d5d243
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: e1e806214ad377e4e86d0c0d0ae79de5
+    outputPortName: "\u5DF2\u88C5\u5907\u6C27\u6C14\u9762\u7F69"
+    inputNodeGUID: f39b6010b111a914889aab8229b0e39d
+    inputPortName: "\u8F93\u5165"
   - outputNodeGUID: d0582fb8237d03e42b1aed54906bb7d6
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 87a446b280eed6c41a61cb2bd2fe437a
@@ -384,12 +392,4 @@ MonoBehaviour:
   - outputNodeGUID: 887cf7594abb1c748b6b3f32e1ae9c75
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 86978c3f845be9d42bfb9a9adc4fbf37
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: e1e806214ad377e4e86d0c0d0ae79de5
-    outputPortName: "\u672A\u88C5\u5907\u6C27\u6C14\u9762\u7F69"
-    inputNodeGUID: a118beb2a33eafc48b99cb08e8d5d243
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: e1e806214ad377e4e86d0c0d0ae79de5
-    outputPortName: "\u5DF2\u88C5\u5907\u6C27\u6C14\u9762\u7F69"
-    inputNodeGUID: f39b6010b111a914889aab8229b0e39d
     inputPortName: "\u8F93\u5165"
