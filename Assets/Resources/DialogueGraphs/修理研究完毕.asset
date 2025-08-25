@@ -327,8 +327,8 @@ MonoBehaviour:
     NodePos: {x: 1740.8, y: 602.4}
     chatData:
       MessageSender: 0
-      MessageCondition: 
-      Message: 
+      MessageCondition: "\u8EAB\u4E0A\u6709\u5E9F\u91D1\u5C5E"
+      Message: "\u80FD\u627E\u5230"
       preWaitTime: 0
       lateWaitTime: 0
       TriggerMessageEffect: 
@@ -347,7 +347,7 @@ MonoBehaviour:
     chatData:
       MessageSender: 1
       MessageCondition: 
-      Message: "\u4F60\u90A3\u8FB9\u80FD\u627E\u5230\u4E00\u4E9B\u5E9F\u91D1\u5C5E\u5417\uFF1F\u4FEE\r\n\u88C2\u7F1D\u9700\u8981\u7528"
+      Message: "\u4F60\u90A3\u8FB9\u80FD\u627E\u5230\u4E00\u4E9B\u5E9F\u91D1\u5C5E\u5417\uFF1F\u4FEE\u7406\u88C2\u7F1D\u9700\u8981\u7528\r"
       preWaitTime: 0
       lateWaitTime: 0
       TriggerMessageEffect: 
@@ -416,6 +416,10 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: da5cb793881cbf44eacd374e095c1373
     inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: da5cb793881cbf44eacd374e095c1373
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 8a4219e6120de0d4590bf18fd38137b1
+    inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 8e41fb5e0d1cb6142bfd756b873391fe
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: d30e2b45334cda04ebd5dcf544d056da
@@ -431,8 +435,4 @@ MonoBehaviour:
   - outputNodeGUID: 5520a8c5e06a65948bf64c175e4700b0
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 52098781a42eac1469a0a835d4c11999
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: da5cb793881cbf44eacd374e095c1373
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 8a4219e6120de0d4590bf18fd38137b1
     inputPortName: "\u8F93\u5165"
