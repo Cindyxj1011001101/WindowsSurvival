@@ -44,6 +44,22 @@ public class StudyWindow : WindowBase
         EventManager.Instance.AddListener(EventType.ChangeStudyProgress, RefreshDisplay);
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
+
+        menuItemTransforms.Clear();
+        for (int i = 0; i < menuLayout.childCount; i++)
+        {
+            var child = menuLayout.GetChild(i);
+            var button = child.GetComponent<HoverableButton>();
+            var type = (TechType)Enum.Parse(typeof(TechType), child.name);
+            button.onClick.AddListener(() =>
+            {
+                curSelectedTechNode = null;
+                DisplayTechTree(type);
+            });
+            menuItemTransforms.Add(type, child as RectTransform);
+        }
     }
 
     private void OnDestroy()
@@ -81,21 +97,6 @@ public class StudyWindow : WindowBase
             studyStateButton.SetVisiable(false);
 
         TechnologyManager.Instance.InitFromGameData();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
-
-        menuItemTransforms.Clear();
-        for (int i = 0; i < menuLayout.childCount; i++)
-        {
-            var child = menuLayout.GetChild(i);
-            var button = child.GetComponent<HoverableButton>();
-            var type = (TechType)Enum.Parse(typeof(TechType), child.name);
-            button.onClick.AddListener(() =>
-            {
-                curSelectedTechNode = null;
-                DisplayTechTree(type);
-            });
-            menuItemTransforms.Add(type, child as RectTransform);
-        }
     }
 
     public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
