@@ -43,10 +43,14 @@ public class CoralReef : Card
         if (curReduceCount >= maxReduceCount) curReduceCount = maxReduceCount;
 
     }
-    protected override Action OnUpdate => () =>
+
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         if (TimeManager.Instance.AnotherDay()) curReduceCount = 0;
-    };
+    }
+
     private void RandomDrop()
     {
         int rand = Random.Range(0, 45);

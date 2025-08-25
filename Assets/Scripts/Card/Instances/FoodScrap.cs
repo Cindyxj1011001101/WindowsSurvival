@@ -21,8 +21,10 @@ public class FoodScrap : Card
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         TimeManager.Instance.AddTime(15);
     }
-    protected override System.Action OnUpdate => () =>
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         if (remainRound <= 0 || GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater) return;
 
         remainRound--;
@@ -31,5 +33,5 @@ public class FoodScrap : Card
             ShowTip("食物残渣被水冲走了");
             DestroyThis();
         }
-    };
+    }
 }

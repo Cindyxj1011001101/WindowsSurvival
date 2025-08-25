@@ -19,12 +19,6 @@ public class RatBody : CookableCard
         };
     }
 
-    private void OnRotton()
-    {
-        DestroyThis();
-        AddCard("腐烂物", Bag);
-    }
-
     #region 食用
     private void Event_Eat(out string tip)
     {
@@ -99,12 +93,6 @@ public class RatBody : CookableCard
         AddCard("小块生肉", true);
     }
     #endregion
-
-    protected override System.Action OnUpdate => () =>
-    {
-        TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
-    };
 
     public override bool CanQuickInteract(Card card)
     {

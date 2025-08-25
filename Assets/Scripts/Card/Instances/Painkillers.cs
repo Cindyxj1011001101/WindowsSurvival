@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -25,8 +24,10 @@ public class Painkillers : Card
         if (curReduceCount >= maxReduceCount) curReduceCount = maxReduceCount;
 
     }
-    protected override Action OnUpdate => () =>
+
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
         if (TimeManager.Instance.AnotherDay()) curReduceCount = 0;
-    };
+    }
 }

@@ -15,12 +15,6 @@ public class LittleRawMeat : CookableCard
         };
     }
 
-    private void OnRotton()
-    {
-        DestroyThis();
-        AddCard("腐烂物", Bag);
-    }
-
     private void Event_Eat(out string tip)
     {
         DestroyThis();
@@ -38,10 +32,4 @@ public class LittleRawMeat : CookableCard
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
     }
-
-    protected override Action OnUpdate => () =>
-    {
-        TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
-    };
 }
