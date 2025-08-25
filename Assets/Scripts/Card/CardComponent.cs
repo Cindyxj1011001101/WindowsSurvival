@@ -574,3 +574,61 @@ public class OxygenStorageComponent : CardComponent
     }
 }
 #endregion
+
+#region PlantGrowth
+public class PlantGrowthComponent : CardComponent
+{
+    public float GrowthRate;
+    public float GrowthProgress;
+    public int DeadProgress;
+    public float minConfortTempreture;
+    public float maxConfortTempreture;
+    public float minGrowTempture;
+    public float maxGrowTempture;
+    public float minLiveTempture;
+    public float maxLiveTempture;
+    public string DeadCardName; 
+    public List<PressureLevel> PressureList;
+    public PlantGrowthComponent(float growthRate, float minConfortTempreture, float maxConfortTempreture, float minGrowTempture, float maxGrowTempture, float minLiveTempture, float maxLiveTempture, string deadCardName, List<PressureLevel> pressureList)
+    { 
+        GrowthRate = growthRate;
+        this.minConfortTempreture = minConfortTempreture;
+        this.maxConfortTempreture = maxConfortTempreture;
+        this.minGrowTempture = minGrowTempture;
+        this.maxGrowTempture = maxGrowTempture;
+        this.minLiveTempture = minLiveTempture;
+        this.maxLiveTempture = maxLiveTempture;
+        DeadCardName = deadCardName;
+        PressureList = pressureList;
+        GrowthProgress = 0;
+    }
+    public void Grow(EnvironmentBag bag)
+    {
+        PressureLevel curPressureLevel = bag.PressureLevel;
+        bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var temp);
+        float curTempture= temp.CurValue;
+        if (PressureList.Contains(curPressureLevel))
+        {
+            if (curTempture <= maxConfortTempreture && curTempture > minConfortTempreture)
+            {
+                GrowthProgress += GrowthRate*1.2f;
+            }
+            else if (curTempture <= maxGrowTempture && curTempture > minGrowTempture)
+            {
+                GrowthProgress += GrowthRate*1f;
+            }
+            else if(curTempture<=maxLiveTempture && curTempture>minLiveTempture)
+            {
+                //不生长
+            }
+            else
+            {
+                DeadProgress++;
+            }
+        }
+        
+    }
+}
+
+#endregion
+

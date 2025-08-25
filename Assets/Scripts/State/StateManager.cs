@@ -723,7 +723,7 @@ public class StateManager : MonoBehaviour
 
         TimeManager.Instance.AddTime(time);
 
-        EventManager.Instance.TriggerEvent(EventType.StartSleeping);
+        EventManager.Instance.TriggerEvent(EventType.StopSleeping);
         SetPlayerStateBasicChangeRate(PlayerStateEnum.Sobriety, rate);
     }
     #endregion

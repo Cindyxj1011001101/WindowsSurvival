@@ -44,6 +44,7 @@ namespace ChatPlugIn
             {
                 chatData.Message = callback.newValue;
             });
+            //对话条件显示为文本框+内容
             TextField tfdCondition = ElementUtility.CreateTextArea(chatData.MessageCondition, "触发对话条件", callback =>
             {
                 chatData.MessageCondition = callback.newValue;

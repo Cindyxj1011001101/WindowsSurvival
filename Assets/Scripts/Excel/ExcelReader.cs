@@ -50,6 +50,7 @@ public static class ExcelReader
                 IsPassage = bool.Parse(row[36].ToString()),
                 CanCook = bool.Parse(row[40].ToString()),
                 IsConstruction = bool.Parse(row[43].ToString()),
+                IsPlant=bool.Parse(row[51].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
@@ -115,6 +116,22 @@ public static class ExcelReader
                 cardConfig.NeedCable = bool.Parse(row[48].ToString());
                 cardConfig.CanBeDemolished = bool.Parse(row[49].ToString());
                 cardConfig.DemolitionDebris = row[50].ToString();
+            }
+            if (cardConfig.IsPlant)
+            {
+                cardConfig.GrowthRate= float.Parse(row[52].ToString());
+                cardConfig.MinConfortTempreture = float.Parse(row[53].ToString());
+                cardConfig.MaxConfortTempreture = float.Parse(row[54].ToString());
+                cardConfig.minGrowTempture = float.Parse(row[55].ToString());
+                cardConfig.maxGrowTempture = float.Parse(row[56].ToString());
+                cardConfig.minLiveTempture = float.Parse(row[57].ToString());
+                cardConfig.maxLiveTempture = float.Parse(row[58].ToString());
+                cardConfig.DeadcardName = row[59].ToString();
+                cardConfig.Pressures = new List<PressureLevel>();
+                foreach (var pressure in row[60].ToString().Split("_"))
+                {
+                    cardConfig.Pressures.Add((PressureLevel)Enum.Parse(typeof(PressureLevel), pressure));
+                }
             }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
@@ -467,6 +484,16 @@ public class CardConfig
     public bool NeedCable; // 是否需要电缆
     public bool CanBeDemolished; // 能否被拆毁
     public string DemolitionDebris; // 拆毁后产物ID
+    public bool IsPlant;//是否是植物
+    public float GrowthRate;//生长速度
+    public float MinConfortTempreture;//舒适温度下限
+    public float MaxConfortTempreture;//舒适温度上限
+    public float minGrowTempture;//生长温度下限
+    public float maxGrowTempture;//生长温度上限
+    public float minLiveTempture;//存活温度下限
+    public float maxLiveTempture;//存活温度上限
+    public string DeadcardName;//死亡后掉落的卡帕名称
+    public List<PressureLevel> Pressures;//存活压强（_隔开）
 }
 
 public class DropConfig
