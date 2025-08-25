@@ -144,7 +144,7 @@ public static class ProcessManager
 
     static ProcessManager()
     {
-        ProcessDataList = ExcelReader.ReadProcess("Process");
+        ProcessDataList = ExcelReader.ReadProcess("ProcessData");
     }
 
     public static string GetProcessOutcomeID(List<Card> cards,List<TempertureData> TemptureDatas)
