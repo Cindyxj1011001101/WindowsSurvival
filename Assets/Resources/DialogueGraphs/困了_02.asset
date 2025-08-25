@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: "\u56F0\u4E86_02"
   m_EditorClassIdentifier: 
   paragraphData:
-    ParagraphName: Start
-    ParagraphPriority: 0
-    ParagraphCondition: "\u6761\u4EF6"
+    ParagraphName: "\u56F0\u4E86_02"
+    ParagraphPriority: 3
+    ParagraphCondition: "\u6BCF\u6B21\u6E05\u9192\u5EA6<=30"
   nodes:
   - guid: 01062673303782b4abab6135b62b621d
     Title: "\u5BF9\u8BDD"
@@ -32,25 +32,6 @@ MonoBehaviour:
       name: "\u8F93\u5165"
       direction: 0
       PortCondition: "\u6761\u4EF6"
-    outputports:
-    - name: "\u8F93\u51FA"
-      direction: 1
-      PortCondition: "\u6761\u4EF6"
-  - guid: e1d847e7c159f2a418fcccb91bc32c0c
-    Title: "\u5F00\u59CB"
-    typeName: Start
-    NodePos: {x: 1935.2, y: -267.19998}
-    chatData:
-      MessageSender: 0
-      MessageCondition: 
-      Message: 
-      preWaitTime: 0
-      lateWaitTime: 0
-      TriggerMessageEffect: 
-    inputport:
-      name: 
-      direction: 0
-      PortCondition: 
     outputports:
     - name: "\u8F93\u51FA"
       direction: 1
@@ -74,10 +55,29 @@ MonoBehaviour:
     - name: "\u8F93\u51FA"
       direction: 1
       PortCondition: "\u6761\u4EF6"
+  - guid: e1d847e7c159f2a418fcccb91bc32c0c
+    Title: "\u5F00\u59CB"
+    typeName: Start
+    NodePos: {x: 1852.8, y: -291.19998}
+    chatData:
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: 
+      direction: 0
+      PortCondition: 
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
   - guid: c096a88b3e9f23949afeab19d495628e
     Title: "\u7ED3\u675F"
     typeName: End
-    NodePos: {x: 2507.2, y: -267.19998}
+    NodePos: {x: 2573.6, y: -181.6}
     chatData:
       MessageSender: 0
       MessageCondition: 
@@ -91,13 +91,13 @@ MonoBehaviour:
       PortCondition: "\u6761\u4EF6"
     outputports: []
   edges:
-  - outputNodeGUID: e1d847e7c159f2a418fcccb91bc32c0c
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 01062673303782b4abab6135b62b621d
-    inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 01062673303782b4abab6135b62b621d
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: fb7a7fa1514ecb94886fbbabbe9b7318
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: e1d847e7c159f2a418fcccb91bc32c0c
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 01062673303782b4abab6135b62b621d
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: fb7a7fa1514ecb94886fbbabbe9b7318
     outputPortName: "\u8F93\u51FA"

@@ -13,29 +13,10 @@ MonoBehaviour:
   m_Name: "\u56F0\u4E86_01"
   m_EditorClassIdentifier: 
   paragraphData:
-    ParagraphName: Start
-    ParagraphPriority: 0
-    ParagraphCondition: "\u6761\u4EF6"
+    ParagraphName: "\u56F0\u4E86_01"
+    ParagraphPriority: 3
+    ParagraphCondition: "\u6BCF\u6B21\u6E05\u9192\u5EA6<=30"
   nodes:
-  - guid: 85fc7038b22fafd4782675cd9f8d03f0
-    Title: "\u5F00\u59CB"
-    typeName: Start
-    NodePos: {x: 1994.4, y: -518.4}
-    chatData:
-      MessageSender: 0
-      MessageCondition: 
-      Message: 
-      preWaitTime: 0
-      lateWaitTime: 0
-      TriggerMessageEffect: 
-    inputport:
-      name: 
-      direction: 0
-      PortCondition: 
-    outputports:
-    - name: "\u8F93\u51FA"
-      direction: 1
-      PortCondition: "\u6761\u4EF6"
   - guid: acdd6762f7fbce744843a8d8e5fe7e32
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
@@ -74,10 +55,29 @@ MonoBehaviour:
     - name: "\u8F93\u51FA"
       direction: 1
       PortCondition: "\u6761\u4EF6"
+  - guid: 85fc7038b22fafd4782675cd9f8d03f0
+    Title: "\u5F00\u59CB"
+    typeName: Start
+    NodePos: {x: 1838.4, y: -555.2}
+    chatData:
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: 
+      direction: 0
+      PortCondition: 
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
   - guid: d5a536014c912b4428fefbe4c6c17217
     Title: "\u7ED3\u675F"
     typeName: End
-    NodePos: {x: 2233.6, y: -116.8}
+    NodePos: {x: 2223.2, y: -53.6}
     chatData:
       MessageSender: 0
       MessageCondition: 
