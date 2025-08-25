@@ -25,6 +25,7 @@ public class FuelFurnace : ConstructionCard
     public bool isProcessing = false; // 是否正在加工
     public List<TempertureData> tempertureData = new(); // 温度数据，用来处理产物获取
     public string outcomeCardId = null; // 产物卡牌id
+    public override bool HasLoopSound => true;
 
     private FuelFurnace()
     {
@@ -75,6 +76,12 @@ public class FuelFurnace : ConstructionCard
     {
         tip = string.Empty;
         fuelStorage.SetIsFiring(true);
+        SoundManager.Instance.PlaySound("点火_02");
+
+        var env = Bag as EnvironmentBag;
+        
+        if (env == GameManager.Instance.CurEnvironmentBag)
+            SoundManager.Instance.PlayCardLoopSound(CardId, "燃料炉音效", 1f);
     }
 
     private bool Judge_Lighting(out string hint)
@@ -94,6 +101,7 @@ public class FuelFurnace : ConstructionCard
         }
 
         return !fuelStorage.isFiring;
+       
     }
 
     /// <summary>
@@ -187,6 +195,10 @@ public class FuelFurnace : ConstructionCard
     {
         tip = string.Empty;
         fuelStorage.SetIsFiring(false);
+
+        var env = Bag as EnvironmentBag;
+        if (env == GameManager.Instance.CurEnvironmentBag)
+            SoundManager.Instance.StopCardLoopSound(CardId);
     }
 
     private bool Judge_Unlightened(out string hint)
@@ -310,5 +322,29 @@ public class FuelFurnace : ConstructionCard
 
         // 拆毁
         base.QuickIneract(slot, count, out tip);
+
+
+    }
+    public override void OnEnterEnvironment()
+    {
+        if (fuelStorage.isFiring)
+            SoundManager.Instance.PlayCardLoopSound(CardId, "燃料炉音效", 0.3f);
+    }
+    public override void OnLeaveEnvironment()
+    {
+        SoundManager.Instance.StopCardLoopSound(CardId);
+    }
+    public override void OnDetailOpen()
+    {
+        SoundManager.Instance.SetCardLoopVolume(CardId, 1.0f); // 音量调高
+    }
+    public override void OnDetailClose()
+    {
+        SoundManager.Instance.SetCardLoopVolume(CardId, 0.3f); // 恢复正常
+    }
+    public override void DestroyThis()
+    {
+        OnLeaveEnvironment();
+        base.DestroyThis();
     }
 }

@@ -17,6 +17,6 @@ public class OxygenCandle : Card
 
         tip = string.Empty;
         AddCard("点燃的氧烛", Bag);
-        SoundManager.Instance.PlaySound("点火");
+        SoundManager.Instance.PlaySound("点火_01");
     }
 }
