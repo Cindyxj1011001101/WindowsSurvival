@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 老鼠尸体
 /// </summary>
-public class RatBody : Card
+public class RatBody : CookableCard
 {
     private RatBody()
     {

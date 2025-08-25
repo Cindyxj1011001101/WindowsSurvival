@@ -105,7 +105,14 @@ public static class CardFactory
             { "凝胶装瓶器", typeof(GelBottler) },
             { "钢材", typeof(Steel) },
             { "烧焦的食物", typeof(BurntFood) },
-            { "蒸馏器", typeof(Distiller) },
+            { "燃料蒸馏器", typeof(FuelDistiller) },
+            { "小块熟肉", typeof(LittleCookedMeat) },
+            { "熟贝肉", typeof(CookedOysterMeat) },
+            { "熟触手", typeof(CookedTentacle) },
+            { "盐水", typeof(SalineWater) },
+            { "育卵液", typeof(EggRearingFluid) },
+            { "水壶兰种子", typeof(WaterBottleOrchidSeed) },
+            { "熟水壶兰种子", typeof(CookedWaterBottleOrchidSeed) },
         };
     }
 

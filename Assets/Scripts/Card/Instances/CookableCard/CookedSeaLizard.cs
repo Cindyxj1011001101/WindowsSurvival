@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public class CookedSeaLizard : Card
+public class CookedSeaLizard : CookableCard
 {
     private CookedSeaLizard()
     {

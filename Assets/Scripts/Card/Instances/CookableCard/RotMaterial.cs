@@ -3,7 +3,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 腐烂物
 /// </summary>
-public class RotMaterial : Card
+public class RotMaterial : CookableCard
 {
     private RotMaterial()
     {
