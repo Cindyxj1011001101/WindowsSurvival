@@ -174,11 +174,10 @@ MonoBehaviour:
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: 154959178, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_hovered: {fileID: 2130795967, guid: 463677557ce92964a8482ac800b7428d, type: 3}
-  defaultPosition: {x: 216, y: -214, z: 0}
-  defaultSizeDelta: {x: 654, y: 508, z: 0}
+  isModal: 0
   slotPrefab: {fileID: 8250425150690940461, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
   slotLayout: {fileID: 3331009166589733441}
-  organizeButton: {fileID: 0}
+  organizeButton: {fileID: 226947611460829450}
   slots: []
 --- !u!1001 &6116814486573529180
 PrefabInstance:
@@ -631,6 +630,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
+--- !u!114 &226947611460829450 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7894813729443786483, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
+  m_PrefabInstance: {fileID: 7977639537400655865}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1769543664131077959 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8518816471054538942, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
