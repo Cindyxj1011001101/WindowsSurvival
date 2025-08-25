@@ -128,8 +128,11 @@ public class Campfire : ConstructionCard
     }
 
     private List<Card> temp = new();
-    protected override System.Action OnUpdate => () =>
+
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         // 没有点燃
         if (!fuelStorage.isFiring) return;
 
@@ -184,7 +187,7 @@ public class Campfire : ConstructionCard
             fuelStorage.SetIsFiring(false);
             ShowTip("水位过高，营火已自动熄灭");
         }
-    };
+    }
 
     public override bool CanQuickInteract(Card card)
     {

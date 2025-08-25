@@ -115,8 +115,10 @@ public class Trap : ConstructionCard
         return stateMachine.currentStateName == "未布置";
     }
 
-    protected override System.Action OnUpdate => () =>
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         if (stateMachine.currentStateName == "未布置" || Bag is not EnvironmentBag env || env.RepeatableDropList.IsEmpty) return;
 
         int probability = innerContents.bag.IsFull ? 3 : 48;
@@ -152,7 +154,7 @@ public class Trap : ConstructionCard
         // 变回未布置状态
         stateMachine.ChangeState("未布置");
         ShowTip("捉到了好东西");
-    };
+    }
 
     public override bool CanQuickInteract(Card card)
     {

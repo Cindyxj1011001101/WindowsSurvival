@@ -207,12 +207,14 @@ public class FuelFurnace : ConstructionCard
         return fuelStorage.isFiring;
     }
 
-    protected override System.Action OnUpdate => () =>
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         HandleFuelAndTemperatureChange();
 
         HandleProcessRound();
-    };
+    }
 
     /// <summary>
     /// 处理每回合燃料和温度的变化

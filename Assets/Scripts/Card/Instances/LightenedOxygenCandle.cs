@@ -1,5 +1,3 @@
-using System;
-
 /// <summary>
 /// 点燃的氧烛
 /// </summary>
@@ -35,12 +33,14 @@ public class LightenedOxygenCandle : Card
             OnRemoved(innerBag.BelongedCard.Bag);
     }
 
-    protected override Action OnUpdate => () =>
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         // 每回合消耗耐久
         Use(1, () =>
         {
             ShowTip("氧烛燃烧殆尽了");
         });
-    };
+    }
 }

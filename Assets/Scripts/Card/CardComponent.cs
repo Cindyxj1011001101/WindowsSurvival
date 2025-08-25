@@ -4,6 +4,11 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 
+public interface IUpdate
+{
+    public void Update();
+}
+
 /// <summary>
 /// 组件接口
 /// </summary>
@@ -18,12 +23,14 @@ public abstract class CardComponent
 }
 
 #region 新鲜度组件
-public class FreshnessComponent : CardComponent
+public class FreshnessComponent : CardComponent, IUpdate
 {
     public int freshness;
     public int maxFreshness;
 
     public float updateRate = 1.0f;
+
+    [JsonIgnore] public UnityAction onRotton;
 
     public FreshnessComponent() { }
 
@@ -32,12 +39,12 @@ public class FreshnessComponent : CardComponent
         freshness = this.maxFreshness = maxFreshness;
     }
 
-    public void Update(int deltaTime, UnityAction onRotton)
+    public void Update()
     {
         if (freshness <= 0) return;
 
         // 随时间自动减少新鲜度
-        freshness -= (int)(deltaTime * updateRate);
+        freshness -= (int)(TimeManager.Instance.SettleInterval * updateRate);
         freshness = Mathf.Max(freshness, 0);
 
         BelongedCard.RefreshSlot();
@@ -46,6 +53,7 @@ public class FreshnessComponent : CardComponent
         {
             BelongedCard.ShowTip($"{BelongedCard.CardName}腐烂了");
             freshness = 0;
+            BelongedCard.DestroyThis();
             onRotton?.Invoke();
         }
     }
@@ -61,12 +69,14 @@ public class FreshnessComponent : CardComponent
 #endregion
 
 #region 生长度组件
-public class GrowthComponent : CardComponent
+public class GrowthComponent : CardComponent, IUpdate
 {
     public int growth;
     public int maxGrowth;
 
     public float updateRate = 1.0f;
+
+    [JsonIgnore] public UnityAction onGrownUp;
 
     public GrowthComponent() { }
 
@@ -76,12 +86,12 @@ public class GrowthComponent : CardComponent
         growth = 0;
     }
 
-    public void Update(int deltaTime, UnityAction onGrownUp)
+    public void Update()
     {
         if (growth >= maxGrowth) return;
 
         // 随时间自动增加生长度
-        growth += (int)(deltaTime * updateRate);
+        growth += (int)(TimeManager.Instance.SettleInterval * updateRate);
         growth = Mathf.Min(growth, maxGrowth);
 
         BelongedCard.RefreshSlot();
@@ -89,6 +99,7 @@ public class GrowthComponent : CardComponent
         if (growth >= maxGrowth)
         {
             growth = maxGrowth;
+            BelongedCard.DestroyThis();
             onGrownUp?.Invoke();
         }
     }
@@ -104,12 +115,14 @@ public class GrowthComponent : CardComponent
 #endregion
 
 #region 产物进度组件
-public class ProgressComponent : CardComponent
+public class ProgressComponent : CardComponent, IUpdate
 {
     public int progress;
     public int maxProgress;
 
     public float updateRate = 1.0f;
+
+    [JsonIgnore] public UnityAction onProgressFull;
 
     public ProgressComponent() { }
 
@@ -119,12 +132,12 @@ public class ProgressComponent : CardComponent
         progress = 0;
     }
 
-    public void Update(int deltaTime, UnityAction onProgressFull)
+    public void Update()
     {
         if (progress >= maxProgress) return;
 
         // 随时间自动增加产物进度
-        progress += (int)(deltaTime * updateRate);
+        progress += (int)(TimeManager.Instance.SettleInterval * updateRate);
         progress = Mathf.Min(progress, maxProgress);
 
         BelongedCard.RefreshSlot();
@@ -132,6 +145,7 @@ public class ProgressComponent : CardComponent
         if (progress >= maxProgress)
         {
             progress = maxProgress;
+            BelongedCard.DestroyThis();
             onProgressFull?.Invoke();
         }
     }

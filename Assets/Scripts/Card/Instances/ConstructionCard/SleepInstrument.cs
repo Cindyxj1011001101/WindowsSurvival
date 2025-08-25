@@ -113,8 +113,10 @@ public class SleepInstrument : ConstructionCard
         return stateMachine.currentStateName == "已接电";
     }
 
-    protected override Action OnUpdate => () =>
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         if (stateMachine.currentStateName == "未接电") return;
 
         if (StateManager.Instance.Electricity.CurValue < electricityConsume)
@@ -123,5 +125,5 @@ public class SleepInstrument : ConstructionCard
             StopWorking();
             ShowTip("电力不足，睡眠脉冲仪已自动断电");
         }
-    };
+    }
 }

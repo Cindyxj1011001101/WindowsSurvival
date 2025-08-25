@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 老鼠尸体
 /// </summary>
-public class RatBody : Card
+public class RatBody : CookableCard
 {
     private RatBody()
     {
@@ -17,12 +17,6 @@ public class RatBody : Card
             new Event("用刀切割", "可以采集到小块生肉", Event_PeelByKnife, Judge_PeelByKnife, () => 15),
 
         };
-    }
-
-    private void OnRotton()
-    {
-        DestroyThis();
-        AddCard("腐烂物", Bag);
     }
 
     #region 食用
@@ -99,12 +93,6 @@ public class RatBody : Card
         AddCard("小块生肉", true);
     }
     #endregion
-
-    protected override System.Action OnUpdate => () =>
-    {
-        TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
-    };
 
     public override bool CanQuickInteract(Card card)
     {

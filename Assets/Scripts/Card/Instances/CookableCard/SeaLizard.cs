@@ -3,7 +3,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 海爬虫
 /// </summary>
-public class SeaLizard : Card
+public class SeaLizard : CookableCard
 {
     private SeaLizard()
     {

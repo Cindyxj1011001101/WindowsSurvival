@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 
 /// <summary>
 /// 磁性触手
 /// </summary>
-public class MagneticTentacle : Card
+public class MagneticTentacle : CookableCard
 {
     private MagneticTentacle()
     {
@@ -13,12 +12,6 @@ public class MagneticTentacle : Card
             new Event("食用", "闻起来有铁锈味", Event_Eat, null, () => 30,
             () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 14 }, { PlayerStateEnum.San, -6 }, { PlayerStateEnum.Health, -5 } })
         };
-    }
-
-    private void OnRotton()
-    {
-        DestroyThis();
-        AddCard("废金属", Bag);
     }
 
     private void Event_Eat(out string tip)
@@ -38,10 +31,4 @@ public class MagneticTentacle : Card
         //消耗30分钟
         TimeManager.Instance.AddTime(30);
     }
-
-    protected override Action OnUpdate => () =>
-    {
-        TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
-    };
 }

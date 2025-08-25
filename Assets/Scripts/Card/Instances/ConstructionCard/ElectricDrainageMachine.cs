@@ -82,8 +82,10 @@ public class ElectricDrainageMachine : ConstructionCard
     }
     #endregion
 
-    protected override Action OnUpdate => () =>
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         if (stateMachine.currentStateName == "已关闭") return;
 
         // 如果电力小于0.5或者水平面小于0时，自动停止工作
@@ -97,5 +99,5 @@ public class ElectricDrainageMachine : ConstructionCard
             StopWorking();
             ShowTip("水平面已为0，排水机已自动停止工作");
         }
-    };
+    }
 }

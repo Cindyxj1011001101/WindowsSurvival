@@ -14,12 +14,6 @@ public class AquariusFish : Card
         };
     }
 
-    private void OnProgressFull()
-    {
-        DestroyThis();
-        AddCard("有产物的水瓶鱼", Bag);
-    }
-
     #region 用捕网捉
     private void Event_CatchByNet(out string tip)
     {
@@ -69,12 +63,6 @@ public class AquariusFish : Card
         }
     }
     #endregion
-
-    protected override System.Action OnUpdate => () =>
-    {
-        TryGetComponent<ProgressComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval, OnProgressFull);
-    };
 
 
     private void Catch(Card tool, out string tip)

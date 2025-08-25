@@ -133,13 +133,15 @@ public class OreReleaseOxygenMachine : ConstructionCard
     }
     #endregion
 
-    protected override System.Action OnUpdate => () =>
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         // 先制氧
         GenerateOxygen();
         // 给室内环境充气
         ReleaseOxygen();
-    };
+    }
 
     // 释放氧气
     private void ReleaseOxygen()

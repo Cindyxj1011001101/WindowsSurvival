@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 小块肉
 /// </summary>
-public class LittleRawMeat : Card
+public class LittleRawMeat : CookableCard
 {
     private LittleRawMeat()
     {
@@ -13,12 +13,6 @@ public class LittleRawMeat : Card
             new Event("食用", "食用小块生肉", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 12 } ,{ PlayerStateEnum.San, -2 }, { PlayerStateEnum.Health, -3 }})
         };
-    }
-
-    private void OnRotton()
-    {
-        DestroyThis();
-        AddCard("腐烂物", Bag);
     }
 
     private void Event_Eat(out string tip)
@@ -38,10 +32,4 @@ public class LittleRawMeat : Card
         //消耗15分钟
         TimeManager.Instance.AddTime(15);
     }
-
-    protected override Action OnUpdate => () =>
-    {
-        TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
-    };
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 生贝肉
 /// </summary>
-public class RawOysterMeat : Card
+public class RawOysterMeat : CookableCard
 {
     private RawOysterMeat()
     {
@@ -12,11 +12,6 @@ public class RawOysterMeat : Card
             new Event("食用", "吃得很快，但不管饱", Event_Eat, null, () => 5,
             () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 6 }, { PlayerStateEnum.Health, -1.2f } })
         };
-    }
-
-    private void OnRotton()
-    {
-        DestroyThis();
     }
 
     #region 食用
@@ -36,10 +31,4 @@ public class RawOysterMeat : Card
         TimeManager.Instance.AddTime(5);
     }
     #endregion
-
-    protected override System.Action OnUpdate => () =>
-    {
-        TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
-    };
 }

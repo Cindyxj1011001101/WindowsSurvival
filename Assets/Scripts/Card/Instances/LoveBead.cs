@@ -1,5 +1,3 @@
-using System;
-
 /// <summary>
 /// 爱情贝
 /// </summary>
@@ -21,16 +19,4 @@ public class LoveBead : Card
         TimeManager.Instance.AddTime(30);
         AddCards("生贝肉", 2, true);
     }
-
-    private void OnProgressFull()
-    {
-        DestroyThis();
-        AddCard("有产物的爱情贝", Bag);
-    }
-
-    protected override Action OnUpdate => () =>
-    {
-        TryGetComponent<ProgressComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval, OnProgressFull);
-    };
 }
