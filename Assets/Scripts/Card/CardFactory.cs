@@ -106,6 +106,9 @@ public static class CardFactory
             { "钢材", typeof(Steel) },
             { "烧焦的食物", typeof(BurntFood) },
             { "蒸馏器", typeof(Distiller) },
+            { "小块熟肉", typeof(LittleCookedMeat) },
+            { "熟贝肉", typeof(CookedOysterMeat) },
+            { "熟触手", typeof(CookedTentacle) },
         };
     }
 

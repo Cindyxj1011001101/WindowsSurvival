@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 小块肉
 /// </summary>
-public class LittleRawMeat : Card
+public class LittleRawMeat : CookableCard
 {
     private LittleRawMeat()
     {

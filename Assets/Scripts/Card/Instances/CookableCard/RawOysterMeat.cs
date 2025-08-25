@@ -3,7 +3,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 生贝肉
 /// </summary>
-public class RawOysterMeat : Card
+public class RawOysterMeat : CookableCard
 {
     private RawOysterMeat()
     {
