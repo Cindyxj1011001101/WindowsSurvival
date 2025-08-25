@@ -109,6 +109,10 @@ public static class CardFactory
             { "小块熟肉", typeof(LittleCookedMeat) },
             { "熟贝肉", typeof(CookedOysterMeat) },
             { "熟触手", typeof(CookedTentacle) },
+            { "盐水", typeof(SalineWater) },
+            { "育卵液", typeof(EggRearingFluid) },
+            { "水壶兰种子", typeof(WaterBottleOrchidSeed) },
+            { "熟水壶兰种子", typeof(CookedWaterBottleOrchidSeed) },
         };
     }
 
