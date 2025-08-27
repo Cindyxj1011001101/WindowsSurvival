@@ -43,10 +43,10 @@ public class GMCommand
         }
     }
 
-    [MenuItem("Command/添加/压缩饼干")]
+    [MenuItem("Command/添加/冰箱")]
     public static void A()
     {
-        AddCard("压缩饼干");
+        AddCard("冰箱");
     }
     [MenuItem("Command/添加/珊瑚礁")]
     public static void Coral()

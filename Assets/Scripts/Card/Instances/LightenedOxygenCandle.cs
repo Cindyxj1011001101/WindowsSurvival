@@ -1,5 +1,3 @@
-using System;
-
 /// <summary>
 /// 点燃的氧烛
 /// </summary>
@@ -13,7 +11,7 @@ public class LightenedOxygenCandle : Card
     public override void OnAdded(Bag bag)
     {
         // 在玩家背包时，玩家每回合氧气的变化率+10
-        if (bag is PlayerBag)
+        if (bag is PlayerBag || bag is EquipmentBag)
             StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Oxygen, +10);
 
         if (bag is EnvironmentBag env)
@@ -25,7 +23,7 @@ public class LightenedOxygenCandle : Card
 
     public override void OnRemoved(Bag bag)
     {
-        if (bag is PlayerBag)
+        if (bag is PlayerBag || bag is EquipmentBag)
             StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Oxygen, -10);
 
         if (bag is EnvironmentBag env)
@@ -35,12 +33,14 @@ public class LightenedOxygenCandle : Card
             OnRemoved(innerBag.BelongedCard.Bag);
     }
 
-    protected override Action OnUpdate => () =>
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         // 每回合消耗耐久
         Use(1, () =>
         {
             ShowTip("氧烛燃烧殆尽了");
         });
-    };
+    }
 }

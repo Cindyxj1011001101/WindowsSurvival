@@ -712,19 +712,38 @@ public class StateManager : MonoBehaviour
     #endregion
 
     #region 睡觉
-    public float SobrietyChangeRateWhileSleeping = +3.5f;
-    
-    public void Sleep(int time)
+    public void Sleep(int time, Dictionary<PlayerStateEnum, float> playerStateBasicChangeRates)
     {
-        float rate = PlayerStateDict[PlayerStateEnum.Sobriety].ChangeRate;
-        SetPlayerStateBasicChangeRate(PlayerStateEnum.Sobriety, SobrietyChangeRateWhileSleeping);
+        // 记录当前变化率
+        var current = new Dictionary<PlayerStateEnum, float>();
+        foreach (var state in playerStateBasicChangeRates.Keys)
+        {
+            if (PlayerStateDict.TryGetValue(state, out var value))
+            {
+                current.Add(state, value.BasicChangeRate);
+            }
+        }
 
+        // 应用新的变化率
+        foreach (var (state, basicChangeRate) in playerStateBasicChangeRates)
+        {
+            SetPlayerStateBasicChangeRate(state, basicChangeRate);
+        }
+
+        // 触发开始睡觉事件
         EventManager.Instance.TriggerEvent(EventType.StartSleeping);
 
+        // 时间增加
         TimeManager.Instance.AddTime(time);
 
-        EventManager.Instance.TriggerEvent(EventType.StartSleeping);
-        SetPlayerStateBasicChangeRate(PlayerStateEnum.Sobriety, rate);
+        // 触发结束睡觉事件
+        EventManager.Instance.TriggerEvent(EventType.StopSleeping);
+
+        // 恢复原来的变化率
+        foreach (var (state, basicChangeRate) in current)
+        {
+            SetPlayerStateBasicChangeRate(state, basicChangeRate);
+        }
     }
     #endregion
 

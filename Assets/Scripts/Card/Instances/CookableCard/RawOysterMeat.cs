@@ -14,11 +14,6 @@ public class RawOysterMeat : CookableCard
         };
     }
 
-    private void OnRotton()
-    {
-        DestroyThis();
-    }
-
     #region 食用
     private void Event_Eat(out string tip)
     {
@@ -36,10 +31,4 @@ public class RawOysterMeat : CookableCard
         TimeManager.Instance.AddTime(5);
     }
     #endregion
-
-    protected override System.Action OnUpdate => () =>
-    {
-        TryGetComponent<FreshnessComponent>(out var component);
-        component.Update(TimeManager.Instance.SettleInterval, OnRotton);
-    };
 }

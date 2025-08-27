@@ -29,11 +29,11 @@ public class PlayerState
     [JsonProperty] private float maxValue; // 最大值
     [JsonProperty] private float constValue; // 固定值
     [JsonProperty] private float variableValue; // 可变值
-    [JsonProperty] public PlayerStateEnum stateEnum;
+    [JsonProperty] private PlayerStateEnum stateEnum;
     [JsonProperty] private List<StateThreshold> thresholds = new();
     [JsonProperty] private List<StateEffect> effects = new();
     [JsonProperty] private int stateLevel = -1;
-    [JsonProperty] public float basicChangeRate;
+    [JsonProperty] private float basicChangeRate;
     [JsonProperty] private float extraChangeRate;
     [JsonProperty] private List<int> lowDangerLevels = new();
     [JsonProperty] private List<int> highDangerLevels = new();

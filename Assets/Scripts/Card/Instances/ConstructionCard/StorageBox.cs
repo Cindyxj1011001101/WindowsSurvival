@@ -1,4 +1,4 @@
-public class StorageBox : Card
+public class StorageBox : ConstructionCard
 {
     private InnerContentsComponent innerContents;
 

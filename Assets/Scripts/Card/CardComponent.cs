@@ -4,6 +4,11 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 
+public interface IUpdate
+{
+    public void Update();
+}
+
 /// <summary>
 /// 组件接口
 /// </summary>
@@ -18,12 +23,14 @@ public abstract class CardComponent
 }
 
 #region 新鲜度组件
-public class FreshnessComponent : CardComponent
+public class FreshnessComponent : CardComponent, IUpdate
 {
     public int freshness;
     public int maxFreshness;
 
     public float updateRate = 1.0f;
+
+    [JsonIgnore] public UnityAction onRotton;
 
     public FreshnessComponent() { }
 
@@ -32,22 +39,24 @@ public class FreshnessComponent : CardComponent
         freshness = this.maxFreshness = maxFreshness;
     }
 
-    public void Update(int deltaTime, UnityAction onRotton)
+    public void Update()
     {
         if (freshness <= 0) return;
 
         // 随时间自动减少新鲜度
-        freshness -= (int)(deltaTime * updateRate);
+        freshness -= (int)(TimeManager.Instance.SettleInterval * updateRate);
         freshness = Mathf.Max(freshness, 0);
-
-        BelongedCard.RefreshSlot();
 
         if (freshness <= 0)
         {
             BelongedCard.ShowTip($"{BelongedCard.CardName}腐烂了");
             freshness = 0;
+            BelongedCard.DestroyThis();
             onRotton?.Invoke();
+            return;
         }
+
+        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
@@ -61,12 +70,14 @@ public class FreshnessComponent : CardComponent
 #endregion
 
 #region 生长度组件
-public class GrowthComponent : CardComponent
+public class GrowthComponent : CardComponent, IUpdate
 {
     public int growth;
     public int maxGrowth;
 
     public float updateRate = 1.0f;
+
+    [JsonIgnore] public UnityAction onGrownUp;
 
     public GrowthComponent() { }
 
@@ -76,21 +87,23 @@ public class GrowthComponent : CardComponent
         growth = 0;
     }
 
-    public void Update(int deltaTime, UnityAction onGrownUp)
+    public void Update()
     {
         if (growth >= maxGrowth) return;
 
         // 随时间自动增加生长度
-        growth += (int)(deltaTime * updateRate);
+        growth += (int)(TimeManager.Instance.SettleInterval * updateRate);
         growth = Mathf.Min(growth, maxGrowth);
-
-        BelongedCard.RefreshSlot();
 
         if (growth >= maxGrowth)
         {
             growth = maxGrowth;
+            BelongedCard.DestroyThis();
             onGrownUp?.Invoke();
+            return;
         }
+
+        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
@@ -104,12 +117,14 @@ public class GrowthComponent : CardComponent
 #endregion
 
 #region 产物进度组件
-public class ProgressComponent : CardComponent
+public class ProgressComponent : CardComponent, IUpdate
 {
     public int progress;
     public int maxProgress;
 
     public float updateRate = 1.0f;
+
+    [JsonIgnore] public UnityAction onProgressFull;
 
     public ProgressComponent() { }
 
@@ -119,21 +134,23 @@ public class ProgressComponent : CardComponent
         progress = 0;
     }
 
-    public void Update(int deltaTime, UnityAction onProgressFull)
+    public void Update()
     {
         if (progress >= maxProgress) return;
 
         // 随时间自动增加产物进度
-        progress += (int)(deltaTime * updateRate);
+        progress += (int)(TimeManager.Instance.SettleInterval * updateRate);
         progress = Mathf.Min(progress, maxProgress);
-
-        BelongedCard.RefreshSlot();
 
         if (progress >= maxProgress)
         {
             progress = maxProgress;
+            BelongedCard.DestroyThis();
             onProgressFull?.Invoke();
+            return;
         }
+
+        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
@@ -570,6 +587,83 @@ public class OxygenStorageComponent : CardComponent
     {
         oxygen += delta;
         oxygen = Mathf.Clamp(oxygen, 0, maxOxygen);
+        BelongedCard.RefreshSlot();
+    }
+}
+#endregion
+
+#region 植物生长组件
+public class PlantGrowthComponent : CardComponent, IUpdate
+{
+    public float growthRate; // 生长速率
+    public float growthProgress; // 生长进度
+    public int deadProgress; // 死亡进度
+    public float minConfortTempreture; // 最低舒适温度
+    public float maxConfortTempreture; // 最高舒适温度
+    public float minGrowTempture; // 最低生长温度
+    public float maxGrowTempture; // 最高生长温度
+    public float minLiveTempture; // 最低存活温度
+    public float maxLiveTempture; // 最高存活温度
+    public string deadCardId; // 死亡后变成的卡牌ID 
+    public List<PressureLevel> pressureList;
+
+    [JsonIgnore] public UnityAction onDead;
+
+    public PlantGrowthComponent(float growthRate, float minConfortTempreture, float maxConfortTempreture, float minGrowTempture, float maxGrowTempture, float minLiveTempture, float maxLiveTempture, string deadCardId, List<PressureLevel> pressureList)
+    { 
+        this.growthRate = growthRate;
+        this.minConfortTempreture = minConfortTempreture;
+        this.maxConfortTempreture = maxConfortTempreture;
+        this.minGrowTempture = minGrowTempture;
+        this.maxGrowTempture = maxGrowTempture;
+        this.minLiveTempture = minLiveTempture;
+        this.maxLiveTempture = maxLiveTempture;
+        this.deadCardId = deadCardId;
+        this.pressureList = pressureList;
+        growthProgress = 0;
+        deadProgress = 5; // 初始死亡进度
+    }
+
+    public void Update()
+    {
+        if (deadProgress <= 0) return;
+
+        var bag = BelongedCard.Bag as EnvironmentBag;
+        PressureLevel curPressureLevel = bag.PressureLevel;
+        
+        bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var t);
+        float curTempture= t.CurValue;
+
+        if (!pressureList.Contains(curPressureLevel)) return;
+
+
+        if (curTempture <= maxConfortTempreture && curTempture > minConfortTempreture)
+        {
+            growthProgress += growthRate * 1.2f; // 舒适区生长加快
+        }
+        else if (curTempture <= maxGrowTempture && curTempture > minGrowTempture)
+        {
+            growthProgress += growthRate * 1f;
+        }
+        else if (curTempture <= maxLiveTempture && curTempture > minLiveTempture)
+        {
+            //不生长
+        }
+        else
+        {
+            // 死亡进度增加
+            deadProgress--;
+        }
+
+        if (deadProgress <= 0)
+        {
+            BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
+            deadProgress = 5;
+            BelongedCard.DestroyThis();
+            onDead?.Invoke();
+            return;
+        }
+
         BelongedCard.RefreshSlot();
     }
 }

@@ -134,13 +134,19 @@ public abstract class Card : IComparable<Card>
     private void Update()
     {
         if (!isUpdatePaused)
-            OnUpdate?.Invoke();
+            OnUpdate();
     }
 
     /// <summary>
     /// 每回合结算时执行
     /// </summary>
-    protected virtual Action OnUpdate { get; } = null;
+    protected virtual void OnUpdate()
+    {
+        foreach (var component in components.Values)
+        {
+            if (component is IUpdate update) update.Update();
+        }
+    }
 
     public virtual void OnAdded(Bag bag) { }
     public virtual void OnRemoved(Bag bag) { }
@@ -165,6 +171,21 @@ public abstract class Card : IComparable<Card>
             i.contentFilter = ReflectionUtility.BindToDelegate<CardFilterDelegate>(this, "ContentFilter", true);
             ReflectionUtility.SetFieldValue(this, "innerContents", i, true);
         }
+        if (TryGetComponent<FreshnessComponent>(out var f))
+        {
+            if (CardId == "磁性触手" || CardId == "熟触手")
+                f.onRotton = () => AddCard("废金属", Bag);
+            else
+                f.onRotton = () => AddCard("腐烂物", Bag);
+        }
+        if (TryGetComponent<ProgressComponent>(out var p))
+        {
+            p.onProgressFull = () => AddCard($"有产物的{CardName}", Bag);
+        }
+        if (TryGetComponent<PlantGrowthComponent>(out var pg))
+        {
+            pg.onDead = () => AddCard(pg.deadCardId, Bag);
+        }
     }
 
     private bool isUpdating = false; // 是否已启用每回合更新
@@ -187,10 +208,9 @@ public abstract class Card : IComparable<Card>
             c.SetBelongedCard(this);
         }
 
-        if (OnUpdate != null)
-            EventManager.Instance.AddListener(EventType.IntervalSettle, Update);
+        EventManager.Instance.AddListener(EventType.IntervalSettle, Update);
 
-        // 如果有内部内容组件，则开始监听内部内容的更新
+        // 如果有内容物组件，则开始监听内容物的更新
         if (TryGetComponent<InnerContentsComponent>(out var component))
         {
             component.Init();
@@ -202,7 +222,7 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     public void StopUpdating()
     {
-        EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnUpdate);
+        EventManager.Instance.RemoveListener(EventType.IntervalSettle, Update);
     }
 
     public void PauseUpdating()

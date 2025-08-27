@@ -141,7 +141,6 @@ public class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        ObjectBufferPool.Instance.Clear(); // 清空对象池
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
 

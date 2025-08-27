@@ -13,7 +13,7 @@ public class Campfire : ConstructionCard
     {
         Events = new()
         {
-            new Event("点燃", "", Event_Light, Judge_Light),
+            new Event("点燃", "点燃营火。点燃状态下会导致室内氧气消耗与一氧化碳增加", Event_Light, Judge_Light),
             new Event("熄灭", "", Event_UnLight, Judge_UnLight)
         };
     }
@@ -128,8 +128,11 @@ public class Campfire : ConstructionCard
     }
 
     private List<Card> temp = new();
-    protected override System.Action OnUpdate => () =>
+
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         // 没有点燃
         if (!fuelStorage.isFiring) return;
 
@@ -184,7 +187,7 @@ public class Campfire : ConstructionCard
             fuelStorage.SetIsFiring(false);
             ShowTip("水位过高，营火已自动熄灭");
         }
-    };
+    }
 
     public override bool CanQuickInteract(Card card)
     {

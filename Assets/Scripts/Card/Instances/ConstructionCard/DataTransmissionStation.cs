@@ -109,8 +109,10 @@ public class DataTransmissionStation : ConstructionCard
         return true;
     }
 
-    protected override System.Action OnUpdate => () =>
+    protected override void OnUpdate()
     {
+        base.OnUpdate();
+
         if (TimeManager.Instance.AnotherDay()) curTimes = 0; // 隔天时刷新可使用次数
-    };
+    }
 }
