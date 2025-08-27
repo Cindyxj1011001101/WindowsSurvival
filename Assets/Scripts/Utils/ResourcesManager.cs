@@ -216,16 +216,19 @@ public class ResourcesManager
         Resources.UnloadAsset(assetToUnload);
     }
 
-    public void UnloadUnusedAssets(UnityAction onAssetLoaded = null)
+    public void UnloadUnusedAssets(UnityAction onAssetUnloaded = null)
     {
         resourceMap.Clear();
-        PublicMono.Instance.StartCoroutine(UnloadUnusedAssetsCoroutine(onAssetLoaded));
+        PublicMono.Instance.StartCoroutine(UnloadUnusedAssetsCoroutine(onAssetUnloaded));
     }
 
-    private IEnumerator UnloadUnusedAssetsCoroutine(UnityAction onAssetLoaded)
+    private IEnumerator UnloadUnusedAssetsCoroutine(UnityAction onAssetUnloaded)
     {
         yield return Resources.UnloadUnusedAssets();
-        onAssetLoaded?.Invoke();
+        // Ö´ÐÐÀ¬»ø»ØÊÕ
+        System.GC.Collect();
+        System.GC.WaitForPendingFinalizers();
+        onAssetUnloaded?.Invoke();
     }
     #endregion
 
