@@ -9,7 +9,7 @@ public class SpaceshipSeat : ConstructionCard
     {
         Events = new()
         {
-            new Event("靠着休息", "靠着休息", Event_Rest, Judge_Rest),
+            new Event("靠着休息", "靠在驾驶座上休息。休息效率为每回合+2.7清醒度，每回合+2精神（休息行为1天内多次进行数值恢复减半，最多叠加2次）", Event_Rest, Judge_Rest),
         };
     }
     public override void LateInit()

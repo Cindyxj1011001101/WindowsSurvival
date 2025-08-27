@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -13,7 +12,7 @@ public class SleepInstrument : ConstructionCard
     {
         Events = new()
         {
-            new Event("接电", "", Event_ConnectElectricity, Judge_ConnectElectricity),
+            new Event("接电", "使其接入电路。接入电路后如果玩家在安装了睡眠脉冲仪的地点休息，休息时每15分钟额外+1.2清醒度和1健康，并消耗0.6电力", Event_ConnectElectricity, Judge_ConnectElectricity),
             new Event("断电", "", Event_DisconnectElectricity, Judge_DisconnectElectricity),
         };
     }

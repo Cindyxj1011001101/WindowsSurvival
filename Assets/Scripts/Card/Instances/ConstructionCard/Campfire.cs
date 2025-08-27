@@ -13,7 +13,7 @@ public class Campfire : ConstructionCard
     {
         Events = new()
         {
-            new Event("点燃", "", Event_Light, Judge_Light),
+            new Event("点燃", "点燃营火。点燃状态下会导致室内氧气消耗与一氧化碳增加", Event_Light, Judge_Light),
             new Event("熄灭", "", Event_UnLight, Judge_UnLight)
         };
     }
