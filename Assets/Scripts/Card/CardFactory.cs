@@ -111,8 +111,8 @@ public static class CardFactory
             { "熟触手", typeof(CookedTentacle) },
             { "盐水", typeof(SalineWater) },
             { "育卵液", typeof(EggRearingFluid) },
-            { "水壶兰种子", typeof(WaterBottleOrchidSeed) },
-            { "熟水壶兰种子", typeof(CookedWaterBottleOrchidSeed) },
+            { "水壶兰种子", typeof(KettleFlowerSeed) },
+            { "熟水壶兰种子", typeof(CookedKettleFlowerSeed) },
         };
     }
 

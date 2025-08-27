@@ -3,9 +3,9 @@
 /// <summary>
 /// 熟水壶兰种子
 /// </summary>
-public class CookedWaterBottleOrchidSeed : CookableCard
+public class CookedKettleFlowerSeed : CookableCard
 {
-    private CookedWaterBottleOrchidSeed()
+    private CookedKettleFlowerSeed()
     {
         Events = new()
         {

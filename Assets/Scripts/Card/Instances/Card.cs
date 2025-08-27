@@ -182,6 +182,10 @@ public abstract class Card : IComparable<Card>
         {
             p.onProgressFull = () => AddCard($"有产物的{CardName}", Bag);
         }
+        if (TryGetComponent<PlantGrowthComponent>(out var pg))
+        {
+            pg.onDead = () => AddCard(pg.deadCardId, Bag);
+        }
     }
 
     private bool isUpdating = false; // 是否已启用每回合更新

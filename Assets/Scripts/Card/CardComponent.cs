@@ -47,15 +47,16 @@ public class FreshnessComponent : CardComponent, IUpdate
         freshness -= (int)(TimeManager.Instance.SettleInterval * updateRate);
         freshness = Mathf.Max(freshness, 0);
 
-        BelongedCard.RefreshSlot();
-
         if (freshness <= 0)
         {
             BelongedCard.ShowTip($"{BelongedCard.CardName}腐烂了");
             freshness = 0;
             BelongedCard.DestroyThis();
             onRotton?.Invoke();
+            return;
         }
+
+        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
@@ -94,14 +95,15 @@ public class GrowthComponent : CardComponent, IUpdate
         growth += (int)(TimeManager.Instance.SettleInterval * updateRate);
         growth = Mathf.Min(growth, maxGrowth);
 
-        BelongedCard.RefreshSlot();
-
         if (growth >= maxGrowth)
         {
             growth = maxGrowth;
             BelongedCard.DestroyThis();
             onGrownUp?.Invoke();
+            return;
         }
+
+        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
@@ -140,14 +142,15 @@ public class ProgressComponent : CardComponent, IUpdate
         progress += (int)(TimeManager.Instance.SettleInterval * updateRate);
         progress = Mathf.Min(progress, maxProgress);
 
-        BelongedCard.RefreshSlot();
-
         if (progress >= maxProgress)
         {
             progress = maxProgress;
             BelongedCard.DestroyThis();
             onProgressFull?.Invoke();
+            return;
         }
+
+        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
@@ -589,60 +592,79 @@ public class OxygenStorageComponent : CardComponent
 }
 #endregion
 
-#region PlantGrowth
-public class PlantGrowthComponent : CardComponent
+#region 植物生长组件
+public class PlantGrowthComponent : CardComponent, IUpdate
 {
-    public float GrowthRate;
-    public float GrowthProgress;
-    public int DeadProgress;
-    public float minConfortTempreture;
-    public float maxConfortTempreture;
-    public float minGrowTempture;
-    public float maxGrowTempture;
-    public float minLiveTempture;
-    public float maxLiveTempture;
-    public string DeadCardName; 
-    public List<PressureLevel> PressureList;
-    public PlantGrowthComponent(float growthRate, float minConfortTempreture, float maxConfortTempreture, float minGrowTempture, float maxGrowTempture, float minLiveTempture, float maxLiveTempture, string deadCardName, List<PressureLevel> pressureList)
+    public float growthRate; // 生长速率
+    public float growthProgress; // 生长进度
+    public int deadProgress; // 死亡进度
+    public float minConfortTempreture; // 最低舒适温度
+    public float maxConfortTempreture; // 最高舒适温度
+    public float minGrowTempture; // 最低生长温度
+    public float maxGrowTempture; // 最高生长温度
+    public float minLiveTempture; // 最低存活温度
+    public float maxLiveTempture; // 最高存活温度
+    public string deadCardId; // 死亡后变成的卡牌ID 
+    public List<PressureLevel> pressureList;
+
+    [JsonIgnore] public UnityAction onDead;
+
+    public PlantGrowthComponent(float growthRate, float minConfortTempreture, float maxConfortTempreture, float minGrowTempture, float maxGrowTempture, float minLiveTempture, float maxLiveTempture, string deadCardId, List<PressureLevel> pressureList)
     { 
-        GrowthRate = growthRate;
+        this.growthRate = growthRate;
         this.minConfortTempreture = minConfortTempreture;
         this.maxConfortTempreture = maxConfortTempreture;
         this.minGrowTempture = minGrowTempture;
         this.maxGrowTempture = maxGrowTempture;
         this.minLiveTempture = minLiveTempture;
         this.maxLiveTempture = maxLiveTempture;
-        DeadCardName = deadCardName;
-        PressureList = pressureList;
-        GrowthProgress = 0;
+        this.deadCardId = deadCardId;
+        this.pressureList = pressureList;
+        growthProgress = 0;
+        deadProgress = 5; // 初始死亡进度
     }
-    public void Grow(EnvironmentBag bag)
+
+    public void Update()
     {
+        if (deadProgress <= 0) return;
+
+        var bag = BelongedCard.Bag as EnvironmentBag;
         PressureLevel curPressureLevel = bag.PressureLevel;
-        bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var temp);
-        float curTempture= temp.CurValue;
-        if (PressureList.Contains(curPressureLevel))
-        {
-            if (curTempture <= maxConfortTempreture && curTempture > minConfortTempreture)
-            {
-                GrowthProgress += GrowthRate*1.2f;
-            }
-            else if (curTempture <= maxGrowTempture && curTempture > minGrowTempture)
-            {
-                GrowthProgress += GrowthRate*1f;
-            }
-            else if(curTempture<=maxLiveTempture && curTempture>minLiveTempture)
-            {
-                //不生长
-            }
-            else
-            {
-                DeadProgress++;
-            }
-        }
         
+        bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var t);
+        float curTempture= t.CurValue;
+
+        if (!pressureList.Contains(curPressureLevel)) return;
+
+
+        if (curTempture <= maxConfortTempreture && curTempture > minConfortTempreture)
+        {
+            growthProgress += growthRate * 1.2f; // 舒适区生长加快
+        }
+        else if (curTempture <= maxGrowTempture && curTempture > minGrowTempture)
+        {
+            growthProgress += growthRate * 1f;
+        }
+        else if (curTempture <= maxLiveTempture && curTempture > minLiveTempture)
+        {
+            //不生长
+        }
+        else
+        {
+            // 死亡进度增加
+            deadProgress--;
+        }
+
+        if (deadProgress <= 0)
+        {
+            BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
+            deadProgress = 5;
+            BelongedCard.DestroyThis();
+            onDead?.Invoke();
+            return;
+        }
+
+        BelongedCard.RefreshSlot();
     }
 }
-
 #endregion
-

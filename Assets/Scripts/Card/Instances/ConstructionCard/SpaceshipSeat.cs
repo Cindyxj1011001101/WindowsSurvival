@@ -2,14 +2,14 @@
 
 public class SpaceshipSeat : ConstructionCard
 {
-    public int curReduceCount = -1;
-    public int MaxReduceCount = 2;
+    public int curReduceCount = 0;
+    public int maxReduceCount = 2;
     public float reduceRate = 0.5f;
     private SpaceshipSeat()
     {
         Events = new()
         {
-            new Event("靠着休息", "靠着休息",Event_Rest,Judge_Rest),
+            new Event("靠着休息", "靠着休息", Event_Rest, Judge_Rest),
         };
     }
     public override void LateInit()
@@ -25,14 +25,14 @@ public class SpaceshipSeat : ConstructionCard
         EventManager.Instance.RemoveListener(EventType.StartSleeping, StartSleeping);
         EventManager.Instance.RemoveListener(EventType.StopSleeping, StopSleeping);
     }
-    public void Event_Rest(out string tip)
+    private void Event_Rest(out string tip)
     {
         tip = string.Empty;
         //TODO:唤起时间窗口，设置休息时长为0-60分钟
         curReduceCount++;
     }
-    public bool Judge_Rest(out string hint)
-    { 
+    private bool Judge_Rest(out string hint)
+    {
         hint = string.Empty;
         if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
         {
@@ -41,19 +41,23 @@ public class SpaceshipSeat : ConstructionCard
         }
         return true;
     }
-    public void StartSleeping()
+
+    private void StartSleeping()
     {
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, +2.7f*Mathf.Pow(reduceRate, curReduceCount));
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.San, +2f*Mathf.Pow(reduceRate, curReduceCount));
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, +2.7f * Mathf.Pow(reduceRate, curReduceCount));
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.San, +2f * Mathf.Pow(reduceRate, curReduceCount));
     }
 
-    public void StopSleeping()
+    private void StopSleeping()
     {
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, -2.7f*Mathf.Pow(reduceRate, curReduceCount));
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.San, -2f*Mathf.Pow(reduceRate, curReduceCount));
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, -2.7f * Mathf.Pow(reduceRate, curReduceCount));
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.San, -2f * Mathf.Pow(reduceRate, curReduceCount));
     }
-    protected override System.Action OnUpdate => () =>
+
+    protected override void OnUpdate()
     {
-        if (TimeManager.Instance.AnotherDay()) curReduceCount = -1; // 隔天时刷新可使用次数
-    };
+        base.OnUpdate();
+
+        if (TimeManager.Instance.AnotherDay()) curReduceCount = 0; // 隔天时刷新可使用次数
+    }
 }
