@@ -75,9 +75,9 @@ public class Campfire : ConstructionCard
         fuelStorage.SetIsFiring(true);
         SoundManager.Instance.PlaySound("点火_02");
 
-        // 只有玩家在同一地点时才播放循环音效
-        if (env == GameManager.Instance.CurEnvironmentBag)
-            SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 1f);
+        // 只有玩家在同一地点且点燃时才播放循环音效
+        if (env == GameManager.Instance.CurEnvironmentBag && fuelStorage.isFiring)
+            SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 0.3f);
     }
 
     private bool Judge_Light(out string hint)
