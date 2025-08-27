@@ -36,6 +36,8 @@ public class WindowsManager : MonoBehaviour
     private int currentPresetIndex;
     public int CurrentPresetIndex => currentPresetIndex;
 
+    private float sobrietyChangeRateWhileSleeping = +3.5f;
+
     private void Awake()
     {
         instance = this;
@@ -55,12 +57,12 @@ public class WindowsManager : MonoBehaviour
             var window = (OpenWindow("TimeSelect", true) as TimeSelectWindow);
             window.onConfirm += (time) =>
             {
-                StateManager.Instance.Sleep(time);
+                StateManager.Instance.Sleep(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRateWhileSleeping } });
             };
             window.getConfirmEffects += (t) =>
             {
                 Dictionary<PlayerStateEnum, float> p = null;
-                float sobrietyChange = t / TimeManager.Instance.SettleInterval * StateManager.Instance.SobrietyChangeRateWhileSleeping;
+                float sobrietyChange = t / TimeManager.Instance.SettleInterval * sobrietyChangeRateWhileSleeping;
                 if (sobrietyChange > 0)
                 {
                     p = new()
