@@ -162,15 +162,21 @@ public class DetailsWindow : BagWindow
                 innerBag = component.bag;
 
                 innerContentsMask.SetActive(!component.canAddOrRemove);
+                // 显示内容物
+                DisplayInnerContents();
             }
             else
             {
                 innerContentsButton.gameObject.SetActive(false);
+                // 显示详情
+                DisplayDetails();
             }
         }
-
-        // 显示详情
-        DisplayDetails();
+        else
+        {
+            // 显示详情
+            DisplayDetails();
+        }
 
         // 打开详情如果卡牌有循环音
         if (currentDisplayedCard.HasLoopSound)
