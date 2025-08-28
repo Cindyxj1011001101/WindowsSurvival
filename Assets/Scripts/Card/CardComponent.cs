@@ -279,7 +279,8 @@ public class InnerContentsComponent : CardComponent
     [JsonIgnore] public UnityAction<Card> onRemoveCard;
 
     public bool display = true; // 是否显示内容物
-    public bool canAddOrRemove = true; // 是否可以添加或移除内容物
+    public bool allowAdd = true; // 是否允许添加内容物
+    public bool allowRemove = true; // 是否允许移除内容物
 
     public InnerContentsComponent() { }
 

@@ -15,8 +15,9 @@ public class GarbageDestroyer : ConstructionCard
     private void Event_Destroy(out string tip)
     {
         tip = string.Empty;
-        innerContents.bag.Clear();
-        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
+        var window = WindowsManager.Instance.OpenWindow("Confirm", true) as ConfirmWindow;
+        window.SetText("确认要销毁所有内容物吗？");
+        window.onConfirm = () => innerContents.Clear();
     }
 
     private bool Judge_Destroy(out string hint)

@@ -14,7 +14,7 @@ public class SafeInsurance : ConstructionCard
     {
         base.LateInit();
         innerContents.display = false; // 不显示内容物
-        innerContents.canAddOrRemove = false; // 不允许添加或移除内容物
+        innerContents.allowAdd = innerContents.allowRemove = false; // 不允许添加或移除内容物
     }
 
     /// <summary>

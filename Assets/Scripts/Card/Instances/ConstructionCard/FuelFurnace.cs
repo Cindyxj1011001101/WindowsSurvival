@@ -141,7 +141,7 @@ public class FuelFurnace : ConstructionCard
         innerContents.PauseUpdating();
 
         // 不可以添加或移除内容物
-        innerContents.canAddOrRemove = false;
+        innerContents.allowAdd = innerContents.allowRemove = false;
 
         // 记录当前炉内的卡牌，即需要加工的卡牌
         foreach (var slot in innerContents.bag.Slots)
@@ -286,7 +286,7 @@ public class FuelFurnace : ConstructionCard
             cardsToProcesss.Clear(); // 销毁加工列表
 
             // 可放入拖出卡牌
-            innerContents.canAddOrRemove = true;
+            innerContents.allowAdd = innerContents.allowRemove = true;
             RefreshSlot();
             ShowTip("燃料炉加工完成");
         }

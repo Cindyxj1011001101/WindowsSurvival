@@ -98,7 +98,7 @@ public class Trap : ConstructionCard
         innerContents.PauseUpdating();
 
         // 不可添加或移除内容物
-        innerContents.canAddOrRemove = false;
+        innerContents.allowAdd = innerContents.allowRemove = false;
 
         TimeManager.Instance.AddTime(15);
         stateMachine.ChangeState("已布置");
@@ -149,7 +149,7 @@ public class Trap : ConstructionCard
         innerContents.Clear();
 
         // 恢复内容物的可添加移除
-        innerContents.canAddOrRemove = true;
+        innerContents.allowAdd = innerContents.allowRemove = true;
 
         // 变回未布置状态
         stateMachine.ChangeState("未布置");

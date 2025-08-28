@@ -10,6 +10,12 @@ public class InnerBag : Bag
     [JsonIgnore]
     public float WeightLossRate => component.weightLossRate;
 
+    [JsonIgnore]
+    public bool AllowAdd => component.allowAdd;
+
+    [JsonIgnore]
+    public bool AllowRemove => component.allowRemove;
+
     public void SetComponent(InnerContentsComponent component)
     {
         this.component = component;
@@ -17,9 +23,9 @@ public class InnerBag : Bag
 
     public override bool CanAddCard(Card card, out string tip)
     {
-        if (!component.canAddOrRemove)
+        if (!component.allowAdd)
         {
-            tip = "当前不可以放入和取出卡牌";
+            tip = "当前不可以放入卡牌";
             return false;
         }
 
@@ -47,30 +53,26 @@ public class InnerBag : Bag
 
     public override void OnAddCard(Card card)
     {
-        component.BelongedCard.RefreshSlot();
-
         // 计算重量
         if (BelongedCard.Bag is PlayerBag || BelongedCard.Bag is EquipmentBag)
         {
             StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, card.Weight * (1 - component.weightLossRate));
         }
-        
-        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
 
         component.onAddCard?.Invoke(card);
+
+        component.BelongedCard.RefreshSlot();
     }
 
     public override void OnRemoveCard(Card card)
     {
-        component.BelongedCard.RefreshSlot();
-
         if (BelongedCard.Bag is PlayerBag || BelongedCard.Bag is EquipmentBag)
         {
             StateManager.Instance.ChangePlayerState(PlayerStateEnum.Load, -card.Weight * (1 - component.weightLossRate));
         }
 
-        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, component.BelongedCard);
-
         component.onRemoveCard?.Invoke(card);
+
+        component.BelongedCard.RefreshSlot();
     }
 }
