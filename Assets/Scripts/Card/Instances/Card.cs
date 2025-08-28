@@ -68,15 +68,7 @@ public abstract class Card : IComparable<Card>
     public int MaxStackNum => CardFactory.GetMaxStackNum(CardId);
 
     [JsonIgnore]
-    public bool Moveable
-    {
-        get
-        {
-            if (Bag is InnerBag innerBag && !innerBag.AllowRemove) return false;
-
-            return CardFactory.GetMoveable(CardId);
-        }
-    }
+    public bool Moveable => CardFactory.GetMoveable(CardId);
 
     [JsonIgnore]
     public float Weight

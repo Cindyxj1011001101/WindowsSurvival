@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -124,8 +125,11 @@ public static class CardFactory
             // 获取图集的所有图片
             var sprites = Resources.LoadAll<Sprite>("Sprites/" + config.CardType.ToString());
             // 找到图片的索引
-            var index = int.Parse(config.CardImagePath);
-            return sprites[index];
+            if (int.TryParse(config.CardImagePath, out var index))
+            {
+                return sprites[index];
+            }
+            return null;
         }
         throw new ArgumentException($"不存在ID为{cardId}的卡牌");
     }
@@ -138,8 +142,11 @@ public static class CardFactory
             // 获取图集的所有图片
             var sprites = Resources.LoadAll<Sprite>("Sprites/" + config.CardType.ToString());
             // 找到图片的索引
-            var index = int.Parse(imagePath);
-            return sprites[index];
+            if (int.TryParse(imagePath, out var index))
+            {
+                return sprites[index];
+            }
+            return null;
         }
         throw new ArgumentException($"不存在ID为{cardId}的卡牌");
     }

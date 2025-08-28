@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   techName: "\u9AD8\u6E29\u84B8\u998F"
   techDescription: "\u4F7F\u7528\u71C3\u6599\u52A0\u70ED\u6D77\u6C34\u8FDB\u884C\u84B8\u998F\u4EE5\u83B7\u53D6\u6DE1\u6C34\u3002"
-  recipes: []
+  recipes:
+  - {fileID: 11400000, guid: f2a285d49d3abbd48b8bd28ff826cdfa, type: 2}
   prerequisites: []
   cost: 24
   techType: 1

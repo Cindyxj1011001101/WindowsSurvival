@@ -58,6 +58,16 @@ public class GMCommand
     {
         AddCard("垃圾销毁器");
     }
+    [MenuItem("Command/添加/燃料蒸馏器")]
+    public static void Rlzlq()
+    {
+        AddCard("燃料蒸馏器");
+    }
+    [MenuItem("Command/添加/盐水")]
+    public static void Ys()
+    {
+        AddCard("盐水");
+    }
     [MenuItem("Command/添加/电动排水机")]
     public static void AddMachine()
     {
@@ -234,6 +244,11 @@ public class GMCommand
     public static void L()
     {
         TimeManager.Instance.AddTime(50);
+    }
+    [MenuItem("Command/时间+15min")]
+    public static void Add15Min()
+    {
+        TimeManager.Instance.AddTime(15);
     }
 
     [MenuItem("Command/添加/氧气罐")]

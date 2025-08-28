@@ -67,7 +67,7 @@ public class Campfire : ConstructionCard
 
         var env = Bag as EnvironmentBag;
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -4); // 点燃后地点氧气每回合-4
-        env.ChangeEnvironmentState(EnvironmentStateEnum.CarbonMonoxideLevel, +2); // 点燃后地点一氧化碳每回合+2
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, +2); // 点燃后地点一氧化碳每回合+2
 
         // 点燃后暂停所有卡牌每回合更新
         innerContents.PauseUpdating();
@@ -109,7 +109,7 @@ public class Campfire : ConstructionCard
 
         var env = Bag as EnvironmentBag;
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +4);
-        env.ChangeEnvironmentState(EnvironmentStateEnum.CarbonMonoxideLevel, -2);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, -2);
 
         // 熄灭后恢复所有卡牌每回合更新
         innerContents.ContinueUpdating();

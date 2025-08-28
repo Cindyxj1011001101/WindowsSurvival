@@ -103,13 +103,21 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 }
             }
             // 跨背包放置
-            else if (sourceSlot.PeekCard().Moveable)
+            else if (!sourceSlot.PeekCard().Moveable)
             {
-                PlaceCardInDifferentBag(targetWindow.Bag, pickedCount, dragEndPosition);
+                AnimateCardReturn(pickedCount, "不能移动该卡牌");
+            }
+            else if (sourceWindow.Bag is InnerBag s && !s.AllowRemove)
+            {
+                AnimateCardReturn(pickedCount, "不能取出卡牌");
+            }
+            else if (targetWindow.Bag is InnerBag t && !t.AllowAdd)
+            {
+                AnimateCardReturn(pickedCount, "不能放入卡牌");
             }
             else
             {
-                AnimateCardReturn(pickedCount, "不能移动该卡牌");
+                PlaceCardInDifferentBag(targetWindow.Bag, pickedCount, dragEndPosition);
             }
         }
         // 不能放置

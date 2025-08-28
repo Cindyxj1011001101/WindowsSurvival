@@ -59,8 +59,12 @@ public class EnvironmentBag : Bag
     private void InitState()
     {
         // 在室内显示氧气
+        // 在室内显示一氧化碳
         if (PlaceData.isIndoor)
+        {
             StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(UnityEngine.Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
+            StateDict.Add(EnvironmentStateEnum.CarbonMonoxideLevel, new EnvironmentState(0, 100, EnvironmentStateEnum.CarbonMonoxideLevel));
+        }
     }
 
     private void InitDropList()
