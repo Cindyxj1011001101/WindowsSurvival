@@ -405,11 +405,11 @@ public abstract class Card : IComparable<Card>
     {
         get
         {
-            if (transform != null)
-                return transform;
+            if (transform != null) return transform;
 
+            if (Slot != null) return Slot.transform;
 
-            return Slot == null ? null : Slot.transform;
+            return null;
         }
         set
         {
@@ -444,7 +444,13 @@ public abstract class Card : IComparable<Card>
 
     protected void AddCard(string cardId, Bag targetBag)
     {
-        AddCard(CardFactory.CreateCard(cardId), targetBag);
+        AddCard(cardId, targetBag, out _);
+    }
+
+    protected void AddCard(string cardId, Bag targetBag, out Card card)
+    {
+        card = CardFactory.CreateCard(cardId);
+        AddCard(card, targetBag);
     }
 
     protected void AddCard(Card card, Bag targetBag)

@@ -11,6 +11,8 @@ public class CaughtAquariusFishWithProduct : Card
         {
             new Event("饮用", "饮用水瓶鱼的育卵液", Event_Drink, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Thirst, 40 },{ PlayerStateEnum.Fullness, 10 } }),
+
+            new Event("液体装瓶", "利用凝胶装瓶器从水瓶鱼中提取育卵液，这种提取方式相对温和，不会杀死水瓶鱼。", Event_Bottling, Judge_Bottling, () => 15)
             
             //new Event("放生", "放生水瓶鱼", Event_Release, Judge_Release)
         };
@@ -47,5 +49,52 @@ public class CaughtAquariusFishWithProduct : Card
             return false;
         }
         return true;
+    }
+
+    /// <summary>
+    /// 液体装瓶
+    /// </summary>
+    /// <param name="tip"></param>
+    private void Event_Bottling(out string tip)
+    {
+        Bottling(GameManager.Instance.PlayerBag.FindCardOfName("凝胶装瓶器"), out tip);
+    }
+
+    private bool Judge_Bottling(out string hint)
+    {
+        hint = string.Empty;
+        if (GameManager.Instance.PlayerBag.FindCardOfName("凝胶装瓶器") == null)
+        {
+            hint = "需要凝胶装瓶器";
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 液体装瓶
+    /// </summary>
+    /// <param name="tool"></param>
+    /// <param name="tip"></param>
+    private void Bottling(Card tool, out string tip)
+    {
+        tip = string.Empty;
+        DestroyThis();
+        tool.Use();
+
+        TimeManager.Instance.AddTime(15);
+
+        AddCard("被捉住的水瓶鱼", Bag);
+        AddCard("育卵液", true);
+    }
+
+    public override bool CanQuickInteract(Card card)
+    {
+        return card.CardId == "凝胶装瓶器";
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        Bottling(slot.PeekCard(), out tip);
     }
 }

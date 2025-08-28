@@ -257,6 +257,18 @@ public class GMCommand
         AddCard("氧气罐");
     }
 
+    [MenuItem("Command/添加/凝胶装瓶器")]
+    public static void Njzpq()
+    {
+        AddCard("凝胶装瓶器");
+    }
+
+    [MenuItem("Command/添加/有产物的水瓶鱼")]
+    public static void Ycwdspy()
+    {
+        AddCard("有产物的水瓶鱼");
+    }
+
     [MenuItem("Command/添加/氧气面罩")]
     public static void N()
     {
