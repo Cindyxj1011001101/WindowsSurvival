@@ -84,18 +84,18 @@ public static class ExcelReader
             {
                 cardConfig.FuelValue = int.Parse(row[26].ToString());
             }
-            // if (cardConfig.HasFoodProperty)
-            // {
-            //     cardConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>();
-            //     cardConfig.FoodPropertyDict.Add(FoodProperty.EatableDegree, ParseFoodPropertyDictValue(row[28].ToString()));//可食用度
-            //     cardConfig.FoodPropertyDict.Add(FoodProperty.UneatableDegree, ParseFoodPropertyDictValue(row[29].ToString()));//不可食用度   
-            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Meatiness, ParseFoodPropertyDictValue(row[30].ToString()));//肉度
-            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Fishiness, ParseFoodPropertyDictValue(row[31].ToString()));//鱼度
-            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Shellfishiness, ParseFoodPropertyDictValue(row[32].ToString()));//贝度
-            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Wateriness, ParseFoodPropertyDictValue(row[33].ToString()));//水度
-            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Vegetableness, ParseFoodPropertyDictValue(row[34].ToString()));//菜度
-            //     cardConfig.FoodPropertyDict.Add(FoodProperty.Fruitiness, ParseFoodPropertyDictValue(row[35].ToString()));//果度
-            // }
+            if (cardConfig.HasFoodProperty)
+            {
+                cardConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>();
+                cardConfig.FoodPropertyDict.Add(FoodProperty.EatableDegree, ParseFoodPropertyDictValue(row[28].ToString()));//可食用度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.UneatableDegree, ParseFoodPropertyDictValue(row[29].ToString()));//不可食用度   
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Meatiness, ParseFoodPropertyDictValue(row[30].ToString()));//肉度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Fishiness, ParseFoodPropertyDictValue(row[31].ToString()));//鱼度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Shellfishiness, ParseFoodPropertyDictValue(row[32].ToString()));//贝度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Wateriness, ParseFoodPropertyDictValue(row[33].ToString()));//水度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Vegetableness, ParseFoodPropertyDictValue(row[34].ToString()));//菜度
+                cardConfig.FoodPropertyDict.Add(FoodProperty.Fruitiness, ParseFoodPropertyDictValue(row[35].ToString()));//果度
+            }
             if (cardConfig.IsPassage)
             {
                 cardConfig.MoveTime = int.Parse(row[37].ToString());
@@ -117,18 +117,18 @@ public static class ExcelReader
                 cardConfig.CanBeDemolished = bool.Parse(row[49].ToString());
                 cardConfig.DemolitionDebris = row[50].ToString();
             }
-            //if (cardConfig.IsPlant)
-            //{
-            //    cardConfig.GrowthRate= float.Parse(row[52].ToString());
-            //    cardConfig.MinConfortTempreture = float.Parse(row[53].ToString());
-            //    cardConfig.MaxConfortTempreture = float.Parse(row[54].ToString());
-            //    cardConfig.MinGrowTempture = float.Parse(row[55].ToString());
-            //    cardConfig.MaxGrowTempture = float.Parse(row[56].ToString());
-            //    cardConfig.MinLiveTempture = float.Parse(row[57].ToString());
-            //    cardConfig.MaxLiveTempture = float.Parse(row[58].ToString());
-            //    cardConfig.DeadcardName = row[59].ToString();
-            //    cardConfig.Pressures = ParsePressureLevels(row[60].ToString());
-            //}
+            if (cardConfig.IsPlant)
+            {
+                cardConfig.GrowthRate= float.Parse(row[52].ToString());
+                cardConfig.MinConfortTempreture = float.Parse(row[53].ToString());
+                cardConfig.MaxConfortTempreture = float.Parse(row[54].ToString());
+                cardConfig.MinGrowTempture = float.Parse(row[55].ToString());
+                cardConfig.MaxGrowTempture = float.Parse(row[56].ToString());
+                cardConfig.MinLiveTempture = float.Parse(row[57].ToString());
+                cardConfig.MaxLiveTempture = float.Parse(row[58].ToString());
+                cardConfig.DeadcardName = row[59].ToString();
+                cardConfig.Pressures = ParsePressureLevels(row[60].ToString());
+            }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
 
