@@ -142,6 +142,11 @@ public class GMCommand
     {
         AddCard("氧烛");
     }
+    [MenuItem("Command/添加/钢锤")]
+    public static void GetSteelHammer()
+    {
+        AddCard("钢锤");
+    }
     [MenuItem("Command/添加/有产物的虹吸海葵")]
     public static void V()
     {
