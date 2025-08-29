@@ -344,7 +344,13 @@ public abstract class Card : IComparable<Card>
     {
         // 如果other有该组件，并且当前卡牌也有该组件，则复制一份
         if (other.TryGetComponent<T>(out var component) && TryGetComponent<T>(out _))
-            components[typeof(T)] = JsonManager.DeepCopy(component);
+        {
+            var newComponent = JsonManager.DeepCopy(component);
+            components[typeof(T)] = newComponent;
+            newComponent.SetBelongedCard(this);
+            if (newComponent is InnerContentsComponent innerContents)
+                innerContents.Init();
+        }
     }
 
     public int CompareTo(Card other)
