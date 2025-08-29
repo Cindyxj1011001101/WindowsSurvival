@@ -22,6 +22,9 @@ public class SalineWater : Card
         DestroyThis();
 
         tip = string.Empty;
+        // 播放喝水的音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("喝_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -25);
         TimeManager.Instance.AddTime(3);
     }

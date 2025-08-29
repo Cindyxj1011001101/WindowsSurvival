@@ -23,6 +23,9 @@ public class EggRearingFluid : Card
         DestroyThis();
 
         tip = string.Empty;
+        // 播放喝水的音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("喝_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 40);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 10);
         TimeManager.Instance.AddTime(3);

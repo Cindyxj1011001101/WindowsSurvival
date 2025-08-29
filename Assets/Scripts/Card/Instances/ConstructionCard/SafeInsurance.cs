@@ -1,3 +1,4 @@
+//变形的保险柜
 public class SafeInsurance : ConstructionCard
 {
     private InnerContentsComponent innerContents;
@@ -5,7 +6,7 @@ public class SafeInsurance : ConstructionCard
     {
         Events = new()
         {
-            new Event("用手砸", "你也太不心疼麦麦了", Event_UseHand, Judge_UseHand, () => 15, () => new() { { PlayerStateEnum.Sobriety, -5 }, { PlayerStateEnum.PainLevel, 15 } }),
+            new Event("用手砸", "如果是方块手的话或许能做到", Event_UseHand, Judge_UseHand, () => 15, () => new() { { PlayerStateEnum.Sobriety, -5 }, { PlayerStateEnum.PainLevel, 15 } }),
             new Event("用铲子凿", "还是有些费力，但是比用手好得多", Event_UseShovel, Judge_UseShovel, () => 15, () => new() { { PlayerStateEnum.Sobriety, -4 } }),
             new Event("用锤子砸", "最有效的打开保险箱的方式", Event_UseHammer, Judge_UseHammer, () => 15)
         };
@@ -24,6 +25,9 @@ public class SafeInsurance : ConstructionCard
     private void Event_UseHand(out string tip)
     {
         tip = string.Empty;
+        // 播放音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("金属受击_01", true);
         Use(3);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -5);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 15);
@@ -43,6 +47,9 @@ public class SafeInsurance : ConstructionCard
     private void Event_UseShovel(out string tip)
     {
         UseShovel(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
+        // 播放音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("凿_01", true);
     }
 
     private bool Judge_UseShovel(out string hint)
@@ -63,6 +70,9 @@ public class SafeInsurance : ConstructionCard
     private void Event_UseHammer(out string tip)
     {
         UseHammer(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), out tip);
+        // 播放音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("暴力拆毁_01", true);
     }
 
     private bool Judge_UseHammer(out string hint)
@@ -78,7 +88,10 @@ public class SafeInsurance : ConstructionCard
 
     private void OnBroken()
     {
-        AddCard("被撬开的保险箱", false, out var card);
+        // 播放音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("摧毁_01", true);
+        AddCard("被撬开的保险柜", false, out var card);
         // 继承内容物
         card.InheritComponent<InnerContentsComponent>(this);
     }
