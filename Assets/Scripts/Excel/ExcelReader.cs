@@ -46,11 +46,11 @@ public static class ExcelReader
                 IsBigIcon = bool.Parse(row[22].ToString()),
                 HasInnerContents = bool.Parse(row[23].ToString()),
                 IsFlammable = bool.Parse(row[25].ToString()),
-                // HasFoodProperty = bool.Parse(row[27].ToString()),
+                HasFoodProperty = bool.Parse(row[27].ToString()),
                 IsPassage = bool.Parse(row[36].ToString()),
                 CanCook = bool.Parse(row[40].ToString()),
                 IsConstruction = bool.Parse(row[43].ToString()),
-                //IsPlant = bool.Parse(row[51].ToString()),
+                IsPlant = bool.Parse(row[51].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
