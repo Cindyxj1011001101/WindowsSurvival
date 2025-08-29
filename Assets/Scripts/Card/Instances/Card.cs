@@ -368,6 +368,18 @@ public abstract class Card : IComparable<Card>
             other.TryGetComponent<DurabilityComponent>(out var o);
             return c.durability - o.durability;
         }
+        else if (other.TryGetComponent<PlantGrowthComponent>(out var p))
+        {
+            // 生长度高的优先
+            other.TryGetComponent<PlantGrowthComponent>(out var o);
+            return Mathf.CeilToInt(o.growthProgress - p.growthProgress);
+        }
+        else if (other.TryGetComponent<GrowthComponent>(out var g))
+        {
+            // 生长度高的优先
+            other.TryGetComponent<GrowthComponent>(out var o);
+            return Mathf.CeilToInt(o.growth - g.growth);
+        }
         else
         {
             return 0;

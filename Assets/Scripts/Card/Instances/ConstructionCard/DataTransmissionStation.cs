@@ -33,7 +33,7 @@ public class DataTransmissionStation : ConstructionCard
             var states = new List<CardState>()
             {
                 new ("待机中", "17", false, true, false),
-                new ("研究中", "17", false, true, true),
+                new ("运行中", "17", true, true, true),
             };
             stateMachine = new StateMachineComponent("待机中", states);
             AddComponent(stateMachine);
@@ -57,9 +57,9 @@ public class DataTransmissionStation : ConstructionCard
 
     private void StartWorking()
     {
-        if (stateMachine.currentStateName == "研究中") return;
+        if (stateMachine.currentStateName == "运行中") return;
 
-        stateMachine.ChangeState("研究中");
+        stateMachine.ChangeState("运行中");
         StateManager.Instance.ChangeElectricityChangeRate(-electricityConsume);
     }
 
@@ -113,6 +113,10 @@ public class DataTransmissionStation : ConstructionCard
     {
         base.OnUpdate();
 
-        if (TimeManager.Instance.AnotherDay()) curTimes = 0; // 隔天时刷新可使用次数
+        if (TimeManager.Instance.AnotherDay())
+        {
+            curTimes = 0; // 隔天时刷新可使用次数
+            RefreshSlot();
+        }
     }
 }
