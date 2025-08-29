@@ -23,13 +23,11 @@ public class SleepInstrument : ConstructionCard
         EventManager.Instance.AddListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.AddListener(EventType.StopSleeping, OnStopSleeping);
 
-
-        // 未布置和已布置两种状态
         if (!TryGetComponent(out stateMachine))
         {
             var states = new List<CardState>()
             {
-                new ("已接电", "11", false, true, true),
+                new ("已接电", "11", true, true, true),
                 new ("未接电", "12", false, true, false),
             };
             stateMachine = new StateMachineComponent("未接电", states);
