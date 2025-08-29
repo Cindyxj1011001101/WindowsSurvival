@@ -62,15 +62,14 @@ public class FuelFurnace : ConstructionCard
 
     private bool ContentFilter(Card c, out string s)
     {
-        s= string.Empty;
-        if (c.TryGetComponent<FoodPropertyComponent>(out var component))
+        s = string.Empty;
+        if (!c.TryGetComponent<FoodPropertyComponent>(out _))
         {
-            return true;
-        }
-        else
-        {
+            s = "只能放入可加工的卡牌";
             return false;
         }
+
+        return true;
     }
 
     /// <summary>

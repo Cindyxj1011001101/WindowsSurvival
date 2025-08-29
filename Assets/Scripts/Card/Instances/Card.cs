@@ -133,7 +133,7 @@ public abstract class Card : IComparable<Card>
 
     private void Update()
     {
-        if (!isUpdatePaused)
+        if (!isUpdatePaused && !Destroyed)
             OnUpdate();
     }
 
