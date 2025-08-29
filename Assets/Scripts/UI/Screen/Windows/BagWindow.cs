@@ -66,7 +66,7 @@ public abstract class BagWindow : WindowBase
     public void RemoveSlot(CardSlot slot)
     {
         slots.Remove(slot);
-        Destroy(slot.gameObject);
+        ObjectBufferPool.Instance.Restore(slot.gameObject);
 
         MonoUtility.UpdateLayoutSize(slotLayout.GetComponent<ILayoutGroup>());
     }
