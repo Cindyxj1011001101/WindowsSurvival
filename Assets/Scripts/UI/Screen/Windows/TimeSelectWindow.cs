@@ -13,6 +13,11 @@ public class TimeSelectWindow : WindowBase
     [SerializeField] private HoverableButton confirmButton;
     [SerializeField] private HoverableButton cancelButton;
 
+    [SerializeField] private HoverableButton hourUpButton;
+    [SerializeField] private HoverableButton hourDownButton;
+    [SerializeField] private HoverableButton minuteUpButton;
+    [SerializeField] private HoverableButton minuteDownButton;
+
     private int hour = 0;
     private int minute = 0;
 
@@ -20,18 +25,35 @@ public class TimeSelectWindow : WindowBase
 
     public Func<int, (string, int, Dictionary<PlayerStateEnum, float>, Dictionary<EnvironmentStateEnum, float>)> getConfirmEffects;
 
-    protected override void Init()
+    private int minMinute = 0;
+    private int minHour = 0;
+
+    private int maxMinute = 60;
+    private int maxHour = 24;
+
+    public void SetTimeRange(int minTime, int maxTime)
     {
-        hourScroll.OnPanelCentered.AddListener((current, previous) =>
+        minHour = minTime / 60;
+        minMinute = minTime % 60;
+        maxHour = maxTime / 60;
+        maxMinute = maxTime % 60;
+
+        for (int i = 0; i < hourScroll.Content.childCount; i++)
         {
-            SoundManager.Instance.PlaySound("简单点击_01", true);
-            hour = 23 - current;
-        });
-        minuteScroll.OnPanelCentered.AddListener((current, previous) =>
-        {
-            SoundManager.Instance.PlaySound("简单点击_01", true);
-            minute = 59 - current;
-        });
+            hourScroll.Content.GetChild(23 - i).gameObject.SetActive(i >= minHour && i <= maxHour);
+        }
+
+        hour = minHour;
+        minute = minMinute;
+        hourScroll.StartingPanel = 23 - minHour;
+        minuteScroll.StartingPanel = 59 - minMinute;
+        ClampTimeRange();
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
         foreach (Transform child in hourScroll.Content)
         {
             if (child.TryGetComponent<Text>(out var text))
@@ -46,8 +68,47 @@ public class TimeSelectWindow : WindowBase
                 text.text = $"{59 - child.GetSiblingIndex():D2}";
             }
         }
-        hour = 23 - hourScroll.StartingPanel;
-        minute = 59 - minuteScroll.StartingPanel;
+    }
+
+    protected override void Init()
+    {
+        minuteUpButton.onClick.AddListener(() =>
+        {
+            SoundManager.Instance.PlaySound("简单点击_01", true);
+            if (!minuteScroll.Content.GetChild((minuteScroll.CenteredPanel + 1 + 60) % 60).gameObject.activeSelf) return;
+
+            minuteScroll.GoToNextPanel();
+            minute = (minute - 1 + 60) % 60;
+        });
+
+        minuteDownButton.onClick.AddListener(() =>
+        {
+            SoundManager.Instance.PlaySound("简单点击_01", true);
+            if (!minuteScroll.Content.GetChild((minuteScroll.CenteredPanel - 1 + 60) % 60).gameObject.activeSelf) return;
+
+            minuteScroll.GoToPreviousPanel();
+            minute = (minute + 1 + 60) % 60;
+        });
+
+        hourUpButton.onClick.AddListener(() =>
+        {
+            SoundManager.Instance.PlaySound("简单点击_01", true);
+            if (!hourScroll.Content.GetChild((hourScroll.CenteredPanel + 1 + 24) % 24).gameObject.activeSelf) return;
+
+            hourScroll.GoToNextPanel();
+            hour = (hour - 1 + 24) % 24;
+            ClampTimeRange();
+        });
+
+        hourDownButton.onClick.AddListener(() =>
+        {
+            SoundManager.Instance.PlaySound("简单点击_01", true);
+            if (!hourScroll.Content.GetChild((hourScroll.CenteredPanel - 1 + 24) % 24).gameObject.activeSelf) return;
+
+            hourScroll.GoToPreviousPanel();
+            hour = (hour + 1 + 24) % 24;
+            ClampTimeRange();
+        });
 
         confirmButton.onClick.AddListener(() =>
         {
@@ -68,5 +129,40 @@ public class TimeSelectWindow : WindowBase
             (string textTip, int time, Dictionary<PlayerStateEnum, float> p, Dictionary<EnvironmentStateEnum, float> e) = getConfirmEffects.Invoke(hour * 60 + minute);
             tipController.SetTip(textTip, time, p, e);
         });
+    }
+
+    private void ClampTimeRange()
+    {
+        if (hour == maxHour)
+        {
+            for (int i = 0; i < minuteScroll.Content.childCount; i++)
+            {
+                minuteScroll.Content.GetChild(59 - i).gameObject.SetActive(i <= maxMinute);
+            }
+            if (minute > maxMinute)
+            {
+                minute = maxMinute;
+                minuteScroll.GoToPanel(59 - maxMinute);
+            }
+        }
+        else if (hour == minHour)
+        {
+            for (int i = 0; i < minuteScroll.Content.childCount; i++)
+            {
+                minuteScroll.Content.GetChild(59 - i).gameObject.SetActive(i >= minMinute);
+            }
+            if (minute < minMinute)
+            {
+                minute = minMinute;
+                minuteScroll.GoToPanel(59 - minMinute);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < minuteScroll.Content.childCount; i++)
+            {
+                minuteScroll.Content.GetChild(i).gameObject.SetActive(true);
+            }
+        }
     }
 }

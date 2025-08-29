@@ -48,7 +48,11 @@ public class CoralReef : Card
     {
         base.OnUpdate();
 
-        if (TimeManager.Instance.AnotherDay()) curReduceCount = 0;
+        if (TimeManager.Instance.AnotherDay())
+        {
+            curReduceCount = 0; // 隔天时刷新可使用次数
+            RefreshSlot();
+        }
     }
 
     private void RandomDrop()
