@@ -78,7 +78,7 @@ public class SafeInsurance : ConstructionCard
 
     private void OnBroken()
     {
-        AddCard("被撬开的保险箱", false, out var card);
+        AddCard("被撬开的保险柜", false, out var card);
         // 继承内容物
         card.InheritComponent<InnerContentsComponent>(this);
     }
