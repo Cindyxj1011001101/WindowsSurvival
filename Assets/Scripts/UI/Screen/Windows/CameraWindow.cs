@@ -1,10 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CameraWindow : WindowBase
 {
+    [SerializeField] private RawImage rarImage;
+    [SerializeField]
+
     protected override void Init()
     {
 
