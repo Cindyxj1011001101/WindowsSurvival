@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEditorInternal;
+using UnityEngine;
 
 /// <summary>
 /// 燃料蒸馏器
@@ -7,6 +9,7 @@ public class FuelDistiller : ConstructionCard
 {
     private InnerContentsComponent innerContents; // 内容物组件
     private FuelStorageComponent fuelStorage; // 燃料存储组件
+    private StateMachineComponent stateMachine;
 
     public int maxSalineWaterStorage = 24;
     public int maxFreshWaterStorage = 12;
@@ -41,6 +44,17 @@ public class FuelDistiller : ConstructionCard
         {
             GetBottledWater();
         };
+
+        if (!TryGetComponent(out stateMachine))
+        {
+            var states = new List<CardState>()
+            {
+                new ("未点燃", "22"),
+                new ("已点燃", "22", true),
+            };
+            stateMachine = new StateMachineComponent("未点燃", states);
+            AddComponent(stateMachine);
+        }
     }
 
     /// <summary>
@@ -59,6 +73,9 @@ public class FuelDistiller : ConstructionCard
         innerContents.PauseUpdating();
 
         fuelStorage.SetIsFiring(true);
+
+        stateMachine.ChangeState("已点燃");
+        
         SoundManager.Instance.PlaySound("点火_02");
     }
 
@@ -97,6 +114,8 @@ public class FuelDistiller : ConstructionCard
         innerContents.ContinueUpdating();
 
         fuelStorage.SetIsFiring(false);
+
+        stateMachine.ChangeState("未点燃");
     }
 
     private bool Judge_UnLight(out string hint)

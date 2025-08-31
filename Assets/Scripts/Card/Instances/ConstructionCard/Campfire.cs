@@ -7,6 +7,8 @@ public class Campfire : ConstructionCard
 {
     private InnerContentsComponent innerContents; // 内容物组件
     private FuelStorageComponent fuelStorage; // 燃料存储组件
+    private StateMachineComponent stateMachine;
+
     public override bool HasLoopSound => true;
 
     private Campfire()
@@ -44,6 +46,17 @@ public class Campfire : ConstructionCard
         {
             slot.SetMaxStackNum(1);
         }
+        
+        if (!TryGetComponent(out stateMachine))
+        {
+            var states = new List<CardState>()
+            {
+                new ("未点燃", "18"),
+                new ("已点燃", "18", true),
+            };
+            stateMachine = new StateMachineComponent("未点燃", states);
+            AddComponent(stateMachine);
+        }
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -74,6 +87,8 @@ public class Campfire : ConstructionCard
 
         fuelStorage.SetIsFiring(true);
         SoundManager.Instance.PlaySound("点火_02");
+
+        stateMachine.ChangeState("已点燃");
 
         // 只有玩家在同一地点且点燃时才播放循环音效
         if (env == GameManager.Instance.CurEnvironmentBag && fuelStorage.isFiring)
@@ -115,6 +130,8 @@ public class Campfire : ConstructionCard
         innerContents.ContinueUpdating();
 
         fuelStorage.SetIsFiring(false);
+
+        stateMachine.ChangeState("未点燃");
 
         // 只有玩家在同一地点时才停止音效
         if (env == GameManager.Instance.CurEnvironmentBag)
@@ -166,8 +183,11 @@ public class Campfire : ConstructionCard
                 {
                     // 处理煮熟的逻辑
                     currentCard.DestroyThis();
-                    AddCard(outcomeId, innerContents.bag);
+                    var outcomeCard = CardFactory.CreateCard(outcomeId);
+                    GameManager.Instance.AddCard(outcomeCard, innerContents.bag);
+                    outcomeCard.RefreshSlot();
                     ShowTip($"{currentCard.CardName}熟了");
+                    currentCard.ShowTip($"{currentCard.CardName}熟了");
                 });
             }
         }
