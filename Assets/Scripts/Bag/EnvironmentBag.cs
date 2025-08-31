@@ -55,7 +55,10 @@ public class EnvironmentBag : Bag
     {
         base.Init();
         RepeatableDropList.StartUpdating();
+        // 每回合结算地点状态
+        EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
     }
+
     private void InitState()
     {
         // 在室内显示氧气
@@ -71,6 +74,23 @@ public class EnvironmentBag : Bag
     {
         disposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(placeData.placeType));
         repeatableDropList = JsonManager.DeepCopy(CardFactory.GetRepeatableDropList(placeData.placeType));
+    }
+
+    private Dictionary<EnvironmentStateEnum, float> temp = new(); // 记录地点状态的当前变化率，防止地点状态的结算顺序影响结算结果
+
+    private void IntervalSettle()
+    {
+        temp.Clear();
+        foreach (var (type, state) in stateDict)
+        {
+            if (state.ChangeRate != 0)
+            {
+                //ChangePlayerState(type, state.ChangeRate);
+                temp.Add(type, state.ChangeRate);
+            }
+        }
+
+        ApplyEnvEffects(temp);
     }
 
     /// <summary>

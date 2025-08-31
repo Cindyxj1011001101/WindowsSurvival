@@ -681,21 +681,22 @@ public class StateManager : MonoBehaviour
     /// 定时结算玩家状态
     /// 玩家状态值基础结算，不考虑环境状态
     /// </summary>
-    public void IntervalSettle()
+    private void IntervalSettle()
     {
         PlayerIntervalSettle();
 
         EnvironmentIntervalSettle();
     }
 
-    public void EnvironmentIntervalSettle()
+    private void EnvironmentIntervalSettle()
     {
         ChangeElectricity(Electricity.ChangeRate);
         ChangeWaterLevel(WaterLevel.ChangeRate);
     }
 
     private Dictionary<PlayerStateEnum, float> temp = new(); // 记录玩家状态的当前变化率，防止玩家状态的结算顺序影响结算结果
-    public void PlayerIntervalSettle()
+
+    private void PlayerIntervalSettle()
     {
         temp.Clear();
         foreach (var (type, state) in PlayerStateDict)
