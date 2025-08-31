@@ -50,7 +50,7 @@ public static class ExcelReader
                 IsPassage = bool.Parse(row[36].ToString()),
                 CanCook = bool.Parse(row[40].ToString()),
                 IsConstruction = bool.Parse(row[43].ToString()),
-                //IsPlant = bool.Parse(row[51].ToString()),
+                IsPlant = bool.Parse(row[51].ToString()),
             };
             if (cardConfig.HasFreshness)
             {
@@ -117,18 +117,19 @@ public static class ExcelReader
                 cardConfig.CanBeDemolished = bool.Parse(row[49].ToString());
                 cardConfig.DemolitionDebris = row[50].ToString();
             }
-            //            if (cardConfig.IsPlant)
-            //            {
-            //                cardConfig.GrowthRate= float.Parse(row[52].ToString());
-            //                cardConfig.MinConfortTempreture = float.Parse(row[53].ToString());
-            //                cardConfig.MaxConfortTempreture = float.Parse(row[54].ToString());
-            //                cardConfig.MinGrowTempture = float.Parse(row[55].ToString());
-            //                cardConfig.MaxGrowTempture = float.Parse(row[56].ToString());
-            //                cardConfig.MinLiveTempture = float.Parse(row[57].ToString());
-            //                cardConfig.MaxLiveTempture = float.Parse(row[58].ToString());
-            //                cardConfig.DeadcardName = row[59].ToString();
-            //                cardConfig.Pressures = ParsePressureLevels(row[60].ToString());
-            //            }
+            if (cardConfig.IsPlant)
+            {
+                cardConfig.GrowthRate= float.Parse(row[52].ToString());
+                string[] tempretures= row[53].ToString().Split('_');
+                cardConfig.MinConfortTempreture = float.Parse(tempretures[0]);
+                cardConfig.MaxConfortTempreture = float.Parse(tempretures[1]);
+                cardConfig.MinGrowTempture = float.Parse(tempretures[2]);
+                cardConfig.MaxGrowTempture = float.Parse(tempretures[3]);
+                cardConfig.MinLiveTempture = float.Parse(tempretures[4]);
+                cardConfig.MaxLiveTempture = float.Parse(tempretures[5]);
+                cardConfig.DeadcardName = row[54].ToString();
+                cardConfig.Pressures = ParsePressureLevels(row[55].ToString());
+            }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
 
@@ -197,7 +198,15 @@ public static class ExcelReader
         var result = new List<PressureLevel>();
         foreach (var pressure in pressureLevelsStr.Split("_"))
         {
-            result.Add((PressureLevel)Enum.Parse(typeof(PressureLevel), pressure));
+            result.Add(pressure switch
+            {
+                "高压强" => PressureLevel.High,
+                "极高压强" => PressureLevel.VeryHigh,
+                "极低压强" => PressureLevel.VeryLow,
+                "低压强" => PressureLevel.Low,
+                "标准压强" => PressureLevel.Standard,
+                _ => throw new Exception($"无效的温度类型: {pressure}")
+            });
         }
 
         return result;
