@@ -137,7 +137,7 @@ public class Trap : ConstructionCard
     {
         base.OnUpdate();
 
-        if (stateMachine.currentStateName == "未布置" || Bag is not EnvironmentBag env || env.RepeatableDropList.IsEmpty) return;
+        if (caught || stateMachine.currentStateName == "未布置" || Bag is not EnvironmentBag env || env.RepeatableDropList.IsEmpty) return;
 
         int probability = innerContents.bag.IsFull ? 3 : 48;
 
