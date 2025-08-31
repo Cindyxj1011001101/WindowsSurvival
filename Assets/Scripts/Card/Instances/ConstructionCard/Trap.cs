@@ -159,8 +159,14 @@ public class Trap : ConstructionCard
         innerContents.allowRemove = true;
 
         // 添加卡牌
+        Card outcomeCard;
         foreach (var card in dropCards)
         {
+            if (CardFactory.ContainsCard("被捉住的" + CardName))
+                outcomeCard = CardFactory.CreateCard("被捉住的" + CardName);
+            else
+                outcomeCard = card;
+
             GameManager.Instance.AddCard(card, innerContents.bag);
             card.RefreshSlot();
         }

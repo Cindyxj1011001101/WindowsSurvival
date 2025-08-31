@@ -11,6 +11,15 @@ public class CaughtAquariusFish : Card
         };
     }
 
+    public override void LateInit()
+    {
+        base.LateInit();
+
+        // 被捉住的水瓶鱼的产物进度不会随时间增加
+        TryGetComponent<ProgressComponent>(out var progress);
+        progress.updateRate = 0;
+    }
+
     private void Event_Release(out string tip)
     {
         DestroyThis();
@@ -20,6 +29,8 @@ public class CaughtAquariusFish : Card
         // 继承产物进度
         AddCard("水瓶鱼", true, out var card);
         card.InheritComponent<ProgressComponent>(this);
+        card.TryGetComponent<ProgressComponent>(out var progress);
+        progress.updateRate = 1;
     }
 
     private bool Judge_Release(out string hint)

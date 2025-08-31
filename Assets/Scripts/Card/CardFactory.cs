@@ -34,6 +34,7 @@ public static class CardFactory
             { "瓶装水", typeof(BottledWater) },
             { "被捉住的水瓶鱼", typeof(CaughtAquariusFish) },
             { "有产物的被捉住的水瓶鱼", typeof(CaughtAquariusFishWithProduct) },
+            { "被捉住的有产物的水瓶鱼", typeof(CaughtAquariusFishWithProduct) },
             { "压缩饼干", typeof(CompactBiscuit) },
             { "珊瑚", typeof(Coral) },
             { "捞网", typeof(FishingNet) },
@@ -115,6 +116,12 @@ public static class CardFactory
             { "水壶兰种子", typeof(KettleFlowerSeed) },
             { "熟水壶兰种子", typeof(CookedKettleFlowerSeed) },
         };
+    }
+
+    public static bool ContainsCard(string cardId)
+    {
+        InitCardConfig();
+        return configCache.ContainsKey(cardId);
     }
 
     public static Sprite GetCardImage(string cardId)
