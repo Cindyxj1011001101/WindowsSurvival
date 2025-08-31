@@ -10,7 +10,7 @@ public class Trap : ConstructionCard
     {
         get
         {
-            if (!string.IsNullOrEmpty(outcomeCardId)) return "已捉到";
+            if (caught) return "已捉到";
             else return base.ExtraInfo;
         }
     }
@@ -18,14 +18,14 @@ public class Trap : ConstructionCard
     private InnerContentsComponent innerContents;
     private StateMachineComponent stateMachine;
 
-    public string outcomeCardId = null; // 诱捕产物
+    public bool caught; // 是否捕捉到生物
 
     private Trap()
     {
         Events = new()
         {
-            new Event("布置", "", Event_Arrange, Judge_Arrange, () => 15),
-            new Event("取出", "取出捕捉到的生物", Event_TakeOut, Judge_TakeOut),
+            new Event("布置", "布置诱捕陷阱，对当前地点内的生物进行诱捕", Event_Arrange, Judge_Arrange, () => 15),
+            //new Event("取出", "取出捕捉到的生物", Event_TakeOut, Judge_TakeOut),
         };
     }
 
@@ -50,6 +50,24 @@ public class Trap : ConstructionCard
             stateMachine = new StateMachineComponent("未布置", states);
             AddComponent(stateMachine);
         }
+
+        innerContents.onRemoveCard = (c) =>
+        {
+            if (caught && innerContents.bag.IsEmpty)
+            {
+                caught = false;
+                // 恢复内容物的可放入
+                innerContents.allowAdd = true;
+                stateMachine.ChangeState("未布置");
+                Use();
+            }
+        };
+
+        // 每个卡牌槽的最大堆叠数都为1
+        foreach (var slot in innerContents.bag.Slots)
+        {
+            slot.SetMaxStackNum(1);
+        }
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -63,28 +81,28 @@ public class Trap : ConstructionCard
         return true;
     }
 
-    /// <summary>
-    /// 取出
-    /// </summary>
-    /// <param name="tip"></param>
-    private void Event_TakeOut(out string tip)
-    {
-        tip = string.Empty;
-        Use();
-        AddCard(outcomeCardId, true);
-        outcomeCardId = null;
-    }
+    ///// <summary>
+    ///// 取出
+    ///// </summary>
+    ///// <param name="tip"></param>
+    //private void Event_TakeOut(out string tip)
+    //{
+    //    tip = string.Empty;
+    //    Use();
+    //    AddCard(outcomeCardId, true);
+    //    outcomeCardId = null;
+    //}
 
-    private bool Judge_TakeOut(out string hint)
-    {
-        hint = string.Empty;
-        if (string.IsNullOrEmpty(outcomeCardId))
-        {
-            hint = "尚未捕捉到任何生物";
-            return false;
-        }
-        return true;
-    }
+    //private bool Judge_TakeOut(out string hint)
+    //{
+    //    hint = string.Empty;
+    //    if (string.IsNullOrEmpty(outcomeCardId))
+    //    {
+    //        hint = "尚未捕捉到任何生物";
+    //        return false;
+    //    }
+    //    return true;
+    //}
 
     /// <summary>
     /// 布置
@@ -107,7 +125,7 @@ public class Trap : ConstructionCard
     private bool Judge_Arrange(out string hint)
     {
         hint = string.Empty;
-        if (!string.IsNullOrEmpty(outcomeCardId))
+        if (caught)
         {
             hint = "请先取出捕捉到的生物";
             return false;
@@ -132,27 +150,21 @@ public class Trap : ConstructionCard
         if (dropCards.IsNullOrEmpty()) return; // 没抽中
 
         // 抽中
-        foreach (var card in dropCards)
-        {
-            if (card.CardId == "有产物的水瓶鱼")
-            {
-                outcomeCardId = "有产物的被捉住的水瓶鱼";
-                //WAIT:可能需要处理生长度等的继承
-            }
-            else
-            {
-                outcomeCardId = card.CardId;
-            }
-        }
-
-        // 抽中，清空内容物中的诱饵
+        caught = true;
+        
+        // 清空内容物中的诱饵
         innerContents.Clear();
 
-        // 恢复内容物的可添加移除
-        innerContents.allowAdd = innerContents.allowRemove = true;
+        // 恢复内容物的可移除
+        innerContents.allowRemove = true;
 
-        // 变回未布置状态
-        stateMachine.ChangeState("未布置");
+        // 添加卡牌
+        foreach (var card in dropCards)
+        {
+            GameManager.Instance.AddCard(card, innerContents.bag);
+            card.RefreshSlot();
+        }
+
         ShowTip("捉到了好东西");
     }
 

@@ -17,7 +17,7 @@ public class Population
     public int sizeChangePerRound; // 每回合数量变化
     public int sizeChangeOnCaught; // 捕捞后的数量变化
 
-    public bool Trappable;//是否可诱捕
+    public bool trappable;//是否可诱捕
 
     public int Proportion => Mathf.Clamp(curSize, 0, maxSize);
 
@@ -116,7 +116,7 @@ public class RepeatableDropList
         int totalProb = emptyPopulation.Proportion;
         foreach (var population in populationList)
         {
-            if (population.Trappable)
+            if (population.trappable)
             {
                 totalProb += population.Proportion;
             }
@@ -128,7 +128,7 @@ public class RepeatableDropList
 
         foreach (var population in populationList)
         {
-            if (population.Trappable)
+            if (population.trappable)
             {
                 currentProb += population.Proportion;
                 if (randomValue < currentProb)

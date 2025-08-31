@@ -103,7 +103,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 }
             }
             // 跨背包放置
-            else if (!sourceSlot.PeekCard().Moveable)
+            else if (targetWindow.Bag is not EnvironmentBag && !sourceSlot.PeekCard().Moveable)
             {
                 AnimateCardReturn(pickedCount, "不能移动该卡牌");
             }
