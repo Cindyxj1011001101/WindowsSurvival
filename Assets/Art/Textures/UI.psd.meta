@@ -1575,7 +1575,7 @@ TextureImporter:
         width: 3
         height: 5
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1583,6 +1583,27 @@ TextureImporter:
       bones: []
       spriteID: fe886373281798f4f986988f743f8a93
       internalID: 1726949806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Charred
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 345
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46bc9187b2940c44da9241ef579ab423
+      internalID: 336171763
       vertices: []
       indices: 
       edges: []
@@ -1624,6 +1645,7 @@ TextureImporter:
       UI_Card: 470443997
       UI_CardHoveredFrame: -275653607
       UI_CardSlot: -1859285613
+      UI_Charred: 336171763
       UI_FireOn: -343286534
       UI_FullScreenFrame: -710150027
       UI_HoveredFrame: 1242553631
