@@ -423,6 +423,24 @@ public class FuelStorageComponent : CardComponent
         isFiring = firing;
         BelongedCard.RefreshSlot();
     }
+
+    public bool CanQuickInteract(Card card)
+    {
+        return card.TryGetComponent<FlammableComponent>(out var burnableComponent) && fuel < maxFuel;
+    }
+
+    public void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        tip = string.Empty;
+        for (int i = 0; i < count; i++)
+        {
+            if (fuel >= maxFuel) break;
+            var card = slot.PeekCard();
+            card.TryGetComponent<FlammableComponent>(out var burnableComponent);
+            card.DestroyThis();
+            AddFuel(burnableComponent.fuelValue);
+        }
+    }
 }
 #endregion
 

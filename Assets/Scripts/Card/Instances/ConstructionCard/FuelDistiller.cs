@@ -214,7 +214,7 @@ public class FuelDistiller : ConstructionCard
     public override bool CanQuickInteract(Card card)
     {
         // 添加燃料
-        if (card.TryGetComponent<FlammableComponent>(out _) && fuelStorage.fuel < fuelStorage.maxFuel) return true;
+        if (fuelStorage.CanQuickInteract(card)) return true;
 
         // 放入盐水
         if (card.CardId == "盐水" && salineWaterStorage < maxFreshWaterStorage) return true;
@@ -229,10 +229,9 @@ public class FuelDistiller : ConstructionCard
         var card = slot.PeekCard();
 
         // 添加燃料
-        if (card.TryGetComponent<FlammableComponent>(out var burnableComponent) && fuelStorage.fuel < fuelStorage.maxFuel)
+        if (fuelStorage.CanQuickInteract(card))
         {
-            card.DestroyThis();
-            fuelStorage.AddFuel(burnableComponent.fuelValue);
+            fuelStorage.QuickIneract(slot, count, out tip);
             return;
         }
 

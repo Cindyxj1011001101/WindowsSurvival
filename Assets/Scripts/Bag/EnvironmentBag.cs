@@ -72,8 +72,8 @@ public class EnvironmentBag : Bag
 
     private void InitDropList()
     {
-        disposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(placeData.placeType));
-        repeatableDropList = JsonManager.DeepCopy(CardFactory.GetRepeatableDropList(placeData.placeType));
+        disposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(PlaceData.placeType));
+        repeatableDropList = JsonManager.DeepCopy(CardFactory.GetRepeatableDropList(PlaceData.placeType));
     }
 
     private Dictionary<EnvironmentStateEnum, float> temp = new(); // 记录地点状态的当前变化率，防止地点状态的结算顺序影响结算结果
@@ -114,7 +114,7 @@ public class EnvironmentBag : Bag
                 var state = StateDict[stateEnum];
                 state.AddValue(delta);
                 // 刷新前端显示
-                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, stateEnum)
+                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(PlaceData.placeType, stateEnum)
                 {
                     stateValue = state
                 });

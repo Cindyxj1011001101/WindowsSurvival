@@ -212,7 +212,7 @@ public class Campfire : ConstructionCard
     public override bool CanQuickInteract(Card card)
     {
         // 添加燃料
-        if (card.TryGetComponent<FlammableComponent>(out _) && fuelStorage.fuel < fuelStorage.maxFuel) return true;
+        if (fuelStorage.CanQuickInteract(card)) return true;
         // 放入内容物
         if (innerContents.CanQuickInteract(card)) return true;
         // 拆毁
@@ -221,14 +221,12 @@ public class Campfire : ConstructionCard
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        tip = string.Empty;
         var card = slot.PeekCard();
 
         // 添加燃料
-        if (card.TryGetComponent<FlammableComponent>(out var burnableComponent) && fuelStorage.fuel < fuelStorage.maxFuel)
+        if (fuelStorage.CanQuickInteract(card))
         {
-            card.DestroyThis();
-            fuelStorage.AddFuel(burnableComponent.fuelValue);
+            fuelStorage.QuickIneract(slot, count, out tip);
             return;
         }
 
