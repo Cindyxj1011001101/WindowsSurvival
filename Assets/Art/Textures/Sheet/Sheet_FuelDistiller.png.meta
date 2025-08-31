@@ -97,13 +97,958 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sheet_Waiting_0
+      name: Sheet_FuelDistiller_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be308e050bc3aa745a5b9c0ab3c14545
+      internalID: 1314142149
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fc3602e3097a11845ba03efc002da40a
+      internalID: -200486822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 21f721c358210da4d80cd253e46828c5
+      internalID: 207127448
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: be42f946f40d0534ebd0d6aed0cf34af
+      internalID: 285521547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a8cab13da817544091585ce4f274e9d
+      internalID: 288705244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4fd089a4600064742965a4818dce5c51
+      internalID: 2027873680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_6
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1821a6bc987c50e4b8aa89cb7e437018
+      internalID: -2055948204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_7
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 120da451d79ff0045b402a179d102ed4
+      internalID: -1885970376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_8
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5029db99f09614a4ea3aa99be843064d
+      internalID: 2097423990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_9
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b4cdca8043ba3443b8988da5065c6ea
+      internalID: 1280800047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_10
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd3337635f1d8aa4c8a100e0a45db28d
+      internalID: 166363996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_11
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8f0f09f7c717033429d0f4dbcb34e091
+      internalID: 690525170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_12
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ea6e78d32c94ce49b6484e5f6427ca6
+      internalID: 2137726889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_13
+      rect:
+        serializedVersion: 2
+        x: 416
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0615ff698844acf48a01f5b14209c21d
+      internalID: 1347085636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_14
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8d6ce2b28568ce544a12feb7870236a4
+      internalID: 515529676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_15
+      rect:
+        serializedVersion: 2
+        x: 480
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5709d4b90256e7242ab99f8e1d8e42a8
+      internalID: -673413278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_16
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19e7a67081224674d8128d79dd61f448
+      internalID: 1639854145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_17
+      rect:
+        serializedVersion: 2
+        x: 544
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9b0001f4cb2d794b8a89be8c69a2055
+      internalID: 224393990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_18
+      rect:
+        serializedVersion: 2
+        x: 576
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6039d93e7722c2c43a87d880843caa09
+      internalID: -961391034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_19
+      rect:
+        serializedVersion: 2
+        x: 608
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95cd461c72f3d324cb950df93761e0bf
+      internalID: -74305731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_20
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a1b280326977304a9ee2e11eebce6ba
+      internalID: -163284064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_21
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e24ee8ad8438b834a8a6bd13e7e4abce
+      internalID: -995811102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_22
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 042df266711e5104994261562e93321d
+      internalID: -1906497752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_23
+      rect:
+        serializedVersion: 2
+        x: 736
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dbe5770aa8f30094bb4e3f3201c3c877
+      internalID: 1013539020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_24
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3225f52259111245a01251c95b1a7d6
+      internalID: -1981505570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_25
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1fda86f622740346b504a5eaf3708b7
+      internalID: -1075692592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_26
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 61c3c9d95f480584094848dcb01cc4b5
+      internalID: 1641368696
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_27
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a2a44b59240245449a8da8b965655ece
+      internalID: -866824605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_28
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 85634d1ad0bc47641826a760972a9b2a
+      internalID: -291626423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_29
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db10bea8f7dc68e4d832a95b3228c42b
+      internalID: -1482980124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_30
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d63f265cd702b84a91cbaf1b14341a3
+      internalID: 1798482056
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_31
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 84466c2dbe32d20409a2704213b75423
+      internalID: 913930938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_32
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15e5d99e5c4021741ad2b4392db6b15c
+      internalID: 1978592599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_33
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3d7bbbf70b5ebd54dac1b76a2760d642
+      internalID: -1024115956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_34
+      rect:
+        serializedVersion: 2
+        x: 1088
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41cd63b2747720b449c8ace839230b3f
+      internalID: -712239164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_35
+      rect:
+        serializedVersion: 2
+        x: 1120
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e8bb27c53ec941843b49a51a213472d3
+      internalID: 362240104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_36
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b7c982904787cf8499b1396128873282
+      internalID: -146439972
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_37
+      rect:
+        serializedVersion: 2
+        x: 1184
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86866f1d9866f134f98bba65c6a95f94
+      internalID: -1040041530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_38
+      rect:
+        serializedVersion: 2
+        x: 1216
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1aabe1e64d86d8749af7ac60ca230c9e
+      internalID: -1049216720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_39
+      rect:
+        serializedVersion: 2
+        x: 1248
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2ec99ba64068ea43a2b9ce23e92d72b
+      internalID: -1763667906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_40
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67fc2a8846557c44c939fbddba07241e
+      internalID: 1375694173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_41
+      rect:
+        serializedVersion: 2
+        x: 1312
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 36dd8aa8fded6bb48a70712a432e672e
+      internalID: 982903716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_42
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 492a0e2bfc4b0504bbb565e0e313a3c6
+      internalID: -782032038
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_43
+      rect:
+        serializedVersion: 2
+        x: 1376
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 91578282e15061940bef8be5665f4894
+      internalID: 915331717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_44
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c13643a7dc2ab54419cf73a810ff19f2
+      internalID: 1788047629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_45
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,20 +1056,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dcbc5887ea04bf346ac5ba14fc369b94
-      internalID: 1518280918
+      spriteID: a9a29d7766992f949874e0531d0f39f2
+      internalID: -634377320
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_1
+      name: Sheet_FuelDistiller_46
       rect:
         serializedVersion: 2
-        x: 63
+        x: 32
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,20 +1077,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 10dcf1bdf99319045b7f0a18102bf034
-      internalID: -374618542
+      spriteID: 7618d1c71d2ef7f48a5918c76af22a26
+      internalID: 1488737252
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_2
+      name: Sheet_FuelDistiller_47
       rect:
         serializedVersion: 2
-        x: 126
+        x: 64
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -153,20 +1098,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 25746e98a4df4cf47b06fa720b5ed09e
-      internalID: -1717990309
+      spriteID: 6127e26e4755d514e889a41c58cc1bc4
+      internalID: 659424889
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_3
+      name: Sheet_FuelDistiller_48
       rect:
         serializedVersion: 2
-        x: 189
+        x: 96
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -174,20 +1119,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3028840226000341aa73c405c14e0d2
-      internalID: -1206606979
+      spriteID: 6ec2182f824fba644be625fae0bc5e82
+      internalID: 1905351996
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_4
+      name: Sheet_FuelDistiller_49
       rect:
         serializedVersion: 2
-        x: 252
+        x: 128
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,20 +1140,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 514504450f35c104badb3d7da8b5bf20
-      internalID: -422804348
+      spriteID: ecbca25277dc7454080a8b1d4f8b87a1
+      internalID: -1275231011
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_5
+      name: Sheet_FuelDistiller_50
       rect:
         serializedVersion: 2
-        x: 315
+        x: 160
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -216,20 +1161,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a7dd1912f96cf364d8edecd65f6ae27a
-      internalID: 879054593
+      spriteID: 65a722fb15e33cd4984abffc7561a52b
+      internalID: 2109495061
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_6
+      name: Sheet_FuelDistiller_51
       rect:
         serializedVersion: 2
-        x: 378
+        x: 192
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -237,20 +1182,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b70b91525f314b04a804e7c6f5ae5c8f
-      internalID: 409851127
+      spriteID: e2a9e06e82562584b9e75e6573a2af73
+      internalID: 515895150
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_7
+      name: Sheet_FuelDistiller_52
       rect:
         serializedVersion: 2
-        x: 441
+        x: 224
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -258,20 +1203,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0eb93b7a42454854eaf21226d3a782cc
-      internalID: -91154385
+      spriteID: 4ac6d9b339dda42499c34d406c65a575
+      internalID: 1623338204
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_8
+      name: Sheet_FuelDistiller_53
       rect:
         serializedVersion: 2
-        x: 504
+        x: 256
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -279,20 +1224,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4dfd7d3297adc6a4284ce81c01fc9527
-      internalID: -1006444209
+      spriteID: 3b60bf8b30391af45ba7e4b9e7395598
+      internalID: -766050941
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_9
+      name: Sheet_FuelDistiller_54
       rect:
         serializedVersion: 2
-        x: 567
+        x: 288
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -300,20 +1245,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ea912eca4e562fc4082154a5a02278f7
-      internalID: 1445639048
+      spriteID: 57b5b3fb94b845e4db8d409bd8e92a06
+      internalID: 1515210540
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_10
+      name: Sheet_FuelDistiller_55
       rect:
         serializedVersion: 2
-        x: 630
+        x: 320
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -321,20 +1266,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 60c120387c009014495afea50380f38e
-      internalID: -1643465507
+      spriteID: 18630eb19956c934bb054b1f6030686b
+      internalID: 1372188341
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_11
+      name: Sheet_FuelDistiller_56
       rect:
         serializedVersion: 2
-        x: 693
+        x: 352
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -342,20 +1287,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 47da80a361d9b984abe4f197339c1559
-      internalID: -1069818109
+      spriteID: 310cf9b4dccc1f746b47626686955286
+      internalID: -1653834340
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_12
+      name: Sheet_FuelDistiller_57
       rect:
         serializedVersion: 2
-        x: 756
+        x: 384
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -363,20 +1308,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a5136af161c725f48bb7244c03602d52
-      internalID: -70031444
+      spriteID: 56c23b5ff417a2f469988639772879bc
+      internalID: 692292599
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_13
+      name: Sheet_FuelDistiller_58
       rect:
         serializedVersion: 2
-        x: 819
+        x: 416
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -384,20 +1329,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3cd466040d8e4654690cb07c1ddbd46d
-      internalID: -1893549080
+      spriteID: 45f089604fd7c9e4fa01c92514c179a9
+      internalID: -1384597742
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_14
+      name: Sheet_FuelDistiller_59
       rect:
         serializedVersion: 2
-        x: 882
+        x: 448
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -405,20 +1350,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 100df8e58021cf745b1bad81b6493664
-      internalID: -1813022193
+      spriteID: 43aecbb5c1e14ef49b87ac4782e6ff70
+      internalID: -1479678011
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_15
+      name: Sheet_FuelDistiller_60
       rect:
         serializedVersion: 2
-        x: 945
+        x: 480
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -426,20 +1371,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 21f1db90965958344a5088d8b3c5e4c4
-      internalID: -839806436
+      spriteID: 80fca37baa5a44447a12df61cf44f547
+      internalID: -111796187
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_16
+      name: Sheet_FuelDistiller_61
       rect:
         serializedVersion: 2
-        x: 1008
+        x: 512
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -447,20 +1392,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bcd86417ca84b944a96af5c5013622ed
-      internalID: 1667539433
+      spriteID: 393b9da2950cb694c9ee06389a22f1db
+      internalID: 1572957547
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_17
+      name: Sheet_FuelDistiller_62
       rect:
         serializedVersion: 2
-        x: 1071
+        x: 544
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -468,20 +1413,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0ba76f28b3f8de44fb88aaeac5434465
-      internalID: -2017203988
+      spriteID: e1c23d16ed6f604478b9bcffc193617c
+      internalID: -312338577
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_18
+      name: Sheet_FuelDistiller_63
       rect:
         serializedVersion: 2
-        x: 1134
+        x: 576
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -489,20 +1434,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3733e0ea84017e940a682f36c561ff6a
-      internalID: 953629387
+      spriteID: 6b7e765eac2fd1b49bb26509457a1274
+      internalID: 1067564013
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sheet_Waiting_19
+      name: Sheet_FuelDistiller_64
       rect:
         serializedVersion: 2
-        x: 1197
+        x: 608
         y: 0
-        width: 63
-        height: 63
+        width: 32
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -510,8 +1455,533 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 96ab77a33ef177c4b91f87d0f83923ac
-      internalID: -1807834130
+      spriteID: 42caf5af96fedef4ba495f0f4773999f
+      internalID: 516219518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_65
+      rect:
+        serializedVersion: 2
+        x: 640
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: db4137ec33e77ed4eb4a4a0bd83dd848
+      internalID: -1482225055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_66
+      rect:
+        serializedVersion: 2
+        x: 672
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8275b645e9e2fd14ab37cdd05816858c
+      internalID: -1752873391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_67
+      rect:
+        serializedVersion: 2
+        x: 704
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d499272c2dfd62e48be468a50f3db57a
+      internalID: -394670101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_68
+      rect:
+        serializedVersion: 2
+        x: 736
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ca8819f4b3e9f364591816bb9e5a671a
+      internalID: -154583393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_69
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7461ea5845ceba043a415f4185b2cac2
+      internalID: 1257377016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_70
+      rect:
+        serializedVersion: 2
+        x: 800
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f797423a48d6e0f4f8abbb8a35fe40f3
+      internalID: -1168864409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_71
+      rect:
+        serializedVersion: 2
+        x: 832
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5fa1cc761d35a3341ace499967cddc11
+      internalID: -116228869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_72
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ee5536c3f80d381459d23cdde4859443
+      internalID: -1525273378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_73
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3381257daecc179429196133809f443c
+      internalID: 475148743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_74
+      rect:
+        serializedVersion: 2
+        x: 928
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e7e10bc256ee9e04ea7ca4e064cb7205
+      internalID: 515856819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_75
+      rect:
+        serializedVersion: 2
+        x: 960
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f9b7aad78da053458498dff08b298a8
+      internalID: -1741875460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_76
+      rect:
+        serializedVersion: 2
+        x: 992
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6dfdd4ac2707b5141a638676d3c609dc
+      internalID: -287922492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_77
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 38c41e3532f34d349aadbedd15bbd048
+      internalID: 651738152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_78
+      rect:
+        serializedVersion: 2
+        x: 1056
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c6e490bee39baf46973f7d3cc0741e4
+      internalID: -884666252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_79
+      rect:
+        serializedVersion: 2
+        x: 1088
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c3850600df5e4d419f84e193d82d2f7
+      internalID: -1600267868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_80
+      rect:
+        serializedVersion: 2
+        x: 1120
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4352a376a62c47546b43108fb5bd5c06
+      internalID: -686638949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_81
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5285d2a2f98233a47afad0c493b26111
+      internalID: -123602188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_82
+      rect:
+        serializedVersion: 2
+        x: 1184
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f508fef25572f54095770ee0cd8ff13
+      internalID: 828333343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_83
+      rect:
+        serializedVersion: 2
+        x: 1216
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4ad18b3228ea664fb7dfc5e72de4110
+      internalID: -1496641767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_84
+      rect:
+        serializedVersion: 2
+        x: 1248
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7666310325680494da6e4f2833257d8b
+      internalID: 894047403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_85
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e337e5b0d671744d9aaa11ba7a0116c
+      internalID: 579541317
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_86
+      rect:
+        serializedVersion: 2
+        x: 1312
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aae4fe37914e9554c93624dee5fe85ba
+      internalID: -1486342695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_87
+      rect:
+        serializedVersion: 2
+        x: 1344
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 825239a79ea88064c842af481bf7494f
+      internalID: -1958005540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_88
+      rect:
+        serializedVersion: 2
+        x: 1376
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb7e53af2428fde47ba0c76cc85a2e8e
+      internalID: -870457510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sheet_FuelDistiller_89
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 11ad5071695c3da4492abc4a2ad0992e
+      internalID: -324379715
       vertices: []
       indices: 
       edges: []
@@ -527,26 +1997,96 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Sheet_Waiting_0: 1518280918
-      Sheet_Waiting_1: -374618542
-      Sheet_Waiting_10: -1643465507
-      Sheet_Waiting_11: -1069818109
-      Sheet_Waiting_12: -70031444
-      Sheet_Waiting_13: -1893549080
-      Sheet_Waiting_14: -1813022193
-      Sheet_Waiting_15: -839806436
-      Sheet_Waiting_16: 1667539433
-      Sheet_Waiting_17: -2017203988
-      Sheet_Waiting_18: 953629387
-      Sheet_Waiting_19: -1807834130
-      Sheet_Waiting_2: -1717990309
-      Sheet_Waiting_3: -1206606979
-      Sheet_Waiting_4: -422804348
-      Sheet_Waiting_5: 879054593
-      Sheet_Waiting_6: 409851127
-      Sheet_Waiting_7: -91154385
-      Sheet_Waiting_8: -1006444209
-      Sheet_Waiting_9: 1445639048
+      Sheet_FuelDistiller_0: 1314142149
+      Sheet_FuelDistiller_1: -200486822
+      Sheet_FuelDistiller_10: 166363996
+      Sheet_FuelDistiller_11: 690525170
+      Sheet_FuelDistiller_12: 2137726889
+      Sheet_FuelDistiller_13: 1347085636
+      Sheet_FuelDistiller_14: 515529676
+      Sheet_FuelDistiller_15: -673413278
+      Sheet_FuelDistiller_16: 1639854145
+      Sheet_FuelDistiller_17: 224393990
+      Sheet_FuelDistiller_18: -961391034
+      Sheet_FuelDistiller_19: -74305731
+      Sheet_FuelDistiller_2: 207127448
+      Sheet_FuelDistiller_20: -163284064
+      Sheet_FuelDistiller_21: -995811102
+      Sheet_FuelDistiller_22: -1906497752
+      Sheet_FuelDistiller_23: 1013539020
+      Sheet_FuelDistiller_24: -1981505570
+      Sheet_FuelDistiller_25: -1075692592
+      Sheet_FuelDistiller_26: 1641368696
+      Sheet_FuelDistiller_27: -866824605
+      Sheet_FuelDistiller_28: -291626423
+      Sheet_FuelDistiller_29: -1482980124
+      Sheet_FuelDistiller_3: 285521547
+      Sheet_FuelDistiller_30: 1798482056
+      Sheet_FuelDistiller_31: 913930938
+      Sheet_FuelDistiller_32: 1978592599
+      Sheet_FuelDistiller_33: -1024115956
+      Sheet_FuelDistiller_34: -712239164
+      Sheet_FuelDistiller_35: 362240104
+      Sheet_FuelDistiller_36: -146439972
+      Sheet_FuelDistiller_37: -1040041530
+      Sheet_FuelDistiller_38: -1049216720
+      Sheet_FuelDistiller_39: -1763667906
+      Sheet_FuelDistiller_4: 288705244
+      Sheet_FuelDistiller_40: 1375694173
+      Sheet_FuelDistiller_41: 982903716
+      Sheet_FuelDistiller_42: -782032038
+      Sheet_FuelDistiller_43: 915331717
+      Sheet_FuelDistiller_44: 1788047629
+      Sheet_FuelDistiller_45: -634377320
+      Sheet_FuelDistiller_46: 1488737252
+      Sheet_FuelDistiller_47: 659424889
+      Sheet_FuelDistiller_48: 1905351996
+      Sheet_FuelDistiller_49: -1275231011
+      Sheet_FuelDistiller_5: 2027873680
+      Sheet_FuelDistiller_50: 2109495061
+      Sheet_FuelDistiller_51: 515895150
+      Sheet_FuelDistiller_52: 1623338204
+      Sheet_FuelDistiller_53: -766050941
+      Sheet_FuelDistiller_54: 1515210540
+      Sheet_FuelDistiller_55: 1372188341
+      Sheet_FuelDistiller_56: -1653834340
+      Sheet_FuelDistiller_57: 692292599
+      Sheet_FuelDistiller_58: -1384597742
+      Sheet_FuelDistiller_59: -1479678011
+      Sheet_FuelDistiller_6: -2055948204
+      Sheet_FuelDistiller_60: -111796187
+      Sheet_FuelDistiller_61: 1572957547
+      Sheet_FuelDistiller_62: -312338577
+      Sheet_FuelDistiller_63: 1067564013
+      Sheet_FuelDistiller_64: 516219518
+      Sheet_FuelDistiller_65: -1482225055
+      Sheet_FuelDistiller_66: -1752873391
+      Sheet_FuelDistiller_67: -394670101
+      Sheet_FuelDistiller_68: -154583393
+      Sheet_FuelDistiller_69: 1257377016
+      Sheet_FuelDistiller_7: -1885970376
+      Sheet_FuelDistiller_70: -1168864409
+      Sheet_FuelDistiller_71: -116228869
+      Sheet_FuelDistiller_72: -1525273378
+      Sheet_FuelDistiller_73: 475148743
+      Sheet_FuelDistiller_74: 515856819
+      Sheet_FuelDistiller_75: -1741875460
+      Sheet_FuelDistiller_76: -287922492
+      Sheet_FuelDistiller_77: 651738152
+      Sheet_FuelDistiller_78: -884666252
+      Sheet_FuelDistiller_79: -1600267868
+      Sheet_FuelDistiller_8: 2097423990
+      Sheet_FuelDistiller_80: -686638949
+      Sheet_FuelDistiller_81: -123602188
+      Sheet_FuelDistiller_82: 828333343
+      Sheet_FuelDistiller_83: -1496641767
+      Sheet_FuelDistiller_84: 894047403
+      Sheet_FuelDistiller_85: 579541317
+      Sheet_FuelDistiller_86: -1486342695
+      Sheet_FuelDistiller_87: -1958005540
+      Sheet_FuelDistiller_88: -870457510
+      Sheet_FuelDistiller_89: -324379715
+      Sheet_FuelDistiller_9: 1280800047
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
