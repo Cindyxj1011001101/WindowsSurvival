@@ -53,6 +53,11 @@ public class GMCommand
     {
         AddCard("珊瑚礁");
     }
+    [MenuItem("Command/添加/水壶兰")]
+    public static void KettleFlower()
+    {
+        AddCard("水壶兰");
+    }
     [MenuItem("Command/添加/垃圾销毁器")]
     public static void Ljxhq()
     {
