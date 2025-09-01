@@ -623,7 +623,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
     public float minLiveTempture; // 最低存活温度
     public float maxLiveTempture; // 最高存活温度
     public string deadCardId; // 死亡后变成的卡牌ID 
-    public List<PressureLevel> pressureList;
+    public List<PressureLevel> pressureList=new List<PressureLevel>();
 
     [JsonIgnore] public UnityAction onDead;
 
@@ -650,7 +650,16 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         PressureLevel curPressureLevel = bag.PressureLevel;
         
         bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var t);
-        float curTempture= t.CurValue;
+        float curTempture = 25;
+        if (t == null)
+        {
+            Debug.LogWarning("当前没有环境温度信息，使用默认环境温度25度");
+           
+        }
+        else
+        {
+            curTempture= t.CurValue;
+        }
 
         if (!pressureList.Contains(curPressureLevel)) return;
 

@@ -115,6 +115,7 @@ public static class CardFactory
             { "育卵液", typeof(EggRearingFluid) },
             { "水壶兰种子", typeof(KettleFlowerSeed) },
             { "熟水壶兰种子", typeof(CookedKettleFlowerSeed) },
+            { "水壶兰", typeof(KettleFlower) },
         };
     }
 
@@ -307,6 +308,15 @@ public static class CardFactory
         if (config.IsConstruction)
         {
             card.AddComponent(new ConstructionComponent(config.OnlyInWater, config.OnlyOutWater, config.OnlyInDoor, config.OnlyOutDoor, config.NeedCable, config.CanBeDemolished, config.DemolitionDebris));
+        }
+
+        if (config.HasFoodProperty)
+        {
+            card.AddComponent(new FoodPropertyComponent(config.FoodPropertyDict));
+        }
+        if (config.IsPlant)
+        {
+            card.AddComponent(new PlantGrowthComponent(config.GrowthRate, config.MinConfortTempreture, config.MaxConfortTempreture, config.MinGrowTempture, config.MaxGrowTempture, config.MinLiveTempture, config.MaxLiveTempture, config.DeadcardName, config.Pressures));
         }
 
         return card;
