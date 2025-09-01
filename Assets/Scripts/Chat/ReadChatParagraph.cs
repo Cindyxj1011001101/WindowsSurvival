@@ -57,7 +57,6 @@ public class ReadChatParagraph:MonoBehaviour
     
     public void InitData()
     {
-        Debug.Log("初始化段落数据"+GameDataManager.Instance.GeneratedChatData.CurrentGraphData.name);
         CurGraphData = GameDataManager.Instance.GeneratedChatData.CurrentGraphData;
         CurNode = GameDataManager.Instance.GeneratedChatData.CurrentNodeData;
     }
