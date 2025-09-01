@@ -50,6 +50,8 @@ public class ChatTip : HoverableButton
         lifeTime = 10f;
         iconEnter.alpha = 0f;
         iconExit.alpha = 1f;
+        background.anchoredPosition = showPosOrigin;
+        background.sizeDelta = pointerEnterSizeOrigin;
         // 播放出现动画
         Show();
     }
