@@ -57,7 +57,7 @@ public class GelBottler : ToolCard
 
         if (env.PlaceData.isInWater) return true;
 
-        if (env.PlaceData.isInSpacecraft && StateManager.Instance.WaterLevel.CurValue < 2)
+        if (env.PlaceData.isInSpacecraft && StateManager.Instance.WaterLevel.CurValue <= 0)
         {
             hint = "水位不足，无法装瓶";
             return false;

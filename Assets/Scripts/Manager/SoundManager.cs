@@ -6,44 +6,41 @@ using System.Collections.Generic;
 public class SoundManager : MonoBehaviour
 {
     private static SoundManager instance;
+    /// <summary>
+    /// 单例访问
+    /// </summary>
     public static SoundManager Instance => instance;
 
-    private AudioSource audioSource;
-    private AudioSource sfxSource; // 专用于音效
-    private Dictionary<string, AudioSource> cardLoopSources = new();
-    private Coroutine fadeCoroutine;// 用于淡入淡出音频
-    private float targetVolume;// 目标音量，用于淡入淡出
-    // 心跳时音量倍率
-    private float HrartbeatVolumeMultiplier = 1f;
+    // 四个声音通道
+    private AudioSource bgmSource;         // 背景音乐通道
+    private AudioSource sfxSource;         // 音效通道
+    private AudioSource heartbeatSource;   // 心跳通道（无音频效果）
+    private Dictionary<string, AudioSource> cardLoopSources = new(); // 卡牌循环音效通道
 
-    // 音频效果组件
-    // 低通滤波器和失真效果
-    private AudioLowPassFilter _lowPassFilter;
-    private AudioDistortionFilter _distortionFilter;
-    private float _defaultCutoffFrequency = 5000f; // 可根据需要调整默认值
+    private Coroutine fadeCoroutine;       // BGM淡入淡出协程
+    private float targetVolume;            // BGM目标音量
 
+    // 通道音频效果组件
+    private AudioLowPassFilter bgmLowPass;         // BGM低通滤波器
+    private AudioDistortionFilter bgmDistortion;   // BGM失真效果
+    private AudioLowPassFilter sfxLowPass;         // SFX低通滤波器
+    private AudioDistortionFilter sfxDistortion;   // SFX失真效果
+
+    // 危险状态下的音效参数
+    private readonly float _defaultCutoffFrequency = 5000f;         // 正常低通截止频率
+    private readonly float _dangerCutoffFrequencyLow = 2200f;       // 低危低通截止频率
+    private readonly float _dangerCutoffFrequencyHigh = 1000f;      // 高危低通截止频率
+    private readonly float _dangerDistortionLevelLow = 0.4f;        // 低危失真
+    private readonly float _dangerDistortionLevelHigh = 0.7f;       // 高危失真
+    private readonly float _defaultDistortionLevel = 0f;            // 正常失真
+
+    /// <summary>
+    /// 初始化所有音频通道
+    /// </summary>
     private void Awake()
     {
         instance = this;
-
-        audioSource = gameObject.AddComponent<AudioSource>();
-
-        audioSource.playOnAwake = false;
-
-
-        sfxSource = gameObject.AddComponent<AudioSource>();
-        sfxSource.playOnAwake = false;
-
-        // 添加音频效果组件 
-        // 低通滤波器和失真效果
-        _lowPassFilter = gameObject.AddComponent<AudioLowPassFilter>();
-        _distortionFilter = gameObject.AddComponent<AudioDistortionFilter>();
-        
-        // 低通滤波器和失真效果de1初始化默认值
-        _lowPassFilter.cutoffFrequency = _defaultCutoffFrequency;
-        _lowPassFilter.enabled = false;
-        _distortionFilter.enabled = false;
-
+        InitAudioChannels();
         GameDataManager.Instance.onBGMVolumeChanged.AddListener(OnBGMVolumeChanged);
     }
 
@@ -52,215 +49,296 @@ public class SoundManager : MonoBehaviour
         GameDataManager.Instance.onBGMVolumeChanged.RemoveListener(OnBGMVolumeChanged);
     }
 
+    /// <summary>
+    /// 初始化BGM、SFX、心跳三个主通道
+    /// </summary>
+    private void InitAudioChannels()
+    {
+        // BGM通道及其效果
+        var bgmObj = new GameObject("BGM_AudioSource");
+        bgmObj.transform.parent = this.transform;
+        bgmSource = bgmObj.AddComponent<AudioSource>();
+        bgmSource.playOnAwake = false;
+        bgmLowPass = bgmObj.AddComponent<AudioLowPassFilter>();
+        bgmLowPass.cutoffFrequency = _defaultCutoffFrequency;
+        bgmLowPass.enabled = false;
+        bgmDistortion = bgmObj.AddComponent<AudioDistortionFilter>();
+        bgmDistortion.distortionLevel = _defaultDistortionLevel;
+        bgmDistortion.enabled = false;
+
+        // SFX通道及其效果
+        var sfxObj = new GameObject("SFX_AudioSource");
+        sfxObj.transform.parent = this.transform;
+        sfxSource = sfxObj.AddComponent<AudioSource>();
+        sfxSource.playOnAwake = false;
+        sfxLowPass = sfxObj.AddComponent<AudioLowPassFilter>();
+        sfxLowPass.cutoffFrequency = _defaultCutoffFrequency;
+        sfxLowPass.enabled = false;
+        sfxDistortion = sfxObj.AddComponent<AudioDistortionFilter>();
+        sfxDistortion.distortionLevel = _defaultDistortionLevel;
+        sfxDistortion.enabled = false;
+
+        // 心跳通道（无任何音频效果组件）
+        var heartbeatObj = new GameObject("Heartbeat_AudioSource");
+        heartbeatObj.transform.parent = this.transform;
+        heartbeatSource = heartbeatObj.AddComponent<AudioSource>();
+        heartbeatSource.playOnAwake = false;
+        heartbeatSource.loop = true;
+        heartbeatSource.volume = 1f;
+    }
+
+    /// <summary>
+    /// 响应BGM音量变化事件
+    /// </summary>
     private void OnBGMVolumeChanged()
     {
         float newVolume = GetNormalizedBGMVolume();
-
         if (fadeCoroutine != null)
-        {
-            // 渐进式调整目标值（保持当前渐变进度）
             targetVolume = newVolume;
-        }
         else
-        {
-            audioSource.volume = targetVolume = newVolume;
-        }
+            bgmSource.volume = targetVolume = newVolume;
     }
-    //根据危险等级应用音频效果
-    //高危险时，低通滤波器和失真效果开启，影响更强
-    //低危险时，低通滤波器和失真效果开启
-    //无危险时，低通滤波器和失真效果关闭，音调恢复正常
+
+    /// <summary>
+    /// 根据危险等级应用音频效果（低通、失真、心跳）
+    /// </summary>
     public void ApplyDangerEffects(DangerLevelEnum dangerLevel)
     {
         switch (dangerLevel)
         {
             case DangerLevelEnum.High:
-                _lowPassFilter.enabled = true;
-                _lowPassFilter.cutoffFrequency = 1000f; // 低沉闷响
-                _distortionFilter.enabled = true;
-                _distortionFilter.distortionLevel = 0.8f; // 高失真
-                sfxSource.pitch = 0.9f; // 轻微降调
-                
-                HrartbeatVolumeMultiplier = 0.4f; // 心跳时音效音量大幅降低
-                
+                // 高危：BGM/SFX/卡牌循环都加重失真和低通，心跳更大
+                ApplyEffectsToMainChannels(_dangerCutoffFrequencyHigh, _dangerDistortionLevelHigh, true);
+                ApplyEffectsToCardLoops(_dangerCutoffFrequencyHigh, _dangerDistortionLevelHigh, true);
+                PlayHeartbeat("心跳_01", 1f, 1f);
                 break;
-
             case DangerLevelEnum.Low:
-                _lowPassFilter.enabled = true;
-                _lowPassFilter.cutoffFrequency = 2200f; // 中等闷响
-                _distortionFilter.enabled = true;
-                _distortionFilter.distortionLevel = 0.55f; // 轻微失真
-                sfxSource.pitch = 0.95f; // 轻微降调
-                HrartbeatVolumeMultiplier = 0.55f; // 心跳时音效音量降低
+                // 低危：BGM/SFX/卡牌循环略有失真和低通，心跳较小
+                ApplyEffectsToMainChannels(_dangerCutoffFrequencyLow, _dangerDistortionLevelLow, true);
+                ApplyEffectsToCardLoops(_dangerCutoffFrequencyLow, _dangerDistortionLevelLow, true);
+                PlayHeartbeat("心跳_01", 0.7f, 1f);
                 break;
-
             case DangerLevelEnum.None:
-                _lowPassFilter.enabled = false;
-                _distortionFilter.enabled = false;
-                sfxSource.pitch = 1f; // 恢复正常
-                HrartbeatVolumeMultiplier =1f; // 音效音量恢复正常·
+                // 正常：关闭所有音频效果，停止心跳
+                ApplyEffectsToMainChannels(_defaultCutoffFrequency, _defaultDistortionLevel, false);
+                ApplyEffectsToCardLoops(_defaultCutoffFrequency, _defaultDistortionLevel, false);
+                StopHeartbeat();
                 break;
         }
     }
 
+    /// <summary>
+    /// 对BGM和SFX主通道应用音频效果
+    /// </summary>
+    private void ApplyEffectsToMainChannels(float cutoff, float distortion, bool enable)
+    {
+        SetChannelEffects(bgmLowPass, bgmDistortion, cutoff, distortion, enable);
+        SetChannelEffects(sfxLowPass, sfxDistortion, cutoff, distortion, enable);
+    }
+
+    /// <summary>
+    /// 对所有卡牌循环音效通道应用音频效果
+    /// </summary>
+    private void ApplyEffectsToCardLoops(float cutoff, float distortion, bool enable)
+    {
+        foreach (var source in cardLoopSources.Values)
+        {
+            var lp = source.GetComponent<AudioLowPassFilter>();
+            var ds = source.GetComponent<AudioDistortionFilter>();
+            SetChannelEffects(lp, ds, cutoff, distortion, enable);
+        }
+    }
+
+    /// <summary>
+    /// 设置单个通道的低通和失真效果
+    /// </summary>
+    private void SetChannelEffects(AudioLowPassFilter lp, AudioDistortionFilter ds, float cutoff, float distortion, bool enable)
+    {
+        if (lp != null)
+        {
+            lp.enabled = enable;
+            lp.cutoffFrequency = cutoff;
+        }
+        if (ds != null)
+        {
+            ds.enabled = enable;
+            ds.distortionLevel = distortion;
+        }
+    }
+
+    /// <summary>
+    /// 播放心跳声（独立通道，无效果）
+    /// </summary>
+    public void PlayHeartbeat(string clipName = "心跳_01", float volume = 1f, float pitch = 1f)
+    {
+        var clip = GetClip(clipName, "Music");
+        if (heartbeatSource.isPlaying && heartbeatSource.clip == clip)
+        {
+            heartbeatSource.volume = volume;
+            heartbeatSource.pitch = pitch;
+            return;
+        }
+        heartbeatSource.Stop();
+        heartbeatSource.clip = clip;
+        heartbeatSource.volume = volume;
+        heartbeatSource.pitch = pitch;
+        heartbeatSource.Play();
+    }
+
+    /// <summary>
+    /// 停止心跳声
+    /// </summary>
+    public void StopHeartbeat()
+    {
+        if (heartbeatSource.isPlaying)
+            heartbeatSource.Stop();
+    }
+
+    /// <summary>
+    /// 播放BGM，支持淡入淡出
+    /// </summary>
     public void PlayBGM(string clipName, bool loop = true, float fadeDuration = 1f, float volumeMultiplier = 1f)
     {
         var clip = GetClip(clipName, "Music");
-
         if (fadeCoroutine != null)
-        {
             StopCoroutine(fadeCoroutine);
-        }
-
         fadeCoroutine = StartCoroutine(FadeSwitchBGM(clip, loop, fadeDuration, volumeMultiplier));
     }
 
+    /// <summary>
+    /// BGM切换淡入淡出协程
+    /// </summary>
     private IEnumerator FadeSwitchBGM(AudioClip clip, bool loop, float fadeDuration, float volumeMultiplier)
     {
         targetVolume = GetNormalizedBGMVolume();
-
-        // 如果当前没有播放音乐，直接淡入新音乐
-        if (!audioSource.isPlaying)
+        if (!bgmSource.isPlaying)
         {
-            audioSource.clip = clip;
-            audioSource.loop = loop;
-            audioSource.Play();
-
-            // 淡入
-            float timer = 0f;
-            while (timer < fadeDuration)
-            {
-                timer += Time.deltaTime;
-                audioSource.volume = Mathf.Lerp(0f, targetVolume * volumeMultiplier, timer / fadeDuration);
-                yield return null;
-            }
-            audioSource.volume = targetVolume * volumeMultiplier;
+            bgmSource.clip = clip;
+            bgmSource.loop = loop;
+            bgmSource.Play();
+            yield return FadeVolume(bgmSource, 0f, targetVolume * volumeMultiplier, fadeDuration);
         }
         else
         {
-            // 先淡出当前音乐
-            float startVolume = audioSource.volume;
-            float timer = 0f;
-
-            while (timer < fadeDuration / 2f)
-            {
-                timer += Time.deltaTime;
-                audioSource.volume = Mathf.Lerp(startVolume, 0f, timer / (fadeDuration / 2f));
-                yield return null;
-            }
-
-            // 切换音乐并淡入
-            audioSource.clip = clip;
-            audioSource.loop = loop;
-            audioSource.Play();
-
-            timer = 0f;
-            while (timer < fadeDuration / 2f)
-            {
-                timer += Time.deltaTime;
-                audioSource.volume = Mathf.Lerp(0f, targetVolume * volumeMultiplier, timer / (fadeDuration / 2f));
-                yield return null;
-            }
-            audioSource.volume = targetVolume * volumeMultiplier;
+            float startVolume = bgmSource.volume;
+            yield return FadeVolume(bgmSource, startVolume, 0f, fadeDuration / 2f);
+            bgmSource.clip = clip;
+            bgmSource.loop = loop;
+            bgmSource.Play();
+            yield return FadeVolume(bgmSource, 0f, targetVolume * volumeMultiplier, fadeDuration / 2f);
         }
-
         fadeCoroutine = null;
     }
 
+    /// <summary>
+    /// 停止BGM，支持淡出
+    /// </summary>
     public void StopBGM(float fadeDuration = 1f)
     {
         if (fadeCoroutine != null)
-        {
             StopCoroutine(fadeCoroutine);
-        }
-
         fadeCoroutine = StartCoroutine(FadeOutBGM(fadeDuration));
     }
+
+    /// <summary>
+    /// BGM淡出协程
+    /// </summary>
     private IEnumerator FadeOutBGM(float fadeDuration)
     {
-        float startVolume = audioSource.volume;
-        float timer = 0f;
-
-        while (timer < fadeDuration)
-        {
-            timer += Time.deltaTime;
-            audioSource.volume = Mathf.Lerp(startVolume, 0f, timer / fadeDuration);
-            yield return null;
-        }
-
-        audioSource.Stop();
-        audioSource.volume = startVolume; // 恢复原始音量设置，以便下次播放
+        float startVolume = bgmSource.volume;
+        yield return FadeVolume(bgmSource, startVolume, 0f, fadeDuration);
+        bgmSource.Stop();
+        bgmSource.volume = startVolume;
         fadeCoroutine = null;
     }
 
-    
-    public void PlaySound(string clipName, bool isRandom = false,float volumeMultiplier = 1f)
+    /// <summary>
+    /// 通用音量渐变协程
+    /// </summary>
+    private IEnumerator FadeVolume(AudioSource source, float from, float to, float duration)
+    {
+        float timer = 0f;
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            source.volume = Mathf.Lerp(from, to, timer / duration);
+            yield return null;
+        }
+        source.volume = to;
+    }
+
+    /// <summary>
+    /// 播放音效（SFX通道），可选随机音量和音调
+    /// </summary>
+    public void PlaySound(string clipName, bool isRandom = false, float volumeMultiplier = 1f)
     {
         var clip = GetClip(clipName, "SFX");
-        
-        // 获取基础音量
         float baseVolume = GetNormalizedSFXVolume();
-        if (isRandom == true)
+        if (isRandom)
         {
-            // 随机音量波动（±10%）
             float volumeVariation = 1f + UnityEngine.Random.Range(-0.1f, 0.1f);
             float finalVolume = Mathf.Clamp(baseVolume * volumeVariation, 0f, 1f);
-
-            // 随机音调波动（±5%）
             sfxSource.pitch = 1f + UnityEngine.Random.Range(-0.1f, 0.1f);
-
-            // 播放音效
-            sfxSource.PlayOneShot(clip, finalVolume* HrartbeatVolumeMultiplier*volumeMultiplier);
-
-
+            sfxSource.PlayOneShot(clip, finalVolume * volumeMultiplier);
         }
         else
         {
             sfxSource.pitch = 1f;
-            sfxSource.PlayOneShot(clip, baseVolume* HrartbeatVolumeMultiplier*volumeMultiplier);
+            sfxSource.PlayOneShot(clip, baseVolume * volumeMultiplier);
         }
     }
 
+    /// <summary>
+    /// 加载音频资源
+    /// </summary>
     private AudioClip GetClip(string clipName, string type)
     {
         var clip = Resources.Load<AudioClip>("Audio/" + type + "/" + clipName);
-        if (clip == null) throw new ArgumentException($"音频切片文件为空。切片名为: {clipName}，切片类型为: {type}。" +
-            $"请确保切片文件\"Resources\\Audio\\{type}\\{clipName}\"存在");
+        if (clip == null)
+            throw new ArgumentException($"音频切片文件为空。切片名为: {clipName}，切片类型为: {type}。" +
+                $"请确保切片文件\"Resources\\Audio\\{type}\\{clipName}\"存在");
         return clip;
     }
+
     /// <summary>
-    /// 播放特定卡牌的循环音效
+    /// 播放特定卡牌的循环音效（每个卡牌通道都加效果组件）
     /// </summary>
-    /// <param name="cardId">卡牌唯一ID</param>
-    /// <param name="clipName">音效名</param>
-    /// <param name="volume">音量</param>
     public void PlayCardLoopSound(string cardId, string clipName, float volume = 0.3f)
     {
         if (cardLoopSources.ContainsKey(cardId)) return;
-        var source = gameObject.AddComponent<AudioSource>();
+        var cardObj = new GameObject($"CardLoop_{cardId}");
+        cardObj.transform.parent = this.transform;
+        var source = cardObj.AddComponent<AudioSource>();
         var clip = GetClip(clipName, "SFX");
         if (clip == null)
         {
             Debug.LogWarning($"未找到音效: {clipName}");
-            Destroy(source);
+            Destroy(cardObj);
             return;
         }
         source.clip = clip;
         source.loop = true;
         source.volume = volume;
+        // 独立添加效果组件
+        var lp = cardObj.AddComponent<AudioLowPassFilter>();
+        lp.cutoffFrequency = _defaultCutoffFrequency;
+        lp.enabled = false;
+        var ds = cardObj.AddComponent<AudioDistortionFilter>();
+        ds.distortionLevel = _defaultDistortionLevel;
+        ds.enabled = false;
         source.Play();
         cardLoopSources[cardId] = source;
     }
 
     /// <summary>
-    /// 停止特定卡牌的循环音效
+    /// 停止并销毁特定卡牌的循环音效
     /// </summary>
     public void StopCardLoopSound(string cardId)
     {
         if (cardLoopSources.TryGetValue(cardId, out var source))
         {
             source.Stop();
-            Destroy(source);
+            Destroy(source.gameObject);
             cardLoopSources.Remove(cardId);
         }
     }
@@ -274,15 +352,22 @@ public class SoundManager : MonoBehaviour
             source.volume = volume;
     }
 
+    /// <summary>
+    /// 获取BGM音量（主音量*BGM音量）
+    /// </summary>
     private float GetNormalizedBGMVolume()
     {
         return GameDataManager.Instance.AudioData.masterVolume * GameDataManager.Instance.AudioData.bgmVolume;
     }
 
+    /// <summary>
+    /// 获取SFX音量（主音量*SFX音量）
+    /// </summary>
     private float GetNormalizedSFXVolume()
     {
-        return GameDataManager.Instance.AudioData.masterVolume * GameDataManager.Instance.AudioData.sfxVolume ;
+        return GameDataManager.Instance.AudioData.masterVolume * GameDataManager.Instance.AudioData.sfxVolume;
     }
+
     /// <summary>
     /// 在考虑上一个地点的情况下播放当前环境的背景音乐
     /// </summary>
@@ -290,56 +375,28 @@ public class SoundManager : MonoBehaviour
     {
         switch (nextEnvironmentBag.PlaceData.placeType)
         {
-
             case PlaceEnum.PowerCabin:
-                if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
-                    //无事发生
-                    break;
-                else
-                    SoundManager.Instance.StopBGM();
-                SoundManager.Instance.PlayBGM("飞船内_01", true);
-                break;
             case PlaceEnum.Cockpit:
-                if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
-                    //无事发生
-                    break;
-                else
-                    SoundManager.Instance.StopBGM();
-                SoundManager.Instance.PlayBGM("飞船内_01", true);
-                break;
             case PlaceEnum.LifeSupportCabin:
                 if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
-                    //无事发生
                     break;
-                else
-                    SoundManager.Instance.StopBGM();
+                SoundManager.Instance.StopBGM();
                 SoundManager.Instance.PlayBGM("飞船内_01", true);
                 break;
             case PlaceEnum.CoralCoast:
-                SoundManager.Instance.StopBGM();
-
-                SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
-                break;
             case PlaceEnum.PhosphorTomb:
-                SoundManager.Instance.StopBGM();
-
-                SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
-                break;
             case PlaceEnum.SpaceshipOuterHull:
                 SoundManager.Instance.StopBGM();
-
                 SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
                 break;
         }
-        ;
     }
-    
+
     /// <summary>
     /// 不考虑上一个场景，直接播当前地点音乐
     /// </summary>
     public void PlayCurEnvironmentMusic()
     {
-        // 播放环境音乐
         switch (GameDataManager.Instance.LastPlace)
         {
             case PlaceEnum.PowerCabin:
@@ -348,11 +405,7 @@ public class SoundManager : MonoBehaviour
                 SoundManager.Instance.PlayBGM("飞船内_01", true);
                 break;
             case PlaceEnum.CoralCoast:
-                SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
-                break;
             case PlaceEnum.PhosphorTomb:
-                SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
-                break;
             case PlaceEnum.SpaceshipOuterHull:
                 SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
                 break;
