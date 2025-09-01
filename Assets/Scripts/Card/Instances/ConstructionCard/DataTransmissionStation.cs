@@ -32,8 +32,8 @@ public class DataTransmissionStation : ConstructionCard
         {
             var states = new List<CardState>()
             {
-                new ("待机中", "17", false, true, false),
-                new ("运行中", "17", true, true, true),
+                new ("待机中", "20", false, true, false),
+                new ("运行中", "20", true, true, true),
             };
             stateMachine = new StateMachineComponent("待机中", states);
             AddComponent(stateMachine);
