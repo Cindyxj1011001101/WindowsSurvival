@@ -162,21 +162,6 @@ public class GMCommand
     {
         AddCard("储物箱");
     }
-    [MenuItem("Command/播放/心跳_01")]
-    public static void PlayHeart()
-    {
-        SoundManager.Instance.PlayBGM("心跳_01", true, 1f);
-    }
-    [MenuItem("Command/播放/心跳_01高音量")]
-    public static void PlayHeart2()
-    {
-        SoundManager.Instance.PlayBGM("心跳_01", true, 1f,2f);
-    }
-    [MenuItem("Command/播放/飞船内_01")]
-    public static void PlatPlane()
-    {
-        SoundManager.Instance.PlayBGM("飞船内_01", true, 1f);
-    }
 
     #region 保存
 
