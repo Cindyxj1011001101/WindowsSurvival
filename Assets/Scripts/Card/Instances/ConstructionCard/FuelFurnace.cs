@@ -253,7 +253,7 @@ public class FuelFurnace : ConstructionCard
         // 燃料不足时自动熄灭
         if (fuelStorage.isFiring && fuelStorage.fuel < 1)
         {
-            fuelStorage.SetIsFiring(false);
+            Event_Unlightened(out _);
             ShowTip("燃料不足，燃料炉已自动熄灭");
             return;
         }
@@ -261,8 +261,9 @@ public class FuelFurnace : ConstructionCard
         // 水平面高于30，自动熄灭
         if (fuelStorage.isFiring && waterLevel >= 30)
         {
-            fuelStorage.SetIsFiring(false);
+            Event_Unlightened(out _);
             ShowTip("水位过高，燃料炉已自动熄灭");
+            return;
         }
     }
 

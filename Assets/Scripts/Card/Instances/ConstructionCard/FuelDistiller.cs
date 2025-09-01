@@ -184,8 +184,9 @@ public class FuelDistiller : ConstructionCard
         // 水平面高于30，自动熄灭
         if (fuelStorage.isFiring && waterLevel >= 30)
         {
-            fuelStorage.SetIsFiring(false);
+            Event_UnLight(out _);
             ShowTip("水位过高，燃料蒸馏器已自动熄灭");
+            return;
         }
     }
 

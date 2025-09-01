@@ -33,12 +33,24 @@ public class Campfire : ConstructionCard
         // 放入内容物时，暂停卡牌每回合更新
         innerContents.onAddCard = (c) =>
         {
-            if (fuelStorage.isFiring) c.PauseUpdating();
+            if (fuelStorage.isFiring)
+            {
+                c.PauseUpdating();
+                c.TryGetComponent<CookComponent>(out var cook);
+                if (cook.leftCookTime < 0) return;
+
+                var timer = new TimerComponent(cook.leftCookTime, cook.totalCookTime);
+                if (cook.outcomeCardId == "烧焦的食物")
+                    timer.tipText = "烧焦";
+                else
+                    timer.tipText = "烤熟";
+            }
         };
         // 取出时恢复每回合更新
         innerContents.onRemoveCard = (c) =>
         {
             c.ContinueUpdating();
+            c.RemoveComponent<CookComponent>();
         };
 
         // 每个卡牌槽的最大堆叠数都为1
@@ -85,6 +97,20 @@ public class Campfire : ConstructionCard
         // 点燃后暂停所有卡牌每回合更新
         innerContents.PauseUpdating();
 
+        // 显示烹饪计时器
+        innerContents.ForEachCard(c =>
+        {
+            c.TryGetComponent<CookComponent>(out var cook);
+            if (cook.leftCookTime < 0) return;
+            
+            var timer = new TimerComponent(cook.leftCookTime, cook.totalCookTime);
+            if (cook.outcomeCardId == "烧焦的食物")
+                timer.tipText = "烧焦";
+            else
+                timer.tipText = "烤熟";
+            c.AddComponent(timer);
+        });
+
         fuelStorage.SetIsFiring(true);
         SoundManager.Instance.PlaySound("点火_02");
 
@@ -128,6 +154,9 @@ public class Campfire : ConstructionCard
 
         // 熄灭后恢复所有卡牌每回合更新
         innerContents.ContinueUpdating();
+
+        // 移除计时器组件
+        innerContents.ForEachCard(c => c.RemoveComponent<TimerComponent>());
 
         fuelStorage.SetIsFiring(false);
 
@@ -204,8 +233,9 @@ public class Campfire : ConstructionCard
         // 水平面高于30，自动熄灭
         if (fuelStorage.isFiring && waterLevel >= 30)
         {
-            fuelStorage.SetIsFiring(false);
+            Event_UnLight(out _);
             ShowTip("水位过高，营火已自动熄灭");
+            return;
         }
     }
 

@@ -309,22 +309,21 @@ public class InnerContentsComponent : CardComponent
 
     public void PauseUpdating()
     {
-        foreach (var slot in bag.Slots)
-        {
-            foreach (var card in slot.Cards)
-            {
-                card.PauseUpdating(); // 停止更新卡牌状态
-            }
-        }
+        ForEachCard(c => c.PauseUpdating());
     }
 
     public void ContinueUpdating()
+    {
+        ForEachCard(c => c.ContinueUpdating());
+    }
+
+    public void ForEachCard(UnityAction<Card> action)
     {
         foreach (var slot in bag.Slots)
         {
             foreach (var card in slot.Cards)
             {
-                card.ContinueUpdating(); // 更新卡牌状态
+                action?.Invoke(card);
             }
         }
     }
@@ -692,6 +691,41 @@ public class PlantGrowthComponent : CardComponent, IUpdate
             return;
         }
 
+        BelongedCard.RefreshSlot();
+    }
+}
+#endregion
+
+#region 计时器组件
+public class TimerComponent : CardComponent
+{
+    public float time;
+    public float maxTime;
+
+    public string tipText;
+
+    public TimerComponent() { }
+
+    public TimerComponent(float maxTime)
+    {
+        this.time = this.maxTime = maxTime;
+    }
+
+    public TimerComponent(float time, float maxTime)
+    {
+        this.time = time;
+        this.maxTime = maxTime;
+    }
+
+    public void SetTime(float time)
+    {
+        this.time = time;
+        BelongedCard.RefreshSlot();
+    }
+
+    public void Reset()
+    {
+        this.time = 0f;
         BelongedCard.RefreshSlot();
     }
 }

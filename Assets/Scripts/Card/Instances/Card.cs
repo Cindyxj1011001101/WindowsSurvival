@@ -327,12 +327,19 @@ public abstract class Card : IComparable<Card>
         return false;
     }
 
-    public void AddComponent(CardComponent component)
+    public void AddComponent(CardComponent newComponent)
     {
-        if (components.ContainsKey(component.GetType())) return;
+        if (components.ContainsKey(newComponent.GetType())) return;
 
-        component.SetBelongedCard(this);
-        components.Add(component.GetType(), component);
+        components.Add(newComponent.GetType(), newComponent);
+        newComponent.SetBelongedCard(this);
+    }
+
+    public void RemoveComponent<T>() where T : CardComponent
+    {
+        if (!components.ContainsKey(typeof(T))) return;
+
+        components.Remove(typeof(T));
     }
 
     /// <summary>
@@ -348,8 +355,6 @@ public abstract class Card : IComparable<Card>
             var newComponent = JsonManager.DeepCopy(component);
             components[typeof(T)] = newComponent;
             newComponent.SetBelongedCard(this);
-            if (newComponent is InnerContentsComponent innerContents)
-                innerContents.Init();
         }
     }
 
