@@ -45,15 +45,15 @@ public class GameDataManager
         // 科技数据
         LoadTechnologyData();
         // 装备数据
-        equipmentData = JsonManager.LoadData<EquipmentBagData>(CurLoadName, "Equipment");
+        LoadEquipmentData();
         // 已生成的对话
-        generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
+        LoadGeneratedChatData();
         // 时间数据
-        timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
+        LoadTimeData();
         // 窗口数据
-        windowsData = JsonManager.LoadData<WindowsData>(CurLoadName, "WindowsData");
+        LoadWindowData();
         // 探索移动额外消耗数据
-        behaviourExtraEffectsData = JsonManager.LoadData<BehaviourExtraEffectsData>(CurLoadName, "BehaviourExtraEffectsData");
+        LoadBehaviourExtraEffectsData();
     }
 
     public void SaveAllData()
@@ -363,7 +363,7 @@ public class GameDataManager
         JsonManager.SaveData(timeData, CurLoadName, "TimeData");
     }
 
-    public void LoadGame()
+    public void LoadTimeData()
     {
         timeData = JsonManager.LoadData<TimeData>(CurLoadName, "TimeData");
     }
@@ -432,6 +432,10 @@ public class GameDataManager
         JsonManager.SaveData(windowsData, CurLoadName, "WindowsData");
     }
 
+    public void LoadWindowData()
+    {
+        windowsData = JsonManager.LoadData<WindowsData>(CurLoadName, "WindowsData");
+    }
     #endregion
 
     #region 探索移动额外消耗
@@ -450,6 +454,11 @@ public class GameDataManager
             exploreInWaterExtraEffects = GameManager.Instance.ExploreInWaterExtraEffects
         };
         JsonManager.SaveData(behaviourExtraEffectsData, CurLoadName, "BehaviourExtraEffectsData");
+    }
+
+    public void LoadBehaviourExtraEffectsData()
+    {
+        behaviourExtraEffectsData = JsonManager.LoadData<BehaviourExtraEffectsData>(CurLoadName, "BehaviourExtraEffectsData");
     }
     #endregion
 }
