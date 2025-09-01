@@ -89,8 +89,6 @@ public class ChatManager : MonoBehaviour
             inParagraph = GameDataManager.Instance.GeneratedChatData.inParagraph;
             InterruptParagraphData = GameDataManager.Instance.GeneratedChatData.InterruptParagraphData;
             Choosing = GameDataManager.Instance.GeneratedChatData.Choosing;
-
-
         }
     }
 
@@ -175,15 +173,18 @@ public class ChatManager : MonoBehaviour
         //进入对话
         inParagraph = true;
         //从GeneratedChatDataList中加载所有已触发的对话数据
-        for (int i = 0; i < GeneratedChatDataList.Count; i++)
+        for (int i = 0; i < GeneratedChatDataList.Count-1; i++)
         {
             chatWindow.CreateMessage(GeneratedChatDataList[i].MessageSender, GeneratedChatDataList[i].Message);
         }
-
-        //触发下一个对话（找到最后一句的下一句）
+        //触发下一个对话（找到当前节点的下一句，如果最后一句是选项或分支需要重新触发最后一句的效果）
         if (ReadChatParagraph.Instance.CurNode.typeName == "End")
         {
             NextParagraph();
+        }
+        else if(ReadChatParagraph.Instance.CurNode.typeName=="Choose"||ReadChatParagraph.Instance.CurNode.typeName=="BranchCondition")
+        {
+            TriggerMessage(ReadChatParagraph.Instance.CurNode);
         }
         else
         {

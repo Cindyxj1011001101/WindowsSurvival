@@ -4,7 +4,7 @@ public class GeneratedChatData
 {
     public bool init;
     public List<ParagraphData> ParagraphConditionsToTrigger = new List<ParagraphData>();
-    public List<ChatData> GeneratedChatDataList = new();
+    public List<ChatData> GeneratedChatDataList = new List<ChatData>();
     //需要触发的段落列表
     public List<string> ParagraphToTriggeer = new List<string>();
     //当前选项数据

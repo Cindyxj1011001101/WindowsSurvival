@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-
 public enum MessageSenderEnum
 {
     NPC, //NPC
@@ -22,6 +21,11 @@ public class ChatData
 
     public ChatData(MessageSenderEnum messageSender, string message, string messageCondition,float preWaitTime,float lateWaitTime,string triggerMessageEffect)
     {
-        
+        MessageSender=messageSender;
+        Message=message;
+        MessageCondition=messageCondition;
+        this.preWaitTime=preWaitTime;
+        this.lateWaitTime=lateWaitTime;
+        TriggerMessageEffect=triggerMessageEffect;
     }
 }

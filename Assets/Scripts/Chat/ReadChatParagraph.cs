@@ -57,6 +57,7 @@ public class ReadChatParagraph:MonoBehaviour
     
     public void InitData()
     {
+        Debug.Log("初始化段落数据"+GameDataManager.Instance.GeneratedChatData.CurrentGraphData.name);
         CurGraphData = GameDataManager.Instance.GeneratedChatData.CurrentGraphData;
         CurNode = GameDataManager.Instance.GeneratedChatData.CurrentNodeData;
     }
@@ -104,7 +105,7 @@ public class ReadChatParagraph:MonoBehaviour
             }
             
         }
-        Debug.LogError($"无法找到{CurNode}的输出节点{portName}连接的下一节点");
+        Debug.LogError($"无法找到{CurNode.Title}的输出节点{portName}连接的下一节点");
         return null;
 
             
