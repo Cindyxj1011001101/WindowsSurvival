@@ -183,13 +183,13 @@ public class GMCommand
     [MenuItem("Command/保存/玩家背包")]
     public static void SavePlayerBag()
     {
-        GameDataManager.Instance.SavePlayerBag();
+        GameDataManager.Instance.SavePlayerBagData();
     }
 
     [MenuItem("Command/保存/环境背包")]
     public static void SaveEnvironmentBag()
     {
-        GameDataManager.Instance.SaveEnvironmentBag();
+        GameDataManager.Instance.SaveEnvironmentBagData();
     }
 
     [MenuItem("Command/保存/当前地点")]
@@ -207,7 +207,7 @@ public class GMCommand
     [MenuItem("Command/保存/已解锁的配方")]
     public static void SaveUnlockedRecipes()
     {
-        GameDataManager.Instance.SaveUnlockedRecipes();
+        GameDataManager.Instance.SaveUnlockedRecipeData();
     }
 
     [MenuItem("Command/保存/科技进度")]

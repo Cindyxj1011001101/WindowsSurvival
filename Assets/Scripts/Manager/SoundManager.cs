@@ -340,7 +340,7 @@ public class SoundManager : MonoBehaviour
     public void PlayCurEnvironmentMusic()
     {
         // 播放环境音乐
-        switch (GameDataManager.Instance.LastPlace)
+        switch (GameDataManager.Instance.lastPlace.LastPlace)
         {
             case PlaceEnum.PowerCabin:
             case PlaceEnum.Cockpit:

@@ -21,7 +21,7 @@ public class CraftManager
             libraryDict.Add(library.craftType, library);
         }
         // 加载已解锁的配方
-        unlockedRecipes = GameDataManager.Instance.UnlockedRecipes;
+        unlockedRecipes = GameDataManager.Instance.UnlockedRecipes.UnlockedRecipeList;
     }
 
     /// <summary>

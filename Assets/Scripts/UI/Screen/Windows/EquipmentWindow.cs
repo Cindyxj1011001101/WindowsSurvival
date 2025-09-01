@@ -5,7 +5,7 @@ public class EquipmentWindow : BagWindow
     protected override void Init()
     {
         //InitBag(GameDataManager.Instance.EquipmentData);
-        DisplayBag(GameDataManager.Instance.EquipmentData);
+        DisplayBag(GameDataManager.Instance.EquipmentData.GetDataFromLoad());
     }
 
     public override void DisplayBag(Bag bag)
@@ -27,9 +27,9 @@ public class EquipmentWindow : BagWindow
         //    organizeButton.onClick.AddListener(() =>
         //    {
         //        if (bag.CompactCards())
-        //            SoundManager.Instance.PlaySound("ÕûÀí", true);
+        //            SoundManager.Instance.PlaySound("ï¿½ï¿½ï¿½ï¿½", true);
         //        else
-        //            SoundManager.Instance.PlaySound("µÍ³ÁÅÝÅÝÒô", true, 1.3f);
+        //            SoundManager.Instance.PlaySound("ï¿½Í³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", true, 1.3f);
 
         //        RefreshDisplay();
 

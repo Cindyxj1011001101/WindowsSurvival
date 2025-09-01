@@ -2,6 +2,6 @@
 {
     protected override void Init()
     {
-        DisplayBag(GameDataManager.Instance.PlayerBagData);
+        DisplayBag(GameDataManager.Instance.PlayerBagData.GetDataFromLoad());
     }
 }

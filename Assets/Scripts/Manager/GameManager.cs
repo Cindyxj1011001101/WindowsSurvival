@@ -129,12 +129,12 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         // 玩家背包
-        playerBag = GameDataManager.Instance.PlayerBagData;
+        playerBag = GameDataManager.Instance.PlayerBagData.GetDataFromLoad();
         // 所有环境背包
-        environmentBags = GameDataManager.Instance.EnvironmentBagDataDict;
+        environmentBags = GameDataManager.Instance.EnvironmentBagDataDict.GetDataFromLoad();
         // 当前环境背包
-        curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
-        equipmentBag = GameDataManager.Instance.EquipmentData;
+        curEnvironmentBag = environmentBags[GameDataManager.Instance.lastPlace.LastPlace];
+        equipmentBag = GameDataManager.Instance.EquipmentData.GetDataFromLoad();
 
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
@@ -159,7 +159,7 @@ public class GameManager : MonoBehaviour
             bag.Init();
         }
         InitBehaviourExtraEffects();
-        ChangeEnv(GameDataManager.Instance.LastPlace);
+        ChangeEnv(GameDataManager.Instance.lastPlace.LastPlace);
         SoundManager.Instance.PlayCurEnvironmentMusic();
     }
 

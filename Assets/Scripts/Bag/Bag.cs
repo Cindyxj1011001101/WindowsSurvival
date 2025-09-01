@@ -5,8 +5,8 @@ using System.Linq;
 
 public abstract class Bag
 {
-    [JsonProperty] private bool firstInit; // 是否第一次初始化
-    [JsonProperty] private List<SlotCards> slots = new();
+    [JsonProperty] public bool firstInit; // 是否第一次初始化
+    [JsonProperty] public List<SlotCards> slots = new();
 
     [JsonIgnore] public List<SlotCards> Slots => slots;
 

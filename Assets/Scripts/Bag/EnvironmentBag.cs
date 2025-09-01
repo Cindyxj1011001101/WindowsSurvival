@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class EnvironmentBag : Bag
 {
-    [JsonProperty] private string placeName;
-    [JsonProperty] private bool hasCable;
-    [JsonProperty] private PressureLevel pressureLevel;
-    [JsonProperty] private DisposableDropList disposableDropList = new();
-    [JsonProperty] private RepeatableDropList repeatableDropList = new();
-    [JsonProperty] private Dictionary<EnvironmentStateEnum, EnvironmentState> stateDict = new();
+    [JsonProperty] public string placeName;
+    [JsonProperty] public bool hasCable;
+    [JsonProperty] public PressureLevel pressureLevel;
+    [JsonProperty] public DisposableDropList disposableDropList = new();
+    [JsonProperty] public RepeatableDropList repeatableDropList = new();
+    [JsonProperty] public Dictionary<EnvironmentStateEnum, EnvironmentState> stateDict = new();
 
-    private PlaceData placeData;
+    public PlaceData placeData;
 
     [JsonIgnore] public bool HasCable => hasCable;
     [JsonIgnore] public PressureLevel PressureLevel => pressureLevel;
