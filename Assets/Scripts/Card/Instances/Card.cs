@@ -24,6 +24,8 @@ public enum CardType
     Other, // 其他
     Crop, // 作物
     Seed, // 种子
+    Liquids​, // 液体
+    Medicine​, // 药品
 }
 
 //卡牌基类
