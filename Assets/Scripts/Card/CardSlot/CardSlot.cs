@@ -378,6 +378,11 @@ public class CardSlot : MonoBehaviour
         // 显示计时器
         if (card.TryGetComponent<TimerComponent>(out var tm))
             DisplayContinuousValueComponent(tm, left);
+        else if (componentSliders.TryGetValue(typeof(TimerComponent), out var timer))
+        {
+            componentSliders.Remove(typeof(TimerComponent));
+            ObjectBufferPool.Instance.Restore(timer.gameObject);
+        }
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;
