@@ -34,6 +34,7 @@ public class DetailsWindow : BagWindow
 
     private void OnDestroy()
     {
+        Clear();
         EventManager.Instance.RemoveListener<Card>(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
