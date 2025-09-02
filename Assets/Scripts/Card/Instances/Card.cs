@@ -349,15 +349,18 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="other"></param>
-    public void InheritComponent<T>(Card other) where T : CardComponent
+    public bool InheritComponent<T>(Card other, out T newComponent) where T : CardComponent
     {
         // 如果other有该组件，并且当前卡牌也有该组件，则复制一份
         if (other.TryGetComponent<T>(out var component) && TryGetComponent<T>(out _))
         {
-            var newComponent = JsonManager.DeepCopy(component);
+            newComponent = JsonManager.DeepCopy(component);
             components[typeof(T)] = newComponent;
             newComponent.SetBelongedCard(this);
+            return true;
         }
+        newComponent = null;
+        return false;
     }
 
     public int CompareTo(Card other)

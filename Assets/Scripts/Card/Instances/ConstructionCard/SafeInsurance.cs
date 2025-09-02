@@ -93,7 +93,8 @@ public class SafeInsurance : ConstructionCard
             SoundManager.Instance.PlaySound("摧毁_01", true);
         AddCard("被撬开的保险柜", false, out var card);
         // 继承内容物
-        card.InheritComponent<InnerContentsComponent>(this);
+        card.InheritComponent<InnerContentsComponent>(this, out var newComponent);
+        newComponent.allowAdd = newComponent.allowRemove = newComponent.display = true;
     }
 
     private void UseHammer(Card tool, out string tip)
