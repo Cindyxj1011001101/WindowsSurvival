@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 /// <summary>
-/// 熟水壶兰种子
+/// 熟水壶兰种
 /// </summary>
 public class CookedKettleFlowerSeed : CookableCard
 {

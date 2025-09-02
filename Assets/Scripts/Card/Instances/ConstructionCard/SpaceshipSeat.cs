@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿//飞船驾驶座
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SpaceshipSeat : ConstructionCard
@@ -10,7 +11,15 @@ public class SpaceshipSeat : ConstructionCard
     {
         Events = new()
         {
-            new Event("靠着休息", "靠在驾驶座上休息。休息效率为每15分钟+2.7清醒度，每15分钟+2精神（休息行为1天内多次进行数值恢复减半，最多叠加2次）", Event_Rest, Judge_Rest),
+            new Event(
+                "靠着休息", 
+                "靠在驾驶座上休息。\n" +
+                "+2.7清醒度/15min\n" +
+                "+2精神/15min\n" +
+                "（休息行为1天内多次进行数值恢复减半，最多叠加2次）", 
+                Event_Rest, 
+                Judge_Rest
+            ),
         };
     }
 
