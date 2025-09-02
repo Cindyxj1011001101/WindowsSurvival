@@ -1,4 +1,4 @@
-﻿public class BehaviourExtraEffectsData
+﻿public class BehaviourExtraEffectsData:VersionMigrator
 {
     public bool init;
 
@@ -13,4 +13,9 @@
 
     // 移动到水域额外消耗
     public BehaviourExtraEffects moveToWaterExtraEffects = new();
+
+    public override IVersionMigrator ReadJSON(string FilePath, string FileName)
+    {
+        return JsonManager.LoadData<BehaviourExtraEffectsData>(FilePath,FileName);
+    }
 }

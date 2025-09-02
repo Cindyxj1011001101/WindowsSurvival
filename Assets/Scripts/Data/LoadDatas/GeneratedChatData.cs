@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public class GeneratedChatData
+public class GeneratedChatData:VersionMigrator
 {
     public bool init;
     public List<ParagraphData> ParagraphConditionsToTrigger = new List<ParagraphData>();
@@ -19,4 +19,8 @@ public class GeneratedChatData
     public GraphData.SerializedNode CurrentNodeData;
     //当前段落图数据
     public  GraphData CurrentGraphData;
+    public override IVersionMigrator ReadJSON(string FilePath,string FileName)
+    {
+        return JsonManager.LoadData<GeneratedChatData>(FilePath, FileName);
+    }
 }

@@ -2,20 +2,22 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LoadData
+public class LoadData:VersionMigrator
 {
     public Load[] loads=new Load[4];
     public LoadData()
     {
         loads=new Load[4];
     }
+    public override IVersionMigrator ReadJSON(string FilePath,string FileName)
+    {
+        return JsonManager.LoadData<LoadData>(FilePath, FileName);
+    }
 }
-public class Load
+public class Load:VersionMigrator
 {
     public DateTime GameTime;
     public bool SkipGuide=true;
-    // public Sprite NPCSprite;
-    // public DateTime LastPlayTime;
     public Load()
     {
         GameTime=DateTime.MinValue;

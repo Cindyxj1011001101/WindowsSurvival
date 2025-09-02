@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 
 [Serializable]
-public class TechNodeData
+public class TechNodeData:VersionMigrator
 {
     public string name;
     public float progress;
 }
 
-public class TechnologyData
+public class TechnologyData:VersionMigrator
 {
     public float basicStudyRate = 2.0f; // 基础研究速率，即每15分钟增长多少科技点
 

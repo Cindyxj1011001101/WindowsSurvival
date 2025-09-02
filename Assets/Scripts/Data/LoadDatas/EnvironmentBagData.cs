@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-public class EnvironmentBagData
+public class EnvironmentBagData:VersionMigrator
 {
     public bool firstInit;
     public List<SlotCards> slots = new();
@@ -26,8 +27,12 @@ public class EnvironmentBagData
         bag.placeData = placeData;
         return bag;
     }
+    public override IVersionMigrator ReadJSON(string FilePath, string FileName)
+    {
+        return JsonManager.LoadData<EnvironmentBagData>(FilePath, FileName);
+    }
 }
-public class EnvironmentBagDictData
+public class EnvironmentBagDictData:VersionMigrator
 { 
     public Dictionary<PlaceEnum, EnvironmentBagData> dict = new();
     public Dictionary<PlaceEnum, EnvironmentBag> GetDataFromLoad()
@@ -38,5 +43,15 @@ public class EnvironmentBagDictData
             bags.Add(item.Key, item.Value.GetDataFromLoad());
         }
         return bags;
+    }
+
+    public override IVersionMigrator ReadJSON(string FilePath, string FileName)
+    {
+        dict.Clear();
+        foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
+        {
+            dict.Add(place,new EnvironmentBagData().ReadJSON(FilePath, place.ToString() + "Bag") as EnvironmentBagData);
+        }
+        return this;
     }
 }

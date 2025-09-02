@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class WindowData
+public class WindowData:VersionMigrator
 {
     public Vector3 position;
     public Vector3 scale;
@@ -13,7 +13,7 @@ public class WindowData
     public bool isModal;
 }
 
-public class WindowsData
+public class WindowsData:VersionMigrator
 {
     public int currentPresetIndex; // 当前应用的窗口布局预设方案
 
@@ -22,4 +22,6 @@ public class WindowsData
     public List<string> unlockedShortcuts = new(); // 已解锁的快捷方式
 
     public Dictionary<string, WindowData> openedWindows = new();
+    
+    
 }

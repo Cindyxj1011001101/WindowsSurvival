@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-public class PlayerBagData
+public class PlayerBagData:VersionMigrator
 {
     public bool firstInit;
     public List<SlotCards> slots;
@@ -11,5 +11,9 @@ public class PlayerBagData
         bag.firstInit = firstInit;
         bag.slots = slots;
         return bag;
+    }
+    public override IVersionMigrator ReadJSON(string FilePath,string FileName)
+    {
+        return JsonManager.LoadData<PlayerBagData>(FilePath, FileName);
     }
 }

@@ -1,6 +1,6 @@
 using System;
 
-public class TimeData
+public class TimeData:VersionMigrator
 {
     public bool init;
     //时间数据

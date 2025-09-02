@@ -9,17 +9,44 @@ public class GameDataManager
     private static GameDataManager instance = new();
     public static GameDataManager Instance => instance;
 
+    public Dictionary<int, Dictionary<string, Type>> VersionClassDict = new Dictionary<int, Dictionary<string, Type>>();
+    
     public int curLoadIndex; // 当前存档索引
-
+    //当前版本
+    //**跨版本时需维护
+    public int curVersion=1;
     public string CurLoadName => "GameData" + curLoadIndex.ToString(); // 当前存档名称
 
     public Load CurLoad => loadData.loads[curLoadIndex]; // 当前存档
 
     private GameDataManager()
     {
+        //**跨版本时需维护
+        VersionClassDict = new Dictionary<int, Dictionary<string, Type>>()
+        {
+            {
+                1, new Dictionary<string, Type>
+                {
+                    { "LoadData", typeof(LoadData) },
+                    { "VersionData", typeof(VersionData) },
+                    { "PlayerBagData", typeof(PlayerBagData) },
+                    { "LastPlaceData", typeof(LastPlaceData) },
+                    { "EnvironmentBagData", typeof(EnvironmentBagData) },
+                    { "EnvironmentBagDictData", typeof(EnvironmentBagDictData) },
+                    { "AudioData", typeof(AudioData) },
+                    { "UnlockedRecipeData", typeof(UnlockedRecipeData) },
+                    { "TechnologyData", typeof(TechnologyData) },
+                    { "EquipmentBagData", typeof(EquipmentBagData) },
+                    { "GeneratedChatData", typeof(GeneratedChatData) },
+                    { "TimeData", typeof(TimeData) },
+                    { "StateData", typeof(StateData) },
+                    { "WindowsData", typeof(WindowsData) },
+                    { "BehaviourExtraEffectsData", typeof(BehaviourExtraEffectsData) },
+                }
+            },
+        };
         Scene currentScene = SceneManager.GetActiveScene();
         if (currentScene.buildIndex == 0) return;
-
         // 加载存档数据
         LoadLoadData();
         // 从UIScene直接打开默认跳过新手教程
@@ -30,6 +57,8 @@ public class GameDataManager
     public void LoadAllData(int index)
     {
         curLoadIndex = index;
+        //版本数据
+        LoadVersionData();
         // 玩家背包
         LoadPlayerBagData();
         // 上次地点
@@ -58,6 +87,8 @@ public class GameDataManager
 
     public void SaveAllData()
     {
+        // 版本数据
+        SaveVersionData();
         // 玩家背包
         SavePlayerBagData();
         // 上次地点
@@ -98,6 +129,44 @@ public class GameDataManager
         SaveLoadData();
     }
 
+    #region 存档版本转换
+    public void TransVersion(int dataVersion)
+    {
+        if (dataVersion == curVersion)
+        {
+            LoadCurVersion();
+        }
+        else
+        {
+            MigrateToLastestVersion(dataVersion);
+        }
+    }
+    private void LoadCurVersion()
+    {
+        LoadAllData(curLoadIndex);
+    }
+    private void MigrateToLastestVersion(int dataVersion)
+    {
+        switch (dataVersion)
+        {
+            case 1: 
+                MigrateFromV1(); 
+                break;
+            default: 
+                Debug.LogError("未定义的版本号");
+                break;
+        }
+        
+                
+    }
+    // 以V1版本读取所有数据，转换到当前版本
+    private void MigrateFromV1()
+    {
+        
+    }
+    #endregion
+    
+
     #region 存档数据
 
     private LoadData loadData;
@@ -120,6 +189,21 @@ public class GameDataManager
         SaveLoadData();
     }
 
+    #endregion
+
+    #region 版本数据
+    
+    public VersionData versionData;
+    private void LoadVersionData()
+    {
+        versionData = JsonManager.LoadData<VersionData>(CurLoadName, "VersionData");
+    }
+
+    public void SaveVersionData()
+    {
+        versionData.Version = curVersion;
+        JsonManager.SaveData(versionData, CurLoadName, "VersionData");
+    }
     #endregion
 
     #region 玩家背包
