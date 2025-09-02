@@ -62,8 +62,8 @@ public class CardSlot : MonoBehaviour
 
         EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
-        EventManager.Instance.AddListener<Card>(EventType.PickUpCard, OnCardPickedUp);
-        EventManager.Instance.AddListener(EventType.PutDownCard, OnCardPutDown);
+        EventManager.Instance.RemoveListener<Card>(EventType.PickUpCard, OnCardPickedUp);
+        EventManager.Instance.RemoveListener(EventType.PutDownCard, OnCardPutDown);
     }
 
     public void Init(SlotCards slotCards)
