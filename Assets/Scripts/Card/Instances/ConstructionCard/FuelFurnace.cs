@@ -19,7 +19,7 @@ public class FuelFurnace : ConstructionCard
     private FuelStorageComponent fuelStorage;
     private TemperatureComponent temperatureComponent;
 
-    public List<Card> cardsToProcesss; // 待加工卡牌
+    public List<Card> cardsToProcesss = new(); // 待加工卡牌
     public int leftRounds = 0; // 当前加工轮数
     public int maxRound = 16; // 总加工轮数
     public bool isProcessing = false; // 是否正在加工
@@ -309,7 +309,6 @@ public class FuelFurnace : ConstructionCard
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        tip = string.Empty;
         var card = slot.PeekCard();
 
         // 添加燃料
