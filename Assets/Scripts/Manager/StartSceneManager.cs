@@ -19,6 +19,8 @@ public class StartSceneManager : MonoBehaviour
     
     private Button ReturnStart;
 
+    private Button ClearData;
+
     private Button SkipGuide;
     private Button DontSkipGuide;
     private Button ReturnLoad;
@@ -27,8 +29,10 @@ public class StartSceneManager : MonoBehaviour
         EnterGame = StartButton.transform.Find("EnterGame").GetComponent<Button>();
         Setting = StartButton.transform.Find("Setting").GetComponent<Button>();
         Exit = StartButton.transform.Find("Exit").GetComponent<Button>();
+        
         ReturnStart = LoadButton.transform.Find("ReturnStart").GetComponent<Button>();
-
+        ClearData = LoadButton.transform.Find("ClearData").GetComponent<Button>();
+        
         SkipGuide = ChooseSkipGuide.transform.Find("SkipGuide").GetComponent<Button>();
         DontSkipGuide = ChooseSkipGuide.transform.Find("DontSkipGuide").GetComponent<Button>();
         ReturnLoad = ChooseSkipGuide.transform.Find("ReturnLoad").GetComponent<Button>();
@@ -36,7 +40,8 @@ public class StartSceneManager : MonoBehaviour
         EnterGame.onClick.AddListener(OnEnterGameClick);
         Exit.onClick.AddListener(OnExitClick);
         Setting.onClick.AddListener(OnSettingClick);
-
+        ClearData.onClick.AddListener(OnClearDataClicked);
+        
         StartButton.SetActive(true);
         LoadButton.SetActive(false);
         ChooseSkipGuide.SetActive(false);
@@ -189,8 +194,22 @@ public class StartSceneManager : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
-    #endregion
 
+    private void OnClearDataClicked()
+    {
+        string targetFolder = Application.persistentDataPath+"/";
+        // 如果目标文件夹不存在，先创建
+        if (Directory.Exists(targetFolder))
+        {
+            Directory.Delete(targetFolder, true);
+        }
+        //刷新存档按钮
+        RefreshLoadButton();
+        GameDataManager.Instance.ClearLoadData();
+    }
+
+    #endregion
+    
     #region 创建新存档
 
     //创建新存档(从初始存档位置复制)

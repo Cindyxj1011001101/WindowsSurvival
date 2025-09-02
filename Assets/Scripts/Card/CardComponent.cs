@@ -532,7 +532,8 @@ public class PlantGrowthComponent : CardComponent, IUpdate
     public float maxLiveTempture; // 最高存活温度
     public string deadCardId; // 死亡后变成的卡牌ID 
     public List<PressureLevel> pressureList=new List<PressureLevel>();
-
+    public bool StopGrow=false; 
+    
     [JsonIgnore] public UnityAction onDead;
 
     public PlantGrowthComponent(float growthRate, float minConfortTempreture, float maxConfortTempreture, float minGrowTempture, float maxGrowTempture, float minLiveTempture, float maxLiveTempture, string deadCardId, List<PressureLevel> pressureList)
@@ -553,7 +554,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
     public void Update()
     {
         if (deadProgress <= 0) return;
-
+        if(StopGrow)return;
         var bag = BelongedCard.Bag as EnvironmentBag;
         PressureLevel curPressureLevel = bag.PressureLevel;
         

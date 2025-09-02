@@ -74,7 +74,7 @@ public static class CardFactory
             { "纤维", typeof(Fiber) },
             { "珊瑚礁", typeof(CoralReef) },
             { "燃素", typeof(Phlogiston) },
-            { "铁齿铜牙餐盘", typeof(IronMeal) },
+            { "铁齿铜牙餐", typeof(IronMeal) },
             { "黑金炭烤肉", typeof(CoalGrilledMeat) },
             { "蛤蜊浓汤", typeof(ClamSoup) },
             { "肉排", typeof(Steak) },

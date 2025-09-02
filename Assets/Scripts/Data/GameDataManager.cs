@@ -42,7 +42,7 @@ public class GameDataManager
                 JsonManager.LoadData<EnvironmentBag>(CurLoadName, place.ToString() + "Bag"));
         }
 
-        // 状态数据
+        // 状态数据 
         stateData = JsonManager.LoadData<StateData>(CurLoadName, "State");
         // 音频数据
         audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
@@ -124,6 +124,10 @@ public class GameDataManager
     {
         loadData.loads[index] = new Load(new DateTime(2020, 1, 1, 0, 0, 0), skipGuide);
         SaveLoadData();
+    }
+    public void ClearLoadData()
+    {
+        loadData= new LoadData();
     }
 
     #endregion

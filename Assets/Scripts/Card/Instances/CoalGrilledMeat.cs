@@ -6,7 +6,7 @@ public class CoalGrilledMeat : Card
     {
         Events = new()
         {
-            new Event("食用", "黑金炭烤肉", Event_Eat, null, () => 15,
+            new Event("食用", "有着一层酥脆的皮", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>()
             {
                 { PlayerStateEnum.Fullness, 94 },
