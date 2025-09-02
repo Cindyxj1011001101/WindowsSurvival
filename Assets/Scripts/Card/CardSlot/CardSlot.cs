@@ -63,6 +63,8 @@ public class CardSlot : MonoBehaviour
         Clear();
         Cards?.SetCardSlot(null);
 
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
+
         EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
         EventManager.Instance.RemoveListener<Card>(EventType.PickUpCard, OnCardPickedUp);
@@ -193,12 +195,13 @@ public class CardSlot : MonoBehaviour
         if (!componentSliders.TryGetValue(component.GetType(), out UIStateSlider slider))
         {
             if (component is TemperatureComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TemperatureComponent", parent, false).GetComponent<UIStateSlider>();
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TemperatureComponent", parent).GetComponent<UIStateSlider>();
             else if (component is TimerComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TimerComponent", parent, false).GetComponent<UIStateSlider>();
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TimerComponent", parent).GetComponent<UIStateSlider>();
             else
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent, false).GetComponent<UIStateSlider>();
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent).GetComponent<UIStateSlider>();
             slider.transform.SetAsLastSibling();
+            (slider.transform as RectTransform).anchoredPosition = Vector3.zero;
             componentSliders.Add(component.GetType(), slider);
         }
 
@@ -264,7 +267,12 @@ public class CardSlot : MonoBehaviour
                 break;
             case TimerComponent timerComponent:
                 slider.SetValue(timerComponent.value, timerComponent.maxValue);
-                slider.tipController.SetTip($"剩余{timerComponent.tipText}时间:    {timerComponent.value}", slider.fillColor);
+                var hour = Mathf.FloorToInt(timerComponent.value / 60);
+                var minute = timerComponent.value % 60;
+                if (hour > 0)
+                    slider.tipController.SetTip($"剩余{timerComponent.tipText}时间:    {hour}h{minute}min", slider.fillColor);
+                else
+                    slider.tipController.SetTip($"剩余{timerComponent.tipText}时间:    {minute}min", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");

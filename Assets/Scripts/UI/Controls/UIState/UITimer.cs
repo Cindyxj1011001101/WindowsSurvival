@@ -9,7 +9,7 @@ public class UITimer : UIStateSlider
     {
         base.SetValue(value, maxValue);
 
-        int separatorCount = Mathf.CeilToInt(maxValue / TimeManager.Instance.SettleInterval);
+        int separatorCount = Mathf.FloorToInt(maxValue / TimeManager.Instance.SettleInterval);
 
         for (int i = 1; i < separatorLayout.transform.childCount - 1; i++)
         {

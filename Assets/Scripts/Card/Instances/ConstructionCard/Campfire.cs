@@ -111,6 +111,7 @@ public class Campfire : ConstructionCard
             else
                 timer.tipText = "烤熟";
             c.AddComponent(timer);
+            c.RefreshSlot();
         });
 
         fuelStorage.SetIsFiring(true);
@@ -158,7 +159,11 @@ public class Campfire : ConstructionCard
         innerContents.ContinueUpdating();
 
         // 移除计时器组件
-        innerContents.ForEachCard(c => c.RemoveComponent<TimerComponent>());
+        innerContents.ForEachCard(c =>
+        {
+            c.RemoveComponent<TimerComponent>();
+            c.RefreshSlot();
+        });
 
         fuelStorage.SetIsFiring(false);
 
@@ -205,12 +210,12 @@ public class Campfire : ConstructionCard
         // 内容物增加烹饪进度
         foreach (var card in temp)
         {
-            if (card != null && card.TryGetComponent(out CookComponent cookComponent))
+            if (card != null && card.TryGetComponent(out CookComponent cook))
             {
                 // 使用局部变量捕获当前的值
                 Card currentCard = card;
 
-                cookComponent.Update(TimeManager.Instance.SettleInterval, (outcomeId) =>
+                cook.Update(TimeManager.Instance.SettleInterval, (outcomeId) =>
                 {
                     // 处理煮熟的逻辑
                     currentCard.DestroyThis();
@@ -220,6 +225,12 @@ public class Campfire : ConstructionCard
                     ShowTip($"{currentCard.CardName}熟了");
                     currentCard.ShowTip($"{currentCard.CardName}熟了");
                 });
+
+
+                if (currentCard.TryGetComponent<TimerComponent>(out var timer) && cook.leftCookTime >= 0)
+                {
+                    timer.SetValue(cook.leftCookTime);
+                }
             }
         }
 
