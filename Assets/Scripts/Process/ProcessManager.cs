@@ -65,10 +65,10 @@ public class ProcessData
 {
     public string OutcomeID;//产出卡牌ID
     public int Priority;//优先级
-    public List<TempertureType> TempertureTypeList;//温度类型列表
+    public List<TempertureType> TempertureTypeList=new List<TempertureType>();//温度类型列表
     public int Round;//回合数
-    public List<FoodPropertyCalculate> FoodPropertyCalculateList;//食物属性计算列表
-    public List<ProcessCardData> CardDataList;//卡牌数据列表
+    public List<FoodPropertyCalculate> FoodPropertyCalculateList=new List<FoodPropertyCalculate>();//食物属性计算列表
+    public List<ProcessCardData> CardDataList=new List<ProcessCardData>();//卡牌数据列表
     public ProcessData(DataRow row)
     {
         //产出卡牌ID
