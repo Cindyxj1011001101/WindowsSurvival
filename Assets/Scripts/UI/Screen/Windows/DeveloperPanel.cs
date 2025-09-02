@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class DeveloperPanel : MonoBehaviour
 {
     public static DeveloperPanel Instance { get; private set; }
 
-    [Header("UI")]
+    [Header("第一行，卡牌添加相关UI")]
     public GameObject panelRoot;
     public InputField inputCardAmount;
     public InputField inputCardId;
     public Dropdown targetBag;
     public Button btnAddCard;
+
+    [Header("第二行，玩家状态控制相关UI")]
+    public Dropdown stateDropdown;      // 玩家状态枚举
+    public Dropdown opDropdown;         // + 或 -
+    public InputField inputStateValue;  // 数值
+    public Button btnApplyState;        // 应用按钮
 
     private float lastShiftTime = 0f;
     private const float doubleClickInterval = 0.3f;
@@ -24,7 +31,17 @@ public class DeveloperPanel : MonoBehaviour
 
     private void Start()
     {
-        // 初始化UI
+        InitCardAddUI();
+        InitPlayerStateUI();
+
+        if (panelRoot != null) panelRoot.SetActive(false);
+    }
+
+    /// <summary>
+    /// 初始化卡牌添加相关UI
+    /// </summary>
+    private void InitCardAddUI()
+    {
         if (targetBag != null)
         {
             targetBag.ClearOptions();
@@ -32,9 +49,30 @@ public class DeveloperPanel : MonoBehaviour
             targetBag.value = 0;
         }
         if (inputCardAmount != null) inputCardAmount.text = "1";
+        if (inputCardId != null) inputCardId.text = "压缩饼干";
         if (btnAddCard != null) btnAddCard.onClick.AddListener(OnAddClicked);
+    }
 
-        if (panelRoot != null) panelRoot.SetActive(false);
+    /// <summary>
+    /// 初始化玩家状态控制相关UI
+    /// </summary>
+    private void InitPlayerStateUI()
+    {
+        if (opDropdown != null)
+        {
+            opDropdown.ClearOptions();
+            opDropdown.AddOptions(new List<string> { "+", "-" });
+            opDropdown.value = 0;
+        }
+        if (stateDropdown != null)
+        {
+            stateDropdown.ClearOptions();
+            var names = Enum.GetNames(typeof(PlayerStateEnum));
+            stateDropdown.AddOptions(new List<string>(names));
+            stateDropdown.value = Array.IndexOf(names, "Fullness");
+        }
+        if (inputStateValue != null) inputStateValue.text = "10";
+        if (btnApplyState != null) btnApplyState.onClick.AddListener(OnApplyStateClicked);
     }
 
     private void Update()
@@ -46,12 +84,14 @@ public class DeveloperPanel : MonoBehaviour
             if (now - lastShiftTime < doubleClickInterval)
             {
                 if (panelRoot != null) panelRoot.SetActive(!panelRoot.activeSelf);
-                // 不要重置lastShiftTime为0，否则只能关闭不能再次打开
             }
             lastShiftTime = now;
         }
     }
 
+    /// <summary>
+    /// 添加卡牌到指定背包
+    /// </summary>
     private void OnAddClicked()
     {
         int amount = 1;
@@ -92,7 +132,24 @@ public class DeveloperPanel : MonoBehaviour
         }
         if (bag?.Window != null) bag.Window.RefreshDisplay();
     }
+
+    /// <summary>
+    /// 应用玩家状态变更
+    /// </summary>
+    private void OnApplyStateClicked()
+    {
+        if (stateDropdown == null || inputStateValue == null || opDropdown == null) return;
+
+        string stateName = stateDropdown.options[stateDropdown.value].text;
+        if (!Enum.TryParse<PlayerStateEnum>(stateName, out var stateEnum)) return;
+
+        float value = 10;
+        float.TryParse(inputStateValue.text, out value);
+        if (opDropdown.value == 1) value = -value; // 1为“-”
+
+        StateManager.Instance.ChangePlayerState(stateEnum, value);
+    }
 }
-        
+
 
 
