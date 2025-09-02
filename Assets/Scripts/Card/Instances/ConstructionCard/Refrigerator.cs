@@ -29,7 +29,7 @@ public class Refrigerator : ConstructionCard
             var states = new List<CardState>()
             {
                 new ("已接电", "16", false, true, true),
-                new ("未接电", "16", false, true, false),
+                new ("未接电", "17", false, true, false),
             };
             stateMachine = new StateMachineComponent("未接电", states);
             AddComponent(stateMachine);
