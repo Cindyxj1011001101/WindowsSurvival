@@ -47,9 +47,7 @@ public class SafeInsurance : ConstructionCard
     private void Event_UseShovel(out string tip)
     {
         UseShovel(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
-        // 播放音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("凿_01", true);
+        
     }
 
     private bool Judge_UseShovel(out string hint)
@@ -70,9 +68,7 @@ public class SafeInsurance : ConstructionCard
     private void Event_UseHammer(out string tip)
     {
         UseHammer(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), out tip);
-        // 播放音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("暴力拆毁_01", true);
+        
     }
 
     private bool Judge_UseHammer(out string hint)
@@ -99,6 +95,9 @@ public class SafeInsurance : ConstructionCard
     private void UseHammer(Card tool, out string tip)
     {
         tip = string.Empty;
+        // 播放音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("暴力拆毁_01", true);
         Use(20, OnBroken);
         tool.Use();
         TimeManager.Instance.AddTime(15);
@@ -107,6 +106,9 @@ public class SafeInsurance : ConstructionCard
     private void UseShovel(Card tool, out string tip)
     {
         tip = string.Empty;
+        // 播放音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("凿_01", true);
         Use(8, OnBroken);
         tool.Use();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -4);
