@@ -52,7 +52,7 @@ public class Campfire : ConstructionCard
         innerContents.onRemoveCard = (c) =>
         {
             c.ContinueUpdating();
-            c.RemoveComponent<CookComponent>();
+            c.RemoveComponent<TimerComponent>();
         };
 
         // 每个卡牌槽的最大堆叠数都为1
