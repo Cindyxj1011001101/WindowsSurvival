@@ -44,6 +44,8 @@ public class Campfire : ConstructionCard
                     timer.tipText = "烧焦";
                 else
                     timer.tipText = "烤熟";
+
+                c.AddComponent(timer);
             }
         };
         // 取出时恢复每回合更新
