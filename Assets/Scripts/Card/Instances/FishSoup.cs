@@ -23,11 +23,14 @@ public class FishSoup : Card
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("喝_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 15);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 29);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 12);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 12);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, -25);
         TimeManager.Instance.AddTime(15);
+        
     }
 }

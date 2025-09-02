@@ -23,6 +23,8 @@ public class KettleFlowerSeed : CookableCard
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 25);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 14);
         TimeManager.Instance.AddTime(15);

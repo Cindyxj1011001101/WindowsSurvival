@@ -33,6 +33,9 @@
     private void Event_Drink(out string tip)
     {
         tip = string.Empty;
+        // 播放喝水的音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("喝_01", true);
     }
     private bool Judge_Drink(out string hint)
     {

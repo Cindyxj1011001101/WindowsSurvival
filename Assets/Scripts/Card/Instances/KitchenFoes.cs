@@ -21,6 +21,8 @@ public class KitchenFoes : Card
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 10);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -6);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -4);
