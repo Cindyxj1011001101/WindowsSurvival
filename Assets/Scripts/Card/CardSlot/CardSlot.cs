@@ -13,16 +13,19 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private GameObject stackObject; // 控制是否显示堆叠
     [SerializeField] private Text stackNumText; // 显示数量
     [SerializeField] private Image maxStackNumImage; // 显示最大堆叠数量的图标
-    [SerializeField] private RectTransform valueComponentLayout; // 用于显示新鲜度、耐久等组件的布局
-    [SerializeField] private RectTransform innerContentsComponent; // 用于显示内容物组件
-    [SerializeField] private UIStateSlider temperatureSlider; // 温度组件
     [SerializeField] private CanvasGroup cardCanvasGroup;
     [SerializeField] private Text moreInfoText; // 额外信息
     [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
     [SerializeField] private GameObject mask;
+
+    [SerializeField] private RectTransform middle; // 用于显示新鲜度、耐久等组件的布局
+    [SerializeField] private RectTransform left; // 用于显示计时器和盐水
+    [SerializeField] private RectTransform right; // 用于显示温度和淡水
+    [SerializeField] private RectTransform innerContentsComponent; // 用于显示内容物组件
     [SerializeField] private GameObject iconLayout; // 用于显示图标的布局
     [SerializeField] private Image fireIcon; // 图标上的火焰
     [SerializeField] private Image flashIcon; // 图标上的闪电
+
     [SerializeField] private Animator cardAnimator;
 
     private Dictionary<Type, float> lastComponentValues = new();
@@ -185,40 +188,20 @@ public class CardSlot : MonoBehaviour
     /// 显示具有浮点值数据的组件
     /// </summary>
     /// <param name="component"></param>
-    private void DisplayValueComponent(CardComponent component)
+    private void DisplayContinuousValueComponent(CardComponent component, RectTransform parent, bool vertical = false)
     {
-        if (component is TemperatureComponent t)
-        {
-            temperatureSlider.gameObject.SetActive(true);
-            if (t.temperature <= 50)
-            {
-                temperatureSlider.fillColor = ColorManager.Green;
-            }
-            else if (t.temperature <= 100)
-            {
-                temperatureSlider.fillColor = ColorManager.Yellow;
-            }
-            else if (t.temperature <= 200)
-            {
-                temperatureSlider.fillColor = ColorManager.Orange;
-            }
-            else
-            {
-                temperatureSlider.fillColor = ColorManager.Red;
-            }
-            temperatureSlider.SetValue(t.temperature, t.maxTemperature);
-            temperatureSlider.tipController.SetTip($"当前温度:    {t.temperature}/{t.maxTemperature}", temperatureSlider.fillColor);
-            return;
-        }
-
         if (!componentSliders.TryGetValue(component.GetType(), out UIStateSlider slider))
         {
-            slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "Component", valueComponentLayout).GetComponent<UIStateSlider>();
+            if (component is TemperatureComponent)
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TemperatureComponent", parent, false).GetComponent<UIStateSlider>();
+            else
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent, false).GetComponent<UIStateSlider>();
             slider.transform.SetAsLastSibling();
             componentSliders.Add(component.GetType(), slider);
         }
 
-        slider.fillColor = ColorManager.CardComponentColors[component.GetType()];
+        if (ColorManager.CardComponentColors.TryGetValue(component.GetType(), out var fillColor))
+            slider.fillColor = fillColor;
 
         switch (component)
         {
@@ -239,15 +222,43 @@ public class CardSlot : MonoBehaviour
                 slider.tipController.SetTip($"产物进度:    {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case FuelStorageComponent fuelStorageComponent:
-                slider.SetValue(fuelStorageComponent.fuel, fuelStorageComponent.maxFuel);
-                slider.tipController.SetTip($"剩余燃料:    {slider.value * 100:0.0}%", slider.fillColor);
+                slider.SetValue(fuelStorageComponent.value, fuelStorageComponent.maxValue);
+                slider.tipController.SetTip($"剩余燃料:    {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}", slider.fillColor);
                 iconLayout.SetActive(true);
                 fireIcon.gameObject.SetActive(true);
                 fireIcon.color = fuelStorageComponent.isFiring ? ColorManager.BurntOrange : ColorManager.DarkGrey;
                 break;
+            case TemperatureComponent temperatureComponent:
+                if (temperatureComponent.value <= 50)
+                {
+                    slider.fillColor = ColorManager.Green;
+                }
+                else if (temperatureComponent.value <= 100)
+                {
+                    slider.fillColor = ColorManager.Yellow;
+                }
+                else if (temperatureComponent.value <= 200)
+                {
+                    slider.fillColor = ColorManager.Orange;
+                }
+                else
+                {
+                    slider.fillColor = ColorManager.Red;
+                }
+                slider.SetValue(temperatureComponent.value, temperatureComponent.maxValue);
+                slider.tipController.SetTip($"当前温度:    {temperatureComponent.value}/{temperatureComponent.maxValue}", slider.fillColor);
+                break;
             case OxygenStorageComponent oxygenStorageComponent:
-                slider.SetValue(oxygenStorageComponent.oxygen, oxygenStorageComponent.maxOxygen);
-                slider.tipController.SetTip($"剩余氧气:    {slider.value * 100:0.0}%", slider.fillColor);
+                slider.SetValue(oxygenStorageComponent.value, oxygenStorageComponent.maxValue);
+                slider.tipController.SetTip($"剩余氧气:    {oxygenStorageComponent.value}/{oxygenStorageComponent.maxValue}", slider.fillColor);
+                break;
+            case FreshWaterStorageComponent freshWaterStorageComponent:
+                slider.SetValue(freshWaterStorageComponent.value, freshWaterStorageComponent.maxValue);
+                slider.tipController.SetTip($"淡水储量:    {freshWaterStorageComponent.value}/{freshWaterStorageComponent.maxValue}", slider.fillColor);
+                break;
+            case SalineWaterStorageComponent salineWaterStorageComponent:
+                slider.SetValue(salineWaterStorageComponent.value, salineWaterStorageComponent.maxValue);
+                slider.tipController.SetTip($"盐水储量:    {salineWaterStorageComponent.value}/{salineWaterStorageComponent.maxValue}", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
@@ -319,31 +330,37 @@ public class CardSlot : MonoBehaviour
 
         // 显示耐久
         if (card.TryGetComponent<DurabilityComponent>(out var d))
-            DisplayValueComponent(d);
+            DisplayContinuousValueComponent(d, middle);
         // 显示新鲜度
         if (card.TryGetComponent<FreshnessComponent>(out var f))
-            DisplayValueComponent(f);
+            DisplayContinuousValueComponent(f, middle);
         // 显示生长度
         if (card.TryGetComponent<GrowthComponent>(out var g))
-            DisplayValueComponent(g);
+            DisplayContinuousValueComponent(g, middle);
         // 显示产物进度
         if (card.TryGetComponent<ProgressComponent>(out var p))
-            DisplayValueComponent(p);
+            DisplayContinuousValueComponent(p, middle);
         // 显示内容物数量
         if (card.TryGetComponent<InnerContentsComponent>(out var i))
             DisplayInnerContentsComponent(i);
         // 显示燃料存储
         if (card.TryGetComponent<FuelStorageComponent>(out var fc))
-            DisplayValueComponent(fc);
+            DisplayContinuousValueComponent(fc, middle);
         // 显示温度
         if (card.TryGetComponent<TemperatureComponent>(out var t))
-            DisplayValueComponent(t);
+            DisplayContinuousValueComponent(t, right);
         // 显示状态
         if (card.TryGetComponent<StateMachineComponent>(out var s))
             DisplayCardState(card, s.CurrentState);
         // 显示氧气存储
         if (card.TryGetComponent<OxygenStorageComponent>(out var o))
-            DisplayValueComponent(o);
+            DisplayContinuousValueComponent(o, middle);
+        // 显示盐水存储
+        if (card.TryGetComponent<SalineWaterStorageComponent>(out var sw))
+            DisplayContinuousValueComponent(sw, left, true);
+        // 显示淡水存储
+        if (card.TryGetComponent<FreshWaterStorageComponent>(out var fw))
+            DisplayContinuousValueComponent(fw, right, true);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;
@@ -362,10 +379,11 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.blocksRaycasts = false;
         cardCanvasGroup.interactable = false;
 
-        ObjectBufferPool.Instance.RestoreAllChildren(valueComponentLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(middle);
+        ObjectBufferPool.Instance.RestoreAllChildren(left);
+        ObjectBufferPool.Instance.RestoreAllChildren(right);
 
         if (innerContentsComponent != null) innerContentsComponent.gameObject.SetActive(false);
-        if (temperatureSlider != null) temperatureSlider.gameObject.SetActive(false);
         if (iconLayout != null) iconLayout.SetActive(false);
         if (fireIcon != null) fireIcon.gameObject.SetActive(false);
         if (flashIcon != null) flashIcon.gameObject.SetActive(false);
@@ -400,7 +418,8 @@ public class CardSlot : MonoBehaviour
 
         foreach (var (type, deltaValue) in deltaValues)
         {
-            groups.Add((deltaValue > 0, CalcLevel(deltaValue), ColorManager.CardComponentColors[type]));
+            if (ColorManager.CardComponentColors.TryGetValue(type, out var color))
+                groups.Add((deltaValue > 0, CalcLevel(deltaValue), color));
         }
 
         MFXUtility.ShowArrows(particleDisplayRect, groups);
@@ -408,7 +427,8 @@ public class CardSlot : MonoBehaviour
 
     public void DisplayComponentValueChange(Type componentType, float value)
     {
-        MFXUtility.ShowArrows(particleDisplayRect, value > 0, CalcLevel(value), ColorManager.CardComponentColors[componentType]);
+        if (ColorManager.CardComponentColors.TryGetValue(componentType, out var color))
+            MFXUtility.ShowArrows(particleDisplayRect, value > 0, CalcLevel(value), color);
     }
 
     private int CalcLevel(float value)

@@ -131,7 +131,7 @@ public class Campfire : ConstructionCard
             return false;
         }
 
-        if (fuelStorage.fuel < 2)
+        if (fuelStorage.value < 2)
         {
             hint = "燃料不足，无法点燃营火";
             return false;
@@ -185,10 +185,10 @@ public class Campfire : ConstructionCard
         var waterLevel = StateManager.Instance.WaterLevel.CurValue;
 
         // 这里剩余燃料一定是>=2的，因为燃料<2时会自动熄灭并且无法点燃
-        fuelStorage.AddFuel(-2); // 每回合消耗2点燃料
+        fuelStorage.AddValue(-2); // 每回合消耗2点燃料
         if (waterLevel > 0) // 水平面>0时，燃料额外-4
         {
-            fuelStorage.AddFuel(-4);
+            fuelStorage.AddValue(-4);
         }
 
         // 记录所有内容物
@@ -223,7 +223,7 @@ public class Campfire : ConstructionCard
 
         temp.Clear();
 
-        if (fuelStorage.isFiring && fuelStorage.fuel < 2) // 燃料不足时自动熄灭
+        if (fuelStorage.isFiring && fuelStorage.value < 2) // 燃料不足时自动熄灭
         {
             Event_UnLight(out _);
             ShowTip("燃料不足，营火已自动熄灭");

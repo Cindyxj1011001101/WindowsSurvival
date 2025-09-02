@@ -16,6 +16,8 @@ public static class ColorManager
     public static Color32 Orange { get; private set; } = new(255, 128, 11, 255);
     public static Color32 BurntOrange { get; private set; } = new(255, 82, 13, 255);
     public static Color32 Red { get; private set; } = new(255, 9, 9, 255);
+    public static Color32 FreshWater { get; private set; } = new(147, 219, 247, 255);
+    public static Color32 SalineWater { get; private set; } = new(59, 124, 246, 255);
 
     public static Dictionary<Type, Color32> CardComponentColors = new()
     {
@@ -25,6 +27,8 @@ public static class ColorManager
         { typeof(GrowthComponent), White },
         { typeof(FuelStorageComponent), BurntOrange },
         { typeof(OxygenStorageComponent), SkyBlue },
+        { typeof(FreshWaterStorageComponent), FreshWater },
+        { typeof(SalineWaterStorageComponent), SalineWater },
     };
 
     public static Dictionary<int, Color32> LoadColors = new()

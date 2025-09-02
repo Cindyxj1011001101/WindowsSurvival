@@ -203,14 +203,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a20ea1567b2bf264aaf83299eea42197, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ignoreThisWhenSave: 0
   destroyAfterClosed: 0
   animDuration: 0.2
   maximize_default: {fileID: -836057702, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: -1399726919, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_hovered: {fileID: -416697522, guid: 463677557ce92964a8482ac800b7428d, type: 3}
-  defaultPosition: {x: -100, y: -92, z: 0}
-  defaultSizeDelta: {x: 500, y: 500, z: 0}
+  isModal: 0
+  rarImage: {fileID: 0}
 --- !u!1 &7982333649505434922
 GameObject:
   m_ObjectHideFlags: 0
