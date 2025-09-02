@@ -19,6 +19,8 @@ public class LittleCookedMeat : CookableCard
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 17);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 1);
         TimeManager.Instance.AddTime(15);

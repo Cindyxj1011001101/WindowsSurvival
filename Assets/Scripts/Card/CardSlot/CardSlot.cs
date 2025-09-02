@@ -194,6 +194,8 @@ public class CardSlot : MonoBehaviour
         {
             if (component is TemperatureComponent)
                 slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TemperatureComponent", parent, false).GetComponent<UIStateSlider>();
+            else if (component is TimerComponent)
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TimerComponent", parent, false).GetComponent<UIStateSlider>();
             else
                 slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent, false).GetComponent<UIStateSlider>();
             slider.transform.SetAsLastSibling();
@@ -259,6 +261,10 @@ public class CardSlot : MonoBehaviour
             case SalineWaterStorageComponent salineWaterStorageComponent:
                 slider.SetValue(salineWaterStorageComponent.value, salineWaterStorageComponent.maxValue);
                 slider.tipController.SetTip($"盐水储量:    {salineWaterStorageComponent.value}/{salineWaterStorageComponent.maxValue}", slider.fillColor);
+                break;
+            case TimerComponent timerComponent:
+                slider.SetValue(timerComponent.value, timerComponent.maxValue);
+                slider.tipController.SetTip($"剩余{timerComponent.tipText}时间:    {timerComponent.value}", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
@@ -361,6 +367,9 @@ public class CardSlot : MonoBehaviour
         // 显示淡水存储
         if (card.TryGetComponent<FreshWaterStorageComponent>(out var fw))
             DisplayContinuousValueComponent(fw, right, true);
+        // 显示计时器
+        if (card.TryGetComponent<TimerComponent>(out var tm))
+            DisplayContinuousValueComponent(tm, left);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;

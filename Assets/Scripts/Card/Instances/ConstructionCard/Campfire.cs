@@ -44,13 +44,15 @@ public class Campfire : ConstructionCard
                     timer.tipText = "烧焦";
                 else
                     timer.tipText = "烤熟";
+
+                c.AddComponent(timer);
             }
         };
         // 取出时恢复每回合更新
         innerContents.onRemoveCard = (c) =>
         {
             c.ContinueUpdating();
-            c.RemoveComponent<CookComponent>();
+            c.RemoveComponent<TimerComponent>();
         };
 
         // 每个卡牌槽的最大堆叠数都为1

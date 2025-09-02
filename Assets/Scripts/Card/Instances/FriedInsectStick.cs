@@ -21,6 +21,8 @@ public class FriedInsectStick : Card
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 46);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -4);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 8);

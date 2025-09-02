@@ -15,7 +15,8 @@ public class CookedSeaLizard : CookableCard
     {
         DestroyThis();
 
-        SoundManager.Instance.PlaySound("吃_01",true);
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
 
         tip = string.Empty;
 

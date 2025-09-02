@@ -22,6 +22,8 @@ public class CookedTentacle : CookableCard
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 24);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -1);
         TimeManager.Instance.AddTime(30);

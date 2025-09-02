@@ -19,6 +19,8 @@ public class Steak : Card
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 68);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 5);
         TimeManager.Instance.AddTime(15);

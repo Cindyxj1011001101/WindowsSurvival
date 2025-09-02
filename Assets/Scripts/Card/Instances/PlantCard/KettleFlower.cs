@@ -73,6 +73,9 @@ public class KettleFlower : Card
     private void Event_Drink(out string tip)
     {
         tip = string.Empty;
+        // 播放喝水的音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("喝_01", true);
         TryGetComponent<PlantGrowthComponent>(out var growthComponent);
         growthComponent.growthProgress -= 20;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 14);

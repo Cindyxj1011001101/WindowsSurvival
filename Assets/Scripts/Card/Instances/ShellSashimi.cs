@@ -25,6 +25,8 @@ public class ShellSashimi : Card
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 44);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 14);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 10);

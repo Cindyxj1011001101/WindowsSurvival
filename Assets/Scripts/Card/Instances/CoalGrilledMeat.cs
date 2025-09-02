@@ -6,7 +6,7 @@ public class CoalGrilledMeat : Card
     {
         Events = new()
         {
-            new Event("食用", "黑金炭烤肉", Event_Eat, null, () => 15,
+            new Event("食用", "有着一层酥脆的皮", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>()
             {
                 { PlayerStateEnum.Fullness, 94 },
@@ -21,10 +21,13 @@ public class CoalGrilledMeat : Card
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 94);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -10);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 8);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 5);
         TimeManager.Instance.AddTime(15);
+        
 }
 }

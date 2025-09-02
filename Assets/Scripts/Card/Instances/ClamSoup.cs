@@ -20,9 +20,12 @@ public class ClamSoup : Card
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("喝_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 30);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 60);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 10);
         TimeManager.Instance.AddTime(15);
+        
     }
 }

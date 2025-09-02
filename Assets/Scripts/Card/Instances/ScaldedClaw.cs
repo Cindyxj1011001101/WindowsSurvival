@@ -23,6 +23,8 @@ public class ScaldedClaw : Card
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 66);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         TimeManager.Instance.AddTime(45);

@@ -20,6 +20,8 @@ public class CookedOysterMeat : CookableCard
         DestroyThis();
 
         tip = string.Empty;
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 8);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 1);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 1);
