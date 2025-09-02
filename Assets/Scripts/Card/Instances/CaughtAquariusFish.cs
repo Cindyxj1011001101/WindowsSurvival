@@ -28,8 +28,7 @@ public class CaughtAquariusFish : Card
         // 地点中增加一个水瓶鱼
         // 继承产物进度
         AddCard("水瓶鱼", true, out var card);
-        card.InheritComponent<ProgressComponent>(this);
-        card.TryGetComponent<ProgressComponent>(out var progress);
+        card.InheritComponent<ProgressComponent>(this, out var progress);
         progress.updateRate = 1;
     }
 

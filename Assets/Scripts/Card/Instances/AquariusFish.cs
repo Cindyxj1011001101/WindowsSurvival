@@ -59,7 +59,7 @@ public class AquariusFish : Card
             // 继承产物进度
             // 添加到玩家背包
             AddCard("被捉住的水瓶鱼", true, out var card);
-            card.InheritComponent<ProgressComponent>(this);
+            card.InheritComponent<ProgressComponent>(this, out _);
         }
     }
     #endregion
@@ -80,7 +80,7 @@ public class AquariusFish : Card
         // 3. 掉落卡牌
         // 获得一张“被捉住的水瓶鱼”
         AddCard("被捉住的水瓶鱼", true, out var card);
-        card.InheritComponent<ProgressComponent>(this);
+        card.InheritComponent<ProgressComponent>(this, out _);
     }
 
     public override bool CanQuickInteract(Card card)
