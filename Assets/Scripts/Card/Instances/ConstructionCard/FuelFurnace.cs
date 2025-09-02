@@ -19,7 +19,7 @@ public class FuelFurnace : ConstructionCard
     private FuelStorageComponent fuelStorage;
     private TemperatureComponent temperatureComponent;
 
-    public List<Card> cardsToProcesss; // 待加工卡牌
+    public List<Card> cardsToProcesss = new(); // 待加工卡牌
     public int leftRounds = 0; // 当前加工轮数
     public int maxRound = 16; // 总加工轮数
     public bool isProcessing = false; // 是否正在加工
@@ -98,7 +98,7 @@ public class FuelFurnace : ConstructionCard
             return false;
         }
 
-        if (fuelStorage.fuel < 1)
+        if (fuelStorage.value < 1)
         {
             hint = "燃料不足，无法点燃燃料炉";
             return false;
@@ -229,29 +229,29 @@ public class FuelFurnace : ConstructionCard
         // 点燃状态下
         if (fuelStorage.isFiring)
         {
-            temperatureComponent.AddTemperature(17); // 温度+17
-            fuelStorage.AddFuel(-1); // 燃料-1
+            temperatureComponent.AddValue(17); // 温度+17
+            fuelStorage.AddValue(-1); // 燃料-1
             if (waterLevel > 0) // 水平面>0时，燃料额外-4
             {
-                fuelStorage.AddFuel(-4);
+                fuelStorage.AddValue(-4);
             }
         }
         // 非点燃状态下
         else
         {
-            temperatureComponent.AddTemperature(-4); // 温度-4
+            temperatureComponent.AddValue(-4); // 温度-4
             if (waterLevel >= 30) // 水平面>=30时，温度额外-8
             {
-                temperatureComponent.AddTemperature(-8);
+                temperatureComponent.AddValue(-8);
             }
             else if (waterLevel > 0) // 水平面>=0时，温度额外-4
             {
-                temperatureComponent.AddTemperature(-4);
+                temperatureComponent.AddValue(-4);
             }
         }
 
         // 燃料不足时自动熄灭
-        if (fuelStorage.isFiring && fuelStorage.fuel < 1)
+        if (fuelStorage.isFiring && fuelStorage.value < 1)
         {
             Event_Unlightened(out _);
             ShowTip("燃料不足，燃料炉已自动熄灭");
@@ -274,9 +274,9 @@ public class FuelFurnace : ConstructionCard
     {
         if (leftRounds <= 0) return;
 
-        if (temperatureComponent.temperature <= 50) tempertureData[0].round++;
-        else if (temperatureComponent.temperature <= 100) tempertureData[1].round++;
-        else if (temperatureComponent.temperature <= 200) tempertureData[2].round++;
+        if (temperatureComponent.value <= 50) tempertureData[0].round++;
+        else if (temperatureComponent.value <= 100) tempertureData[1].round++;
+        else if (temperatureComponent.value <= 200) tempertureData[2].round++;
         else tempertureData[3].round++;
         leftRounds--;
 
@@ -309,7 +309,6 @@ public class FuelFurnace : ConstructionCard
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        tip = string.Empty;
         var card = slot.PeekCard();
 
         // 添加燃料

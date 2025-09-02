@@ -108,7 +108,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
             hint = "麦麦的氧气已满";
             return false;
         }
-        var toRelease = Mathf.Min(oxygenStorage.oxygen, remainingCapacity);
+        var toRelease = Mathf.Min(oxygenStorage.value, remainingCapacity);
         if (toRelease == 0)
         {
             hint = "机器的氧气存储不足";
@@ -123,13 +123,13 @@ public class OreReleaseOxygenMachine : ConstructionCard
         // 玩家氧气剩余容量
         var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
         // 计算释放量
-        var toRelease = Mathf.Min(oxygenStorage.oxygen, remainingCapacity);
+        var toRelease = Mathf.Min(oxygenStorage.value, remainingCapacity);
         if (toRelease > 0)
             // 释放氧气
             StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, toRelease);
 
         // 氧气存量减少
-        oxygenStorage.AddOxygen(-toRelease);
+        oxygenStorage.AddValue(-toRelease);
     }
     #endregion
 
@@ -153,13 +153,13 @@ public class OreReleaseOxygenMachine : ConstructionCard
         // 室内氧气剩余容量
         var remainingCapacity = env.StateDict[EnvironmentStateEnum.Oxygen].RemainingCapacity;
         // 计算释放量
-        var toRelease = Mathf.Min(oxygenStorage.oxygen, remainingCapacity);
+        var toRelease = Mathf.Min(oxygenStorage.value, remainingCapacity);
         if (toRelease > 0)
             // 释放氧气
             env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, toRelease);
 
         // 氧气存量减少
-        oxygenStorage.AddOxygen(-toRelease);
+        oxygenStorage.AddValue(-toRelease);
     }
 
     // 制氧
@@ -181,7 +181,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         }
 
         // 氧气存储要超了不制氧
-        if (oxygenStorage.oxygen + oxygenRelease > oxygenStorage.maxOxygen)
+        if (oxygenStorage.value + oxygenRelease > oxygenStorage.maxValue)
         {
             return;
         }
@@ -212,7 +212,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         StateManager.Instance.ChangeElectricity(-electricityConsumption);
 
         // 氧气存量增加
-        oxygenStorage.AddOxygen(oxygenRelease);
+        oxygenStorage.AddValue(oxygenRelease);
     }
 
     private bool TryConsumeOre(int amount)

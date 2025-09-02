@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEditorInternal;
-using UnityEngine;
 
 /// <summary>
 /// 燃料蒸馏器
@@ -10,11 +8,9 @@ public class FuelDistiller : ConstructionCard
     private InnerContentsComponent innerContents; // 内容物组件
     private FuelStorageComponent fuelStorage; // 燃料存储组件
     private StateMachineComponent stateMachine;
+    private FreshWaterStorageComponent freshWaterStorage; // 淡水存储 
+    private SalineWaterStorageComponent salineWaterStorage; // 盐水存储
 
-    public int maxSalineWaterStorage = 24;
-    public int maxFreshWaterStorage = 12;
-    public int salineWaterStorage = 0;
-    public int freshWaterStorage = 0;
     public int fuelConsume = 1;
 
     private FuelDistiller()
@@ -55,6 +51,18 @@ public class FuelDistiller : ConstructionCard
             stateMachine = new StateMachineComponent("未点燃", states);
             AddComponent(stateMachine);
         }
+
+        if (!TryGetComponent(out freshWaterStorage))
+        {
+            freshWaterStorage = new(12);
+            AddComponent(freshWaterStorage);
+        }
+
+        if (!TryGetComponent(out salineWaterStorage))
+        {
+            salineWaterStorage = new(24);
+            AddComponent(salineWaterStorage);
+        }
     }
 
     /// <summary>
@@ -89,7 +97,7 @@ public class FuelDistiller : ConstructionCard
             return false;
         }
 
-        if (fuelStorage.fuel < fuelConsume)
+        if (fuelStorage.value < fuelConsume)
         {
             hint = "燃料不足，无法点燃燃料蒸馏器";
             return false;
@@ -132,15 +140,14 @@ public class FuelDistiller : ConstructionCard
     {
         tip = string.Empty;
         GameManager.Instance.PlayerBag.FindCardOfName("盐水").DestroyThis();
-        salineWaterStorage += 12; // 盐水储量+12
-        salineWaterStorage = Mathf.Clamp(salineWaterStorage, 0, maxSalineWaterStorage);
+        salineWaterStorage.AddValue(12); // 盐水储量+12
     }
 
     private bool Judge_AddSalineWater(out string hint)
     {
         hint = string.Empty;
 
-        if (salineWaterStorage >= maxFreshWaterStorage)
+        if (salineWaterStorage.value >= salineWaterStorage.maxValue)
         {
             hint = "盐水储量已经达到上限";
             return false;
@@ -165,16 +172,16 @@ public class FuelDistiller : ConstructionCard
         var waterLevel = StateManager.Instance.WaterLevel.CurValue;
 
         // 这里剩余燃料一定是>=fuelConsume的，因为燃料<fuelConsume时会自动熄灭并且无法点燃
-        fuelStorage.AddFuel(-fuelConsume); // 每回合消耗1点燃料
+        fuelStorage.AddValue(-fuelConsume); // 每回合消耗1点燃料
         if (waterLevel > 0) // 水平面>0时，燃料额外-4
         {
-            fuelStorage.AddFuel(-4);
+            fuelStorage.AddValue(-4);
         }
 
         // 处理蒸馏逻辑
         HandleDistillation();
 
-        if (fuelStorage.isFiring && fuelStorage.fuel < fuelConsume) // 燃料不足时自动熄灭
+        if (fuelStorage.isFiring && fuelStorage.value < fuelConsume) // 燃料不足时自动熄灭
         {
             Event_UnLight(out _);
             ShowTip("燃料不足，燃料蒸馏器已自动熄灭");
@@ -192,10 +199,10 @@ public class FuelDistiller : ConstructionCard
 
     private void HandleDistillation()
     {
-        if (salineWaterStorage < 1 || freshWaterStorage >= maxFreshWaterStorage) return;
+        if (salineWaterStorage.value < 1 || freshWaterStorage.value >= freshWaterStorage.maxValue) return;
 
-        salineWaterStorage -= 1; // 盐水储量-1
-        freshWaterStorage += 1; // 淡水储量+1
+        salineWaterStorage.AddValue(-1); // 盐水储量-1
+        freshWaterStorage.AddValue(1); // 淡水储量+1
 
         GetBottledWater();
     }
@@ -203,10 +210,10 @@ public class FuelDistiller : ConstructionCard
     private void GetBottledWater()
     {
         // 淡水储量没有达到上限，或者内容物已满，不生成瓶装水
-        if (freshWaterStorage < maxFreshWaterStorage || !innerContents.bag.CanAddCard(CardFactory.GetStaticCardInstance("瓶装水"), out _)) return;
+        if (freshWaterStorage.value < freshWaterStorage.maxValue || !innerContents.bag.CanAddCard(CardFactory.GetStaticCardInstance("瓶装水"), out _)) return;
 
         // 淡水储量清0，生成一瓶瓶装水
-        freshWaterStorage = 0;
+        freshWaterStorage.SetValue(0);
         AddCard("瓶装水", innerContents.bag, out var card);
         card.RefreshSlot();
         ShowTip("蒸馏得到了一瓶瓶装水");
@@ -218,7 +225,7 @@ public class FuelDistiller : ConstructionCard
         if (fuelStorage.CanQuickInteract(card)) return true;
 
         // 放入盐水
-        if (card.CardId == "盐水" && salineWaterStorage < maxFreshWaterStorage) return true;
+        if (card.CardId == "盐水" && salineWaterStorage.value < salineWaterStorage.maxValue) return true;
 
         // 拆毁
         return base.CanQuickInteract(card);
@@ -237,11 +244,10 @@ public class FuelDistiller : ConstructionCard
         }
 
         // 放入盐水
-        if (card.CardId == "盐水" && salineWaterStorage < maxFreshWaterStorage)
+        if (card.CardId == "盐水" && salineWaterStorage.value < salineWaterStorage.maxValue)
         {
             card.DestroyThis();
-            salineWaterStorage += 12;
-            salineWaterStorage = Mathf.Clamp(salineWaterStorage, 0, maxSalineWaterStorage);
+            salineWaterStorage.AddValue(12);
             return;
         }
 

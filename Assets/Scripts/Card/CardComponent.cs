@@ -394,55 +394,6 @@ public class FlammableComponent : CardComponent
 }
 #endregion
 
-#region 燃料存储组件
-public class FuelStorageComponent : CardComponent
-{
-    public int fuel; // 燃料值
-    public int maxFuel; // 最大燃料值
-    public bool isFiring; // 是否正在燃烧
-
-    public FuelStorageComponent() { }
-
-    public FuelStorageComponent(int maxFuel)
-    {
-        fuel = 0;
-        this.maxFuel = maxFuel;
-        isFiring = false;
-    }
-
-    public void AddFuel(int delta)
-    {
-        fuel += delta;
-        fuel = Mathf.Clamp(fuel, 0, maxFuel);
-        BelongedCard.RefreshSlot();
-    }
-
-    public void SetIsFiring(bool firing)
-    {
-        isFiring = firing;
-        BelongedCard.RefreshSlot();
-    }
-
-    public bool CanQuickInteract(Card card)
-    {
-        return card.TryGetComponent<FlammableComponent>(out var burnableComponent) && fuel < maxFuel;
-    }
-
-    public void QuickIneract(SlotCards slot, int count, out string tip)
-    {
-        tip = string.Empty;
-        for (int i = 0; i < count; i++)
-        {
-            if (fuel >= maxFuel) break;
-            var card = slot.PeekCard();
-            card.TryGetComponent<FlammableComponent>(out var burnableComponent);
-            card.DestroyThis();
-            AddFuel(burnableComponent.fuelValue);
-        }
-    }
-}
-#endregion
-
 #region 通道组件
 public class PassageComponent : CardComponent
 {
@@ -518,29 +469,6 @@ public class CookComponent : CardComponent
 }
 #endregion
 
-#region 温度组件
-public class TemperatureComponent : CardComponent
-{
-    public float temperature;
-    public float maxTemperature;
-
-    public TemperatureComponent() { }
-
-    public TemperatureComponent(float temperature, float maxTemperature)
-    {
-        this.temperature = temperature;
-        this.maxTemperature = maxTemperature;
-    }
-
-    public void AddTemperature(float delta)
-    {
-        temperature += delta;
-        temperature = Mathf.Clamp(temperature, 0, maxTemperature);
-        BelongedCard.RefreshSlot();
-    }
-}
-#endregion
-
 #region 状态机组件
 public class CardState
 {
@@ -585,26 +513,6 @@ public class StateMachineComponent : CardComponent
     {
         if (!stateDict.ContainsKey(newStateName)) return;
         currentStateName = newStateName;
-        BelongedCard.RefreshSlot();
-    }
-}
-#endregion
-
-#region 氧气存储组件
-public class OxygenStorageComponent : CardComponent
-{
-    public float oxygen; // 氧气值
-    public float maxOxygen; // 最大氧气值
-    public OxygenStorageComponent() { }
-    public OxygenStorageComponent(float maxOxygen)
-    {
-        oxygen = 0;
-        this.maxOxygen = maxOxygen;
-    }
-    public void AddOxygen(float delta)
-    {
-        oxygen += delta;
-        oxygen = Mathf.Clamp(oxygen, 0, maxOxygen);
         BelongedCard.RefreshSlot();
     }
 }
@@ -697,37 +605,113 @@ public class PlantGrowthComponent : CardComponent, IUpdate
 }
 #endregion
 
-#region 计时器组件
-public class TimerComponent : CardComponent
+#region 连续值组件
+public abstract class ContinuousValueComponent : CardComponent
 {
-    public float time;
-    public float maxTime;
+    [JsonProperty] public float value { get; protected set; }
+    [JsonProperty] public float maxValue { get; protected set; }
 
+    public ContinuousValueComponent() { }
+
+    public ContinuousValueComponent(float value, float maxValue)
+    {
+        this.value = value;
+        this.maxValue = maxValue;
+    }
+
+    public void AddValue(float delta)
+    {
+        value += delta;
+        value = Mathf.Clamp(value, 0, maxValue);
+        BelongedCard.RefreshSlot();
+    }
+
+    public void SetValue(float value)
+    {
+        this.value = value;
+        BelongedCard.RefreshSlot();
+    }
+
+    public void SetMaxValue(float maxValue)
+    {
+        this.maxValue = maxValue;
+        value = Mathf.Clamp(value, 0, maxValue);
+        BelongedCard.RefreshSlot();
+    }
+
+    public void ResetValue()
+    {
+        SetValue(0);
+    }
+}
+#endregion
+
+#region 计时器组件
+public class TimerComponent : ContinuousValueComponent
+{
     public string tipText;
 
-    public TimerComponent() { }
+    public TimerComponent(float value, float maxValue) : base(value, maxValue) { }
+}
+#endregion
 
-    public TimerComponent(float maxTime)
-    {
-        this.time = this.maxTime = maxTime;
-    }
+#region 淡水组件
+public class FreshWaterStorageComponent : ContinuousValueComponent
+{
+    public FreshWaterStorageComponent(float maxValue) : base(0, maxValue) { }
+}
+#endregion
 
-    public TimerComponent(float time, float maxTime)
-    {
-        this.time = time;
-        this.maxTime = maxTime;
-    }
+#region 盐水组件
+public class SalineWaterStorageComponent : ContinuousValueComponent
+{
+    public SalineWaterStorageComponent(float maxValue) : base(0, maxValue) { }
+}
+#endregion
 
-    public void SetTime(float time)
+#region 氧气存储组件
+public class OxygenStorageComponent : ContinuousValueComponent
+{
+    public OxygenStorageComponent(float maxValue) : base(0, maxValue) { }
+}
+#endregion
+
+#region 温度组件
+public class TemperatureComponent : ContinuousValueComponent
+{
+    public TemperatureComponent(float value, float maxValue) : base(value, maxValue) { }
+}
+#endregion
+
+#region 燃料存储组件
+public class FuelStorageComponent : ContinuousValueComponent
+{
+    [JsonProperty] public bool isFiring { get; private set; } // 是否正在燃烧
+
+    public FuelStorageComponent(float maxValue) : base(0, maxValue) { }
+
+    public void SetIsFiring(bool firing)
     {
-        this.time = time;
+        isFiring = firing;
         BelongedCard.RefreshSlot();
     }
 
-    public void Reset()
+    public bool CanQuickInteract(Card card)
     {
-        this.time = 0f;
-        BelongedCard.RefreshSlot();
+        return card.TryGetComponent<FlammableComponent>(out _) && value < maxValue;
+    }
+
+    public void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        tip = string.Empty;
+        for (int i = 0; i < count; i++)
+        {
+            if (value >= maxValue) break;
+            var card = slot.PeekCard();
+            card.TryGetComponent<FlammableComponent>(out var burnableComponent);
+            card.DestroyThis();
+            AddValue(burnableComponent.fuelValue);
+        }
     }
 }
 #endregion
