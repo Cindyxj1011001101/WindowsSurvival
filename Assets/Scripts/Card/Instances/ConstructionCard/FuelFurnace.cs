@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// 燃料炉
@@ -163,7 +162,6 @@ public class FuelFurnace : ConstructionCard
             new (TempertureType.Medium, 0),
             new (TempertureType.High, 0)
         };
-        WindowsManager.Instance.CloseWindow("Details");
     }
 
     private bool Judge_Process(out string hint)
