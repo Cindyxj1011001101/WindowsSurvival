@@ -86,7 +86,7 @@ public abstract class Card : IComparable<Card>
                 {
                     foreach (var card in slot.Cards)
                     {
-                        weight += card.Weight * component.weightLossRate;
+                        weight += card.Weight * (1 - component.weightLossRate);
                     }
                 }
             }
