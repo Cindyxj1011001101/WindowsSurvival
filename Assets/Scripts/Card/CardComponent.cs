@@ -654,6 +654,10 @@ public class TimerComponent : ContinuousValueComponent
 {
     public string tipText;
 
+    public TimerComponent() { }
+
+    public TimerComponent(float maxValue) : base(maxValue, maxValue) { }
+
     public TimerComponent(float value, float maxValue) : base(value, maxValue) { }
 }
 #endregion

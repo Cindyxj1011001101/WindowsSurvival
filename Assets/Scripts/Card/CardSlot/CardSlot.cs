@@ -287,7 +287,7 @@ public class CardSlot : MonoBehaviour
                 if (minute > 0)
                     leftTime += $"{minute}min";
 
-                slider.tipController.SetTip($"距离 {timerComponent.tipText} 剩余:  {leftTime}", slider.fillColor);
+                slider.tipController.SetTip($"距 {timerComponent.tipText} 剩余:  {leftTime}", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
