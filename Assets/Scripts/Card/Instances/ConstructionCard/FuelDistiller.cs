@@ -62,6 +62,7 @@ public class FuelDistiller : ConstructionCard
 
         // 不允许放入
         innerContents.allowAdd = false;
+        innerContents.notAllowAddReason = "该槽位仅用于放置蒸馏产出的瓶装水";
 
         // 取出瓶装水时，如果淡水储量达到了上限，则再生成一瓶
         innerContents.onRemoveCard = (c) =>

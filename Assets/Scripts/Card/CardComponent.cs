@@ -282,6 +282,9 @@ public class InnerContentsComponent : CardComponent
     public bool allowAdd = true; // 是否允许添加内容物
     public bool allowRemove = true; // 是否允许移除内容物
 
+    public string notAllowRemoveReason = ""; // 不允许移除内容物的原因
+    public string notAllowAddReason = ""; // 不允许放入内容物的原因
+
     public InnerContentsComponent() { }
 
     public InnerContentsComponent(int slotCount)

@@ -16,6 +16,12 @@ public class InnerBag : Bag
     [JsonIgnore]
     public bool AllowRemove => component.allowRemove;
 
+    [JsonIgnore]
+    public string NotAllowRemoveReason => component.notAllowRemoveReason;
+
+    [JsonIgnore]
+    public string NotAllowAddReason => component.notAllowAddReason;
+
     public void SetComponent(InnerContentsComponent component)
     {
         this.component = component;

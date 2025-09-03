@@ -145,6 +145,8 @@ public class FuelFurnace : ConstructionCard
 
         // 不可以添加或移除内容物
         innerContents.allowAdd = innerContents.allowRemove = false;
+        innerContents.notAllowRemoveReason = "加工中，不能移除待加工物";
+        innerContents.notAllowAddReason = "加工中，不能添加待加工物";
 
         // 记录当前炉内的卡牌，即需要加工的卡牌
         foreach (var slot in innerContents.bag.Slots)
