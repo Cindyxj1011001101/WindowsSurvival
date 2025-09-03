@@ -86,6 +86,8 @@ public class TimeManager : MonoBehaviour
                 time = 0;
             }
         }
+
+        AnotherDay();
         lastDay = CurTime.Date;
 
         EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
@@ -93,6 +95,14 @@ public class TimeManager : MonoBehaviour
 
     public bool AnotherDay()
     {
-        return CurTime.Date != lastDay;
+        if (CurTime.Date != lastDay)
+        {
+            EventManager.Instance.TriggerEvent(EventType.AnotherDay);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

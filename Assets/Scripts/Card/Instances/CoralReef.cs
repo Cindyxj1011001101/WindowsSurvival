@@ -5,17 +5,29 @@ using Random = UnityEngine.Random;
 
 public class CoralReef : Card
 {
-    public int maxReduceCount = 2;
-    public int curReduceCount = 0;
-    public float reduceRate = 0.5f;
     private CoralReef()
     {
         Events = new()
         {
             new Event("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig, () => 45),
             new Event("欣赏", "一天内多次欣赏获得的数值会衰减", Event_Enjoy, null,() => 15,
-            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, 6 * Mathf.Pow(reduceRate, curReduceCount) }, { PlayerStateEnum.Sobriety, 4 * Mathf.Pow(reduceRate, curReduceCount) } })
+            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, 6 * GlobalDataManager.Instance.saveData.GetReduce(CardId) }, { PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.saveData.GetReduce(CardId)} })
         };
+    }
+    public override void LateInit()
+    {
+        base.LateInit();
+        if (!GlobalDataManager.Instance.saveData.ReduceActionDict.ContainsKey(CardId))
+        {
+            GlobalDataManager.Instance.saveData.ReduceActionDict.Add(CardId,
+                new Reduce()
+                {
+                    maxReduceCount = 2,
+                    curReduceCount = 0,
+                    reduceRate = 0.5f
+                });
+        }
+
     }
     private void Event_Dig(out string tip)
     {
@@ -36,25 +48,12 @@ public class CoralReef : Card
     private void Event_Enjoy(out string tip)
     {
         tip = string.Empty;
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 6 * Mathf.Pow(reduceRate, curReduceCount));
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4 * Mathf.Pow(reduceRate, curReduceCount));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 6 *GlobalDataManager.Instance.saveData.GetReduce(CardId));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4 *GlobalDataManager.Instance.saveData.GetReduce(CardId));
+        GlobalDataManager.Instance.saveData.AddCardReduce(CardId);
         TimeManager.Instance.AddTime(15);
-        curReduceCount++;
-        if (curReduceCount >= maxReduceCount) curReduceCount = maxReduceCount;
-
     }
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        if (TimeManager.Instance.AnotherDay())
-        {
-            curReduceCount = 0; // 隔天时刷新可使用次数
-            RefreshSlot();
-        }
-    }
-
+    
     private void RandomDrop()
     {
         int rand = Random.Range(0, 45);
@@ -101,5 +100,14 @@ public class CoralReef : Card
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
         DigByTool(slot.PeekCard(), out tip);
+    }
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
+
+        if (TimeManager.Instance.AnotherDay())
+        {
+            RefreshSlot();
+        }
     }
 }

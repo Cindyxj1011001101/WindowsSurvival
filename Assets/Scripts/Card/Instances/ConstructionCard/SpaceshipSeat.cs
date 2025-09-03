@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class SpaceshipSeat : ConstructionCard
 {
-    public int curReduceCount = 0;
-    public int maxReduceCount = 2;
-    public float reduceRate = 0.5f;
     private SpaceshipSeat()
     {
         Events = new()
@@ -22,13 +19,26 @@ public class SpaceshipSeat : ConstructionCard
             ),
         };
     }
-
+    public override void LateInit()
+    {
+        base.LateInit();
+        if (!GlobalDataManager.Instance.saveData.ReduceActionDict.ContainsKey(CardId))
+        {
+            GlobalDataManager.Instance.saveData.ReduceActionDict.Add(CardId,
+                new Reduce()
+                {
+                    maxReduceCount = 2,
+                    curReduceCount = 0,
+                    reduceRate = 0.5f
+                });
+        }
+    }
     private void Event_Rest(out string tip)
     {
         tip = string.Empty;
 
-        var sobrietyChangeRate = +2.7f * Mathf.Pow(reduceRate, curReduceCount);
-        var sanChangeRate = +2f * Mathf.Pow(reduceRate, curReduceCount);
+        var sobrietyChangeRate = +2.7f *GlobalDataManager.Instance.saveData.GetReduce(CardName);
+        var sanChangeRate = +2f * GlobalDataManager.Instance.saveData.GetReduce(CardName);
 
         // 唤起时间窗口，设置休息时长为0-60分钟
         var window = (WindowsManager.Instance.OpenWindow("TimeSelect", true) as TimeSelectWindow);
@@ -36,9 +46,7 @@ public class SpaceshipSeat : ConstructionCard
         window.onConfirm += (time) =>
         {
             StateManager.Instance.Sleep(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRate }, { PlayerStateEnum.San, sanChangeRate } });
-
-            curReduceCount++;
-            if (curReduceCount >= maxReduceCount) curReduceCount = maxReduceCount;
+            GlobalDataManager.Instance.saveData.AddCardReduce(CardName);
         };
         window.getConfirmEffects += (t) =>
         {
@@ -67,14 +75,12 @@ public class SpaceshipSeat : ConstructionCard
         }
         return true;
     }
-
     protected override void OnUpdate()
     {
         base.OnUpdate();
 
         if (TimeManager.Instance.AnotherDay())
         {
-            curReduceCount = 0; // 隔天时刷新可使用次数
             RefreshSlot();
         }
     }

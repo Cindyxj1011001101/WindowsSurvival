@@ -25,7 +25,16 @@ public class DataTransmissionStation : ConstructionCard
         base.LateInit();
         EventManager.Instance.AddListener(EventType.StudyStarted, StartWorking);
         EventManager.Instance.AddListener(EventType.StudyStoped, StopWorking);
-
+        if (!GlobalDataManager.Instance.saveData.ReduceActionDict.ContainsKey(CardId))
+        {
+            GlobalDataManager.Instance.saveData.ReduceActionDict.Add(CardId,
+                new Reduce()
+                {
+                    maxReduceCount = 2,
+                    curReduceCount = 0,
+                    reduceRate = 0.5f
+                });
+        }
 
         // 未布置和已布置两种状态
         if (!TryGetComponent(out stateMachine))
@@ -78,17 +87,18 @@ public class DataTransmissionStation : ConstructionCard
     private void Event_Transmit(out string tip)
     {
         tip = string.Empty;
-        curTimes++;
         StateManager.Instance.ChangeElectricity(-5f);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -10);
         TechnologyManager.Instance.AddStudyProcess(28);
+        GlobalDataManager.Instance.saveData.AddCardReduce(CardId);
         TimeManager.Instance.AddTime(60);
     }
 
     private bool Judge_Transmit(out string hint)
     {
         hint = string.Empty;
-        if (curTimes >= maxTimes)
+        if (GlobalDataManager.Instance.saveData.ReduceActionDict[CardId].curReduceCount>= 
+            GlobalDataManager.Instance.saveData.ReduceActionDict[CardId].maxReduceCount)
         {
             hint = "当日内可以进行的数据传输次数已达上限";
             return false;
@@ -115,7 +125,6 @@ public class DataTransmissionStation : ConstructionCard
 
         if (TimeManager.Instance.AnotherDay())
         {
-            curTimes = 0; // 隔天时刷新可使用次数
             RefreshSlot();
         }
     }
