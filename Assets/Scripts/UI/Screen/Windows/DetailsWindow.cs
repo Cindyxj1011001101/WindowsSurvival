@@ -244,7 +244,7 @@ public class DetailsWindow : BagWindow
                     // 改变场景了就清空详情
                     if (moved) Clear();
                     // 否则刷新卡牌和详情
-                    else card?.RefreshSlot();
+                    //else card?.RefreshSlot();
 
                     // 否则尝试刷新
                     //else if (currentDisplayedCard != null && !currentDisplayedCard.Destroyed)
