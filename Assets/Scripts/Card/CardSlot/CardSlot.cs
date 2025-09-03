@@ -280,9 +280,9 @@ public class CardSlot : MonoBehaviour
                 var hour = Mathf.FloorToInt(timerComponent.value / 60);
                 var minute = timerComponent.value % 60;
                 if (hour > 0)
-                    slider.tipController.SetTip($"剩余{timerComponent.tipText}时间:    {hour}h{minute}min", slider.fillColor);
+                    slider.tipController.SetTip($"距离 {timerComponent.tipText} 剩余:    {hour}h{minute}min", slider.fillColor);
                 else
-                    slider.tipController.SetTip($"剩余{timerComponent.tipText}时间:    {minute}min", slider.fillColor);
+                    slider.tipController.SetTip($"距离 {timerComponent.tipText} 剩余:    {minute}min", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
