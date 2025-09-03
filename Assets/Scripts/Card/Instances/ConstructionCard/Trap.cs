@@ -25,7 +25,6 @@ public class Trap : ConstructionCard
         Events = new()
         {
             new Event("布置", "布置诱捕陷阱，对当前地点内的生物进行诱捕", Event_Arrange, Judge_Arrange, () => 15),
-            //new Event("取出", "取出捕捉到的生物", Event_TakeOut, Judge_TakeOut),
         };
     }
 
@@ -80,29 +79,6 @@ public class Trap : ConstructionCard
         }
         return true;
     }
-
-    ///// <summary>
-    ///// 取出
-    ///// </summary>
-    ///// <param name="tip"></param>
-    //private void Event_TakeOut(out string tip)
-    //{
-    //    tip = string.Empty;
-    //    Use();
-    //    AddCard(outcomeCardId, true);
-    //    outcomeCardId = null;
-    //}
-
-    //private bool Judge_TakeOut(out string hint)
-    //{
-    //    hint = string.Empty;
-    //    if (string.IsNullOrEmpty(outcomeCardId))
-    //    {
-    //        hint = "尚未捕捉到任何生物";
-    //        return false;
-    //    }
-    //    return true;
-    //}
 
     /// <summary>
     /// 布置

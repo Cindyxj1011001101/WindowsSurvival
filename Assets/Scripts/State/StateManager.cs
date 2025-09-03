@@ -125,13 +125,6 @@ public class StateManager : MonoBehaviour
             WaterLevel = stateData.waterLevel;
             PlayerStateDict = stateData.playerState;
         }
-
-        // 监听回合结算
-        UpdateManager.Instance.PlayerUpdate.AddListener(PlayerUpdate);
-        UpdateManager.Instance.EnvironmentUpdate.AddListener(EnvironmentUpdate);
-        // 当环境改变时尝试获取氧气
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
-        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
     }
 
     private void CheckPlayerState(PlayerStateEnum stateEnum)
@@ -143,6 +136,13 @@ public class StateManager : MonoBehaviour
     {
         // 评估危险状态，播放音乐
         EvaluateDangerLevel();
+
+        // 监听回合结算
+        UpdateManager.Instance.PlayerUpdate.AddListener(PlayerUpdate);
+        UpdateManager.Instance.EnvironmentUpdate.AddListener(EnvironmentUpdate);
+        // 当环境改变时尝试获取氧气
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
     }
 
     private void OnDestroy()
