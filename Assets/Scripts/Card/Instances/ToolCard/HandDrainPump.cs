@@ -7,7 +7,7 @@ public class HandDrainPump : ToolCard
     {
         Events = new()
         {
-            new Event("手压排水", "手压排水", Event_Drain, Judge_Drain, () => 30, () => new() { { PlayerStateEnum.Sobriety, -3 } }, () => new(){ { EnvironmentStateEnum.WaterLevel, -7 } }),
+            new Event("手压排水", "手压排水", Event_Drain, Judge_Drain, () => 30, () => new() { { PlayerStateEnum.Sobriety, -3 } }, () => new(){ { EnvironmentStateEnum.WaterLevel, -9 } }),
         };
 
     }
@@ -15,9 +15,12 @@ public class HandDrainPump : ToolCard
     private void Event_Drain(out string tip)
     {
         tip = string.Empty;
+        // 播放吃的音效
+        if(SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("凿_01",true);
         Use();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -3);
-        StateManager.Instance.ChangeWaterLevel(-7);
+        StateManager.Instance.ChangeWaterLevel(-9);
         TimeManager.Instance.AddTime(30);
 
     }

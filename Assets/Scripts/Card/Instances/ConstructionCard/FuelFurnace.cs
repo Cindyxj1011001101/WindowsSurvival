@@ -21,7 +21,7 @@ public class FuelFurnace : ConstructionCard
 
     public List<Card> cardsToProcesss = new(); // 待加工卡牌
     public int leftRounds = 0; // 当前加工轮数
-    public int maxRound = 16; // 总加工轮数
+    public int maxRounds = 16; // 总加工轮数
     public bool isProcessing = false; // 是否正在加工
     public List<TempertureData> tempertureData = new(); // 温度数据，用来处理产物获取
     public string outcomeCardId = null; // 产物卡牌id
@@ -138,7 +138,7 @@ public class FuelFurnace : ConstructionCard
         tip = string.Empty;
 
         isProcessing = true;
-        leftRounds = maxRound;
+        leftRounds = maxRounds;
 
         // 暂停内容物的更新
         innerContents.PauseUpdating();
@@ -164,6 +164,10 @@ public class FuelFurnace : ConstructionCard
             new (TempertureType.Medium, 0),
             new (TempertureType.High, 0)
         };
+
+        // 添加计时器组件
+        AddComponent(new TimerComponent(maxRounds * TimeManager.Instance.SettleInterval) { tipText = "加工完成" });
+        RefreshSlot();
     }
 
     private bool Judge_Process(out string hint)
@@ -211,6 +215,11 @@ public class FuelFurnace : ConstructionCard
         else tempertureData[3].round++;
         leftRounds--;
 
+        if (TryGetComponent<TimerComponent>(out var timer))
+        {
+            timer.SetValue(leftRounds * TimeManager.Instance.SettleInterval);
+        }
+
         // 加工完成
         if (leftRounds <= 0)
         {
@@ -225,6 +234,9 @@ public class FuelFurnace : ConstructionCard
             innerContents.allowAdd = innerContents.allowRemove = true;
             RefreshSlot();
             ShowTip("燃料炉加工完成");
+
+            RemoveComponent<TimerComponent>();
+            RefreshSlot();
         }
     }
 
@@ -258,8 +270,6 @@ public class FuelFurnace : ConstructionCard
 
         // 拆毁
         base.QuickIneract(slot, count, out tip);
-
-
     }
     public override void OnEnterEnvironment()
     {

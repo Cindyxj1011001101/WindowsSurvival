@@ -385,7 +385,7 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 1 };
         var highDangerLevels = new List<int>() { 2 };
-        return new PlayerState(0, 100, PlayerStateEnum.Itchiness, -3f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new PlayerState(0, 100, PlayerStateEnum.Itchiness, -1f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
     private PlayerState InitPainState()
@@ -402,11 +402,11 @@ public class StateManager : MonoBehaviour
             StateEffect.NoEffect,
             new () { sanityRate = -0.2f },
             new () { sanityRate = -0.6f, sorbrietyRate = +0.5f, healthRate = -0.5f },
-            new () { sanityRate = -2f, sorbrietyRate = +1f, healthRate = -1f },
+            new () { sanityRate = -2.5f, sorbrietyRate = +1f, healthRate = -1f },
         };
         var lowDangerLevels = new List<int>() { 1, 2 };
         var highDangerLevels = new List<int>() { 3 };
-        return new PlayerState(0, 400, PlayerStateEnum.PainLevel, -8f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new PlayerState(0, 400, PlayerStateEnum.PainLevel, -2f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
     #endregion
 

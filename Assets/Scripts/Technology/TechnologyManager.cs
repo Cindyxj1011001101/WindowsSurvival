@@ -62,27 +62,13 @@ public class TechnologyManager
         // 计算研究速率
         CurStudyRate = CalcStudyRate();
         // 进度增长
-        techData.CurStudiedTechNodeData.progress += CurStudyRate;
-        // 研究完成
-        if (techData.CurStudiedTechNodeData.progress >= CurStudiedTechNode.cost)
-        {
-            SoundManager.Instance.PlaySound("研究完成", true);
-            techData.CurStudiedTechNodeData.progress = CurStudiedTechNode.cost;
-            // 解锁该科技
-            UnlockTechNode(CurStudiedTechNode);
-            // 触发研究完成事件
-            EventManager.Instance.TriggerEvent(EventType.StudyComplished, CurStudiedTechNode);
-            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("FinishResearch", CurStudiedTechNode.techName));
-            // 停止研究
-            StopStudy();
-        }
-        EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
+        AddStudyProcess(CurStudyRate);
     }
 
-    public void AddStudyProcess(int value)
+    public void AddStudyProcess(float value)
     {
         // 进度增长
-        techData.CurStudiedTechNodeData.progress += CurStudyRate;
+        techData.CurStudiedTechNodeData.progress += value;
         // 研究完成
         if (techData.CurStudiedTechNodeData.progress >= CurStudiedTechNode.cost)
         {

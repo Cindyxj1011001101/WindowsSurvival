@@ -388,7 +388,7 @@ public abstract class Card : IComparable<Card>
         {
             // 生长度高的优先
             other.TryGetComponent<PlantGrowthComponent>(out var o);
-            return Mathf.CeilToInt(o.growthProgress - p.growthProgress);
+            return Mathf.CeilToInt(o.growth - p.growth);
         }
         else if (other.TryGetComponent<GrowthComponent>(out var g))
         {

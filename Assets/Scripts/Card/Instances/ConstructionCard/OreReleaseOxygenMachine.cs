@@ -51,7 +51,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         // 添加计时器组件
         if (!TryGetComponent(out timer))
         {
-            timer = new TimerComponent(120, 120);
+            timer = new TimerComponent(120);
             timer.tipText = "下次制氧";
             AddComponent(timer);
         }
