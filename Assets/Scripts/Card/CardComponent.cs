@@ -547,7 +547,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         this.maxLiveTempture = maxLiveTempture;
         this.deadCardId = deadCardId;
         this.pressureList = pressureList;
-        growthProgress = 0;
+        growthProgress = 100;
         deadProgress = 5; // 初始死亡进度
     }
 
