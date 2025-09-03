@@ -93,6 +93,8 @@ public class Trap : ConstructionCard
 
         // 不可添加或移除内容物
         innerContents.allowAdd = innerContents.allowRemove = false;
+        innerContents.notAllowRemoveReason = "陷阱已布置，不能移除诱饵";
+        innerContents.notAllowAddReason = "陷阱已布置，不能添加诱饵";
 
         TimeManager.Instance.AddTime(15);
         stateMachine.ChangeState("已布置");
@@ -133,6 +135,7 @@ public class Trap : ConstructionCard
 
         // 恢复内容物的可移除
         innerContents.allowRemove = true;
+        innerContents.notAllowAddReason = "不能添加，请先取出捕捉到的生物";
 
         // 添加卡牌
         Card outcomeCard;

@@ -109,11 +109,11 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
             else if (sourceWindow.Bag is InnerBag s && !s.AllowRemove)
             {
-                AnimateCardReturn(pickedCount, "不能取出卡牌");
+                AnimateCardReturn(pickedCount, string.IsNullOrEmpty(s.NotAllowRemoveReason) ? "不能取出卡牌" : s.NotAllowRemoveReason);
             }
             else if (targetWindow.Bag is InnerBag t && !t.AllowAdd)
             {
-                AnimateCardReturn(pickedCount, "不能放入卡牌");
+                AnimateCardReturn(pickedCount, string.IsNullOrEmpty(t.NotAllowAddReason) ? "不能放入卡牌" : t.NotAllowAddReason);
             }
             else
             {
