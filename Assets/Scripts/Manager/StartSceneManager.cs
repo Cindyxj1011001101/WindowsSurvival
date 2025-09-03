@@ -15,7 +15,7 @@ public class StartSceneManager : MonoBehaviour
     private Button Exit;
 
     private bool isButtonCooldown = false;
-    private float buttonCooldownTime = 0.5f; // 0.5秒冷却时间
+    private float buttonCooldownTime =0.5f; // 0.5秒冷却时间
     
     private Button ReturnStart;
 
@@ -88,7 +88,8 @@ public class StartSceneManager : MonoBehaviour
     //加载存档
     private void ClickLoad(string name)
     {
-        if (isButtonCooldown) return; // 如果在冷却中，忽略点击
+        if (isButtonCooldown) return;
+        isButtonCooldown = true;
         int index = int.Parse(name.Substring(name.Length - 1, 1)) - 1;
         // 加载存档
         if (GameDataManager.Instance.LoadData.loads[index] == null)
@@ -121,6 +122,7 @@ public class StartSceneManager : MonoBehaviour
         {
             LoadGameScene(index);
         }
+        StartCoroutine(ResetCooldown());
     }
     
     
@@ -143,6 +145,8 @@ public class StartSceneManager : MonoBehaviour
     #region 进入游戏按钮事件
     private void OnEnterGameClick()
     {
+        if (isButtonCooldown) return;
+        isButtonCooldown = true;
         //进入存档选择界面
         StartButton.SetActive(false);
         LoadButton.SetActive(true);
@@ -156,10 +160,13 @@ public class StartSceneManager : MonoBehaviour
         //显示现在的存档情况
         RefreshLoadButton();
         //添加按钮事件
+        StartCoroutine(ResetCooldown());
     }
     //删除存档
     public void DeleteLoad(string name)
     {
+        if (isButtonCooldown) return;
+        isButtonCooldown = true;
         int index = int.Parse(name.Substring(name.Length - 1, 1)) - 1;
         GameDataManager.Instance.LoadData.loads[index] = null;
         GameDataManager.Instance.SaveLoadData();
@@ -177,15 +184,22 @@ public class StartSceneManager : MonoBehaviour
         }
         //刷新存档按钮
         RefreshLoadButton();
+        StartCoroutine(ResetCooldown());
     }
 
     private void OnSettingClick()
     {
+        if (isButtonCooldown) return;
+        isButtonCooldown = true;
         Debug.Log("Setting");
         //进入设置界面
+        StartCoroutine(ResetCooldown());
     }
     private void OnExitClick()
     {
+        if (isButtonCooldown) return;
+        isButtonCooldown = true;
+        StartCoroutine(ResetCooldown());
         //发布后退出游戏
         Application.Quit();
 
@@ -193,6 +207,7 @@ public class StartSceneManager : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
+        
     }
 
     private void OnClearDataClicked()
