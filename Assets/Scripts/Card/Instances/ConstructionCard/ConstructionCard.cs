@@ -22,6 +22,8 @@ public abstract class ConstructionCard : Card
 
         // 拆毁建筑物
         DestroyThis();
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("摧毁_01", true);
         // 消耗钢锤耐久
         tool.Use();
 

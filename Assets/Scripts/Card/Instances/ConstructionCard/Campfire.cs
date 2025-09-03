@@ -13,11 +13,7 @@ public class Campfire : ConstructionCard
 
     private Campfire()
     {
-        Events = new()
-        {
-            new Event("点燃", "点燃营火。点燃状态下会导致室内氧气消耗与一氧化碳增加", Event_Light, Judge_Light),
-            new Event("熄灭", "", Event_UnLight, Judge_UnLight)
-        };
+
     }
 
     public override void LateInit()
@@ -26,14 +22,23 @@ public class Campfire : ConstructionCard
         // 手动添加燃料存储组件
         if (!TryGetComponent(out fuelStorage))
         {
-            fuelStorage = new FuelStorageComponent(96);
+            fuelStorage = new FuelStorageComponent(96, 2);
             AddComponent(fuelStorage);
         }
+
+        fuelStorage.actionWhileBurning = WhileBurning;
+
+        fuelStorage.actionOnIgnite = OnIgnite;
+
+        fuelStorage.actionOnExtinguish = OnExtinguish;
+
+        // 添加点燃熄灭事件
+        fuelStorage.AddEvents("点燃营火。可以对部分食物进行简单的烧烤。\n点燃状态下会导致室内氧气消耗与一氧化碳增加");
 
         // 放入内容物时，暂停卡牌每回合更新
         innerContents.onAddCard = (c) =>
         {
-            if (fuelStorage.isFiring)
+            if (fuelStorage.isBurning)
             {
                 c.PauseUpdating();
                 c.TryGetComponent<CookComponent>(out var cook);
@@ -73,25 +78,11 @@ public class Campfire : ConstructionCard
         }
     }
 
-    private bool ContentFilter(Card c, out string s)
-    {
-        s = string.Empty;
-        if (!c.TryGetComponent<CookComponent>(out _))
-        {
-            s = "只能放入可烹饪的物品";
-            return false;
-        }
-        return true;
-    }
-
     /// <summary>
-    /// 点燃
+    /// 点燃时触发
     /// </summary>
-    /// <param name="tip"></param>
-    private void Event_Light(out string tip)
+    private void OnIgnite()
     {
-        tip = string.Empty;
-
         var env = Bag as EnvironmentBag;
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -4); // 点燃后地点氧气每回合-4
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, +2); // 点燃后地点一氧化碳每回合+2
@@ -104,52 +95,30 @@ public class Campfire : ConstructionCard
         {
             c.TryGetComponent<CookComponent>(out var cook);
             if (cook.leftCookTime < 0) return;
-            
+
             var timer = new TimerComponent(cook.leftCookTime, cook.totalCookTime);
             if (cook.outcomeCardId == "烧焦的食物")
                 timer.tipText = "烧焦";
             else
                 timer.tipText = "烤熟";
             c.AddComponent(timer);
+            c.RefreshSlot();
         });
-
-        fuelStorage.SetIsFiring(true);
-        SoundManager.Instance.PlaySound("点火_02");
 
         stateMachine.ChangeState("已点燃");
 
+        SoundManager.Instance.PlaySound("点火_02");
+
         // 只有玩家在同一地点且点燃时才播放循环音效
-        if (env == GameManager.Instance.CurEnvironmentBag && fuelStorage.isFiring)
+        if (env == GameManager.Instance.CurEnvironmentBag && fuelStorage.isBurning)
             SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 0.3f);
     }
 
-    private bool Judge_Light(out string hint)
-    {
-        hint = string.Empty;
-
-        if (StateManager.Instance.WaterLevel.CurValue >= 30)
-        {
-            hint = "水位过高，无法点燃营火";
-            return false;
-        }
-
-        if (fuelStorage.value < 2)
-        {
-            hint = "燃料不足，无法点燃营火";
-            return false;
-        }
-
-        return !fuelStorage.isFiring;
-    }
-
     /// <summary>
-    /// 熄灭
+    /// 熄灭时触发
     /// </summary>
-    /// <param name="tip"></param>
-    private void Event_UnLight(out string tip)
+    private void OnExtinguish()
     {
-        tip = string.Empty;
-
         var env = Bag as EnvironmentBag;
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +4);
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, -2);
@@ -158,9 +127,11 @@ public class Campfire : ConstructionCard
         innerContents.ContinueUpdating();
 
         // 移除计时器组件
-        innerContents.ForEachCard(c => c.RemoveComponent<TimerComponent>());
-
-        fuelStorage.SetIsFiring(false);
+        innerContents.ForEachCard(c =>
+        {
+            c.RemoveComponent<TimerComponent>();
+            c.RefreshSlot();
+        });
 
         stateMachine.ChangeState("未点燃");
 
@@ -169,30 +140,14 @@ public class Campfire : ConstructionCard
             SoundManager.Instance.StopCardLoopSound(CardId);
     }
 
-    private bool Judge_UnLight(out string hint)
-    {
-        hint = string.Empty;
-        return fuelStorage.isFiring;
-    }
 
     private List<Card> temp = new();
 
-    protected override void OnUpdate()
+    /// <summary>
+    /// 点燃时每回合触发
+    /// </summary>
+    private void WhileBurning()
     {
-        base.OnUpdate();
-
-        // 没有点燃
-        if (!fuelStorage.isFiring) return;
-
-        var waterLevel = StateManager.Instance.WaterLevel.CurValue;
-
-        // 这里剩余燃料一定是>=2的，因为燃料<2时会自动熄灭并且无法点燃
-        fuelStorage.AddValue(-2); // 每回合消耗2点燃料
-        if (waterLevel > 0) // 水平面>0时，燃料额外-4
-        {
-            fuelStorage.AddValue(-4);
-        }
-
         // 记录所有内容物
         foreach (var slot in innerContents.bag.Slots)
         {
@@ -205,40 +160,49 @@ public class Campfire : ConstructionCard
         // 内容物增加烹饪进度
         foreach (var card in temp)
         {
-            if (card != null && card.TryGetComponent(out CookComponent cookComponent))
-            {
-                // 使用局部变量捕获当前的值
-                Card currentCard = card;
+            if (card == null || card.Destroyed || !card.TryGetComponent(out CookComponent cook)) continue;
 
-                cookComponent.Update(TimeManager.Instance.SettleInterval, (outcomeId) =>
+            // 使用局部变量捕获当前的值
+            Card currentCard = card;
+
+            cook.Update(TimeManager.Instance.SettleInterval, (outcomeId) =>
+            {
+                // 处理煮熟的逻辑
+                currentCard.DestroyThis();
+                var outcomeCard = CardFactory.CreateCard(outcomeId);
+                GameManager.Instance.AddCard(outcomeCard, innerContents.bag);
+                outcomeCard.RefreshSlot();
+                if (outcomeId == "烧焦的食物")
                 {
-                    // 处理煮熟的逻辑
-                    currentCard.DestroyThis();
-                    var outcomeCard = CardFactory.CreateCard(outcomeId);
-                    GameManager.Instance.AddCard(outcomeCard, innerContents.bag);
-                    outcomeCard.RefreshSlot();
+                    ShowTip($"{currentCard.CardName}烧焦了");
+                    currentCard.ShowTip($"{currentCard.CardName}烧焦了");
+                }
+                else
+                {
                     ShowTip($"{currentCard.CardName}熟了");
                     currentCard.ShowTip($"{currentCard.CardName}熟了");
-                });
+                }
+            });
+
+
+            if (currentCard.TryGetComponent<TimerComponent>(out var timer) && cook.leftCookTime >= 0)
+            {
+                timer.SetValue(cook.leftCookTime);
             }
         }
 
         temp.Clear();
+    }
 
-        if (fuelStorage.isFiring && fuelStorage.value < 2) // 燃料不足时自动熄灭
+    private bool ContentFilter(Card c, out string s)
+    {
+        s = string.Empty;
+        if (!c.TryGetComponent<CookComponent>(out _))
         {
-            Event_UnLight(out _);
-            ShowTip("燃料不足，营火已自动熄灭");
-            return;
+            s = "只能放入可烹饪的物品";
+            return false;
         }
-
-        // 水平面高于30，自动熄灭
-        if (fuelStorage.isFiring && waterLevel >= 30)
-        {
-            Event_UnLight(out _);
-            ShowTip("水位过高，营火已自动熄灭");
-            return;
-        }
+        return true;
     }
 
     public override bool CanQuickInteract(Card card)
@@ -275,7 +239,7 @@ public class Campfire : ConstructionCard
     public override void OnEnterEnvironment()
     {
         // 只有点燃状态才播放音效
-        if (fuelStorage.isFiring)
+        if (fuelStorage.isBurning)
             SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 0.3f);
     }
     public override void OnLeaveEnvironment()

@@ -64,7 +64,7 @@ public class RepeatableDropList
     {
         if (IsEmpty) return;
 
-        EventManager.Instance.AddListener(EventType.IntervalSettle, () =>
+        UpdateManager.Instance.PopulationUpdate.AddListener(() =>
         {
             foreach (var population in populationList)
             {

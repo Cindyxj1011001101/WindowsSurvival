@@ -684,16 +684,109 @@ public class TemperatureComponent : ContinuousValueComponent
 #endregion
 
 #region 燃料存储组件
-public class FuelStorageComponent : ContinuousValueComponent
+public class FuelStorageComponent : ContinuousValueComponent, IUpdate
 {
-    [JsonProperty] public bool isFiring { get; private set; } // 是否正在燃烧
+    [JsonProperty] public bool isBurning { get; private set; } // 是否正在燃烧
 
-    public FuelStorageComponent(float maxValue) : base(0, maxValue) { }
+    public int basicFuelComsume; // 基础燃料消耗
+    public int extraFuelComsumeWhenWinter; // 冰层季导致的额外燃料消耗
+    public int extreFuelComsumeWhenWaterLevelHigh; // 水平面高时导致的额外燃料消耗
+    public int autoExtinguishWaterLevelThreshold; // 导致自动熄灭的水平面高度
 
-    public void SetIsFiring(bool firing)
+    [JsonIgnore] public UnityAction actionWhileBurning; // 燃烧时每回合处理
+    [JsonIgnore] public UnityAction actionWhileNotBurning; // 非燃烧时每回合处理
+    [JsonIgnore] public UnityAction actionOnIgnite; // 点燃时触发
+    [JsonIgnore] public UnityAction actionOnExtinguish; // 熄灭时触发
+
+    [JsonIgnore] public int FuelComsume
     {
-        isFiring = firing;
+        get
+        {
+            int consume = basicFuelComsume;
+            if (StateManager.Instance.WaterLevel.CurValue > 0)
+                consume += extreFuelComsumeWhenWaterLevelHigh;
+            // TODO: 冰层季的额外消耗
+
+            return consume;
+        }
+    }
+
+    public FuelStorageComponent(float maxValue, int basicFuelComsume, int extreFuelComsumeWhenWaterLevelHigh = 2, int extraFuelComsumeWhenWinter = 4, int autoExtinguishWaterLevelThreshold = 30) : base(0, maxValue)
+    {
+        this.basicFuelComsume = basicFuelComsume;
+        this.extraFuelComsumeWhenWinter = extraFuelComsumeWhenWinter;
+        this.extreFuelComsumeWhenWaterLevelHigh = extreFuelComsumeWhenWaterLevelHigh;
+        this.autoExtinguishWaterLevelThreshold = autoExtinguishWaterLevelThreshold;
+    }
+
+    /// <summary>
+    /// 能否点燃
+    /// </summary>
+    public bool CanIgnite(out string tip)
+    {
+        tip = string.Empty;
+
+        if (value < FuelComsume)
+        {
+            tip = "燃料不足";
+            return false;
+        }
+
+        if (StateManager.Instance.WaterLevel.CurValue >= autoExtinguishWaterLevelThreshold)
+        {
+            tip = "水位过高";
+            return false;
+        }
+
+        return !isBurning;
+    }
+
+    /// <summary>
+    /// 能否熄灭
+    /// </summary>
+    /// <returns></returns>
+    public bool CanExtinguish(out string tip)
+    {
+        tip = string.Empty;
+        return isBurning;
+    }
+
+    /// <summary>
+    /// 点燃
+    /// </summary>
+    public void Ignite()
+    {
+        isBurning = true;
         BelongedCard.RefreshSlot();
+        actionOnIgnite?.Invoke();
+    }
+
+    /// <summary>
+    /// 熄灭
+    /// </summary>
+    public void Extinguish()
+    {
+        isBurning = false;
+        BelongedCard.RefreshSlot();
+        actionOnExtinguish?.Invoke();
+    }
+
+    public void AddEvents(string tipOnIgnite = "", string tipOnExtinguish = "")
+    {
+        void IgniteEvent(out string tip)
+        {
+            tip = string.Empty;
+            Ignite();
+        }
+
+        void ExtinguishEvent(out string tip)
+        {
+            tip = string.Empty;
+            Extinguish();
+        }
+
+        BelongedCard.Events.Insert(0, new("点燃", tipOnIgnite, IgniteEvent, CanIgnite));
+        BelongedCard.Events.Insert(1, new("熄灭", tipOnExtinguish, ExtinguishEvent, CanExtinguish));
     }
 
     public bool CanQuickInteract(Card card)
@@ -711,6 +804,29 @@ public class FuelStorageComponent : ContinuousValueComponent
             card.TryGetComponent<FlammableComponent>(out var burnableComponent);
             card.DestroyThis();
             AddValue(burnableComponent.fuelValue);
+        }
+    }
+
+    public void Update()
+    {
+        if (!isBurning)
+        {
+            // 非燃烧时每回合处理
+            actionWhileNotBurning?.Invoke();
+            return;
+        }
+
+        // 燃烧时每回合处理
+        actionWhileBurning?.Invoke();
+
+        // 燃料减少
+        AddValue(-FuelComsume);
+
+        // 自动熄灭
+        if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip))
+        {
+            Extinguish();
+            BelongedCard.ShowTip($"{tip}，{BelongedCard.CardName}已自动熄灭");
         }
     }
 }

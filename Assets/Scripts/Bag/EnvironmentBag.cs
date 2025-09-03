@@ -56,7 +56,7 @@ public class EnvironmentBag : Bag
         base.Init();
         RepeatableDropList.StartUpdating();
         // 每回合结算地点状态
-        EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
+        UpdateManager.Instance.EnvironmentUpdate.AddListener(Update);
     }
 
     private void InitState()
@@ -78,7 +78,7 @@ public class EnvironmentBag : Bag
 
     private Dictionary<EnvironmentStateEnum, float> temp = new(); // 记录地点状态的当前变化率，防止地点状态的结算顺序影响结算结果
 
-    private void IntervalSettle()
+    private void Update()
     {
         temp.Clear();
         foreach (var (type, state) in stateDict)

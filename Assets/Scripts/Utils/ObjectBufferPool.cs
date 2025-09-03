@@ -265,7 +265,7 @@ public class ObjectBufferPool
     /// <param name="rotation">旋转</param>
     public GameObject Get(GameObject prefab, Vector3 position, Quaternion rotation)
     {
-        return Get(prefab, t => t.SetPositionAndRotation(position, rotation));
+        return Get(prefab, t => t.SetLocalPositionAndRotation(position, rotation));
     }
 
     /// <summary>
@@ -278,7 +278,7 @@ public class ObjectBufferPool
         return Get(prefab, t =>
         {
             t.SetParent(parent);
-            t.SetPositionAndRotation(position, rotation);
+            t.SetLocalPositionAndRotation(position, rotation);
         });
     }
     #endregion
@@ -343,7 +343,7 @@ public class ObjectBufferPool
     /// <param name="rotation">旋转</param>
     public GameObject Get(string bundleName, string assetName, Vector3 position, Quaternion rotation)
     {
-        return Get(bundleName, assetName, t => t.SetPositionAndRotation(position, rotation));
+        return Get(bundleName, assetName, t => t.SetLocalPositionAndRotation(position, rotation));
     }
 
     /// <summary>
@@ -358,7 +358,7 @@ public class ObjectBufferPool
         return Get(bundleName, assetName, t =>
         {
             t.SetParent(parent);
-            t.SetPositionAndRotation(position, rotation);
+            t.SetLocalPositionAndRotation(position, rotation);
         });
     }
 
@@ -433,7 +433,7 @@ public class ObjectBufferPool
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
     public void Get(string bundleName, string assetName, Vector3 position, Quaternion rotation, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, t => t.SetPositionAndRotation(position, rotation), onInstaniated);
+        Get(bundleName, assetName, t => t.SetLocalPositionAndRotation(position, rotation), onInstaniated);
     }
 
     /// <summary>
@@ -449,7 +449,7 @@ public class ObjectBufferPool
         Get(bundleName, assetName, t =>
         {
             t.SetParent(parent);
-            t.SetPositionAndRotation(position, rotation);
+            t.SetLocalPositionAndRotation(position, rotation);
         }, onInstaniated);
     }
     #endregion

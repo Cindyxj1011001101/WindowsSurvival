@@ -76,7 +76,7 @@ public class ProcessData
         //优先级
         Priority = int.Parse(row[1].ToString());
         //温度类型列表
-        foreach (string tempertureType in row[2].ToString().Split(','))
+        foreach (string tempertureType in row[2].ToString().Split('+'))
         {
             TempertureType TempertureType = tempertureType switch
             {

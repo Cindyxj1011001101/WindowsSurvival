@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -62,6 +63,8 @@ public class CardSlot : MonoBehaviour
     {
         Clear();
         Cards?.SetCardSlot(null);
+
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
 
         EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
@@ -193,12 +196,13 @@ public class CardSlot : MonoBehaviour
         if (!componentSliders.TryGetValue(component.GetType(), out UIStateSlider slider))
         {
             if (component is TemperatureComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TemperatureComponent", parent, false).GetComponent<UIStateSlider>();
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TemperatureComponent", parent).GetComponent<UIStateSlider>();
             else if (component is TimerComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TimerComponent", parent, false).GetComponent<UIStateSlider>();
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TimerComponent", parent).GetComponent<UIStateSlider>();
             else
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent, false).GetComponent<UIStateSlider>();
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent).GetComponent<UIStateSlider>();
             slider.transform.SetAsLastSibling();
+            (slider.transform as RectTransform).anchoredPosition = Vector3.zero;
             componentSliders.Add(component.GetType(), slider);
         }
 
@@ -225,10 +229,19 @@ public class CardSlot : MonoBehaviour
                 break;
             case FuelStorageComponent fuelStorageComponent:
                 slider.SetValue(fuelStorageComponent.value, fuelStorageComponent.maxValue);
-                slider.tipController.SetTip($"剩余燃料:    {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}", slider.fillColor);
+                string tip = $"剩余燃料:    {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}";
+
                 iconLayout.SetActive(true);
                 fireIcon.gameObject.SetActive(true);
-                fireIcon.color = fuelStorageComponent.isFiring ? ColorManager.BurntOrange : ColorManager.DarkGrey;
+                fireIcon.color = fuelStorageComponent.isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
+
+                // 显示燃料消耗
+                tip += $"\n自然消耗:    -{fuelStorageComponent.basicFuelComsume}/15min";
+                if (StateManager.Instance.WaterLevel.CurValue > 0)
+                    tip += $"\n地面积水:    -{fuelStorageComponent.extreFuelComsumeWhenWaterLevelHigh}/15min";
+
+                // TODO: 冰层季额外消耗
+                slider.tipController.SetTip(tip, slider.fillColor);
                 break;
             case TemperatureComponent temperatureComponent:
                 if (temperatureComponent.value <= 50)
@@ -264,7 +277,12 @@ public class CardSlot : MonoBehaviour
                 break;
             case TimerComponent timerComponent:
                 slider.SetValue(timerComponent.value, timerComponent.maxValue);
-                slider.tipController.SetTip($"剩余{timerComponent.tipText}时间:    {timerComponent.value}", slider.fillColor);
+                var hour = Mathf.FloorToInt(timerComponent.value / 60);
+                var minute = timerComponent.value % 60;
+                if (hour > 0)
+                    slider.tipController.SetTip($"距离 {timerComponent.tipText} 剩余:    {hour}h{minute}min", slider.fillColor);
+                else
+                    slider.tipController.SetTip($"距离 {timerComponent.tipText} 剩余:    {minute}min", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
@@ -370,6 +388,11 @@ public class CardSlot : MonoBehaviour
         // 显示计时器
         if (card.TryGetComponent<TimerComponent>(out var tm))
             DisplayContinuousValueComponent(tm, left);
+        else if (componentSliders.TryGetValue(typeof(TimerComponent), out var timer))
+        {
+            componentSliders.Remove(typeof(TimerComponent));
+            ObjectBufferPool.Instance.Restore(timer.gameObject);
+        }
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;

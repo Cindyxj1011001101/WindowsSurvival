@@ -1,5 +1,4 @@
-﻿using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -114,8 +113,9 @@ public static class CardFactory
             { "盐水", typeof(SalineWater) },
             { "育卵液", typeof(EggRearingFluid) },
             { "水壶兰种子", typeof(KettleFlowerSeed) },
-            { "熟水壶兰种子", typeof(CookedKettleFlowerSeed) },
+            { "熟水壶兰种", typeof(CookedKettleFlowerSeed) },
             { "水壶兰", typeof(KettleFlower) },
+            { "损坏的飞船驾驶座", typeof(SpaceshipSeat) },
         };
     }
 

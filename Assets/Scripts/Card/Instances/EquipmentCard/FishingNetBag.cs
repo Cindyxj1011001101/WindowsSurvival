@@ -45,7 +45,7 @@ public class FishingNetBag : EquipmentCard
     private void CutThis(Card tool, out string tip)
     {
         tip = string.Empty;
-        Use();
+        DestroyThis();
         tool.Use();
         TimeManager.Instance.AddTime(15);
         AddCard("韧性胶管", true);

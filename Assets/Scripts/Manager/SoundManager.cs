@@ -293,10 +293,20 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     private AudioClip GetClip(string clipName, string type)
     {
-        var clip = Resources.Load<AudioClip>("Audio/" + type + "/" + clipName);
+        // 构建资源路径
+        string path = $"Audio/{type}/{clipName}";
+        
+        // 尝试加载音效
+        AudioClip clip = Resources.Load<AudioClip>(path);
+
+        // 检查是否加载失败
         if (clip == null)
-            throw new ArgumentException($"音频切片文件为空。切片名为: {clipName}，切片类型为: {type}。" +
-                $"请确保切片文件\"Resources\\Audio\\{type}\\{clipName}\"存在");
+        {
+            // 仅输出警告（黄色），不会中断程序
+            Debug.LogWarning($"音效文件未找到: {path}");
+            return null; // 返回空而不是抛出异常
+        }
+
         return clip;
     }
 

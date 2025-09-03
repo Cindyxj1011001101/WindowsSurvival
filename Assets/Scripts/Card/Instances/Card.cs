@@ -86,7 +86,7 @@ public abstract class Card : IComparable<Card>
                 {
                     foreach (var card in slot.Cards)
                     {
-                        weight += card.Weight * component.weightLossRate;
+                        weight += card.Weight * (1 - component.weightLossRate);
                     }
                 }
             }
@@ -203,14 +203,14 @@ public abstract class Card : IComparable<Card>
 
         isUpdating = true;
 
-        LateInit();
-
         foreach (var c in components.Values)
         {
             c.SetBelongedCard(this);
         }
 
-        EventManager.Instance.AddListener(EventType.IntervalSettle, Update);
+        LateInit();
+
+        UpdateManager.Instance.CardUpdate.AddListener(Update);
 
         // 如果有内容物组件，则开始监听内容物的更新
         if (TryGetComponent<InnerContentsComponent>(out var component))
@@ -224,7 +224,7 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     public void StopUpdating()
     {
-        EventManager.Instance.RemoveListener(EventType.IntervalSettle, Update);
+        UpdateManager.Instance.CardUpdate.RemoveListener(Update);
     }
 
     public void PauseUpdating()
@@ -349,15 +349,18 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="other"></param>
-    public void InheritComponent<T>(Card other) where T : CardComponent
+    public bool InheritComponent<T>(Card other, out T newComponent) where T : CardComponent
     {
         // 如果other有该组件，并且当前卡牌也有该组件，则复制一份
         if (other.TryGetComponent<T>(out var component) && TryGetComponent<T>(out _))
         {
-            var newComponent = JsonManager.DeepCopy(component);
+            newComponent = JsonManager.DeepCopy(component);
             components[typeof(T)] = newComponent;
             newComponent.SetBelongedCard(this);
+            return true;
         }
+        newComponent = null;
+        return false;
     }
 
     public int CompareTo(Card other)

@@ -11,14 +11,10 @@ public class FuelDistiller : ConstructionCard
     private FreshWaterStorageComponent freshWaterStorage; // 淡水存储 
     private SalineWaterStorageComponent salineWaterStorage; // 盐水存储
 
-    public int fuelConsume = 1;
-
     private FuelDistiller()
     {
         Events = new()
         {
-            new Event("点燃", "点燃蒸馏器，将盐水蒸馏成淡水。点燃状态下会导致室内氧气消耗与一氧化碳增加", Event_Light, Judge_Light),
-            new Event("熄灭", "", Event_UnLight, Judge_UnLight),
             new Event("倒入盐水", "消耗盐水，使蒸馏器的盐水储量+12\n！可能会造成浪费！", Event_AddSalineWater, Judge_AddSalineWater),
         };
     }
@@ -29,11 +25,43 @@ public class FuelDistiller : ConstructionCard
         // 手动添加燃料存储组件
         if (!TryGetComponent(out fuelStorage))
         {
-            fuelStorage = new FuelStorageComponent(96);
+            fuelStorage = new FuelStorageComponent(96, 1);
             AddComponent(fuelStorage);
         }
 
-        innerContents.allowAdd = false; // 不允许放入
+        fuelStorage.actionOnIgnite = () =>
+        {
+            var env = Bag as EnvironmentBag;
+            env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -4); // 点燃后地点氧气每回合-4
+            env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, +2); // 点燃后地点一氧化碳每回合+2
+
+            // 点燃后暂停所有卡牌每回合更新
+            innerContents.PauseUpdating();
+
+            stateMachine.ChangeState("已点燃");
+
+            SoundManager.Instance.PlaySound("点火_02");
+        };
+
+        fuelStorage.actionOnExtinguish = () =>
+        {
+            var env = Bag as EnvironmentBag;
+            env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +4);
+            env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, -2);
+
+            // 熄灭后恢复所有卡牌每回合更新
+            innerContents.ContinueUpdating();
+
+            stateMachine.ChangeState("未点燃");
+        };
+
+        fuelStorage.actionWhileBurning = HandleDistillation;
+
+        // 添加点燃熄灭事件
+        fuelStorage.AddEvents("点燃蒸馏器。将盐水蒸馏成淡水。\n点燃状态下会导致室内氧气消耗与一氧化碳增加");
+
+        // 不允许放入
+        innerContents.allowAdd = false;
 
         // 取出瓶装水时，如果淡水储量达到了上限，则再生成一瓶
         innerContents.onRemoveCard = (c) =>
@@ -66,73 +94,6 @@ public class FuelDistiller : ConstructionCard
     }
 
     /// <summary>
-    /// 点燃
-    /// </summary>
-    /// <param name="tip"></param>
-    private void Event_Light(out string tip)
-    {
-        tip = string.Empty;
-
-        var env = Bag as EnvironmentBag;
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -4); // 点燃后地点氧气每回合-4
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, +2); // 点燃后地点一氧化碳每回合+2
-
-        // 点燃后暂停所有卡牌每回合更新
-        innerContents.PauseUpdating();
-
-        fuelStorage.SetIsFiring(true);
-
-        stateMachine.ChangeState("已点燃");
-        
-        SoundManager.Instance.PlaySound("点火_02");
-    }
-
-    private bool Judge_Light(out string hint)
-    {
-        hint = string.Empty;
-
-        if (StateManager.Instance.WaterLevel.CurValue >= 30)
-        {
-            hint = "水位过高，无法点燃燃料蒸馏器";
-            return false;
-        }
-
-        if (fuelStorage.value < fuelConsume)
-        {
-            hint = "燃料不足，无法点燃燃料蒸馏器";
-            return false;
-        }
-
-        return !fuelStorage.isFiring;
-    }
-
-    /// <summary>
-    /// 熄灭
-    /// </summary>
-    /// <param name="tip"></param>
-    private void Event_UnLight(out string tip)
-    {
-        tip = string.Empty;
-
-        var env = Bag as EnvironmentBag;
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +4);
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, -2);
-
-        // 熄灭后恢复所有卡牌每回合更新
-        innerContents.ContinueUpdating();
-
-        fuelStorage.SetIsFiring(false);
-
-        stateMachine.ChangeState("未点燃");
-    }
-
-    private bool Judge_UnLight(out string hint)
-    {
-        hint = string.Empty;
-        return fuelStorage.isFiring;
-    }
-
-    /// <summary>
     /// 倒入盐水
     /// </summary>
     /// <param name="tip"></param>
@@ -162,41 +123,9 @@ public class FuelDistiller : ConstructionCard
         return true;
     }
 
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        // 没有点燃
-        if (!fuelStorage.isFiring) return;
-
-        var waterLevel = StateManager.Instance.WaterLevel.CurValue;
-
-        // 这里剩余燃料一定是>=fuelConsume的，因为燃料<fuelConsume时会自动熄灭并且无法点燃
-        fuelStorage.AddValue(-fuelConsume); // 每回合消耗1点燃料
-        if (waterLevel > 0) // 水平面>0时，燃料额外-4
-        {
-            fuelStorage.AddValue(-4);
-        }
-
-        // 处理蒸馏逻辑
-        HandleDistillation();
-
-        if (fuelStorage.isFiring && fuelStorage.value < fuelConsume) // 燃料不足时自动熄灭
-        {
-            Event_UnLight(out _);
-            ShowTip("燃料不足，燃料蒸馏器已自动熄灭");
-            return;
-        }
-
-        // 水平面高于30，自动熄灭
-        if (fuelStorage.isFiring && waterLevel >= 30)
-        {
-            Event_UnLight(out _);
-            ShowTip("水位过高，燃料蒸馏器已自动熄灭");
-            return;
-        }
-    }
-
+    /// <summary>
+    /// 处理蒸馏逻辑
+    /// </summary>
     private void HandleDistillation()
     {
         if (salineWaterStorage.value < 1 || freshWaterStorage.value >= freshWaterStorage.maxValue) return;
@@ -207,6 +136,9 @@ public class FuelDistiller : ConstructionCard
         GetBottledWater();
     }
 
+    /// <summary>
+    /// 获取瓶装水
+    /// </summary>
     private void GetBottledWater()
     {
         // 淡水储量没有达到上限，或者内容物已满，不生成瓶装水

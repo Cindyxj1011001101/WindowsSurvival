@@ -175,6 +175,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool IsCurrentEnvironment(Bag bag) => bag is EnvironmentBag env && env == curEnvironmentBag;
+
     public void AddCard(Card card, Bag targetBag)
     {
         card.StartUpdating();
@@ -281,27 +283,22 @@ public class GameManager : MonoBehaviour
     /// <param name="equipment"></param>
     public void Equip(Card equipment)
     {
+        // 找到卡牌位置
+        Transform transform = null;
+        if (equipment.Slot != null)
+            transform = equipment.Slot.transform;
+        if (transform == null && equipment.Bag is InnerBag innerBag && innerBag.BelongedCard != null)
+            transform = innerBag.BelongedCard.Transform;
+
         // 从原来的格子里移除
-        var originalSlot = equipment.Slot;
-        originalSlot.RemoveCard(equipment);
-        originalSlot.RefreshDisplay();
+        equipment.SlotCards.RemoveCard(equipment);
 
         // 打开装备窗口
         if (!WindowsManager.Instance.IsWindowOpen("Equipment"))
             WindowsManager.Instance.OpenWindow("Equipment");
 
         // 添加到装备格子里
-        EquipmentBag.AddCard(equipment);
-        MFXUtility.MoveCard(
-            equipment,
-            1,
-            originalSlot.transform.position,
-            equipment.Slot.transform.position,
-            onComplete: () =>
-            {
-                equipment.RefreshSlot();
-            }
-            );
+        AddCardWithTween(equipment, equipmentBag, transform.position); // transform 理论上不会为空
     }
 
     /// <summary>
@@ -310,13 +307,13 @@ public class GameManager : MonoBehaviour
     /// <param name="type"></param>
     public void Unequip(Card equipment)
     {
+        Transform transform = equipment.Slot.transform;
+
         // 从装备格子中移除
-        var originalSlot = equipment.Slot;
-        originalSlot.RemoveCard(equipment);
-        originalSlot.RefreshDisplay();
+        equipment.SlotCards.RemoveCard(equipment);
 
         // 添加到背包(优先)或环境中
-        AddCardWithTween(equipment, originalSlot.transform.position, true);
+        AddCardWithTween(equipment, transform.position, true); // transform 理论上不会为空
     }
 
     /// <summary>

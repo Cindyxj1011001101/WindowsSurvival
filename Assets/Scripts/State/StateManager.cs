@@ -125,12 +125,6 @@ public class StateManager : MonoBehaviour
             WaterLevel = stateData.waterLevel;
             PlayerStateDict = stateData.playerState;
         }
-
-        // 监听回合结算
-        EventManager.Instance.AddListener(EventType.IntervalSettle, IntervalSettle);
-        // 当环境改变时尝试获取氧气
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
-        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
     }
 
     private void CheckPlayerState(PlayerStateEnum stateEnum)
@@ -142,11 +136,19 @@ public class StateManager : MonoBehaviour
     {
         // 评估危险状态，播放音乐
         EvaluateDangerLevel();
+
+        // 监听回合结算
+        UpdateManager.Instance.PlayerUpdate.AddListener(PlayerUpdate);
+        UpdateManager.Instance.EnvironmentUpdate.AddListener(EnvironmentUpdate);
+        // 当环境改变时尝试获取氧气
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener(EventType.IntervalSettle, IntervalSettle);
+        UpdateManager.Instance.PlayerUpdate.RemoveListener(PlayerUpdate);
+        UpdateManager.Instance.EnvironmentUpdate.RemoveListener(EnvironmentUpdate);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
     }
@@ -678,17 +680,9 @@ public class StateManager : MonoBehaviour
 
     #region 定时结算相关
     /// <summary>
-    /// 定时结算玩家状态
-    /// 玩家状态值基础结算，不考虑环境状态
+    /// 定时结算环境状态
     /// </summary>
-    private void IntervalSettle()
-    {
-        PlayerIntervalSettle();
-
-        EnvironmentIntervalSettle();
-    }
-
-    private void EnvironmentIntervalSettle()
+    private void EnvironmentUpdate()
     {
         ChangeElectricity(Electricity.ChangeRate);
         ChangeWaterLevel(WaterLevel.ChangeRate);
@@ -696,7 +690,10 @@ public class StateManager : MonoBehaviour
 
     private Dictionary<PlayerStateEnum, float> temp = new(); // 记录玩家状态的当前变化率，防止玩家状态的结算顺序影响结算结果
 
-    private void PlayerIntervalSettle()
+    /// <summary>
+    /// 定时结算玩家状态
+    /// </summary>
+    private void PlayerUpdate()
     {
         temp.Clear();
         foreach (var (type, state) in PlayerStateDict)

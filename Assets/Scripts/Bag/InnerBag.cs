@@ -30,6 +30,13 @@ public class InnerBag : Bag
             return false;
         }
 
+        // 不能套娃
+        if (card.TryGetComponent<InnerContentsComponent>(out _))
+        {
+            tip = "不能放入带有内容物的卡牌";
+            return false;
+        }
+
         // 卡牌不满足过滤器限制
         if (component.contentFilter != null && !component.contentFilter(card, out tip)) return false;
 
