@@ -11360,6 +11360,7 @@ GameObject:
   - component: {fileID: 1241781961}
   - component: {fileID: 1241781962}
   - component: {fileID: 1241781963}
+  - component: {fileID: 1241781964}
   m_Layer: 0
   m_Name: DestroyOnLoad
   m_TagString: Untagged
@@ -11532,6 +11533,18 @@ MonoBehaviour:
       direction: 0
       PortCondition: 
     outputports: []
+--- !u!114 &1241781964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241781950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 171477d6bab8203489306b2737cf6890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1248705056
 GameObject:
   m_ObjectHideFlags: 0

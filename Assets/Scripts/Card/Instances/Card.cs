@@ -210,7 +210,7 @@ public abstract class Card : IComparable<Card>
 
         LateInit();
 
-        EventManager.Instance.AddListener(EventType.IntervalSettle, Update);
+        UpdateManager.Instance.CardUpdate.AddListener(Update);
 
         // 如果有内容物组件，则开始监听内容物的更新
         if (TryGetComponent<InnerContentsComponent>(out var component))
@@ -224,7 +224,7 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     public void StopUpdating()
     {
-        EventManager.Instance.RemoveListener(EventType.IntervalSettle, Update);
+        UpdateManager.Instance.CardUpdate.RemoveListener(Update);
     }
 
     public void PauseUpdating()

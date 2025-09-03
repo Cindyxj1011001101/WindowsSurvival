@@ -11,6 +11,8 @@ public static class MySceneManager
         DOTween.KillAll();
         // 清空对象池
         ObjectBufferPool.Instance.Clear();
+        // 移除事件监听
+        EventManager.Instance.ClearEvents();
         // 卸载未使用的资源
         ResourcesManager.Instance.UnloadUnusedAssets(() => PublicMono.Instance.StartCoroutine(LoadSceneAsync(sceneBuildIndex))); // 卸载完成后异步加载场景
     }

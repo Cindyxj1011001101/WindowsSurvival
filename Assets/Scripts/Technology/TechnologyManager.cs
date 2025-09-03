@@ -35,7 +35,7 @@ public class TechnologyManager
         techData.curStudiedTechNodeType = techNode.techType;
         CurStudyRate = CalcStudyRate();
         // 添加监听，每回合结算研究进度
-        EventManager.Instance.AddListener(EventType.IntervalSettle, OnStudy);
+        UpdateManager.Instance.TechnologyUpdate.AddListener(OnStudy);
         EventManager.Instance.TriggerEvent(EventType.StudyStarted, CurStudiedTechNode);
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("StartResearch", techNode.techName));
     }
@@ -48,7 +48,7 @@ public class TechnologyManager
         // 设置正在研究的科技节点为空
         techData.curStudiedTechNodeName = "";
         // 移除监听
-        EventManager.Instance.RemoveListener(EventType.IntervalSettle, OnStudy);
+        UpdateManager.Instance.TechnologyUpdate.RemoveListener(OnStudy);
         EventManager.Instance.TriggerEvent(EventType.StudyStoped);
     }
 
