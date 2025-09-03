@@ -5,6 +5,16 @@ public class UITimer : UIStateSlider
 {
     public VerticalLayoutGroup separatorLayout;
 
+    private float fillRectHeight;
+
+    private float separatorHeight;
+
+    private void Awake()
+    {
+        fillRectHeight = slider.fillRect.rect.height;
+        separatorHeight = (separatorLayout.transform.GetChild(0).transform as RectTransform).rect.height;
+    }
+
     public override void SetValue(float value, float maxValue)
     {
         base.SetValue(value, maxValue);
@@ -16,6 +26,6 @@ public class UITimer : UIStateSlider
             separatorLayout.transform.GetChild(i).gameObject.SetActive(i - 1 < separatorCount);
         }
 
-        separatorLayout.spacing = TimeManager.Instance.SettleInterval * (slider.fillRect.rect.height - (separatorCount - 1) * 2) / maxValue;
+        separatorLayout.spacing = TimeManager.Instance.SettleInterval * (fillRectHeight - (separatorCount - 1) * separatorHeight) / maxValue;
     }
 }

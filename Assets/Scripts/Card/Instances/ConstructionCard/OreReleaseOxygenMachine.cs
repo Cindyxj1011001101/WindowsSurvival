@@ -9,9 +9,8 @@ public class OreReleaseOxygenMachine : ConstructionCard
     private StateMachineComponent stateMachine;
     private InnerContentsComponent innerContents;
     private OxygenStorageComponent oxygenStorage;
+    private TimerComponent timer;
 
-    public int maxTimeProgress = 120; // 最大时间进度
-    public int curTimeProgress = 0; // 当前时间进度
     public float oxygenRelease = 180; // 氧气释放量
     public int oreConsumption = 1; // 白爆矿消耗量
     public float electricityConsumption = 1; // 电力消耗量
@@ -47,6 +46,14 @@ public class OreReleaseOxygenMachine : ConstructionCard
         {
             oxygenStorage = new OxygenStorageComponent(360);
             AddComponent(oxygenStorage);
+        }
+
+        // 添加计时器组件
+        if (!TryGetComponent(out timer))
+        {
+            timer = new TimerComponent(120, 120);
+            timer.tipText = "下次制氧";
+            AddComponent(timer);
         }
     }
 
@@ -172,10 +179,10 @@ public class OreReleaseOxygenMachine : ConstructionCard
         }
 
         // 制氧进度增加
-        curTimeProgress += TimeManager.Instance.SettleInterval;
+        timer.AddValue(-TimeManager.Instance.SettleInterval);
         
         // 进度不满不制氧
-        if (curTimeProgress < maxTimeProgress)
+        if (timer.value > 0)
         {
             return;
         }
@@ -206,7 +213,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         }
 
         //归零生产进度
-        curTimeProgress = 0;
+        timer.SetValue(timer.maxValue);
 
         // 消耗电力
         StateManager.Instance.ChangeElectricity(-electricityConsumption);

@@ -213,32 +213,32 @@ public class CardSlot : MonoBehaviour
         {
             case DurabilityComponent durabilityComponent:
                 slider.SetValue(durabilityComponent.durability, durabilityComponent.maxDurability);
-                slider.tipController.SetTip($"耐久度:    {slider.value * 100:0.0}%", slider.fillColor);
+                slider.tipController.SetTip($"耐久度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case FreshnessComponent freshnessComponent:
                 slider.SetValue(freshnessComponent.freshness, freshnessComponent.maxFreshness);
-                slider.tipController.SetTip($"新鲜度:    {slider.value * 100:0.0}%", slider.fillColor);
+                slider.tipController.SetTip($"新鲜度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case GrowthComponent growthComponent:
                 slider.SetValue(growthComponent.growth, growthComponent.maxGrowth);
-                slider.tipController.SetTip($"生长度:    {slider.value * 100:0.0}%", slider.fillColor);
+                slider.tipController.SetTip($"生长度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case ProgressComponent progressComponent:
                 slider.SetValue(progressComponent.progress, progressComponent.maxProgress);
-                slider.tipController.SetTip($"产物进度:    {slider.value * 100:0.0}%", slider.fillColor);
+                slider.tipController.SetTip($"产物进度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case FuelStorageComponent fuelStorageComponent:
                 slider.SetValue(fuelStorageComponent.value, fuelStorageComponent.maxValue);
-                string tip = $"剩余燃料:    {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}";
+                string tip = $"剩余燃料:  {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}";
 
                 iconLayout.SetActive(true);
                 fireIcon.gameObject.SetActive(true);
                 fireIcon.color = fuelStorageComponent.isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
 
                 // 显示燃料消耗
-                tip += $"\n自然消耗:    -{fuelStorageComponent.basicFuelComsume}/15min";
+                tip += $"\n自然消耗:  -{fuelStorageComponent.basicFuelComsume}/15min";
                 if (StateManager.Instance.WaterLevel.CurValue > 0)
-                    tip += $"\n地面积水:    -{fuelStorageComponent.extreFuelComsumeWhenWaterLevelHigh}/15min";
+                    tip += $"\n地面积水:  -{fuelStorageComponent.extreFuelComsumeWhenWaterLevelHigh}/15min";
 
                 // TODO: 冰层季额外消耗
                 slider.tipController.SetTip(tip, slider.fillColor);
@@ -261,28 +261,33 @@ public class CardSlot : MonoBehaviour
                     slider.fillColor = ColorManager.Red;
                 }
                 slider.SetValue(temperatureComponent.value, temperatureComponent.maxValue);
-                slider.tipController.SetTip($"当前温度:    {temperatureComponent.value}/{temperatureComponent.maxValue}", slider.fillColor);
+                slider.tipController.SetTip($"当前温度:  {temperatureComponent.value}/{temperatureComponent.maxValue}", slider.fillColor);
                 break;
             case OxygenStorageComponent oxygenStorageComponent:
                 slider.SetValue(oxygenStorageComponent.value, oxygenStorageComponent.maxValue);
-                slider.tipController.SetTip($"剩余氧气:    {oxygenStorageComponent.value}/{oxygenStorageComponent.maxValue}", slider.fillColor);
+                slider.tipController.SetTip($"剩余氧气:  {oxygenStorageComponent.value}/{oxygenStorageComponent.maxValue}", slider.fillColor);
                 break;
             case FreshWaterStorageComponent freshWaterStorageComponent:
                 slider.SetValue(freshWaterStorageComponent.value, freshWaterStorageComponent.maxValue);
-                slider.tipController.SetTip($"淡水储量:    {freshWaterStorageComponent.value}/{freshWaterStorageComponent.maxValue}", slider.fillColor);
+                slider.tipController.SetTip($"淡水储量:  {freshWaterStorageComponent.value}/{freshWaterStorageComponent.maxValue}", slider.fillColor);
                 break;
             case SalineWaterStorageComponent salineWaterStorageComponent:
                 slider.SetValue(salineWaterStorageComponent.value, salineWaterStorageComponent.maxValue);
-                slider.tipController.SetTip($"盐水储量:    {salineWaterStorageComponent.value}/{salineWaterStorageComponent.maxValue}", slider.fillColor);
+                slider.tipController.SetTip($"盐水储量:  {salineWaterStorageComponent.value}/{salineWaterStorageComponent.maxValue}", slider.fillColor);
                 break;
             case TimerComponent timerComponent:
                 slider.SetValue(timerComponent.value, timerComponent.maxValue);
                 var hour = Mathf.FloorToInt(timerComponent.value / 60);
                 var minute = timerComponent.value % 60;
+                string leftTime = "";
+                if (hour == 0 && minute == 0)
+                    leftTime = "0min";
                 if (hour > 0)
-                    slider.tipController.SetTip($"距离 {timerComponent.tipText} 剩余:    {hour}h{minute}min", slider.fillColor);
-                else
-                    slider.tipController.SetTip($"距离 {timerComponent.tipText} 剩余:    {minute}min", slider.fillColor);
+                    leftTime += $"{hour}h";
+                if (minute > 0)
+                    leftTime += $"{minute}min";
+
+                slider.tipController.SetTip($"距离 {timerComponent.tipText} 剩余:  {leftTime}", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
