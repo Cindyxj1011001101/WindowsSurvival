@@ -525,7 +525,8 @@ public class StateMachineComponent : CardComponent
 public class PlantGrowthComponent : CardComponent, IUpdate
 {
     public float growthRate; // 生长速率
-    public float growthProgress; // 生长进度
+    public float growth; // 生长进度
+    public float maxGrowth; // 最大生长进度
     public int deadProgress; // 死亡进度
     public float minConfortTempreture; // 最低舒适温度
     public float maxConfortTempreture; // 最高舒适温度
@@ -534,13 +535,13 @@ public class PlantGrowthComponent : CardComponent, IUpdate
     public float minLiveTempture; // 最低存活温度
     public float maxLiveTempture; // 最高存活温度
     public string deadCardId; // 死亡后变成的卡牌ID 
-    public List<PressureLevel> pressureList=new List<PressureLevel>();
-    public bool StopGrow=false; 
-    
+    public List<PressureLevel> pressureList = new List<PressureLevel>();
+    public bool StopGrow = false;
+
     [JsonIgnore] public UnityAction onDead;
 
     public PlantGrowthComponent(float growthRate, float minConfortTempreture, float maxConfortTempreture, float minGrowTempture, float maxGrowTempture, float minLiveTempture, float maxLiveTempture, string deadCardId, List<PressureLevel> pressureList)
-    { 
+    {
         this.growthRate = growthRate;
         this.minConfortTempreture = minConfortTempreture;
         this.maxConfortTempreture = maxConfortTempreture;
@@ -550,27 +551,26 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         this.maxLiveTempture = maxLiveTempture;
         this.deadCardId = deadCardId;
         this.pressureList = pressureList;
-        growthProgress = 100;
+        growth = maxGrowth = 100;
         deadProgress = 5; // 初始死亡进度
     }
 
     public void Update()
     {
         if (deadProgress <= 0) return;
-        if(StopGrow)return;
+        if (StopGrow) return;
         var bag = BelongedCard.Bag as EnvironmentBag;
         PressureLevel curPressureLevel = bag.PressureLevel;
-        
+
         bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var t);
         float curTempture = 25;
         if (t == null)
         {
             Debug.LogWarning("当前没有环境温度信息，使用默认环境温度25度");
-           
         }
         else
         {
-            curTempture= t.CurValue;
+            curTempture = t.CurValue;
         }
 
         if (!pressureList.Contains(curPressureLevel)) return;
@@ -578,11 +578,11 @@ public class PlantGrowthComponent : CardComponent, IUpdate
 
         if (curTempture <= maxConfortTempreture && curTempture > minConfortTempreture)
         {
-            growthProgress += growthRate * 1.2f; // 舒适区生长加快
+            growth += growthRate * 1.2f; // 舒适区生长加快
         }
         else if (curTempture <= maxGrowTempture && curTempture > minGrowTempture)
         {
-            growthProgress += growthRate * 1f;
+            growth += growthRate * 1f;
         }
         else if (curTempture <= maxLiveTempture && curTempture > minLiveTempture)
         {
@@ -597,7 +597,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         if (deadProgress <= 0)
         {
             BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
-            deadProgress = 5;
+            deadProgress = 0;
             BelongedCard.DestroyThis();
             onDead?.Invoke();
             return;
@@ -705,7 +705,8 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     [JsonIgnore] public UnityAction actionOnIgnite; // 点燃时触发
     [JsonIgnore] public UnityAction actionOnExtinguish; // 熄灭时触发
 
-    [JsonIgnore] public int FuelComsume
+    [JsonIgnore]
+    public int FuelComsume
     {
         get
         {

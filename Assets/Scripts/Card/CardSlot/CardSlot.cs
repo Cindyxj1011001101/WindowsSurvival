@@ -223,6 +223,10 @@ public class CardSlot : MonoBehaviour
                 slider.SetValue(growthComponent.growth, growthComponent.maxGrowth);
                 slider.tipController.SetTip($"生长度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
+            case PlantGrowthComponent plantGrowthComponent:
+                slider.SetValue(plantGrowthComponent.growth, plantGrowthComponent.maxGrowth);
+                slider.tipController.SetTip($"生长度:  {slider.value * 100:0.0}%", slider.fillColor);
+                break;
             case ProgressComponent progressComponent:
                 slider.SetValue(progressComponent.progress, progressComponent.maxProgress);
                 slider.tipController.SetTip($"产物进度:  {slider.value * 100:0.0}%", slider.fillColor);
@@ -398,6 +402,9 @@ public class CardSlot : MonoBehaviour
             componentSliders.Remove(typeof(TimerComponent));
             ObjectBufferPool.Instance.Restore(timer.gameObject);
         }
+        // 显示植物生长度
+        if (card.TryGetComponent<PlantGrowthComponent>(out var pg))
+            DisplayContinuousValueComponent(pg, middle);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;
