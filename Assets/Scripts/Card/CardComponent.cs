@@ -711,7 +711,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         }
     }
 
-    public FuelStorageComponent(float maxValue, int basicFuelComsume, int extreFuelComsumeWhenWaterLevelHigh = 4, int extraFuelComsumeWhenWinter = 6, int autoExtinguishWaterLevelThreshold = 30) : base(0, maxValue)
+    public FuelStorageComponent(float maxValue, int basicFuelComsume, int extreFuelComsumeWhenWaterLevelHigh = 2, int extraFuelComsumeWhenWinter = 4, int autoExtinguishWaterLevelThreshold = 30) : base(0, maxValue)
     {
         this.basicFuelComsume = basicFuelComsume;
         this.extraFuelComsumeWhenWinter = extraFuelComsumeWhenWinter;
