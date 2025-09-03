@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -228,10 +229,19 @@ public class CardSlot : MonoBehaviour
                 break;
             case FuelStorageComponent fuelStorageComponent:
                 slider.SetValue(fuelStorageComponent.value, fuelStorageComponent.maxValue);
-                slider.tipController.SetTip($"剩余燃料:    {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}", slider.fillColor);
+                string tip = $"剩余燃料:    {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}";
+
                 iconLayout.SetActive(true);
                 fireIcon.gameObject.SetActive(true);
                 fireIcon.color = fuelStorageComponent.isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
+
+                // 显示燃料消耗
+                tip += $"\n自然消耗:    -{fuelStorageComponent.basicFuelComsume}/15min";
+                if (StateManager.Instance.WaterLevel.CurValue > 0)
+                    tip += $"\n地面积水:    -{fuelStorageComponent.extreFuelComsumeWhenWaterLevelHigh}/15min";
+
+                // TODO: 冰层季额外消耗
+                slider.tipController.SetTip(tip, slider.fillColor);
                 break;
             case TemperatureComponent temperatureComponent:
                 if (temperatureComponent.value <= 50)

@@ -823,10 +823,9 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         AddValue(-FuelComsume);
 
         // 自动熄灭
-        if (!CanIgnite(out var tip))
+        if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip))
         {
             Extinguish();
-            Debug.Log("自动熄灭");
             BelongedCard.ShowTip($"{tip}，{BelongedCard.CardName}已自动熄灭");
         }
     }
