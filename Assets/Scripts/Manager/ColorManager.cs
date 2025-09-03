@@ -25,6 +25,7 @@ public static class ColorManager
         { typeof(FreshnessComponent), Orange },
         { typeof(ProgressComponent), Green },
         { typeof(GrowthComponent), White },
+        { typeof(PlantGrowthComponent), Green },
         { typeof(FuelStorageComponent), BurntOrange },
         { typeof(OxygenStorageComponent), SkyBlue },
         { typeof(FreshWaterStorageComponent), FreshWater },

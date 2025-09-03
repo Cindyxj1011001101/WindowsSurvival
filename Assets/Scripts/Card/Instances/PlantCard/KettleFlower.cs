@@ -1,5 +1,4 @@
-﻿using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class KettleFlower : Card
 {
@@ -20,7 +19,7 @@ public class KettleFlower : Card
         tip = string.Empty;
         GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut).Use();
         TryGetComponent<PlantGrowthComponent>(out var growthComponent);
-        growthComponent.growthProgress -= 10;
+        growthComponent.growth -= 10;
         growthComponent.StopGrow=true;
         hasWound = true;
         int rad= Random.Range(0,100);
@@ -31,6 +30,7 @@ public class KettleFlower : Card
         //TODO：切换图片为有伤口的水壶兰
         TimeManager.Instance.AddTime(15);
     }
+
     private bool Judge_Hurt(out string hint)
     {
         hint = string.Empty;
@@ -40,7 +40,7 @@ public class KettleFlower : Card
             hint = "此时已有伤口，无需划口";
             return false;
         }
-        if (growthComponent.growthProgress < 30)
+        if (growthComponent.growth < 30)
         {
             hint = "需要生长度大于等于30";
             return false;
@@ -77,7 +77,7 @@ public class KettleFlower : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("喝_01", true);
         TryGetComponent<PlantGrowthComponent>(out var growthComponent);
-        growthComponent.growthProgress -= 20;
+        growthComponent.growth -= 20;
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 14);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         TimeManager.Instance.AddTime(15);
@@ -91,7 +91,7 @@ public class KettleFlower : Card
             return false;
         }
         TryGetComponent<PlantGrowthComponent>(out var growthComponent);
-        if (growthComponent.growthProgress < 20)
+        if (growthComponent.growth < 20)
         {
             hint = "此时生长度不足20，无法饮用";
             return false;
