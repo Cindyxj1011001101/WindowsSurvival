@@ -19,7 +19,7 @@ namespace ChatPlugIn
             if(outputPortData.Count==0)outputPortData.Add(new PortData("输出","条件"));
             base.Init(graphView, title, position);
             Type = NodeType.Dialogue;
-            chatData = new ChatData(MessageSenderEnum.NPC, "对话内容", "条件", 0, 0, "效果");
+            chatData = new ChatData(MessageSenderEnum.NPC, "对话内容", "", 0, 0, "");
 
         }
         protected override void DrawExtensionContainer()
