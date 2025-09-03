@@ -42,11 +42,24 @@ public class TempertureData
 public class ProcessCardData
 {
     public List<string> CardIdList;//卡牌列表（或卡牌ID）
+    public CalculateType calculateType;
     public int CardCount;//卡牌数量
-    public ProcessCardData(List<string> cardIdList, int cardCount)
+    public ProcessCardData(List<string> cardIdList, CalculateType calculateType, int cardCount)
     {
         CardIdList = cardIdList;
+        this.calculateType = calculateType;
         CardCount = cardCount;
+    }
+}
+
+public class RoundCalculate
+{
+    public int value;
+    public CalculateType CalculateType;
+    public RoundCalculate(int value, CalculateType calculateType)
+    {
+        this.value = value;
+        CalculateType = calculateType;
     }
 }
 public class FoodPropertyCalculate
@@ -66,7 +79,7 @@ public class ProcessData
     public string OutcomeID;//产出卡牌ID
     public int Priority;//优先级
     public List<TempertureType> TempertureTypeList=new List<TempertureType>();//温度类型列表
-    public int Round;//回合数
+    public RoundCalculate Round;//回合数
     public List<FoodPropertyCalculate> FoodPropertyCalculateList=new List<FoodPropertyCalculate>();//食物属性计算列表
     public List<ProcessCardData> CardDataList=new List<ProcessCardData>();//卡牌数据列表
     public ProcessData(DataRow row)
@@ -76,20 +89,42 @@ public class ProcessData
         //优先级
         Priority = int.Parse(row[1].ToString());
         //温度类型列表
-        foreach (string tempertureType in row[2].ToString().Split('+'))
+        if (row[2].ToString() == "/")
         {
-            TempertureType TempertureType = tempertureType switch
-            {
-                "常温" => TempertureType.Normal,
-                "低温" => TempertureType.Low,
-                "中温" => TempertureType.Medium,
-                "高温" => TempertureType.High,
-                _ => throw new Exception($"无效的温度类型: {row[2].ToString()}")
-            };
-            TempertureTypeList.Add(TempertureType);
+            TempertureTypeList = new List<TempertureType>();
         }
+        else
+        {
+            foreach (string tempertureType in row[2].ToString().Split('+'))
+            {
+                TempertureType TempertureType = tempertureType switch
+                {
+                    "常温" => TempertureType.Normal,
+                    "低温" => TempertureType.Low,
+                    "中温" => TempertureType.Medium,
+                    "高温" => TempertureType.High,
+                    _ => throw new Exception($"无效的温度类型: {row[2].ToString()}")
+                };
+                TempertureTypeList.Add(TempertureType);
+            }
+        }
+
         //回合数
-        Round = int.Parse(row[3].ToString());
+        if (row[3].ToString() == "/")
+        {
+            Round = new RoundCalculate(0, CalculateType.Greater);
+        }
+        else
+        {
+            CalculateType calculateType = row[3].ToString().Substring(0, 2) switch
+            {
+                ">=" => CalculateType.Greater,
+                "<=" => CalculateType.Less,
+                "==" => CalculateType.Equal,
+                _ => throw new Exception($"无效的计算类型: {row[3].ToString().Substring(0, 2)}")
+            };
+            Round = new RoundCalculate(int.Parse(row[3].ToString().Substring(2)), calculateType);
+        }
         //食物属性计算列表
         for (int i = 4; i < 12; i++)
         {
@@ -104,37 +139,39 @@ public class ProcessData
             FoodPropertyCalculateList.Add(new FoodPropertyCalculate((FoodProperty)i - 4, calculateType, int.Parse(row[i].ToString().Substring(2))));
         }
         //卡牌数据列表
-        for (int i = 12; i < row.ItemArray.Length; i++)
+        CardDataList.Clear();
+        if (row[12].ToString()!= "/")
         {
-            string data = row[i].ToString();
-            try
+            CalculateType calculateType = row[13].ToString().Substring(0, 2) switch
             {
-                // 分离卡牌列表和数量
-                string[] parts = data.Split('*');
-                if (parts.Length != 2)
-                {
-                    Debug.LogError("数据格式错误: " + data);
-                    return;
-                }
-
-                // 解析卡牌ID列表
-                string cardListPart = parts[0].Trim('(', ')');
-                string[] cardIds = cardListPart.Split(',');
-
-                // 解析数量
-                if (!int.TryParse(parts[1], out int count))
-                {
-                    Debug.LogError("数量解析失败: " + parts[1]);
-                    return;
-                }
-
-                // 赋值
-                CardDataList.Add(new ProcessCardData(new List<string>(cardIds), count));
-            }
-            catch (Exception e)
+                ">=" => CalculateType.Greater,
+                "<=" => CalculateType.Less,
+                "==" => CalculateType.Equal,
+                _ => throw new Exception($"无效的计算类型: {row[13].ToString().Substring(0, 2)}")
+            };
+            CardDataList.Add(new ProcessCardData(row[12].ToString().Split('+').ToList(),calculateType, int.Parse(row[13].ToString().Substring(2))));
+        }
+        if (row[14].ToString()!= "/")
+        {
+            CalculateType calculateType = row[15].ToString().Substring(0, 2) switch
             {
-                Debug.LogError($"解析数据失败: {data}, 错误: {e.Message}");
-            }
+                ">=" => CalculateType.Greater,
+                "<=" => CalculateType.Less,
+                "==" => CalculateType.Equal,
+                _ => throw new Exception($"无效的计算类型: {row[15].ToString().Substring(0, 2)}")
+            };
+            CardDataList.Add(new ProcessCardData(row[14].ToString().Split('+').ToList(),calculateType, int.Parse(row[15].ToString().Substring(2))));
+        }
+        if (row[16].ToString()!= "/")
+        {
+            CalculateType calculateType = row[17].ToString().Substring(0, 2) switch
+            {
+                ">=" => CalculateType.Greater,
+                "<=" => CalculateType.Less,
+                "==" => CalculateType.Equal,
+                _ => throw new Exception($"无效的计算类型: {row[17].ToString().Substring(0, 2)}")
+            };
+            CardDataList.Add(new ProcessCardData(row[16].ToString().Split('+').ToList(),calculateType, int.Parse(row[17].ToString().Substring(2))));
         }
     }
 }
@@ -186,13 +223,15 @@ public static class ProcessManager
     {
         List<ProcessData> result = new List<ProcessData>();
         result = FindProcessByCards(cardIdList);
+        List<ProcessData> filteredResult = new List<ProcessData>();
         foreach (ProcessData processData in result)
         {
-            if (!IsTempertureMatch(processData, tempertureDataList))
+            if (IsTempertureMatch(processData, tempertureDataList))
             {
-                result.Remove(processData);
+                filteredResult.Add(processData);
             }
         }
+        result = filteredResult;
         return result;
     }
     //根据配方列表的优先度判断结算的加工
@@ -244,9 +283,9 @@ public static class ProcessManager
         switch (foodPropertyCalculate.CalculateType)
         {
             case CalculateType.Greater:
-                return value > foodPropertyCalculate.Value;
+                return value >= foodPropertyCalculate.Value;
             case CalculateType.Less:
-                return value < foodPropertyCalculate.Value;
+                return value <= foodPropertyCalculate.Value;
             case CalculateType.Equal:
                 return value == foodPropertyCalculate.Value;
             default:
@@ -265,6 +304,17 @@ public static class ProcessManager
                 round += tempertureData.round;
             }
         }
-        return round >= processData.Round;
+        switch (processData.Round.CalculateType)
+        {
+            case CalculateType.Greater:
+                return round >= processData.Round.value;
+            case CalculateType.Less:
+                return round <= processData.Round.value;
+            case CalculateType.Equal:
+                return round == processData.Round.value;
+            default:
+                Debug.LogError($"无效的计算类型: {processData.Round.CalculateType}");
+                return false;
+        }
     }
 }
