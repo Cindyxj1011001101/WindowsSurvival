@@ -12,12 +12,16 @@ public class Painkillers : Card
     {
         Events = new()
         {
-            new Event("使用", "使用", Event_Use, null, () => 5,  () => new () { { PlayerStateEnum.PainLevel, -50 * Mathf.Pow(reduceRate, curReduceCount) } })
+            new Event("使用", "一天内多次使用效果减半,最多叠加2次", Event_Use, null, () => 5,  () => new () { { PlayerStateEnum.PainLevel, -50 * Mathf.Pow(reduceRate, curReduceCount) } })
         };
     }
     private void Event_Use(out string tip)
     {
+        DestroyThis();
         tip = string.Empty;
+        // 播放吃的音效
+        if(SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01",true);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, -50 * Mathf.Pow(reduceRate, curReduceCount));
         TimeManager.Instance.AddTime(5);
         curReduceCount++;
