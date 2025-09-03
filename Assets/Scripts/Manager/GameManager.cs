@@ -175,6 +175,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool IsCurrentEnvironment(Bag bag) => bag is EnvironmentBag env && env == curEnvironmentBag;
+
     public void AddCard(Card card, Bag targetBag)
     {
         card.StartUpdating();

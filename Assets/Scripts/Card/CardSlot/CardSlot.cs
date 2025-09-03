@@ -231,7 +231,7 @@ public class CardSlot : MonoBehaviour
                 slider.tipController.SetTip($"剩余燃料:    {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}", slider.fillColor);
                 iconLayout.SetActive(true);
                 fireIcon.gameObject.SetActive(true);
-                fireIcon.color = fuelStorageComponent.isFiring ? ColorManager.BurntOrange : ColorManager.DarkGrey;
+                fireIcon.color = fuelStorageComponent.isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
                 break;
             case TemperatureComponent temperatureComponent:
                 if (temperatureComponent.value <= 50)

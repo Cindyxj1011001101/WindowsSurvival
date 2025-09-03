@@ -203,12 +203,12 @@ public abstract class Card : IComparable<Card>
 
         isUpdating = true;
 
-        LateInit();
-
         foreach (var c in components.Values)
         {
             c.SetBelongedCard(this);
         }
+
+        LateInit();
 
         EventManager.Instance.AddListener(EventType.IntervalSettle, Update);
 
