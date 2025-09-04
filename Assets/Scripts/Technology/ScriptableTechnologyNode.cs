@@ -10,6 +10,13 @@ public enum TechType
     Resource,
 }
 
+public enum TechLevl
+{
+    Junior, // 初级
+    Intermediate, // 中级
+    Advanced // 高级
+}
+
 [CreateAssetMenu(fileName = "Technology", menuName = "ScriptableObject/Technology")]
 public class ScriptableTechnologyNode : ScriptableObject
 {
@@ -20,6 +27,7 @@ public class ScriptableTechnologyNode : ScriptableObject
     public List<ScriptableTechnologyNode> prerequisites; // 前置科技条件
     public int cost; // 需要消耗的科技点
     public TechType techType;
+    public TechLevl techLevel;
 
     private void OnValidate()
     {

@@ -12,6 +12,8 @@ public class TechnologyManager
     public float CurStudyRate { get; private set; }
     public bool AllTechnologiesStudied => techData.studiedTechNodes.Count == techData.techNodeDict.Count;
 
+    public bool IsIntermediateTechnologiesUnlocked => techData.isIntermediateTechnologiesUnlocked;
+
     private TechnologyManager()
     {
         techData = GameDataManager.Instance.TechnologyData;
@@ -121,8 +123,12 @@ public class TechnologyManager
     /// <returns></returns>
     public bool IsTechNodeLocked(ScriptableTechnologyNode techNode)
     {
-        // 前置条件都满足，则该科技解锁
-        return !(techNode.prerequisites.Count == 0 || techNode.prerequisites.All(t => techData.studiedTechNodes.Contains(t.techName)));
+        // 前置条件不满足，未解锁
+        if (!(techNode.prerequisites.Count == 0 || techNode.prerequisites.All(t => techData.studiedTechNodes.Contains(t.techName)))) return true;
+        // 中级科技未解锁
+        if (techNode.techLevel == TechLevl.Intermediate && !IsIntermediateTechnologiesUnlocked) return true;
+
+        return false;
     }
 
     /// <summary>
@@ -152,5 +158,35 @@ public class TechnologyManager
     public bool IsTechNodeBeingStudied(string techName)
     {
         return techData.curStudiedTechNodeName == techName;
+    }
+
+    /// <summary>
+    /// 解锁中级科技
+    /// </summary>
+    public void UnlockIntermediateTechnologies()
+    {
+        if (IsIntermediateTechnologiesUnlocked) return;
+
+        techData.isIntermediateTechnologiesUnlocked = true;
+
+        EventManager.Instance.TriggerEvent(EventType.LockUnlockIntermediateTechnologies);
+    }
+
+    /// <summary>
+    /// 锁定中级科技
+    /// </summary>
+    public void LockIntermediateTechnologies()
+    {
+        if (!IsIntermediateTechnologiesUnlocked) return;
+
+        // 设置中级科技为锁定
+        techData.isIntermediateTechnologiesUnlocked = false;
+
+        // 如果正在研究中级科技
+        if (CurStudiedTechNode != null && CurStudiedTechNode.techLevel == TechLevl.Intermediate)
+            // 暂停当前研究
+            StopStudy();
+
+        EventManager.Instance.TriggerEvent(EventType.LockUnlockIntermediateTechnologies);
     }
 }

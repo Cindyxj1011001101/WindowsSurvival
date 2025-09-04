@@ -13,7 +13,7 @@ public class StudyWindow : WindowBase
 
     [SerializeField] private StudyButton studyButton;
     [SerializeField] private UIStateSlider progressSlider;
-    [SerializeField] private Text studyRate;
+    [SerializeField] private Text studyInfo;
     [SerializeField] private Text studyTime;
 
     [SerializeField] private Transform detailLayout;
@@ -45,6 +45,7 @@ public class StudyWindow : WindowBase
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
         EventManager.Instance.AddListener(EventType.StudyStopped, OnStudyStopped);
+        EventManager.Instance.AddListener(EventType.LockUnlockIntermediateTechnologies, RefreshDisplay);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
 
@@ -69,6 +70,7 @@ public class StudyWindow : WindowBase
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
         EventManager.Instance.RemoveListener(EventType.StudyStopped, OnStudyStopped);
+        EventManager.Instance.RemoveListener(EventType.LockUnlockIntermediateTechnologies, RefreshDisplay);
     }
 
     private void OnStudyStarted(ScriptableTechnologyNode techNode)
@@ -270,12 +272,17 @@ public class StudyWindow : WindowBase
         // 显示研究速度
         if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
         {
-            studyRate.gameObject.SetActive(true);
-            studyRate.text = $"+{TechnologyManager.Instance.CurStudyRate:0.0}科技点/15min";
+            studyInfo.gameObject.SetActive(true);
+            studyInfo.text = $"+{TechnologyManager.Instance.CurStudyRate:0.0}科技点/15min";
+        }
+        else if (techNode.techLevel == TechLevl.Intermediate && TechnologyManager.Instance.IsTechNodeLocked(techNode))
+        {
+            studyInfo.gameObject.SetActive(true);
+            studyInfo.text = $"建造\"数据传输台\"解锁";
         }
         else
         {
-            studyRate.gameObject.SetActive(false);
+            studyInfo.gameObject.SetActive(false);
         }
     }
 

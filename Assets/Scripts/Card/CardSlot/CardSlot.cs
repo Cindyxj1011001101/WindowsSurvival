@@ -64,8 +64,6 @@ public class CardSlot : MonoBehaviour
         Clear();
         Cards?.SetCardSlot(null);
 
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
-
         EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
         EventManager.Instance.RemoveListener<Card>(EventType.PickUpCard, OnCardPickedUp);

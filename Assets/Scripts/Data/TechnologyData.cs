@@ -20,6 +20,8 @@ public class TechnologyData
 
     public Dictionary<string, TechNodeData> techNodeDict = new();
 
+    public bool isIntermediateTechnologiesUnlocked = false;
+
     [JsonIgnore]
     public TechNodeData CurStudiedTechNodeData => techNodeDict[curStudiedTechNodeName];
 }

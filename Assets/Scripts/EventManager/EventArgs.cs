@@ -23,6 +23,7 @@
     PutDownCard, // 放下一张卡牌
     StartSleeping, // 开始睡觉
     StopSleeping, // 停止睡觉
+    LockUnlockIntermediateTechnologies,
 }
 
 public class ChangeStateArgs

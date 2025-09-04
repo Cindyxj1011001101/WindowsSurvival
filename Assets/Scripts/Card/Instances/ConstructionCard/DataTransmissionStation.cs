@@ -9,6 +9,8 @@ public class DataTransmissionStation : ConstructionCard
 
     public float electricityConsume = 0.5f; // 每回合电力消耗
 
+    public bool counted = false; // 是否计算过数量
+
     private DataTransmissionStation()
     {
         Events = new()
@@ -44,6 +46,15 @@ public class DataTransmissionStation : ConstructionCard
         // 添加数据传输台使用次数的记录
         GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
 
+        if (!counted)
+        {
+            GlobalDataManager.Instance.saveData.AddCardNum(CardId);
+            counted = true;
+        }
+
+        // 解锁中级科技
+        TechnologyManager.Instance.UnlockIntermediateTechnologies();
+
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天时刷新
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, StartWorking);
         EventManager.Instance.AddListener(EventType.StudyStopped, StopWorking);
@@ -58,6 +69,13 @@ public class DataTransmissionStation : ConstructionCard
     protected override void OnDestroy()
     {
         StopWorking();
+
+        GlobalDataManager.Instance.saveData.RemoveCardNum(CardId);
+
+        if (GlobalDataManager.Instance.saveData.GetCardNum(CardId) <= 0)
+            // 锁定中级科技
+            TechnologyManager.Instance.LockIntermediateTechnologies();
+
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, StartWorking);
         EventManager.Instance.RemoveListener(EventType.StudyStopped, StopWorking);
@@ -65,7 +83,7 @@ public class DataTransmissionStation : ConstructionCard
 
     private void StartWorking(ScriptableTechnologyNode techNode)
     {
-        // TODO: 判断科技是否是中级科技
+        if (techNode.techLevel != TechLevl.Intermediate) return;
 
         if (stateMachine.currentStateName == "运行中") return;
 
@@ -130,7 +148,7 @@ public class DataTransmissionStation : ConstructionCard
         if (stateMachine.currentStateName == "待机中") return;
 
         // 电力不足自动停止研究
-        if (StateManager.Instance.Electricity.CurValue < electricityConsume) // TODO: 这里应该是 < electricityConsume * 研究台个数。当前这样写会导致即使有很多台传输台，只要有0.5的点就不会自动断开
+        if (StateManager.Instance.Electricity.CurValue < electricityConsume * GlobalDataManager.Instance.saveData.GetCardNum(CardId))
         {
             TechnologyManager.Instance.StopStudy(); // StopStudy会触发StopWorking方法，所以不用再在这里写一遍
             ShowTip("电力不足，研究已自动停止");
