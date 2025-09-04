@@ -268,7 +268,7 @@ public abstract class Card : IComparable<Card>
 
     public void DisplayComponentValueChange(Type componentType, float value)
     {
-        if (Slot != null) Slot.DisplayComponentValueChange(typeof(PlantGrowthComponent), -20);
+        if (Slot != null) Slot.DisplayComponentValueChange(componentType, value);
     }
 
     public void ShowTip(string tip)
