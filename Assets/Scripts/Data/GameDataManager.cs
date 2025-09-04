@@ -488,6 +488,7 @@ public class GameDataManager
 
     public void SaveGlobalData()
     {
+        // TODO: 这个全局数据应该是存档无关的
         JsonManager.SaveData(globalData, CurLoadName, "GlobalData");
     }
     #endregion

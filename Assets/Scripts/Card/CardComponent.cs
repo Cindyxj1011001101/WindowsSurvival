@@ -512,9 +512,14 @@ public class StateMachineComponent : CardComponent
         }
     }
 
+    public StateMachineComponent(List<CardState> states) : this(string.Empty, states) { }
+
     public void ChangeState(string newStateName)
     {
         if (!stateDict.ContainsKey(newStateName)) return;
+
+        if (currentStateName == newStateName) return;
+        
         currentStateName = newStateName;
         BelongedCard.RefreshSlot();
     }
@@ -525,7 +530,7 @@ public class StateMachineComponent : CardComponent
 public class PlantGrowthComponent : CardComponent, IUpdate
 {
     public float growthRate; // 生长速率
-    public float growth; // 生长进度
+    [JsonProperty] public float growth { get; private set; } // 生长进度
     public float maxGrowth; // 最大生长进度
     public int deadProgress; // 死亡进度
     public float minConfortTempreture; // 最低舒适温度
@@ -536,7 +541,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
     public float maxLiveTempture; // 最高存活温度
     public string deadCardId; // 死亡后变成的卡牌ID 
     public List<PressureLevel> pressureList = new List<PressureLevel>();
-    public bool StopGrow = false;
+    public bool growStopped = false;
 
     [JsonIgnore] public UnityAction onDead;
 
@@ -555,38 +560,46 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         deadProgress = 5; // 初始死亡进度
     }
 
+    public void AddGrowth(float delta)
+    {
+        growth += delta;
+        growth = Mathf.Clamp(growth, 0, 100);
+        BelongedCard.RefreshSlot();
+    }
+
     public void Update()
     {
-        if (deadProgress <= 0) return;
-        if (StopGrow) return;
+        if (deadProgress <= 0) return; // 已死亡
+
+        if (growStopped) return; // 暂停生长
+
         var bag = BelongedCard.Bag as EnvironmentBag;
         PressureLevel curPressureLevel = bag.PressureLevel;
 
-        bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var t);
-        float curTempture = 25;
-        if (t == null)
+        if (!pressureList.Contains(curPressureLevel)) return; // 压强不合适不生长
+
+        float curTempture;
+        if (bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var roomTemperature))
         {
-            Debug.LogWarning("当前没有环境温度信息，使用默认环境温度25度");
+            curTempture = roomTemperature.CurValue;
         }
         else
         {
-            curTempture = t.CurValue;
+            curTempture = 25;
+            Debug.LogWarning("当前地点没有环境温度信息，使用默认环境温度25度");
         }
-
-        if (!pressureList.Contains(curPressureLevel)) return;
-
 
         if (curTempture <= maxConfortTempreture && curTempture > minConfortTempreture)
         {
-            growth += growthRate * 1.2f; // 舒适区生长加快
+            AddGrowth(growthRate * 1.2f); // 舒适区生长加快
         }
         else if (curTempture <= maxGrowTempture && curTempture > minGrowTempture)
         {
-            growth += growthRate * 1f;
+            AddGrowth(growthRate * 1f);
         }
         else if (curTempture <= maxLiveTempture && curTempture > minLiveTempture)
         {
-            //不生长
+            // 不生长
         }
         else
         {
@@ -602,8 +615,6 @@ public class PlantGrowthComponent : CardComponent, IUpdate
             onDead?.Invoke();
             return;
         }
-
-        BelongedCard.RefreshSlot();
     }
 }
 #endregion
