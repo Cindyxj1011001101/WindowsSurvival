@@ -90,6 +90,7 @@ public class TechnologyManager
             techData.CurStudiedTechNodeData.progress = CurStudiedTechNode.cost;
             // 解锁该科技
             UnlockTechNode(CurStudiedTechNode);
+            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("FinishResearch", techData.CurStudiedTechNodeData.name));
             // 触发研究完成事件
             EventManager.Instance.TriggerEvent(EventType.StudyComplished, CurStudiedTechNode);
             // 停止研究
