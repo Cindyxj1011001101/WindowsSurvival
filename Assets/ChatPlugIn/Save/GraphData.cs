@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+
+public enum Direction
+{
+    Input,
+    Output
+}
 
     [Serializable]
     public class GraphData:ScriptableObject
