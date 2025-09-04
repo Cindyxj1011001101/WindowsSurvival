@@ -2482,7 +2482,7 @@ MonoBehaviour:
     typeName: Dialogue
     NodePos: {x: 13021.6, y: 2122.4}
     chatData:
-      MessageSender: 1
+      MessageSender: 0
       MessageCondition: 
       Message: "\u6CA1\u95EE\u9898\uFF01\u6211\u4F1A\u6309\u7167\u4F60\u8BF4\u7684\u505A\u7684"
       preWaitTime: 0
@@ -3407,10 +3407,6 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 6c41702aac68c9c4fa45bc6ba1594ca1
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 2edbc51983b57d947a2ce0577132d892
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: f13fe8a0ef20d4243aefd688e27ba2f4
-    inputPortName: "\u8F93\u5165"
   - outputNodeGUID: f13fe8a0ef20d4243aefd688e27ba2f4
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 2de1bdc434b9a654b98fb28afa528eba
@@ -3491,18 +3487,6 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 836bcf493f57add4e8c811783b1c1b5e
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 836bcf493f57add4e8c811783b1c1b5e
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 002ebc91516bf4f40b9afff100bfc449
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 002ebc91516bf4f40b9afff100bfc449
-    outputPortName: "\u54C8\u7279\u662F\u8C01?"
-    inputNodeGUID: a21aaa63e0cc5184daebca36beaae0e2
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: a21aaa63e0cc5184daebca36beaae0e2
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 2edbc51983b57d947a2ce0577132d892
-    inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 14e18dcae93531548adbc883f8ac16bc
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: db5aba64c7b06594aaa3abb3f6614030
@@ -3534,4 +3518,20 @@ MonoBehaviour:
   - outputNodeGUID: 5f5f9fd7aa7d68c47829956e8ca8e1bf
     outputPortName: "\u4F60\u4E3A\u4EC0\u4E48\u4E0D\u60CA\u8BB6\u554A?\u6211\u5BF9\u4F60\u6765\u8BF4\u662F\u53E4\u4EE3\u4EBA\u8BF6"
     inputNodeGUID: b582b7566450efe4ba7203660723f17c
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 002ebc91516bf4f40b9afff100bfc449
+    outputPortName: "\u54C8\u7279\u662F\u8C01?"
+    inputNodeGUID: a21aaa63e0cc5184daebca36beaae0e2
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 836bcf493f57add4e8c811783b1c1b5e
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 002ebc91516bf4f40b9afff100bfc449
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: a21aaa63e0cc5184daebca36beaae0e2
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 2edbc51983b57d947a2ce0577132d892
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 2edbc51983b57d947a2ce0577132d892
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: f13fe8a0ef20d4243aefd688e27ba2f4
     inputPortName: "\u8F93\u5165"
