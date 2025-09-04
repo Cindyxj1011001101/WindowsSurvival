@@ -212,11 +212,24 @@ public class StartSceneManager : MonoBehaviour
 
     private void OnClearDataClicked()
     {
-        string targetFolder = Application.persistentDataPath+"/";
         // 如果目标文件夹不存在，先创建
+        string targetFolder = Application.persistentDataPath+"/"+"Unity";
         if (Directory.Exists(targetFolder))
         {
             Directory.Delete(targetFolder, true);
+        }
+        targetFolder = Application.persistentDataPath + "/" + "LoadData";
+        if (Directory.Exists(targetFolder))
+        {
+            Directory.Delete(targetFolder, true);
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            targetFolder = Application.persistentDataPath + "/" + "GameData"+i.ToString();
+            if (Directory.Exists(targetFolder))
+            {
+                Directory.Delete(targetFolder, true);
+            }
         }
         //刷新存档按钮
         GameDataManager.Instance.ClearLoadData();
