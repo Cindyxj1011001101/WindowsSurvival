@@ -9,8 +9,6 @@ public class DataTransmissionStation : ConstructionCard
 
     public float electricityConsume = 0.5f; // 每回合电力消耗
 
-    public bool counted = false; // 是否计算过数量
-
     private DataTransmissionStation()
     {
         Events = new()
