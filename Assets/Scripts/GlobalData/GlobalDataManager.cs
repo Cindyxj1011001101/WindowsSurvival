@@ -1,44 +1,38 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class GlobalDataManager:MonoBehaviour
+public class GlobalDataManager : MonoBehaviour
 {
-        private static GlobalDataManager instance;
-        public static GlobalDataManager Instance => instance;
-        public GlobalData globalData=new GlobalData();
-        public GlobalData saveData=new GlobalData();
-        private void Awake()
+    private static GlobalDataManager instance;
+    public static GlobalDataManager Instance => instance;
+
+    public GlobalData globalData;
+    public GlobalData saveData;
+
+    private void Awake()
+    {
+        instance = this;
+
+        globalData = GameDataManager.Instance.GlobalData;
+        saveData = GameDataManager.Instance.SaveData;
+
+        EventManager.Instance.AddListener(EventType.AnotherDay, OnAnotherDay);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener(EventType.AnotherDay, OnAnotherDay);
+    }
+
+    private void OnAnotherDay()
+    {
+        SolveReduce();
+    }
+
+    private void SolveReduce()
+    {
+        foreach (var reduce in saveData.reduceActionDict.Values)
         {
-                if (instance == null)
-                {
-                        instance = this;
-                        DontDestroyOnLoad(gameObject);
-                }
-                else
-                {
-                        Destroy(gameObject);
-                }
-                EventManager.Instance.AddListener(EventType.AnotherDay,OnAnotherDay);
+            reduce.curReduceCount = 0;
         }
-
-        private void OnDestroy()
-        {
-                EventManager.Instance.RemoveListener(EventType.AnotherDay,OnAnotherDay);
-        }
-
-        private void OnAnotherDay()
-        {
-                SolveReduce();
-
-        }
-
-        private void SolveReduce()
-        {
-                foreach (var reduce in saveData.ReduceActionDict)
-                {
-                        Debug.Log("1");
-                        reduce.Value.curReduceCount=0;       
-                }
-        }
-
+    }
 }

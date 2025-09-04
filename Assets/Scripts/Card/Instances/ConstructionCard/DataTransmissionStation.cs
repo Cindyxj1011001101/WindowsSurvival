@@ -7,34 +7,31 @@ public class DataTransmissionStation : ConstructionCard
 {
     private StateMachineComponent stateMachine;
 
-    public int maxTimes = 2; // 一天内最多可使用次数
-    public int curTimes = 0; // 当前使用次数
-
     public float electricityConsume = 0.5f; // 每回合电力消耗
 
     private DataTransmissionStation()
     {
         Events = new()
         {
-            new Event("数据传输", "使当前研究科技的研究进度加28", Event_Transmit, Judge_Transmit, () => 60, () => new() { { PlayerStateEnum.Sobriety, -10 } }, () => new() { { EnvironmentStateEnum.Electricity, -5f } }),
+            new Event("数据传输", "使当前研究科技的研究进度加28" +
+            $"\n（数据传输1天内最多可以进行2次，当日已进行次数:  {GlobalDataManager.Instance.saveData.GetCurrentReduceCount(CardId)}）",
+            Event_Transmit,
+            Judge_Transmit,
+            () => 60,
+            () => new() { { PlayerStateEnum.Sobriety, -10 } }, () => new() { { EnvironmentStateEnum.Electricity, -5f } }),
         };
     }
 
     public override void LateInit()
     {
         base.LateInit();
+
+        EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天时刷新
         EventManager.Instance.AddListener(EventType.StudyStarted, StartWorking);
         EventManager.Instance.AddListener(EventType.StudyStoped, StopWorking);
-        if (!GlobalDataManager.Instance.saveData.ReduceActionDict.ContainsKey(CardId))
-        {
-            GlobalDataManager.Instance.saveData.ReduceActionDict.Add(CardId,
-                new Reduce()
-                {
-                    maxReduceCount = 2,
-                    curReduceCount = 0,
-                    reduceRate = 0.5f
-                });
-        }
+
+        // 添加数据传输台使用次数的记录
+        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
 
         // 未布置和已布置两种状态
         if (!TryGetComponent(out stateMachine))
@@ -60,6 +57,7 @@ public class DataTransmissionStation : ConstructionCard
         base.DestroyThis();
 
         StopWorking();
+        EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
         EventManager.Instance.RemoveListener(EventType.StudyStarted, StartWorking);
         EventManager.Instance.RemoveListener(EventType.StudyStoped, StopWorking);
     }
@@ -89,16 +87,19 @@ public class DataTransmissionStation : ConstructionCard
         tip = string.Empty;
         StateManager.Instance.ChangeElectricity(-5f);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -10);
-        TechnologyManager.Instance.AddStudyProcess(28);
-        GlobalDataManager.Instance.saveData.AddCardReduce(CardId);
+
+        TechnologyManager.Instance.AddStudyProcess(28); // 研究进度增加
+
+        GlobalDataManager.Instance.saveData.AddReduceCount(CardId); // 使用次数增加
+
         TimeManager.Instance.AddTime(60);
     }
 
     private bool Judge_Transmit(out string hint)
     {
         hint = string.Empty;
-        if (GlobalDataManager.Instance.saveData.ReduceActionDict[CardId].curReduceCount>= 
-            GlobalDataManager.Instance.saveData.ReduceActionDict[CardId].maxReduceCount)
+
+        if (GlobalDataManager.Instance.saveData.IsReduceCountMax(CardId))
         {
             hint = "当日内可以进行的数据传输次数已达上限";
             return false;
@@ -117,15 +118,5 @@ public class DataTransmissionStation : ConstructionCard
         }
 
         return true;
-    }
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        if (TimeManager.Instance.AnotherDay())
-        {
-            RefreshSlot();
-        }
     }
 }

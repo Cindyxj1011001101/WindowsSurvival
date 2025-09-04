@@ -60,6 +60,9 @@ public class GameDataManager
         windowsData = JsonManager.LoadData<WindowsData>(CurLoadName, "WindowsData");
         // 探索移动额外消耗数据
         behaviourExtraEffectsData = JsonManager.LoadData<BehaviourExtraEffectsData>(CurLoadName, "BehaviourExtraEffectsData");
+        // 全局数据
+        saveData = JsonManager.LoadData<GlobalData>(CurLoadName, "SaveData");
+        globalData = JsonManager.LoadData<GlobalData>(CurLoadName, "GlobalData");
     }
 
     public void SaveAllData()
@@ -88,6 +91,9 @@ public class GameDataManager
         SaveWindowsData();
         // 探索移动额外消耗数据
         SaveBehaviourExtraEffectsData();
+        // 全局数据
+        SaveSaveData();
+        SaveGlobalData();
 
         if (loadData == null)
         {
@@ -463,6 +469,26 @@ public class GameDataManager
             exploreInWaterExtraEffects = GameManager.Instance.ExploreInWaterExtraEffects
         };
         JsonManager.SaveData(behaviourExtraEffectsData, CurLoadName, "BehaviourExtraEffectsData");
+    }
+    #endregion
+
+    #region 全局数据
+    private GlobalData saveData;
+
+    public GlobalData SaveData => saveData;
+
+    public void SaveSaveData()
+    {
+        JsonManager.SaveData(saveData, CurLoadName, "SaveData");
+    }
+
+    private GlobalData globalData;
+
+    public GlobalData GlobalData => globalData;
+
+    public void SaveGlobalData()
+    {
+        JsonManager.SaveData(globalData, CurLoadName, "GlobalData");
     }
     #endregion
 }

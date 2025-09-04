@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class CoralReef : Card
@@ -11,24 +9,25 @@ public class CoralReef : Card
         {
             new Event("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig, () => 45),
             new Event("欣赏", "一天内多次欣赏获得的数值会衰减", Event_Enjoy, null,() => 15,
-            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, 6 * GlobalDataManager.Instance.saveData.GetReduce(CardId) }, { PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.saveData.GetReduce(CardId)} })
+            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, 6 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId) }, { PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId)} })
         };
     }
     public override void LateInit()
     {
         base.LateInit();
-        if (!GlobalDataManager.Instance.saveData.ReduceActionDict.ContainsKey(CardId))
-        {
-            GlobalDataManager.Instance.saveData.ReduceActionDict.Add(CardId,
-                new Reduce()
-                {
-                    maxReduceCount = 2,
-                    curReduceCount = 0,
-                    reduceRate = 0.5f
-                });
-        }
 
+        EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天刷新
+
+        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
     }
+
+    public override void DestroyThis()
+    {
+        base.DestroyThis();
+
+        EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
+    }
+
     private void Event_Dig(out string tip)
     {
         DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
@@ -48,12 +47,14 @@ public class CoralReef : Card
     private void Event_Enjoy(out string tip)
     {
         tip = string.Empty;
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 6 *GlobalDataManager.Instance.saveData.GetReduce(CardId));
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4 *GlobalDataManager.Instance.saveData.GetReduce(CardId));
-        GlobalDataManager.Instance.saveData.AddCardReduce(CardId);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 6 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId));
+
+        GlobalDataManager.Instance.saveData.AddReduceCount(CardId);
+
         TimeManager.Instance.AddTime(15);
     }
-    
+
     private void RandomDrop()
     {
         int rand = Random.Range(0, 45);
@@ -77,37 +78,26 @@ public class CoralReef : Card
 
     private void DigByTool(Card tool, out string tip)
     {
+        tip = string.Empty;
         tool.Use();
 
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("挖掘废料_01", true);
-        tip = string.Empty;
+
         TimeManager.Instance.AddTime(45);
+
         RandomDrop();
         RandomDrop();
     }
 
     public override bool CanQuickInteract(Card card)
     {
-        // 允许和带有切割标签的卡牌快速交互
-        if (card.TryGetComponent<ToolComponent>(out var component))
-        {
-            if (component.toolTypes.Contains(ToolType.Dig)) return true;
-        }
-        return false;
+        // 允许和带有挖掘标签的卡牌快速交互
+        return card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig);
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
         DigByTool(slot.PeekCard(), out tip);
-    }
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        if (TimeManager.Instance.AnotherDay())
-        {
-            RefreshSlot();
-        }
     }
 }

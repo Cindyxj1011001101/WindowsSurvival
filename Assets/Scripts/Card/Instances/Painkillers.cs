@@ -1,55 +1,44 @@
-using UnityEngine;
-
 /// <summary>
 /// 止痛药
 /// </summary>
 public class Painkillers : Card
 {
-    public int maxReduceCount = 2;
-    public int curReduceCount = 0;
-    public float reduceRate = 0.5f;
     private Painkillers()
     {
         Events = new()
         {
-            new Event("使用", "使用", Event_Use, null, () => 5,  () => new () { { PlayerStateEnum.PainLevel, -50 * GlobalDataManager.Instance.saveData.GetReduce(CardId) } })
+            new Event("使用", "使用止痛药。这可以缓解疼痛，但是一天内使用多次效果会变差", Event_Use, null, () => 5,  () => new () { { PlayerStateEnum.PainLevel, -50 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId) } })
         };
     }
 
     public override void LateInit()
     {
         base.LateInit();
-        if (!GlobalDataManager.Instance.saveData.ReduceActionDict.ContainsKey(CardId))
-        {
-            GlobalDataManager.Instance.saveData.ReduceActionDict.Add(CardId,
-                new Reduce()
-                {
-                    maxReduceCount = 2,
-                    curReduceCount = 0,
-                    reduceRate = 0.5f
-                });
-        }
+
+        EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot);
+
+        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
+    }
+
+    public override void DestroyThis()
+    {
+        base.DestroyThis();
+
+        EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
     }
 
     private void Event_Use(out string tip)
     {
-        DestroyThis();
         tip = string.Empty;
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, -50 * GlobalDataManager.Instance.saveData.GetReduce(CardId));
+        DestroyThis();
         // 播放吃的音效
-        if(SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("吃_01",true);
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound("吃_01", true);
+
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, -50 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId));
+
+        GlobalDataManager.Instance.saveData.AddReduceCount(CardId);
+
         TimeManager.Instance.AddTime(5);
-        GlobalDataManager.Instance.saveData.AddCardReduce(CardId);
-    }
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        if (TimeManager.Instance.AnotherDay())
-        {
-            RefreshSlot();
-        }
     }
 }

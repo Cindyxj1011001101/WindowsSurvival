@@ -1,37 +1,81 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Reduce
 {
-        public int maxReduceCount = 2;
-        public int curReduceCount = 0;
-        public float reduceRate = 0.5f;
-        public float reduce => Mathf.Pow(reduceRate, curReduceCount);
+    public int maxReduceCount = 2;
+    public int curReduceCount = 0;
+    public float reduceRate = 0.5f;
+
+    [JsonIgnore]
+    public float ReduceRate => Mathf.Pow(reduceRate, curReduceCount);
+
+    public Reduce() { }
+
+    public Reduce(int maxReduceCount)
+    {
+        curReduceCount = 0;
+        this.maxReduceCount = maxReduceCount;
+    }
+
+    public Reduce(int maxReduceCount, float reduceRate) : this(maxReduceCount)
+    {
+        this.reduceRate = reduceRate;
+    }
+
+    public void AddReduceCount()
+    {
+        curReduceCount++;
+        curReduceCount = Mathf.Clamp(curReduceCount, 0, maxReduceCount);
+    }
 }
+
 public class GlobalData
 {
-        public Dictionary<string, Reduce> ReduceActionDict = new  Dictionary<string, Reduce>();
+    public Dictionary<string, Reduce> reduceActionDict = new();
 
-        public GlobalData()
+    public GlobalData()
+    {
+
+    }
+
+    public void AddReduceCount(string key)
+    {
+        if (reduceActionDict.TryGetValue(key, out var value))
         {
-                ReduceActionDict = new Dictionary<string, Reduce>();
+            value.AddReduceCount();
         }
-        public void AddCardReduce(string CardId)
+    }
+
+    public float GetReduceRate(string key)
+    {
+        if (reduceActionDict.ContainsKey(key))
         {
-                if (ReduceActionDict.ContainsKey(CardId))
-                {
-                        ReduceActionDict[CardId].curReduceCount++;
-                        ReduceActionDict[CardId].curReduceCount=Mathf.Min(
-                                ReduceActionDict[CardId].maxReduceCount,
-                                ReduceActionDict[CardId].curReduceCount);
-                }
+            return reduceActionDict[key].ReduceRate;
         }
-        public float GetReduce(string CardId)
+        return 1;
+    }
+
+    public int GetCurrentReduceCount(string key)
+    {
+        if (reduceActionDict.ContainsKey(key))
         {
-                if (ReduceActionDict.ContainsKey(CardId))
-                {
-                        return ReduceActionDict[CardId].reduce;
-                }
-                return 1;
+            return reduceActionDict[key].curReduceCount;
         }
+        return -1;
+    }
+
+    public void AddReduceAction(string key, Reduce reduce)
+    {
+        if (!reduceActionDict.ContainsKey(key))
+            reduceActionDict.Add(key, reduce);
+    }
+
+    public bool IsReduceCountMax(string key)
+    {
+        if (!reduceActionDict.TryGetValue(key, out var value)) return false;
+
+        return value.curReduceCount == value.maxReduceCount;
+    }
 }

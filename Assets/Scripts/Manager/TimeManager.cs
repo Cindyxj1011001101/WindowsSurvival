@@ -69,40 +69,36 @@ public class TimeManager : MonoBehaviour
         // 等待动画
         MouseManager.Instance.Wait();
 
-        int time = minute;
+        int timespan = minute;
         CurTime = CurTime.AddMinutes(minute);
-        while (time != 0)
+
+        while (timespan != 0)
         {
-            if (time >= curInterval)
+            if (timespan >= curInterval)
             {
-                time -= curInterval;
+                timespan -= curInterval;
                 curInterval = SettleInterval;
                 // ChatConditionManager.Instance.TrackCurrentStatus();
                 EventManager.Instance.TriggerEvent(EventType.Update);
             }
             else
             {
-                curInterval -= time;
-                time = 0;
+                curInterval -= timespan;
+                timespan = 0;
             }
         }
 
         AnotherDay();
-        lastDay = CurTime.Date;
 
         EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
     }
 
     public bool AnotherDay()
     {
-        if (CurTime.Date != lastDay)
-        {
-            EventManager.Instance.TriggerEvent(EventType.AnotherDay);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if (CurTime.Date == lastDay) return false;
+
+        lastDay = CurTime.Date;
+        EventManager.Instance.TriggerEvent(EventType.AnotherDay);
+        return true;
     }
 }
