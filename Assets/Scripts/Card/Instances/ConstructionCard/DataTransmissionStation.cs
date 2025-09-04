@@ -137,6 +137,8 @@ public class DataTransmissionStation : ConstructionCard
         {
             TechnologyManager.Instance.StopStudy(); // StopStudy会触发StopWorking方法，所以不用再在这里写一遍
             ShowTip("电力不足，研究已自动停止");
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("数据传输台没电", true);
         }
     }
 }
