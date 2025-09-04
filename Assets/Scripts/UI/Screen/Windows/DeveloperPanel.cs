@@ -21,6 +21,9 @@ public class DeveloperPanel : MonoBehaviour
     public InputField inputStateValue;  // 数值
     public Button btnApplyState;        // 应用按钮
 
+    [Header("其他控制UI")]
+    public Button btnAddStudyProcess;   // 研究进度增加按钮
+
     private float lastShiftTime = 0f;
     private const float doubleClickInterval = 0.3f;
 
@@ -33,6 +36,7 @@ public class DeveloperPanel : MonoBehaviour
     {
         InitCardAddUI();
         InitPlayerStateUI();
+        InitOtherUI();
 
         if (panelRoot != null) panelRoot.SetActive(false);
     }
@@ -73,6 +77,13 @@ public class DeveloperPanel : MonoBehaviour
         }
         if (inputStateValue != null) inputStateValue.text = "10";
         if (btnApplyState != null) btnApplyState.onClick.AddListener(OnApplyStateClicked);
+    }
+    /// <summary>
+    /// 初始化其他控制UI
+    /// </summary>
+    private void InitOtherUI()
+    {
+        if (btnAddStudyProcess != null) btnAddStudyProcess.onClick.AddListener(OnApplyAddStudyProcess);
     }
 
     private void Update()
@@ -149,6 +160,15 @@ public class DeveloperPanel : MonoBehaviour
 
         StateManager.Instance.ChangePlayerState(stateEnum, value);
     }
+    private void OnApplyAddStudyProcess()
+    {
+        if (TechnologyManager.Instance.CurStudiedTechNode != null)
+        {
+            TechnologyManager.Instance.AddStudyProcess(99999999); // 研究进度增加
+        }
+        
+    }
+    
 }
 
 
