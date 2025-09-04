@@ -46,15 +46,6 @@ public class DataTransmissionStation : ConstructionCard
         // 添加数据传输台使用次数的记录
         GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
 
-        if (!counted)
-        {
-            GlobalDataManager.Instance.saveData.AddCardNum(CardId);
-            counted = true;
-        }
-
-        // 解锁中级科技
-        TechnologyManager.Instance.UnlockIntermediateTechnologies();
-
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天时刷新
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, StartWorking);
         EventManager.Instance.AddListener(EventType.StudyStopped, StopWorking);
@@ -69,12 +60,6 @@ public class DataTransmissionStation : ConstructionCard
     protected override void OnDestroy()
     {
         StopWorking();
-
-        GlobalDataManager.Instance.saveData.RemoveCardNum(CardId);
-
-        if (GlobalDataManager.Instance.saveData.GetCardNum(CardId) <= 0)
-            // 锁定中级科技
-            TechnologyManager.Instance.LockIntermediateTechnologies();
 
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, StartWorking);
@@ -148,7 +133,7 @@ public class DataTransmissionStation : ConstructionCard
         if (stateMachine.currentStateName == "待机中") return;
 
         // 电力不足自动停止研究
-        if (StateManager.Instance.Electricity.CurValue < electricityConsume * GlobalDataManager.Instance.saveData.GetCardNum(CardId))
+        if (StateManager.Instance.Electricity.CurValue < electricityConsume * GlobalDataManager.Instance.GetCardNum(CardId))
         {
             TechnologyManager.Instance.StopStudy(); // StopStudy会触发StopWorking方法，所以不用再在这里写一遍
             ShowTip("电力不足，研究已自动停止");

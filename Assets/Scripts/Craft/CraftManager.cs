@@ -46,38 +46,7 @@ public class CraftManager
         EventManager.Instance.TriggerEvent(EventType.UnlockRecipe);
     }
 
-    ///// <summary>
-    ///// 判断一个配方能否合成
-    ///// </summary>
-    ///// <param name="recipe"></param>
-    //public bool CanCrfat(ScriptableRecipe recipe, out string hint)
-    //{
-    //    hint = string.Empty;
-    //    // 配方未解锁，则无法合成
-    //    if (IsRecipeLocked(recipe)) return false;
-
-    //    // 配方已解锁，看材料是否充足
-    //    PlayerBag playerBag = GameManager.Instance.PlayerBag;
-    //    foreach (var material in recipe.materials)
-    //    {
-    //        // 任何一项材料不满足数量需求，不能合成
-    //        if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum)
-    //        {
-    //            hint = "缺少制作材料";
-    //            return false;
-    //        }
-    //    }
-
-    //    // 材料充足，看有没有制造限制
-    //    if (recipe.CardInstance is ConstructionCard constructionCard)
-    //    {
-    //        return constructionCard.CanPlace(out hint);
-    //    }
-
-    //    return true;
-    //}
-
-    public bool CanCrfat(ScriptableRecipe recipe, out Dictionary<string, bool> limitations)
+    public bool CanCrfat(ScriptableRecipe recipe, out Dictionary<string, bool> limitations, out string hint)
     {
         limitations = null;
 
@@ -88,21 +57,38 @@ public class CraftManager
             // 任意一项限制不满足不能建造
             foreach (var met in limitations.Values)
             {
+                hint = "存在限制";
                 if (!met) return false;
             }
         }
 
         // 配方未解锁，则无法合成
-        if (IsRecipeLocked(recipe)) return false;
+        if (IsRecipeLocked(recipe))
+        {
+            hint = "未解锁";
+            return false;
+        }
+
+        // 数量达到上限，无法合成
+        if (GlobalDataManager.Instance.GetCardNum(recipe.cardId) >= recipe.craftLimit)
+        {
+            hint = "已达上限";
+            return false;
+        }
 
         // 配方已解锁，看材料是否充足
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
         foreach (var material in recipe.materials)
         {
             // 任何一项材料不满足数量需求，不能合成
-            if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum) return false;
+            if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum)
+            {
+                hint = "材料不足";
+                return false;
+            }
         }
 
+        hint = string.Empty;
         return true;
     }
 

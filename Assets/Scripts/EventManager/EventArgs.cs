@@ -24,6 +24,7 @@
     StartSleeping, // 开始睡觉
     StopSleeping, // 停止睡觉
     LockUnlockIntermediateTechnologies,
+    CardNumChange,
 }
 
 public class ChangeStateArgs
@@ -36,7 +37,6 @@ public class ChangeStateArgs
         state = s;
         value = i;
     }
-
 }
 
 public class ChangePlayerBagCardsArgs

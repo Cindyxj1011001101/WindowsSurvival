@@ -25,6 +25,18 @@ public class TechnologyManager
         if (CurStudiedTechNode != null)
             Study(CurStudiedTechNode);
         CurStudyRate = CalcStudyRate();
+
+        // 监听数据传输台的数量变化
+        EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, OnCardNumChanged);
+    }
+
+    private void OnCardNumChanged((string cardId, int num) args)
+    {
+        // 当数据传输台的数量变化时，锁定或解锁中级科技
+        if (args.cardId != "数据传输台") return;
+
+        if (args.num == 0) LockIntermediateTechnologies();
+        else if (args.num > 0) UnlockIntermediateTechnologies();
     }
 
     /// <summary>
@@ -112,8 +124,6 @@ public class TechnologyManager
         {
             CraftManager.Instance.UnlockRecipe(recipe);
         }
-
-
     }
 
     /// <summary>

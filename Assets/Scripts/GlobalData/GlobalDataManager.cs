@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class GlobalDataManager : MonoBehaviour
 {
@@ -7,6 +8,45 @@ public class GlobalDataManager : MonoBehaviour
 
     public GlobalData globalData;
     public GlobalData saveData;
+
+    #region 卡牌数量
+    // 不需要持久化，这个是运行时数据
+    // 不需要持久化，这个是运行时数据
+    private Dictionary<string, int> cardNumDict = new(); // 卡牌数量
+
+    public void AddCardNum(string cardId, int num = 1)
+    {
+        if (cardNumDict.ContainsKey(cardId))
+        {
+            cardNumDict[cardId] += num;
+        }
+        else
+        {
+            cardNumDict.Add(cardId, num);
+        }
+
+        EventManager.Instance.TriggerEvent(EventType.CardNumChange, (cardId, cardNumDict[cardId]));
+    }
+
+    public void RemoveCardNum(string cardId, int num = 1)
+    {
+        if (cardNumDict.ContainsKey(cardId))
+        {
+            cardNumDict[cardId] -= num;
+
+            EventManager.Instance.TriggerEvent(EventType.CardNumChange, (cardId, cardNumDict[cardId]));
+        }
+    }
+
+    public int GetCardNum(string cardId)
+    {
+        if (cardNumDict.TryGetValue(cardId, out var num))
+        {
+            return num;
+        }
+        return 0;
+    }
+    #endregion
 
     private void Awake()
     {

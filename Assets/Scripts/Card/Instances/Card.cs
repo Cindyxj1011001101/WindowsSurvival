@@ -224,6 +224,8 @@ public abstract class Card : IComparable<Card>
         }
 
         Start();
+
+        GlobalDataManager.Instance.AddCardNum(CardId);
     }
 
     /// <summary>
@@ -287,6 +289,8 @@ public abstract class Card : IComparable<Card>
         SlotCards.RemoveCard(this);
 
         OnLeaveEnvironment();
+
+        GlobalDataManager.Instance.RemoveCardNum(CardId);
     }
 
     protected virtual void OnDestroy() { }

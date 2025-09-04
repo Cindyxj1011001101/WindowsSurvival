@@ -14,7 +14,7 @@ public  class CraftButton : HoverableButton
         //hoverTipController = gameObject.AddComponent<HoverTipController>();
     }
 
-    public void DisplayButton(bool isLocked, bool canCraft/*, string hint*/)
+    public void DisplayButton(bool isLocked, bool canCraft, string hint)
     {
         if (isLocked)
         {
@@ -36,7 +36,10 @@ public  class CraftButton : HoverableButton
         {
             Interactable = false;
             iconObject.SetActive(false);
-            text.text = "不可制作";
+            if (string.IsNullOrEmpty(hint))
+                text.text = "不可制作";
+            else
+                text.text = hint;
             text.color = ColorManager.LightGrey;
             //hoverTipController.enabled = true;
         }

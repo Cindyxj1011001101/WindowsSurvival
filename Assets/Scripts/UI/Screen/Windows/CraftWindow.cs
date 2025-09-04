@@ -36,6 +36,7 @@ public class CraftWindow : WindowBase
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshDisplay);
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, RefreshDisplay);
         EventManager.Instance.AddListener(EventType.UnlockRecipe, RefreshDisplay);
+        EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
     }
 
     private void OnDestroy()
@@ -43,6 +44,7 @@ public class CraftWindow : WindowBase
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshDisplay);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, RefreshDisplay);
         EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshDisplay);
+        EventManager.Instance.RemoveListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
     }
 
     protected override void Init()
@@ -65,6 +67,11 @@ public class CraftWindow : WindowBase
     }
 
     private void RefreshDisplay(EnvironmentBag env)
+    {
+        RefreshDisplay();
+    }
+
+    private void RefreshDisplay((string, int) args)
     {
         RefreshDisplay();
     }
@@ -123,7 +130,7 @@ public class CraftWindow : WindowBase
             {
                 return 2; // 未解锁的排在最后
             }
-            else if (!CraftManager.Instance.CanCrfat(recipe, out _))
+            else if (!CraftManager.Instance.CanCrfat(recipe, out _, out _))
             {
                 return 1; // 不可合成的排在中间
             }
@@ -141,7 +148,7 @@ public class CraftWindow : WindowBase
             recipeItem.DisplayRecipe(
                 recipe.CardImage,
                 CraftManager.Instance.IsRecipeLocked(recipe),
-                CraftManager.Instance.CanCrfat(recipe, out _)
+                CraftManager.Instance.CanCrfat(recipe, out _, out _)
                 );
             recipeItem.button.onClick.RemoveAllListeners();
             recipeItem.button.onClick.AddListener(() =>
@@ -229,11 +236,11 @@ public class CraftWindow : WindowBase
         craftTimeText.text = sb.ToString();
 
         // 不可制作的卡牌，卡牌槽变灰
-        bool canCraft = CraftManager.Instance.CanCrfat(recipe, out var limitations);
+        bool canCraft = CraftManager.Instance.CanCrfat(recipe, out var limitations, out var hint);
         slot.GetComponent<CanvasGroup>().alpha = canCraft ? 1f : 0.14f;
 
         // 显示制作按钮
-        craftButton.DisplayButton(CraftManager.Instance.IsRecipeLocked(recipe), canCraft);
+        craftButton.DisplayButton(CraftManager.Instance.IsRecipeLocked(recipe), canCraft, hint);
 
         // 添加制作事件
         craftButton.onClick.RemoveAllListeners();

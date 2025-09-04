@@ -33,14 +33,8 @@ public class Reduce
 
 public class GlobalData
 {
+    #region 每日衰减
     public Dictionary<string, Reduce> reduceActionDict = new();
-
-    public Dictionary<string, int> cardNumDict = new(); // 卡牌数量
-
-    public GlobalData()
-    {
-
-    }
 
     public void AddReduceCount(string key)
     {
@@ -80,33 +74,5 @@ public class GlobalData
 
         return value.curReduceCount == value.maxReduceCount;
     }
-
-    public void AddCardNum(string cardId, int num = 1)
-    {
-        if (cardNumDict.ContainsKey(cardId))
-        {
-            cardNumDict[cardId] += num;
-        }
-        else
-        {
-            cardNumDict.Add(cardId, num);
-        }
-    }
-
-    public void RemoveCardNum(string cardId, int num = 1)
-    {
-        if (cardNumDict.ContainsKey(cardId))
-        {
-            cardNumDict[cardId] -= num;
-        }
-    }
-
-    public int GetCardNum(string cardId)
-    {
-        if (cardNumDict.TryGetValue(cardId, out var num))
-        {
-            return num;
-        }
-        return 0;
-    }
+    #endregion
 }
