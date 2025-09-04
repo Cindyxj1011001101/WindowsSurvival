@@ -14,7 +14,7 @@ public class DataTransmissionStation : ConstructionCard
         Events = new()
         {
             new Event("数据传输", "使当前研究科技的研究进度加28" +
-            $"\n（数据传输1天内最多可以进行2次，当日已进行次数:  {GlobalDataManager.Instance.saveData.GetCurrentReduceCount(CardId)}）",
+            $"\n（数据传输1天内最多可以进行2次）",
             Event_Transmit,
             Judge_Transmit,
             () => 60,
