@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
+﻿using System.Collections.Generic;
 using UnityEngine;
 public class ReadChatParagraph:MonoBehaviour
 {

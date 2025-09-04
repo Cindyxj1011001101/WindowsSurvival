@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Data;
 public enum MessageSenderEnum
 {
     NPC, //NPC
