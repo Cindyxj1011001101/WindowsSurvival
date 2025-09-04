@@ -219,8 +219,9 @@ public class StartSceneManager : MonoBehaviour
             Directory.Delete(targetFolder, true);
         }
         //刷新存档按钮
-        RefreshLoadButton();
         GameDataManager.Instance.ClearLoadData();
+        RefreshLoadButton();
+
     }
 
     #endregion
