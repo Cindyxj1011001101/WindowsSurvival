@@ -44,7 +44,7 @@ public class MFXUtility
     public static CardSlot CreateSlot(Vector2 screenPosition)
     {
         // 实例化预制体
-        GameObject slotObj = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/CardSlot", "CardSlot", WindowsManager.Instance.TempCardSlotLayer);
+        GameObject slotObj = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/CardSlot", "TempCardSlot", WindowsManager.Instance.TempCardSlotLayer);
 
         // 获取RectTransform并设置位置
         RectTransform slotRect = slotObj.GetComponent<RectTransform>();
@@ -111,10 +111,10 @@ public class MFXUtility
     {
         var seq = DOTween.Sequence();
 
-        Card card;
+        
         for (int i = 0; i < cards.Count; i++)
         {
-            card = cards[i];
+            Card card = cards[i];
             seq.Join(MoveCard(
                 card,
                 1,
