@@ -22,16 +22,9 @@ public class DataTransmissionStation : ConstructionCard
         };
     }
 
-    public override void LateInit()
+    public override void Awake()
     {
-        base.LateInit();
-
-        EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天时刷新
-        EventManager.Instance.AddListener(EventType.StudyStarted, StartWorking);
-        EventManager.Instance.AddListener(EventType.StudyStoped, StopWorking);
-
-        // 添加数据传输台使用次数的记录
-        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
+        base.Awake();
 
         // 未布置和已布置两种状态
         if (!TryGetComponent(out stateMachine))
@@ -44,26 +37,36 @@ public class DataTransmissionStation : ConstructionCard
             stateMachine = new StateMachineComponent("待机中", states);
             AddComponent(stateMachine);
         }
+    }
+
+    protected override void Start()
+    {
+        // 添加数据传输台使用次数的记录
+        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
+
+        EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天时刷新
+        EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, StartWorking);
+        EventManager.Instance.AddListener(EventType.StudyStopped, StopWorking);
 
         // 当前有科技在研究
         if (TechnologyManager.Instance.CurStudiedTechNode != null)
         {
-            StartWorking();
+            StartWorking(TechnologyManager.Instance.CurStudiedTechNode);
         }
     }
 
-    public override void DestroyThis()
+    protected override void OnDestroy()
     {
-        base.DestroyThis();
-
         StopWorking();
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
-        EventManager.Instance.RemoveListener(EventType.StudyStarted, StartWorking);
-        EventManager.Instance.RemoveListener(EventType.StudyStoped, StopWorking);
+        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, StartWorking);
+        EventManager.Instance.RemoveListener(EventType.StudyStopped, StopWorking);
     }
 
-    private void StartWorking()
+    private void StartWorking(ScriptableTechnologyNode techNode)
     {
+        // TODO: 判断科技是否是中级科技
+
         if (stateMachine.currentStateName == "运行中") return;
 
         stateMachine.ChangeState("运行中");
@@ -118,5 +121,19 @@ public class DataTransmissionStation : ConstructionCard
         }
 
         return true;
+    }
+
+    protected override void OnUpdate()
+    {
+        base.OnUpdate();
+
+        if (stateMachine.currentStateName == "待机中") return;
+
+        // 电力不足自动停止研究
+        if (StateManager.Instance.Electricity.CurValue < electricityConsume) // TODO: 这里应该是 < electricityConsume * 研究台个数。当前这样写会导致即使有很多台传输台，只要有0.5的点就不会自动断开
+        {
+            TechnologyManager.Instance.StopStudy(); // StopStudy会触发StopWorking方法，所以不用再在这里写一遍
+            ShowTip("电力不足，研究已自动停止");
+        }
     }
 }

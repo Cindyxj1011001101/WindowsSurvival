@@ -1,15 +1,13 @@
 
 public class WebbedFeet : EquipmentCard
 {
-    public override void LateInit()
+    protected override void Start()
     {
-        base.LateInit();
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
     }
 
-    public override void DestroyThis()
+    protected override void OnDestroy()
     {
-        base.DestroyThis();
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
     }
 

@@ -17,11 +17,9 @@ public class SleepInstrument : ConstructionCard
         };
     }
 
-    public override void LateInit()
+    public override void Awake()
     {
-        base.LateInit();
-        EventManager.Instance.AddListener(EventType.StartSleeping, OnStartSleeping);
-        EventManager.Instance.AddListener(EventType.StopSleeping, OnStopSleeping);
+        base.Awake();
 
         if (!TryGetComponent(out stateMachine))
         {
@@ -35,9 +33,14 @@ public class SleepInstrument : ConstructionCard
         }
     }
 
-    public override void DestroyThis()
+    protected override void Start()
     {
-        base.DestroyThis();
+        EventManager.Instance.AddListener(EventType.StartSleeping, OnStartSleeping);
+        EventManager.Instance.AddListener(EventType.StopSleeping, OnStopSleeping);
+    }
+
+    protected override void OnDestroy()
+    {
         EventManager.Instance.RemoveListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.RemoveListener(EventType.StopSleeping, OnStopSleeping);
     }

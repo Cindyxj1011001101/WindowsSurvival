@@ -19,9 +19,9 @@ public class ElectricDrainageMachine : ConstructionCard
         };
     }
 
-    public override void LateInit()
+    public override void Awake()
     {
-        base.LateInit();
+        base.Awake();
 
         if (!TryGetComponent(out stateMachine))
         {

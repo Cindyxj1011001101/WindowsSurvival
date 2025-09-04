@@ -370,7 +370,7 @@ public static class CardFactory
         else
         {
             var card = CreateCard(cardId);
-            card.LateInit();
+            card.Awake();
             cardInstances.Add(cardId, card);
             return card;
         }

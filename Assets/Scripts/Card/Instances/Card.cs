@@ -164,9 +164,9 @@ public abstract class Card : IComparable<Card>
     }
 
     /// <summary>
-    /// 用于在卡牌实例化后进行额外的初始化操作
+    /// 用于在卡牌实例化后进行额外的初始化操作，主要用于为卡牌手动添加组件或者对组件的数值进行修改
     /// </summary>
-    public virtual void LateInit()
+    public virtual void Awake()
     {
         if (TryGetComponent<InnerContentsComponent>(out var i))
         {
@@ -190,6 +190,11 @@ public abstract class Card : IComparable<Card>
         }
     }
 
+    /// <summary>
+    /// 在Awake之后调用，主要用于处理游戏内事件的监听
+    /// </summary>
+    protected virtual void Start() { }
+
     private bool isUpdating = false; // 是否已启用每回合更新
 
     [JsonProperty] private bool isUpdatePaused = false; // 是否暂停每回合更新
@@ -208,7 +213,7 @@ public abstract class Card : IComparable<Card>
             c.SetBelongedCard(this);
         }
 
-        LateInit();
+        Awake();
 
         UpdateManager.Instance.CardUpdate.AddListener(Update);
 
@@ -217,6 +222,8 @@ public abstract class Card : IComparable<Card>
         {
             component.Init();
         }
+
+        Start();
     }
 
     /// <summary>
@@ -264,7 +271,7 @@ public abstract class Card : IComparable<Card>
         if (Slot != null) Slot.ShowTip(tip);
     }
 
-    public virtual void DestroyThis()
+    public void DestroyThis()
     {
         if (Destroyed) return;
 
@@ -273,7 +280,11 @@ public abstract class Card : IComparable<Card>
         StopUpdating();
 
         SlotCards.RemoveCard(this);
+
+        OnLeaveEnvironment();
     }
+
+    protected virtual void OnDestroy() { }
 
     #region 拖动交互
     /// <summary>

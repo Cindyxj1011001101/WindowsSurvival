@@ -21,19 +21,15 @@ public class SpaceshipSeat : ConstructionCard
         };
     }
 
-    public override void LateInit()
+    protected override void Start()
     {
-        base.LateInit();
+        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2, .5f));
 
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天刷新
-
-        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2, .5f));
     }
 
-    public override void DestroyThis()
+    protected override void OnDestroy()
     {
-        base.DestroyThis();
-
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
     }
 

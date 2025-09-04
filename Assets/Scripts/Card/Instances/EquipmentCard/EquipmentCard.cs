@@ -13,9 +13,9 @@ public abstract class EquipmentCard : Card
         };
     }
 
-    public override void LateInit()
+    public override void Awake()
     {
-        base.LateInit();
+        base.Awake();
         TryGetComponent(out equipment);
     }
 

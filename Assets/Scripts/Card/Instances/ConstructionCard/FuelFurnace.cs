@@ -36,9 +36,9 @@ public class FuelFurnace : ConstructionCard
         };
     }
 
-    public override void LateInit()
+    public override void Awake()
     {
-        base.LateInit();
+        base.Awake();
         // 添加燃料存储组件
         if (!TryGetComponent(out fuelStorage))
         {
@@ -287,10 +287,5 @@ public class FuelFurnace : ConstructionCard
     public override void OnDetailClose()
     {
         SoundManager.Instance.SetCardLoopVolume(CardId, 0.3f); // 恢复正常
-    }
-    public override void DestroyThis()
-    {
-        OnLeaveEnvironment();
-        base.DestroyThis();
     }
 }

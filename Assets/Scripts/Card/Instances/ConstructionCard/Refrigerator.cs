@@ -19,9 +19,9 @@ public class Refrigerator : ConstructionCard
         };
     }
 
-    public override void LateInit()
+    public override void Awake()
     {
-        base.LateInit();
+        base.Awake();
 
         // 未布置和已布置两种状态
         if (!TryGetComponent(out stateMachine))

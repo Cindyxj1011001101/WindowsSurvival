@@ -9,16 +9,24 @@
         };
     }
 
-    public override void LateInit()
+    public override void Awake()
     {
-        base.LateInit();
+        base.Awake();
         TryGetComponent(out passage);
-
-        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
 
         Events[0].description = GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
         Events[0].getTimeEffect = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).time;
         Events[0].getPlayerEffects = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerEffects;
+    }
+
+    protected override void Start()
+    {
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
+    }
+
+    protected override void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
 
     /// <summary>
@@ -32,12 +40,6 @@
             Events[0].description = GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
             RefreshSlot();
         }
-    }
-
-    public override void DestroyThis()
-    {
-        base.DestroyThis();
-        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
 
     public virtual void Event_Enter(out string tip)

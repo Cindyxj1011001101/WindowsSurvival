@@ -78,9 +78,4 @@ public class WaterCrack : Card
     {
         SoundManager.Instance.SetCardLoopVolume(CardId, 0.3f); // 恢复正常
     }
-    public override void DestroyThis()
-    {
-        OnLeaveEnvironment();
-        base.DestroyThis();
-    }
 }

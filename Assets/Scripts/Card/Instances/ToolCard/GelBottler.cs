@@ -18,15 +18,13 @@ public class GelBottler : ToolCard
         };
     }
 
-    public override void LateInit()
+    protected override void Start()
     {
-        base.LateInit();
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnWaterLevelChanged);
     }
 
-    public override void DestroyThis()
+    protected override void OnDestroy()
     {
-        base.DestroyThis();
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnWaterLevelChanged);
     }
 

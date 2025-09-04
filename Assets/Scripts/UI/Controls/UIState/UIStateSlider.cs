@@ -118,6 +118,7 @@ public class UIStateSlider : MonoBehaviour
             arrow.rectTransform.DOKill();
             arrow.gameObject.SetActive(false);
             tipController.enabled = false;
+            curChangeLavel = 0;
             return;
         }
 

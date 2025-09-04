@@ -15,7 +15,7 @@
     //ChangeWaterLevel, // 水平面变化
     AnotherDay,//跨天行为触发
     StudyStarted, // 研究开始
-    StudyStoped, // 研究暂停
+    StudyStopped, // 研究暂停
     StudyComplished, // 研究完成
     StartChangeTime,
     EndChangeTime,

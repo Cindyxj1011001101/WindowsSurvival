@@ -11,19 +11,15 @@ public class Painkillers : Card
         };
     }
 
-    public override void LateInit()
+    protected override void Start()
     {
-        base.LateInit();
+        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
 
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot);
-
-        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
     }
 
-    public override void DestroyThis()
+    protected override void OnDestroy()
     {
-        base.DestroyThis();
-
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
     }
 

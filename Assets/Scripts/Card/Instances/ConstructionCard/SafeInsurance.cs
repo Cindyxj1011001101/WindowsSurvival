@@ -11,9 +11,9 @@ public class SafeInsurance : ConstructionCard
             new Event("用锤子砸", "最有效的打开保险箱的方式", Event_UseHammer, Judge_UseHammer, () => 15)
         };
     }
-    public override void LateInit()
+    public override void Awake()
     {
-        base.LateInit();
+        base.Awake();
         innerContents.display = false; // 不显示内容物
         innerContents.allowAdd = innerContents.allowRemove = false; // 不允许添加或移除内容物
     }

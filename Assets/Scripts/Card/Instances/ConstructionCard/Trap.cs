@@ -28,9 +28,9 @@ public class Trap : ConstructionCard
         };
     }
 
-    public override void LateInit()
+    public override void Awake()
     {
-        base.LateInit();
+        base.Awake();
 
         // 每个卡牌槽的最大堆叠数都为1
         foreach (var slot in innerContents.bag.Slots)

@@ -44,6 +44,7 @@ public class StudyWindow : WindowBase
         EventManager.Instance.AddListener(EventType.ChangeStudyProgress, RefreshDisplay);
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
+        EventManager.Instance.AddListener(EventType.StudyStopped, OnStudyStopped);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
 
@@ -67,6 +68,7 @@ public class StudyWindow : WindowBase
         EventManager.Instance.RemoveListener(EventType.ChangeStudyProgress, RefreshDisplay);
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
+        EventManager.Instance.RemoveListener(EventType.StudyStopped, OnStudyStopped);
     }
 
     private void OnStudyStarted(ScriptableTechnologyNode techNode)
@@ -80,6 +82,13 @@ public class StudyWindow : WindowBase
         RefreshDisplay();
 
         DisplayStudyState(0, techNode);
+    }
+
+    private void OnStudyStopped()
+    {
+        RefreshDisplay();
+
+        DisplayStudyState(2, null);
     }
 
     protected override void Init()

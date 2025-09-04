@@ -11,9 +11,9 @@ public class CaughtAquariusFish : Card
         };
     }
 
-    public override void LateInit()
+    public override void Awake()
     {
-        base.LateInit();
+        base.Awake();
 
         // 被捉住的水瓶鱼的产物进度不会随时间增加
         TryGetComponent<ProgressComponent>(out var progress);
