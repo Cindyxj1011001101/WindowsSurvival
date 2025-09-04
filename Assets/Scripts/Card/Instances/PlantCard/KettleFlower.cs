@@ -84,6 +84,8 @@ public class KettleFlower : Card
 
         hasWound = true; // 产生伤口
         plant.AddGrowth(-10); // 生长进度-10
+        DisplayComponentValueChange(typeof(PlantGrowthComponent), -10);
+
         plant.growStopped = true; // 停止生长
 
         TimeManager.Instance.AddTime(15);
@@ -150,6 +152,7 @@ public class KettleFlower : Card
             SoundManager.Instance.PlaySound("喝_01", true);
 
         plant.AddGrowth(-20); // 生长进度-20
+        DisplayComponentValueChange(typeof(PlantGrowthComponent), -20);
 
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 14);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);

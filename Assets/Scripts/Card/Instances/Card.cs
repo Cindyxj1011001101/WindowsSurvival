@@ -266,6 +266,11 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
 
+    public void DisplayComponentValueChange(Type componentType, float value)
+    {
+        if (Slot != null) Slot.DisplayComponentValueChange(typeof(PlantGrowthComponent), -20);
+    }
+
     public void ShowTip(string tip)
     {
         if (Slot != null) Slot.ShowTip(tip);

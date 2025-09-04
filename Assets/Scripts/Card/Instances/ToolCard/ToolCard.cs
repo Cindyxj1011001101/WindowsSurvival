@@ -9,6 +9,6 @@ public abstract class ToolCard : Card
             ShowTip($"{CardName}损坏了");
         };
         base.Use(times, onBroken);
-        if (Slot != null) Slot.DisplayComponentValueChange(typeof(DurabilityComponent), -times);
+        DisplayComponentValueChange(typeof(DurabilityComponent), -times);
     }
 }
