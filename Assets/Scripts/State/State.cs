@@ -136,6 +136,8 @@ public class State
         basicChangeRate = value;
     }
 
+    public State() { }
+
     public State(float value, float maxValue, float basicChangeRate,
         List<StateThreshold> thresholds, List<StateEffect> effects,
         List<int> lowDangerLevels, List<int> highDangerLevels, float normParam = 0)
