@@ -377,6 +377,9 @@ public abstract class Card : IComparable<Card>
             newComponent = JsonManager.DeepCopy(component);
             components[typeof(T)] = newComponent;
             newComponent.SetBelongedCard(this);
+
+            if (newComponent is InnerContentsComponent innerContents) innerContents.Init();
+
             return true;
         }
         newComponent = null;
