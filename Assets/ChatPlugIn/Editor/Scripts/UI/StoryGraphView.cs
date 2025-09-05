@@ -197,7 +197,6 @@ namespace ChatPlugIn
                 };
                 if (node.Type == NodeType.Start)
                 {
-                    Debug.Log( ((StartNode)node).paragraphData);
                     graph.paragraphData = ((StartNode)node).paragraphData;
                 }
                 if (node.Type == NodeType.Dialogue)
@@ -242,7 +241,6 @@ namespace ChatPlugIn
 
         public void LoadGraph(string fileName)
         {
-            Debug.Log(fileName);
             graphData = Resources.Load<GraphData>($"DialogueGraphs/{fileName}");
             if (graphData == null)
             {
