@@ -35,11 +35,11 @@ public class KettleFlower : Card
             var states = new List<CardState>()
             {
                 new ("幼苗期", "0"),
-                new ("生长期1", "1"),
-                new ("生长期2", "2"),
+                new ("生长期1", "1") { displayName = "生长期"},
+                new ("生长期2", "2") { displayName = "生长期"},
                 new ("成熟期", "3"),
-                new ("有伤口1", "4"),
-                new ("有伤口2", "5"),
+                new ("有伤口1", "4") { displayName = "有伤口"},
+                new ("有伤口2", "5") { displayName = "有伤口" },
             };
             stateMachine = new StateMachineComponent(states);
             AddComponent(stateMachine);

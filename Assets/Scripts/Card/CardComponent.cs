@@ -476,6 +476,7 @@ public class CookComponent : CardComponent
 public class CardState
 {
     public string name; // 状态名称
+    public string displayName; // 对外显示的名称
     public string imagePath; // 图片路径
     public bool isAnim; // 是否为动画
     public bool needElectricity; // 是否需要电力

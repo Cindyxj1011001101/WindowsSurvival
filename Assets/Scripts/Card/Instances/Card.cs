@@ -51,7 +51,7 @@ public abstract class Card : IComparable<Card>
         {
             if (TryGetComponent<StateMachineComponent>(out var s))
             {
-                return s.currentStateName;
+                return s.CurrentState.displayName;
             }
             else
             {
