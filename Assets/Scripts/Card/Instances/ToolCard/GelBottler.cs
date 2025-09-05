@@ -1,7 +1,7 @@
 ﻿/// <summary>
 /// 凝胶装瓶器
 /// </summary>
-public class GelBottler : ToolCard
+public class GelBottler : Card
 {
     private GelBottler()
     {

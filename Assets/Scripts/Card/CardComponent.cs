@@ -1,5 +1,8 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
@@ -49,7 +52,10 @@ public class FreshnessComponent : CardComponent, IUpdate
 
         if (freshness <= 0)
         {
-            BelongedCard.ShowTip($"{BelongedCard.CardName}腐烂了");
+            if (BelongedCard.CardType == CardType.Food)
+                BelongedCard.ShowTip($"{BelongedCard.CardName}腐烂了");
+            else if (BelongedCard.CardType == CardType.Medicine)
+                BelongedCard.ShowTip($"{BelongedCard.CardName}过期了");
             freshness = 0;
             BelongedCard.DestroyThis();
             onRotton?.Invoke();
@@ -233,6 +239,8 @@ public class DurabilityComponent : CardComponent
     public int durability;
     public int maxDurability;
 
+    [JsonIgnore] public UnityAction onBroken;
+
     public DurabilityComponent() { }
 
     public DurabilityComponent(int maxDurability)
@@ -240,20 +248,31 @@ public class DurabilityComponent : CardComponent
         durability = this.maxDurability = maxDurability;
     }
 
-    public void Use(UnityAction onBroken)
+    public void Use(int times = 1)
     {
         if (durability <= 0) return;
 
-        durability--;
+        durability -= times;
         durability = Mathf.Max(durability, 0);
 
-        BelongedCard.RefreshSlot();
+        StackTrace stackTrace = new();
+        MethodBase callerMethod = stackTrace.GetFrame(2).GetMethod();
+
+        if (callerMethod.Name != "OnUpdate")
+            BelongedCard.DisplayComponentValueChange(typeof(DurabilityComponent), -times);
 
         if (durability <= 0)
         {
+            if (BelongedCard.CardType == CardType.Tool || BelongedCard.CardType == CardType.Equipment)
+                BelongedCard.ShowTip($"{BelongedCard.CardName}损坏了");
+
             durability = 0;
+            BelongedCard.DestroyThis();
             onBroken?.Invoke();
+            return;
         }
+
+        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
@@ -587,7 +606,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         else
         {
             curTempture = 25;
-            Debug.LogWarning("当前地点没有环境温度信息，使用默认环境温度25度");
+            UnityEngine.Debug.LogWarning("当前地点没有环境温度信息，使用默认环境温度25度");
         }
 
         if (curTempture <= maxConfortTempreture && curTempture > minConfortTempreture)

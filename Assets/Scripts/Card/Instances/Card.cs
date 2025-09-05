@@ -246,19 +246,11 @@ public abstract class Card : IComparable<Card>
         isUpdatePaused = false;
     }
 
-    public virtual void Use(int times = 1, UnityAction onBroken = null)
+    public virtual void Use(int times = 1)
     {
         if (TryGetComponent<DurabilityComponent>(out var component))
         {
-            int usedTimes = Mathf.Min(times, component.durability);
-            for (int i = 0; i < usedTimes; i++)
-            {
-                component.Use(() =>
-                {
-                    DestroyThis();
-                    onBroken?.Invoke();
-                });
-            }
+            component.Use(times);
         }
     }
 

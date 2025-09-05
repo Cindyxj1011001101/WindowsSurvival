@@ -16,6 +16,9 @@ public class SafeInsurance : ConstructionCard
         base.Awake();
         innerContents.display = false; // 不显示内容物
         innerContents.allowAdd = innerContents.allowRemove = false; // 不允许添加或移除内容物
+
+        TryGetComponent<DurabilityComponent>(out var d);
+        d.onBroken = OnBroken;
     }
 
     /// <summary>
@@ -47,7 +50,6 @@ public class SafeInsurance : ConstructionCard
     private void Event_UseShovel(out string tip)
     {
         UseShovel(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
-        
     }
 
     private bool Judge_UseShovel(out string hint)
@@ -68,7 +70,6 @@ public class SafeInsurance : ConstructionCard
     private void Event_UseHammer(out string tip)
     {
         UseHammer(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), out tip);
-        
     }
 
     private bool Judge_UseHammer(out string hint)
@@ -99,7 +100,7 @@ public class SafeInsurance : ConstructionCard
         // 播放音效
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("暴力拆毁_01", true);
-        Use(20, OnBroken);
+        Use(20);
         tool.Use();
         TimeManager.Instance.AddTime(15);
     }
@@ -110,7 +111,7 @@ public class SafeInsurance : ConstructionCard
         // 播放音效
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("凿_01", true);
-        Use(8, OnBroken);
+        Use(8);
         tool.Use();
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -4);
         TimeManager.Instance.AddTime(15);

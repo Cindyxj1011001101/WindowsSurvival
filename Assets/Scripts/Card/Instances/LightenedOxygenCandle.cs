@@ -38,9 +38,9 @@ public class LightenedOxygenCandle : Card
         base.OnUpdate();
 
         // 每回合消耗耐久
-        Use(1, () =>
-        {
-            ShowTip("氧烛燃烧殆尽了");
-        });
+        Use();
+
+        TryGetComponent<DurabilityComponent>(out var d);
+        if (d.durability == 0) ShowTip("氧烛燃烧殆尽了");
     }
 }

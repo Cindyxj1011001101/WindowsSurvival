@@ -1,4 +1,4 @@
-public class WasteShovel : ToolCard
+public class WasteShovel : Card
 {
     private WasteShovel()
     {

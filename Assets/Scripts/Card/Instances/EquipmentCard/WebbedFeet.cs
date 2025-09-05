@@ -17,7 +17,7 @@ public class WebbedFeet : EquipmentCard
 
         if (!bag.PlaceData.isInWater) return;
 
-        Use(1, () => ShowTip($"{CardName}损坏了"));
+        Use();
     }
 
     public override void OnEquipped()

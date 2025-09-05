@@ -1,7 +1,7 @@
 /// <summary>
 /// 手压排水泵
 /// </summary>
-public class HandDrainPump : ToolCard
+public class HandDrainPump : Card
 {
     private HandDrainPump()
     {
