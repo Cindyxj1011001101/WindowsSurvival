@@ -280,6 +280,8 @@ public abstract class Card : IComparable<Card>
 
         SlotCards.RemoveCard(this);
 
+        if (TryGetComponent<InnerContentsComponent>(out var innerContents)) innerContents.Clear();
+
         OnLeaveEnvironment();
 
         GlobalDataManager.Instance.RemoveCardNum(CardId);

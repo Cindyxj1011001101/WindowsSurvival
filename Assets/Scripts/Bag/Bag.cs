@@ -175,6 +175,7 @@ public abstract class Bag
         {
             slot.Clear();
         }
+        slots.Clear();
     }
 
     /// <summary>
