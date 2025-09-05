@@ -71,7 +71,6 @@ public class ReadChatParagraph:MonoBehaviour
             GraphDatas.Find(x => x.paragraphData.ParagraphName==paragraphName);
         if(graphData==null) return null;
         CurGraphData=graphData;
-        Debug.Log(graphData);
         GraphData.SerializedNode nodeData = graphData.nodes.Find(x => x.typeName == "Start");
         
         CurNode = nodeData;

@@ -51,10 +51,8 @@ public class GlobalDataManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-
         globalData = GameDataManager.Instance.GlobalData;
         saveData = GameDataManager.Instance.SaveData;
-
         EventManager.Instance.AddListener(EventType.AnotherDay, OnAnotherDay);
     }
 

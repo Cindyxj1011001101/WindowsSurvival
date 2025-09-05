@@ -45,7 +45,10 @@ public class ChatConditionManager : MonoBehaviour
         //订阅所有段落的触发
         foreach (var paragraph in ReadChatParagraph.Instance.FindAllParagraphData())
         {
-            ParagraphConditionsToTrigger.Add(paragraph);
+            if (paragraph.ParagraphName != "一切的开始")
+            {
+                ParagraphConditionsToTrigger.Add(paragraph);
+            }
         }
         foreach (var paragraphData in ParagraphConditionsToTrigger)
         {
@@ -71,6 +74,10 @@ public class ChatConditionManager : MonoBehaviour
     
     public void PassParagraphCondition(List<ParagraphData> paragraphData)
     {
+        foreach (var data in paragraphData)
+        {
+            ParagraphConditionsToTrigger.Remove(data);
+        }
         //通过对话条件检测时判断该对话是否会打断
         ChatManager.Instance.AddTriggerParagraph(paragraphData[Random.Range(0, paragraphData.Count)]);
     }
@@ -146,6 +153,11 @@ public class ChatConditionManager : MonoBehaviour
                         new FinishResearchFix(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
+                // case "制作裂缝填充物":
+                //     DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                //         new MadeCrackFiller(paragraphData.ParagraphCondition, true, false,
+                //             PassParagraphCondition,paragraphData));
+                //     break;
                 case "首次点开气密舱门":
                     DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
                         new FirstOpenAirtightDoor(paragraphData.ParagraphCondition, true, false,
