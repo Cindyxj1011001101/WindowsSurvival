@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditorInternal;
 
 /// <summary>
 /// 燃料炉
@@ -9,7 +10,7 @@ public class FuelFurnace : ConstructionCard
     {
         get
         {
-            if (!string.IsNullOrEmpty(outcomeCardId)) return "加工完成";
+            if (processComplished) return "加工完成";
             else if (isProcessing) return "加工中";
             else return base.ExtraInfo;
         }
@@ -24,7 +25,7 @@ public class FuelFurnace : ConstructionCard
     public int maxRounds = 16; // 总加工轮数
     public bool isProcessing = false; // 是否正在加工
     public List<TempertureData> tempertureData = new(); // 温度数据，用来处理产物获取
-    public string outcomeCardId = null; // 产物卡牌id
+    public bool processComplished = false;
     public override bool HasLoopSound => true;
 
     private FuelFurnace()
@@ -32,7 +33,6 @@ public class FuelFurnace : ConstructionCard
         Events = new()
         {
             new Event("开始加工" , "", Event_Process, Judge_Process),
-            new Event("取出" , "取出燃料炉的加工产物", Event_TakeOut, Judge_TakeOut),
         };
     }
 
@@ -93,6 +93,17 @@ public class FuelFurnace : ConstructionCard
         {
             slot.SetMaxStackNum(1);
         }
+
+        innerContents.onRemoveCard = (c) =>
+        {
+            if (processComplished && innerContents.bag.IsEmpty)
+            {
+                processComplished = false;
+                // 恢复内容物的可放入
+                innerContents.allowAdd = true;
+                RefreshSlot();
+            }
+        };
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -104,28 +115,6 @@ public class FuelFurnace : ConstructionCard
             return false;
         }
 
-        return true;
-    }
-
-    /// <summary>
-    /// 取出加工产物
-    /// </summary>
-    /// <param name="tip"></param>
-    private void Event_TakeOut(out string tip)
-    {
-        tip = string.Empty;
-        AddCard(outcomeCardId, true);
-        outcomeCardId = null;
-    }
-
-    private bool Judge_TakeOut(out string hint)
-    {
-        hint = string.Empty;
-        if (string.IsNullOrEmpty(outcomeCardId))
-        {
-            hint = "没有加工产物可取出";
-            return false;
-        }
         return true;
     }
 
@@ -180,7 +169,7 @@ public class FuelFurnace : ConstructionCard
             return false;
         }
 
-        if (!string.IsNullOrEmpty(outcomeCardId))
+        if (processComplished)
         {
             hint = "请先取出加工产物";
             return false;
@@ -224,17 +213,26 @@ public class FuelFurnace : ConstructionCard
         if (leftRounds <= 0)
         {
             leftRounds = 0;
-            outcomeCardId = ProcessManager.GetProcessOutcomeID(cardsToProcesss, tempertureData);
             isProcessing = false;
             tempertureData.Clear();
             innerContents.Clear(); // 销毁内容物
-            cardsToProcesss.Clear(); // 销毁加工列表
+            cardsToProcesss.Clear(); // 清空加工列表
 
-            // 可放入拖出卡牌
-            innerContents.allowAdd = innerContents.allowRemove = true;
-            RefreshSlot();
+            processComplished = true; // 加工完成
+
+            // 可拖出卡牌
+            innerContents.allowRemove = true;
+            innerContents.notAllowAddReason = "请先取出加工产物";
+
+            // 得到产物
+            var outcomeCardId = ProcessManager.GetProcessOutcomeID(cardsToProcesss, tempertureData);
+            var outcomeCard = CardFactory.CreateCard(outcomeCardId);
+            GameManager.Instance.AddCard(outcomeCard, innerContents.bag);
+            outcomeCard.RefreshSlot();
+
             ShowTip("燃料炉加工完成");
 
+            // 移除计时器
             RemoveComponent<TimerComponent>();
             RefreshSlot();
         }
