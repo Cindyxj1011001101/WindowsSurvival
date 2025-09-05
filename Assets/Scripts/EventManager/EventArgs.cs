@@ -49,7 +49,7 @@ public class RefreshEnvironmentStateArgs
 {
     public PlaceEnum place;
     public EnvironmentStateEnum stateEnum;
-    public EnvironmentState stateValue;
+    public State stateValue;
     public bool hasCable;
     public PressureLevel pressureLevel;
 

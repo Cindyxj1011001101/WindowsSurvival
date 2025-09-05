@@ -3,7 +3,7 @@
 public class StateData
 {
     public bool init;
-    public EnvironmentState electricity;
-    public EnvironmentState waterLevel;
-    public Dictionary<PlayerStateEnum, PlayerState> playerState = new();
+    public State electricity;
+    public State waterLevel;
+    public Dictionary<PlayerStateEnum, State> playerState = new();
 }

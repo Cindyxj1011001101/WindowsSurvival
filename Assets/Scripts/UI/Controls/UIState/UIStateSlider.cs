@@ -63,7 +63,7 @@ public class UIStateSlider : MonoBehaviour
             valueText.text = $"{(int)value}/{maxValue}";
     }
 
-    public void SetValue(PlayerState state)
+    public void SetValue(State state)
     {
         SetValue(state.CurValue, state.MaxValue);
 
@@ -72,13 +72,6 @@ public class UIStateSlider : MonoBehaviour
 
         // 根据状态的危险程度，给予提示
         PlayerStateDangerAlert(state.DangerLevel);
-    }
-
-    public void SetValue(EnvironmentState state)
-    {
-        SetValue(state.CurValue, state.MaxValue);
-
-        DisplayChangeRate(state.ChangeRate, state.MaxValue);
     }
 
     private void PlayerStateDangerAlert(DangerLevelEnum dangerLevel)

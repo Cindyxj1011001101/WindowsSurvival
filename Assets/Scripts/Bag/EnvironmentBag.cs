@@ -10,7 +10,7 @@ public class EnvironmentBag : Bag
     [JsonProperty] private PressureLevel pressureLevel;
     [JsonProperty] private DisposableDropList disposableDropList = new();
     [JsonProperty] private RepeatableDropList repeatableDropList = new();
-    [JsonProperty] private Dictionary<EnvironmentStateEnum, EnvironmentState> stateDict = new();
+    [JsonProperty] private Dictionary<EnvironmentStateEnum, State> stateDict = new();
 
     private PlaceData placeData;
 
@@ -19,7 +19,7 @@ public class EnvironmentBag : Bag
     [JsonIgnore] public string PlaceName => placeName;
     [JsonIgnore] public DisposableDropList DisposableDropList => disposableDropList;
     [JsonIgnore] public RepeatableDropList RepeatableDropList => repeatableDropList;
-    [JsonIgnore] public Dictionary<EnvironmentStateEnum, EnvironmentState> StateDict => stateDict;
+    [JsonIgnore] public Dictionary<EnvironmentStateEnum, State> StateDict => stateDict;
 
     [JsonIgnore]
     public PlaceData PlaceData
@@ -65,9 +65,27 @@ public class EnvironmentBag : Bag
         // 在室内显示一氧化碳
         if (PlaceData.isIndoor)
         {
-            StateDict.Add(EnvironmentStateEnum.Oxygen, new EnvironmentState(UnityEngine.Random.Range(400, 600), 1000, EnvironmentStateEnum.Oxygen));
-            StateDict.Add(EnvironmentStateEnum.CarbonMonoxideLevel, new EnvironmentState(0, 100, EnvironmentStateEnum.CarbonMonoxideLevel));
+            StateDict.Add(EnvironmentStateEnum.Oxygen, new State(UnityEngine.Random.Range(400, 600), 1000));
+
+            var thresholds = new List<StateThreshold>()
+            {
+                new (-1, 25, "低浓度"),
+                new (25, 50, "中浓度"),
+                new (50, 75, "高浓度"),
+                new (75, int.MaxValue, "极高浓度"),
+            };
+            var effects = new List<StateEffect>()
+            {
+                new () { carbonMonoxidePoisoningRate = +0.5f },
+                new () { carbonMonoxidePoisoningRate = +1f },
+                new () { carbonMonoxidePoisoningRate = +1.7f },
+                new () { carbonMonoxidePoisoningRate = +3f },
+            };
+            StateDict.Add(EnvironmentStateEnum.CarbonMonoxideLevel, new State(0, 100, -0.5f, thresholds, effects, new(), new()));
         }
+
+        // 室温
+        stateDict.Add(EnvironmentStateEnum.RoomTemperature, new State(200, 400, normParam: -200));
     }
 
     private void InitDropList()

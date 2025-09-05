@@ -21,15 +21,29 @@ public enum PlayerStateEnum
 }
 
 /// <summary>
+/// 环境状态
+/// </summary>
+public enum EnvironmentStateEnum
+{
+    Electricity,
+    Oxygen,
+    WaterLevel,
+    HasCable,
+    PressureLevel,
+    RoomTemperature,
+    CarbonMonoxideLevel,
+    Dirtiness,
+}
+
+/// <summary>
 /// 玩家状态类
 /// </summary>
-public class PlayerState
+public class State
 {
     [JsonProperty] private float extraValue; // 额外值
     [JsonProperty] private float maxValue; // 最大值
     [JsonProperty] private float constValue; // 固定值
     [JsonProperty] private float variableValue; // 可变值
-    [JsonProperty] private PlayerStateEnum stateEnum;
     [JsonProperty] private List<StateThreshold> thresholds = new();
     [JsonProperty] private List<StateEffect> effects = new();
     [JsonProperty] private int stateLevel = -1;
@@ -37,14 +51,16 @@ public class PlayerState
     [JsonProperty] private float extraChangeRate;
     [JsonProperty] private List<int> lowDangerLevels = new();
     [JsonProperty] private List<int> highDangerLevels = new();
+    [JsonProperty] private float normParam = 0;
 
     [JsonIgnore] public string StateLevelName => thresholds[stateLevel].levelName;
     [JsonIgnore] public int StateLevel => stateLevel;
     [JsonIgnore] public float CurValue => Mathf.Clamp(variableValue + constValue, 0, MaxValue);
+    [JsonIgnore] public float NormedValue => CurValue + normParam;
     [JsonIgnore] public float ExtraValue => extraValue;
     [JsonIgnore] public float MaxValue => maxValue + extraValue;
     [JsonIgnore] public float RemainingCapacity => MaxValue - CurValue;
-    [JsonProperty] public float BasicChangeRate => basicChangeRate;
+    [JsonIgnore] public float BasicChangeRate => basicChangeRate;
     [JsonIgnore] public float ChangeRate => basicChangeRate + extraChangeRate;
 
     [JsonIgnore]
@@ -57,12 +73,6 @@ public class PlayerState
             return DangerLevelEnum.None;
         }
     }
-
-    //[JsonIgnore]
-    //private UnityAction<int> onEnterLevel;
-
-    //[JsonIgnore]
-    //private UnityAction<int> onExitLevel;
 
     public void AddValue(float delta)
     {
@@ -126,22 +136,24 @@ public class PlayerState
         basicChangeRate = value;
     }
 
-    public PlayerState(float value, float maxValue, PlayerStateEnum state, float basicChangeRate,
+    public State(float value, float maxValue, float basicChangeRate,
         List<StateThreshold> thresholds, List<StateEffect> effects,
-        List<int> lowDangerLevels, List<int> highDangerLevels)
+        List<int> lowDangerLevels, List<int> highDangerLevels, float normParam = 0)
     {
         constValue = 0;
         extraValue = 0;
         variableValue = value;
         this.maxValue = maxValue;
-        stateEnum = state;
         this.thresholds = thresholds;
         this.effects = effects;
         this.basicChangeRate = basicChangeRate;
         extraChangeRate = 0;
         this.lowDangerLevels = lowDangerLevels;
         this.highDangerLevels = highDangerLevels;
+        this.normParam = normParam;
     }
+
+    public State(float value, float maxValue, float basicChangeRate = 0, float normParam = 0) : this(value, maxValue, basicChangeRate, new(), new(), new(), new(), normParam) { }
 }
 
 // 状态阈值配置
@@ -172,6 +184,8 @@ public class StateEffect
     public float fulnessRate;     // 饱食影响
     public float thirstRate;      // 水分影响
     public float sorbrietyRate;   // 清醒度影响
+    public float bodyTemperatureRate;         // 体温影响
+    public float carbonMonoxidePoisoningRate; // 一氧化碳中毒影响
 
     // 瞬间变化
     public float oxygenMax;       // 氧气上限
@@ -181,13 +195,16 @@ public class StateEffect
     {
         int signal = forward ? 1 : -1;
 
+        // 每回合变化
         if (healthRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, healthRate * signal);
         if (sanityRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.San, sanityRate * signal);
         if (fulnessRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Fullness, fulnessRate * signal);
         if (thirstRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Thirst, thirstRate * signal);
         if (sorbrietyRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, sorbrietyRate * signal);
+        if (carbonMonoxidePoisoningRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.CarbonMonoxidePoisoning, carbonMonoxidePoisoningRate * signal);
+        if (bodyTemperatureRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.BodyTemperature, bodyTemperatureRate * signal);
 
-
+        // 瞬时变化
         if (oxygenMax != 0) StateManager.Instance.ChangePlayerMaxState(PlayerStateEnum.Oxygen, oxygenMax * signal);
         if (painConst != 0) StateManager.Instance.ChangePlayerConstState(PlayerStateEnum.PainLevel, painConst * signal);
     }

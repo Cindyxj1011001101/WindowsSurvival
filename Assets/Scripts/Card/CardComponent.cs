@@ -593,6 +593,8 @@ public class PlantGrowthComponent : CardComponent, IUpdate
 
         if (growStopped) return; // 暂停生长
 
+        if (growth >= maxGrowth) return; // 已经成熟
+
         var bag = BelongedCard.Bag as EnvironmentBag;
         PressureLevel curPressureLevel = bag.PressureLevel;
 
@@ -601,7 +603,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         float curTempture;
         if (bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var roomTemperature))
         {
-            curTempture = roomTemperature.CurValue;
+            curTempture = roomTemperature.NormedValue;
         }
         else
         {

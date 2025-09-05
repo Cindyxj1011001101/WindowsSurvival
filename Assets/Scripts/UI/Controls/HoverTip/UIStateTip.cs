@@ -25,12 +25,7 @@ public class UIStateTip : MonoBehaviour
         }
     }
 
-    public void SetValue(PlayerState state, float delta)
-    {
-        SetValue(state.CurValue, state.MaxValue, delta);
-    }
-
-    public void SetValue(EnvironmentState state, float delta)
+    public void SetValue(State state, float delta)
     {
         SetValue(state.CurValue, state.MaxValue, delta);
     }

@@ -1,22 +1,7 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-/// <summary>
-/// 环境状态
-/// </summary>
-public enum EnvironmentStateEnum
-{
-    Electricity,
-    Oxygen,
-    WaterLevel,
-    HasCable,
-    PressureLevel,
-    RoomTemperature,
-    CarbonMonoxideLevel,
-    Dirtiness,
-}
 /// <summary>
 /// 当前危险程度
 /// </summary>
@@ -27,58 +12,22 @@ public enum DangerLevelEnum
     None = 2,
 }
 
-/// <summary>
-/// 环境状态类
-/// </summary>
-public class EnvironmentState
-{
-    [JsonProperty] private float curValue;
-    [JsonProperty] private float maxValue;
-    [JsonProperty] private float changeRate;
-    [JsonProperty] private EnvironmentStateEnum stateEnum;
-
-    [JsonIgnore] public float RemainingCapacity => MaxValue - CurValue;
-    [JsonIgnore] public float CurValue => curValue;
-    [JsonIgnore] public float MaxValue => maxValue;
-    [JsonIgnore] public float ChangeRate => changeRate;
-    [JsonIgnore] public EnvironmentStateEnum StateEnum => stateEnum;
-
-    public EnvironmentState(float value, float maxValue, EnvironmentStateEnum state, float changeRate = 0)
-    {
-        curValue = value;
-        this.maxValue = maxValue;
-        stateEnum = state;
-        this.changeRate = changeRate;
-    }
-
-    public void AddValue(float delta)
-    {
-        curValue += delta;
-        curValue = Mathf.Clamp(curValue, 0, MaxValue);
-    }
-
-    public void AddChangeRate(float delta)
-    {
-        changeRate += delta;
-    }
-}
-
 public class StateManager : MonoBehaviour
 {
     /// <summary>
     /// 玩家状态
     /// </summary>
-    public Dictionary<PlayerStateEnum, PlayerState> PlayerStateDict { get; private set; } = new();
+    public Dictionary<PlayerStateEnum, State> PlayerStateDict { get; private set; } = new();
 
     /// <summary>
     /// 电力
     /// </summary>
-    public EnvironmentState Electricity { get; private set; }
+    public State Electricity { get; private set; }
 
     /// <summary>
     /// 飞船水平面高度
     /// </summary>
-    public EnvironmentState WaterLevel { get; private set; }
+    public State WaterLevel { get; private set; }
 
     #region 单例
     private static StateManager instance;
@@ -125,6 +74,9 @@ public class StateManager : MonoBehaviour
             WaterLevel = stateData.waterLevel;
             PlayerStateDict = stateData.playerState;
         }
+        // 当环境改变时尝试获取氧气
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
     }
 
     private void CheckPlayerState(PlayerStateEnum stateEnum)
@@ -140,17 +92,21 @@ public class StateManager : MonoBehaviour
         // 监听回合结算
         UpdateManager.Instance.PlayerUpdate.AddListener(PlayerUpdate);
         UpdateManager.Instance.EnvironmentUpdate.AddListener(EnvironmentUpdate);
-        // 当环境改变时尝试获取氧气
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
-        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
     }
 
     private void OnDestroy()
     {
         UpdateManager.Instance.PlayerUpdate.RemoveListener(PlayerUpdate);
         UpdateManager.Instance.EnvironmentUpdate.RemoveListener(EnvironmentUpdate);
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, TryGainOxygenFromEnvironment);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
+    }
+
+    private void OnMove(EnvironmentBag env)
+    {
+        TryGainOxygenFromEnvironment(env);
+
+        CalcBodyTemperatureChangeRate(env);
     }
 
     #region 初始化玩家状态
@@ -175,7 +131,7 @@ public class StateManager : MonoBehaviour
         }
     }
 
-    private PlayerState InitHealthState()
+    private State InitHealthState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -194,10 +150,10 @@ public class StateManager : MonoBehaviour
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
 
-        return new PlayerState(100, 150, PlayerStateEnum.Health, +0.5f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(100, 150, +0.5f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
-    private PlayerState InitFullnessState()
+    private State InitFullnessState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -215,10 +171,10 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new PlayerState(100, 250, PlayerStateEnum.Fullness, -1f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(100, 250, -1f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
-    private PlayerState InitThirstState()
+    private State InitThirstState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -236,10 +192,10 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new PlayerState(100, 200, PlayerStateEnum.Thirst, -1.3f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(100, 200, -1.3f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
-    private PlayerState InitSanityState()
+    private State InitSanityState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -257,10 +213,10 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new PlayerState(100, 100, PlayerStateEnum.San, +0.1f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(100, 100, +0.1f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
-    private PlayerState InitOxygenState()
+    private State InitOxygenState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -278,10 +234,10 @@ public class StateManager : MonoBehaviour
             StateEffect.NoEffect,
             StateEffect.NoEffect,
         };
-        return new PlayerState(60, 60, PlayerStateEnum.Oxygen, -6f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(60, 60, -6f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
-    private PlayerState InitSobriety()
+    private State InitSobriety()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -299,10 +255,10 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new PlayerState(150, 180, PlayerStateEnum.Sobriety, -1, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(150, 180, -1, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
-    private PlayerState InitLoadState()
+    private State InitLoadState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -320,10 +276,10 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 1, 2 };
         var highDangerLevels = new List<int>() { 3 };
-        return new PlayerState(0, 30, PlayerStateEnum.Load, 0f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(0, 30, 0f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
-    private PlayerState InitBodyTemperatureState()
+    private State InitBodyTemperatureState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -335,19 +291,19 @@ public class StateManager : MonoBehaviour
         };
         var effects = new List<StateEffect>()
         {
-            new () { fulnessRate = -1.2f, healthRate = -1, painConst = +50 },
-            new () { fulnessRate = -0.4f },
+            new () { fulnessRate = -1.2f, healthRate = -1, bodyTemperatureRate = +2f, painConst = +50 },
+            new () { fulnessRate = -0.4f, bodyTemperatureRate = +1f },
             new () { sanityRate = +0.2f },
-            new () { thirstRate = -0.5f },
-            new () { thirstRate = -1.5f, healthRate = -1, painConst = +50 },
+            new () { thirstRate = -0.5f, bodyTemperatureRate = -1f },
+            new () { thirstRate = -1.5f, healthRate = -1, bodyTemperatureRate = -2f, painConst = +50 },
         };
         var lowDangerLevels = new List<int>() { 1, 3 };
         var highDangerLevels = new List<int>() { 0, 4 };
 
-        return new PlayerState(100, 200, PlayerStateEnum.BodyTemperature, 0f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(100, 200, 0f, thresholds, effects, lowDangerLevels, highDangerLevels, -100);
     }
 
-    private PlayerState InitCarbonMonoxideState()
+    private State InitCarbonMonoxideState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -366,10 +322,10 @@ public class StateManager : MonoBehaviour
         var lowDangerLevels = new List<int>() { 1, 2 };
         var highDangerLevels = new List<int>() { 3 };
 
-        return new PlayerState(0, 100, PlayerStateEnum.CarbonMonoxidePoisoning, -0.8f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(0, 100, -0.3f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
-    private PlayerState InitItchinessState()
+    private State InitItchinessState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -385,10 +341,10 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 1 };
         var highDangerLevels = new List<int>() { 2 };
-        return new PlayerState(0, 100, PlayerStateEnum.Itchiness, -1f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(0, 100, -1f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
 
-    private PlayerState InitPainState()
+    private State InitPainState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -406,23 +362,22 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 1, 2 };
         var highDangerLevels = new List<int>() { 3 };
-        return new PlayerState(0, 400, PlayerStateEnum.PainLevel, -2f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(0, 400, -2f, thresholds, effects, lowDangerLevels, highDangerLevels);
     }
     #endregion
 
     private void InitElectricity()
     {
-        Electricity = new EnvironmentState(Random.Range(30, 45), 50, EnvironmentStateEnum.Electricity, 0);
+        Electricity = new(Random.Range(30, 45), 50);
     }
 
     private void InitWaterLevel()
     {
-        WaterLevel = new EnvironmentState(0, 100, EnvironmentStateEnum.WaterLevel);
+        WaterLevel = new(0, 100);
     }
     #endregion
 
     #region 状态变化相关
-
     /// <summary>
     /// 改变玩家状态
     /// </summary>
@@ -695,6 +650,8 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void PlayerUpdate()
     {
+        CalcBodyTemperatureChangeRate(GameManager.Instance.CurEnvironmentBag);
+
         temp.Clear();
         foreach (var (type, state) in PlayerStateDict)
         {
@@ -706,6 +663,52 @@ public class StateManager : MonoBehaviour
         }
 
         ApplyPlayerStateChange(temp);
+    }
+
+    private void CalcBodyTemperatureChangeRate(EnvironmentBag env)
+    {
+        // 温度差 = 室温 - 体温
+        var diff = env.StateDict[EnvironmentStateEnum.RoomTemperature].NormedValue - PlayerStateDict[PlayerStateEnum.BodyTemperature].NormedValue;
+
+        float rate;
+        if (diff < -50)
+        {
+            rate = -4f;
+        }
+        else if (diff < -30)
+        {
+            rate = -3f;
+        }
+        else if (diff < -10)
+        {
+            rate = -2f;
+        }
+        else if (diff < -5)
+        {
+            rate = -1f;
+        }
+        else if (diff <= 5)
+        {
+            rate = 0f;
+        }
+        else if (diff <= 10)
+        {
+            rate = 1f;
+        }
+        else if (diff <= 30)
+        {
+            rate = 2f;
+        }
+        else if (diff <= 50)
+        {
+            rate = 3f;
+        }
+        else
+        {
+            rate = 4f;
+        }
+
+        SetPlayerStateBasicChangeRate(PlayerStateEnum.BodyTemperature, rate);
     }
     #endregion
 

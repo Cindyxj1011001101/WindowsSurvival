@@ -9,6 +9,7 @@ public static class ColorManager
     public static Color32 LightGrey { get; private set; } = new(118, 118, 118, 255);
     public static Color32 White { get; private set; } = new(255, 255, 255, 255);
     public static Color32 Blue { get; private set; } = new(77, 154, 255, 255);
+    public static Color32 DarkBlue { get; private set; } = new(0, 128, 255, 255);
     public static Color32 SkyBlue { get; private set; } = new(1, 255, 249, 255);
     public static Color32 Cyan { get; private set; } = new(10, 229, 176, 255);
     public static Color32 Green { get; private set; } = new(0, 209, 63, 255);
@@ -38,5 +39,14 @@ public static class ColorManager
         { 1,  Yellow },
         { 2,  Orange },
         { 3,  Red },
+    };
+
+    public static Dictionary<int, Color32> TemperatureColors = new()
+    {
+        { 0, DarkBlue },
+        { 1, SkyBlue },
+        { 2, Green },
+        { 3, Yellow },
+        { 4, Red },
     };
 }
