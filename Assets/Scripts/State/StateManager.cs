@@ -107,6 +107,8 @@ public class StateManager : MonoBehaviour
         TryGainOxygenFromEnvironment(env);
 
         CalcBodyTemperatureChangeRate(env);
+
+        CalcCarbonMonoxidePoisoningChangeRate(env);
     }
 
     #region 初始化玩家状态
@@ -651,6 +653,7 @@ public class StateManager : MonoBehaviour
     private void PlayerUpdate()
     {
         CalcBodyTemperatureChangeRate(GameManager.Instance.CurEnvironmentBag);
+        CalcCarbonMonoxidePoisoningChangeRate(GameManager.Instance.CurEnvironmentBag);
 
         temp.Clear();
         foreach (var (type, state) in PlayerStateDict)
@@ -665,6 +668,10 @@ public class StateManager : MonoBehaviour
         ApplyPlayerStateChange(temp);
     }
 
+    /// <summary>
+    /// 计算室温导致的体温变化
+    /// </summary>
+    /// <param name="env"></param>
     private void CalcBodyTemperatureChangeRate(EnvironmentBag env)
     {
         // 温度差 = 室温 - 体温
@@ -709,6 +716,40 @@ public class StateManager : MonoBehaviour
         }
 
         SetPlayerStateBasicChangeRate(PlayerStateEnum.BodyTemperature, rate);
+    }
+
+    /// <summary>
+    /// 计算室内一氧化碳浓度导致的一氧化碳中毒影响
+    /// </summary>
+    /// <param name="env"></param>
+    private void CalcCarbonMonoxidePoisoningChangeRate(EnvironmentBag env)
+    {
+        // 温度差 = 室温 - 体温
+        var value = env.StateDict[EnvironmentStateEnum.CarbonMonoxideLevel].NormedValue;
+
+        float rate;
+        if (value <= 0)
+        {
+            rate = 0f;
+        }
+        else if (value <= 25)
+        {
+            rate = +.5f;
+        }
+        else if (value <= 50)
+        {
+            rate = +1f;
+        }
+        else if (value <= 75)
+        {
+            rate = +1.7f;
+        }
+        else
+        {
+            rate = +3f;
+        }
+
+        SetPlayerStateBasicChangeRate(PlayerStateEnum.CarbonMonoxidePoisoning, rate);
     }
     #endregion
 

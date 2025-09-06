@@ -66,24 +66,7 @@ public class EnvironmentBag : Bag
         if (PlaceData.isIndoor)
         {
             StateDict.Add(EnvironmentStateEnum.Oxygen, new State(UnityEngine.Random.Range(400, 600), 1000));
-
-            var thresholds = new List<StateThreshold>()
-            {
-                new (-1, 0, "无一氧化碳"),
-                new (0, 25, "低浓度"),
-                new (25, 50, "中浓度"),
-                new (50, 75, "高浓度"),
-                new (75, int.MaxValue, "极高浓度"),
-            };
-            var effects = new List<StateEffect>()
-            {
-                StateEffect.NoEffect,
-                new () { carbonMonoxidePoisoningRate = +0.5f },
-                new () { carbonMonoxidePoisoningRate = +1f },
-                new () { carbonMonoxidePoisoningRate = +1.7f },
-                new () { carbonMonoxidePoisoningRate = +3f },
-            };
-            StateDict.Add(EnvironmentStateEnum.CarbonMonoxideLevel, new State(0, 100, -0.5f, thresholds, effects, new(), new()));
+            StateDict.Add(EnvironmentStateEnum.CarbonMonoxideLevel, new State(0, 100, -0.5f));
         }
 
         // 室温
