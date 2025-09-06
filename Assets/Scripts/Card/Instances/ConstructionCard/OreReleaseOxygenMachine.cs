@@ -9,8 +9,9 @@ public class OreReleaseOxygenMachine : ConstructionCard
     private StateMachineComponent stateMachine;
     private InnerContentsComponent innerContents;
     private OxygenStorageComponent oxygenStorage;
-    private TimerComponent timer;
 
+    public float generateProcess = 120;
+    public float maxGenerateProcess = 120;
     public float oxygenRelease = 180; // 氧气释放量
     public int oreConsumption = 1; // 白爆矿消耗量
     public float electricityConsumption = 1; // 电力消耗量
@@ -47,14 +48,6 @@ public class OreReleaseOxygenMachine : ConstructionCard
             oxygenStorage = new OxygenStorageComponent(360);
             AddComponent(oxygenStorage);
         }
-
-        // 添加计时器组件
-        if (!TryGetComponent(out timer))
-        {
-            timer = new TimerComponent(120);
-            timer.tipText = "下次制氧";
-            AddComponent(timer);
-        }
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -90,7 +83,13 @@ public class OreReleaseOxygenMachine : ConstructionCard
     private void Event_Open(out string tip)
     {
         tip = string.Empty;
-        stateMachine.ChangeState("已开启");
+
+		// 添加计时器组件
+		var timer = new TimerComponent(generateProcess, maxGenerateProcess);
+		timer.tipText = "下次制氧";
+		AddComponent(timer);
+
+		stateMachine.ChangeState("已开启");
     }
 
     private bool Judge_Open(out string hint)
@@ -103,6 +102,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
     {
         tip = string.Empty;
         stateMachine.ChangeState("已关闭");
+        RemoveComponent<TimerComponent>();
     }
 
     private bool Judge_Close(out string hint)
@@ -187,10 +187,15 @@ public class OreReleaseOxygenMachine : ConstructionCard
         }
 
         // 制氧进度增加
-        timer.AddValue(-TimeManager.Instance.SettleInterval);
-        
+        generateProcess -= TimeManager.Instance.SettleInterval;
+
+		if (TryGetComponent<TimerComponent>(out var timer))
+        {
+            timer.SetValue(generateProcess);
+        }
+
         // 进度不满不制氧
-        if (timer.value > 0)
+        if (generateProcess > 0)
         {
             return;
         }
@@ -221,7 +226,8 @@ public class OreReleaseOxygenMachine : ConstructionCard
         }
 
         //归零生产进度
-        timer.SetValue(timer.maxValue);
+        generateProcess = 0;
+        timer?.SetValue(generateProcess);
 
         // 消耗电力
         StateManager.Instance.ChangeElectricity(-electricityConsumption);

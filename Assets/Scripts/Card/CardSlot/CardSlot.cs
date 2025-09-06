@@ -205,14 +205,14 @@ public class CardSlot : MonoBehaviour
             else
                 slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent).GetComponent<UIStateSlider>();
 
+
+            slider.transform.SetAsLastSibling();
+
+            slider.transform.position = parent.position;
+            (slider.transform as RectTransform).anchoredPosition = Vector3.zero;
+            slider.transform.localRotation = Quaternion.identity;
             componentSliders.Add(component.GetType(), slider);
         }
-
-        slider.transform.SetAsLastSibling();
-
-        slider.transform.position = parent.position;
-        (slider.transform as RectTransform).anchoredPosition = Vector3.zero;
-        slider.transform.localRotation = Quaternion.identity;
 
         if (ColorManager.CardComponentColors.TryGetValue(component.GetType(), out var fillColor))
             slider.fillColor = fillColor;
