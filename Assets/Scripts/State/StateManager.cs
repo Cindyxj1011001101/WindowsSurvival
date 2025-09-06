@@ -715,8 +715,7 @@ public class StateManager : MonoBehaviour
             rate = 4f;
         }
 
-        float basicRate = -0.3f;
-        SetPlayerStateBasicChangeRate(PlayerStateEnum.BodyTemperature, rate + basicRate);
+        SetPlayerStateBasicChangeRate(PlayerStateEnum.BodyTemperature, rate);
     }
 
     /// <summary>
@@ -750,7 +749,8 @@ public class StateManager : MonoBehaviour
             rate = +3f;
         }
 
-        SetPlayerStateBasicChangeRate(PlayerStateEnum.CarbonMonoxidePoisoning, rate);
+        float basicRate = -0.3f;
+        SetPlayerStateBasicChangeRate(PlayerStateEnum.CarbonMonoxidePoisoning, rate + basicRate);
     }
     #endregion
 
