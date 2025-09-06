@@ -58,7 +58,7 @@ public class AquariusFish : Card
             // 获得一张“被捉住的水瓶鱼”
             // 继承产物进度
             // 添加到玩家背包
-            AddCard("被捉住的水瓶鱼", true, out var card);
+            TurnTo("被捉住的水瓶鱼", GameManager.Instance.PlayerBag, out var card);
             card.InheritComponent<ProgressComponent>(this, out _);
         }
     }
@@ -79,7 +79,7 @@ public class AquariusFish : Card
 
         // 3. 掉落卡牌
         // 获得一张“被捉住的水瓶鱼”
-        AddCard("被捉住的水瓶鱼", true, out var card);
+        TurnTo("被捉住的水瓶鱼", GameManager.Instance.PlayerBag, out var card);
         card.InheritComponent<ProgressComponent>(this, out _);
     }
 

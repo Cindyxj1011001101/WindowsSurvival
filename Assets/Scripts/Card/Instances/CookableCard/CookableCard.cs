@@ -21,6 +21,6 @@
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("点火_02", true);
         TimeManager.Instance.AddTime(15);
-        AddCard(cookComponent.outcomeCardId, true);
+        TurnTo(cookComponent.outcomeCardId, Bag);
     }
 }

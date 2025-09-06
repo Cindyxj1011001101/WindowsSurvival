@@ -35,10 +35,10 @@ public class AquariusFishWithProduct : Card
     #region 用手捉
     private void Event_CatchByHand(out string tip)
     {
+        tip = string.Empty;
+
         // 1. 销毁卡牌
         DestroyThis();
-
-        tip = string.Empty;
 
         int rand = Random.Range(0, 4);
         if (rand < 3)
@@ -57,7 +57,7 @@ public class AquariusFishWithProduct : Card
             TimeManager.Instance.AddTime(30);
 
             // 获得一张“有产物的被捉住的水瓶鱼”
-            AddCard("有产物的被捉住的水瓶鱼", true);
+            TurnTo("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
         }
     }
     #endregion
@@ -65,19 +65,19 @@ public class AquariusFishWithProduct : Card
 
     private void Catch(Card tool, out string tip)
     {
+        tip = string.Empty;
+
         // 销毁卡牌
         DestroyThis();
         // 1. 消耗耐久
         tool.Use();
-
-        tip = string.Empty;
 
         // 2. 时间变化
         TimeManager.Instance.AddTime(15);
 
         // 3. 掉落卡牌
         // 获得一张“有产物的被捉住的水瓶鱼”
-        AddCard("有产物的被捉住的水瓶鱼", true);
+        TurnTo("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
     }
 
     public override bool CanQuickInteract(Card card)

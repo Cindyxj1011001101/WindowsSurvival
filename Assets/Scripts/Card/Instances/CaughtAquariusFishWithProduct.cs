@@ -37,7 +37,7 @@ public class CaughtAquariusFishWithProduct : Card
 
         tip = string.Empty;
         // 地点中增加一个有产物的水瓶鱼
-        AddCard("有产物的水瓶鱼", true);
+        TurnTo("有产物的水瓶鱼", GameManager.Instance.CurEnvironmentBag);
     }
 
     private bool Judge_Release(out string hint)
@@ -84,7 +84,7 @@ public class CaughtAquariusFishWithProduct : Card
 
         TimeManager.Instance.AddTime(15);
 
-        AddCard("被捉住的水瓶鱼", Bag);
+        TurnTo("被捉住的水瓶鱼", Bag);
         AddCard("育卵液", true);
     }
 

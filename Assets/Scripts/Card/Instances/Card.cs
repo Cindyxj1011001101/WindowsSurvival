@@ -176,13 +176,13 @@ public abstract class Card : IComparable<Card>
         if (TryGetComponent<FreshnessComponent>(out var f))
         {
             if (CardId == "磁性触手" || CardId == "熟触手")
-                f.onRotton = () => AddCard("废金属", Bag);
+                f.onRotton = () => TurnTo("废金属", Bag);
             else
-                f.onRotton = () => AddCard("腐烂物", Bag);
+                f.onRotton = () => TurnTo("腐烂物", Bag);
         }
         if (TryGetComponent<ProgressComponent>(out var p))
         {
-            p.onProgressFull = () => AddCard($"有产物的{CardName}", Bag);
+            p.onProgressFull = () => TurnTo($"有产物的{CardName}", Bag);
         }
         if (TryGetComponent<PlantGrowthComponent>(out var pg))
         {
@@ -454,6 +454,8 @@ public abstract class Card : IComparable<Card>
 
             if (Slot != null) return Slot.transform;
 
+            if (Bag is InnerBag innerBag && innerBag.BelongedCard.Slot != null) return innerBag.BelongedCard.Slot.transform;
+
             return null;
         }
         set
@@ -498,23 +500,19 @@ public abstract class Card : IComparable<Card>
         AddCard(card, targetBag);
     }
 
-    protected void AddCard(Card card, Bag targetBag)
+    protected void AddCard(Card card, Bag targetBag, bool playAnim = true)
     {
         // 尝试放在targetBag里
         if (targetBag.CanAddCard(card, out _))
         {
             // 成功放置
-            var transform = Transform;
-            if (transform == null && Bag is InnerBag innerBag && innerBag.BelongedCard != null)
-                transform = innerBag.BelongedCard.Transform;
             // 当前卡牌和其父卡牌都没有显示在场景里
-            if (transform == null)
+            if (!playAnim || Transform == null)
                 // 没有动效直接添加
                 GameManager.Instance.AddCard(card, targetBag);
             else
                 // 添加并且播放动效
-                GameManager.Instance.AddCardWithTween(card, targetBag, transform.position);
-
+                GameManager.Instance.AddCardWithTween(card, targetBag, Transform.position);
         }
         // 放不下看targetBag是不是内容物背包
         else if (targetBag is InnerBag innerBag)
@@ -527,6 +525,28 @@ public abstract class Card : IComparable<Card>
         {
             AddCard(card, GameManager.Instance.CurEnvironmentBag);
         }
+    }
+
+    protected void TurnTo(Card targetCard, Bag targetBag)
+    {
+        // 销毁自身
+        DestroyThis();
+        // 添加目标卡牌到包中
+        AddCard(targetCard, targetBag, false);
+        // 播放动效
+        if (Transform != null)
+            MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot());
+    }
+
+    protected void TurnTo(string cardId, Bag targetBag, out Card card)
+    {
+        card = CardFactory.CreateCard(cardId);
+        TurnTo(card, targetBag);
+    }
+
+    protected void TurnTo(string cardId, Bag targetBag)
+    {
+        TurnTo(cardId, targetBag, out _);
     }
 }
 

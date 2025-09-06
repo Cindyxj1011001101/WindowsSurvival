@@ -32,12 +32,14 @@ public class SiphonophyllumWithProduct : Card
 
     private void Event_Collect(out string tip)
     {
-        // 变回虹吸海葵
-        DestroyThis();
-        AddCard("虹吸海葵", Bag);
-
         tip = string.Empty;
+        DestroyThis();
+
         TimeManager.Instance.AddTime(15);
+
+        // 变回虹吸海葵
+        TurnTo("虹吸海葵", Bag);
+
         int random = Random.Range(0, 6);
         if (random < 3)
         {

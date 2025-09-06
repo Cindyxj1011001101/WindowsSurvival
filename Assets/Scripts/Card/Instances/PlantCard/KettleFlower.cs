@@ -28,7 +28,6 @@ public class KettleFlower : Card
         base.Awake();
 
         TryGetComponent(out plant);
-        plant.onDead = () => AddCard("水壶兰种子", true); // 死亡时获得一颗种子
 
         if (!TryGetComponent(out stateMachine))
         {
@@ -92,7 +91,7 @@ public class KettleFlower : Card
 
         if (Random.Range(0, 100) <= 5) // 5%概率获得水壶兰种子
         {
-            AddCard("水壶兰种子", true);
+            AddCard("水壶兰种子", Bag);
         }
 
         UpdatePlantState();
@@ -130,7 +129,7 @@ public class KettleFlower : Card
         DestroyThis();
         tool.Use();
         TimeManager.Instance.AddTime(15);
-        AddCard("水壶兰种子", true);
+        AddCard("水壶兰种子", Bag);
     }
 
     private bool Judge_DigUp(out string hint)

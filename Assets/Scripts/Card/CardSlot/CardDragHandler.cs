@@ -40,9 +40,12 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             pickedCount = 1;
 
         var card = sourceSlot.PeekCard();
-        // 更新源卡槽显示
-        sourceSlot.DisplayCard(card, sourceSlot.StackNum - pickedCount);
         cursorSlot.DisplayCard(card, pickedCount);
+        if (sourceSlot.StackNum - pickedCount > 0)
+            // 更新源卡槽显示
+            sourceSlot.DisplayCard(sourceSlot.Cards[pickedCount], sourceSlot.StackNum - pickedCount);
+        else
+            sourceSlot.Clear();
 
         // 让sourceSlot暂时不要刷新显示
         sourceSlot.DontRefresh = true;

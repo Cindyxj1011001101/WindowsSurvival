@@ -34,15 +34,15 @@ public class LoveBeadWithProduct : Card
 
     private void OpenByTool(Card tool, out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         tool.Use();
 
-        tip = string.Empty;
+        TimeManager.Instance.AddTime(15);
 
         // 变回爱情贝
-        // 如果原来在玩家背包，则优先添加到玩家背包，否则添加到环境里
-        AddCard("爱情贝", Bag);
-        TimeManager.Instance.AddTime(15);
+        TurnTo("爱情贝", Bag);
+
         //撬开概率
         int random = Random.Range(0, 15);
         if (random < 3)

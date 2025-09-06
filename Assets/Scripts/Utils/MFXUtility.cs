@@ -2,6 +2,7 @@
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class MFXUtility
 {
@@ -110,7 +111,6 @@ public class MFXUtility
         )
     {
         var seq = DOTween.Sequence();
-
         
         for (int i = 0; i < cards.Count; i++)
         {
@@ -131,6 +131,57 @@ public class MFXUtility
         }
 
         return seq;
+    }
+
+    /// <summary>
+    /// 从一张卡牌变成另一张卡牌
+    /// </summary>
+    /// <param name="sourceCard"></param>
+    /// <param name="targetCard"></param>
+    /// <param name="onStart"></param>
+    /// <param name="onComplete"></param>
+    /// <returns></returns>
+    public static Tween TurnTo(Card sourceCard, Card targetCard, UnityAction onStart = null, UnityAction onComplete = null)
+    {
+        var slot = CreateSlot(sourceCard.Transform.position);
+        slot.DisplayCard(sourceCard, 1, false);
+
+        var mainSeq = DOTween.Sequence();
+
+        var transform = slot.transform as RectTransform;
+
+        var scaleSeq = DOTween.Sequence();
+        scaleSeq.Append(transform.DOScale(1.1f, .2f));
+        scaleSeq.AppendInterval(.4f);
+        scaleSeq.Append(transform.DOScale(1f, .2f));
+
+        mainSeq.Join(scaleSeq);
+
+        var moveSeq = DOTween.Sequence();
+        moveSeq.Join(transform.DOAnchorPos(targetCard.Transform.position, .4f).SetDelay(.4f));
+
+        mainSeq.Join(moveSeq);
+
+        var rotateSeq = DOTween.Sequence();
+        rotateSeq.Append(transform.DOLocalRotate(Vector3.up * 90, .25f).OnComplete(() =>
+        {
+            slot.Clear();
+            slot.DisplayCard(targetCard, 1, false);
+        }));
+        rotateSeq.Append(transform.DOLocalRotate(Vector3.zero, .25f));
+
+        mainSeq.Join(rotateSeq); // 总时长0.8s
+
+        mainSeq.OnStart(() => onStart?.Invoke());
+
+        mainSeq.OnComplete(() =>
+        {
+            onComplete?.Invoke();
+            ObjectBufferPool.Instance.Restore(slot.gameObject);
+            SoundManager.Instance.PlaySound("放置卡牌", true);
+        });
+
+        return mainSeq;
     }
 
     public static void ShowTip(string tip, Vector3 position, float duration = 1f)

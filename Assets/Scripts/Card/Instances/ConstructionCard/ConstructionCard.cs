@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-
+﻿/// <summary>
+/// 建筑卡片基类
+/// </summary>
 public abstract class ConstructionCard : Card
 {
     private ConstructionComponent construction;
@@ -31,7 +32,7 @@ public abstract class ConstructionCard : Card
         TimeManager.Instance.AddTime(15);
 
         // 掉落拆毁产物
-        AddCards(ParseDemolitionDebris(construction.demolitionDebris), false);
+        ParseAndDrop(construction.demolitionDebris);
     }
 
     private void Event_DemolishThis(out string tip)
@@ -56,24 +57,16 @@ public abstract class ConstructionCard : Card
     /// </summary>
     /// <param name="s"></param>
     /// <returns></returns>
-    private List<Card> ParseDemolitionDebris(string s)
+    private void ParseAndDrop(string s)
     {
-        List<Card> result = new();
-
         // 格式为：卡牌ID * 数量 + 卡牌ID * 数量 + ...
         var strs = s.Replace(" ", "").Split('+');
         string[] config;
         foreach (var str in strs)
         {
             config = str.Split('*');
-            var card = CardFactory.CreateCard(config[0]);
-            for (int i = 0; i < int.Parse(config[1]); i++)
-            {
-                result.Add(card);
-            }
+            AddCards(config[0], int.Parse(config[1]), false);
         }
-
-        return result;
     }
 
     public override bool CanQuickInteract(Card card)

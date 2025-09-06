@@ -88,7 +88,8 @@ public class SafeInsurance : ConstructionCard
         // 播放音效
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("摧毁_01", true);
-        AddCard("被撬开的保险柜", false, out var card);
+        //AddCard("被撬开的保险柜", false, out var card);
+        TurnTo("被撬开的保险柜", Bag, out var card);
         // 继承内容物
         card.InheritComponent<InnerContentsComponent>(this, out var newComponent);
         newComponent.allowAdd = newComponent.allowRemove = newComponent.display = true;
