@@ -715,7 +715,8 @@ public class StateManager : MonoBehaviour
             rate = 4f;
         }
 
-        SetPlayerStateBasicChangeRate(PlayerStateEnum.BodyTemperature, rate);
+        float basicRate = -0.3f;
+        SetPlayerStateBasicChangeRate(PlayerStateEnum.BodyTemperature, rate + basicRate);
     }
 
     /// <summary>
