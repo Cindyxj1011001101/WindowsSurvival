@@ -151,7 +151,7 @@ public class MFXUtility
         var transform = slot.transform as RectTransform;
 
         var scaleSeq = DOTween.Sequence();
-        scaleSeq.Append(transform.DOScale(1.1f, .2f));
+        scaleSeq.Append(transform.DOScale(1.15f, .2f));
         scaleSeq.AppendInterval(.4f);
         scaleSeq.Append(transform.DOScale(1f, .2f));
 

@@ -233,6 +233,7 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     public void StopUpdating()
     {
+        PauseUpdating();
         UpdateManager.Instance.CardUpdate.RemoveListener(Update);
     }
 
