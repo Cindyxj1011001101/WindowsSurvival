@@ -88,9 +88,15 @@ public class CaughtAquariusFishWithProduct : Card
         AddCard("育卵液", true);
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
-        return card.CardId == "凝胶装瓶器";
+        tip = string.Empty;
+        if (card.CardId == "凝胶装瓶器")
+        {
+            tip = "液体装瓶";
+            return true;
+        }
+        return false;
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)

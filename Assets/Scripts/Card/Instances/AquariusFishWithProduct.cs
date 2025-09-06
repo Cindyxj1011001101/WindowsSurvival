@@ -80,9 +80,15 @@ public class AquariusFishWithProduct : Card
         TurnTo("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
-        return card.CardId == "捞网";
+        tip = string.Empty;
+        if (card.CardId == "捞网")
+        {
+            tip = "用捞网捉";
+            return true;
+        }
+        return false;
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)

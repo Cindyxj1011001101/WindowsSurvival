@@ -29,6 +29,8 @@ public class CardSlot : MonoBehaviour
 
     [SerializeField] private Animator cardAnimator;
 
+    [SerializeField] private HoverTipController tipController;
+
     private Dictionary<Type, float> lastComponentValues = new();
     private Dictionary<Type, UIStateSlider> componentSliders = new(); // 用于存储组件的滑动条
 
@@ -93,10 +95,12 @@ public class CardSlot : MonoBehaviour
             return;
         }
 
-        if (PeekCard().CanQuickInteract(card))
+        if (PeekCard().CanQuickInteract(card, out var tip))
         {
             mask.SetActive(false);
             Interactable = true;
+            tipController.enabled = true;
+            tipController.SetTip(tip);
         }
         else
         {
@@ -109,6 +113,7 @@ public class CardSlot : MonoBehaviour
     {
         mask.SetActive(false);
         Interactable = false;
+        tipController.enabled = false;
     }
 
     private void OnChangeTimeStarted()
@@ -437,6 +442,8 @@ public class CardSlot : MonoBehaviour
 
         componentSliders.Clear();
         lastComponentValues.Clear();
+
+        tipController.enabled = false;
     }
 
     /// <summary>

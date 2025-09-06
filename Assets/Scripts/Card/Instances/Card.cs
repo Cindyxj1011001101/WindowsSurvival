@@ -296,7 +296,11 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     /// <param name="card">被拿起的卡牌</param>
     /// <returns></returns>
-    public virtual bool CanQuickInteract(Card card) { return false; }
+    public virtual bool CanQuickInteract(Card card, out string tip)
+    {
+        tip = string.Empty;
+        return false;
+    }
 
     /// <summary>
     /// 拖动交互的具体逻辑

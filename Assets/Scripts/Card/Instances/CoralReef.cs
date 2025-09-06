@@ -87,10 +87,16 @@ public class CoralReef : Card
         RandomDrop();
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
+        tip = string.Empty;
         // 允许和带有挖掘标签的卡牌快速交互
-        return card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig);
+        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
+        {
+            tip = "用铲子凿";
+            return true;
+        }
+        return false;
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)

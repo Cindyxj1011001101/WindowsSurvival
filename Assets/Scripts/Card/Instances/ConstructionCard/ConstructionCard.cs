@@ -69,24 +69,20 @@ public abstract class ConstructionCard : Card
         }
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
+        tip = string.Empty;
         if (construction.canBeDemolished && card.CardId == "钢锤")
         {
+            tip = "暴力拆毁";
             return true;
         }
-        return base.CanQuickInteract(card);
+        return false;
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
         tip = string.Empty;
-        var card = slot.PeekCard();
-        if (construction.canBeDemolished && card.CardId == "钢锤")
-        {
-            DemolishThis(card);
-            return;
-        }
-        base.QuickIneract(slot, count, out tip);
+        DemolishThis(slot.PeekCard());
     }
 }

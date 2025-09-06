@@ -68,11 +68,13 @@ public class LoveBeadWithProduct : Card
     }
     #endregion
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
-        if (card.TryGetComponent<ToolComponent>(out var component))
+        tip = string.Empty;
+        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Intersect(new List<ToolType> { ToolType.Cut, ToolType.Dig }).Any())
         {
-            if (component.toolTypes.Intersect(new List<ToolType> { ToolType.Cut, ToolType.Dig }).Any()) return true;
+            tip = "撬开";
+            return true;
         }
         return false;
     }

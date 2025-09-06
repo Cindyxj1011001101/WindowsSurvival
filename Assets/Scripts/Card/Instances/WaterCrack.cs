@@ -39,9 +39,15 @@ public class WaterCrack : Card
         TimeManager.Instance.AddTime(15);
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
-        return card.CardId == "裂缝填充物";
+        tip = string.Empty;
+        if (card.CardId == "裂缝填充物")
+        {
+            tip = "堵住";
+            return true;
+        }
+        return false;
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)

@@ -10,7 +10,7 @@ public class SeaGrassBed : Card
         Events = new()
         {
             new Event("用手采集", "获得的东西更少且有可能划伤手", Event_CollectByHand, null, () => 30),
-            new Event("用刀切割", "耗时更少但获得更多产物", Event_CollectByKnife, Judge_CollectByKnife, () => 15),
+            new Event("用刀采集", "耗时更少但获得更多产物", Event_CollectByKnife, Judge_CollectByKnife, () => 15),
         };
     }
 
@@ -95,12 +95,14 @@ public class SeaGrassBed : Card
         RandomDropByKnife();
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
+        tip = string.Empty;
         // 允许和带有切割标签的卡牌快速交互
-        if (card.TryGetComponent<ToolComponent>(out var component))
+        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            if (component.toolTypes.Contains(ToolType.Cut)) return true;
+            tip = "用刀采集";
+            return true;
         }
         return false;
     }

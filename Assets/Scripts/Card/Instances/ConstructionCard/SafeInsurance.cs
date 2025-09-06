@@ -118,29 +118,42 @@ public class SafeInsurance : ConstructionCard
         TimeManager.Instance.AddTime(15);
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
+        tip = string.Empty;
+
         // 用铲子凿
-        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig)) return true;
+        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
+        {
+            tip = "用铲子凿";
+            return true;
+        }
 
-        if (card.CardId == "钢锤") return true;
+        if (card.CardId == "钢锤")
+        {
+            tip = "用锤子砸";
+            return true;
+        }
 
-        return base.CanQuickInteract(card);
+        return false;
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
+        tip = string.Empty;
+
         var card = slot.PeekCard();
+        
         if (slot.PeekCard().CardId == "钢锤")
         {
             UseHammer(card, out tip);
             return;
         }
-        else if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
+        
+        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
             UseShovel(card, out tip);
             return;
         }
-        base.QuickIneract(slot, count, out tip);
     }
 }

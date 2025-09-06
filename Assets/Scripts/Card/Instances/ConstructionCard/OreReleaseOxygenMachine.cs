@@ -68,16 +68,16 @@ public class OreReleaseOxygenMachine : ConstructionCard
         return true;
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
-        if (base.CanQuickInteract(card)) return true;
+        if (base.CanQuickInteract(card, out tip)) return true;
 
-        return innerContents.CanQuickInteract(card);
+        return innerContents.CanQuickInteract(card, out tip);
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        if (base.CanQuickInteract(slot.PeekCard()))
+        if (base.CanQuickInteract(slot.PeekCard(), out _))
         {
             base.QuickIneract(slot, count, out tip);
             return;

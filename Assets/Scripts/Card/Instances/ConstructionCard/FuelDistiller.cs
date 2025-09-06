@@ -152,16 +152,24 @@ public class FuelDistiller : ConstructionCard
         ShowTip("蒸馏得到了一瓶瓶装水");
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
         // 添加燃料
-        if (fuelStorage.CanQuickInteract(card)) return true;
+        if (fuelStorage.CanQuickInteract(card))
+        {
+            tip = "添加燃料";
+            return true;
+        }
 
         // 放入盐水
-        if (card.CardId == "盐水" && salineWaterStorage.value < salineWaterStorage.maxValue) return true;
+        if (card.CardId == "盐水" && salineWaterStorage.value < salineWaterStorage.maxValue)
+        {
+            tip = "倒入盐水";
+            return true;
+        }
 
         // 拆毁
-        return base.CanQuickInteract(card);
+        return base.CanQuickInteract(card, out tip);
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)

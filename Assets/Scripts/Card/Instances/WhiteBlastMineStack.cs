@@ -56,12 +56,14 @@ public class WhiteBlastMineStack : Card
         RandomDrop();
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
+        tip = string.Empty;
         // 允许和带有切割标签的卡牌快速交互
-        if (card.TryGetComponent<ToolComponent>(out var component))
+        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            if (component.toolTypes.Contains(ToolType.Dig)) return true;
+            tip = "用铲子凿";
+            return true;
         }
         return false;
     }

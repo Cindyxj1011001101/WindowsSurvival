@@ -9,7 +9,7 @@ public class AquariusFish : Card
     {
         Events = new()
         {
-            new Event("用捕网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, () => 15),
+            new Event("用捞网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, () => 15),
             new Event("用手捉", "可能捉不到", Event_CatchByHand, null, () => 30),
         };
     }
@@ -83,9 +83,15 @@ public class AquariusFish : Card
         card.InheritComponent<ProgressComponent>(this, out _);
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
-        return card.CardId == "捞网";
+        tip = string.Empty;
+        if (card.CardId == "捞网")
+        {
+            tip = "用捞网捉";
+            return true;
+        }
+        return false;
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)

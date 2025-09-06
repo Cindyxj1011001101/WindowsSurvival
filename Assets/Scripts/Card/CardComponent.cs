@@ -324,9 +324,27 @@ public class InnerContentsComponent : CardComponent
 
     public int DestroyCardsByCardId(string cardId, int count) => bag.DestroyCardsByCardId(cardId, count);
 
-    public bool CanQuickInteract(Card card)
+    public bool CanQuickInteract(Card card, out string tip)
     {
-        return card.Moveable && card.Bag != bag && bag.CanAddCard(card, out _);
+        tip = string.Empty;
+        if (card.Moveable && card.Bag != bag && bag.CanAddCard(card, out _))
+        {
+            tip = "放入内容物";
+            return true;
+        }
+        return false;
+    }
+
+    public void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        tip = string.Empty;
+        for (int i = 0; i < count; i++)
+        {
+            if (!bag.CanAddCard(slot.PeekCard(), out tip)) break;
+            var toAdd = slot.RemoveCard();
+            bag.AddCard(toAdd);
+            toAdd.RefreshSlot();
+        }
     }
 
     public void PauseUpdating()
@@ -347,18 +365,6 @@ public class InnerContentsComponent : CardComponent
             {
                 action?.Invoke(card);
             }
-        }
-    }
-
-    public void QuickIneract(SlotCards slot, int count, out string tip)
-    {
-        tip = string.Empty;
-        for (int i = 0; i < count; i++)
-        {
-            if (!bag.CanAddCard(slot.PeekCard(), out tip)) break;
-            var toAdd = slot.RemoveCard();
-            bag.AddCard(toAdd);
-            toAdd.RefreshSlot();
         }
     }
 

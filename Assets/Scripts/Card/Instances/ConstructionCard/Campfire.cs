@@ -205,14 +205,18 @@ public class Campfire : ConstructionCard
         return true;
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
         // 添加燃料
-        if (fuelStorage.CanQuickInteract(card)) return true;
+        if (fuelStorage.CanQuickInteract(card))
+        {
+            tip = "添加燃料";
+			return true;
+		}
         // 放入内容物
-        if (innerContents.CanQuickInteract(card)) return true;
+        if (innerContents.CanQuickInteract(card, out tip)) return true;
         // 拆毁
-        return base.CanQuickInteract(card);
+        return base.CanQuickInteract(card, out tip);
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
@@ -227,7 +231,7 @@ public class Campfire : ConstructionCard
         }
 
         // 放入内容物
-        if (innerContents.CanQuickInteract(card))
+        if (innerContents.CanQuickInteract(card, out _))
         {
             innerContents.QuickIneract(slot, count, out tip);
             return;

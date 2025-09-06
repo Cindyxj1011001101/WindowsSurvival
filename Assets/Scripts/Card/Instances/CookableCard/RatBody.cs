@@ -94,12 +94,14 @@ public class RatBody : CookableCard
     }
     #endregion
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
+        tip = string.Empty;
         // 允许和带有切割标签的卡牌快速交互
-        if (card.TryGetComponent<ToolComponent>(out var component))
+        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            if (component.toolTypes.Contains(ToolType.Cut)) return true;
+            tip = "用刀切割";
+            return true;
         }
         return false;
     }

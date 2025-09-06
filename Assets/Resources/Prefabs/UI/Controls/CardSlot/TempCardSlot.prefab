@@ -1929,6 +1929,7 @@ GameObject:
   - component: {fileID: 4750413819344185410}
   - component: {fileID: 527027144953067077}
   - component: {fileID: 502016104440838314}
+  - component: {fileID: 9044048913553053745}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -2077,6 +2078,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   changeMouseType: 0
   InButton: 0
+--- !u!114 &9044048913553053745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7221006975776441215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40fa700f93e8d7446ad366bdfe799a7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 10, y: 0}
+  onPointerEnter:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &7259874036709276877
 GameObject:
   m_ObjectHideFlags: 0
@@ -2336,6 +2353,7 @@ MonoBehaviour:
   fireIcon: {fileID: 2463911327904468339}
   flashIcon: {fileID: 6617699673019985640}
   cardAnimator: {fileID: 1024847263152617096}
+  tipController: {fileID: 9044048913553053745}
 --- !u!225 &8356294659441100970
 CanvasGroup:
   m_ObjectHideFlags: 0

@@ -193,18 +193,29 @@ public class KettleFlower : Card
         UpdatePlantState();
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
+        tip = string.Empty;
         if (card.TryGetComponent<ToolComponent>(out var component))
         {
-            return component.toolTypes.Contains(ToolType.Cut) || component.toolTypes.Contains(ToolType.Dig);
+            if (component.toolTypes.Contains(ToolType.Cut))
+            {
+                tip = "划一个口";
+                return true;
+            }
+            if (component.toolTypes.Contains(ToolType.Dig))
+            {
+                tip = "铲起";
+                return true;
+            }
         }
 
-        return base.CanQuickInteract(card);
+        return false;
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
+        tip = string.Empty;
         var card = slot.PeekCard();
 
         if (card.TryGetComponent<ToolComponent>(out var component))
@@ -220,7 +231,5 @@ public class KettleFlower : Card
                 return;
             }
         }
-
-        base.QuickIneract(slot, count, out tip);
     }
 }

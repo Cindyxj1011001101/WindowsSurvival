@@ -8,14 +8,20 @@
         TryGetComponent(out cookComponent);
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
-        return cookComponent.leftCookTime > 0 && card.CardId == "自热烹饪袋";
+        tip = string.Empty;
+        if (cookComponent.leftCookTime > 0 && card.CardId == "自热烹饪袋")
+        {
+            tip = "煮熟食物";
+            return true;
+        }
+        return false;
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        base.QuickIneract(slot, count, out tip);
+        tip = string.Empty;
         DestroyThis();
         slot.PeekCard().Use();
         if (SoundManager.Instance != null)

@@ -52,14 +52,15 @@ public class FishingNetBag : EquipmentCard
         AddCards("纤维", 4, true);
     }
 
-    public override bool CanQuickInteract(Card card)
+    public override bool CanQuickInteract(Card card, out string tip)
     {
-        if (card.TryGetComponent<ToolComponent>(out var component))
+        if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut) && innerContents.bag.IsEmpty)
         {
             // 如果是切割工具，并且渔获袋是空的，可以快速交互
-            if (component.toolTypes.Contains(ToolType.Cut) && innerContents.bag.IsEmpty) return true;
+            tip = "切割";
+            return true;
         }
-        return innerContents.CanQuickInteract(card);
+        return innerContents.CanQuickInteract(card, out tip);
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
