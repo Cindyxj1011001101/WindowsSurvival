@@ -83,10 +83,6 @@ public class Campfire : ConstructionCard
     /// </summary>
     private void OnIgnite()
     {
-        var env = Bag as EnvironmentBag;
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -4); // 点燃后地点氧气每回合-4
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, +2); // 点燃后地点一氧化碳每回合+2
-
         // 点燃后暂停所有卡牌每回合更新
         innerContents.PauseUpdating();
 
@@ -110,7 +106,7 @@ public class Campfire : ConstructionCard
         SoundManager.Instance.PlaySound("点火_02");
 
         // 只有玩家在同一地点且点燃时才播放循环音效
-        if (env == GameManager.Instance.CurEnvironmentBag && fuelStorage.isBurning)
+        if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 0.3f);
     }
 
@@ -119,10 +115,6 @@ public class Campfire : ConstructionCard
     /// </summary>
     private void OnExtinguish()
     {
-        var env = Bag as EnvironmentBag;
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +4);
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, -2);
-
         // 熄灭后恢复所有卡牌每回合更新
         innerContents.ContinueUpdating();
 
@@ -136,10 +128,9 @@ public class Campfire : ConstructionCard
         stateMachine.ChangeState("未点燃");
 
         // 只有玩家在同一地点时才停止音效
-        if (env == GameManager.Instance.CurEnvironmentBag)
+        if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
     }
-
 
     private List<Card> temp = new();
 
