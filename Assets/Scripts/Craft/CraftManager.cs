@@ -147,8 +147,8 @@ public class CraftManager
         var card = CardFactory.CreateCard(recipe.cardId);
 
         // 掉落制作出的卡牌
-        // 如果是建筑卡牌，则优先掉落到环境里
-        GameManager.Instance.AddCardWithTween(card, startPos, card.CardType != CardType.Construction);
+        // 如果是建筑卡牌或者是有内容物的卡牌，则优先掉落到环境里
+        GameManager.Instance.AddCardWithTween(card, startPos, !(card.CardType == CardType.Construction || card.TryGetComponent<InnerContentsComponent>(out _)));
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", card.CardName));
     }

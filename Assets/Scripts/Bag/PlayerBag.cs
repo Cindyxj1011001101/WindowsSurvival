@@ -23,6 +23,12 @@
 
     public override bool CanAddCard(Card card, out string tip)
     {
+        if (card.TryGetComponent<InnerContentsComponent>(out _))
+        {
+            tip = "麦麦的兜里放不下整个包";
+            return false;
+        }
+
         if (!CanAddCardConsideringWeight(card, out tip))
         {
             return false;
