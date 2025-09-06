@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// 燃料炉
@@ -211,6 +212,9 @@ public class FuelFurnace : ConstructionCard
         // 加工完成
         if (leftRounds <= 0)
         {
+            // 得到产物
+            var outcomeCardId = ProcessManager.GetProcessOutcomeID(cardsToProcesss, tempertureData);
+            
             leftRounds = 0;
             isProcessing = false;
             tempertureData.Clear();
@@ -222,9 +226,8 @@ public class FuelFurnace : ConstructionCard
             // 可拖出卡牌
             innerContents.allowRemove = true;
             innerContents.notAllowAddReason = "请先取出加工产物";
-
-            // 得到产物
-            var outcomeCardId = ProcessManager.GetProcessOutcomeID(cardsToProcesss, tempertureData);
+            
+            // 添加产物
             var outcomeCard = CardFactory.CreateCard(outcomeCardId);
             GameManager.Instance.AddCard(outcomeCard, innerContents.bag);
             outcomeCard.RefreshSlot();
