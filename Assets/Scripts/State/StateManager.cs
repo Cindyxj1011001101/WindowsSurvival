@@ -724,6 +724,14 @@ public class StateManager : MonoBehaviour
     /// <param name="env"></param>
     private void CalcCarbonMonoxidePoisoningChangeRate(EnvironmentBag env)
     {
+        float basicRate = -0.3f;
+
+        if (!env.StateDict.ContainsKey(EnvironmentStateEnum.CarbonMonoxideLevel))
+        {
+            SetPlayerStateBasicChangeRate(PlayerStateEnum.CarbonMonoxidePoisoning, basicRate);
+            return;
+        }
+
         // 温度差 = 室温 - 体温
         var value = env.StateDict[EnvironmentStateEnum.CarbonMonoxideLevel].NormedValue;
 
@@ -748,8 +756,6 @@ public class StateManager : MonoBehaviour
         {
             rate = +3f;
         }
-
-        float basicRate = -0.3f;
         SetPlayerStateBasicChangeRate(PlayerStateEnum.CarbonMonoxidePoisoning, rate + basicRate);
     }
     #endregion
