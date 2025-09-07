@@ -3549,6 +3549,7 @@ GameObject:
   - component: {fileID: 1672926792}
   - component: {fileID: 1672926793}
   - component: {fileID: 1672926794}
+  - component: {fileID: 1672926795}
   m_Layer: 0
   m_Name: DestroyOnLoad
   m_TagString: Untagged
@@ -3598,6 +3599,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b933084479350248bf1c2acb65f1d17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1672926795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672926791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88ae83240bb480741a6066413f2ec292, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetWidth: 1920
+  targetHeight: 1080
+  isFullscreen: 1
+  targetFrameRate: 60
 --- !u!1001 &1722216797
 PrefabInstance:
   m_ObjectHideFlags: 0
