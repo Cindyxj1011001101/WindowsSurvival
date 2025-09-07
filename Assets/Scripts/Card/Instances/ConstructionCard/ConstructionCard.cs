@@ -44,6 +44,12 @@ public abstract class ConstructionCard : Card
     private bool Judge_DemolishThis(out string hint)
     {
         hint = string.Empty;
+        if (TryGetComponent<InnerContentsComponent>(out var innerContents) && !innerContents.bag.IsEmpty)
+        {
+            hint = "需要先清空内容物";
+            return false;
+        }
+
         if (GameManager.Instance.PlayerBag.FindCardOfName("钢锤") == null)
         {
             hint = "需要钢锤";
@@ -72,7 +78,9 @@ public abstract class ConstructionCard : Card
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
-        if (construction.canBeDemolished && card.CardId == "钢锤")
+        // 能被拆毁并且内容物清空，可以暴力拆毁
+        if (construction.canBeDemolished && card.CardId == "钢锤" &&
+            (!TryGetComponent<InnerContentsComponent>(out var innerContents) || innerContents.bag.IsEmpty))
         {
             tip = "暴力拆毁";
             return true;

@@ -281,7 +281,7 @@ public abstract class Card : IComparable<Card>
 
         SlotCards.RemoveCard(this);
 
-        if (TryGetComponent<InnerContentsComponent>(out var innerContents)) innerContents.Clear();
+        //if (TryGetComponent<InnerContentsComponent>(out var innerContents)) innerContents.Clear();
 
         OnLeaveEnvironment();
 
