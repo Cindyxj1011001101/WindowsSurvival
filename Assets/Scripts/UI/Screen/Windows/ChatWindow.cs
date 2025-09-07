@@ -89,6 +89,9 @@ public class ChatWindow : WindowBase, IPointerDownHandler
             case MessageSenderEnum.Aside:
                 prefab = narrtionPrefab;
                 break;
+            case MessageSenderEnum.Alert:   
+                prefab = narrtionPrefab;
+                break;
         }
 
         // 创建聊天气泡
