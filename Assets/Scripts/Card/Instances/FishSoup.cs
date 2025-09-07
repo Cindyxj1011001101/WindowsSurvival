@@ -9,10 +9,10 @@ public class FishSoup : Card
             new Event("食用", "食用鱼汤", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>()
             {
-                { PlayerStateEnum.Fullness, 15 },
-                { PlayerStateEnum.Thirst, 29 },
+                { PlayerStateEnum.Fullness, 18 },
+                { PlayerStateEnum.Thirst, 33 },
                 { PlayerStateEnum.San, 12 },
-                { PlayerStateEnum.Health, 12 },
+                { PlayerStateEnum.Health, 20 },
                 { PlayerStateEnum.PainLevel, -25 }
             })
         };
@@ -25,10 +25,10 @@ public class FishSoup : Card
         tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("喝_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 15);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 29);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 18);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 33);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 12);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 12);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 20);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, -25);
         TimeManager.Instance.AddTime(15);
         

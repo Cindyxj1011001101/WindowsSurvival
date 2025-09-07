@@ -10,7 +10,7 @@ public class CompactBiscuit : Card
         Events = new()
         {
             new Event("食用", "食用压缩饼干", Event_Eat, null, () => 3,
-            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 12 } })
+            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 14 } })
         };
     }
 
@@ -22,7 +22,7 @@ public class CompactBiscuit : Card
         // 播放吃的音效
         if(SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01",true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 12);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 14);
         TimeManager.Instance.AddTime(3);
     }
 }

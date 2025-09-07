@@ -12,7 +12,7 @@ public class ScaldedClaw : Card
             new Event("食用", "食用白灼触手", Event_Eat, null, () => 45,
             () => new Dictionary<PlayerStateEnum, float>()
             {
-                { PlayerStateEnum.Fullness, 66 },
+                { PlayerStateEnum.Fullness, 81 },
                 { PlayerStateEnum.San, -3 }
             })
         };
@@ -25,7 +25,7 @@ public class ScaldedClaw : Card
         tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 66);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 81);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         TimeManager.Instance.AddTime(45);
     }
