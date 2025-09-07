@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class CraftWindow : WindowBase
 {
     [SerializeField] private Transform recipeLibraryLayout;
-    [SerializeField] private Transform recipieLayout;
+    [SerializeField] private Transform recipeLayout;
     [SerializeField] private Transform materialLayout;
     [SerializeField] private CardSlot slot;
     [SerializeField] private Text craftTimeText;
@@ -41,6 +41,9 @@ public class CraftWindow : WindowBase
 
     private void OnDestroy()
     {
+        ObjectBufferPool.Instance.RestoreAllChildren(recipeLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(materialLayout);
+
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshDisplay);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, RefreshDisplay);
         EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshDisplay);
@@ -118,7 +121,7 @@ public class CraftWindow : WindowBase
         // 清空位置记录字典
         recipeItemTransforms.Clear();
 
-        ObjectBufferPool.Instance.RestoreAllChildren(recipieLayout);
+        ObjectBufferPool.Instance.RestoreAllChildren(recipeLayout);
 
         // 获取当前类型的配方列表
         var recipes = CraftManager.Instance.LibraryDict[recipeType].recipes;
@@ -144,7 +147,7 @@ public class CraftWindow : WindowBase
         // 创建所有配方按钮
         foreach (var recipe in sortedRecipes)
         {
-            recipeItem = ObjectBufferPool.Instance.Get(recipeItemPrefab, recipieLayout).GetComponent<UIRecipeItem>();
+            recipeItem = ObjectBufferPool.Instance.Get(recipeItemPrefab, recipeLayout).GetComponent<UIRecipeItem>();
             recipeItem.DisplayRecipe(
                 recipe.CardImage,
                 CraftManager.Instance.IsRecipeLocked(recipe),
@@ -163,7 +166,7 @@ public class CraftWindow : WindowBase
             recipeItemTransforms.Add(recipe.cardId, recipeItem.transform as RectTransform);
         }
 
-        MonoUtility.UpdateLayoutSize(recipieLayout.GetComponent<GridLayoutGroup>());
+        MonoUtility.UpdateLayoutSize(recipeLayout.GetComponent<GridLayoutGroup>());
 
         // 如果是刷新，继续选中上一个选中的配方
         if (isRefresh)
