@@ -9,8 +9,8 @@ public class Steak : Card
             new Event("食用", "食用肉排", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>()
             {
-                { PlayerStateEnum.Fullness, 68 },
-                { PlayerStateEnum.Health, 5 }
+                { PlayerStateEnum.Fullness, 72 },
+                { PlayerStateEnum.Health, 8 }
             })
         };
     }
@@ -21,8 +21,8 @@ public class Steak : Card
         tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 68);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 5);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 72);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 8);
         TimeManager.Instance.AddTime(15);
     }
 }

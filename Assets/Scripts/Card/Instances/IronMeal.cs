@@ -9,7 +9,7 @@ public class IronMeal : Card
             new Event("食用", "食用铁齿铜牙餐", Event_Eat, null, () => 30,
             () => new Dictionary<PlayerStateEnum, float>()
             {
-                { PlayerStateEnum.Fullness, 35 },
+                { PlayerStateEnum.Fullness, 40 },
                 { PlayerStateEnum.San, -6 },
                 { PlayerStateEnum.Health, -7 },
                 { PlayerStateEnum.PainLevel, 50 }
@@ -23,7 +23,7 @@ public class IronMeal : Card
         tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 35);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 40);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -6);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -7);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 50);

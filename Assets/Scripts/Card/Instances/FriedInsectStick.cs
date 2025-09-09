@@ -9,9 +9,9 @@ public class FriedInsectStick : Card
             new Event("食用", "食用炸虫串", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>()
             {
-                { PlayerStateEnum.Fullness, 46 },
+                { PlayerStateEnum.Fullness, 58 },
                 { PlayerStateEnum.Thirst, -4 },
-                { PlayerStateEnum.San, 8 }
+                { PlayerStateEnum.San, 12 }
             })
         };
     }
@@ -23,9 +23,9 @@ public class FriedInsectStick : Card
         tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 46);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 58);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -4);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 8);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 12);
         TimeManager.Instance.AddTime(15);
     }
 }

@@ -9,7 +9,7 @@ public class KitchenFoes : Card
             new Event("食用", "食用厨房恶物", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>()
             {
-                { PlayerStateEnum.Fullness, 10 },
+                { PlayerStateEnum.Fullness, 13 },
                 { PlayerStateEnum.San, -6 },
                 { PlayerStateEnum.Health, -4 }
             })
@@ -23,7 +23,7 @@ public class KitchenFoes : Card
         tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 10);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 13);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -6);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -4);
         TimeManager.Instance.AddTime(15);

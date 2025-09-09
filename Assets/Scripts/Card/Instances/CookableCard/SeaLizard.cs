@@ -10,7 +10,7 @@ public class SeaLizard : CookableCard
         Events = new()
         {
             new Event("食用", "希望不会有毒吧", Event_Eat, null, () => 15,
-            () => new Dictionary < PlayerStateEnum, float >() { { PlayerStateEnum.Fullness, 6 }, { PlayerStateEnum.San, -3 }, { PlayerStateEnum.Itchiness, 25 } })
+            () => new Dictionary < PlayerStateEnum, float >() { { PlayerStateEnum.Fullness, 10 }, { PlayerStateEnum.San, -3 }, { PlayerStateEnum.Itchiness, 25 } })
         };
     }
 
@@ -23,7 +23,7 @@ public class SeaLizard : CookableCard
         tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 6);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 10);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Itchiness, 25);
         TimeManager.Instance.AddTime(15);

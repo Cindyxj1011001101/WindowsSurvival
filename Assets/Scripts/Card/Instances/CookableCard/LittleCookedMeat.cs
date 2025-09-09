@@ -9,7 +9,7 @@ public class LittleCookedMeat : CookableCard
             new Event("食用", "食用小块熟肉", Event_Eat, null, () => 15,
             () => new Dictionary<PlayerStateEnum, float>()
             {
-                { PlayerStateEnum.Fullness, 17 },
+                { PlayerStateEnum.Fullness, 18 },
                 { PlayerStateEnum.Health, 1 },
             })
         };
@@ -21,7 +21,7 @@ public class LittleCookedMeat : CookableCard
         tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 17);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 18);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 1);
         TimeManager.Instance.AddTime(15);
     }
