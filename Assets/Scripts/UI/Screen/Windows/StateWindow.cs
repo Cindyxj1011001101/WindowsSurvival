@@ -9,7 +9,7 @@ public class StateWindow : WindowBase
 
     [SerializeField] private GridLayoutGroup buffLayout;
 
-    private Dictionary<PlayerStateEnum, UIStateSlider> stateSliders = new();
+    [HideInInspector] public Dictionary<PlayerStateEnum, UIStateSlider> stateSliders = new();
 
     protected override void Awake()
     {

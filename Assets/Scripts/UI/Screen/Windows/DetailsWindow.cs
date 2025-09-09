@@ -241,6 +241,25 @@ public class DetailsWindow : BagWindow
                     // 显示提示
                     button.ShowTip(tip);
 
+                    // 显示状态变化
+                    var playerStateChanges = e.GetPlayerEffects();
+                    if (!playerStateChanges.IsNullOrEmpty())
+                    {
+                        foreach (var (state, delta) in playerStateChanges)
+                        {
+                            ShowStateChange(state, delta, button.transform.position);
+                        }
+                    }
+
+                    var envStateChanges = e.GetEnvEffects();
+                    if (!envStateChanges.IsNullOrEmpty())
+                    {
+                        foreach (var (state, delta) in envStateChanges)
+                        {
+                            ShowStateChange(state, delta, button.transform.position);
+                        }
+                    }
+
                     // 改变场景了就清空详情
                     if (moved) Clear();
                     // 否则刷新卡牌和详情
@@ -315,5 +334,84 @@ public class DetailsWindow : BagWindow
         if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
             currentDisplayedCard.OnDetailClose();
         base.Minimize(shortcut);
+    }
+
+    /// <summary>
+    /// 显示玩家状态的变化值
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="delta"></param>
+    public void ShowStateChange(PlayerStateEnum state, float delta, Vector3 center)
+    {
+        var stateWindow = WindowsManager.Instance.OpenWindow("State") as StateWindow;
+
+        ShowStateChange(stateWindow.stateSliders[state].icon, StateManager.Instance.PlayerStateDict[state].MaxValue, delta, center);
+    }
+
+    /// <summary>
+    /// 显示玩家状态的变化值
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="delta"></param>
+    public void ShowStateChange(EnvironmentStateEnum state, float delta, Vector3 center)
+    {
+        var envWindow = WindowsManager.Instance.OpenWindow("EnvironmentBag") as EnvironmentBagWindow;
+
+        float maxValue;
+        if (state == EnvironmentStateEnum.Electricity)
+            maxValue = StateManager.Instance.Electricity.MaxValue;
+        else if (state == EnvironmentStateEnum.WaterLevel)
+            maxValue = StateManager.Instance.WaterLevel.MaxValue;
+        else
+            maxValue = GameManager.Instance.CurEnvironmentBag.StateDict[state].MaxValue;
+
+        ShowStateChange(envWindow.continuousValueStates[state].icon, maxValue, delta, center);
+    }
+
+    /// <summary>
+    /// 显示玩家状态的变化值
+    /// </summary>
+    /// <param name="state"></param>
+    /// <param name="delta"></param>
+    public void ShowStateChange(Image icon, float stateMaxValue, float delta, Vector3 center)
+    {
+        var stateWindow = WindowsManager.Instance.OpenWindow("State") as StateWindow;
+
+        float halfLength = 85f;
+        float xMax = center.x + halfLength;
+        float xMin = center.x - halfLength;
+        float yMax = center.y + halfLength;
+        float yMin = center.y - halfLength;
+
+        Vector3 randomPos;
+        Vector3 targetPos;
+
+        var count = 2 + Mathf.CeilToInt(Mathf.Abs(delta) * 10 / stateMaxValue);
+
+        for (int i = 0; i < count; i++)
+        {
+            randomPos = new(Random.Range(xMin, xMax), Random.Range(yMin, yMax));
+            var transform = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/State", "StateIcon", WindowsManager.Instance.FloatingTipLayer).transform;
+
+            transform.GetComponent<Image>().sprite = icon.sprite;
+
+            var seq = DOTween.Sequence();
+
+            transform.position = randomPos;
+            transform.localScale = Vector3.one * .8f;
+            seq.Append(transform.DOScale(1.2f, .3f));
+
+            seq.AppendInterval(.4f);
+
+            targetPos = icon.transform.position;
+            seq.Join(transform.DOMove(targetPos, .6f));
+            seq.Join(transform.DOScale(.8f, .6f));
+
+            seq.OnComplete(() =>
+            {
+                ObjectBufferPool.Instance.Restore(transform.gameObject);
+                icon.transform.DOScale(1.3f, .15f).SetLoops(2, LoopType.Yoyo);
+            }); // 总时长1.3s
+        }
     }
 }

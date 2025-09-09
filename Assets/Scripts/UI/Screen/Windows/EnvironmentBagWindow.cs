@@ -37,7 +37,7 @@ public class EnvironmentBagWindow : BagWindow
 
     [SerializeField] private UIStateToggle hasCabble; // 是否铺设电缆
     [SerializeField] private UIPressureLevel pressureLevel; // 压强等级
-    private Dictionary<EnvironmentStateEnum, UIStateSlider> continuousValueStates = new(); // 环境状态显示
+    [HideInInspector] public Dictionary<EnvironmentStateEnum, UIStateSlider> continuousValueStates = new(); // 环境状态显示
 
     private HoverTipController hoveredTipController;
 

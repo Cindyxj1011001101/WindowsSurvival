@@ -33,6 +33,10 @@ public class UIStateSlider : MonoBehaviour
 
     private void OnDisable()
     {
+        init = false;
+        button.transform.DOKill();
+        arrow.transform.DOKill();
+        icon.transform.DOKill();
         fillColor = ColorManager.White;
     }
 
