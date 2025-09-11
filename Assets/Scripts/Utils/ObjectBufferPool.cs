@@ -160,7 +160,7 @@ public class ObjectBufferPool
                 obj = objectsInUse[0];
                 objectsInUse.RemoveAt(0);
             }
-            // 没有使用对象 并且 正在使用的对象数量不超上限
+            // 没有未使用对象 并且 正在使用的对象数量不超上限
             else
             {
                 // 实例化对象
@@ -168,6 +168,12 @@ public class ObjectBufferPool
                 // 设置对象的名称
                 obj.name = objectName;
             }
+
+            // 如果物体因为各种原因已经被销毁但是没有从列表中移除
+            if (obj == null)
+                // 则重新尝试获取
+                return Get();
+
             // 将该物体添加到正在使用的物体列表的尾部
             objectsInUse.Add(obj);
 
