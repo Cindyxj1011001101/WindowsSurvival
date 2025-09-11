@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlotCards
+public class SlotCards : IComparable<SlotCards>
 {
     public List<Card> Cards { get; protected set; } = new();
 
@@ -158,5 +159,29 @@ public class SlotCards
     {
         DestroyCards(StackNum);
         Cards.Clear();
+    }
+
+    public int CompareTo(SlotCards other)
+    {
+        if (IsEmpty) return 1; // 自己是空，则自己排在后面
+
+        if (other.IsEmpty) return -1; // other是空，自己排在前面
+
+        // 都不为空
+        var thisCard = PeekCard();
+        var otherCard = other.PeekCard();
+
+        // 渗水裂缝特殊处理，保证渗水裂缝永远显示在最前面
+        if (thisCard.CardId == "渗水裂缝") return -1;
+        if (otherCard.CardId == "渗水裂缝") return 1;
+
+        // 类型不同，按照类型排序
+        if (thisCard.CardType != otherCard.CardType) return thisCard.CardType - otherCard.CardType;
+
+        // 类型相同，卡牌id不同，按id排序
+        if (thisCard.CardId != otherCard.CardId) return string.Compare(thisCard.CardId, otherCard.CardId);
+
+        // 卡牌id相同，按堆叠数量排序
+        return this.StackNum - other.StackNum;
     }
 }

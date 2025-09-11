@@ -339,6 +339,9 @@ public abstract class Bag
         // 第二步：紧凑排列剩余的卡牌
         CompactRemainingCards();
 
+        // 第三步：对紧凑排列的卡牌槽进行排序
+        Slots.Sort();
+
         // 检查是否有卡牌位置或堆叠数量变化
         bool hasChanged = false;
         for (int i = 0; i < Slots.Count; i++)

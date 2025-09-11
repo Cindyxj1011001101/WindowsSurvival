@@ -76,7 +76,7 @@ public class MFXUtility
         Ease ease = Ease.OutQuad)
     {
         var slot = CreateSlot(sourcePosition);
-        slot.transform.SetAsFirstSibling();
+        //slot.transform.SetAsFirstSibling();
 
         slot.DisplayCard(card, count);
 

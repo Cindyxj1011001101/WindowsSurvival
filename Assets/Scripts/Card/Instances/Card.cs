@@ -12,19 +12,19 @@ public enum CardTag
 
 public enum CardType
 {
-    Food, // 食物
-    Tool, // 工具
-    Resource, // 资源
     Place, // 地点
     ResourcePoint, // 资源点
-    Equipment, // 装备
     Creature, // 生物
-    Construction, // 建筑
-    Other, // 其他
     Crop, // 作物
     Seed, // 种子
+    Construction, // 建筑
+    Food, // 食物
     Liquids​, // 液体
     Medicine​, // 药品
+    Resource, // 资源
+    Tool, // 工具
+    Equipment, // 装备
+    Other, // 其他
 }
 
 //卡牌基类
