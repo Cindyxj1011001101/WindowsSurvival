@@ -153,30 +153,9 @@ public class Campfire : ConstructionCard
         {
             if (card == null || card.Destroyed || !card.TryGetComponent(out CookComponent cook)) continue;
 
-            // 使用局部变量捕获当前的值
-            Card currentCard = card;
+            cook.Update();
 
-            cook.Update(TimeManager.Instance.SettleInterval, (outcomeId) =>
-            {
-                // 处理煮熟的逻辑
-                currentCard.DestroyThis();
-                var outcomeCard = CardFactory.CreateCard(outcomeId);
-                GameManager.Instance.AddCard(outcomeCard, innerContents.bag);
-                outcomeCard.RefreshSlot();
-                if (outcomeId == "烧焦的食物")
-                {
-                    ShowTip($"{currentCard.CardName}烧焦了");
-                    currentCard.ShowTip($"{currentCard.CardName}烧焦了");
-                }
-                else
-                {
-                    ShowTip($"{currentCard.CardName}熟了");
-                    currentCard.ShowTip($"{currentCard.CardName}熟了");
-                }
-            });
-
-
-            if (currentCard.TryGetComponent<TimerComponent>(out var timer) && cook.leftCookTime >= 0)
+            if (card.TryGetComponent<TimerComponent>(out var timer) && cook.leftCookTime >= 0)
             {
                 timer.SetValue(cook.leftCookTime);
             }

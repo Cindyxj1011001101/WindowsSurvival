@@ -52,12 +52,18 @@ public class FreshnessComponent : CardComponent, IUpdate
 
         if (freshness <= 0)
         {
+            freshness = 0;
+
             if (BelongedCard.CardType == CardType.Food)
                 BelongedCard.ShowTip($"{BelongedCard.CardName}腐烂了");
             else if (BelongedCard.CardType == CardType.Medicine)
                 BelongedCard.ShowTip($"{BelongedCard.CardName}过期了");
-            freshness = 0;
-            BelongedCard.DestroyThis();
+
+            if (BelongedCard.CardId == "磁性触手" || BelongedCard.CardId == "熟触手")
+                BelongedCard.TurnTo("废金属", BelongedCard.Bag);
+            else
+                BelongedCard.TurnTo("腐烂物", BelongedCard.Bag);
+
             onRotton?.Invoke();
             return;
         }
@@ -151,7 +157,7 @@ public class ProgressComponent : CardComponent, IUpdate
         if (progress >= maxProgress)
         {
             progress = maxProgress;
-            BelongedCard.DestroyThis();
+            BelongedCard.TurnTo($"有产物的{BelongedCard.CardName}", BelongedCard.Bag);
             onProgressFull?.Invoke();
             return;
         }
@@ -474,6 +480,8 @@ public class CookComponent : CardComponent
     public int leftCookTime;
     public string outcomeCardId;
 
+    [JsonIgnore] public UnityAction onCooked;
+
     public CookComponent() { }
 
     public CookComponent(int totalCookTime, string outcomeCardId)
@@ -482,17 +490,32 @@ public class CookComponent : CardComponent
         this.outcomeCardId = outcomeCardId;
     }
 
-    public void Update(int deltaTime, UnityAction<string> onCooked)
+    public void Update()
     {
         if (leftCookTime <= 0) return;
 
-        leftCookTime -= deltaTime;
+        leftCookTime -= TimeManager.Instance.SettleInterval;
         leftCookTime = Mathf.Max(leftCookTime, 0);
+
         if (leftCookTime <= 0)
         {
             leftCookTime = 0;
-            onCooked?.Invoke(outcomeCardId);
+            // 处理煮熟的逻辑
+            CookingComplete();
         }
+    }
+
+    public void CookingComplete()
+    {
+        leftCookTime = 0;
+
+        if (outcomeCardId == "烧焦的食物")
+            BelongedCard.ShowTip($"{BelongedCard.CardName}烧焦了");
+        else
+            BelongedCard.ShowTip($"{BelongedCard.CardName}熟了");
+
+        BelongedCard.TurnTo(outcomeCardId, BelongedCard.Bag);
+        onCooked?.Invoke();
     }
 }
 #endregion
@@ -640,6 +663,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
             BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
             deadProgress = 0;
             BelongedCard.DestroyThis();
+            BelongedCard.AddCard(deadCardId, BelongedCard.Bag);
             onDead?.Invoke();
             return;
         }

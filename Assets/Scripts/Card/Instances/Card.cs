@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using UnityEngine.Events;
 
 public enum CardTag
 {
@@ -172,21 +171,6 @@ public abstract class Card : IComparable<Card>
         {
             i.contentFilter = ReflectionUtility.BindToDelegate<CardFilterDelegate>(this, "ContentFilter", true);
             ReflectionUtility.SetFieldValue(this, "innerContents", i, true);
-        }
-        if (TryGetComponent<FreshnessComponent>(out var f))
-        {
-            if (CardId == "磁性触手" || CardId == "熟触手")
-                f.onRotton = () => TurnTo("废金属", Bag);
-            else
-                f.onRotton = () => TurnTo("腐烂物", Bag);
-        }
-        if (TryGetComponent<ProgressComponent>(out var p))
-        {
-            p.onProgressFull = () => TurnTo($"有产物的{CardName}", Bag);
-        }
-        if (TryGetComponent<PlantGrowthComponent>(out var pg))
-        {
-            pg.onDead = () => AddCard(pg.deadCardId, Bag);
         }
     }
 
@@ -469,43 +453,43 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    protected Tween AddCard(string cardId, bool toPlayerBag, out Card card)
+    public Tween AddCard(string cardId, bool toPlayerBag, out Card card)
     {
         return GameManager.Instance.AddCardWithTween(cardId, Transform.position, toPlayerBag, out card);
     }
 
-    protected Tween AddCard(string cardId, bool toPlayerBag)
+    public Tween AddCard(string cardId, bool toPlayerBag)
     {
         return GameManager.Instance.AddCardWithTween(cardId, Transform.position, toPlayerBag, out _);
     }
 
-    protected Tween AddCards(string cardId, int count, bool toPlayerBag, out List<Card> cards)
+    public Tween AddCards(string cardId, int count, bool toPlayerBag, out List<Card> cards)
     {
         return GameManager.Instance.AddCardsWithTween(cardId, count, Transform.position, toPlayerBag, out cards);
     }
 
-    protected Tween AddCards(string cardId, int count, bool toPlayerBag)
+    public Tween AddCards(string cardId, int count, bool toPlayerBag)
     {
         return GameManager.Instance.AddCardsWithTween(cardId, count, Transform.position, toPlayerBag, out _);
     }
 
-    protected Tween AddCards(List<Card> cards, bool toPlayerBag)
+    public Tween AddCards(List<Card> cards, bool toPlayerBag)
     {
         return GameManager.Instance.AddCardsWithTween(cards, Transform.position, toPlayerBag);
     }
 
-    protected void AddCard(string cardId, Bag targetBag)
+    public void AddCard(string cardId, Bag targetBag)
     {
         AddCard(cardId, targetBag, out _);
     }
 
-    protected void AddCard(string cardId, Bag targetBag, out Card card)
+    public void AddCard(string cardId, Bag targetBag, out Card card)
     {
         card = CardFactory.CreateCard(cardId);
         AddCard(card, targetBag);
     }
 
-    protected void AddCard(Card card, Bag targetBag, bool playAnim = true)
+    public void AddCard(Card card, Bag targetBag, bool playAnim = true)
     {
         // 尝试放在targetBag里
         if (targetBag.CanAddCard(card, out _))
@@ -532,7 +516,7 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    protected void TurnTo(Card targetCard, Bag targetBag)
+    public void TurnTo(Card targetCard, Bag targetBag)
     {
         // 销毁自身
         DestroyThis();
@@ -543,13 +527,13 @@ public abstract class Card : IComparable<Card>
             MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot());
     }
 
-    protected void TurnTo(string cardId, Bag targetBag, out Card card)
+    public void TurnTo(string cardId, Bag targetBag, out Card card)
     {
         card = CardFactory.CreateCard(cardId);
         TurnTo(card, targetBag);
     }
 
-    protected void TurnTo(string cardId, Bag targetBag)
+    public void TurnTo(string cardId, Bag targetBag)
     {
         TurnTo(cardId, targetBag, out _);
     }
