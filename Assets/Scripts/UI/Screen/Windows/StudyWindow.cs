@@ -219,6 +219,13 @@ public class StudyWindow : WindowBase
             button = ObjectBufferPool.Instance.Get(recipeItem, detailLayout).GetComponent<HoverableButton>();
             button.normalImage.sprite = recipe.CardImage;
             button.GetComponentsInChildren<Text>()[1].text = recipe.cardId;
+
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() =>
+            {
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(recipe.CardInstance, DisplayType.DetailsAndCraftButton);
+            });
+
             temp.Add(button.gameObject);
 
             //button.transform.SetAsLastSibling();

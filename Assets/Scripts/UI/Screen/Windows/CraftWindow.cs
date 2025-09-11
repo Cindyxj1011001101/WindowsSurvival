@@ -206,7 +206,7 @@ public class CraftWindow : WindowBase
         slot.GetComponentInChildren<HoverableButton>().onClick.RemoveAllListeners();
         slot.GetComponentInChildren<HoverableButton>().onClick.AddListener(() =>
         {
-            (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(recipe.CardInstance, true);
+            (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(recipe.CardInstance, DisplayType.OnlyDetails);
         });
 
         UIRecipeMaterial recipeMaterial;
@@ -224,7 +224,7 @@ public class CraftWindow : WindowBase
             recipeMaterial.button.onClick.RemoveAllListeners();
             recipeMaterial.button.onClick.AddListener(() =>
             {
-                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(material.CardInstance, true);
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(material.CardInstance, DisplayType.OnlyDetails);
             });
 
             recipeMaterial.transform.SetAsLastSibling();
@@ -286,6 +286,23 @@ public class CraftWindow : WindowBase
 
         // 播放选择动效
         SelectRecipeWithTween(recipe.cardId);
+    }
+
+    public void DisplayRecipe(string cardId)
+    {
+        foreach (var (type, library) in CraftManager.Instance.LibraryDict)
+        {
+            foreach (var recipe in library.recipes)
+            {
+                // 找到id对应的配方
+                if (recipe.cardId == cardId)
+                {
+                    DisplayRecipesByType(type);
+                    DisplayRecipeDetails(recipe);
+                    return;
+                }
+            }
+        }
     }
 
     private void SelectRecipeWithTween(string cardId)

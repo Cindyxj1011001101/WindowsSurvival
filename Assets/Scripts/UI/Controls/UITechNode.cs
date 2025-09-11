@@ -39,6 +39,13 @@ public class UITechNode : HoverableButton
         {
             button = ObjectBufferPool.Instance.Get(recipeItemPrefab, recipeLayout).GetComponent<HoverableButton>();
             button.normalImage.sprite = recipe.CardImage;
+
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() =>
+            {
+                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(recipe.CardInstance, DisplayType.DetailsAndCraftButton);
+            });
+
             tipController = button.GetComponent<HoverTipController>();
             tipController.SetTip(recipe.CardInstance.CardName);
             recipeButtons.Add(button);

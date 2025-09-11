@@ -2,6 +2,13 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum DisplayType
+{
+    All,
+    OnlyDetails,
+    DetailsAndCraftButton
+}
+
 public class DetailsWindow : BagWindow
 {
     [SerializeField] private Text detailsText;
@@ -22,7 +29,7 @@ public class DetailsWindow : BagWindow
 
     private Card currentDisplayedCard;
     private Bag innerBag;
-    private bool onlyDetails;
+    private DisplayType displayType = DisplayType.All;
 
     protected override void Awake()
     {
@@ -92,12 +99,9 @@ public class DetailsWindow : BagWindow
         else
         {
             slot.DisplayCard(currentDisplayedCard, 1, false);
-            if (!onlyDetails)
-            {
-                DisplayEventButtons();
-                //if (currentDisplay == "内容物" && innerBag != null)
-                //    DisplayBag(innerBag);
-            }
+            DisplayEventButtons();
+            //if (currentDisplay == "内容物" && innerBag != null)
+            //    DisplayBag(innerBag);
         }
     }
 
@@ -108,7 +112,7 @@ public class DetailsWindow : BagWindow
         moved = true;
     }
 
-    public void Display(SlotCards slotCards, bool onlyDetails = false)
+    public void Display(SlotCards slotCards, DisplayType displayType = DisplayType.All)
     {
         // 清除原数据
         Clear();
@@ -120,10 +124,10 @@ public class DetailsWindow : BagWindow
 
         currentDisplayedCard.Transform = slot.transform;
 
-        Display(onlyDetails);
+        Display(displayType);
     }
 
-    public void Display(Card card, bool onlyDetails = false)
+    public void Display(Card card, DisplayType displayType = DisplayType.All)
     {
         // 清除原数据
         Clear();
@@ -135,46 +139,48 @@ public class DetailsWindow : BagWindow
 
         currentDisplayedCard.Transform = slot.transform;
 
-        Display(onlyDetails);
+        Display(displayType);
     }
 
-    private void Display(bool onlyDetails = false)
+    private void Display(DisplayType displayType = DisplayType.All)
     {
-        this.onlyDetails = onlyDetails;
+        this.displayType = displayType;
 
         // 显示卡牌
         slot.DisplayCard(currentDisplayedCard, 1, false);
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 
-        if (!onlyDetails)
+        // 显示可交互按钮
+        DisplayEventButtons();
+
+        switch (displayType)
         {
-            // 显示可选择按钮
-            DisplayEventButtons();
+            case DisplayType.All:
+                // 有内容物优先显示内容物
+                if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component) && component.display)
+                {
+                    innerContentsButton.gameObject.SetActive(true);
+                    innerContentsButton.Interactable = true;
+                    innerBag = component.bag;
 
-            innerContentsButton.Interactable = false;
-
-            // 初始化内容物
-            if (currentDisplayedCard.TryGetComponent<InnerContentsComponent>(out var component) && component.display)
-            {
-                innerContentsButton.gameObject.SetActive(true);
-                innerContentsButton.Interactable = true;
-                innerBag = component.bag;
-
-                // 显示内容物
-                DisplayInnerContents();
-            }
-            else
-            {
-                innerContentsButton.gameObject.SetActive(false);
-                // 显示详情
+                    // 显示内容物
+                    DisplayInnerContents();
+                }
+                // 优先显示详情
+                else
+                {
+                    innerContentsButton.gameObject.SetActive(false);
+                    innerContentsButton.Interactable = false;
+                    // 显示详情
+                    DisplayDetails();
+                }
+                break;
+            case DisplayType.OnlyDetails:
+            case DisplayType.DetailsAndCraftButton:
+            default:
                 DisplayDetails();
-            }
-        }
-        else
-        {
-            // 显示详情
-            DisplayDetails();
+                break;
         }
 
         // 打开详情如果卡牌有循环音
@@ -212,13 +218,44 @@ public class DetailsWindow : BagWindow
 
     private void DisplayEventButtons()
     {
-        if (currentDisplayedCard == null) return;
+        if (currentDisplayedCard == null || displayType == DisplayType.OnlyDetails) return;
 
         ObjectBufferPool.Instance.RestoreAllChildren(buttonLayout);
 
         HoverableButton button;
         Text btnText;
         bool interactable;
+
+        // 显示详情和前往制作按钮
+        if (displayType == DisplayType.DetailsAndCraftButton)
+        {
+            button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
+            btnText = button.GetComponentInChildren<Text>();
+            btnText.text = "前往制作";
+            button.Interactable = WindowsManager.Instance.GetUnlockedShortcuts().Contains("Craft");
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() =>
+            {
+                var window = WindowsManager.Instance.OpenWindow("Craft") as CraftWindow;
+                window.DisplayRecipe(currentDisplayedCard.CardId);
+            });
+
+            if (button.Interactable)
+            {
+                btnText.color = ColorManager.White;
+                button.GetComponent<HoverTipController>().SetTip("");
+            }
+            else
+            {
+                btnText.color = ColorManager.DarkGrey;
+                button.GetComponent<HoverTipController>().SetTip("制作窗口尚未解锁");
+            }
+
+            button.transform.localScale = Vector3.one; // 确保按钮缩放为1
+            button.transform.SetAsLastSibling();
+            return;
+        }
+
         foreach (var e in currentDisplayedCard.Events)
         {
             var card = currentDisplayedCard;
@@ -303,7 +340,7 @@ public class DetailsWindow : BagWindow
         if (currentDisplayedCard != null)
             currentDisplayedCard.Transform = null;
 
-        onlyDetails = false;
+        displayType = DisplayType.All;
         currentDisplayedCard = null;
         innerBag = null;
         detailsText.text = "";
