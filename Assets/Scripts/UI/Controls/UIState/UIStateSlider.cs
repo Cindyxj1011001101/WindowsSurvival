@@ -34,9 +34,9 @@ public class UIStateSlider : MonoBehaviour
     private void OnDisable()
     {
         init = false;
-        button.transform.DOKill();
-        arrow.transform.DOKill();
-        icon.transform.DOKill();
+        if (button != null) button.transform.DOKill();
+        if (arrow != null) arrow.transform.DOKill();
+        if (icon != null) icon.transform.DOKill();
         fillColor = ColorManager.White;
     }
 
