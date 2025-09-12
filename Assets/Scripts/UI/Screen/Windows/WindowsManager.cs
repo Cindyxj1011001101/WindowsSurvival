@@ -22,6 +22,10 @@ public class WindowsManager : MonoBehaviour
     public RectTransform FloatingTipLayer => floatingCardSlotLayer;
     public RectTransform ChatTipLayer => chatTipLayer;
 
+    [SerializeField] private RectTransform desktop;
+
+    public RectTransform Desktop => desktop;
+
     private Dictionary<string, WindowBase> openedWindows = new(); // 当前所有打开的窗口，最小化的窗口也算打开的
     private WindowBase currentFocusedWindow; // 当前持有焦点的窗口，可能是openWindows[0]，可能是null
 
@@ -321,7 +325,19 @@ public class WindowsManager : MonoBehaviour
         return shortcutsController.GetUnlockedShortcuts();
     }
 
-    public Dictionary<string, WindowBase> GetOpenedWindows() => openedWindows;
+    public Dictionary<string, WindowBase> GetOpenedWindows(bool excludeMinimized = false)
+    {
+        if (!excludeMinimized) return new(openedWindows);
+
+        var result = new Dictionary<string, WindowBase>();
+
+        foreach (var (name, window) in openedWindows)
+        {
+            if (window.State != WindowState.Minimized) result.Add(name, window);
+        }
+
+        return result;
+    }
 
 
     PointerEventData pointerData;

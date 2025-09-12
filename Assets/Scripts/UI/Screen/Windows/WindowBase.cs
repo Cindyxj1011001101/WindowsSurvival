@@ -76,11 +76,12 @@ public abstract class WindowBase : PanelBase
 
         // 添加拖拽支持
         Transform topBar = transform.Find("TopBar");
-        if (topBar.TryGetComponent(out dragMoveHandler))
-        {
-            dragMoveHandler.targetToMove = RectTransform;
-            dragMoveHandler.onPointerDown.AddListener(Focus);
-        }
+        //if (topBar.TryGetComponent(out dragMoveHandler))
+        //{
+        //    //dragMoveHandler.targetToMove = RectTransform;
+        //    dragMoveHandler.onPointerDown.AddListener(Focus);
+        //}
+        dragMoveHandler = topBar.GetComponent<DragMoveHandler>();
 
         // 添加双击支持
         if (topBar.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
@@ -313,7 +314,7 @@ public abstract class WindowBase : PanelBase
 
 
         // 获取桌面的RectTransform作为最大化的参考尺寸
-        RectTransform targetRect = GameObject.Find("Desktop").transform as RectTransform;
+        RectTransform targetRect = WindowsManager.Instance.Desktop;
 
         canvasGroup.alpha = 1;
         canvasGroup.interactable = false;
