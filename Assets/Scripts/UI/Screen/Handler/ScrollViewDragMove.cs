@@ -20,8 +20,12 @@ public class ScrollViewDragMove : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     private ScrollRect scrollRect;
 
+    private Graphic graphic;
+
     private void Awake()
     {
+        graphic = GetComponent<Graphic>();
+
         scrollRect = GetComponentInParent<ScrollRect>();
 
         if (scrollRect.vertical && (direction == ScrollViewMoveDirection.Left || direction == ScrollViewMoveDirection.Right))
@@ -38,6 +42,8 @@ public class ScrollViewDragMove : MonoBehaviour, IPointerEnterHandler, IPointerE
 
         EventManager.Instance.AddListener<Card>(EventType.PickUpCard, OnPickUp);
         EventManager.Instance.AddListener(EventType.PutDownCard, OnPutDown);
+
+        graphic.raycastTarget = false;
     }
 
     private void OnDisable()
@@ -48,11 +54,13 @@ public class ScrollViewDragMove : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     private void OnPickUp(Card card)
     {
+        graphic.raycastTarget = true;
         isDragging = true;
     }
 
     private void OnPutDown()
     {
+        graphic.raycastTarget = false;
         isDragging = false;
     }
 
