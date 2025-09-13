@@ -158,7 +158,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // 左键点击
         if (IsLeftButtonPressed(eventData))
         {
-            Debug.Log("Left");
             // shift + 左键 = 快速移动一组
             if (IsShiftPressed())
                 HandleQuickMove(sourceSlot.StackNum);
