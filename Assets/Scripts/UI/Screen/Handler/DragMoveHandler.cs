@@ -1,3 +1,4 @@
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -83,14 +84,8 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private void SnapToEdges()
     {
-        // 优先检查与其他窗口的吸附
-        bool snappedToWindow = CheckWindowSnapping();
-
-        // 如果没有吸附到其他窗口，则检查屏幕边缘吸附
-        if (!snappedToWindow)
-        {
-            CheckScreenEdgeSnapping();
-        }
+        // 进行窗口吸附
+        CheckWindowSnapping();
 
         // 限制窗口不要超出屏幕范围
         var targetPosition = thisWindowRect.position;
@@ -102,13 +97,13 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// 检查是否存在窗口边缘吸附的可能
     /// </summary>
     /// <returns></returns>
-    private bool CheckWindowSnapping()
+    private void CheckWindowSnapping()
     {
         float minDistanceHorizontal = float.MaxValue;
         float minDistanceVertical = float.MaxValue;
 
-        RectTransform closestWindowRectHorizontal = null;
-        RectTransform closestWindowRectVertical = null;
+        float horizontalBorder = 0;
+        float verticalBorder = 0;
 
         SnapDirection snapDirectionHorizontal = SnapDirection.None;
         SnapDirection snapDirectionVertical = SnapDirection.None;
@@ -121,45 +116,48 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             if (window == thisWindow || window == null) continue;
 
             // 检查四个方向的吸附可能性
-            CheckSnapDirection(thisLeft, thisTop, thisRight, thisBottom,
+            CheckWindowEdgeSnapping(thisLeft, thisTop, thisRight, thisBottom,
                 window.transform as RectTransform,
                 ref minDistanceHorizontal,
                 ref minDistanceVertical,
-                ref closestWindowRectHorizontal,
-                ref closestWindowRectVertical,
+                ref horizontalBorder,
+                ref verticalBorder,
                 ref snapDirectionHorizontal,
                 ref snapDirectionVertical);
         }
 
-        bool snapped = false;
+        // 再检查和屏幕边缘的吸附可能性
+        CheckScreenEdgeSnapping(thisLeft, thisTop, thisRight, thisBottom,
+                ref minDistanceHorizontal,
+                ref minDistanceVertical,
+                ref horizontalBorder,
+                ref verticalBorder,
+                ref snapDirectionHorizontal,
+                ref snapDirectionVertical);
 
         // 如果找到最近的窗口且距离小于阈值，则执行吸附
         // 水平方向
-        if (closestWindowRectHorizontal != null && minDistanceHorizontal < snapThreshold)
+        if (snapDirectionHorizontal != SnapDirection.None && minDistanceHorizontal < snapThreshold)
         {
-            ExecuteWindowSnap(closestWindowRectHorizontal, snapDirectionHorizontal);
-            snapped = true;
+            ExecuteWindowSnap(horizontalBorder, snapDirectionHorizontal);
         }
         // 垂直方向
-        if (closestWindowRectVertical != null && minDistanceVertical < snapThreshold)
+        if (snapDirectionVertical != SnapDirection.None && minDistanceVertical < snapThreshold)
         {
-            ExecuteWindowSnap(closestWindowRectVertical, snapDirectionVertical);
-            snapped = true;
+            ExecuteWindowSnap(verticalBorder, snapDirectionVertical);
         }
-
-        return snapped;
     }
 
 
     /// <summary>
-    /// 检查四个方向的吸附可能性
+    /// 检查和窗口边缘的吸附可能性
     /// </summary>
-    private void CheckSnapDirection(float thisLeft, float thisTop, float thisRight, float thisBottom,
+    private void CheckWindowEdgeSnapping(float thisLeft, float thisTop, float thisRight, float thisBottom,
                                    RectTransform otherWindowRect,
                                    ref float minDistanceHorizontal,
                                    ref float minDistanceVertical,
-                                   ref RectTransform closestWindowRectHorizontal,
-                                   ref RectTransform closestWindowRectVertical,
+                                   ref float horizontalBorder,
+                                   ref float verticalBorder,
                                    ref SnapDirection snapDirectionHorizontal,
                                    ref SnapDirection snapDirectionVertical)
     {
@@ -174,7 +172,7 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (leftDistance < minDistanceHorizontal && leftDistance < snapThreshold)
         {
             minDistanceHorizontal = leftDistance;
-            closestWindowRectHorizontal = otherWindowRect;
+            horizontalBorder = otherRight;
             snapDirectionHorizontal = SnapDirection.Left;
         }
 
@@ -182,7 +180,7 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (rightDistance < minDistanceHorizontal && rightDistance < snapThreshold)
         {
             minDistanceHorizontal = rightDistance;
-            closestWindowRectHorizontal = otherWindowRect;
+            horizontalBorder = otherLeft;
             snapDirectionHorizontal = SnapDirection.Right;
         }
 
@@ -190,7 +188,7 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (topDistance < minDistanceVertical && topDistance < snapThreshold)
         {
             minDistanceVertical = topDistance;
-            closestWindowRectVertical = otherWindowRect;
+            verticalBorder = otherBottom;
             snapDirectionVertical = SnapDirection.Top;
         }
 
@@ -198,89 +196,93 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         if (bottomDistance < minDistanceVertical && bottomDistance < snapThreshold)
         {
             minDistanceVertical = bottomDistance;
-            closestWindowRectVertical = otherWindowRect;
+            verticalBorder = otherTop;
             snapDirectionVertical = SnapDirection.Bottom;
         }
     }
+
+
+    /// <summary>
+    /// 检查和屏幕边缘的吸附可能性
+    /// </summary>
+    private void CheckScreenEdgeSnapping(float thisLeft, float thisTop, float thisRight, float thisBottom,
+                                   ref float minDistanceHorizontal,
+                                   ref float minDistanceVertical,
+                                   ref float horizontalBorder,
+                                   ref float verticalBorder,
+                                   ref SnapDirection snapDirectionHorizontal,
+                                   ref SnapDirection snapDirectionVertical)
+    {
+        var (screenLeft, screenTop, screenRight, screenBottom) = GetFourBorders(WindowsManager.Instance.Desktop);
+
+        var leftDistance = Mathf.Abs(screenLeft - thisLeft);
+        var rightDistance = Mathf.Abs(screenRight - thisRight);
+        var topDistance = Mathf.Abs(screenTop - thisTop);
+        var bottomDistance = Mathf.Abs(screenBottom - thisBottom);
+
+        // 检查左吸附
+        if (leftDistance < minDistanceHorizontal && leftDistance < snapThreshold)
+        {
+            minDistanceHorizontal = leftDistance;
+            horizontalBorder = screenLeft + constBorder;
+            snapDirectionHorizontal = SnapDirection.Left;
+        }
+
+        // 检查右吸附
+        if (rightDistance < minDistanceHorizontal && rightDistance < snapThreshold)
+        {
+            minDistanceHorizontal = rightDistance;
+            horizontalBorder = screenRight - constBorder;
+            snapDirectionHorizontal = SnapDirection.Right;
+        }
+
+        // 检查上吸附
+        if (topDistance < minDistanceVertical && topDistance < snapThreshold)
+        {
+            minDistanceVertical = topDistance;
+            verticalBorder = screenTop - constBorder;
+            snapDirectionVertical = SnapDirection.Top;
+        }
+
+        // 检查下吸附
+        if (bottomDistance < minDistanceVertical && bottomDistance < snapThreshold)
+        {
+            minDistanceVertical = bottomDistance;
+            verticalBorder = screenBottom + constBorder;
+            snapDirectionVertical = SnapDirection.Bottom;
+        }
+    }
+
 
     /// <summary>
     /// 执行窗口边缘吸附
     /// </summary>
     /// <param name="target"></param>
     /// <param name="direction"></param>
-    private void ExecuteWindowSnap(RectTransform target, SnapDirection direction)
+    private void ExecuteWindowSnap(float border, SnapDirection direction)
     {
         Vector2 targetPosition = thisWindowRect.position;
-
-        var (thisLeft, thisTop, thisRight, thisBottom) = GetFourBorders(thisWindowRect);
-        var (otherLeft, otherTop, otherRight, otherBottom) = GetFourBorders(target);
-
-        switch (direction)
-        {
-            case SnapDirection.Left:
-                targetPosition.x -= thisLeft - otherRight + constBorder;
-                break;
-            case SnapDirection.Right:
-                targetPosition.x -= thisRight - otherLeft - constBorder;
-                break;
-            case SnapDirection.Top:
-                targetPosition.y -= thisTop - otherBottom - constBorder;
-                break;
-            case SnapDirection.Bottom:
-                targetPosition.y -= thisBottom - otherTop + constBorder;
-                break;
-        }
-
-        thisWindowRect.position = targetPosition;
-    }
-
-    /// <summary>
-    /// 执行屏幕边缘吸附
-    /// </summary>
-    private void CheckScreenEdgeSnapping()
-    {
-        // 获取画布尺寸
-        RectTransform screenRect = WindowsManager.Instance.Desktop;
-
-        var (thisLeft, thisTop, thisRight, thisBottom) = GetFourBorders(thisWindowRect);
-        var (screenLeft, screenTop, screenRight, screenBottom) = GetFourBorders(screenRect);
-
-        Vector2 targetPosition = thisWindowRect.position;
-        bool snapped = false;
 
         var halfWidth = thisWindowRect.rect.width / 2;
         var halfHeight = thisWindowRect.rect.height / 2;
 
-        // 检查左边缘
-        if (Mathf.Abs(thisLeft - screenLeft) < snapThreshold)
+        switch (direction)
         {
-            targetPosition.x = screenLeft + halfWidth;
-            snapped = true;
-        }
-        // 检查右边缘
-        else if (Mathf.Abs(thisRight - screenRight) < snapThreshold)
-        {
-            targetPosition.x = screenRight - halfWidth;
-            snapped = true;
-        }
-
-        // 检查上边缘
-        if (Mathf.Abs(thisTop - screenTop) < snapThreshold)
-        {
-            targetPosition.y = screenTop - halfHeight;
-            snapped = true;
-        }
-        // 检查下边缘
-        else if (Mathf.Abs(thisBottom - screenBottom) < snapThreshold)
-        {
-            targetPosition.y = screenBottom + halfHeight;
-            snapped = true;
+            case SnapDirection.Left:
+                targetPosition.x = border + halfWidth - constBorder;
+                break;
+            case SnapDirection.Right:
+                targetPosition.x = border - halfWidth + constBorder;
+                break;
+            case SnapDirection.Top:
+                targetPosition.y = border - halfHeight + constBorder;
+                break;
+            case SnapDirection.Bottom:
+                targetPosition.y = border + halfHeight - constBorder;
+                break;
         }
 
-        if (snapped)
-        {
-            thisWindowRect.position = targetPosition;
-        }
+        thisWindowRect.position = targetPosition;
     }
 
     private (float, float, float, float) GetFourBorders(RectTransform rectTransform)
