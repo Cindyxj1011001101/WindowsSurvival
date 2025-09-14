@@ -37,6 +37,17 @@ public class CraftWindow : WindowBase
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, RefreshDisplay);
         EventManager.Instance.AddListener(EventType.UnlockRecipe, RefreshDisplay);
         EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
+
+        foreach (Transform child in limitationLayout)
+        {
+            child.gameObject.AddComponent<HoverTipController>().SetTip(child.GetComponentInChildren<Text>(true).text);
+        }
+        cannotMove.AddComponent<HoverTipController>().SetTip(cannotMove.GetComponentInChildren<Text>(true).text);
+        cannotMove.SetActive(false);
+        limitationLayout.gameObject.SetActive(false);
+
+        currentRecipeType = (RecipeType)Enum.Parse(typeof(RecipeType), recipeLibraryLayout.GetChild(0).name);
+        DisplayRecipeLibraries();
     }
 
     private void OnDestroy()
@@ -52,16 +63,7 @@ public class CraftWindow : WindowBase
 
     protected override void Init()
     {
-        foreach (Transform child in limitationLayout)
-        {
-            child.gameObject.AddComponent<HoverTipController>().SetTip(child.GetComponentInChildren<Text>(true).text);
-        }
-        cannotMove.AddComponent<HoverTipController>().SetTip(cannotMove.GetComponentInChildren<Text>(true).text);
-        cannotMove.SetActive(false);
-        limitationLayout.gameObject.SetActive(false);
 
-        currentRecipeType = (RecipeType)Enum.Parse(typeof(RecipeType), recipeLibraryLayout.GetChild(0).name);
-        DisplayRecipeLibraries();
     }
 
     private void RefreshDisplay(ChangePlayerBagCardsArgs args)
@@ -89,8 +91,6 @@ public class CraftWindow : WindowBase
     /// </summary>
     private void DisplayRecipeLibraries()
     {
-        LayoutRebuilder.ForceRebuildLayoutImmediate(recipeLibraryLayout as RectTransform);
-
         for (int i = 0; i < recipeLibraryLayout.childCount; i++)
         {
             var button = recipeLibraryLayout.GetChild(i).GetComponent<HoverableButton>();
@@ -118,6 +118,8 @@ public class CraftWindow : WindowBase
     /// <param name="isRefresh"></param>
     private void DisplayRecipesByType(RecipeType recipeType, bool isRefresh = false)
     {
+        currentRecipeType = recipeType;
+
         // 清空位置记录字典
         recipeItemTransforms.Clear();
 
@@ -184,6 +186,8 @@ public class CraftWindow : WindowBase
     private void SelectRecipeLibraryWithTween(RecipeType type)
     {
 
+        LayoutRebuilder.ForceRebuildLayoutImmediate(recipeLibraryLayout as RectTransform);
+
         Vector2 targetPos = new(recipeLibrarySelectRect.anchoredPosition.x, recipeLibraryItemTransforms[type].anchoredPosition.y);
 
         // 创建动画序列
@@ -197,6 +201,8 @@ public class CraftWindow : WindowBase
     /// <param name="recipe"></param>
     private void DisplayRecipeDetails(ScriptableRecipe recipe)
     {
+        currentSelectedRecipe = recipe;
+
         ObjectBufferPool.Instance.RestoreAllChildren(materialLayout);
 
         // 显示卡牌
@@ -249,10 +255,14 @@ public class CraftWindow : WindowBase
         craftButton.onClick.RemoveAllListeners();
         craftButton.onClick.AddListener(() =>
         {
-            // 合成卡牌
-            CraftManager.Instance.Craft(recipe, slot.transform.position);
-            // 刷新显示
-            RefreshDisplay();
+            var tween = slot.transform.ShakeAndBounce(() =>
+            {
+                // 合成卡牌
+                CraftManager.Instance.Craft(recipe, slot.transform.position);
+                // 刷新显示
+                RefreshDisplay();
+            });
+            MouseManager.Instance.Wait(tween.Duration());
         });
 
         // 显示放置限制
