@@ -97,7 +97,7 @@ public class EnvironmentBagWindow : BagWindow
             GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
             // 提示
             exploreButton.ShowTip(tip);
-        }, bounceMaxScale: 1.09f, bounceDuration: 0.15f);
+        });
 
         // 等待抽牌动画完成
         MouseManager.Instance.Wait(seq.Duration());

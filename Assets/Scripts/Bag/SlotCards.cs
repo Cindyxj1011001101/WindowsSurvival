@@ -107,20 +107,15 @@ public class SlotCards : IComparable<SlotCards>
     }
 
     /// <summary>
-    /// 销毁最优先的卡牌
-    /// </summary>
-    public void DestroyCard()
-    {
-        PeekCard().DestroyThis();
-    }
-
-    /// <summary>
     /// 销毁指定数量的卡牌
     /// </summary>
-    public void DestroyCards(int amount)
+    public void DestroyCard(int amount = 1)
     {
-        for (int i = 0; i < amount; i++)
-            DestroyCard();
+        var count = Mathf.Min(amount, StackNum);
+        for (int i = 0; i < count; i++)
+            PeekCard().DestroyThis();
+
+        if (StackNum > 0 && CardSlot != null) CardSlot.transform.Bounce();
     }
 
     /// <summary>
@@ -157,7 +152,7 @@ public class SlotCards : IComparable<SlotCards>
     /// </summary>
     public virtual void Clear()
     {
-        DestroyCards(StackNum);
+        DestroyCard(StackNum);
         Cards.Clear();
     }
 

@@ -63,7 +63,7 @@ public class CraftWindow : WindowBase
 
     protected override void Init()
     {
-
+        DisplayRecipesByType(currentRecipeType);
     }
 
     private void RefreshDisplay(ChangePlayerBagCardsArgs args)
@@ -107,8 +107,6 @@ public class CraftWindow : WindowBase
                 DisplayRecipesByType(type);
             });
         }
-
-        DisplayRecipesByType(currentRecipeType);
     }
 
     /// <summary>

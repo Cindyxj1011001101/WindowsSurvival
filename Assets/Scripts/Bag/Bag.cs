@@ -290,7 +290,7 @@ public abstract class Bag
             // 则将这些卡牌移除，退出循环
             else
             {
-                slot.DestroyCards(leftAmount);
+                slot.DestroyCard(leftAmount);
                 leftAmount = 0;
                 break;
             }

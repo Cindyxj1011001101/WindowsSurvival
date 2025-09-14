@@ -12,7 +12,7 @@ public static class ExtensionClass
         return target == null || target.Count == 0;
     }
 
-    public static Tween Bounce(this Transform target, float maxScale = 1.07f, float duration = 0.09f)
+    public static Tween Bounce(this Transform target, float maxScale = 1.09f, float duration = 0.15f)
     {
         return target.DOScale(maxScale, duration).SetLoops(2, LoopType.Yoyo).OnComplete(() => target.localScale = Vector3.one);
     }
@@ -34,7 +34,7 @@ public static class ExtensionClass
     public static Tween ShakeAndBounce(this Transform target,
                                     TweenCallback onShakeComplete = null,
                                     TweenCallback onBounceComplete = null,
-                                    float bounceMaxScale = 1.07f, float bounceDuration = 0.09f,
+                                    float bounceMaxScale = 1.09f, float bounceDuration = 0.15f,
                                     float shakeDuration = .6f,
                                     float pStrengthX = 2.3f, float pStrengthY = 1.2f, float pStrengthZ = 0, int pVibrato = 15,
                                     float rStrengthX = 0, float rStrengthY = 0, float rStrengthZ = 0.7f, int rVibrato = 12)
