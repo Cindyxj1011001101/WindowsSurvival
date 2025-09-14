@@ -177,6 +177,13 @@ public class GameManager : MonoBehaviour
 
     public bool IsCurrentEnvironment(Bag bag) => bag is EnvironmentBag env && env == curEnvironmentBag;
 
+    #region AddCard
+
+    /// <summary>
+    /// 添加卡牌到指定背包
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="targetBag"></param>
     public void AddCard(Card card, Bag targetBag)
     {
         card.StartUpdating();
@@ -186,21 +193,13 @@ public class GameManager : MonoBehaviour
     public void AddCard(Card card, bool toPlayerBag)
     {
         if (toPlayerBag && playerBag.CanAddCard(card, out _))
-        {
-            if (!WindowsManager.Instance.IsWindowOpen("PlayerBag"))
-                WindowsManager.Instance.OpenWindow("PlayerBag");
             AddCard(card, playerBag);
-        }
         else
-        {
-            if (!WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))
-                WindowsManager.Instance.OpenWindow("EnvironmentBag");
-            AddCard(card, curEnvironmentBag);
-        }
+            AddCard(card, CurEnvironmentBag);
     }
 
     /// <summary>
-    /// 添加卡牌到指定背包
+    /// 添加卡牌到指定背包(结合动效)
     /// </summary>
     /// <param name="card"></param>
     /// <param name="targetBag"></param>
@@ -224,42 +223,22 @@ public class GameManager : MonoBehaviour
             });
     }
 
-    public Tween AddCardWithTween(Card card, Vector2 startPos, bool toPlayerBag)
+    public Tween AddCardWithTween(Card card, bool toPlayerBag, Vector2 startPos)
     {
-        AddCard(card, toPlayerBag);
-
-        return MFXUtility.MoveCard(
-            card,
-            1,
-            startPos,
-            card.Slot.transform.position,
-            addCardAnimDuration,
-            onComplete: () =>
-            {
-                card.RefreshSlot();
-            });
+        if (toPlayerBag && playerBag.CanAddCard(card, out _))
+            return AddCardWithTween(card, playerBag, startPos);
+        else
+            return AddCardWithTween(card, curEnvironmentBag, startPos);
     }
 
-    public Tween AddCardWithTween(string cardId, Vector2 startPos, bool toPlayerBag, out Card card)
+    public Tween AddCardWithTween(string cardId, bool toPlayerBag, Vector2 startPos, out Card card)
     {
         card = CardFactory.CreateCard(cardId);
-        
-        return AddCardWithTween(card, startPos, toPlayerBag);
+
+        return AddCardWithTween(card, toPlayerBag, startPos);
     }
 
-    public Tween AddCardsWithTween(string cardId, int count, Vector2 startPos, bool toPlayerBag, out List<Card> cards)
-    {
-        cards = new();
-
-        for (int i = 0; i < count; i++)
-        {
-            cards.Add(CardFactory.CreateCard(cardId));
-        }
-
-        return AddCardsWithTween(cards, startPos, toPlayerBag);
-    }
-
-    public Tween AddCardsWithTween(List<Card> cards, Vector2 startPos, bool toPlayerBag)
+    public Tween AddCardsWithTween(List<Card> cards, bool toPlayerBag, Vector2 startPos)
     {
         foreach (var card in cards)
         {
@@ -275,6 +254,19 @@ public class GameManager : MonoBehaviour
                 card.RefreshSlot();
             });
     }
+
+    public Tween AddCardsWithTween(string cardId, int count, bool toPlayerBag, Vector2 startPos, out List<Card> cards)
+    {
+        cards = new();
+
+        for (int i = 0; i < count; i++)
+        {
+            cards.Add(CardFactory.CreateCard(cardId));
+        }
+
+        return AddCardsWithTween(cards, toPlayerBag, startPos);
+    }
+    #endregion
 
     #region 装备
     /// <summary>
@@ -313,7 +305,7 @@ public class GameManager : MonoBehaviour
         equipment.SlotCards.RemoveCard(equipment);
 
         // 添加到背包(优先)或环境中
-        AddCardWithTween(equipment, transform.position, true); // transform 理论上不会为空
+        AddCardWithTween(equipment, true, transform.position); // transform 理论上不会为空
     }
 
     /// <summary>

@@ -33,7 +33,7 @@ public class EnvironmentBagWindow : BagWindow
     [SerializeField] private Image environmentImage; // 环境图片
     [SerializeField] private HoverableButton exploreButton; // 探索按钮
     [SerializeField] private RectTransform stateLayout;
-    [SerializeField] private RectTransform envCardTransform;
+    [SerializeField] private CardSlot envCardSlot;
 
     [SerializeField] private UIStateToggle hasCabble; // 是否铺设电缆
     [SerializeField] private UIPressureLevel pressureLevel; // 压强等级
@@ -104,26 +104,13 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void Explore()
     {
-        var pos = envCardTransform.anchoredPosition;
-
-        var seq = DOTween.Sequence();
-
-        // 1. 牌堆抖动
-        seq.Join(envCardTransform.DOShakePosition(pDuration, pStrength, vibrato: pVibrato, fadeOut: false)); // 位置抖动
-        seq.Join(envCardTransform.DOShakeRotation(rDuration, rStrength, vibrato: rVibrato, fadeOut: false)); // 旋转抖动
-
-        // 2. 抽牌
-        seq.AppendCallback(() =>
+        var seq = envCardSlot.ShakeAndBounce(() =>
         {
             GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
-            GameManager.Instance.AddCardsWithTween(droppedCards, envCardTransform.position, false);
+            GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardSlot.transform.position);
             // 提示
             exploreButton.ShowTip(tip);
-        });
-
-        // 3. 归位
-        seq.Append(envCardTransform.DOAnchorPos(pos, .1f));
-        seq.Join(envCardTransform.DORotateQuaternion(Quaternion.identity, .1f));
+        }, bounceMaxScale: 1.09f, bounceDuration: 0.15f);
 
         // 等待抽牌动画完成
         MouseManager.Instance.Wait(seq.Duration());

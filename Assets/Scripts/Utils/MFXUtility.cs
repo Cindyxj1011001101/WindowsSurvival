@@ -51,7 +51,7 @@ public class MFXUtility
         RectTransform slotRect = slotObj.GetComponent<RectTransform>();
         slotRect.anchoredPosition = screenPosition;
         slotRect.localRotation = Quaternion.identity;
-        slotRect.localScale = Vector3.one;
+        slotRect.localScale = Vector3.one * 1.07f;
 
         // 设置CardSlot组件
         CardSlot slot = slotObj.GetComponent<CardSlot>();
@@ -71,24 +71,37 @@ public class MFXUtility
         Vector3 sourcePosition,
         Vector3 targetPosition,
         float duration = 0.3f,
+        bool bounce = false,
         System.Action onStart = null,
         System.Action onComplete = null,
         Ease ease = Ease.OutQuad)
     {
         var slot = CreateSlot(sourcePosition);
-        //slot.transform.SetAsFirstSibling();
 
         slot.DisplayCard(card, count);
 
-        return slot.transform.DOMove(targetPosition, duration)
+        var seq = DOTween.Sequence();
+
+        seq.Join(slot.transform.DOMove(targetPosition, duration)
              .SetEase(ease)
              .OnStart(() => onStart?.Invoke())
              .OnComplete(() =>
              {
                  onComplete?.Invoke();
-                 ObjectBufferPool.Instance.Restore(slot.gameObject);
                  SoundManager.Instance.PlaySound("放置卡牌", true);
-             });
+             }));
+
+        seq.Join(slot.transform.DOScale(1f, duration));
+
+        if (bounce)
+            seq.Join(slot.Bounce().SetDelay(duration));
+
+        seq.OnComplete(() =>
+        {
+            ObjectBufferPool.Instance.Restore(slot.gameObject);
+        });
+
+        return seq;
     }
 
     /// <summary>
@@ -107,6 +120,7 @@ public class MFXUtility
         Vector3 sourcePosition,
         float duration = 0.3f,
         float interval = 0.1f,
+        bool bounce = false,
         System.Action onStart = null,
         System.Action<Card> onComplete = null,
         Ease ease = Ease.OutQuad
@@ -123,6 +137,7 @@ public class MFXUtility
                 sourcePosition,
                 card.Slot.transform.position,
                 duration,
+                bounce,
                 onStart,
                 () =>
                 {
@@ -172,7 +187,7 @@ public class MFXUtility
         }));
         rotateSeq.Append(transform.DOLocalRotate(Vector3.zero, .25f));
 
-        mainSeq.Join(rotateSeq); // 总时长0.8s
+        mainSeq.Join(rotateSeq); // 总时长0.9s
 
         mainSeq.OnStart(() => onStart?.Invoke());
 

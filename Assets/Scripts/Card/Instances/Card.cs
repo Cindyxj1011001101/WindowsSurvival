@@ -455,56 +455,51 @@ public abstract class Card : IComparable<Card>
 
     public Tween AddCard(string cardId, bool toPlayerBag, out Card card)
     {
-        return GameManager.Instance.AddCardWithTween(cardId, Transform.position, toPlayerBag, out card);
+        return GameManager.Instance.AddCardWithTween(cardId, toPlayerBag, Transform.position, out card);
     }
 
     public Tween AddCard(string cardId, bool toPlayerBag)
     {
-        return GameManager.Instance.AddCardWithTween(cardId, Transform.position, toPlayerBag, out _);
+        return GameManager.Instance.AddCardWithTween(cardId, toPlayerBag, Transform.position, out _);
     }
 
     public Tween AddCards(string cardId, int count, bool toPlayerBag, out List<Card> cards)
     {
-        return GameManager.Instance.AddCardsWithTween(cardId, count, Transform.position, toPlayerBag, out cards);
+        return GameManager.Instance.AddCardsWithTween(cardId, count, toPlayerBag, Transform.position, out cards);
     }
 
     public Tween AddCards(string cardId, int count, bool toPlayerBag)
     {
-        return GameManager.Instance.AddCardsWithTween(cardId, count, Transform.position, toPlayerBag, out _);
+        return GameManager.Instance.AddCardsWithTween(cardId, count, toPlayerBag, Transform.position, out _);
     }
 
     public Tween AddCards(List<Card> cards, bool toPlayerBag)
     {
-        return GameManager.Instance.AddCardsWithTween(cards, Transform.position, toPlayerBag);
+        return GameManager.Instance.AddCardsWithTween(cards, toPlayerBag, Transform.position);
     }
 
-    public void AddCard(string cardId, Bag targetBag)
-    {
-        AddCard(cardId, targetBag, out _);
-    }
-
-    public void AddCard(string cardId, Bag targetBag, out Card card)
-    {
-        card = CardFactory.CreateCard(cardId);
-        AddCard(card, targetBag);
-    }
-
-    public void AddCard(Card card, Bag targetBag, bool playAnim = true)
+    /// <summary>
+    /// 添加卡牌到背包(优先添加到preferredBag)
+    /// </summary>
+    /// <param name="card"></param>
+    /// <param name="preferredBag">优先添加到的背包(不能保证一定添加到这个背包里)</param>
+    /// <param name="playAnim"></param>
+    public void AddCard(Card card, Bag preferredBag, bool playAnim = true)
     {
         // 尝试放在targetBag里
-        if (targetBag.CanAddCard(card, out _))
+        if (preferredBag.CanAddCard(card, out _))
         {
             // 成功放置
             // 当前卡牌和其父卡牌都没有显示在场景里
             if (!playAnim || Transform == null)
                 // 没有动效直接添加
-                GameManager.Instance.AddCard(card, targetBag);
+                GameManager.Instance.AddCard(card, preferredBag);
             else
                 // 添加并且播放动效
-                GameManager.Instance.AddCardWithTween(card, targetBag, Transform.position);
+                GameManager.Instance.AddCardWithTween(card, preferredBag, Transform.position);
         }
         // 放不下看targetBag是不是内容物背包
-        else if (targetBag is InnerBag innerBag)
+        else if (preferredBag is InnerBag innerBag)
         {
             // 是的话尝试放在内容物背包的父物体所在的背包里
             AddCard(card, innerBag.BelongedCard.Bag);
@@ -516,6 +511,22 @@ public abstract class Card : IComparable<Card>
         }
     }
 
+    public void AddCard(string cardId, Bag preferredBag)
+    {
+        AddCard(cardId, preferredBag, out _);
+    }
+
+    public void AddCard(string cardId, Bag preferredBag, out Card card)
+    {
+        card = CardFactory.CreateCard(cardId);
+        AddCard(card, preferredBag);
+    }
+
+    /// <summary>
+    /// 将自身变成另一张卡
+    /// </summary>
+    /// <param name="targetCard"></param>
+    /// <param name="targetBag"></param>
     public void TurnTo(Card targetCard, Bag targetBag)
     {
         // 销毁自身

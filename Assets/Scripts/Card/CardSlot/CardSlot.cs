@@ -1,6 +1,6 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +31,8 @@ public class CardSlot : MonoBehaviour
 
     [SerializeField] private HoverTipController tipController;
 
+    [SerializeField] private bool onlyDisplay = false;
+
     private Dictionary<Type, float> lastComponentValues = new();
     private Dictionary<Type, UIStateSlider> componentSliders = new(); // 用于存储组件的滑动条
 
@@ -54,6 +56,8 @@ public class CardSlot : MonoBehaviour
 
     private void OnEnable()
     {
+        if (onlyDisplay) return;
+
         Clear();
         EventManager.Instance.AddListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
@@ -63,8 +67,13 @@ public class CardSlot : MonoBehaviour
 
     private void OnDisable()
     {
+        if (onlyDisplay) return;
+
         Clear();
         Cards?.SetCardSlot(null);
+
+        transform.DOKill();
+        transform.localScale = Vector3.one;
 
         EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
@@ -423,8 +432,6 @@ public class CardSlot : MonoBehaviour
     /// </summary>
     public void Clear()
     {
-        mask.SetActive(false);
-
         cardAnimator.enabled = false;
 
         cardCanvasGroup.alpha = 0;
@@ -434,6 +441,8 @@ public class CardSlot : MonoBehaviour
         ObjectBufferPool.Instance.RestoreAllChildren(middle);
         ObjectBufferPool.Instance.RestoreAllChildren(left);
         ObjectBufferPool.Instance.RestoreAllChildren(right);
+
+        if (mask != null) mask.SetActive(false);
 
         if (innerContentsComponent != null) innerContentsComponent.gameObject.SetActive(false);
         if (iconLayout != null) iconLayout.SetActive(false);
@@ -495,6 +504,43 @@ public class CardSlot : MonoBehaviour
         else
             return 3;
     }
+    #endregion
+
+    #region Tween
+
+    public Tween Bounce(float maxScale = 1.07f, float duration = 0.09f)
+    {
+        return transform.DOScale(maxScale, duration).SetLoops(2, LoopType.Yoyo).OnComplete(() => transform.localScale = Vector3.one);
+    }
+
+    public Tween Shake(float duration = .6f,
+                       float pStrengthX = 2.3f, float pStrengthY = 1.2f, float pStrengthZ = 0, int pVibrato = 15,
+                       float rStrengthX = 0, float rStrengthY = 0, float rStrengthZ = 0.7f, int rVibrato = 12)
+    {
+        transform.GetPositionAndRotation(out var originalPos, out var originalRotation);
+
+        var seq = DOTween.Sequence();
+        seq.Join(transform.DOShakePosition(duration, new Vector3(pStrengthX, pStrengthY, pStrengthZ), vibrato: pVibrato, fadeOut: false).OnComplete(() => { transform.position = originalPos; })); // 位置抖动
+        seq.Join(transform.DOShakeRotation(duration, new Vector3(rStrengthX, rStrengthY, rStrengthZ), vibrato: rVibrato, fadeOut: false).OnComplete(() => { transform.rotation = originalRotation; })); // 旋转抖动
+
+        return seq;
+    }
+
+    public Tween ShakeAndBounce(TweenCallback onShakeComplete = null,
+                                TweenCallback onBounceComplete = null,
+                                float bounceMaxScale = 1.07f, float bounceDuration = 0.09f,
+                                float shakeDuration = .6f,
+                                float pStrengthX = 2.3f, float pStrengthY = 1.2f, float pStrengthZ = 0, int pVibrato = 15,
+                                float rStrengthX = 0, float rStrengthY = 0, float rStrengthZ = 0.7f, int rVibrato = 12)
+    {
+        var seq = DOTween.Sequence();
+
+        seq.Append(Shake(shakeDuration, pStrengthX, pStrengthY, pStrengthZ, pVibrato, rStrengthX, rStrengthY, rStrengthZ, rVibrato).OnComplete(onShakeComplete));
+        seq.Append(Bounce(bounceMaxScale, bounceDuration).OnComplete(onBounceComplete));
+
+        return seq;
+    }
+
     #endregion
 
     /// <summary>
