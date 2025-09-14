@@ -222,15 +222,12 @@ public class DetailsWindow : BagWindow
 
         ObjectBufferPool.Instance.RestoreAllChildren(buttonLayout);
 
-        HoverableButton button;
-        Text btnText;
-        bool interactable;
 
         // 显示详情和前往制作按钮
         if (displayType == DisplayType.DetailsAndCraftButton)
         {
-            button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
-            btnText = button.GetComponentInChildren<Text>();
+            var button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
+            var btnText = button.GetComponentInChildren<Text>();
             btnText.text = "前往制作";
             button.Interactable = WindowsManager.Instance.GetUnlockedShortcuts().Contains("Craft");
             button.onClick.RemoveAllListeners();
@@ -259,11 +256,11 @@ public class DetailsWindow : BagWindow
         foreach (var e in currentDisplayedCard.Events)
         {
             var card = currentDisplayedCard;
-            button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
-            btnText = button.GetComponentInChildren<Text>();
+            var button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
+            var btnText = button.GetComponentInChildren<Text>();
             btnText.text = e.name;
 
-            interactable = e.Judge();
+            var interactable = e.Judge();
             button.Interactable = interactable;
 
             // 判断cardEvent是否满足条件
@@ -276,7 +273,7 @@ public class DetailsWindow : BagWindow
                     e.Inovke(out string tip);
 
                     // 显示提示
-                    button.ShowTip(tip);
+                    button.transform.ShowTip(tip, 1.4f);
 
                     // 显示状态变化
                     var playerStateChanges = e.GetPlayerEffects();

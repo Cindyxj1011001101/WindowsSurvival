@@ -209,7 +209,7 @@ public class MFXUtility
         return mainSeq;
     }
 
-    public static void ShowTip(string tip, Vector3 position, float duration = 1f)
+    public static void ShowTip(string tip, Vector3 position, float duration = 2f)
     {
         ShowTip(tip, position, ColorManager.White, duration);
     }
