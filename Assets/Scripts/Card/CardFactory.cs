@@ -339,19 +339,19 @@ public static class CardFactory
     }
 
     // 环境重复掉落列表
-    private static Dictionary<PlaceEnum, RepeatableDropList> repeatableDropListDict = null;
+    private static Dictionary<PlaceEnum, DeepExploreDropList> repeatableDropListDict = null;
 
-    private static void InitRepeatableDropList()
+    private static void InitDeepExploreDropList()
     {
-        repeatableDropListDict ??= ExcelReader.GenerateRepeatableDropList();
+        repeatableDropListDict ??= ExcelReader.GenerateDeepExploreDropList();
     }
 
-    public static RepeatableDropList GetRepeatableDropList(PlaceEnum place)
+    public static DeepExploreDropList GetDeepExploreDropList(PlaceEnum place)
     {
-        InitRepeatableDropList();
+        InitDeepExploreDropList();
         if (repeatableDropListDict.ContainsKey(place))
             return repeatableDropListDict[place];
-        return new RepeatableDropList();
+        return new DeepExploreDropList();
     }
 
     private static Dictionary<string, Card> cardInstances = new();

@@ -9097,42 +9097,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1014820197}
   m_CullTransparentMesh: 1
---- !u!1 &1022945085 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6954445716605417701, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
-  m_PrefabInstance: {fileID: 1605146528637459510}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1022945089
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1022945085}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64d8a0a577cc2b542bf36c66227413a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  iconImage: {fileID: 0}
-  nameText: {fileID: 0}
-  stackObject: {fileID: 0}
-  stackNumText: {fileID: 0}
-  maxStackNumImage: {fileID: 0}
-  cardCanvasGroup: {fileID: 0}
-  moreInfoText: {fileID: 0}
-  particleDisplayRect: {fileID: 0}
-  mask: {fileID: 0}
-  middle: {fileID: 0}
-  left: {fileID: 0}
-  right: {fileID: 0}
-  innerContentsComponent: {fileID: 0}
-  iconLayout: {fileID: 0}
-  fireIcon: {fileID: 0}
-  flashIcon: {fileID: 0}
-  cardAnimator: {fileID: 0}
-  tipController: {fileID: 0}
-  onlyDisplay: 1
 --- !u!1 &1024441530
 GameObject:
   m_ObjectHideFlags: 0
@@ -20111,26 +20075,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7277602289191385233, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
-      propertyPath: rVibrato
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 7277602289191385233, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
-      propertyPath: pDuration
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7277602289191385233, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
-      propertyPath: rDuration
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7277602289191385233, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
-      propertyPath: envCardSlot
-      value: 
-      objectReference: {fileID: 1022945089}
-    - target: {fileID: 7277602289191385233, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
-      propertyPath: rStrength.z
-      value: 0.7
-      objectReference: {fileID: 0}
     - target: {fileID: 7328046855825756702, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -20294,10 +20238,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6954445716605417701, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1022945089}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
 --- !u!114 &1721470175637008864
 MonoBehaviour:

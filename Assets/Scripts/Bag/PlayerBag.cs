@@ -23,6 +23,12 @@
 
     public override bool CanAddCard(Card card, out string tip)
     {
+        if (!card.Moveable)
+        {
+            tip = "不能移动该卡牌";
+            return false;
+        }
+
         if (card.TryGetComponent<InnerContentsComponent>(out _))
         {
             tip = "麦麦的兜里放不下整个包";

@@ -1,12 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 /// <summary>
 /// 有产物的爱情贝
 /// </summary>
 public class LoveBeadWithProduct : Card
 {
+    private RandomDropList dropList = new(
+        new Drop("玻璃沙", 2, 3),
+        new Drop("废金属", 2, 3),
+        new Drop("珊瑚", 1, 3),
+        new Drop("韧性胶管", 1, 3),
+        new Drop("白爆矿", 1, 3)
+        );
+
     private LoveBeadWithProduct()
     {
         Events = new()
@@ -34,7 +41,6 @@ public class LoveBeadWithProduct : Card
 
     private void OpenByTool(Card tool, out string tip)
     {
-        tip = string.Empty;
         DestroyThis();
         tool.Use();
 
@@ -43,28 +49,8 @@ public class LoveBeadWithProduct : Card
         // 变回爱情贝
         TurnTo("爱情贝", Bag);
 
-        //撬开概率
-        int random = Random.Range(0, 15);
-        if (random < 3)
-        {
-            AddCards("玻璃沙", 2, true);
-        }
-        else if (random < 6)
-        {
-            AddCards("废金属", 2, true);
-        }
-        else if (random < 9)
-        {
-            AddCard("珊瑚", true);
-        }
-        else if (random < 12)
-        {
-            AddCard("韧性胶管", true);
-        }
-        else if (random < 15)
-        {
-            AddCard("白爆矿", true);
-        }
+        // 随机掉落
+        RandomDrop(dropList, out tip);
     }
     #endregion
 

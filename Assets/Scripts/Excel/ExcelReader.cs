@@ -345,14 +345,14 @@ public static class ExcelReader
         return result;
     }
 
-    public static Dictionary<PlaceEnum, RepeatableDropList> GenerateRepeatableDropList()
+    public static Dictionary<PlaceEnum, DeepExploreDropList> GenerateDeepExploreDropList()
     {
         // 打开Excel文件
-        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/RepeatableDropListConfig.xlsx", FileMode.Open, FileAccess.Read);
+        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/DeepExploreDropListConfig.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
 
-        Dictionary<PlaceEnum, RepeatableDropList> dict = new();
+        Dictionary<PlaceEnum, DeepExploreDropList> dict = new();
 
         foreach (DataTable table in result.Tables)
         {
@@ -423,7 +423,7 @@ public static class ExcelReader
                 });
             }
             // 保存为Json
-            RepeatableDropList repeatableDropList = new()
+            DeepExploreDropList repeatableDropList = new()
             {
                 emptyPopulation = emptyPopulation,
                 emptyPopulationSizeChangeOnNotCaught = sizeChangeOnNotCaught,

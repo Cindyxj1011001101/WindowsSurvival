@@ -1,10 +1,27 @@
-using UnityEngine;
-
 /// <summary>
 /// 海麻线丛
 /// </summary>
 public class SeaGrassBed : Card
 {
+    private RandomDropList dropListHand = new(
+           new Drop("海麻线", 2, 4),
+           new Drop("海麻线", 1, 12),
+           new Drop("海爬虫", 1, 3),
+           new Drop(2, (out string tip) =>
+           {
+               tip = "手被划伤了";
+               //掉落提示："手被划伤了"
+               StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 5);
+               StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -3);
+           })
+           );
+
+    private RandomDropList dropListKnife = new(
+       new Drop("海麻线", 2, 10),
+       new Drop("海麻线", 1, 5),
+       new Drop("海爬虫", 1, 3)
+       );
+
     private SeaGrassBed()
     {
         Events = new()
@@ -16,10 +33,12 @@ public class SeaGrassBed : Card
 
     private void Event_CollectByHand(out string tip)
     {
-        Use();
+        RandomDrop(dropListHand, out tip, 2, () =>
+        {
+            Use();
 
-        TimeManager.Instance.AddTime(30);
-        RandomDropByHand(out tip);
+            TimeManager.Instance.AddTime(30);
+        });
     }
 
     private bool Judge_CollectByKnife(out string hint)
@@ -38,61 +57,15 @@ public class SeaGrassBed : Card
         CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
 
-    private void RandomDropByHand(out string tip)
-    {
-        tip = string.Empty;
-        for (int i = 0; i < 2; i++)
-        {
-            int rand = Random.Range(0, 20);
-            if (rand < 4)
-            {
-                AddCards("海麻线", 2, true);
-            }
-            else if (rand < 16)
-            {
-                AddCard("海麻线", true);
-            }
-            else if (rand < 19)
-            {
-                AddCard("海爬虫", true);
-            }
-            else
-            {
-                tip = "手被划伤了";
-                //掉落提示："手被划伤了"
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 5);
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -3);
-            }
-        }
-    }
-    private void RandomDropByKnife()
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            int rand = Random.Range(0, 18);
-            if (rand < 10)
-            {
-                AddCards("海麻线", 2, true);
-            }
-            else if (rand < 15)
-            {
-                AddCard("海麻线", true);
-            }
-            else
-            {
-                AddCard("海爬虫", true);
-            }
-        }
-    }
-
     private void CollectByKnife(Card tool, out string tip)
     {
-        Use();
-        tool.Use();
+        RandomDrop(dropListKnife, out tip, 3, () =>
+        {
+            Use();
+            tool.Use();
 
-        tip = string.Empty;
-        TimeManager.Instance.AddTime(15);
-        RandomDropByKnife();
+            TimeManager.Instance.AddTime(15);
+        });
     }
 
     public override bool CanQuickInteract(Card card, out string tip)

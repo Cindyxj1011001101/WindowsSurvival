@@ -1,12 +1,28 @@
-using UnityEngine;
-
 /// <summary>
 /// 水瓶鱼
 /// </summary>
 public class AquariusFishWithProduct : Card
 {
+    private RandomDropList dropList;
     private AquariusFishWithProduct()
     {
+        dropList = new(
+            new Drop(3, (out string tip) =>
+            {
+                tip = "水瓶鱼逃跑了";
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -2);
+
+            }),
+            new Drop(1, (out string tip) =>
+            {
+                tip = string.Empty;
+                // 获得一张“有产物的被捉住的水瓶鱼”
+                // 继承产物进度
+                // 添加到玩家背包
+                TurnTo("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag, out var card);
+                card.InheritComponent<ProgressComponent>(this, out _);
+            })
+        );
         Events = new()
         {
             new Event("用捕网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, () => 15),
@@ -35,30 +51,11 @@ public class AquariusFishWithProduct : Card
     #region 用手捉
     private void Event_CatchByHand(out string tip)
     {
-        tip = string.Empty;
-
-        // 1. 销毁卡牌
         DestroyThis();
 
-        int rand = Random.Range(0, 4);
-        if (rand < 3)
-        {
-            // 2. 玩家状态变化
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -2);
+        TimeManager.Instance.AddTime(30);
 
-            // 3. 时间变化
-            TimeManager.Instance.AddTime(30);
-
-            // 4. 鱼逃跑了
-            tip = "水瓶鱼逃跑了";
-        }
-        else
-        {
-            TimeManager.Instance.AddTime(30);
-
-            // 获得一张“有产物的被捉住的水瓶鱼”
-            TurnTo("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
-        }
+        RandomDrop(dropList, out tip);
     }
     #endregion
 

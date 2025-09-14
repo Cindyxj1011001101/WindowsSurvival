@@ -206,16 +206,12 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     public Tween AddCardWithTween(Card card, Bag targetBag, Vector2 startPos)
     {
-        if (targetBag.Window != null && !WindowsManager.Instance.IsWindowOpen(targetBag.Window.AppName))
-            WindowsManager.Instance.OpenWindow(targetBag.Window.AppName);
-
         AddCard(card, targetBag);
 
         return MFXUtility.MoveCard(
             card,
             1,
             startPos,
-            card.Slot.transform.position,
             addCardAnimDuration,
             onComplete: () =>
             {
@@ -223,22 +219,7 @@ public class GameManager : MonoBehaviour
             });
     }
 
-    public Tween AddCardWithTween(Card card, bool toPlayerBag, Vector2 startPos)
-    {
-        if (toPlayerBag && playerBag.CanAddCard(card, out _))
-            return AddCardWithTween(card, playerBag, startPos);
-        else
-            return AddCardWithTween(card, curEnvironmentBag, startPos);
-    }
-
-    public Tween AddCardWithTween(string cardId, bool toPlayerBag, Vector2 startPos, out Card card)
-    {
-        card = CardFactory.CreateCard(cardId);
-
-        return AddCardWithTween(card, toPlayerBag, startPos);
-    }
-
-    public Tween AddCardsWithTween(List<Card> cards, bool toPlayerBag, Vector2 startPos)
+    public Tween AddCardsWithTween(bool toPlayerBag, Vector2 startPos, params Card[] cards)
     {
         foreach (var card in cards)
         {
@@ -253,6 +234,23 @@ public class GameManager : MonoBehaviour
             {
                 card.RefreshSlot();
             });
+    }
+
+    public Tween AddCardWithTween(string cardId, bool toPlayerBag, Vector2 startPos, out Card card)
+    {
+        card = CardFactory.CreateCard(cardId);
+
+        return AddCardWithTween(card, toPlayerBag, startPos);
+    }
+
+    public Tween AddCardWithTween(Card card, bool toPlayerBag, Vector2 startPos)
+    {
+        return AddCardsWithTween(toPlayerBag, startPos, card);
+    }
+
+    public Tween AddCardsWithTween(List<Card> cards, bool toPlayerBag, Vector2 startPos)
+    {
+        return AddCardsWithTween(toPlayerBag, startPos,cards.ToArray());
     }
 
     public Tween AddCardsWithTween(string cardId, int count, bool toPlayerBag, Vector2 startPos, out List<Card> cards)
@@ -284,10 +282,6 @@ public class GameManager : MonoBehaviour
 
         // 从原来的格子里移除
         equipment.SlotCards.RemoveCard(equipment);
-
-        // 打开装备窗口
-        if (!WindowsManager.Instance.IsWindowOpen("Equipment"))
-            WindowsManager.Instance.OpenWindow("Equipment");
 
         // 添加到装备格子里
         AddCardWithTween(equipment, equipmentBag, transform.position); // transform 理论上不会为空

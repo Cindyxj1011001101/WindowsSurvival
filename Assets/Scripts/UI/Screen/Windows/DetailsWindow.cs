@@ -337,7 +337,7 @@ public class DetailsWindow : BagWindow
         if (currentDisplayedCard != null && currentDisplayedCard.HasLoopSound)
             currentDisplayedCard.OnDetailClose();
 
-        if (currentDisplayedCard != null)
+        if (currentDisplayedCard != null && !currentDisplayedCard.Destroyed)
             currentDisplayedCard.Transform = null;
 
         displayType = DisplayType.All;

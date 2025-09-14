@@ -1,8 +1,14 @@
 using System.Collections.Generic;
-using Random = UnityEngine.Random;
 
 public class CoralReef : Card
 {
+    private RandomDropList dropList = new(
+       new Drop("珊瑚", 1, 30),
+       new Drop("海爬虫", 1, 8),
+       new Drop("白爆矿", 1, 5),
+       new Drop("有产物的水瓶鱼", 1, 2)
+       );
+
     private CoralReef()
     {
         Events = new()
@@ -52,39 +58,18 @@ public class CoralReef : Card
         TimeManager.Instance.AddTime(15);
     }
 
-    private void RandomDrop()
-    {
-        int rand = Random.Range(0, 45);
-        if (rand < 30)
-        {
-            AddCard("珊瑚", true);
-        }
-        else if (rand < 38)
-        {
-            AddCard("海爬虫", true);
-        }
-        else if (rand < 43)
-        {
-            AddCard("白爆矿", true);
-        }
-        else
-        {
-            AddCard("有产物的水瓶鱼", false);
-        }
-    }
-
     private void DigByTool(Card tool, out string tip)
     {
-        tip = string.Empty;
-        tool.Use();
+        RandomDrop(dropList, out tip, 2, rightBeforeDrop: () =>
+        {
+            tool.Use();
 
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("挖掘废料_01", true);
+            TimeManager.Instance.AddTime(45);
 
-        TimeManager.Instance.AddTime(45);
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("挖掘废料_01", true);
 
-        RandomDrop();
-        RandomDrop();
+        });
     }
 
     public override bool CanQuickInteract(Card card, out string tip)

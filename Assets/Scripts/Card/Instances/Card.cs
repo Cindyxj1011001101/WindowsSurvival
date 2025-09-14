@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum CardTag
 {
@@ -252,7 +253,7 @@ public abstract class Card : IComparable<Card>
 
     public void ShowTip(string tip)
     {
-        if (Slot != null) Slot.ShowTip(tip);
+        if (Transform != null) Transform.ShowTip(tip);
     }
 
     public void DestroyThis()
@@ -479,6 +480,41 @@ public abstract class Card : IComparable<Card>
     }
 
     /// <summary>
+    /// 掉落卡牌，适用于资源点的探索
+    /// </summary>
+    /// <returns></returns>
+    public void DropCards(List<Card> cards, UnityAction rightBeforeDrop)
+    {
+        if (Transform == null || cards.IsNullOrEmpty()) return;
+
+        if (Destroyed)
+        {
+            AddCards(cards, true);
+        }
+        else
+        {
+            var tween = Transform.ShakeAndBounce(() =>
+            {
+                rightBeforeDrop?.Invoke();
+                AddCards(cards, true);
+            });
+
+            MouseManager.Instance.Wait(tween.Duration());
+        }
+    }
+
+    public void RandomDrop(RandomDropList dropList, out string tip, int times = 1, UnityAction rightBeforeDrop = null)
+    {
+        tip = string.Empty;
+        var droppedCards = new List<Card>();
+        for (int i = 0; i < times; i++)
+        {
+            droppedCards.AddRange(dropList.RandomDrop(out tip));
+        }
+        DropCards(droppedCards, rightBeforeDrop);
+    }
+
+    /// <summary>
     /// 添加卡牌到背包(优先添加到preferredBag)
     /// </summary>
     /// <param name="card"></param>
@@ -535,7 +571,10 @@ public abstract class Card : IComparable<Card>
         AddCard(targetCard, targetBag, false);
         // 播放动效
         if (Transform != null)
-            MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot());
+        {
+            var tween = MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot());
+            MouseManager.Instance.Wait(tween.Duration());
+        }
     }
 
     public void TurnTo(string cardId, Bag targetBag, out Card card)

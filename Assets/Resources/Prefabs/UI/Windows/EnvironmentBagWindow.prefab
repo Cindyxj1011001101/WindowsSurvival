@@ -641,12 +641,6 @@ MonoBehaviour:
   slotLayout: {fileID: 5471198114392509026}
   organizeButton: {fileID: 3004231969791096285}
   slots: []
-  pDuration: 0.5
-  pStrength: {x: 2.3, y: 1.2, z: 0}
-  pVibrato: 15
-  rDuration: 0.5
-  rStrength: {x: 0, y: 0, z: 0.5}
-  rVibrato: 7
   discoveryDegreeSlider: {fileID: 3752219512033304092}
   placeNameText: {fileID: 1854835988193562814}
   environmentImage: {fileID: 22326867948043783}
@@ -2011,6 +2005,7 @@ GameObject:
   - component: {fileID: 1406574377978460436}
   - component: {fileID: 4347303266957326774}
   - component: {fileID: 8638736776945367141}
+  - component: {fileID: 491459402638248463}
   m_Layer: 5
   m_Name: EnvCard
   m_TagString: Untagged
@@ -2078,6 +2073,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &491459402638248463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6954445716605417701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64d8a0a577cc2b542bf36c66227413a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  iconImage: {fileID: 0}
+  nameText: {fileID: 0}
+  stackObject: {fileID: 0}
+  stackNumText: {fileID: 0}
+  maxStackNumImage: {fileID: 0}
+  cardCanvasGroup: {fileID: 0}
+  moreInfoText: {fileID: 0}
+  particleDisplayRect: {fileID: 0}
+  mask: {fileID: 0}
+  middle: {fileID: 0}
+  left: {fileID: 0}
+  right: {fileID: 0}
+  innerContentsComponent: {fileID: 0}
+  iconLayout: {fileID: 0}
+  fireIcon: {fileID: 0}
+  flashIcon: {fileID: 0}
+  cardAnimator: {fileID: 0}
+  tipController: {fileID: 0}
+  onlyDisplay: 1
 --- !u!1 &7136409829427316031
 GameObject:
   m_ObjectHideFlags: 0

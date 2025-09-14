@@ -1,10 +1,14 @@
-using UnityEngine;
-
 /// <summary>
 /// 有产物的虹吸海葵
 /// </summary>
 public class SiphonophyllumWithProduct : Card
 {
+    private RandomDropList dropList = new(
+       new Drop("废金属", 2, 3),
+       new Drop("废金属", 1, 2),
+       new Drop("磁性触手", 1, 1)
+       );
+
     private SiphonophyllumWithProduct()
     {
         Events = new()
@@ -32,7 +36,6 @@ public class SiphonophyllumWithProduct : Card
 
     private void Event_Collect(out string tip)
     {
-        tip = string.Empty;
         DestroyThis();
 
         TimeManager.Instance.AddTime(15);
@@ -40,19 +43,7 @@ public class SiphonophyllumWithProduct : Card
         // 变回虹吸海葵
         TurnTo("虹吸海葵", Bag);
 
-        int random = Random.Range(0, 6);
-        if (random < 3)
-        {
-            AddCards("废金属", 2, true);
-        }
-        else if (random < 5)
-        {
-            AddCard("废金属", true);
-        }
-        else
-        {
-            AddCard("磁性触手", true);
-        }
+        RandomDrop(dropList, out tip);
     }
 
     private void Cut(Card tool, out string tip)

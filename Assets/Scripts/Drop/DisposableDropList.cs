@@ -3,14 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Drop
-{
-    public Card card; // 卡牌
-    public int dropNum; // 掉落数量
-    public int dropProb; // 掉落概率，是正整数，dropProb除以一个掉落列表中所有地dropProb之和为真实掉落概率
-}
-
-[System.Serializable]
 public class DisposableDropList
 {
     public int maxCount;
@@ -34,7 +26,6 @@ public class DisposableDropList
     {
         if (dropList.Count == 0)
         {
-            Debug.LogWarning("No drops remaining in disposable drop list!");
             return new();
         }
 
@@ -60,7 +51,7 @@ public class DisposableDropList
                 // 从剩余列表中移除（一次性掉落）
                 dropList.RemoveAt(i);
 
-                return DropCards(drop);
+                return drop.GetDroppedCards(out _);
             }
         }
 
@@ -82,26 +73,10 @@ public class DisposableDropList
             if (drop.card.CardId == cardId)
             {
                 dropList.RemoveAt(i);
-                return DropCards(drop);
+                return drop.GetDroppedCards(out _);
             }
         }
 
         return null;
-    }
-
-    private List<Card> DropCards(Drop drop)
-    {
-        List<Card> droppedCards = new List<Card>();
-        // 创建卡牌
-        for (int j = 0; j < drop.dropNum; j++)
-        {
-            // 添加到返回列表
-            if (drop.card != null)
-            {
-                // 深拷贝
-                droppedCards.Add(JsonManager.DeepCopy(drop.card));
-            }
-        }
-        return droppedCards;
     }
 }

@@ -145,7 +145,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         var left = sourceSlot.StackNum - pickedCount;
         targetSlot.PeekCard().QuickIneract(sourceSlot.Cards, pickedCount, out var tip);
-        targetSlot.ShowTip(tip);
+        targetSlot.transform.ShowTip(tip);
         var toReturn = sourceSlot.StackNum - left; // toReturn一定>=0
         if (toReturn > 0)
             AnimateCardReturn(toReturn);
@@ -188,7 +188,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         var card = sourceSlot.PeekCard();
         if (!card.Moveable)
         {
-            sourceSlot.ShowTip("不能移动该卡牌");
+            sourceSlot.transform.ShowTip("不能移动该卡牌");
             return;
         }
 
@@ -200,7 +200,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             else if (GameManager.Instance.CanEquip(card, out string tip))
                 GameManager.Instance.Equip(card);
             else
-                sourceSlot.ShowTip(tip);
+                sourceSlot.transform.ShowTip(tip);
             return;
         }
 
@@ -273,13 +273,12 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="startPos"></param>
     /// <param name="endPos"></param>
     /// <param name="count"></param>
-    private void AnimateCardPlacement(Card card, UnityAction placementAction, Vector3 startPos, Vector3 endPos, int count)
+    private void AnimateCardPlacement(Card card, UnityAction placementAction, Vector3 startPos, int count)
     {
         MFXUtility.MoveCard(
             card,
             count,
             startPos,
-            endPos,
             moveDuration,
             onStart: null,
             onComplete: () =>
@@ -299,7 +298,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 sourceSlot.PeekCard(),
                 count,
                 dragEndPosition,
-                sourceSlot.transform.position,
                 returnDuration,
                 onStart: null,
                 onComplete: () =>
@@ -307,7 +305,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     // 刷新源卡槽显示
                     sourceSlot.DontRefresh = false;
                     // 显示提示
-                    sourceSlot.ShowTip(tip);
+                    sourceSlot.transform.ShowTip(tip);
                 }
             );
     }
@@ -338,7 +336,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     targetSlot.RefreshDisplay();
                 },
                 dragEndPosition,
-                targetSlot.transform.position,
                 movedCard.Count
             );
         }
@@ -381,7 +378,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                         group.Key.RefreshDisplay();
                     },
                     startPos,
-                    group.Key.transform.position,
                     group.Count()
                 );
             }

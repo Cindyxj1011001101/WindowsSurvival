@@ -1,11 +1,15 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// 老鼠尸体
 /// </summary>
 public class RatBody : CookableCard
 {
+    private RandomDropList dropList = new(
+       new Drop("小块生肉", 1, 3),
+       new Drop(1, (out string tip) => { tip = "肉被糟蹋了，什么都没得到"; })
+       );
+
     private RatBody()
     {
         Events = new()
@@ -44,7 +48,6 @@ public class RatBody : CookableCard
     {
         DestroyThis();
 
-        tip = string.Empty;
         //-3精神值
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
         //-2健康
@@ -52,16 +55,7 @@ public class RatBody : CookableCard
         //消耗45分钟
         TimeManager.Instance.AddTime(45);
         //随机掉落卡牌
-        int rand = Random.Range(0, 4);
-        if (rand < 3)
-        {
-            AddCard("小块生肉", true);
-        }
-        else
-        {
-            //掉落提示：“肉被糟蹋了，什么都没得到”
-            tip = "肉被糟蹋了，什么都没得到";
-        }
+        RandomDrop(dropList, out tip);
     }
     #endregion
 

@@ -15,25 +15,12 @@ public enum PressureLevel
 
 public class EnvironmentBagWindow : BagWindow
 {
-    [Header("抖动参数")]
-    [Header("位置")]
-    public float pDuration;
-    public Vector3 pStrength;
-    public int pVibrato;
-
-    [Header("旋转")]
-    public float rDuration;
-    public Vector3 rStrength;
-    public int rVibrato;
-
-
-    [Header("")]
     [SerializeField] private UIStateSlider discoveryDegreeSlider; // 探索度显示
     [SerializeField] private Text placeNameText; // 环境名称
     [SerializeField] private Image environmentImage; // 环境图片
     [SerializeField] private HoverableButton exploreButton; // 探索按钮
     [SerializeField] private RectTransform stateLayout;
-    [SerializeField] private CardSlot envCardSlot;
+    [SerializeField] private RectTransform envCardTransform;
 
     [SerializeField] private UIStateToggle hasCabble; // 是否铺设电缆
     [SerializeField] private UIPressureLevel pressureLevel; // 压强等级
@@ -104,10 +91,10 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void Explore()
     {
-        var seq = envCardSlot.ShakeAndBounce(() =>
+        var seq = envCardTransform.ShakeAndBounce(() =>
         {
             GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
-            GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardSlot.transform.position);
+            GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
             // 提示
             exploreButton.ShowTip(tip);
         }, bounceMaxScale: 1.09f, bounceDuration: 0.15f);

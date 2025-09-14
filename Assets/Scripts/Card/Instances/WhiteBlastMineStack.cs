@@ -1,10 +1,14 @@
-using UnityEngine;
-
 /// <summary>
-/// 白爆矿
+/// 白爆矿堆
 /// </summary>
 public class WhiteBlastMineStack : Card
 {
+    private RandomDropList dropList = new(
+       new Drop("白爆矿", 2, 4),
+       new Drop("白爆矿", 1, 8),
+       new Drop("玻璃沙", 1, 4)
+       );
+
     private WhiteBlastMineStack()
     {
         Events = new()
@@ -17,6 +21,7 @@ public class WhiteBlastMineStack : Card
     {
         DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
     }
+
     private bool Judge_Dig(out string hint)
     {
         hint = string.Empty;
@@ -27,33 +32,17 @@ public class WhiteBlastMineStack : Card
         }
         return true;
     }
-    private void RandomDrop()
-    {
-        int rand = Random.Range(0,16);
-        if (rand < 4)
-        {
-            AddCards("白爆矿", 2, true);
-        }
-        else if (rand < 12)
-        {
-            AddCard("白爆矿", true);
-        }
-        else
-        {
-            AddCard("玻璃沙", true);
-        }
-    }
 
     private void DigByTool(Card tool, out string tip)
     {
-        Use();
-        tool.Use();
+        // 掉落卡牌(2次)
+        RandomDrop(dropList, out tip, 2, () =>
+        {
+            Use();
+            tool.Use();
 
-        tip = string.Empty;
-        TimeManager.Instance.AddTime(30);
-        //掉落卡牌
-        RandomDrop();
-        RandomDrop();
+            TimeManager.Instance.AddTime(30);
+        });
     }
 
     public override bool CanQuickInteract(Card card, out string tip)

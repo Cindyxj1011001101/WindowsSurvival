@@ -466,11 +466,6 @@ public class CardSlot : MonoBehaviour
         cardCanvasGroup.interactable = true;
     }
 
-    public void ShowTip(string tip)
-    {
-        MFXUtility.ShowTip(tip, transform.position + (transform as RectTransform).sizeDelta.y * 0.4f * Vector3.up);
-    }
-
     /// <summary>
     /// 显示卡牌如耐久度变化、
     /// </summary>
@@ -504,43 +499,6 @@ public class CardSlot : MonoBehaviour
         else
             return 3;
     }
-    #endregion
-
-    #region Tween
-
-    public Tween Bounce(float maxScale = 1.07f, float duration = 0.09f)
-    {
-        return transform.DOScale(maxScale, duration).SetLoops(2, LoopType.Yoyo).OnComplete(() => transform.localScale = Vector3.one);
-    }
-
-    public Tween Shake(float duration = .6f,
-                       float pStrengthX = 2.3f, float pStrengthY = 1.2f, float pStrengthZ = 0, int pVibrato = 15,
-                       float rStrengthX = 0, float rStrengthY = 0, float rStrengthZ = 0.7f, int rVibrato = 12)
-    {
-        transform.GetPositionAndRotation(out var originalPos, out var originalRotation);
-
-        var seq = DOTween.Sequence();
-        seq.Join(transform.DOShakePosition(duration, new Vector3(pStrengthX, pStrengthY, pStrengthZ), vibrato: pVibrato, fadeOut: false).OnComplete(() => { transform.position = originalPos; })); // 位置抖动
-        seq.Join(transform.DOShakeRotation(duration, new Vector3(rStrengthX, rStrengthY, rStrengthZ), vibrato: rVibrato, fadeOut: false).OnComplete(() => { transform.rotation = originalRotation; })); // 旋转抖动
-
-        return seq;
-    }
-
-    public Tween ShakeAndBounce(TweenCallback onShakeComplete = null,
-                                TweenCallback onBounceComplete = null,
-                                float bounceMaxScale = 1.07f, float bounceDuration = 0.09f,
-                                float shakeDuration = .6f,
-                                float pStrengthX = 2.3f, float pStrengthY = 1.2f, float pStrengthZ = 0, int pVibrato = 15,
-                                float rStrengthX = 0, float rStrengthY = 0, float rStrengthZ = 0.7f, int rVibrato = 12)
-    {
-        var seq = DOTween.Sequence();
-
-        seq.Append(Shake(shakeDuration, pStrengthX, pStrengthY, pStrengthZ, pVibrato, rStrengthX, rStrengthY, rStrengthZ, rVibrato).OnComplete(onShakeComplete));
-        seq.Append(Bounce(bounceMaxScale, bounceDuration).OnComplete(onBounceComplete));
-
-        return seq;
-    }
-
     #endregion
 
     /// <summary>

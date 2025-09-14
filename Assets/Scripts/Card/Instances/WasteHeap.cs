@@ -1,10 +1,18 @@
-using UnityEngine;
-
 /// <summary>
 /// 被安全泡沫覆盖的废料堆
 /// </summary>
 public class WasteHeap : Card
 {
+    private RandomDropList dropList = new(
+       new Drop("废金属", 2, 5),
+       new Drop("废金属", 1, 4),
+       new Drop("韧性胶管", 1, 4),
+       new Drop("压缩饼干", 1, 3),
+       new Drop("老鼠尸体", 1, 1),
+       new Drop("腐烂物", 1, 1),
+       new Drop("氧烛", 1, 2)
+       );
+
     private WasteHeap()
     {
         Events = new()
@@ -16,17 +24,18 @@ public class WasteHeap : Card
 
     private void Event_Dig(out string tip)
     {
-        //消耗1点耐久度
-        Use();
-
-        tip = string.Empty;
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("挖掘废料_01", true);
-
-        //消耗45分钟
-        TimeManager.Instance.AddTime(45);
         //掉落卡牌
-        RandomDrop();
+        RandomDrop(dropList, out tip, rightBeforeDrop: () =>
+        {
+            //消耗1点耐久度
+            Use();
+
+            //消耗45分钟
+            TimeManager.Instance.AddTime(45);
+
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("挖掘废料_01", true);
+        });
     }
 
     private void Event_DigByTool(out string tip)
@@ -45,57 +54,22 @@ public class WasteHeap : Card
         return true;
     }
 
-    private void RandomDrop()
-    {
-        int rand = Random.Range(0, 26);
-        if (rand < 5)
-        {
-            AddCards("废金属", 2, true);
-        }
-        else if (rand < 9)
-        {
-            AddCard("废金属", true);
-        }
-        else if (rand < 11)
-        {
-            AddCard("韧性胶管", true);
-        }
-        else if (rand < 16)
-        {
-            AddCard("压缩饼干", true);
-        }
-        else if (rand < 17)
-        {
-            AddCard("老鼠尸体", true);
-        }
-        else if (rand < 18)
-        {
-            AddCard("腐烂物", true);
-        }
-        else if (rand < 20)
-        {
-            AddCard("氧烛", true);
-        }
-        else
-        {
-            AddCard("瓶装水", true);
-        }
-    }
-
     private void DigByTool(Card tool, out string tip)
     {
-        //消耗1点耐久度
-        Use();
-        // 工具消耗耐久
-        tool.Use();
-
-        tip = string.Empty;
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("挖掘废料_01", true);
-        //消耗15分钟
-        TimeManager.Instance.AddTime(15);
         //掉落卡牌
-        RandomDrop();
+        RandomDrop(dropList, out tip, rightBeforeDrop: () =>
+        {
+            //消耗1点耐久度
+            Use();
+            // 工具消耗耐久
+            tool.Use();
+
+            //消耗15分钟
+            TimeManager.Instance.AddTime(15);
+
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlaySound("挖掘废料_01", true);
+        });
     }
 
     public override bool CanQuickInteract(Card card, out string tip)

@@ -9,7 +9,7 @@ public class EnvironmentBag : Bag
     [JsonProperty] private bool hasCable;
     [JsonProperty] private PressureLevel pressureLevel;
     [JsonProperty] private DisposableDropList disposableDropList = new();
-    [JsonProperty] private RepeatableDropList repeatableDropList = new();
+    [JsonProperty] private DeepExploreDropList repeatableDropList = new();
     [JsonProperty] private Dictionary<EnvironmentStateEnum, State> stateDict = new();
 
     private PlaceData placeData;
@@ -18,7 +18,7 @@ public class EnvironmentBag : Bag
     [JsonIgnore] public PressureLevel PressureLevel => pressureLevel;
     [JsonIgnore] public string PlaceName => placeName;
     [JsonIgnore] public DisposableDropList DisposableDropList => disposableDropList;
-    [JsonIgnore] public RepeatableDropList RepeatableDropList => repeatableDropList;
+    [JsonIgnore] public DeepExploreDropList RepeatableDropList => repeatableDropList;
     [JsonIgnore] public Dictionary<EnvironmentStateEnum, State> StateDict => stateDict;
 
     [JsonIgnore]
@@ -76,7 +76,7 @@ public class EnvironmentBag : Bag
     private void InitDropList()
     {
         disposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(PlaceData.placeType));
-        repeatableDropList = JsonManager.DeepCopy(CardFactory.GetRepeatableDropList(PlaceData.placeType));
+        repeatableDropList = JsonManager.DeepCopy(CardFactory.GetDeepExploreDropList(PlaceData.placeType));
     }
 
     private Dictionary<EnvironmentStateEnum, float> temp = new(); // 记录地点状态的当前变化率，防止地点状态的结算顺序影响结算结果

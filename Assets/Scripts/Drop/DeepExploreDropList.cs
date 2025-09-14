@@ -46,9 +46,9 @@ public class Population
 
 [System.Serializable]
 /// <summary>
-/// 重复掉落列表
+/// 深入探索掉落列表
 /// </summary>
-public class RepeatableDropList
+public class DeepExploreDropList
 {
     public int emptyPopulationSizeChangeOnNotCaught;
     public Population emptyPopulation = new();

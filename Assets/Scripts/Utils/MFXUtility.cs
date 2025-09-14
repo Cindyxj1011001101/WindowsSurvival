@@ -69,7 +69,6 @@ public class MFXUtility
         Card card,
         int count,
         Vector3 sourcePosition,
-        Vector3 targetPosition,
         float duration = 0.3f,
         bool bounce = false,
         System.Action onStart = null,
@@ -80,9 +79,14 @@ public class MFXUtility
 
         slot.DisplayCard(card, count);
 
+        // 打开卡牌目标背包所属的窗口
+        var targetWindow = card.Bag.Window;
+        if (targetWindow != null && !WindowsManager.Instance.IsWindowOpen(targetWindow.AppName))
+            WindowsManager.Instance.OpenWindow(targetWindow.AppName);
+
         var seq = DOTween.Sequence();
 
-        seq.Join(slot.transform.DOMove(targetPosition, duration)
+        seq.Join(slot.transform.DOMove(card.Slot.transform.position, duration)
              .SetEase(ease)
              .OnStart(() => onStart?.Invoke())
              .OnComplete(() =>
@@ -94,7 +98,7 @@ public class MFXUtility
         seq.Join(slot.transform.DOScale(1f, duration));
 
         if (bounce)
-            seq.Join(slot.Bounce().SetDelay(duration));
+            seq.Join(slot.transform.Bounce().SetDelay(duration));
 
         seq.OnComplete(() =>
         {
@@ -116,7 +120,7 @@ public class MFXUtility
     /// <param name="ease"></param>
     /// <returns></returns>
     public static Tween MoveCards(
-        List<Card> cards,
+        Card[] cards,
         Vector3 sourcePosition,
         float duration = 0.3f,
         float interval = 0.1f,
@@ -128,14 +132,13 @@ public class MFXUtility
     {
         var seq = DOTween.Sequence();
         
-        for (int i = 0; i < cards.Count; i++)
+        for (int i = 0; i < cards.Length; i++)
         {
             Card card = cards[i];
             seq.Join(MoveCard(
                 card,
                 1,
                 sourcePosition,
-                card.Slot.transform.position,
                 duration,
                 bounce,
                 onStart,
@@ -162,6 +165,11 @@ public class MFXUtility
     {
         var slot = CreateSlot(sourceCard.Transform.position);
         slot.DisplayCard(sourceCard, 1, false);
+
+        // 打开卡牌目标背包所属的窗口
+        var targetWindow = targetCard.Bag.Window;
+        if (targetWindow != null && !WindowsManager.Instance.IsWindowOpen(targetWindow.AppName))
+            WindowsManager.Instance.OpenWindow(targetWindow.AppName);
 
         var mainSeq = DOTween.Sequence();
 
