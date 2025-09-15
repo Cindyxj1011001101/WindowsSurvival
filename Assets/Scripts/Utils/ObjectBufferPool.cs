@@ -377,7 +377,7 @@ public class ObjectBufferPool
     /// <param name="bundleName">预设体所在文件夹相对Editor文件夹的路径 或者 预设体所在的AB包的名称</param>
     /// <param name="assetName">预设体名称</param>
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
-    public void Get(string bundleName, string assetName, UnityAction<Transform> setTransform, UnityAction<GameObject> onInstaniated = null)
+    public void GetAsync(string bundleName, string assetName, UnityAction<Transform> setTransform, UnityAction<GameObject> onInstaniated = null)
     {
         // 如果不存在容器就创建
         if (!pool.ContainsKey(assetName))
@@ -399,9 +399,9 @@ public class ObjectBufferPool
     /// <param name="bundleName">预设体所在文件夹相对Editor文件夹的路径 或者 预设体所在的AB包的名称</param>
     /// <param name="assetName">预设体名称</param>
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
-    public void Get(string bundleName, string assetName, UnityAction<GameObject> onInstaniated = null)
+    public void GetAsync(string bundleName, string assetName, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, setTransform: null, onInstaniated);
+        GetAsync(bundleName, assetName, setTransform: null, onInstaniated);
     }
 
     /// <summary>
@@ -411,9 +411,9 @@ public class ObjectBufferPool
     /// <param name="assetName">预设体名称</param>
     /// <param name="parent">预设体实例的父对象</param>
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
-    public void Get(string bundleName, string assetName, Transform parent, UnityAction<GameObject> onInstaniated = null)
+    public void GetAsync(string bundleName, string assetName, Transform parent, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, t => t.SetParent(parent), onInstaniated);
+        GetAsync(bundleName, assetName, t => t.SetParent(parent), onInstaniated);
     }
 
     /// <summary>
@@ -424,9 +424,9 @@ public class ObjectBufferPool
     /// <param name="parent">预设体实例的父对象</param>
     /// <param name="worldPositionStays">是否保持预设体在世界坐标系下的位置</param>
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
-    public void Get(string bundleName, string assetName, Transform parent, bool worldPositionStays, UnityAction<GameObject> onInstaniated = null)
+    public void GetAsync(string bundleName, string assetName, Transform parent, bool worldPositionStays, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, t => t.SetParent(parent, worldPositionStays), onInstaniated);
+        GetAsync(bundleName, assetName, t => t.SetParent(parent, worldPositionStays), onInstaniated);
     }
 
     /// <summary>
@@ -437,9 +437,9 @@ public class ObjectBufferPool
     /// <param name="position">位置</param>
     /// <param name="rotation">旋转</param>
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
-    public void Get(string bundleName, string assetName, Vector3 position, Quaternion rotation, UnityAction<GameObject> onInstaniated = null)
+    public void GetAsync(string bundleName, string assetName, Vector3 position, Quaternion rotation, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, t => t.SetLocalPositionAndRotation(position, rotation), onInstaniated);
+        GetAsync(bundleName, assetName, t => t.SetLocalPositionAndRotation(position, rotation), onInstaniated);
     }
 
     /// <summary>
@@ -450,9 +450,9 @@ public class ObjectBufferPool
     /// <param name="position">位置</param>
     /// <param name="rotation">旋转</param>
     /// <param name="onInstaniated">预设体实例化后执行的逻辑</param>
-    public void Get(string bundleName, string assetName, Vector3 position, Quaternion rotation, Transform parent, UnityAction<GameObject> onInstaniated = null)
+    public void GetAsync(string bundleName, string assetName, Vector3 position, Quaternion rotation, Transform parent, UnityAction<GameObject> onInstaniated = null)
     {
-        Get(bundleName, assetName, t =>
+        GetAsync(bundleName, assetName, t =>
         {
             t.SetParent(parent);
             t.SetLocalPositionAndRotation(position, rotation);

@@ -69,13 +69,11 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
             return;
         }
 
-        ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Tips", "HoverTip", WindowsManager.Instance.HoverTipLayer, (asset) =>
-        {
-            hoverTip = asset.GetComponent<HoverTip>();
-            hoverTip.SetTip(textTip, textColor, time, playerEffects, envEffects);
-            hoverTip.transform.position = CalcTipPos();
-            hoverTip.Show();
-        });
+        hoverTip = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Tips", "HoverTip", WindowsManager.Instance.HoverTipLayer).GetComponent<HoverTip>();
+
+        hoverTip.SetTip(textTip, textColor, time, playerEffects, envEffects);
+        hoverTip.transform.position = CalcTipPos();
+        hoverTip.Show();
     }
 
     public void HideTip()
