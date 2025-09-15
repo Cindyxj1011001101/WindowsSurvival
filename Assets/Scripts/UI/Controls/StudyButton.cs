@@ -71,7 +71,7 @@ public class StudyButton : HoverableButton
             text.color = ColorManager.White;
         }
         // 研究未解锁
-        else if (TechnologyManager.Instance.IsTechNodeLocked(techNode))
+        else if (TechnologyManager.Instance.IsTechNodeLocked(techNode, out _))
         {
             iconObject.SetActive(false);
             Interactable = false;

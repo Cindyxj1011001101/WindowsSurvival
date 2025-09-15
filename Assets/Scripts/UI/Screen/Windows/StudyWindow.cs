@@ -276,16 +276,17 @@ public class StudyWindow : WindowBase
             studyTime.text = sb.ToString();
         }
 
-        // 显示研究速度
+        // 正在研究中，显示研究速度
         if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
         {
             studyInfo.gameObject.SetActive(true);
             studyInfo.text = $"+{TechnologyManager.Instance.CurStudyRate:0.0}科技点/15min";
         }
-        else if (techNode.techLevel == TechLevl.Intermediate && TechnologyManager.Instance.IsTechNodeLocked(techNode))
+        // 未解锁的研究，显示原因
+        else if (TechnologyManager.Instance.IsTechNodeLocked(techNode, out string reason))
         {
             studyInfo.gameObject.SetActive(true);
-            studyInfo.text = $"建造\"数据传输台\"解锁";
+            studyInfo.text = reason;
         }
         else
         {

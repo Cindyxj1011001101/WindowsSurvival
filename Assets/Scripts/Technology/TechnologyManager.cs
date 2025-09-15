@@ -132,12 +132,21 @@ public class TechnologyManager
     /// </summary>
     /// <param name="techNode"></param>
     /// <returns></returns>
-    public bool IsTechNodeLocked(ScriptableTechnologyNode techNode)
+    public bool IsTechNodeLocked(ScriptableTechnologyNode techNode, out string reason)
     {
+        reason = string.Empty;
         // 前置条件不满足，未解锁
-        if (!(techNode.prerequisites.Count == 0 || techNode.prerequisites.All(t => techData.studiedTechNodes.Contains(t.techName)))) return true;
+        if (!(techNode.prerequisites.Count == 0 || techNode.prerequisites.All(t => techData.studiedTechNodes.Contains(t.techName))))
+        {
+            reason = "前置科技未解锁";
+            return true;
+        }
         // 中级科技未解锁
-        if (techNode.techLevel == TechLevl.Intermediate && !IsIntermediateTechnologiesUnlocked) return true;
+        if (techNode.techLevel == TechLevl.Intermediate && !IsIntermediateTechnologiesUnlocked)
+        {
+            reason = "缺少\"数据传输台\"";
+            return true;
+        }
 
         return false;
     }

@@ -21,7 +21,7 @@ public class UITechNode : HoverableButton
     {
         bool complished = TechnologyManager.Instance.IsTechNodeComplished(techNode);
         bool beingStudied = TechnologyManager.Instance.IsTechNodeBeingStudied(techNode);
-        bool locked = TechnologyManager.Instance.IsTechNodeLocked(techNode);
+        bool locked = TechnologyManager.Instance.IsTechNodeLocked(techNode, out _);
 
         // 显示必要信息
         techName.text = techNode.techName;
