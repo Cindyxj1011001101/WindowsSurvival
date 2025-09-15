@@ -52,9 +52,6 @@ public class CraftWindow : WindowBase
 
     private void OnDestroy()
     {
-        ObjectBufferPool.Instance.RestoreAllChildren(recipeLayout);
-        ObjectBufferPool.Instance.RestoreAllChildren(materialLayout);
-
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshDisplay);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, RefreshDisplay);
         EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshDisplay);

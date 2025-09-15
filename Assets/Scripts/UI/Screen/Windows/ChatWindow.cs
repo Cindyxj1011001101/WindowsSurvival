@@ -250,10 +250,4 @@ public class ChatWindow : WindowBase, IPointerDownHandler
             }
         }
     }
-
-    private void OnDestroy()
-    {
-        ObjectBufferPool.Instance.RestoreAllChildren(chatLayoutGroup.transform);
-        ObjectBufferPool.Instance.RestoreAllChildren(optionLayout);
-    }
 }
