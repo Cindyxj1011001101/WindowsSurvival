@@ -19,7 +19,7 @@ public class KettleFlower : Card
         {
             new Event("划一个口", "在水壶兰的茎部划一个口，从而可以饮用其中的汁液，并且有概率获得一颗种子。\n伤口需要一段时间愈合，愈合前水壶兰不会生长", Event_Hurt, Judge_Hurt, () => 15),
             new Event("铲起", "将水壶兰连根铲起。将会获得一颗种子", Event_DigUp, Judge_DigUp, () => 15),
-            new Event("饮用汁液", "", Event_Drink, Judge_Drink, () => 15, () => new(){ { PlayerStateEnum.Thirst, +13 }, { PlayerStateEnum.San, -3 } }),
+            new Event("饮用汁液", "", Event_Drink, Judge_Drink, () => 15, () => new(){ { PlayerStateEnum.Thirst, +14 }, { PlayerStateEnum.San, -3 } }),
         };
     }
 
@@ -153,7 +153,7 @@ public class KettleFlower : Card
         plant.AddGrowth(-20); // 生长进度-20
         DisplayComponentValueChange(typeof(PlantGrowthComponent), -20);
 
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 13);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 14);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
 
         TimeManager.Instance.AddTime(15);

@@ -6,9 +6,9 @@ public class SafeInsurance : ConstructionCard
     {
         Events = new()
         {
-            new Event("用手砸", "如果是方块手的话或许能做到"+"\n"+"每次减少3耐久", Event_UseHand, Judge_UseHand, () => 15, () => new() { { PlayerStateEnum.Sobriety, -5 }, { PlayerStateEnum.PainLevel, 15 } }),
-            new Event("用铲子凿", "还是有些费力，但是比用手好得多"+"\n"+"每次减少8耐久", Event_UseShovel, Judge_UseShovel, () => 15, () => new() { { PlayerStateEnum.Sobriety, -4 } }),
-            new Event("用锤子砸", "最有效的打开保险箱的方式"+"\n"+"每次减少20耐久", Event_UseHammer, Judge_UseHammer, () => 15)
+            new Event("用手砸", "如果是方块手的话或许能做到", Event_UseHand, Judge_UseHand, () => 15, () => new() { { PlayerStateEnum.Sobriety, -5 }, { PlayerStateEnum.PainLevel, 15 } }),
+            new Event("用铲子凿", "还是有些费力，但是比用手好得多", Event_UseShovel, Judge_UseShovel, () => 15, () => new() { { PlayerStateEnum.Sobriety, -4 } }),
+            new Event("用锤子砸", "最有效的打开保险箱的方式", Event_UseHammer, Judge_UseHammer, () => 15)
         };
     }
     public override void Awake()
