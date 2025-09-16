@@ -22,9 +22,23 @@ public class TechnologyManager
     public void InitFromGameData()
     {
         techData = GameDataManager.Instance.TechnologyData;
+
         if (CurStudiedTechNode != null)
             Study(CurStudiedTechNode);
+
         CurStudyRate = CalcStudyRate();
+
+        // 解锁一遍物品配方
+        foreach (var techNode in Resources.LoadAll<ScriptableTechnologyNode>($"ScriptableObject/Technology"))
+        {
+            if (techData.studiedTechNodes.Contains(techNode.techName))
+            {
+                foreach (var recipe in techNode.recipes)
+                {
+                    CraftManager.Instance.UnlockRecipe(recipe.cardId);
+                }
+            }
+        }
 
         // 监听数据传输台的数量变化
         EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, OnCardNumChanged);
@@ -123,7 +137,7 @@ public class TechnologyManager
         // 解锁相应配方
         foreach (var recipe in techNode.recipes)
         {
-            CraftManager.Instance.UnlockRecipe(recipe);
+            CraftManager.Instance.UnlockRecipe(recipe.cardId);
         }
     }
 

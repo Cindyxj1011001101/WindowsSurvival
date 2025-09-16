@@ -37,12 +37,11 @@ public class CraftManager
     /// <summary>
     /// 解锁指定的合成配方
     /// </summary>
-    /// <param name="recipe"></param>
-    public void UnlockRecipe(ScriptableRecipe recipe)
+    public void UnlockRecipe(string cardId)
     {
-        if (unlockedRecipes.Contains(recipe.cardId)) return;
+        if (unlockedRecipes.Contains(cardId)) return;
 
-        unlockedRecipes.Add(recipe.cardId);
+        unlockedRecipes.Add(cardId);
         EventManager.Instance.TriggerEvent(EventType.UnlockRecipe);
     }
 
