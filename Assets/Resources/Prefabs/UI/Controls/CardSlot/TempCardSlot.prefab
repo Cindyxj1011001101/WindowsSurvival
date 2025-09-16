@@ -2354,6 +2354,7 @@ MonoBehaviour:
   flashIcon: {fileID: 6617699673019985640}
   cardAnimator: {fileID: 1024847263152617096}
   tipController: {fileID: 9044048913553053745}
+  onlyDisplay: 0
 --- !u!225 &8356294659441100970
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2632,7 +2633,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 2, y: 6}
-  m_SizeDelta: {x: 28, y: 28}
+  m_SizeDelta: {x: 32, y: 28}
   m_Pivot: {x: 1, y: 1}
 --- !u!222 &178598866692815478
 CanvasRenderer:

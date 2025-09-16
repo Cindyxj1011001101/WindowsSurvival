@@ -184,6 +184,21 @@ public class CardSlot : MonoBehaviour
 
     private void DisplayStackNum(int stackNum, int maxStackNum, bool displayStack)
     {
+        static int CountDigitFour(int number)
+        {
+            string numberStr = Math.Abs(number).ToString(); // 处理负数
+            int count = 0;
+
+            foreach (char c in numberStr)
+            {
+                if (c == '4')
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
 
         if (maxStackNum <= 1 || !displayStack)
         {
@@ -194,6 +209,7 @@ public class CardSlot : MonoBehaviour
         {
             stackObject.SetActive(true);
             stackNumText.text = $"{stackNum}";
+            stackNumText.GetComponent<TextSpacing>().spacing_x = -CountDigitFour(stackNum) * 2; // 处理字体中数字4导致的间距变大
 
             maxStackNumImage.gameObject.SetActive(stackNum == maxStackNum);
         }
