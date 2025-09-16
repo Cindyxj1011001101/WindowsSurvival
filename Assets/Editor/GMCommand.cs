@@ -189,12 +189,6 @@ public class GMCommand
         GameDataManager.Instance.SaveAudioData();
     }
 
-    [MenuItem("Command/保存/已解锁的配方")]
-    public static void SaveUnlockedRecipes()
-    {
-        GameDataManager.Instance.SaveUnlockedRecipes();
-    }
-
     [MenuItem("Command/保存/科技进度")]
     public static void SaveTechnologyData()
     {

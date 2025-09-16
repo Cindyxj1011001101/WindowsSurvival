@@ -47,7 +47,7 @@ public class GameDataManager
         // 音频数据
         audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
         // 已解锁的配方
-        unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
+        //unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
         // 科技数据
         technologyData = JsonManager.LoadData<TechnologyData>(CurLoadName, "Technology");
         // 装备数据
@@ -78,7 +78,7 @@ public class GameDataManager
         // 音频数据
         SaveAudioData();
         // 已解锁的配方
-        SaveUnlockedRecipes();
+        //SaveUnlockedRecipes();
         // 科技数据
         SaveTechnologyData();
         // 装备数据
@@ -277,23 +277,23 @@ public class GameDataManager
 
     #endregion
 
-    #region 合成
+    //#region 合成
 
-    private List<string> unlockedRecipes;
+    //private List<string> unlockedRecipes;
 
-    public List<string> UnlockedRecipes => unlockedRecipes;
+    //public List<string> UnlockedRecipes => unlockedRecipes;
 
-    public void SaveUnlockedRecipes()
-    {
-        JsonManager.SaveData(unlockedRecipes, CurLoadName, "UnlockedRecipes");
-    }
+    //public void SaveUnlockedRecipes()
+    //{
+    //    JsonManager.SaveData(unlockedRecipes, CurLoadName, "UnlockedRecipes");
+    //}
 
-    public void LoadUnlockedRecipes()
-    {
-        unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
-    }
+    //public void LoadUnlockedRecipes()
+    //{
+    //    unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
+    //}
 
-    #endregion
+    //#endregion
 
     #region 科技
 

@@ -11,7 +11,7 @@ public class CraftManager
     private List<string> unlockedRecipes = new(); // 已解锁的合成配方
 
     public Dictionary<RecipeType, ScriptableRecipeLibrary> LibraryDict => libraryDict;
-    public List<string> UnlockedRecipes => unlockedRecipes;
+    //public List<string> UnlockedRecipes => unlockedRecipes;
 
     private CraftManager()
     {
@@ -21,7 +21,7 @@ public class CraftManager
             libraryDict.Add(library.craftType, library);
         }
         // 加载已解锁的配方
-        unlockedRecipes = GameDataManager.Instance.UnlockedRecipes;
+        //unlockedRecipes = GameDataManager.Instance.UnlockedRecipes;
     }
 
     /// <summary>
