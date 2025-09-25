@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler,
+public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IPointerClickHandler,
                                 IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     // 动画参数配置
@@ -75,16 +75,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         SoundManager.Instance.PlaySound("拿起卡牌", true);
 
         EventManager.Instance.TriggerEvent(EventType.PickUpCard, card);
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        //(cursorSlot.transform as RectTransform).anchoredPosition += eventData.delta / canvas.scaleFactor;
-        //cursorSlot.transform.position = Vector3.Lerp(
-        //    cursorSlot.transform.position,
-        //    cursorSlot.transform.position + (Vector3)eventData.delta / canvas.scaleFactor,
-        //    lerpFactor
-        //    );
     }
 
     Vector2 mousePosition;
@@ -281,7 +271,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             transform.DOKill();
             transform.localScale = Vector3.one;
         }
-        Debug.Log("quick move");
     }
 
     private bool IsShiftPressed()
