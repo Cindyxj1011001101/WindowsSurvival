@@ -14,7 +14,8 @@ public static class ExtensionClass
 
     public static Tween Bounce(this Transform target, float maxScale = 1.09f, float duration = 0.15f)
     {
-        return target.DOScale(maxScale, duration).SetLoops(2, LoopType.Yoyo).OnComplete(() => target.localScale = Vector3.one);
+        var originalScale = target.localScale;
+        return target.DOScale(maxScale, duration).SetLoops(2, LoopType.Yoyo).OnComplete(() => target.localScale = originalScale);
     }
 
     public static Tween Shake(this Transform target,

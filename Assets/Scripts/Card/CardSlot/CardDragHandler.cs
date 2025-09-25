@@ -1,36 +1,48 @@
-﻿using System.Collections.Generic;
+﻿using DG.Tweening;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler,
+                                IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     // 动画参数配置
     private float moveDuration = 0.3f;
-    private float returnDuration = 0.3f;
+    private float hoverTransition = .1f;
+    private float scaleOnHover = 1.05f;
+    private float scaleOnPointerDown = 1f;
+    private float scaleTransition = .15f;
+
+    // 拖拽移动插值系数
+    private float followSpeed = 30f;
+    private Vector2 dragPosOffset;
 
     private CardSlot sourceSlot;
-    private Canvas canvas;
 
     private CardSlot cursorSlot;
+
     private int pickedCount;
 
     private Vector3 dragEndPosition;
 
+    private bool isDragging;
+
     private void Awake()
     {
         sourceSlot = GetComponentInParent<CardSlot>();
-        canvas = GetComponentInParent<Canvas>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        isDragging = true;
+
         MouseManager.Instance.StartDragging();
 
-        // 在鼠标位置创建图标
-        var screenPosition = MFXUtility.ScreenPointToLocalPointInRectangle(eventData.position);
-        cursorSlot = MFXUtility.CreateSlot(screenPosition);
+        // 创建临时卡牌槽
+        cursorSlot = MFXUtility.CreateSlot(sourceSlot.transform.position);
+        dragPosOffset = (Vector2)cursorSlot.transform.position - MFXUtility.ScreenPointToLocalPointInRectangle(eventData.position);
 
         // 计算拖动数量
         if (IsLeftButtonPressed(eventData))
@@ -67,14 +79,36 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnDrag(PointerEventData eventData)
     {
-        (cursorSlot.transform as RectTransform).anchoredPosition += eventData.delta / canvas.scaleFactor;
+        //(cursorSlot.transform as RectTransform).anchoredPosition += eventData.delta / canvas.scaleFactor;
+        //cursorSlot.transform.position = Vector3.Lerp(
+        //    cursorSlot.transform.position,
+        //    cursorSlot.transform.position + (Vector3)eventData.delta / canvas.scaleFactor,
+        //    lerpFactor
+        //    );
+    }
+
+    Vector2 mousePosition;
+    private void Update()
+    {
+        if (isDragging)
+        {
+            mousePosition = MFXUtility.ScreenPointToLocalPointInRectangle(Input.mousePosition);
+
+            cursorSlot.transform.position = Vector3.Lerp(
+                cursorSlot.transform.position,
+                mousePosition + dragPosOffset,
+                followSpeed * Time.deltaTime
+            );
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        isDragging = false;
+
         MouseManager.Instance.EndDragging();
 
-        dragEndPosition = MFXUtility.ScreenPointToLocalPointInRectangle(eventData.position);
+        dragEndPosition = cursorSlot.transform.position;
         ObjectBufferPool.Instance.Restore(cursorSlot.gameObject);
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
@@ -166,7 +200,10 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 HandleQuickMove(Mathf.CeilToInt((float)sourceSlot.StackNum / 2));
             // 打开详情
             else
+            {
+                transform.Bounce(duration: 0.05f); // 卡牌的 bounce 效果
                 (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(sourceSlot.Cards);
+            }
 
             return;
         }
@@ -192,6 +229,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             return;
         }
 
+        var sourceBag = sourceSlot.GetComponentInParent<BagWindow>().Bag;
+
         // 对于装备卡牌，快速穿上和脱下
         if (card.TryGetComponent<EquipmentComponent>(out var equ))
         {
@@ -201,12 +240,9 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 GameManager.Instance.Equip(card);
             else
                 sourceSlot.transform.ShowTip(tip);
-            return;
         }
-
-        var sourceBag = sourceSlot.GetComponentInParent<BagWindow>().Bag;
         // 从内容物中快速移出
-        if (sourceBag is InnerBag)
+        else if (sourceBag is InnerBag)
         {
             // 先尝试移入玩家背包
             if (WindowsManager.Instance.IsWindowOpen("PlayerBag"))
@@ -221,29 +257,31 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 PlaceCardInDifferentBag(GameManager.Instance.CurEnvironmentBag, ref count, sourceSlot.transform.position, false);
                 sourceSlot.RefreshDisplay();
             }
-            return;
         }
-
         // 在背包和地点之间移动
-        if (sourceBag is PlayerBag)
+        else if (sourceBag is PlayerBag)
         {
             if (WindowsManager.Instance.IsWindowOpen("EnvironmentBag"))
             {
                 PlaceCardInDifferentBag(GameManager.Instance.CurEnvironmentBag, ref count, sourceSlot.transform.position, false);
                 sourceSlot.RefreshDisplay();
             }
-            return;
         }
-
-        if (sourceBag is EnvironmentBag)
+        else if (sourceBag is EnvironmentBag)
         {
             if (WindowsManager.Instance.IsWindowOpen("PlayerBag"))
             {
                 PlaceCardInDifferentBag(GameManager.Instance.PlayerBag, ref count, sourceSlot.transform.position, false);
                 sourceSlot.RefreshDisplay();
             }
-            return;
         }
+
+        if (sourceSlot.IsEmpty)
+        {
+            transform.DOKill();
+            transform.localScale = Vector3.one;
+        }
+        Debug.Log("quick move");
     }
 
     private bool IsShiftPressed()
@@ -298,7 +336,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 sourceSlot.PeekCard(),
                 count,
                 dragEndPosition,
-                returnDuration,
+                moveDuration,
                 onStart: null,
                 onComplete: () =>
                 {
@@ -388,5 +426,28 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             AnimateCardReturn(leftCount, tip);
 
         count = leftCount;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        transform.DOScale(scaleOnHover, hoverTransition)
+            .OnComplete(() => transform.localScale = Vector3.one * scaleOnHover);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        transform.DOKill();
+        transform.DOScale(1, hoverTransition).OnComplete(() => transform.localScale = Vector3.one);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (!isDragging)
+            transform.DOScale(scaleOnHover, scaleTransition).SetEase(Ease.OutBack);
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        transform.DOScale(scaleOnPointerDown, scaleTransition).SetEase(Ease.OutBack);
     }
 }

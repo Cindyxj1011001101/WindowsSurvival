@@ -51,7 +51,7 @@ public class MFXUtility
         RectTransform slotRect = slotObj.GetComponent<RectTransform>();
         slotRect.anchoredPosition = screenPosition;
         slotRect.localRotation = Quaternion.identity;
-        slotRect.localScale = Vector3.one * 1.07f;
+        slotRect.localScale = Vector3.one;
 
         // 设置CardSlot组件
         CardSlot slot = slotObj.GetComponent<CardSlot>();

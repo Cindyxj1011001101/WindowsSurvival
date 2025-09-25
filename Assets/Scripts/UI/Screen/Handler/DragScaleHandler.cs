@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class DragScaleHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
@@ -13,7 +12,6 @@ public class DragScaleHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     public ScaleDirection direction;
     private RectTransform targetRect;
     private RectTransform canvasRect;
-    private RectTransform rectMask;
 
     public float minWidth = 300f;
     public float minHeight = 200f;
@@ -31,7 +29,6 @@ public class DragScaleHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     {
         targetRect = transform.parent.parent.GetComponent<RectTransform>();
         canvasRect = FindObjectOfType<Canvas>().GetComponent<RectTransform>();
-        rectMask = FindObjectOfType<RectMask2D>().GetComponent<RectTransform>();
     }
 
     public void ChangeMouseByDirection()
@@ -150,14 +147,10 @@ public class DragScaleHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, 
         targetRect.offsetMin = newOffsetMin;
         targetRect.offsetMax = newOffsetMax;
 
-        //targetRect.offsetMin = new Vector2(
-        //    Mathf.Clamp(targetRect.offsetMin.x, rectMask.rect.xMin, rectMask.rect.xMax),
-        //    Mathf.Clamp(targetRect.offsetMin.y, rectMask.rect.yMin, rectMask.rect.yMax)
-        //);
+        // 限制顶边栏不能拉出屏幕外
         targetRect.offsetMax = new Vector2(
             targetRect.offsetMax.x,
-            //Mathf.Clamp(targetRect.offsetMax.x, rectMask.rect.xMin, rectMask.rect.xMax),
-            Mathf.Clamp(targetRect.offsetMax.y, rectMask.rect.yMin + 60, rectMask.rect.yMax)
+            Mathf.Clamp(targetRect.offsetMax.y, WindowsManager.Instance.Desktop.rect.yMin + 60, WindowsManager.Instance.Desktop.rect.yMax)
         );
     }
 
