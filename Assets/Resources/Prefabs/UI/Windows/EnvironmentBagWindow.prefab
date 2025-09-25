@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2310967032061370325
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2314,7 +2314,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6380355673362166994
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2914,15 +2914,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 347786978172178886, guid: e66348b512c6cbe40b5b10659261006c, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -20
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 347786978172178886, guid: e66348b512c6cbe40b5b10659261006c, type: 3}
       propertyPath: m_SizeDelta.y
-      value: -20
+      value: -16
       objectReference: {fileID: 0}
     - target: {fileID: 3507147826382519186, guid: e66348b512c6cbe40b5b10659261006c, type: 3}
       propertyPath: m_Value
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3566168531701075751, guid: e66348b512c6cbe40b5b10659261006c, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3073,10 +3073,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 8
-    m_Right: 8
-    m_Top: 8
-    m_Bottom: 8
+    m_Left: 12
+    m_Right: 12
+    m_Top: 12
+    m_Bottom: 12
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
@@ -3226,7 +3226,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1065582681270328394, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 542
+      value: 546
       objectReference: {fileID: 0}
     - target: {fileID: 1065582681270328394, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
@@ -3234,7 +3234,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1113768014524737052, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 542
+      value: 546
       objectReference: {fileID: 0}
     - target: {fileID: 1113768014524737052, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
@@ -3242,7 +3242,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2224730111995872713, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 542
+      value: 546
       objectReference: {fileID: 0}
     - target: {fileID: 2224730111995872713, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
@@ -3250,7 +3250,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2677453288185900698, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 542
+      value: 546
       objectReference: {fileID: 0}
     - target: {fileID: 2677453288185900698, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
@@ -3266,7 +3266,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4717627398990265235, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 542
+      value: 546
       objectReference: {fileID: 0}
     - target: {fileID: 4717627398990265235, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
@@ -3358,7 +3358,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6009868744749949120, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 542
+      value: 546
       objectReference: {fileID: 0}
     - target: {fileID: 6009868744749949120, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
@@ -3366,7 +3366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6240264970601181780, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 542
+      value: 546
       objectReference: {fileID: 0}
     - target: {fileID: 6240264970601181780, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
@@ -3374,7 +3374,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7063507758247106707, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minWidth
-      value: 542
+      value: 546
       objectReference: {fileID: 0}
     - target: {fileID: 7063507758247106707, guid: 480c060adc538c745946fdd18329de5f, type: 3}
       propertyPath: minHeight
