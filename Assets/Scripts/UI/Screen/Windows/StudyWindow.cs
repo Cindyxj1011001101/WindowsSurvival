@@ -107,7 +107,7 @@ public class StudyWindow : WindowBase
         else
             studyStateButton.SetVisiable(false);
 
-        TechnologyManager.Instance.InitFromGameData();
+        //TechnologyManager.Instance.InitFromGameData();
     }
 
     public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)

@@ -147,6 +147,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Init();
+
+        TechnologyManager.Instance.Init();
     }
 
     private void Init()

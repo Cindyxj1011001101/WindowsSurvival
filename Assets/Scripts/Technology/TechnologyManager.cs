@@ -19,7 +19,7 @@ public class TechnologyManager
         techData = GameDataManager.Instance.TechnologyData;
     }
 
-    public void InitFromGameData()
+    public void Init()
     {
         techData = GameDataManager.Instance.TechnologyData;
 
