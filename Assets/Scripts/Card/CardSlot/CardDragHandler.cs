@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IPointerClickHandler,
+public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler,
                                 IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     // 动画参数配置
@@ -75,6 +75,11 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IEndDragHandler
         SoundManager.Instance.PlaySound("拿起卡牌", true);
 
         EventManager.Instance.TriggerEvent(EventType.PickUpCard, card);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        // 不能移除此方法，否则无法拖拽卡牌
     }
 
     Vector2 mousePosition;
