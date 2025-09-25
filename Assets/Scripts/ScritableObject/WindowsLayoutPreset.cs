@@ -17,6 +17,6 @@ public class WindowsLayoutPreset : ScriptableObject
     public PositionAndSizeDelta detailsWindow;
     public PositionAndSizeDelta envBagWindow;
     public PositionAndSizeDelta playerBagWindow;
-    //public PositionAndSizeDelta equipmentWindow;
     public PositionAndSizeDelta stateWindow;
+    public PositionAndSizeDelta equipmentWindow;
 }

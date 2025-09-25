@@ -147,7 +147,7 @@ public class WindowsManager : MonoBehaviour
             { "Details", preset.detailsWindow },
             { "EnvironmentBag", preset.envBagWindow },
             { "PlayerBag", preset.playerBagWindow },
-            //{ "Equipment", preset.equipmentWindow },
+            { "Equipment", preset.equipmentWindow },
         };
     }
 
