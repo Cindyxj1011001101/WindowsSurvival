@@ -132,8 +132,13 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 同背包放置
             if (targetWindow == sourceWindow)
             {
+                // 不能在装备背包里转移卡牌
+                if (targetWindow is EquipmentWindow)
+                {
+                    AnimateCardReturn(pickedCount);
+                }
                 // 放在同背包的不同格子里
-                if (targetSlot != null && targetSlot != sourceSlot)
+                else if (targetSlot != null && targetSlot != sourceSlot)
                 {
                     PlaceCardInSameBag(targetSlot, pickedCount);
                 }
