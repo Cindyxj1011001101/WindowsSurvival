@@ -415,7 +415,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             foreach (var group in groups)
             {
                 AnimateCardPlacement(
-                    movedCard[0],
+                    group.ToList()[0],
                     () =>
                     {
                         // 再刷新显示
