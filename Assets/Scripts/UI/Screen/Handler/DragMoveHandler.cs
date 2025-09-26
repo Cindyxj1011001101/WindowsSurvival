@@ -11,7 +11,7 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public UnityEvent onPointerDown = new();
 
-    private float snapThreshold = 10f; // 吸附阈值（像素）
+    private float snapThreshold = 12f; // 吸附阈值（像素）
 
     private float constBorder = 2f;
 
