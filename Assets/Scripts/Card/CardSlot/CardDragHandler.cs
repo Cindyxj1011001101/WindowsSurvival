@@ -242,8 +242,15 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 sourceSlot.transform.ShowTip(tip);
         }
         // 从内容物中快速移出
-        else if (sourceBag is InnerBag)
+        else if (sourceBag is InnerBag innerBag)
         {
+            // 不允许取出内容物的情况
+            if (!innerBag.AllowRemove)
+            {
+                sourceSlot.transform.ShowTip(string.IsNullOrEmpty(innerBag.NotAllowRemoveReason) ? "不能取出卡牌" : innerBag.NotAllowRemoveReason);
+                return;
+            }
+
             // 先尝试移入玩家背包
             if (WindowsManager.Instance.IsWindowOpen("PlayerBag"))
             {
