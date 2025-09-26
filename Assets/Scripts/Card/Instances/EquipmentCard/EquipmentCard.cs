@@ -25,7 +25,7 @@ public abstract class EquipmentCard : Card
     protected void Event_Equip(out string tip)
     {
         tip = string.Empty;
-        GameManager.Instance.Equip(this);
+        GameManager.Instance.Equip(this, Slot.transform.position);
     }
 
     protected bool Judge_Equip(out string hint)

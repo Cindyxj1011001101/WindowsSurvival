@@ -237,7 +237,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             if (equ.isEquipped)
                 GameManager.Instance.Unequip(card);
             else if (GameManager.Instance.CanEquip(card, out string tip))
-                GameManager.Instance.Equip(card);
+                GameManager.Instance.Equip(card, card.Slot.transform.position);
             else
                 sourceSlot.transform.ShowTip(tip);
         }

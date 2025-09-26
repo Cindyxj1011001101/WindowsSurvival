@@ -273,20 +273,20 @@ public class GameManager : MonoBehaviour
     /// 穿上装备
     /// </summary>
     /// <param name="equipment"></param>
-    public void Equip(Card equipment)
+    public void Equip(Card equipment, Vector3 startPos)
     {
-        // 找到卡牌位置
-        Transform transform = null;
-        if (equipment.Slot != null)
-            transform = equipment.Slot.transform;
-        if (transform == null && equipment.Bag is InnerBag innerBag && innerBag.BelongedCard != null)
-            transform = innerBag.BelongedCard.Transform;
+        //// 找到卡牌位置
+        //Transform transform = null;
+        //if (equipment.Slot != null)
+        //    transform = equipment.Slot.transform;
+        //if (transform == null && equipment.Bag is InnerBag innerBag && innerBag.BelongedCard != null)
+        //    transform = innerBag.BelongedCard.Transform;
 
         // 从原来的格子里移除
-        equipment.SlotCards.RemoveCard(equipment);
+        equipment.SlotCards?.RemoveCard(equipment);
 
         // 添加到装备格子里
-        AddCardWithTween(equipment, equipmentBag, transform.position); // transform 理论上不会为空
+        AddCardWithTween(equipment, equipmentBag, startPos); // transform 理论上不会为空
     }
 
     /// <summary>

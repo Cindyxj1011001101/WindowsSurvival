@@ -11,7 +11,6 @@ public class CraftManager
     private List<string> unlockedRecipes = new(); // 已解锁的合成配方
 
     public Dictionary<RecipeType, ScriptableRecipeLibrary> LibraryDict => libraryDict;
-    //public List<string> UnlockedRecipes => unlockedRecipes;
 
     private CraftManager()
     {
@@ -20,8 +19,6 @@ public class CraftManager
         {
             libraryDict.Add(library.craftType, library);
         }
-        // 加载已解锁的配方
-        //unlockedRecipes = GameDataManager.Instance.UnlockedRecipes;
     }
 
     /// <summary>
@@ -146,8 +143,12 @@ public class CraftManager
         var card = CardFactory.CreateCard(recipe.cardId);
 
         // 掉落制作出的卡牌
+        // 如果是装备卡牌，则尝试直接穿上
+        if (card.TryGetComponent<EquipmentComponent>(out _) && GameManager.Instance.CanEquip(card, out _))
+            GameManager.Instance.Equip(card, startPos);
         // 如果是建筑卡牌或者是有内容物的卡牌，则优先掉落到环境里
-        GameManager.Instance.AddCardWithTween(card, !(card.CardType == CardType.Construction || card.TryGetComponent<InnerContentsComponent>(out _)), startPos);
+        else
+            GameManager.Instance.AddCardWithTween(card, !(card.CardType == CardType.Construction || card.TryGetComponent<InnerContentsComponent>(out _)), startPos);
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", card.CardName));
     }
