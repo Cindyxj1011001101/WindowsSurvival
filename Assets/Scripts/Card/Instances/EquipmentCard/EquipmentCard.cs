@@ -17,6 +17,19 @@ public abstract class EquipmentCard : Card
     {
         base.Awake();
         TryGetComponent(out equipment);
+
+        if (TryGetComponent<DurabilityComponent>(out var d))
+        {
+            // 装备损坏后尝试从背包中重新找到一件相同的装备并且穿上
+            d.onBroken = () =>
+            {
+                var sameEquipment = GameManager.Instance.PlayerBag.FindCardOfName(CardName);
+                if (sameEquipment != null && GameManager.Instance.CanEquip(sameEquipment, out _))
+                {
+                    GameManager.Instance.Equip(sameEquipment, sameEquipment.Slot.transform.position);
+                }
+            };
+        }
     }
 
     public abstract void OnEquipped();
