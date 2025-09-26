@@ -74,10 +74,16 @@ public class State
         }
     }
 
+    private void ClampVariableValue()
+    {
+        variableValue = Mathf.Clamp(variableValue, 0, MaxValue);
+        variableValue = System.MathF.Round(variableValue, 1); // 四舍五入到一位小数
+    }
+
     public void AddValue(float delta)
     {
         variableValue += delta;
-        variableValue = Mathf.Clamp(variableValue, 0, MaxValue);
+        ClampVariableValue();
 
         CalcStateLevel();
     }
@@ -85,7 +91,7 @@ public class State
     public void AddExtraValue(float delta)
     {
         extraValue += delta;
-        variableValue = Mathf.Clamp(variableValue, 0, MaxValue);
+        ClampVariableValue();
 
         CalcStateLevel();
     }
