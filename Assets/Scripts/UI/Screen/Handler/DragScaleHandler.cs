@@ -81,6 +81,8 @@ public class DragScaleHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     {
         if (!isDragging || targetRect == null || canvasRect == null) return;
 
+        ChangeMouseByDirection();
+
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvasRect, eventData.position, eventData.pressEventCamera, out Vector2 currentMouseLocalToParent);
 
