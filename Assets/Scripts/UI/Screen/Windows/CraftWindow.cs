@@ -250,7 +250,7 @@ public class CraftWindow : WindowBase
         craftButton.onClick.RemoveAllListeners();
         craftButton.onClick.AddListener(() =>
         {
-            var tween = slot.transform.ShakeAndBounce(() =>
+            var tween = slot.transform.PunchAndBounce(() =>
             {
                 // 合成卡牌
                 CraftManager.Instance.Craft(recipe, slot.transform.position);

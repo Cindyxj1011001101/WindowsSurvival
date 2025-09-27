@@ -91,7 +91,7 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void Explore()
     {
-        var seq = envCardTransform.ShakeAndBounce(() =>
+        var seq = envCardTransform.PunchAndBounce(() =>
         {
             GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
             GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);

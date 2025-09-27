@@ -493,7 +493,7 @@ public abstract class Card : IComparable<Card>
         }
         else
         {
-            var tween = Transform.ShakeAndBounce(() =>
+            var tween = Transform.PunchAndBounce(() =>
             {
                 rightBeforeDrop?.Invoke();
                 AddCards(cards, true);

@@ -18,32 +18,31 @@ public static class ExtensionClass
         return target.DOScale(maxScale, duration).SetLoops(2, LoopType.Yoyo).OnComplete(() => target.localScale = originalScale);
     }
 
-    public static Tween Shake(this Transform target,
-                           float duration = .6f,
-                           float pStrengthX = 2.3f, float pStrengthY = 1.2f, float pStrengthZ = 0, int pVibrato = 15,
-                           float rStrengthX = 0, float rStrengthY = 0, float rStrengthZ = 0.7f, int rVibrato = 12)
+    public static Tween Punch(this Transform target, float duration,
+                           float pStrengthX, float pStrengthY, float pStrengthZ, int pVibrato,
+                           float rStrengthX, float rStrengthY, float rStrengthZ, int rVibrato)
     {
         target.GetPositionAndRotation(out var originalPos, out var originalRotation);
 
         var seq = DOTween.Sequence();
-        seq.Join(target.DOShakePosition(duration, new Vector3(pStrengthX, pStrengthY, pStrengthZ), vibrato: pVibrato, fadeOut: false).OnComplete(() => { target.position = originalPos; })); // 位置抖动
-        seq.Join(target.DOShakeRotation(duration, new Vector3(rStrengthX, rStrengthY, rStrengthZ), vibrato: rVibrato, fadeOut: false).OnComplete(() => { target.rotation = originalRotation; })); // 旋转抖动
+        seq.Join(target.DOPunchPosition(new Vector3(pStrengthX, pStrengthY, pStrengthZ), duration, vibrato: pVibrato).OnComplete(() => { target.position = originalPos; })); // 位置抖动
+        seq.Join(target.DOPunchRotation(new Vector3(rStrengthX, rStrengthY, rStrengthZ), duration, vibrato: rVibrato).OnComplete(() => { target.rotation = originalRotation; })); // 旋转抖动
 
         return seq;
     }
 
-    public static Tween ShakeAndBounce(this Transform target,
-                                    TweenCallback onShakeComplete = null,
+    public static Tween PunchAndBounce(this Transform target,
+                                    TweenCallback onPunchComplete = null,
                                     TweenCallback onBounceComplete = null,
                                     float bounceMaxScale = 1.09f, float bounceDuration = 0.15f,
-                                    float shakeDuration = .6f,
-                                    float pStrengthX = 2.3f, float pStrengthY = 1.2f, float pStrengthZ = 0, int pVibrato = 15,
-                                    float rStrengthX = 0, float rStrengthY = 0, float rStrengthZ = 0.7f, int rVibrato = 12)
+                                    float punchDuration = .6f,
+                                    float pStrengthX = 4f, float pStrengthY = 2.5f, float pStrengthZ = 0, int pVibrato = 18,
+                                    float rStrengthX = 0, float rStrengthY = 0, float rStrengthZ = 1.5f, int rVibrato = 15)
     {
         var seq = DOTween.Sequence();
 
-        seq.Append(target.Shake(shakeDuration, pStrengthX, pStrengthY, pStrengthZ, pVibrato, rStrengthX, rStrengthY, rStrengthZ, rVibrato).OnComplete(onShakeComplete));
-        seq.Append(target.Bounce(bounceMaxScale, bounceDuration).OnComplete(onBounceComplete));
+        seq.Join(target.Punch(punchDuration, pStrengthX, pStrengthY, pStrengthZ, pVibrato, rStrengthX, rStrengthY, rStrengthZ, rVibrato).OnComplete(onPunchComplete));
+        seq.Join(target.Bounce(bounceMaxScale, bounceDuration).SetDelay(punchDuration * .82f).OnComplete(onBounceComplete));
 
         return seq;
     }
