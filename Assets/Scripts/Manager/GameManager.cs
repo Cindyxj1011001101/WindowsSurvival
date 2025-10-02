@@ -582,17 +582,8 @@ public class GameManager : MonoBehaviour
         EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
     }
 
-    public static string ParsePlaceEnum(PlaceEnum place)
+    public string ParsePlaceEnum(PlaceEnum place)
     {
-        return place switch
-        {
-            PlaceEnum.PowerCabin => "动力舱",
-            PlaceEnum.Cockpit => "驾驶室",
-            PlaceEnum.LifeSupportCabin => "维生舱",
-            PlaceEnum.CoralCoast => "珊瑚礁海域",
-            PlaceEnum.PhosphorTomb => "织光藻墓园",
-            PlaceEnum.SpaceshipOuterHull => "飞船外壳",
-            _ => null,
-        };
+        return environmentBags[place].PlaceData.placeName;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -919,5 +918,12 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
             BelongedCard.ShowTip($"{tip}，{BelongedCard.CardName}已自动熄灭");
         }
     }
+}
+#endregion
+
+#region 实体组件
+public class EntityComponent : CardComponent
+{
+
 }
 #endregion

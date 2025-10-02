@@ -124,13 +124,13 @@ public class ObjectBufferPool
         /// 从未使用的或者正在使用的游戏对象中获取一个
         /// </summary>
         /// <returns></returns>
-        public void Get(UnityAction<GameObject> onInstaniated)
+        public void GetAsync(UnityAction<GameObject> onInstaniated)
         {
             if (prefab == null)
             {
                 onPrefabLoaded += () =>
                 {
-                    Get(onInstaniated);
+                    GetAsync(onInstaniated);
                 };
                 return;
             }
@@ -142,7 +142,6 @@ public class ObjectBufferPool
         /// <summary>
         /// 同步的获取方法
         /// </summary>
-        /// <param name="instaniate"></param>
         /// <returns></returns>
         public GameObject Get()
         {
@@ -164,7 +163,7 @@ public class ObjectBufferPool
             else
             {
                 // 实例化对象
-                obj = GameObject.Instantiate(prefab, Instance.Root);
+                obj = Object.Instantiate(prefab, Instance.Root);
                 // 设置对象的名称
                 obj.name = objectName;
             }
@@ -390,7 +389,7 @@ public class ObjectBufferPool
             setTransform?.Invoke(obj.transform);
             obj.transform.localScale = Vector3.one;
         };
-        pool[assetName].Get(onInstaniated);
+        pool[assetName].GetAsync(onInstaniated);
     }
 
     /// <summary>

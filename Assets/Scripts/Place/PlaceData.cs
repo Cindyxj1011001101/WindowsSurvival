@@ -11,6 +11,8 @@ public class PlaceData : ScriptableObject
     public bool isInSpacecraft;
     public Sprite placeImage;
     public int exploreTime;
+    [HideInInspector] public float minCoord = 0;
+    public float maxCoord;
 
     private void OnValidate()
     {
