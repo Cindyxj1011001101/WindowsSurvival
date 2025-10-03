@@ -52,9 +52,13 @@ public class UIStateSlider : MonoBehaviour
             fill.color = fillColor;
         }
 
-        if (slider.handleRect != null && slider.handleRect.TryGetComponent<Image>(out var handle))
+        if (slider.handleRect != null)
         {
-            handle.color = fillColor;
+            var handle = slider.handleRect.GetComponentInChildren<Image>();
+            if (handle != null)
+            {
+                handle.color = fillColor;
+            }
         }
 
         slider.value = value / maxValue;

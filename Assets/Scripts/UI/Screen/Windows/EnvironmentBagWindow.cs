@@ -26,24 +26,71 @@ public class EnvironmentBagWindow : BagWindow
     [SerializeField] private UIPressureLevel pressureLevel; // 压强等级
     [HideInInspector] public Dictionary<EnvironmentStateEnum, UIStateSlider> continuousValueStates = new(); // 环境状态显示
 
-    private HoverTipController hoveredTipController;
+    [SerializeField] private Slider currentCoordSlider;
+    [SerializeField] private Slider nextCoordSlider;
+    [SerializeField] private HoverableButton moveLeftButton;
+    [SerializeField] private HoverableButton moveRightButton;
+    [SerializeField] private HoverableButton executeMoveButton;
+    [SerializeField] private Text nextPosition;
+    [SerializeField] private Text currentPosition;
+    [SerializeField] private Image fillBetween;
+
+    private const float MoveDistResolution = .5f; // 移动距离分辨率
+
+    private HoverTipController exploreTipController;
+
+    private EnvironmentBag CurEnv => GameManager.Instance.CurEnvironmentBag;
+    private Player Player => GameManager.Instance.Player;
+    private float NextPosition => nextCoordSlider.value * MoveDistResolution;
 
     protected override void Awake()
     {
         base.Awake();
 
-        hoveredTipController = exploreButton.gameObject.AddComponent<HoverTipController>();
-        hoveredTipController.onPointerEnter.AddListener(() =>
+        // 探索按钮事件
+        exploreButton.onClick.AddListener(Explore);
+
+        // 探索消耗显示
+        exploreTipController = exploreButton.gameObject.AddComponent<HoverTipController>();
+        exploreTipController.onPointerEnter.AddListener(() =>
         {
             if (GameManager.Instance.CanMoveExplore())
             {
                 var (desc, time, playerEffects) = GameManager.Instance.GetExploreEffects();
-                hoveredTipController.SetTip(desc, time, playerEffects, null);
+                exploreTipController.SetTip(desc, time, playerEffects, null);
             }
             else
-                hoveredTipController.SetTip("身上太重了，无法探索");
+                exploreTipController.SetTip("身上太重了，无法探索");
         });
 
+        // 移动
+
+        // 当前坐标显示
+        currentCoordSlider.onValueChanged.AddListener((v) =>
+        {
+            currentPosition.text = (v * MoveDistResolution).ToString();
+            FillBetween();    
+        });
+
+        // 选择距离
+        nextCoordSlider.onValueChanged.AddListener((v) =>
+        {
+            nextPosition.text = (v * MoveDistResolution).ToString();
+            FillBetween();
+        });
+        moveLeftButton.onClick.AddListener(() =>
+        {
+            nextCoordSlider.value--;
+        });
+        moveRightButton.onClick.AddListener(() =>
+        {
+            nextCoordSlider.value++;
+        });
+
+        // 执行移动
+        executeMoveButton.onClick.AddListener(ExecuteMove);
+
+        // 注册状态
         foreach (Transform c in stateLayout)
         {
             if (c.TryGetComponent<UIStateSlider>(out var s))
@@ -53,7 +100,7 @@ public class EnvironmentBagWindow : BagWindow
         // 注册探索度变化事件
         EventManager.Instance.AddListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         // 注册环境移动事件
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, DisplayBag);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         // 玩家背包卡牌变化
@@ -64,7 +111,7 @@ public class EnvironmentBagWindow : BagWindow
     {
         // 移除事件
         EventManager.Instance.RemoveListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, DisplayBag);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
     }
@@ -77,13 +124,11 @@ public class EnvironmentBagWindow : BagWindow
     {
         if (state != PlayerStateEnum.Load) return;
 
-        DisplayDiscoveryDegree((GameManager.Instance.CurEnvironmentBag.DiscoveryDegree, GameManager.Instance.CurEnvironmentBag.ExploreCompleted));
+        DisplayDiscoveryDegree((CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted));
     }
 
     protected override void Init()
     {
-        exploreButton.onClick.RemoveAllListeners();
-        exploreButton.onClick.AddListener(Explore);
     }
 
     /// <summary>
@@ -103,9 +148,6 @@ public class EnvironmentBagWindow : BagWindow
         MouseManager.Instance.Wait(seq.Duration());
     }
 
-    /// <summary>
-    /// 移动到指定环境
-    /// </summary>
     public override void DisplayBag(Bag bag)
     {
         base.DisplayBag(bag);
@@ -155,6 +197,12 @@ public class EnvironmentBagWindow : BagWindow
         // 显示图片
         environmentImage.sprite = env.PlaceData.placeImage;
         environmentImage.SetNativeSize();
+
+        // 显示坐标系
+        DisplayCoordinateSystem();
+
+        // 显示玩家位置
+        DisplayPlayerPosition();
     }
 
     /// <summary>
@@ -163,7 +211,7 @@ public class EnvironmentBagWindow : BagWindow
     private void OnEnvironmentStateChanged(RefreshEnvironmentStateArgs args)
     {
         // 不是当前地点的值变化不显示
-        if (args.place != GameManager.Instance.CurEnvironmentBag.PlaceData.placeType) return;
+        if (args.place != CurEnv.PlaceData.placeType) return;
 
         switch (args.stateEnum)
         {
@@ -195,7 +243,7 @@ public class EnvironmentBagWindow : BagWindow
             text.color = ColorManager.Cyan;
 
             // 不再显示探索提示
-            hoveredTipController.enabled = false;
+            exploreTipController.enabled = false;
         }
         else if (args.degree == 1)
         {
@@ -205,7 +253,7 @@ public class EnvironmentBagWindow : BagWindow
             text.text = "深入探索";
             text.color = ColorManager.White;
 
-            hoveredTipController.enabled = true;
+            exploreTipController.enabled = true;
         }
         else
         {
@@ -214,10 +262,49 @@ public class EnvironmentBagWindow : BagWindow
             text.text = "开始探索";
             text.color = ColorManager.White;
 
-            hoveredTipController.enabled = true;
+            exploreTipController.enabled = true;
         }
 
         // 按钮是否能够交互
         exploreButton.Interactable = exploreButton.Interactable && GameManager.Instance.CanMoveExplore();
+    }
+
+    /// <summary>
+    /// 显示地点坐标系
+    /// </summary>
+    private void DisplayCoordinateSystem()
+    {
+        currentCoordSlider.maxValue = nextCoordSlider.maxValue = CurEnv.PlaceData.maxCoord / MoveDistResolution;
+    }
+
+    /// <summary>
+    /// 用白色填充 current coord slider handle 和 next corrd slider handle 之间的部分
+    /// </summary>
+    private void FillBetween()
+    {
+        fillBetween.transform.position = (currentCoordSlider.handleRect.position + nextCoordSlider.handleRect.position) / 2;
+        fillBetween.rectTransform.sizeDelta = new(Mathf.Abs(currentCoordSlider.handleRect.position.x - nextCoordSlider.handleRect.position.x), fillBetween.rectTransform.sizeDelta.y);
+    }
+
+    /// <summary>
+    /// 显示玩家位置
+    /// </summary>
+    private void DisplayPlayerPosition()
+    {
+        currentCoordSlider.value = nextCoordSlider.value = Player.Coordinate.Position / MoveDistResolution;
+
+        currentPosition.text = nextPosition.text = Player.Coordinate.Position.ToString();
+        FillBetween();
+    }
+
+    /// <summary>
+    /// 执行移动
+    /// </summary>
+    private void ExecuteMove()
+    {
+        if (Mathf.Abs(NextPosition - Player.Coordinate.Position) < MoveDistResolution) return;
+
+        Player.Coordinate.SetPosition(NextPosition);
+        DisplayPlayerPosition();
     }
 }
