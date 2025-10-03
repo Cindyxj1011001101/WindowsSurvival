@@ -47,7 +47,6 @@ public class FreshnessComponent : CardComponent, IUpdate
 
         // 随时间自动减少新鲜度
         freshness -= (int)(TimeManager.Instance.SettleInterval * updateRate);
-        freshness = Mathf.Max(freshness, 0);
 
         if (freshness <= 0)
         {
@@ -104,7 +103,6 @@ public class GrowthComponent : CardComponent, IUpdate
 
         // 随时间自动增加生长度
         growth += (int)(TimeManager.Instance.SettleInterval * updateRate);
-        growth = Mathf.Min(growth, maxGrowth);
 
         if (growth >= maxGrowth)
         {
@@ -151,7 +149,6 @@ public class ProgressComponent : CardComponent, IUpdate
 
         // 随时间自动增加产物进度
         progress += (int)(TimeManager.Instance.SettleInterval * updateRate);
-        progress = Mathf.Min(progress, maxProgress);
 
         if (progress >= maxProgress)
         {
@@ -258,7 +255,6 @@ public class DurabilityComponent : CardComponent
         if (durability <= 0) return;
 
         durability -= times;
-        durability = Mathf.Max(durability, 0);
 
         StackTrace stackTrace = new();
         MethodBase callerMethod = stackTrace.GetFrame(2).GetMethod();
@@ -489,22 +485,21 @@ public class CookComponent : CardComponent
         this.outcomeCardId = outcomeCardId;
     }
 
-    public void Update()
+    public void Cook()
     {
         if (leftCookTime <= 0) return;
 
         leftCookTime -= TimeManager.Instance.SettleInterval;
-        leftCookTime = Mathf.Max(leftCookTime, 0);
 
         if (leftCookTime <= 0)
         {
             leftCookTime = 0;
             // 处理煮熟的逻辑
-            CookingComplete();
+            HandleCookComplete();
         }
     }
 
-    public void CookingComplete()
+    public void HandleCookComplete()
     {
         leftCookTime = 0;
 
@@ -628,6 +623,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
 
         if (!pressureList.Contains(curPressureLevel)) return; // 压强不合适不生长
 
+        // 获取当前地点的温度
         float curTempture;
         if (bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var roomTemperature))
         {
@@ -922,8 +918,113 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
 #endregion
 
 #region 实体组件
-public class EntityComponent : CardComponent
+/// <summary>
+/// 行为倾向
+/// </summary>
+public enum BehavioralTendency
 {
+    /// <summary>
+    /// 友善
+    /// </summary>
+    Friendly,
+    /// <summary>
+    /// 中立
+    /// </summary>
+    Neutral,
+    /// <summary>
+    /// 敌对
+    /// </summary>
+    Hostile
+}
 
+public class EntityComponent : CardComponent, IUpdate
+{
+    public float maxHealth; // 最大生命值
+    public float health; // 当前生命值
+    public float atk; // 攻击力
+    public float moveDistPerMin; // 每分钟移动距离
+    public BehavioralTendency behavioralTendency; // 行为倾向
+
+    public int aiRefreshInterval; // ai刷新间隔
+    [JsonIgnore] public UnityAction aiLogic; // ai行为逻辑
+
+    [JsonIgnore] public UnityAction onDead;
+
+    [JsonIgnore] public List<IEntity> arrgoEntities; // 当前仇恨的生物
+
+    public EntityComponent() { }
+
+    public EntityComponent(float maxHealth, float atk, float moveDistPerMin, int aiRefreshInterval, BehavioralTendency behavioralTendency)
+    {
+        this.maxHealth = health = maxHealth;
+        this.atk = atk;
+        this.moveDistPerMin = moveDistPerMin;
+        this.aiRefreshInterval = aiRefreshInterval;
+        this.behavioralTendency = behavioralTendency;
+    }
+
+    public void TakeDamage(float damage, IEntity damageDealer)
+    {
+        if (health <= 0) return;
+
+        UnityEngine.Debug.Log($"{BelongedCard}受到伤害！伤害值：{damage}，伤害者：{damageDealer}");
+
+        health -= damage;
+        if (health <= 0)
+        {
+            health = 0;
+            BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
+            BelongedCard.DestroyThis();
+            onDead?.Invoke();
+        }
+
+        BelongedCard.RefreshSlot();
+    }
+
+    public void Update()
+    {
+        aiLogic?.Invoke();
+    }
+}
+#endregion
+
+#region 坐标组件
+public class CoordinateComponent : CardComponent
+{
+    public Coordinate coordinate;
+
+    public CoordinateComponent() { }
+
+    public CoordinateComponent(float position)
+    {
+        coordinate.SetPosition(position);
+    }
+}
+#endregion
+
+#region 武器组件
+public enum AttackForm
+{
+    /// <summary>
+    /// 单体攻击
+    /// </summary>
+    Single,
+    /// <summary>
+    /// 范围攻击
+    /// </summary>
+    AOE
+}
+
+public class WeaponComponent : CardComponent
+{
+    public float atk; // 攻击力
+    public float minAtkDist; // 最小攻击距离
+    public float maxAtkDist; // 最大攻击距离
+    public AttackForm attackForm; // 攻击方式
+
+    public void DealDamage(IEntity target)
+    {
+        target.TakeDamage(atk, GameManager.Instance.Player);
+    }
 }
 #endregion
