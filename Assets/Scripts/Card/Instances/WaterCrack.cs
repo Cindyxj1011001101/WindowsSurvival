@@ -55,14 +55,14 @@ public class WaterCrack : Card
         Fix(slot.PeekCard(), out tip);
     }
 
-    public override void OnAdded(Bag bag)
+    public override void OnAdd(Bag bag)
     {
         // 渗水裂缝所在的地点每回合-3氧气
         (bag as EnvironmentBag).ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -3);
         StateManager.Instance.ChangeWaterLevelChangeRate(+0.3f);
     }
 
-    public override void OnRemoved(Bag bag)
+    public override void OnRemove(Bag bag)
     {
         (bag as EnvironmentBag).ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +3);
         StateManager.Instance.ChangeWaterLevelChangeRate(-0.3f);

@@ -92,9 +92,9 @@ public abstract class Bag
     #endregion
 
     #region Card
-    public abstract void OnAddCard(Card card);
+    public virtual void OnAddCard(Card card) { }
 
-    public abstract void OnRemoveCard(Card card);
+    public virtual void OnRemoveCard(Card card) { }
 
     /// <summary>
     /// 能否添加新的卡牌

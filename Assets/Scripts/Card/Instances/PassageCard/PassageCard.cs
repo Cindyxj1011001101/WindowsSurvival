@@ -1,6 +1,10 @@
 ﻿public abstract class PassageCard : Card
 {
     private PassageComponent passage;
+    private CoordinateComponent coordinate;
+
+    private const float MaxAvailableDist = 3.0f; // 小于等于该距离时可以使用
+
     protected PassageCard()
     {
         Events = new()
@@ -12,6 +16,7 @@
     public override void Awake()
     {
         base.Awake();
+        TryGetComponent(out coordinate);
         TryGetComponent(out passage);
 
         Events[0].description = GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
@@ -53,6 +58,12 @@
     public virtual bool Judge_Enter(out string hint)
     {
         hint = string.Empty;
+        if (GameManager.Instance.Player.Coordinate.DistanceTo(coordinate.coordinate) > MaxAvailableDist)
+        {
+            hint = "距离通道太远，无法前往";
+            return false;
+        }
+
         if (!GameManager.Instance.CanMoveExplore())
         {
             hint = "身上太重了，无法前往";

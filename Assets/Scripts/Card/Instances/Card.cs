@@ -28,7 +28,9 @@ public enum CardType
     Other, // 其他
 }
 
-//卡牌基类
+/// <summary>
+/// 卡牌基类
+/// </summary>
 public abstract class Card : IComparable<Card>
 {
     #region 属性
@@ -150,8 +152,8 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    public virtual void OnAdded(Bag bag) { }
-    public virtual void OnRemoved(Bag bag) { }
+    public virtual void OnAdd(Bag bag) { }
+    public virtual void OnRemove(Bag bag) { }
 
     public void SetCardId(string cardId)
     {

@@ -153,7 +153,7 @@ public class Campfire : ConstructionCard
         {
             if (card == null || card.Destroyed || !card.TryGetComponent(out CookComponent cook)) continue;
 
-            cook.Update();
+            cook.Cook();
 
             if (card.TryGetComponent<TimerComponent>(out var timer) && cook.leftCookTime >= 0)
             {

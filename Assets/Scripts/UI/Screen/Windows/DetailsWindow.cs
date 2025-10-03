@@ -35,7 +35,7 @@ public class DetailsWindow : BagWindow
     {
         base.Awake();
         EventManager.Instance.AddListener<Card>(EventType.ChangeCardProperty, RefreshCard);
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnMove);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
@@ -43,7 +43,7 @@ public class DetailsWindow : BagWindow
     {
         Clear();
         EventManager.Instance.RemoveListener<Card>(EventType.ChangeCardProperty, RefreshCard);
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, OnMove);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnMove);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 

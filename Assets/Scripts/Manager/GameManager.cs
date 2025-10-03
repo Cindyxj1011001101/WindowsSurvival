@@ -115,26 +115,24 @@ public class GameManager : MonoBehaviour
 
     private float addCardAnimDuration = 0.4f;
 
-    private PlayerBag playerBag;
-    private Dictionary<PlaceEnum, EnvironmentBag> environmentBags = new();
-    private EnvironmentBag curEnvironmentBag;
-    private EquipmentBag equipmentBag;
-
-    public PlayerBag PlayerBag => playerBag;
-    public Dictionary<PlaceEnum, EnvironmentBag> EnvironmentBags => environmentBags;
-    public EnvironmentBag CurEnvironmentBag => curEnvironmentBag;
-    public EquipmentBag EquipmentBag => equipmentBag;
+    public PlayerBag PlayerBag { get; private set; }
+    public Dictionary<PlaceEnum, EnvironmentBag> EnvironmentBags { get; private set; } = new();
+    public EnvironmentBag CurEnvironmentBag { get; private set; }
+    public EquipmentBag EquipmentBag { get; private set; }
+    public Player Player { get; private set; }
 
     private void Awake()
     {
         instance = this;
+
         // 玩家背包
-        playerBag = GameDataManager.Instance.PlayerBagData;
+        PlayerBag = GameDataManager.Instance.PlayerBagData;
         // 所有环境背包
-        environmentBags = GameDataManager.Instance.EnvironmentBagDataDict;
+        EnvironmentBags = GameDataManager.Instance.EnvironmentBagDataDict;
         // 当前环境背包
-        curEnvironmentBag = environmentBags[GameDataManager.Instance.LastPlace];
-        equipmentBag = GameDataManager.Instance.EquipmentData;
+        CurEnvironmentBag = EnvironmentBags[GameDataManager.Instance.LastPlace];
+        EquipmentBag = GameDataManager.Instance.EquipmentData;
+        Player = GameDataManager.Instance.PlayerData;
 
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
@@ -154,9 +152,9 @@ public class GameManager : MonoBehaviour
     private void Init()
     {
         lastLoadLevel = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
-        playerBag.Init();
-        equipmentBag.Init();
-        foreach (var bag in environmentBags.Values)
+        PlayerBag.Init();
+        EquipmentBag.Init();
+        foreach (var bag in EnvironmentBags.Values)
         {
             bag.Init();
         }
@@ -177,7 +175,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public bool IsCurrentEnvironment(Bag bag) => bag is EnvironmentBag env && env == curEnvironmentBag;
+    public bool IsCurrentEnvironment(Bag bag) => bag is EnvironmentBag env && env == CurEnvironmentBag;
 
     #region AddCard
 
@@ -188,14 +186,14 @@ public class GameManager : MonoBehaviour
     /// <param name="targetBag"></param>
     public void AddCard(Card card, Bag targetBag)
     {
-        card.StartUpdating();
         targetBag.AddCard(card);
+        card.StartUpdating();
     }
 
     public void AddCard(Card card, bool toPlayerBag)
     {
-        if (toPlayerBag && playerBag.CanAddCard(card, out _))
-            AddCard(card, playerBag);
+        if (toPlayerBag && PlayerBag.CanAddCard(card, out _))
+            AddCard(card, PlayerBag);
         else
             AddCard(card, CurEnvironmentBag);
     }
@@ -286,7 +284,7 @@ public class GameManager : MonoBehaviour
         equipment.SlotCards?.RemoveCard(equipment);
 
         // 添加到装备格子里
-        AddCardWithTween(equipment, equipmentBag, startPos); // transform 理论上不会为空
+        AddCardWithTween(equipment, EquipmentBag, startPos); // transform 理论上不会为空
     }
 
     /// <summary>
@@ -387,7 +385,7 @@ public class GameManager : MonoBehaviour
     public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects) GetExploreEffects()
     {
         string desc = "探索该地点" + ExploreExtraEffects.GetEffectsDescription();
-        int time = ExploreExtraEffects.GetFinalTime(curEnvironmentBag.PlaceData.exploreTime);
+        int time = ExploreExtraEffects.GetFinalTime(CurEnvironmentBag.PlaceData.exploreTime);
         Dictionary<PlayerStateEnum, float> playerEffects = ExploreExtraEffects.GetFinalPlayerEffects(new());
 
         // 对水域的探索额外消耗
@@ -408,7 +406,7 @@ public class GameManager : MonoBehaviour
         Dictionary<PlayerStateEnum, float> playerEffects = MoveExtraEffects.GetFinalPlayerEffects(new());
 
         // 前往水域的额外消耗
-        if (environmentBags[targetPlace].PlaceData.isInWater)
+        if (EnvironmentBags[targetPlace].PlaceData.isInWater)
         {
             desc += MoveToWaterExtraEffects.GetEffectsDescription();
             time = MoveToWaterExtraEffects.GetFinalTime(time);
@@ -460,8 +458,8 @@ public class GameManager : MonoBehaviour
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
 
-        var disposableDropList = curEnvironmentBag.DisposableDropList;
-        var repeatableDropList = curEnvironmentBag.RepeatableDropList;
+        var disposableDropList = CurEnvironmentBag.DisposableDropList;
+        var repeatableDropList = CurEnvironmentBag.RepeatableDropList;
         if (disposableDropList.IsEmpty && repeatableDropList.IsEmpty)
         {
             Debug.Log("探索完全");
@@ -487,8 +485,8 @@ public class GameManager : MonoBehaviour
     {
         tip = string.Empty;
         droppedCards = new List<Card>();
-        var disposableDropList = curEnvironmentBag.DisposableDropList;
-        var repeatableDropList = curEnvironmentBag.RepeatableDropList;
+        var disposableDropList = CurEnvironmentBag.DisposableDropList;
+        var repeatableDropList = CurEnvironmentBag.RepeatableDropList;
 
         // 当一次性探索列表还有剩余
         if (!disposableDropList.IsEmpty)
@@ -502,7 +500,7 @@ public class GameManager : MonoBehaviour
             }
 
             // 探索度变化
-            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, (curEnvironmentBag.DiscoveryDegree, curEnvironmentBag.ExploreCompleted));
+            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, (CurEnvironmentBag.DiscoveryDegree, CurEnvironmentBag.ExploreCompleted));
         }
         // 如果还可以重复探索
         else if (!repeatableDropList.IsEmpty)
@@ -543,12 +541,12 @@ public class GameManager : MonoBehaviour
     {
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("EnterEnvironment", targetPlace.ToString()));
         //拿到原先场景是哪个
-        PlaceEnum lastPlace = curEnvironmentBag.PlaceData.placeType;
+        PlaceEnum lastPlace = CurEnvironmentBag.PlaceData.placeType;
 
-        SoundManager.Instance.PlayPlaceMusic(environmentBags[targetPlace]);
+        SoundManager.Instance.PlayPlaceMusic(EnvironmentBags[targetPlace]);
         
         // 离开旧地点：关闭有循环音的卡牌的循环音
-        foreach (var slot in curEnvironmentBag.Slots)
+        foreach (var slot in CurEnvironmentBag.Slots)
         {
             if (!slot.IsEmpty)
             {
@@ -558,10 +556,10 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        curEnvironmentBag = environmentBags[targetPlace];
+        CurEnvironmentBag = EnvironmentBags[targetPlace];
         
         // 进入新地点：播放新地点离有循环音的卡牌
-        foreach (var slot in curEnvironmentBag.Slots)
+        foreach (var slot in CurEnvironmentBag.Slots)
         {
             if (!slot.IsEmpty)
             {
@@ -572,18 +570,18 @@ public class GameManager : MonoBehaviour
         }
 
         //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
-        var door = curEnvironmentBag.DisposableDropList.CertainDrop($"从{ParsePlaceEnum(targetPlace)}到{ParsePlaceEnum(lastPlace)}");
+        var door = CurEnvironmentBag.DisposableDropList.CertainDrop($"从{ParsePlaceEnum(targetPlace)}到{ParsePlaceEnum(lastPlace)}");
         if (!door.IsNullOrEmpty())
         {
             AddCard(door[0], false);
             door[0].RefreshSlot();
         }
 
-        EventManager.Instance.TriggerEvent(EventType.Move, curEnvironmentBag);
+        EventManager.Instance.TriggerEvent(EventType.ChangeEnv, CurEnvironmentBag);
     }
 
     public string ParsePlaceEnum(PlaceEnum place)
     {
-        return environmentBags[place].PlaceData.placeName;
+        return EnvironmentBags[place].PlaceData.placeName;
     }
 }

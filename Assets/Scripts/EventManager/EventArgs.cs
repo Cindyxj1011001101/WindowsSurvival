@@ -2,7 +2,7 @@
 {
     Update,
     ChangeCardProperty, // 卡牌属性变化
-    Move,//场景移动界面刷新
+    ChangeEnv,//场景移动界面刷新
     RefreshPlayerState,//更新玩家状态数据
     RefreshEnvironmentState,//更新环境状态数据
     ChangeDiscoveryDegree, // 探索度变化

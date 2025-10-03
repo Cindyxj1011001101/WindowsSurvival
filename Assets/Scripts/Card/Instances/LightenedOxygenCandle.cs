@@ -8,7 +8,7 @@ public class LightenedOxygenCandle : Card
 
     }
 
-    public override void OnAdded(Bag bag)
+    public override void OnAdd(Bag bag)
     {
         // 在玩家背包时，玩家每回合氧气的变化率+10
         if (bag is PlayerBag || bag is EquipmentBag)
@@ -18,10 +18,10 @@ public class LightenedOxygenCandle : Card
             env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, +10);
 
         if (bag is InnerBag innerBag)
-            OnAdded(innerBag.BelongedCard.Bag);
+            OnAdd(innerBag.BelongedCard.Bag);
     }
 
-    public override void OnRemoved(Bag bag)
+    public override void OnRemove(Bag bag)
     {
         if (bag is PlayerBag || bag is EquipmentBag)
             StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Oxygen, -10);
@@ -30,7 +30,7 @@ public class LightenedOxygenCandle : Card
             env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -10);
 
         if (bag is InnerBag innerBag)
-            OnRemoved(innerBag.BelongedCard.Bag);
+            OnRemove(innerBag.BelongedCard.Bag);
     }
 
     protected override void OnUpdate()

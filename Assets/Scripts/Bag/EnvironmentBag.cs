@@ -11,7 +11,6 @@ public class EnvironmentBag : Bag
     [JsonProperty] private DisposableDropList disposableDropList = new();
     [JsonProperty] private DeepExploreDropList repeatableDropList = new();
     [JsonProperty] private Dictionary<EnvironmentStateEnum, State> stateDict = new();
-
     private PlaceData placeData;
 
     [JsonIgnore] public bool HasCable => hasCable;
@@ -20,7 +19,6 @@ public class EnvironmentBag : Bag
     [JsonIgnore] public DisposableDropList DisposableDropList => disposableDropList;
     [JsonIgnore] public DeepExploreDropList RepeatableDropList => repeatableDropList;
     [JsonIgnore] public Dictionary<EnvironmentStateEnum, State> StateDict => stateDict;
-
     [JsonIgnore]
     public PlaceData PlaceData
     {
@@ -30,19 +28,16 @@ public class EnvironmentBag : Bag
             return placeData;
         }
     }
-
-    [JsonIgnore]
-    public float DiscoveryDegree => 1 - DisposableDropList.RemainingDropsRate;
-
-    [JsonIgnore]
-    public bool ExploreCompleted => DisposableDropList.IsEmpty && RepeatableDropList.IsEmpty;
+    [JsonIgnore] public float DiscoveryDegree => 1 - DisposableDropList.RemainingDropsRate;
+    [JsonIgnore] public bool ExploreCompleted => DisposableDropList.IsEmpty && RepeatableDropList.IsEmpty;
+    [JsonIgnore] public List<IEntity> Entities { get; private set; } = new();
 
     protected override void FirstInit()
     {
         AddSlot(9);
 
-        InitState();
-        InitDropList();
+        FirstInitState();
+        FirstInitDropList();
         if (PlaceData.isInSpacecraft)
         {
             hasCable = true;
@@ -54,12 +49,13 @@ public class EnvironmentBag : Bag
     public override void Init()
     {
         base.Init();
+        InitEntites();
         RepeatableDropList.StartUpdating();
         // 每回合结算地点状态
         UpdateManager.Instance.EnvironmentUpdate.AddListener(Update);
     }
 
-    private void InitState()
+    private void FirstInitState()
     {
         // 在室内显示氧气
         // 在室内显示一氧化碳
@@ -73,10 +69,32 @@ public class EnvironmentBag : Bag
         stateDict.Add(EnvironmentStateEnum.RoomTemperature, new State(200, 400, normParam: -200));
     }
 
-    private void InitDropList()
+    private void FirstInitDropList()
     {
         disposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(PlaceData.placeType));
         repeatableDropList = JsonManager.DeepCopy(CardFactory.GetDeepExploreDropList(PlaceData.placeType));
+    }
+
+    /// <summary>
+    /// 将地点内的所有实体加入实体列表
+    /// </summary>
+    private void InitEntites()
+    {
+        foreach (var slot in Slots)
+        {
+            foreach (var card in slot.Cards)
+            {
+                if (card is IEntity entity)
+                {
+                    AddEntity(entity);
+                }
+            }
+        }
+
+        if (GameManager.Instance.IsCurrentEnvironment(this))
+        {
+            AddEntity(GameManager.Instance.Player);
+        }
     }
 
     private Dictionary<EnvironmentStateEnum, float> temp = new(); // 记录地点状态的当前变化率，防止地点状态的结算顺序影响结算结果
@@ -88,7 +106,6 @@ public class EnvironmentBag : Bag
         {
             if (state.ChangeRate != 0)
             {
-                //ChangePlayerState(type, state.ChangeRate);
                 temp.Add(type, state.ChangeRate);
             }
         }
@@ -220,13 +237,19 @@ public class EnvironmentBag : Bag
         return hasChanged;
     }
 
-    public override void OnAddCard(Card card)
+    public void AddEntity(IEntity entity)
     {
+        if (Entities.Contains(entity)) return;
 
+        // 设置当前所在地点
+        entity.Coordinate.SetLocation(this);
+        // 将实体加入实体列表
+        Entities.Add(entity);
     }
 
-    public override void OnRemoveCard(Card card)
+    public void RemoveEntity(IEntity entity)
     {
-
+        entity.Coordinate.SetLocation(null);
+        Entities.Remove(entity);
     }
 }

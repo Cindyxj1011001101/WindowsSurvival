@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Assets.Scripts.Entity
+﻿public class Player : IEntity
 {
-    internal class Player
+    public float moveDistPerMin = 1;
+
+    public Coordinate Coordinate { get; private set; } = new();
+
+    public void TakeDamage(float damage, IEntity damageDealer)
     {
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -damage);
     }
 }

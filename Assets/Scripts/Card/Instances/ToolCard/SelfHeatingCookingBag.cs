@@ -28,6 +28,6 @@ public class SelfHeatingCookingBag : Card
         TimeManager.Instance.AddTime(15);
 
         card.TryGetComponent<CookComponent>(out var cook);
-        cook.CookingComplete();
+        cook.HandleCookComplete();
     }
 }

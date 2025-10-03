@@ -60,8 +60,8 @@ public class SlotCards : IComparable<SlotCards>
         if (oBag != Bag)
         {
             // oBag为空说明卡牌是第一次创建
-            if (oBag != null) card.OnRemoved(oBag); // 不必担心卡牌被销毁时执行不到这里的onremoved方法，它会转而在RemoveCard中执行
-            card.OnAdded(Bag);
+            if (oBag != null) card.OnRemove(oBag); // 不必担心卡牌被销毁时执行不到这里的OnRemove方法，它会转而在RemoveCard中执行
+            card.OnAdd(Bag);
         }
     }
 
@@ -77,8 +77,8 @@ public class SlotCards : IComparable<SlotCards>
 
         Bag.OnRemoveCard(card);
 
-        // 如果卡牌要被销毁，说明它不会进入AddCard方法，需要在这里执行onremoved
-        if (card.Destroyed) card.OnRemoved(Bag);
+        // 如果卡牌要被销毁，说明它不会进入AddCard方法，需要在这里执行OnRemove
+        if (card.Destroyed) card.OnRemove(Bag);
 
         card.RefreshSlot();
     }

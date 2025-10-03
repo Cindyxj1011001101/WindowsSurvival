@@ -63,6 +63,8 @@ public class GameDataManager
         // 全局数据
         saveData = JsonManager.LoadData<GlobalData>(CurLoadName, "SaveData");
         globalData = JsonManager.LoadData<GlobalData>(CurLoadName, "GlobalData");
+        // 玩家数据
+        playerData = JsonManager.LoadData<Player>(CurLoadName, "PlayerData");
     }
 
     public void SaveAllData()
@@ -94,6 +96,8 @@ public class GameDataManager
         // 全局数据
         SaveSaveData();
         SaveGlobalData();
+        // 玩家数据
+        SavePlayerData();
 
         if (loadData == null)
         {
@@ -490,6 +494,17 @@ public class GameDataManager
     {
         // TODO: 这个全局数据应该是存档无关的
         JsonManager.SaveData(globalData, CurLoadName, "GlobalData");
+    }
+    #endregion
+
+    #region 玩家数据
+    private Player playerData;
+
+    public Player PlayerData => playerData;
+
+    public void SavePlayerData()
+    {
+        JsonManager.SaveData(playerData, CurLoadName, "PlayerData");
     }
     #endregion
 }

@@ -34,7 +34,7 @@ public class CraftWindow : WindowBase
 
         // 注册背包变化事件
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshDisplay);
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.Move, RefreshDisplay);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, RefreshDisplay);
         EventManager.Instance.AddListener(EventType.UnlockRecipe, RefreshDisplay);
         EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
 
@@ -53,7 +53,7 @@ public class CraftWindow : WindowBase
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshDisplay);
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.Move, RefreshDisplay);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, RefreshDisplay);
         EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshDisplay);
         EventManager.Instance.RemoveListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
     }

@@ -3,30 +3,30 @@ using UnityEngine;
 
 public class Coordinate
 {
-    [JsonIgnore] public PlaceData Location { get; private set; }
+    [JsonIgnore] public EnvironmentBag Location { get; private set; } // 地点
 
-    [JsonProperty] public float Current { get; private set; }
+    [JsonProperty] public float Position { get; private set; } // 位置
 
-    public void SetLocation(PlaceData location)
+    public void SetLocation(EnvironmentBag location)
     {
         Location = location;
     }
 
-    public void SetCurrentCoordinate(float current)
+    public void SetPosition(float position)
     {
-        Current = current;
+        Position = position;
     }
 
     public void Move(float distance)
     {
-        Current += distance;
-        Current = Mathf.Clamp(Current, Location.minCoord, Location.maxCoord);
+        Position += distance;
+        Position = Mathf.Clamp(Position, Location.PlaceData.minCoord, Location.PlaceData.maxCoord);
     }
 
     public float DistanceTo(Coordinate other)
     {
         if (Location != other.Location) return float.MaxValue;
 
-        return Mathf.Abs(Current - other.Current);
+        return Mathf.Abs(Position - other.Position);
     }
 }
