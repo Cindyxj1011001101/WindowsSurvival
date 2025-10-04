@@ -991,7 +991,7 @@ public class EntityComponent : CardComponent, IUpdate
 #region 坐标组件
 public class CoordinateComponent : CardComponent
 {
-    public Coordinate coordinate;
+    public Coordinate coordinate = new();
 
     public CoordinateComponent() { }
 
@@ -1021,6 +1021,16 @@ public class WeaponComponent : CardComponent
     public float minAtkDist; // 最小攻击距离
     public float maxAtkDist; // 最大攻击距离
     public AttackForm attackForm; // 攻击方式
+
+    public WeaponComponent() { }
+
+    public WeaponComponent(float atk, float minAtkDist, float maxAtkDist, AttackForm attackForm)
+    {
+        this.atk = atk;
+        this.minAtkDist = minAtkDist;
+        this.maxAtkDist = maxAtkDist;
+        this.attackForm = attackForm;
+    }
 
     public void DealDamage(IEntity target)
     {

@@ -25,6 +25,7 @@ public static class ExcelReader
             row = table.Rows[i];
             if (string.IsNullOrEmpty(row[0].ToString())) continue; // 如果卡牌ID为空，跳过读取
             count++;
+            // 必要字段
             CardConfig cardConfig = new()
             {
                 CardId = row[0].ToString(),
@@ -32,7 +33,7 @@ public static class ExcelReader
                 CardExtraInfo = row[2].ToString(),
                 CardDesc = row[3].ToString(),
                 CardImagePath = row[4].ToString(),
-                CardType = ParseCardType(row[5].ToString()),
+                CardType = Enum.Parse<CardType>(row[5].ToString()),
                 MaxStackNum = int.Parse(row[6].ToString()),
                 Moveable = bool.Parse(row[7].ToString()),
                 Weight = float.Parse(row[8].ToString()),
@@ -51,7 +52,11 @@ public static class ExcelReader
                 CanCook = bool.Parse(row[40].ToString()),
                 IsConstruction = bool.Parse(row[43].ToString()),
                 IsPlant = bool.Parse(row[51].ToString()),
+                //HasCoordinate = bool.Parse(row[56].ToString()),
+                //IsWeapon = bool.Parse(row[58].ToString()),
+                //IsEntity = bool.Parse(row[63].ToString()),
             };
+            // 可选字段
             if (cardConfig.HasFreshness)
             {
                 cardConfig.MaxFreshness = int.Parse(row[11].ToString());
@@ -70,7 +75,7 @@ public static class ExcelReader
             }
             if (cardConfig.IsEquipment)
             {
-                cardConfig.EquipmentType = ParseEquipmentType(row[19].ToString());
+                cardConfig.EquipmentType = Enum.Parse<EquipmentType>(row[19].ToString());
             }
             if (cardConfig.IsTool)
             {
@@ -86,20 +91,22 @@ public static class ExcelReader
             }
             if (cardConfig.HasFoodProperty)
             {
-                cardConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>();
-                cardConfig.FoodPropertyDict.Add(FoodProperty.EatableDegree, ParseFoodPropertyDictValue(row[28].ToString()));//可食用度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.UneatableDegree, ParseFoodPropertyDictValue(row[29].ToString()));//不可食用度   
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Meatiness, ParseFoodPropertyDictValue(row[30].ToString()));//肉度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Fishiness, ParseFoodPropertyDictValue(row[31].ToString()));//鱼度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Shellfishiness, ParseFoodPropertyDictValue(row[32].ToString()));//贝度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Wateriness, ParseFoodPropertyDictValue(row[33].ToString()));//水度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Vegetableness, ParseFoodPropertyDictValue(row[34].ToString()));//菜度
-                cardConfig.FoodPropertyDict.Add(FoodProperty.Fruitiness, ParseFoodPropertyDictValue(row[35].ToString()));//果度
+                cardConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>
+                {
+                    { FoodProperty.EatableDegree, ParseFoodPropertyDictValue(row[28].ToString()) },   // 可食用度
+                    { FoodProperty.UneatableDegree, ParseFoodPropertyDictValue(row[29].ToString()) }, // 不可食用度   
+                    { FoodProperty.Meatiness, ParseFoodPropertyDictValue(row[30].ToString()) },       // 肉度
+                    { FoodProperty.Fishiness, ParseFoodPropertyDictValue(row[31].ToString()) },       // 鱼度
+                    { FoodProperty.Shellfishiness, ParseFoodPropertyDictValue(row[32].ToString()) },  // 贝度
+                    { FoodProperty.Wateriness, ParseFoodPropertyDictValue(row[33].ToString()) },      // 水度
+                    { FoodProperty.Vegetableness, ParseFoodPropertyDictValue(row[34].ToString()) },   // 菜度
+                    { FoodProperty.Fruitiness, ParseFoodPropertyDictValue(row[35].ToString()) }       // 果度
+                };
             }
             if (cardConfig.IsPassage)
             {
                 cardConfig.MoveTime = int.Parse(row[37].ToString());
-                cardConfig.TargetPlace = ParsePlaceEnum(row[38].ToString());
+                cardConfig.TargetPlace = Enum.Parse<PlaceEnum>(row[38].ToString());
                 cardConfig.InteractAudio = row[39].ToString();
             }
             if (cardConfig.CanCook)
@@ -119,8 +126,8 @@ public static class ExcelReader
             }
             if (cardConfig.IsPlant)
             {
-                cardConfig.GrowthRate= float.Parse(row[52].ToString());
-                string[] tempretures= row[53].ToString().Split('_');
+                cardConfig.GrowthRate = float.Parse(row[52].ToString());
+                string[] tempretures = row[53].ToString().Split('_');
                 cardConfig.MinConfortTempreture = float.Parse(tempretures[0]);
                 cardConfig.MaxConfortTempreture = float.Parse(tempretures[1]);
                 cardConfig.MinGrowTempture = float.Parse(tempretures[2]);
@@ -129,6 +136,25 @@ public static class ExcelReader
                 cardConfig.MaxLiveTempture = float.Parse(tempretures[5]);
                 cardConfig.DeadcardName = row[54].ToString();
                 cardConfig.Pressures = ParsePressureLevels(row[55].ToString());
+            }
+            if (cardConfig.HasCoordinate)
+            {
+                cardConfig.Position = float.Parse(row[57].ToString());
+            }
+            if (cardConfig.IsWeapon)
+            {
+                cardConfig.WeaponAtk = float.Parse(row[59].ToString());
+                cardConfig.MinAtkDist = float.Parse(row[60].ToString());
+                cardConfig.MaxAtkDist = float.Parse(row[61].ToString());
+                cardConfig.AtkForm = Enum.Parse<AttackForm>(row[62].ToString());
+            }
+            if (cardConfig.IsEntity)
+            {
+                cardConfig.MaxHealth = float.Parse(row[64].ToString());
+                cardConfig.EntityAtk = float.Parse(row[65].ToString());
+                cardConfig.MoveDistPerMin = float.Parse(row[66].ToString());
+                cardConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[67].ToString());
+                cardConfig.AIRefreshInterval = int.Parse(row[67].ToString());
             }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
@@ -140,11 +166,6 @@ public static class ExcelReader
         return cardConfigs;
     }
 
-    private static CardType ParseCardType(string typeStr)
-    {
-        return (CardType)System.Enum.Parse(typeof(CardType), typeStr);
-    }
-
     private static List<CardTag> ParseTags(string tagsStr)
     {
         var tags = new List<CardTag>();
@@ -153,15 +174,10 @@ public static class ExcelReader
         var tagArray = tagsStr.Split(',');
         foreach (var tag in tagArray)
         {
-            tags.Add((CardTag)System.Enum.Parse(typeof(CardTag), tag.Trim()));
+            tags.Add(Enum.Parse<CardTag>(tag.Trim()));
         }
 
         return tags;
-    }
-
-    private static EquipmentType ParseEquipmentType(string typeStr)
-    {
-        return (EquipmentType)System.Enum.Parse(typeof(EquipmentType), typeStr);
     }
 
     private static List<ToolType> ParseToolTypes(string toolTypesStr)
@@ -171,7 +187,7 @@ public static class ExcelReader
         var toolTypeArray = toolTypesStr.Split(',');
         foreach (var toolType in toolTypeArray)
         {
-            toolTypes.Add((ToolType)System.Enum.Parse(typeof(ToolType), toolType.Trim()));
+            toolTypes.Add(Enum.Parse<ToolType>(toolType.Trim()));
         }
         return toolTypes;
     }
@@ -186,11 +202,6 @@ public static class ExcelReader
         {
             return 0;
         }
-    }
-
-    private static PlaceEnum ParsePlaceEnum(string placeEnumStr)
-    {
-        return (PlaceEnum)System.Enum.Parse(typeof(PlaceEnum), placeEnumStr);
     }
 
     private static List<PressureLevel> ParsePressureLevels(string pressureLevelsStr)
@@ -502,16 +513,29 @@ public class CardConfig
     public bool NeedCable; // 是否需要电缆
     public bool CanBeDemolished; // 能否被拆毁
     public string DemolitionDebris; // 拆毁后产物ID
-    public bool IsPlant;//是否是植物
-    public float GrowthRate;//生长速度
-    public float MinConfortTempreture;//舒适温度下限
-    public float MaxConfortTempreture;//舒适温度上限
-    public float MinGrowTempture;//生长温度下限
-    public float MaxGrowTempture;//生长温度上限
-    public float MinLiveTempture;//存活温度下限
-    public float MaxLiveTempture;//存活温度上限
-    public string DeadcardName;//死亡后掉落的卡帕名称
-    public List<PressureLevel> Pressures;//存活压强（_隔开）
+    public bool IsPlant; // 是否是植物
+    public float GrowthRate; // 生长速度
+    public float MinConfortTempreture; // 舒适温度下限
+    public float MaxConfortTempreture; // 舒适温度上限
+    public float MinGrowTempture; // 生长温度下限
+    public float MaxGrowTempture; // 生长温度上限
+    public float MinLiveTempture; // 存活温度下限
+    public float MaxLiveTempture; // 存活温度上限
+    public string DeadcardName; // 死亡后掉落的卡帕名称
+    public List<PressureLevel> Pressures; // 存活压强(_隔开)
+    public bool HasCoordinate; // 是否有坐标
+    public float Position; // 坐标位置
+    public bool IsWeapon; // 是否是武器
+    public float WeaponAtk; // 武器攻击力
+    public float MinAtkDist; // 最小攻击距离
+    public float MaxAtkDist; // 最大攻击距离
+    public AttackForm AtkForm; // 攻击方式
+    public bool IsEntity; // 是否是实体
+    public float MaxHealth; // 最大生命值
+    public float EntityAtk; // 实体攻击力
+    public float MoveDistPerMin; // 每分钟移动距离
+    public BehavioralTendency BehavioralTendency; // 行为倾向
+    public int AIRefreshInterval; // AI刷新间隔
 }
 
 public class DropConfig

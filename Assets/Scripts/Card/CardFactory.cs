@@ -309,7 +309,6 @@ public static class CardFactory
         {
             card.AddComponent(new ConstructionComponent(config.OnlyInWater, config.OnlyOutWater, config.OnlyInDoor, config.OnlyOutDoor, config.NeedCable, config.CanBeDemolished, config.DemolitionDebris));
         }
-
         if (config.HasFoodProperty)
         {
             card.AddComponent(new FoodPropertyComponent(config.FoodPropertyDict));
@@ -317,6 +316,18 @@ public static class CardFactory
         if (config.IsPlant)
         {
             card.AddComponent(new PlantGrowthComponent(config.GrowthRate, config.MinConfortTempreture, config.MaxConfortTempreture, config.MinGrowTempture, config.MaxGrowTempture, config.MinLiveTempture, config.MaxLiveTempture, config.DeadcardName, config.Pressures));
+        }
+        if (config.HasCoordinate)
+        {
+            card.AddComponent(new CoordinateComponent(config.Position));
+        }
+        if (config.IsWeapon)
+        {
+            card.AddComponent(new WeaponComponent(config.WeaponAtk, config.MinAtkDist, config.MaxAtkDist, config.AtkForm));
+        }
+        if (config.IsEntity)
+        {
+            card.AddComponent(new EntityComponent(config.MaxHealth, config.EntityAtk, config.MoveDistPerMin, config.AIRefreshInterval, config.BehavioralTendency));
         }
 
         return card;
