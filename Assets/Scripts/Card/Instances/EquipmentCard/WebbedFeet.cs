@@ -3,15 +3,15 @@ public class WebbedFeet : EquipmentCard
 {
     protected override void Start()
     {
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnMove);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
     }
 
     protected override void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnMove);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
     }
 
-    public void OnMove(EnvironmentBag bag)
+    public void OnChangeEnv(EnvironmentBag bag)
     {
         if (!equipment.isEquipped) return;
 

@@ -75,7 +75,7 @@ public class StateManager : MonoBehaviour
             PlayerStateDict = stateData.playerState;
         }
         // 当环境改变时尝试获取氧气
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnMove);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
         // 玩家生命值不高于0时死亡
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
     }
@@ -99,11 +99,11 @@ public class StateManager : MonoBehaviour
     {
         UpdateManager.Instance.PlayerUpdate.RemoveListener(PlayerUpdate);
         UpdateManager.Instance.EnvironmentUpdate.RemoveListener(EnvironmentUpdate);
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnMove);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
     }
 
-    private void OnMove(EnvironmentBag env)
+    private void OnChangeEnv(EnvironmentBag env)
     {
         TryGainOxygenFromEnvironment(env);
 

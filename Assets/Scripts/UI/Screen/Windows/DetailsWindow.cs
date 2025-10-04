@@ -35,7 +35,7 @@ public class DetailsWindow : BagWindow
     {
         base.Awake();
         EventManager.Instance.AddListener<Card>(EventType.ChangeCardProperty, RefreshCard);
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnMove);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
@@ -43,7 +43,7 @@ public class DetailsWindow : BagWindow
     {
         Clear();
         EventManager.Instance.RemoveListener<Card>(EventType.ChangeCardProperty, RefreshCard);
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnMove);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
@@ -105,11 +105,11 @@ public class DetailsWindow : BagWindow
         }
     }
 
-    bool moved = false;
-    private void OnMove(EnvironmentBag curEnvironmentBag)
+    bool envChanged = false;
+    private void OnChangeEnv(EnvironmentBag curEnvironmentBag)
     {
         // 切地点时清除显示
-        moved = true;
+        envChanged = true;
     }
 
     public void Display(SlotCards slotCards, DisplayType displayType = DisplayType.All)
@@ -295,7 +295,7 @@ public class DetailsWindow : BagWindow
                     }
 
                     // 改变场景了就清空详情
-                    if (moved) Clear();
+                    if (envChanged) Clear();
                     // 否则刷新卡牌和详情
                     else RefreshCard(card);
                     //else card?.RefreshSlot();
@@ -327,7 +327,7 @@ public class DetailsWindow : BagWindow
 
         ClearBag();
 
-        moved = false;
+        envChanged = false;
         slot.Clear();
 
         // 关闭时如果卡牌有循环音将循环音减小
