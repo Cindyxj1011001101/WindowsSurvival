@@ -153,4 +153,12 @@ public static class MonoUtility
         // 立刻更新布局
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
     }
+
+    public static (float left, float top, float right, float bottom) GetFourBorders(RectTransform rectTransform)
+    {
+        Vector3[] corners = new Vector3[4];
+        rectTransform.GetWorldCorners(corners);
+
+        return (corners[1].x, corners[1].y, corners[3].x, corners[3].y);
+    }
 }

@@ -98,28 +98,29 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         var pivot = tipRect.pivot = new Vector2(0, 1);
 
         // 获取屏幕坐标
-        var canvas = WindowsManager.Instance.GetComponentInParent<Canvas>();
         var rect = transform as RectTransform;
         var worldPos = rect.position + new Vector3(rect.sizeDelta.x / 2 + offset.x, rect.sizeDelta.y / 2 + offset.y);
-        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(canvas.worldCamera, worldPos);
 
-        if (screenPos.x + tipSize.x > Screen.width)
+        // 获取桌面大小
+        (float left, float top, float right, float bottom) = MonoUtility.GetFourBorders(WindowsManager.Instance.Desktop);
+
+        if (worldPos.x + tipSize.x > right)
         {
             pivot.x = 1;
             tipRect.pivot = pivot;
             worldPos.x = rect.position.x - rect.sizeDelta.x /2 - offset.x;
         }
-        if (screenPos.y - tipSize.y < 0)
+        if (worldPos.y - tipSize.y < bottom)
         {
             pivot.y = 0;
             tipRect.pivot = pivot;
             worldPos.y = rect.position.y - rect.sizeDelta.y / 2 - offset.y;
         }
-        if (screenPos.y > Screen.height)
+        if (worldPos.y > top)
         {
             Debug.Log("超过上边界");
         }
-        if (screenPos.x < 0)
+        if (worldPos.x < left)
         {
             Debug.Log("超过左边界");
         }

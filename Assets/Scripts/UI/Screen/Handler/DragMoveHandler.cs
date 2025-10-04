@@ -61,7 +61,7 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     private void ClampWindowPosition(ref Vector3 newPosition)
     {
-        var (screenLeft, screenTop, screenRight, screenBottom) = GetFourBorders(WindowsManager.Instance.Desktop);
+        var (screenLeft, screenTop, screenRight, screenBottom) = MonoUtility.GetFourBorders(WindowsManager.Instance.Desktop);
 
         float halfHeight = thisWindowRect.rect.height / 2;
 
@@ -107,7 +107,7 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         SnapDirection snapDirectionHorizontal = SnapDirection.None;
         SnapDirection snapDirectionVertical = SnapDirection.None;
 
-        var (thisLeft, thisTop, thisRight, thisBottom) = GetFourBorders(thisWindowRect);
+        var (thisLeft, thisTop, thisRight, thisBottom) = MonoUtility.GetFourBorders(thisWindowRect);
 
         // 遍历所有窗口（排除自己）
         foreach (var window in WindowsManager.Instance.GetOpenedWindows(true).Values)
@@ -161,7 +161,7 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                                    ref SnapDirection snapDirectionVertical)
     {
         // 计算四个方向的距离
-        var (otherLeft, otherTop, otherRight, otherBottom) = GetFourBorders(otherWindowRect);
+        var (otherLeft, otherTop, otherRight, otherBottom) = MonoUtility.GetFourBorders(otherWindowRect);
         var leftDistance = Mathf.Abs(otherRight - thisLeft);
         var rightDistance = Mathf.Abs(otherLeft - thisRight);
         var topDistance = Mathf.Abs(otherBottom - thisTop);
@@ -212,7 +212,7 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                                    ref SnapDirection snapDirectionHorizontal,
                                    ref SnapDirection snapDirectionVertical)
     {
-        var (screenLeft, screenTop, screenRight, screenBottom) = GetFourBorders(WindowsManager.Instance.Desktop);
+        var (screenLeft, screenTop, screenRight, screenBottom) = MonoUtility.GetFourBorders(WindowsManager.Instance.Desktop);
 
         var leftDistance = Mathf.Abs(screenLeft - thisLeft);
         var rightDistance = Mathf.Abs(screenRight - thisRight);
@@ -282,14 +282,6 @@ public class DragMoveHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         thisWindowRect.position = targetPosition;
-    }
-
-    private (float, float, float, float) GetFourBorders(RectTransform rectTransform)
-    {
-        Vector3[] corners = new Vector3[4];
-        rectTransform.GetWorldCorners(corners);
-
-        return (corners[1].x, corners[1].y, corners[3].x, corners[3].y);
     }
 
     private enum SnapDirection
