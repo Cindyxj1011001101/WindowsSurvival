@@ -25,6 +25,7 @@
     StopSleeping, // 停止睡觉
     LockUnlockIntermediateTechnologies,
     CardNumChange,
+    PlayerMove, // 玩家移动
 }
 
 public class ChangeStateArgs

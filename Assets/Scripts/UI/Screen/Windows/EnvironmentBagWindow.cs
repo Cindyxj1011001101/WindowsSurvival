@@ -71,9 +71,7 @@ public class EnvironmentBagWindow : BagWindow
         {
             if (GameManager.Instance.CanMoveExplore())
             {
-                var dist = Mathf.Abs(Player.Coordinate.Position - TargetPosition);
-                var basicMoveTime = Mathf.CeilToInt(dist / Player.moveDistPerMin);
-                var (desc, time, playerEffects) = GameManager.Instance.GetMoveEffects(basicMoveTime, CurEnv.PlaceData.placeType);
+                var (desc, time, playerEffects) = GameManager.Instance.GetMoveEffects(TargetPosition);
                 desc = $"前往坐标 {TargetPosition:0.0} 处" + desc;
                 moveTipController.SetTip(desc, time, playerEffects, null);
             }
@@ -121,6 +119,8 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         // 注册负重变化事件
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
+        // 玩家移动
+        EventManager.Instance.AddListener(EventType.PlayerMove, DisplayPlayerPosition);
     }
 
     private void OnDestroy()
@@ -130,6 +130,7 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
+        EventManager.Instance.RemoveListener(EventType.PlayerMove, DisplayPlayerPosition);
     }
 
     /// <summary>
@@ -320,8 +321,6 @@ public class EnvironmentBagWindow : BagWindow
     {
         if (Mathf.Abs(TargetPosition - Player.Coordinate.Position) < MoveDistResolution) return;
 
-        // TODO：移动方法
         GameManager.Instance.Move(TargetPosition);
-        DisplayPlayerPosition();
     }
 }

@@ -3,13 +3,14 @@
     private PassageComponent passage;
     private CoordinateComponent coordinate;
 
-    private const float MaxAvailableDist = 3.0f; // 小于等于该距离时可以使用
+    private const float MaxAvailableDist = 3.0f; // 小于等于该距离时可以使用通道
 
     protected PassageCard()
     {
         Events = new()
         {
-            new Event("前往", "", Event_Enter, Judge_Enter),
+            new Event("通过", "", Event_Enter, Judge_Enter),
+            new Event("移至附近", "", Event_MoveNear, Judge_MoveNear)
         };
     }
 
@@ -23,16 +24,23 @@
             GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
         Events[0].getTimeEffect = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).time;
         Events[0].getPlayerEffects = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerEffects;
+
+        var pos = GetNearestAvailablePosition();
+        Events[1].description = "移动到通道的附近" + GameManager.Instance.GetMoveEffects(pos).desc;
+        Events[1].getTimeEffect = () => GameManager.Instance.GetMoveEffects(pos).time;
+        Events[1].getPlayerEffects = () => GameManager.Instance.GetMoveEffects(pos).playerEffects;
     }
 
     protected override void Start()
     {
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
+        EventManager.Instance.AddListener(EventType.PlayerMove, OnPlayerMove);
     }
 
     protected override void OnDestroy()
     {
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
+        EventManager.Instance.RemoveListener(EventType.PlayerMove, OnPlayerMove);
     }
 
     /// <summary>
@@ -49,7 +57,13 @@
         }
     }
 
-    public virtual void Event_Enter(out string tip)
+    private void OnPlayerMove()
+    {
+        Events[1].description = "移动到通道的附近" + GameManager.Instance.GetMoveEffects(GetNearestAvailablePosition()).desc;
+        RefreshSlot();
+    }
+
+    protected virtual void Event_Enter(out string tip)
     {
         tip = string.Empty;
         if (!string.IsNullOrEmpty(passage.audioClip))
@@ -57,20 +71,58 @@
         GameManager.Instance.Move(passage.targetPlace, passage.time);
     }
 
-    public virtual bool Judge_Enter(out string hint)
+    protected virtual bool Judge_Enter(out string hint)
     {
         hint = string.Empty;
-        //if (GameManager.Instance.Player.Coordinate.DistanceTo(coordinate.coordinate) > MaxAvailableDist)
-        //{
-        //    hint = "距离通道太远，无法前往";
-        //    return false;
-        //}
+        if (!IsPlayerNear())
+        {
+            hint = "距离太远，无法通过";
+            return false;
+        }
 
         if (!GameManager.Instance.CanMoveExplore())
         {
-            hint = "身上太重了，无法前往";
+            hint = "身上太重了，无法通过";
             return false;
         }
         return true;
+    }
+
+    protected virtual void Event_MoveNear(out string tip)
+    {
+        tip = string.Empty;
+        // 移动到最近的可用使用通道的坐标
+        GameManager.Instance.Move(GetNearestAvailablePosition());
+    }
+
+    protected virtual bool Judge_MoveNear(out string hint)
+    {
+        hint = string.Empty;
+
+        if (IsPlayerNear())
+        {
+            hint = "已经在附近了，无需移动";
+            return false;
+        }
+
+        if (!GameManager.Instance.CanMoveExplore())
+        {
+            hint = "身上太重了，无法移动";
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool IsPlayerNear()
+    {
+        return GameManager.Instance.Player.Coordinate.DistanceTo(coordinate.coordinate) <= MaxAvailableDist;
+    }
+
+    private float GetNearestAvailablePosition()
+    {
+        var playerPos = GameManager.Instance.Player.Coordinate.Position;
+        var passagePos = coordinate.coordinate.Position;
+        return playerPos > passagePos ? passagePos + MaxAvailableDist : passagePos - MaxAvailableDist;
     }
 }
