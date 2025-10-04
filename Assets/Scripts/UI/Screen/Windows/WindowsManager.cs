@@ -48,6 +48,7 @@ public class WindowsManager : MonoBehaviour
         pointerData = new(EventSystem.current);
     }
 
+    #region Start
     private void Start()
     {
         saveButton.onClick.AddListener(() =>
@@ -56,44 +57,59 @@ public class WindowsManager : MonoBehaviour
             MySceneManager.LoadScene(0);
         });
 
-        restButton.onClick.AddListener(() =>
+        restButton.onClick.AddListener(HandleRestOnTheGround);
+
+        // 初始化预设按钮
+        InitPresetButtons();
+
+        // 恢复窗口
+        LoadWindowsData();
+
+        // 应用预设
+        currentPresetIndex = GameDataManager.Instance.WindowsData.currentPresetIndex;
+        ApplyPreset(currentPresetIndex);
+    }
+
+    private void HandleRestOnTheGround()
+    {
+        var window = (OpenWindow("TimeSelect", true) as TimeSelectWindow);
+        window.canConfirm = (out string hint) =>
         {
-            var window = (OpenWindow("TimeSelect", true) as TimeSelectWindow);
-            window.canConfirm = (out string hint) =>
+            hint = string.Empty;
+            var placeData = GameManager.Instance.CurEnvironmentBag.PlaceData;
+            if (placeData.isInWater)
             {
-                hint = string.Empty;
-                var placeData = GameManager.Instance.CurEnvironmentBag.PlaceData;
-                if (placeData.isInWater)
-                {
-                    hint = "无法在水域地点休息";
-                    return false;
-                }
-                if (placeData.isInSpacecraft && StateManager.Instance.WaterLevel.CurValue >= 20)
-                {
-                    hint = "水位过高，无法在飞船内休息";
-                    return false;
-                }
-                return true;
-            };
-            window.onConfirm = (time) =>
+                hint = "无法在水域地点休息";
+                return false;
+            }
+            if (placeData.isInSpacecraft && StateManager.Instance.WaterLevel.CurValue >= 20)
             {
-                StateManager.Instance.Sleep(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRateWhileSleeping } });
-            };
-            window.getConfirmEffects = (t) =>
+                hint = "水位过高，无法在飞船内休息";
+                return false;
+            }
+            return true;
+        };
+        window.onConfirm = (time) =>
+        {
+            StateManager.Instance.Sleep(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRateWhileSleeping } });
+        };
+        window.getConfirmEffects = (t) =>
+        {
+            Dictionary<PlayerStateEnum, float> p = null;
+            float sobrietyChange = t / TimeManager.Instance.SettleInterval * sobrietyChangeRateWhileSleeping;
+            if (sobrietyChange > 0)
             {
-                Dictionary<PlayerStateEnum, float> p = null;
-                float sobrietyChange = t / TimeManager.Instance.SettleInterval * sobrietyChangeRateWhileSleeping;
-                if (sobrietyChange > 0)
-                {
-                    p = new()
+                p = new()
                     {
                         { PlayerStateEnum.Sobriety, sobrietyChange }
                     };
-                }
-                return ($"休息{t}分钟", t, p, null);
-            };
-        });
+            }
+            return ($"在地上休息{t}分钟", t, p, null);
+        };
+    }
 
+    private void InitPresetButtons()
+    {
         for (int i = 0; i < presetButtons.Count; i++)
         {
             var button = presetButtons[i];
@@ -111,8 +127,10 @@ public class WindowsManager : MonoBehaviour
                 };
             });
         }
+    }
 
-        // 恢复窗口
+    private void LoadWindowsData()
+    {
         foreach (var (name, data) in GameDataManager.Instance.WindowsData.openedWindows)
         {
             // 如果窗口不在closedGroup里，则创建实例
@@ -138,10 +156,6 @@ public class WindowsManager : MonoBehaviour
         }
 
         FocusWindow(GameDataManager.Instance.WindowsData.focusedWindow);
-
-        // 应用预设
-        currentPresetIndex = GameDataManager.Instance.WindowsData.currentPresetIndex;
-        ApplyPreset(currentPresetIndex);
     }
 
     /// <summary>
@@ -182,6 +196,7 @@ public class WindowsManager : MonoBehaviour
 
         FocusWindow(focus);
     }
+    #endregion
 
     public WindowBase OpenWindow(string appName, bool isModal = false)
     {
