@@ -80,46 +80,6 @@ public class BehaviourExtraEffects
     }
 }
 
-public enum PlaceEnum
-{
-    /// <summary>
-    /// 动力舱
-    /// </summary>
-    PowerCabin,
-    /// <summary>
-    /// 驾驶室
-    /// </summary>
-    Cockpit,
-    /// <summary>
-    /// 维生舱
-    /// </summary>
-    LifeSupportCabin,
-    /// <summary>
-    /// 珊瑚礁海域
-    /// </summary>
-    CoralCoast,
-    /// <summary>
-    /// 织光藻墓园
-    /// </summary>
-    PhosphorTomb,
-    /// <summary>
-    /// 飞船外壳
-    /// </summary>
-    SpaceshipOuterHull,
-    /// <summary>
-    /// 浅层岩穴
-    /// </summary>
-    ShallowGrotto,
-    /// <summary>
-    /// 遇难者大厅
-    /// </summary>
-    VictimsHall,
-    /// <summary>
-    /// 最后庇护所
-    /// </summary>
-    LastSanctuary
-}
-
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
@@ -262,7 +222,7 @@ public class GameManager : MonoBehaviour
 
     public Tween AddCardsWithTween(List<Card> cards, bool toPlayerBag, Vector2 startPos)
     {
-        return AddCardsWithTween(toPlayerBag, startPos,cards.ToArray());
+        return AddCardsWithTween(toPlayerBag, startPos, cards.ToArray());
     }
 
     public Tween AddCardsWithTween(string cardId, int count, bool toPlayerBag, Vector2 startPos, out List<Card> cards)
@@ -536,6 +496,14 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    #region 移动
+
+    private void SetPlayerPosition(float targetPosition)
+    {
+        Player.Coordinate.SetPosition(targetPosition);
+        EventManager.Instance.TriggerEvent(EventType.PlayerMove);
+    }
+
     /// <summary>
     /// 移动到目标场景
     /// </summary>
@@ -545,15 +513,47 @@ public class GameManager : MonoBehaviour
     {
         if (!CanMoveExplore()) return;
 
+        var lastEnv = CurEnvironmentBag;
+
+        // 改变地点
         ChangeEnv(targetPlace);
 
-        (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) = GetMoveEffects(basicMoveTime, targetPlace);
+        //从切换后的场景单次探索列表中拿出回到原先场景的牌，加入当前场景背包
+        Card passage = null;
+        var passageCardId = $"从{CurEnvironmentBag.PlaceName}到{lastEnv.PlaceName}";
+        var droppedCards = CurEnvironmentBag.DisposableDropList.CertainDrop(passageCardId);
+        if (!droppedCards.IsNullOrEmpty())
+        {
+            passage = droppedCards[0];
+            AddCard(passage, false);
+            passage.RefreshSlot();
+        }
+
+        // 将玩家实体添加到新地点
+        lastEnv.RemoveEntity(Player);
+        CurEnvironmentBag.AddEntity(Player);
+
+        // 玩家坐标设置在通道位置
+        passage ??= CurEnvironmentBag.FindCardOfId(passageCardId);
+        if (passage != null)
+        {
+            passage.TryGetComponent<CoordinateComponent>(out var coordinate);
+            SetPlayerPosition(coordinate.coordinate.Position);
+        }
 
         // 移动消耗
+        (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) = GetMoveEffects(basicMoveTime, targetPlace);
         StateManager.Instance.ApplyPlayerStateChange(playerEffects);
         TimeManager.Instance.AddTime(time);
+
+        // 触发事件
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("EnterEnvironment", targetPlace.ToString()));
     }
 
+    /// <summary>
+    /// 地点内移动
+    /// </summary>
+    /// <param name="targetPosition"></param>
     public void Move(float targetPosition)
     {
         if (!CanMoveExplore()) return;
@@ -571,38 +571,30 @@ public class GameManager : MonoBehaviour
             GetMoveEffects(basicMoveTime, CurEnvironmentBag.PlaceData.placeType);
 
         // 执行移动
-        Player.Coordinate.SetPosition(targetPosition);
+        SetPlayerPosition(targetPosition);
         StateManager.Instance.ApplyPlayerStateChange(playerEffects);
         TimeManager.Instance.AddTime(time);
-
-        EventManager.Instance.TriggerEvent(EventType.PlayerMove);
     }
 
     /// <summary>
-    /// 变化场景
+    /// 切换地点
     /// </summary>
-    /// <param name="targetPlace"></param>
+    /// <param name="targetPlace">目标地点</param>
     private void ChangeEnv(PlaceEnum targetPlace)
     {
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("EnterEnvironment", targetPlace.ToString()));
-        //拿到原先场景是哪个
-        PlaceEnum lastPlace = CurEnvironmentBag.PlaceData.placeType;
-
-        SoundManager.Instance.PlayPlaceMusic(EnvironmentBags[targetPlace]);
-        
         // 离开旧地点：关闭有循环音的卡牌的循环音
         foreach (var slot in CurEnvironmentBag.Slots)
         {
             if (!slot.IsEmpty)
             {
                 var card = slot.PeekCard();
-                if (card.HasLoopSound) 
+                if (card.HasLoopSound)
                     card.OnLeaveEnvironment();
             }
         }
 
         CurEnvironmentBag = EnvironmentBags[targetPlace];
-        
+
         // 进入新地点：播放新地点离有循环音的卡牌
         foreach (var slot in CurEnvironmentBag.Slots)
         {
@@ -614,16 +606,13 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        //从切换后的场景单次探索列表中拿出必定回到原先场景的牌，加入当前场景背包
-        var door = CurEnvironmentBag.DisposableDropList.CertainDrop($"从{ParsePlaceEnum(targetPlace)}到{ParsePlaceEnum(lastPlace)}");
-        if (!door.IsNullOrEmpty())
-        {
-            AddCard(door[0], false);
-            door[0].RefreshSlot();
-        }
+        // 播放新地点环境音
+        SoundManager.Instance.PlayPlaceMusic(CurEnvironmentBag);
 
+        // 触发事件
         EventManager.Instance.TriggerEvent(EventType.ChangeEnv, CurEnvironmentBag);
     }
+    #endregion
 
     public string ParsePlaceEnum(PlaceEnum place)
     {

@@ -203,6 +203,16 @@ public abstract class Bag
     }
 
     /// <summary>
+    /// 根据id查找卡牌
+    /// </summary>
+    /// <param name="cardId"></param>
+    /// <returns></returns>
+    public Card FindCardOfId(string cardId)
+    {
+        return FindCard(s => s.ContainsByCardId(cardId));
+    }
+
+    /// <summary>
     /// 根据工具类型查找卡牌，参数之间是“或”的关系
     /// </summary>
     /// <param name="toolTypes"></param>

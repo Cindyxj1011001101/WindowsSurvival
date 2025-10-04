@@ -113,7 +113,7 @@ public class EnvironmentBagWindow : BagWindow
 
         // 注册探索度变化事件
         EventManager.Instance.AddListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
-        // 注册环境移动事件
+        // 注册地点改变事件
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
