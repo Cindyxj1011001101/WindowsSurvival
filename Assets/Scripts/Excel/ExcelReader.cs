@@ -13,10 +13,12 @@ public static class ExcelReader
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
         var excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         var result = excelReader.AsDataSet();
-        DataTable table = result.Tables[0]; // 假设配置在第一张表中
+        DataTable table = result.Tables[0]; // 配置在第一张表中
 
         // 存储卡牌配置的字典
         Dictionary<string, CardConfig> cardConfigs = new();
+
+        //Debug.Log("卡牌表列数：" + table.Columns.Count);
 
         DataRow row;
         int count = 0;
@@ -25,6 +27,7 @@ public static class ExcelReader
             row = table.Rows[i];
             if (string.IsNullOrEmpty(row[0].ToString())) continue; // 如果卡牌ID为空，跳过读取
             count++;
+
             // 必要字段
             CardConfig cardConfig = new()
             {
@@ -34,44 +37,44 @@ public static class ExcelReader
                 CardDesc = row[3].ToString(),
                 CardImagePath = row[4].ToString(),
                 CardType = Enum.Parse<CardType>(row[5].ToString()),
-                MaxStackNum = int.Parse(row[6].ToString()),
-                Moveable = bool.Parse(row[7].ToString()),
-                Weight = float.Parse(row[8].ToString()),
+                MaxStackNum = ParseInt(row[6].ToString()),
+                Moveable = ParseBool(row[7].ToString()),
+                Weight = ParseFloat(row[8].ToString()),
                 Tags = ParseTags(row[9].ToString()),
-                HasFreshness = bool.Parse(row[10].ToString()),
-                HasDurability = bool.Parse(row[12].ToString()),
-                HasGrowth = bool.Parse(row[14].ToString()),
-                HasProgress = bool.Parse(row[16].ToString()),
-                IsEquipment = bool.Parse(row[18].ToString()),
-                IsTool = bool.Parse(row[20].ToString()),
-                IsBigIcon = bool.Parse(row[22].ToString()),
-                HasInnerContents = bool.Parse(row[23].ToString()),
-                IsFlammable = bool.Parse(row[25].ToString()),
-                HasFoodProperty = bool.Parse(row[27].ToString()),
-                IsPassage = bool.Parse(row[36].ToString()),
-                CanCook = bool.Parse(row[40].ToString()),
-                IsConstruction = bool.Parse(row[43].ToString()),
-                IsPlant = bool.Parse(row[51].ToString()),
-                //HasCoordinate = bool.Parse(row[56].ToString()),
-                //IsWeapon = bool.Parse(row[58].ToString()),
-                //IsEntity = bool.Parse(row[63].ToString()),
+                HasFreshness = ParseBool(row[10].ToString()),
+                HasDurability = ParseBool(row[12].ToString()),
+                HasGrowth = ParseBool(row[14].ToString()),
+                HasProgress = ParseBool(row[16].ToString()),
+                IsEquipment = ParseBool(row[18].ToString()),
+                IsTool = ParseBool(row[20].ToString()),
+                IsBigIcon = ParseBool(row[22].ToString()),
+                HasInnerContents = ParseBool(row[23].ToString()),
+                IsFlammable = ParseBool(row[25].ToString()),
+                HasFoodProperty = ParseBool(row[27].ToString()),
+                IsPassage = ParseBool(row[36].ToString()),
+                CanCook = ParseBool(row[40].ToString()),
+                IsConstruction = ParseBool(row[43].ToString()),
+                IsPlant = ParseBool(row[51].ToString()),
+                HasCoordinate = ParseBool(row[56].ToString()),
+                IsWeapon = ParseBool(row[58].ToString()),
+                IsEntity = ParseBool(row[63].ToString()),
             };
             // 可选字段
             if (cardConfig.HasFreshness)
             {
-                cardConfig.MaxFreshness = int.Parse(row[11].ToString());
+                cardConfig.MaxFreshness = ParseInt(row[11].ToString());
             }
             if (cardConfig.HasDurability)
             {
-                cardConfig.MaxDurability = int.Parse(row[13].ToString());
+                cardConfig.MaxDurability = ParseInt(row[13].ToString());
             }
             if (cardConfig.HasGrowth)
             {
-                cardConfig.MaxGrowth = int.Parse(row[15].ToString());
+                cardConfig.MaxGrowth = ParseInt(row[15].ToString());
             }
             if (cardConfig.HasProgress)
             {
-                cardConfig.MaxProgress = int.Parse(row[17].ToString());
+                cardConfig.MaxProgress = ParseInt(row[17].ToString());
             }
             if (cardConfig.IsEquipment)
             {
@@ -83,78 +86,78 @@ public static class ExcelReader
             }
             if (cardConfig.HasInnerContents)
             {
-                cardConfig.InnerContentSlotCount = int.Parse(row[24].ToString());
+                cardConfig.InnerContentSlotCount = ParseInt(row[24].ToString());
             }
             if (cardConfig.IsFlammable)
             {
-                cardConfig.FuelValue = int.Parse(row[26].ToString());
+                cardConfig.FuelValue = ParseInt(row[26].ToString());
             }
             if (cardConfig.HasFoodProperty)
             {
                 cardConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>
                 {
-                    { FoodProperty.EatableDegree, ParseFoodPropertyDictValue(row[28].ToString()) },   // 可食用度
-                    { FoodProperty.UneatableDegree, ParseFoodPropertyDictValue(row[29].ToString()) }, // 不可食用度   
-                    { FoodProperty.Meatiness, ParseFoodPropertyDictValue(row[30].ToString()) },       // 肉度
-                    { FoodProperty.Fishiness, ParseFoodPropertyDictValue(row[31].ToString()) },       // 鱼度
-                    { FoodProperty.Shellfishiness, ParseFoodPropertyDictValue(row[32].ToString()) },  // 贝度
-                    { FoodProperty.Wateriness, ParseFoodPropertyDictValue(row[33].ToString()) },      // 水度
-                    { FoodProperty.Vegetableness, ParseFoodPropertyDictValue(row[34].ToString()) },   // 菜度
-                    { FoodProperty.Fruitiness, ParseFoodPropertyDictValue(row[35].ToString()) }       // 果度
+                    { FoodProperty.EatableDegree, ParseInt(row[28].ToString()) },   // 可食用度
+                    { FoodProperty.UneatableDegree, ParseInt(row[29].ToString()) }, // 不可食用度   
+                    { FoodProperty.Meatiness, ParseInt(row[30].ToString()) },       // 肉度
+                    { FoodProperty.Fishiness, ParseInt(row[31].ToString()) },       // 鱼度
+                    { FoodProperty.Shellfishiness, ParseInt(row[32].ToString()) },  // 贝度
+                    { FoodProperty.Wateriness, ParseInt(row[33].ToString()) },      // 水度
+                    { FoodProperty.Vegetableness, ParseInt(row[34].ToString()) },   // 菜度
+                    { FoodProperty.Fruitiness, ParseInt(row[35].ToString()) }       // 果度
                 };
             }
             if (cardConfig.IsPassage)
             {
-                cardConfig.MoveTime = int.Parse(row[37].ToString());
+                cardConfig.MoveTime = ParseInt(row[37].ToString());
                 cardConfig.TargetPlace = Enum.Parse<PlaceEnum>(row[38].ToString());
                 cardConfig.InteractAudio = row[39].ToString();
             }
             if (cardConfig.CanCook)
             {
-                cardConfig.CookTime = int.Parse(row[41].ToString());
+                cardConfig.CookTime = ParseInt(row[41].ToString());
                 cardConfig.OutcomeCardId = row[42].ToString();
             }
             if (cardConfig.IsConstruction)
             {
-                cardConfig.OnlyInWater = bool.Parse(row[44].ToString());
-                cardConfig.OnlyOutWater = bool.Parse(row[45].ToString());
-                cardConfig.OnlyInDoor = bool.Parse(row[46].ToString());
-                cardConfig.OnlyOutDoor = bool.Parse(row[47].ToString());
-                cardConfig.NeedCable = bool.Parse(row[48].ToString());
-                cardConfig.CanBeDemolished = bool.Parse(row[49].ToString());
+                cardConfig.OnlyInWater = ParseBool(row[44].ToString());
+                cardConfig.OnlyOutWater = ParseBool(row[45].ToString());
+                cardConfig.OnlyInDoor = ParseBool(row[46].ToString());
+                cardConfig.OnlyOutDoor = ParseBool(row[47].ToString());
+                cardConfig.NeedCable = ParseBool(row[48].ToString());
+                cardConfig.CanBeDemolished = ParseBool(row[49].ToString());
                 cardConfig.DemolitionDebris = row[50].ToString();
             }
             if (cardConfig.IsPlant)
             {
-                cardConfig.GrowthRate = float.Parse(row[52].ToString());
+                cardConfig.GrowthRate = ParseFloat(row[52].ToString());
                 string[] tempretures = row[53].ToString().Split('_');
-                cardConfig.MinConfortTempreture = float.Parse(tempretures[0]);
-                cardConfig.MaxConfortTempreture = float.Parse(tempretures[1]);
-                cardConfig.MinGrowTempture = float.Parse(tempretures[2]);
-                cardConfig.MaxGrowTempture = float.Parse(tempretures[3]);
-                cardConfig.MinLiveTempture = float.Parse(tempretures[4]);
-                cardConfig.MaxLiveTempture = float.Parse(tempretures[5]);
+                cardConfig.MinConfortTempreture = ParseFloat(tempretures[0]);
+                cardConfig.MaxConfortTempreture = ParseFloat(tempretures[1]);
+                cardConfig.MinGrowTempture = ParseFloat(tempretures[2]);
+                cardConfig.MaxGrowTempture = ParseFloat(tempretures[3]);
+                cardConfig.MinLiveTempture = ParseFloat(tempretures[4]);
+                cardConfig.MaxLiveTempture = ParseFloat(tempretures[5]);
                 cardConfig.DeadcardName = row[54].ToString();
                 cardConfig.Pressures = ParsePressureLevels(row[55].ToString());
             }
             if (cardConfig.HasCoordinate)
             {
-                cardConfig.Position = float.Parse(row[57].ToString());
+                cardConfig.Position = ParseFloat(row[57].ToString());
             }
             if (cardConfig.IsWeapon)
             {
-                cardConfig.WeaponAtk = float.Parse(row[59].ToString());
-                cardConfig.MinAtkDist = float.Parse(row[60].ToString());
-                cardConfig.MaxAtkDist = float.Parse(row[61].ToString());
+                cardConfig.WeaponAtk = ParseFloat(row[59].ToString());
+                cardConfig.MinAtkDist = ParseFloat(row[60].ToString());
+                cardConfig.MaxAtkDist = ParseFloat(row[61].ToString());
                 cardConfig.AtkForm = Enum.Parse<AttackForm>(row[62].ToString());
             }
             if (cardConfig.IsEntity)
             {
-                cardConfig.MaxHealth = float.Parse(row[64].ToString());
-                cardConfig.EntityAtk = float.Parse(row[65].ToString());
-                cardConfig.MoveDistPerMin = float.Parse(row[66].ToString());
+                cardConfig.MaxHealth = ParseFloat(row[64].ToString());
+                cardConfig.EntityAtk = ParseFloat(row[65].ToString());
+                cardConfig.MoveDistPerMin = ParseFloat(row[66].ToString());
                 cardConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[67].ToString());
-                cardConfig.AIRefreshInterval = int.Parse(row[67].ToString());
+                cardConfig.AIRefreshInterval = ParseInt(row[68].ToString());
             }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
@@ -165,6 +168,13 @@ public static class ExcelReader
 
         return cardConfigs;
     }
+
+    public static bool ParseBool(string str) => bool.TryParse(str, out var value) && value;
+
+    public static int ParseInt(string str) => int.TryParse(str, out int value) ? value : default;
+
+    public static float ParseFloat(string str) => float.TryParse(str, out float value) ? value : default;
+
 
     private static List<CardTag> ParseTags(string tagsStr)
     {
@@ -190,18 +200,6 @@ public static class ExcelReader
             toolTypes.Add(Enum.Parse<ToolType>(toolType.Trim()));
         }
         return toolTypes;
-    }
-
-    private static int ParseFoodPropertyDictValue(string foodPropertyDictStr)
-    {
-        if (foodPropertyDictStr != "/" && int.TryParse(foodPropertyDictStr, out int value))
-        {
-            return value;
-        }
-        else
-        {
-            return 0;
-        }
     }
 
     private static List<PressureLevel> ParsePressureLevels(string pressureLevelsStr)
@@ -247,13 +245,13 @@ public static class ExcelReader
                 DropConfig config = new()
                 {
                     CardId = row[0].ToString(),
-                    DropNum = int.Parse(row[1].ToString()),
-                    DropProb = int.Parse(row[2].ToString()),
-                    OverwriteFreshness = bool.Parse(row[3].ToString()),
-                    OverwriteDurability = bool.Parse(row[5].ToString()),
-                    OverwriteGrowth = bool.Parse(row[7].ToString()),
-                    OverwriteProgress = bool.Parse(row[9].ToString()),
-                    OverwriteInnerContents = bool.Parse(row[11].ToString())
+                    DropNum = ParseInt(row[1].ToString()),
+                    DropProb = ParseInt(row[2].ToString()),
+                    OverwriteFreshness = ParseBool(row[3].ToString()),
+                    OverwriteDurability = ParseBool(row[5].ToString()),
+                    OverwriteGrowth = ParseBool(row[7].ToString()),
+                    OverwriteProgress = ParseBool(row[9].ToString()),
+                    OverwriteInnerContents = ParseBool(row[11].ToString())
                 };
                 // 创建卡牌实例
                 var card = CardFactory.CreateCard(config.CardId);
@@ -261,27 +259,27 @@ public static class ExcelReader
                 if (config.OverwriteFreshness)
                 {
                     if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                        freshnessComponent.freshness = int.Parse(row[4].ToString()); // 设置新鲜度
+                        freshnessComponent.freshness = ParseInt(row[4].ToString()); // 设置新鲜度
                 }
                 if (config.OverwriteDurability)
                 {
                     if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                        durabilityComponent.durability = int.Parse(row[6].ToString()); // 设置耐久度
+                        durabilityComponent.durability = ParseInt(row[6].ToString()); // 设置耐久度
                 }
                 if (config.OverwriteGrowth)
                 {
                     if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                        growthComponent.growth = int.Parse(row[8].ToString()); // 设置生长进度
+                        growthComponent.growth = ParseInt(row[8].ToString()); // 设置生长进度
                 }
                 if (config.OverwriteProgress)
                 {
                     if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                        progressComponent.progress = int.Parse(row[10].ToString()); // 设置产物进度
+                        progressComponent.progress = ParseInt(row[10].ToString()); // 设置产物进度
                 }
                 if (config.OverwriteInnerContents)
                 {
-                    var startRowIndex = int.Parse(row[12].ToString());
-                    var endRowIndex = int.Parse(row[13].ToString());
+                    var startRowIndex = ParseInt(row[12].ToString());
+                    var endRowIndex = ParseInt(row[13].ToString());
                     if (card.TryGetComponent<InnerContentsComponent>(out var innerContentsComponent))
                         foreach (var c in ReadInnerContents(table, startRowIndex, endRowIndex))
                         {
@@ -298,7 +296,7 @@ public static class ExcelReader
             }
             // 保存为Json
             DisposableDropList disposableDropList = new() { maxCount = dropList.Count, dropList = dropList };
-            dict.Add((PlaceEnum)Enum.Parse(typeof(PlaceEnum), table.TableName), disposableDropList);
+            dict.Add(Enum.Parse<PlaceEnum>(table.TableName), disposableDropList);
         }
         return dict;
     }
@@ -315,13 +313,13 @@ public static class ExcelReader
             DropConfig config = new()
             {
                 CardId = row[0].ToString(),
-                DropNum = int.Parse(row[1].ToString()),
-                //DropProb = int.Parse(row[2].ToString()),
-                OverwriteFreshness = bool.Parse(row[3].ToString()),
-                OverwriteDurability = bool.Parse(row[5].ToString()),
-                OverwriteGrowth = bool.Parse(row[7].ToString()),
-                OverwriteProgress = bool.Parse(row[9].ToString()),
-                //OverwriteInnerContents = bool.Parse(row[11].ToString())
+                DropNum = ParseInt(row[1].ToString()),
+                //DropProb = ParseInt(row[2].ToString()),
+                OverwriteFreshness = ParseBool(row[3].ToString()),
+                OverwriteDurability = ParseBool(row[5].ToString()),
+                OverwriteGrowth = ParseBool(row[7].ToString()),
+                OverwriteProgress = ParseBool(row[9].ToString()),
+                //OverwriteInnerContents = ParseBool(row[11].ToString())
             };
             // 创建卡牌实例
             var card = CardFactory.CreateCard(config.CardId);
@@ -329,22 +327,22 @@ public static class ExcelReader
             if (config.OverwriteFreshness)
             {
                 if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                    freshnessComponent.freshness = int.Parse(row[4].ToString()); // 设置新鲜度
+                    freshnessComponent.freshness = ParseInt(row[4].ToString()); // 设置新鲜度
             }
             if (config.OverwriteDurability)
             {
                 if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                    durabilityComponent.durability = int.Parse(row[6].ToString()); // 设置耐久度
+                    durabilityComponent.durability = ParseInt(row[6].ToString()); // 设置耐久度
             }
             if (config.OverwriteGrowth)
             {
                 if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                    growthComponent.growth = int.Parse(row[8].ToString()); // 设置生长进度
+                    growthComponent.growth = ParseInt(row[8].ToString()); // 设置生长进度
             }
             if (config.OverwriteProgress)
             {
                 if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                    progressComponent.progress = int.Parse(row[10].ToString()); // 设置产物进度
+                    progressComponent.progress = ParseInt(row[10].ToString()); // 设置产物进度
             }
             // 添加到掉落列表
             for (int j = 0; j < config.DropNum; j++)
@@ -371,11 +369,11 @@ public static class ExcelReader
 
             Population emptyPopulation = new()
             {
-                curSize = int.Parse(emptyPopulationConfig[2].ToString()),
-                maxSize = int.Parse(emptyPopulationConfig[3].ToString()),
-                sizeChangePerRound = int.Parse(emptyPopulationConfig[4].ToString()),
+                curSize = ParseInt(emptyPopulationConfig[2].ToString()),
+                maxSize = ParseInt(emptyPopulationConfig[3].ToString()),
+                sizeChangePerRound = ParseInt(emptyPopulationConfig[4].ToString()),
             };
-            int sizeChangeOnNotCaught = int.Parse(emptyPopulationConfig[6].ToString());
+            int sizeChangeOnNotCaught = ParseInt(emptyPopulationConfig[6].ToString());
 
             // 假设每个表都是重复掉落列表
             List<Population> populationList = new();
@@ -387,16 +385,16 @@ public static class ExcelReader
                 PopulationConfig config = new()
                 {
                     CardId = row[0].ToString(),
-                    DropNum = int.Parse(row[1].ToString()),
-                    Size = int.Parse(row[2].ToString()),
-                    MaxSize = int.Parse(row[3].ToString()),
-                    SizeChangePerRound = int.Parse(row[4].ToString()),
-                    SizeChangeOnCaught = int.Parse(row[5].ToString()),
-                    OverwriteFreshness = bool.Parse(row[7].ToString()),
-                    OverwriteDurability = bool.Parse(row[9].ToString()),
-                    OverwriteGrowth = bool.Parse(row[11].ToString()),
-                    OverwriteProgress = bool.Parse(row[13].ToString()),
-                    Trappable = bool.Parse(row[15].ToString()),
+                    DropNum = ParseInt(row[1].ToString()),
+                    Size = ParseInt(row[2].ToString()),
+                    MaxSize = ParseInt(row[3].ToString()),
+                    SizeChangePerRound = ParseInt(row[4].ToString()),
+                    SizeChangeOnCaught = ParseInt(row[5].ToString()),
+                    OverwriteFreshness = ParseBool(row[7].ToString()),
+                    OverwriteDurability = ParseBool(row[9].ToString()),
+                    OverwriteGrowth = ParseBool(row[11].ToString()),
+                    OverwriteProgress = ParseBool(row[13].ToString()),
+                    Trappable = ParseBool(row[15].ToString()),
                 };
                 // 创建卡牌实例
                 var card = CardFactory.CreateCard(config.CardId);
@@ -404,22 +402,22 @@ public static class ExcelReader
                 if (config.OverwriteFreshness)
                 {
                     if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                        freshnessComponent.freshness = int.Parse(row[8].ToString()); // 设置新鲜度
+                        freshnessComponent.freshness = ParseInt(row[8].ToString()); // 设置新鲜度
                 }
                 if (config.OverwriteDurability)
                 {
                     if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                        durabilityComponent.durability = int.Parse(row[10].ToString()); // 设置耐久度
+                        durabilityComponent.durability = ParseInt(row[10].ToString()); // 设置耐久度
                 }
                 if (config.OverwriteGrowth)
                 {
                     if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                        growthComponent.growth = int.Parse(row[12].ToString()); // 设置生长进度
+                        growthComponent.growth = ParseInt(row[12].ToString()); // 设置生长进度
                 }
                 if (config.OverwriteProgress)
                 {
                     if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                        progressComponent.progress = int.Parse(row[14].ToString()); // 设置产物进度
+                        progressComponent.progress = ParseInt(row[14].ToString()); // 设置产物进度
                 }
                 // 添加到掉落列表
                 populationList.Add(new Population()
@@ -440,7 +438,7 @@ public static class ExcelReader
                 emptyPopulationSizeChangeOnNotCaught = sizeChangeOnNotCaught,
                 populationList = populationList
             };
-            dict.Add((PlaceEnum)Enum.Parse(typeof(PlaceEnum), table.TableName), repeatableDropList);
+            dict.Add(Enum.Parse<PlaceEnum>(table.TableName), repeatableDropList);
         }
         return dict;
     }
