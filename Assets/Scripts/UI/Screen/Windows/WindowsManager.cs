@@ -104,7 +104,7 @@ public class WindowsManager : MonoBehaviour
                         { PlayerStateEnum.Sobriety, sobrietyChange }
                     };
             }
-            return ($"在地上休息{t}分钟", t, p, null);
+            return ($"在地上休息 {t} 分钟", t, p, null);
         };
     }
 

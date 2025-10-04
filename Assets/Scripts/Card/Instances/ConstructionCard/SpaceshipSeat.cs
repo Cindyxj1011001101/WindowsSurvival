@@ -64,7 +64,7 @@ public class SpaceshipSeat : ConstructionCard
                         { PlayerStateEnum.San, sanChange }
                     };
             }
-            return ($"休息{t}分钟", t, p, null);
+            return ($"靠在驾驶座上休息 {t} 分钟", t, p, null);
         };
     }
 
