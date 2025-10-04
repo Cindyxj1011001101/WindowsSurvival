@@ -40,7 +40,7 @@ public class WindowsManager : MonoBehaviour
     private int currentPresetIndex;
     public int CurrentPresetIndex => currentPresetIndex;
 
-    private float sobrietyChangeRateWhileSleeping = +3.5f;
+    private float sobrietyChangeRateWhileSleeping = +2.8f;
 
     private void Awake()
     {
@@ -59,11 +59,27 @@ public class WindowsManager : MonoBehaviour
         restButton.onClick.AddListener(() =>
         {
             var window = (OpenWindow("TimeSelect", true) as TimeSelectWindow);
-            window.onConfirm += (time) =>
+            window.canConfirm = (out string hint) =>
+            {
+                hint = string.Empty;
+                var placeData = GameManager.Instance.CurEnvironmentBag.PlaceData;
+                if (placeData.isInWater)
+                {
+                    hint = "无法在水域地点休息";
+                    return false;
+                }
+                if (placeData.isInSpacecraft && StateManager.Instance.WaterLevel.CurValue >= 20)
+                {
+                    hint = "水位过高，无法在飞船内休息";
+                    return false;
+                }
+                return true;
+            };
+            window.onConfirm = (time) =>
             {
                 StateManager.Instance.Sleep(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRateWhileSleeping } });
             };
-            window.getConfirmEffects += (t) =>
+            window.getConfirmEffects = (t) =>
             {
                 Dictionary<PlayerStateEnum, float> p = null;
                 float sobrietyChange = t / TimeManager.Instance.SettleInterval * sobrietyChangeRateWhileSleeping;

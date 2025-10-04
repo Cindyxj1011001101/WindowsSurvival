@@ -22,6 +22,7 @@ public class TimeSelectWindow : WindowBase
     private int minute = 0;
 
     public UnityAction<int> onConfirm;
+    public OutStringAction<bool> canConfirm;
 
     public Func<int, (string, int, Dictionary<PlayerStateEnum, float>, Dictionary<EnvironmentStateEnum, float>)> getConfirmEffects;
 
@@ -110,20 +111,31 @@ public class TimeSelectWindow : WindowBase
             ClampTimeRange();
         });
 
+        cancelButton.onClick.AddListener(() =>
+        {
+            WindowsManager.Instance.CloseWindow(AppName);
+        });
         confirmButton.onClick.AddListener(() =>
         {
             WindowsManager.Instance.CloseWindow(AppName);
             onConfirm?.Invoke(hour * 60 + minute);
             onConfirm = null;
         });
-        cancelButton.onClick.AddListener(() =>
+        // 确定按钮是否可用交互
+        string hint = string.Empty;
+        confirmButton.Interactable = canConfirm == null || canConfirm.Invoke(out hint);
+
+        var tipController = confirmButton.GetComponent<HoverTipController>();
+
+        // 显示不可交互的原因
+        if (!confirmButton.Interactable)
         {
-            WindowsManager.Instance.CloseWindow(AppName);
-        });
+            tipController.SetTip(hint);
+            return;
+        }
 
         if (getConfirmEffects == null) return;
 
-        var tipController = confirmButton.GetComponent<HoverTipController>();
         tipController.onPointerEnter.AddListener(() =>
         {
             (string textTip, int time, Dictionary<PlayerStateEnum, float> p, Dictionary<EnvironmentStateEnum, float> e) = getConfirmEffects.Invoke(hour * 60 + minute);
