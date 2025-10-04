@@ -105,7 +105,19 @@ public enum PlaceEnum
     /// <summary>
     /// 飞船外壳
     /// </summary>
-    SpaceshipOuterHull
+    SpaceshipOuterHull,
+    /// <summary>
+    /// 浅层岩穴
+    /// </summary>
+    ShallowGrotto,
+    /// <summary>
+    /// 遇难者大厅
+    /// </summary>
+    VictimsHall,
+    /// <summary>
+    /// 最后庇护所
+    /// </summary>
+    LastSanctuary
 }
 
 public class GameManager : MonoBehaviour
@@ -417,6 +429,14 @@ public class GameManager : MonoBehaviour
         return (desc, time, playerEffects);
     }
 
+    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects)
+        GetMoveEffects(float targetPosition)
+    {
+        var dist = Mathf.Abs(Player.Coordinate.Position - targetPosition);
+        var basicMoveTime = Mathf.CeilToInt(dist / Player.moveDistPerMin);
+        return GetMoveEffects(basicMoveTime, CurEnvironmentBag.PlaceData.placeType);
+    }
+
     /// <summary>
     /// 载重变化触发的移动探索额外消耗变化
     /// </summary>
@@ -554,6 +574,8 @@ public class GameManager : MonoBehaviour
         Player.Coordinate.SetPosition(targetPosition);
         StateManager.Instance.ApplyPlayerStateChange(playerEffects);
         TimeManager.Instance.AddTime(time);
+
+        EventManager.Instance.TriggerEvent(EventType.PlayerMove);
     }
 
     /// <summary>
