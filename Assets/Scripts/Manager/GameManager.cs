@@ -384,7 +384,7 @@ public class GameManager : MonoBehaviour
 
     public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects) GetExploreEffects()
     {
-        string desc = "探索该地点" + ExploreExtraEffects.GetEffectsDescription();
+        string desc = ExploreExtraEffects.GetEffectsDescription();
         int time = ExploreExtraEffects.GetFinalTime(CurEnvironmentBag.PlaceData.exploreTime);
         Dictionary<PlayerStateEnum, float> playerEffects = ExploreExtraEffects.GetFinalPlayerEffects(new());
 
@@ -399,9 +399,10 @@ public class GameManager : MonoBehaviour
         return (desc, time, playerEffects);
     }
 
-    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects) GetMoveEffects(int basicMoveTime, PlaceEnum targetPlace)
+    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects)
+        GetMoveEffects(int basicMoveTime, PlaceEnum targetPlace)
     {
-        string desc = "前往" + ParsePlaceEnum(targetPlace) + MoveExtraEffects.GetEffectsDescription();
+        string desc = MoveExtraEffects.GetEffectsDescription();
         int time = MoveExtraEffects.GetFinalTime(basicMoveTime);
         Dictionary<PlayerStateEnum, float> playerEffects = MoveExtraEffects.GetFinalPlayerEffects(new());
 
@@ -529,6 +530,28 @@ public class GameManager : MonoBehaviour
         (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) = GetMoveEffects(basicMoveTime, targetPlace);
 
         // 移动消耗
+        StateManager.Instance.ApplyPlayerStateChange(playerEffects);
+        TimeManager.Instance.AddTime(time);
+    }
+
+    public void Move(float targetPosition)
+    {
+        if (!CanMoveExplore()) return;
+
+        // 计算移动距离
+        // 限制坐标范围
+        targetPosition = Mathf.Clamp(targetPosition, CurEnvironmentBag.PlaceData.minCoord, CurEnvironmentBag.PlaceData.maxCoord);
+        var dist = Mathf.Abs(targetPosition - Player.Coordinate.Position);
+
+        // 计算移动时间
+        var basicMoveTime = Mathf.CeilToInt(dist / Player.moveDistPerMin);
+
+        // 移动消耗
+        (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) =
+            GetMoveEffects(basicMoveTime, CurEnvironmentBag.PlaceData.placeType);
+
+        // 执行移动
+        Player.Coordinate.SetPosition(targetPosition);
         StateManager.Instance.ApplyPlayerStateChange(playerEffects);
         TimeManager.Instance.AddTime(time);
     }

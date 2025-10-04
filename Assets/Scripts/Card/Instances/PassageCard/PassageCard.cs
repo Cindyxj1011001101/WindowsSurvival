@@ -19,7 +19,8 @@
         TryGetComponent(out coordinate);
         TryGetComponent(out passage);
 
-        Events[0].description = GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
+        Events[0].description = "前往" + GameManager.Instance.ParsePlaceEnum(passage.targetPlace) +
+            GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
         Events[0].getTimeEffect = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).time;
         Events[0].getPlayerEffects = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerEffects;
     }
@@ -42,7 +43,8 @@
     {
         if (state == PlayerStateEnum.Load)
         {
-            Events[0].description = GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
+            Events[0].description = "前往" + GameManager.Instance.ParsePlaceEnum(passage.targetPlace) +
+                GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
             RefreshSlot();
         }
     }
@@ -58,11 +60,11 @@
     public virtual bool Judge_Enter(out string hint)
     {
         hint = string.Empty;
-        if (GameManager.Instance.Player.Coordinate.DistanceTo(coordinate.coordinate) > MaxAvailableDist)
-        {
-            hint = "距离通道太远，无法前往";
-            return false;
-        }
+        //if (GameManager.Instance.Player.Coordinate.DistanceTo(coordinate.coordinate) > MaxAvailableDist)
+        //{
+        //    hint = "距离通道太远，无法前往";
+        //    return false;
+        //}
 
         if (!GameManager.Instance.CanMoveExplore())
         {

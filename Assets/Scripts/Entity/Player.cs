@@ -1,6 +1,6 @@
 ﻿public class Player : IEntity
 {
-    public float moveDistPerMin = 1;
+    public float moveDistPerMin = .5f;
 
     public Coordinate Coordinate { get; private set; } = new();
 

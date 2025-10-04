@@ -27,21 +27,22 @@ public class EnvironmentBagWindow : BagWindow
     [HideInInspector] public Dictionary<EnvironmentStateEnum, UIStateSlider> continuousValueStates = new(); // 环境状态显示
 
     [SerializeField] private Slider currentCoordSlider;
-    [SerializeField] private Slider nextCoordSlider;
+    [SerializeField] private Slider targetCoordSlider;
     [SerializeField] private HoverableButton moveLeftButton;
     [SerializeField] private HoverableButton moveRightButton;
     [SerializeField] private HoverableButton executeMoveButton;
-    [SerializeField] private Text nextPosition;
+    [SerializeField] private Text targetPosition;
     [SerializeField] private Text currentPosition;
     [SerializeField] private Image fillBetween;
 
     private const float MoveDistResolution = .5f; // 移动距离分辨率
 
     private HoverTipController exploreTipController;
+    private HoverTipController moveTipController;
 
     private EnvironmentBag CurEnv => GameManager.Instance.CurEnvironmentBag;
     private Player Player => GameManager.Instance.Player;
-    private float NextPosition => nextCoordSlider.value * MoveDistResolution;
+    private float TargetPosition => targetCoordSlider.value * MoveDistResolution;
 
     protected override void Awake()
     {
@@ -57,34 +58,49 @@ public class EnvironmentBagWindow : BagWindow
             if (GameManager.Instance.CanMoveExplore())
             {
                 var (desc, time, playerEffects) = GameManager.Instance.GetExploreEffects();
+                desc = "探索该地点" + desc;
                 exploreTipController.SetTip(desc, time, playerEffects, null);
             }
             else
                 exploreTipController.SetTip("身上太重了，无法探索");
         });
 
-        // 移动
+        // 移动消耗显示
+        moveTipController = executeMoveButton.gameObject.AddComponent<HoverTipController>();
+        moveTipController.onPointerEnter.AddListener(() =>
+        {
+            if (GameManager.Instance.CanMoveExplore())
+            {
+                var dist = Mathf.Abs(Player.Coordinate.Position - TargetPosition);
+                var basicMoveTime = Mathf.CeilToInt(dist / Player.moveDistPerMin);
+                var (desc, time, playerEffects) = GameManager.Instance.GetMoveEffects(basicMoveTime, CurEnv.PlaceData.placeType);
+                desc = $"前往坐标 {TargetPosition:0.0} 处" + desc;
+                moveTipController.SetTip(desc, time, playerEffects, null);
+            }
+            else
+                moveTipController.SetTip("身上太重了，无法移动");
+        });
 
         // 当前坐标显示
         currentCoordSlider.onValueChanged.AddListener((v) =>
         {
-            currentPosition.text = (v * MoveDistResolution).ToString();
+            currentPosition.text = (v * MoveDistResolution).ToString("0.0");
             FillBetween();    
         });
 
         // 选择距离
-        nextCoordSlider.onValueChanged.AddListener((v) =>
+        targetCoordSlider.onValueChanged.AddListener((v) =>
         {
-            nextPosition.text = (v * MoveDistResolution).ToString();
+            targetPosition.text = (v * MoveDistResolution).ToString("0.0");
             FillBetween();
         });
         moveLeftButton.onClick.AddListener(() =>
         {
-            nextCoordSlider.value--;
+            targetCoordSlider.value--;
         });
         moveRightButton.onClick.AddListener(() =>
         {
-            nextCoordSlider.value++;
+            targetCoordSlider.value++;
         });
 
         // 执行移动
@@ -103,7 +119,7 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
-        // 玩家背包卡牌变化
+        // 注册负重变化事件
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
     }
 
@@ -119,12 +135,12 @@ public class EnvironmentBagWindow : BagWindow
     /// <summary>
     /// 监听负重变化，负重变化会导致探索按钮的提示变化
     /// </summary>
-    /// <param name="args"></param>
     private void OnLoadChanged(PlayerStateEnum state)
     {
         if (state != PlayerStateEnum.Load) return;
 
         DisplayDiscoveryDegree((CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted));
+        executeMoveButton.Interactable = GameManager.Instance.CanMoveExplore();
     }
 
     protected override void Init()
@@ -274,16 +290,16 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void DisplayCoordinateSystem()
     {
-        currentCoordSlider.maxValue = nextCoordSlider.maxValue = CurEnv.PlaceData.maxCoord / MoveDistResolution;
+        currentCoordSlider.maxValue = targetCoordSlider.maxValue = CurEnv.PlaceData.maxCoord / MoveDistResolution;
     }
 
     /// <summary>
-    /// 用白色填充 current coord slider handle 和 next corrd slider handle 之间的部分
+    /// 用白色填充 current coord slider handle 和 target corrd slider handle 之间的部分
     /// </summary>
     private void FillBetween()
     {
-        fillBetween.transform.position = (currentCoordSlider.handleRect.position + nextCoordSlider.handleRect.position) / 2;
-        fillBetween.rectTransform.sizeDelta = new(Mathf.Abs(currentCoordSlider.handleRect.position.x - nextCoordSlider.handleRect.position.x), fillBetween.rectTransform.sizeDelta.y);
+        fillBetween.transform.position = (currentCoordSlider.handleRect.position + targetCoordSlider.handleRect.position) / 2;
+        fillBetween.rectTransform.sizeDelta = new(Mathf.Abs(currentCoordSlider.handleRect.position.x - targetCoordSlider.handleRect.position.x), fillBetween.rectTransform.sizeDelta.y);
     }
 
     /// <summary>
@@ -291,9 +307,9 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void DisplayPlayerPosition()
     {
-        currentCoordSlider.value = nextCoordSlider.value = Player.Coordinate.Position / MoveDistResolution;
+        currentCoordSlider.value = targetCoordSlider.value = Player.Coordinate.Position / MoveDistResolution;
 
-        currentPosition.text = nextPosition.text = Player.Coordinate.Position.ToString();
+        currentPosition.text = targetPosition.text = Player.Coordinate.Position.ToString("0.0");
         FillBetween();
     }
 
@@ -302,9 +318,10 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void ExecuteMove()
     {
-        if (Mathf.Abs(NextPosition - Player.Coordinate.Position) < MoveDistResolution) return;
+        if (Mathf.Abs(TargetPosition - Player.Coordinate.Position) < MoveDistResolution) return;
 
-        Player.Coordinate.SetPosition(NextPosition);
+        // TODO：移动方法
+        GameManager.Instance.Move(TargetPosition);
         DisplayPlayerPosition();
     }
 }

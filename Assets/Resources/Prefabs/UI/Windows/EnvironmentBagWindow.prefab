@@ -1477,11 +1477,11 @@ MonoBehaviour:
   hasCabble: {fileID: 5870073811650543952}
   pressureLevel: {fileID: 7118895120618933934}
   currentCoordSlider: {fileID: 7660563373390719762}
-  nextCoordSlider: {fileID: 7201193213881895580}
+  targetCoordSlider: {fileID: 7201193213881895580}
   moveLeftButton: {fileID: 8167543296838623330}
   moveRightButton: {fileID: 8566138826729409260}
   executeMoveButton: {fileID: 135031240617657769}
-  nextPosition: {fileID: 8176012612983779358}
+  targetPosition: {fileID: 8176012612983779358}
   currentPosition: {fileID: 8762547019165384156}
   fillBetween: {fileID: 2413420881148155670}
 --- !u!1 &2708421120638654049
@@ -4424,7 +4424,7 @@ GameObject:
   - component: {fileID: 8457172541182606567}
   - component: {fileID: 8176012612983779358}
   m_Layer: 5
-  m_Name: NextPosition
+  m_Name: TargetPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4504,7 +4504,7 @@ GameObject:
   - component: {fileID: 6102010637173935879}
   - component: {fileID: 7201193213881895580}
   m_Layer: 5
-  m_Name: Next
+  m_Name: Target
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -17,12 +17,6 @@ public class Coordinate
         Position = position;
     }
 
-    public void Move(float distance)
-    {
-        Position += distance;
-        Position = Mathf.Clamp(Position, Location.PlaceData.minCoord, Location.PlaceData.maxCoord);
-    }
-
     public float DistanceTo(Coordinate other)
     {
         if (Location != other.Location) return float.MaxValue;
