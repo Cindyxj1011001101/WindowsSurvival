@@ -614,7 +614,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         StackTrace stackTrace = new();
         MethodBase callerMethod = stackTrace.GetFrame(2).GetMethod();
 
-        if (callerMethod.Name != nameof(HandleGrow))
+        if (callerMethod.Name != nameof(Grow))
             BelongedCard.DisplayComponentValueChange(typeof(PlantGrowthComponent), delta);
     }
 
@@ -622,43 +622,60 @@ public class PlantGrowthComponent : CardComponent, IUpdate
     {
         if (deadProgress <= 0) return; // 已死亡
 
+        HandleGrowth();
+
+        HandleDeath();
+    }
+
+    private void HandleGrowth()
+    {
         var env = BelongedCard.Bag as EnvironmentBag;
 
-        if (!pressureList.Contains(env.PressureLevel)) return; // 压强不合适不生长
+        if (!pressureList.Contains(env.PressureLevel))
+        {
+            // 压强不合适不生长，并且死亡进度增加
+            deadProgress--;
+            return;
+        }
 
         // 获取当前地点的温度
         float envTempture = GetEnvTempreture();
-
         if (envTempture <= maxConfortTempreture && envTempture > minConfortTempreture)
         {
-            HandleGrow(growthRate * 1.2f); // 舒适区生长加快
+            deadProgress = InitialDeadProgress; // 恢复死亡进度
+            Grow(growthRate * 1.2f); // 舒适区生长加快
         }
         else if (envTempture <= maxGrowTempture && envTempture > minGrowTempture)
         {
-            HandleGrow(growthRate * 1f);
+            deadProgress = InitialDeadProgress; // 恢复死亡进度
+            Grow(growthRate * 1f);
         }
         else if (envTempture <= maxLiveTempture && envTempture > minLiveTempture)
         {
             // 不生长
+            deadProgress = InitialDeadProgress; // 恢复死亡进度
         }
         else
         {
             // 死亡进度增加
             deadProgress--;
         }
+    }
 
+    private void HandleDeath()
+    {
         if (deadProgress <= 0)
         {
             BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
             deadProgress = 0;
             BelongedCard.DestroyThis();
+            // 掉落死亡掉落物
             BelongedCard.AddCard(deadCardId, BelongedCard.Bag);
             onDead?.Invoke();
-            return;
         }
     }
 
-    private void HandleGrow(float delta)
+    private void Grow(float delta)
     {
         if (IsMature || growStopped) return;
 
