@@ -960,6 +960,7 @@ public class EntityComponent : CardComponent, IUpdate
     public float atk; // 攻击力
     public float moveDistPerMin; // 每分钟移动距离
     public BehavioralTendency behavioralTendency; // 行为倾向
+    public string deadDrops; // 死亡凋落物
 
     public int aiRefreshInterval; // ai刷新间隔
     [JsonIgnore] public UnityAction aiLogic; // ai行为逻辑
@@ -970,13 +971,14 @@ public class EntityComponent : CardComponent, IUpdate
 
     public EntityComponent() { }
 
-    public EntityComponent(float maxHealth, float atk, float moveDistPerMin, int aiRefreshInterval, BehavioralTendency behavioralTendency)
+    public EntityComponent(float maxHealth, float atk, float moveDistPerMin, int aiRefreshInterval, BehavioralTendency behavioralTendency, string deadDrops)
     {
         this.maxHealth = health = maxHealth;
         this.atk = atk;
         this.moveDistPerMin = moveDistPerMin;
         this.aiRefreshInterval = aiRefreshInterval;
         this.behavioralTendency = behavioralTendency;
+        this.deadDrops = deadDrops;
     }
 
     public void TakeDamage(float damage, IEntity damageDealer)
@@ -991,6 +993,7 @@ public class EntityComponent : CardComponent, IUpdate
             health = 0;
             BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
             BelongedCard.DestroyThis();
+            // TODO：掉落死亡掉落物
             onDead?.Invoke();
         }
 

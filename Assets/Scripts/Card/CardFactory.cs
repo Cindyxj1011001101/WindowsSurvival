@@ -337,7 +337,7 @@ public static class CardFactory
         }
         if (config.IsEntity)
         {
-            card.AddComponent(new EntityComponent(config.MaxHealth, config.EntityAtk, config.MoveDistPerMin, config.AIRefreshInterval, config.BehavioralTendency));
+            card.AddComponent(new EntityComponent(config.MaxHealth, config.EntityAtk, config.MoveDistPerMin, config.AIRefreshInterval, config.BehavioralTendency, config.DeadDrops));
         }
 
         return card;

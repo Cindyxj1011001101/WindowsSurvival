@@ -158,6 +158,7 @@ public static class ExcelReader
                 cardConfig.MoveDistPerMin = ParseFloat(row[66].ToString());
                 cardConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[67].ToString());
                 cardConfig.AIRefreshInterval = ParseInt(row[68].ToString());
+                cardConfig.DeadDrops = row[69].ToString();
             }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
@@ -534,6 +535,7 @@ public class CardConfig
     public float MoveDistPerMin; // 每分钟移动距离
     public BehavioralTendency BehavioralTendency; // 行为倾向
     public int AIRefreshInterval; // AI刷新间隔
+    public string DeadDrops; // 死亡掉落
 }
 
 public class DropConfig
