@@ -18,8 +18,6 @@ public class SeaLizard : CookableCard
     {
         DestroyThis();
 
-        
-
         tip = string.Empty;
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("吃_01", true);

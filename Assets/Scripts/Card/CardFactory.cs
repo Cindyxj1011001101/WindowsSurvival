@@ -122,6 +122,10 @@ public static class CardFactory
             { "从浅层岩穴到织光藻墓园", typeof(FromShallowGrottoToPhosphorTomb) },
             { "从遇难者大厅到浅层岩穴", typeof(FromVictimsHallToShallowGrotto) },
             { "从浅层岩穴到遇难者大厅", typeof(FromShallowGrottoToVictimsHall) },
+            { "四角菱", typeof(WaterChestnut) },
+            { "菱果", typeof(WaterChestnutFruit) },
+            { "菱果肉", typeof(WaterChestnutPulp) },
+            { "烤菱果肉", typeof(CookedWaterChestnutPulp) },
         };
     }
 
