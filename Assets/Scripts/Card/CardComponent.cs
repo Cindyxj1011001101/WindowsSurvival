@@ -572,6 +572,7 @@ public class StateMachineComponent : CardComponent
 #region 植物生长组件
 public class PlantGrowthComponent : CardComponent, IUpdate
 {
+    private const int InitialDeadProgress = 5; // 初始死亡进度
     public float growthRate; // 生长速率
     [JsonProperty] public float growth { get; private set; } // 生长进度
     public float maxGrowth; // 最大生长进度
@@ -587,6 +588,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
     public bool growStopped = false;
 
     [JsonIgnore] public UnityAction onDead;
+    [JsonIgnore] public bool IsMature => growth >= maxGrowth; // 是否成熟
 
     public PlantGrowthComponent(float growthRate, float minConfortTempreture, float maxConfortTempreture, float minGrowTempture, float maxGrowTempture, float minLiveTempture, float maxLiveTempture, string deadCardId, List<PressureLevel> pressureList)
     {
@@ -600,7 +602,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         this.deadCardId = deadCardId;
         this.pressureList = pressureList;
         growth = maxGrowth = 100;
-        deadProgress = 5; // 初始死亡进度
+        deadProgress = InitialDeadProgress; // 初始死亡进度
     }
 
     public void AddGrowth(float delta)
@@ -608,42 +610,34 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         growth += delta;
         growth = Mathf.Clamp(growth, 0, 100);
         BelongedCard.RefreshSlot();
+
+        StackTrace stackTrace = new();
+        MethodBase callerMethod = stackTrace.GetFrame(2).GetMethod();
+
+        if (callerMethod.Name != nameof(HandleGrow))
+            BelongedCard.DisplayComponentValueChange(typeof(PlantGrowthComponent), delta);
     }
 
     public void Update()
     {
         if (deadProgress <= 0) return; // 已死亡
 
-        if (growStopped) return; // 暂停生长
+        var env = BelongedCard.Bag as EnvironmentBag;
 
-        if (growth >= maxGrowth) return; // 已经成熟
-
-        var bag = BelongedCard.Bag as EnvironmentBag;
-        PressureLevel curPressureLevel = bag.PressureLevel;
-
-        if (!pressureList.Contains(curPressureLevel)) return; // 压强不合适不生长
+        if (!pressureList.Contains(env.PressureLevel)) return; // 压强不合适不生长
 
         // 获取当前地点的温度
-        float curTempture;
-        if (bag.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var roomTemperature))
-        {
-            curTempture = roomTemperature.NormedValue;
-        }
-        else
-        {
-            curTempture = 25;
-            UnityEngine.Debug.LogWarning("当前地点没有环境温度信息，使用默认环境温度25度");
-        }
+        float envTempture = GetEnvTempreture();
 
-        if (curTempture <= maxConfortTempreture && curTempture > minConfortTempreture)
+        if (envTempture <= maxConfortTempreture && envTempture > minConfortTempreture)
         {
-            AddGrowth(growthRate * 1.2f); // 舒适区生长加快
+            HandleGrow(growthRate * 1.2f); // 舒适区生长加快
         }
-        else if (curTempture <= maxGrowTempture && curTempture > minGrowTempture)
+        else if (envTempture <= maxGrowTempture && envTempture > minGrowTempture)
         {
-            AddGrowth(growthRate * 1f);
+            HandleGrow(growthRate * 1f);
         }
-        else if (curTempture <= maxLiveTempture && curTempture > minLiveTempture)
+        else if (envTempture <= maxLiveTempture && envTempture > minLiveTempture)
         {
             // 不生长
         }
@@ -661,6 +655,28 @@ public class PlantGrowthComponent : CardComponent, IUpdate
             BelongedCard.AddCard(deadCardId, BelongedCard.Bag);
             onDead?.Invoke();
             return;
+        }
+    }
+
+    private void HandleGrow(float delta)
+    {
+        if (IsMature || growStopped) return;
+
+        AddGrowth(delta);
+    }
+
+    private float GetEnvTempreture()
+    {
+        var env = BelongedCard.Bag as EnvironmentBag;
+        // 获取当前地点的温度
+        if (env.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var roomTemperature))
+        {
+            return roomTemperature.NormedValue;
+        }
+        else
+        {
+            UnityEngine.Debug.LogWarning("当前地点没有环境温度信息，使用默认环境温度25度");
+            return 25;
         }
     }
 }
