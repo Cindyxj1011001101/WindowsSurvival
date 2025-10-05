@@ -1,0 +1,6 @@
+/// <summary>
+/// ËÉ¶¯¾ÞÊ¯
+/// </summary>
+public class LooseBoulders
+{
+}

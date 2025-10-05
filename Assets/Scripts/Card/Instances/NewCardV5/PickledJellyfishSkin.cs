@@ -1,0 +1,6 @@
+/// <summary>
+/// ëç×ÕÖÐµÄº£òØÆ¤
+/// </summary>
+public class PickledJellyfishSkin
+{
+}

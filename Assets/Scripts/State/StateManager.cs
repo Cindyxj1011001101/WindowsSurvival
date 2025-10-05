@@ -761,8 +761,8 @@ public class StateManager : MonoBehaviour
     }
     #endregion
 
-    #region 睡觉
-    public void Sleep(int time, Dictionary<PlayerStateEnum, float> playerStateBasicChangeRates)
+    #region 休息
+    public void Rest(int time, Dictionary<PlayerStateEnum, float> playerStateBasicChangeRates)
     {
         // 记录当前变化率
         var current = new Dictionary<PlayerStateEnum, float>();

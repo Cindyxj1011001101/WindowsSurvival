@@ -91,7 +91,7 @@ public class WindowsManager : MonoBehaviour
         };
         window.onConfirm = (time) =>
         {
-            StateManager.Instance.Sleep(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRateWhileSleeping } });
+            StateManager.Instance.Rest(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRateWhileSleeping } });
         };
         window.getConfirmEffects = (t) =>
         {

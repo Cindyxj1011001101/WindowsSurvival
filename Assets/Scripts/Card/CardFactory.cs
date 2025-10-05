@@ -116,6 +116,12 @@ public static class CardFactory
             { "熟水壶兰种", typeof(CookedKettleFlowerSeed) },
             { "水壶兰", typeof(KettleFlower) },
             { "损坏的飞船驾驶座", typeof(SpaceshipSeat) },
+            { "从最后庇护所到遇难者大厅", typeof(FromLastSancutuaryToVictimsHall) },
+            { "从遇难者大厅到最后庇护所", typeof(FromVictimsHallToLastSancutuary) },
+            { "从织光藻墓园到浅层岩穴", typeof(FromPhosphorTombToShallowGrotto) },
+            { "从浅层岩穴到织光藻墓园", typeof(FromShallowGrottoToPhosphorTomb) },
+            { "从遇难者大厅到浅层岩穴", typeof(FromVictimsHallToShallowGrotto) },
+            { "从浅层岩穴到遇难者大厅", typeof(FromShallowGrottoToVictimsHall) },
         };
     }
 
