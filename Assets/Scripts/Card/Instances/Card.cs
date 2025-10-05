@@ -255,6 +255,8 @@ public abstract class Card : IComparable<Card>
     public void DisplayComponentValueChange(Type componentType, float value)
     {
         if (Slot != null) Slot.DisplayComponentValueChange(componentType, value);
+        if (transform != null && transform.TryGetComponent<CardSlot>(out var slot))
+            slot.DisplayComponentValueChange(componentType, value);
     }
 
     public void ShowTip(string tip)
@@ -268,6 +270,8 @@ public abstract class Card : IComparable<Card>
 
         Destroyed = true;
 
+        OnDestroy();
+
         StopUpdating();
 
         SlotCards.RemoveCard(this);
@@ -276,7 +280,7 @@ public abstract class Card : IComparable<Card>
 
         OnLeaveEnvironment();
 
-        GlobalDataManager.Instance.RemoveCardNum(CardId);
+        GlobalDataManager.Instance.ReduceCardNum(CardId);
     }
 
     protected virtual void OnDestroy() { }

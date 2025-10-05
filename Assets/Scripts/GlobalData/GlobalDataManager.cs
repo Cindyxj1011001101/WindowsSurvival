@@ -28,7 +28,7 @@ public class GlobalDataManager : MonoBehaviour
         EventManager.Instance.TriggerEvent(EventType.CardNumChange, (cardId, cardNumDict[cardId]));
     }
 
-    public void RemoveCardNum(string cardId, int num = 1)
+    public void ReduceCardNum(string cardId, int num = 1)
     {
         if (cardNumDict.ContainsKey(cardId))
         {
