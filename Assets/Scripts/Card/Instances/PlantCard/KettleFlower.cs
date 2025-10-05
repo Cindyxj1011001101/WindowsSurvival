@@ -83,7 +83,6 @@ public class KettleFlower : Card
 
         hasWound = true; // 产生伤口
         plant.AddGrowth(-10); // 生长进度-10
-        DisplayComponentValueChange(typeof(PlantGrowthComponent), -10);
 
         plant.growStopped = true; // 停止生长
 
@@ -129,7 +128,7 @@ public class KettleFlower : Card
         DestroyThis();
         tool.Use();
         TimeManager.Instance.AddTime(15);
-        AddCard("水壶兰种子", Bag);
+        AddCard(plant.deadCardId, Bag);
     }
 
     private bool Judge_DigUp(out string hint)
@@ -137,7 +136,7 @@ public class KettleFlower : Card
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) == null)
         {
-            hint = "需要切割类工具";
+            hint = "需要挖掘类工具";
             return false;
         }
         return true;
@@ -151,7 +150,6 @@ public class KettleFlower : Card
             SoundManager.Instance.PlaySound("喝_01", true);
 
         plant.AddGrowth(-20); // 生长进度-20
-        DisplayComponentValueChange(typeof(PlantGrowthComponent), -20);
 
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 14);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
