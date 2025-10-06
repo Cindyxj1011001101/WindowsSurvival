@@ -127,6 +127,7 @@ public static class CardFactory
             { "菱果肉", typeof(WaterChestnutPulp) },
             { "烤菱果肉", typeof(CookedWaterChestnutPulp) },
             { "板床", typeof(PlankBed) },
+            { "狮子水母尸体", typeof(LionJellyfishCorpse) },
         };
     }
 
