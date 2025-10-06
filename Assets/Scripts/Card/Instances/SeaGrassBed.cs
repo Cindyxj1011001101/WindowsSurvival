@@ -4,23 +4,23 @@
 public class SeaGrassBed : Card
 {
     private RandomDropList dropListHand = new(
-           new Drop(4, ("海麻线", 2)),
-           new Drop(12, ("海麻线", 1)),
-           new Drop(3, ("海爬虫", 1)),
-           new Drop(2, (out string tip) =>
-           {
-               tip = "手被划伤了";
-               //掉落提示："手被划伤了"
-               StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 5);
-               StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -3);
-           })
-           );
+        new Drop(4, ("海麻线", 2)),
+        new Drop(12, ("海麻线", 1)),
+        new Drop(3, ("海爬虫", 1)),
+        new Drop(2, (out string tip) =>
+        {
+            tip = "手被划伤了";
+            //掉落提示："手被划伤了"
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 5);
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -3);
+        })
+        );
 
     private RandomDropList dropListKnife = new(
-       new Drop(10, ("海麻线", 2)),
-       new Drop(5, ("海麻线", 1)),
-       new Drop(3, ("海爬虫", 1))
-       );
+        new Drop(10, ("海麻线", 2)),
+        new Drop(5, ("海麻线", 1)),
+        new Drop(3, ("海爬虫", 1))
+        );
 
     private SeaGrassBed()
     {

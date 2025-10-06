@@ -1,27 +1,15 @@
-using System.Collections.Generic;
-
 public class CookedSeaLizard : CookableCard
 {
     private CookedSeaLizard()
     {
         Events = new()
         {
-            new Event("食用", "食用熟海爬虫", Event_Eat, null, () => 15,
-            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 9 },{ PlayerStateEnum.Itchiness, 8 } })
+            new Event("食用", "食用熟海爬虫", (out string s) => EasyEvent(out s, "吃_01"), null, () => 15,
+            () => new()
+            {
+                { PlayerStateEnum.Fullness, 9 },
+                { PlayerStateEnum.Itchiness, 8 }
+            })
         };
-    }
-
-    private void Event_Eat(out string tip)
-    {
-        DestroyThis();
-
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("吃_01", true);
-
-        tip = string.Empty;
-
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 9);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Itchiness, 8);
-        TimeManager.Instance.AddTime(15);
     }
 }

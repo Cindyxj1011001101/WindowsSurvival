@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-/// <summary>
+﻿/// <summary>
 /// 盐水
 /// </summary>
 public class SalineWater : Card
@@ -9,23 +7,11 @@ public class SalineWater : Card
     {
         Events = new()
         {
-            new Event("饮用", "会导致脱水", Event_Drink, null, () => 3,
-            () => new Dictionary<PlayerStateEnum, float>()
+            new Event("饮用", "会导致脱水", (out string s) => EasyEvent(out s, "喝_01"), null, () => 3,
+            () => new()
             {
                 { PlayerStateEnum.Thirst, -25 },
             })
         };
-    }
-
-    private void Event_Drink(out string tip)
-    {
-        DestroyThis();
-
-        tip = string.Empty;
-        // 播放喝水的音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("喝_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -25);
-        TimeManager.Instance.AddTime(3);
     }
 }

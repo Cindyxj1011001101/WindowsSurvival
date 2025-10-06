@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-/// <summary>
+﻿/// <summary>
 /// 烧焦的食物
 /// </summary>
 public class BurntFood : CookableCard
@@ -9,8 +7,8 @@ public class BurntFood : CookableCard
     {
         Events = new()
         {
-            new Event("食用", "食用烧焦的食物", Event_Eat, null, () => 15,
-            () => new Dictionary<PlayerStateEnum, float>()
+            new Event("食用", "食用烧焦的食物", (out string s) => EasyEvent(out s, "吃_01"), null, () => 15,
+            () => new()
             {
                 { PlayerStateEnum.Fullness, 10 },
                 { PlayerStateEnum.Thirst, -20 },
@@ -18,18 +16,5 @@ public class BurntFood : CookableCard
                 { PlayerStateEnum.BodyTemperature, 20 }
             })
         };
-    }
-    private void Event_Eat(out string tip)
-    {
-        DestroyThis();
-
-        tip = string.Empty;
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 10);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -20);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -5);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.BodyTemperature, 20);
-        TimeManager.Instance.AddTime(15);
     }
 }

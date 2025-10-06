@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 压缩饼干
 /// </summary>
@@ -9,20 +7,11 @@ public class CompactBiscuit : Card
     {
         Events = new()
         {
-            new Event("食用", "食用压缩饼干", Event_Eat, null, () => 3,
-            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 14 } })
+            new Event("食用", "食用压缩饼干", (out string s) => EasyEvent(out s, "吃_01"), null, () => 3,
+            () => new()
+            {
+                { PlayerStateEnum.Fullness, 14 }
+            })
         };
-    }
-
-    private void Event_Eat(out string tip)
-    {
-        DestroyThis();
-
-        tip = string.Empty;
-        // 播放吃的音效
-        if(SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("吃_01",true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 14);
-        TimeManager.Instance.AddTime(3);
     }
 }

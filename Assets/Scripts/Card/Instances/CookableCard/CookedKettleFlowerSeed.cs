@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-/// <summary>
+﻿/// <summary>
 /// 熟水壶兰种
 /// </summary>
 public class CookedKettleFlowerSeed : CookableCard
@@ -9,26 +7,13 @@ public class CookedKettleFlowerSeed : CookableCard
     {
         Events = new()
         {
-            new Event("食用", "", Event_Drink, null, () => 15,
-            () => new Dictionary<PlayerStateEnum, float>()
+            new Event("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 15,
+            () => new()
             {
                 { PlayerStateEnum.Fullness, 36 },
                 { PlayerStateEnum.Thirst, 14 },
                 { PlayerStateEnum.Health, 3 },
             })
         };
-    }
-
-    private void Event_Drink(out string tip)
-    {
-        DestroyThis();
-
-        tip = string.Empty;
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 36);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 14);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 3);
-        TimeManager.Instance.AddTime(15);
     }
 }

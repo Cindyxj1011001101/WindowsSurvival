@@ -7,20 +7,11 @@ public class BottledWater : Card
     {
         Events = new()
         {
-            new Event("饮用", "连瓶子也喝掉", Event_Drink, null, () => 3,
-            () => new() { { PlayerStateEnum.Thirst, 20 } })
+            new Event("饮用", "连瓶子也喝掉", (out string s) => EasyEvent(out s, "喝_01"), null, () => 3,
+            () => new()
+            {
+                { PlayerStateEnum.Thirst, 20 }
+            })
         };
-    }
-
-    private void Event_Drink(out string tip)
-    {
-        DestroyThis();
-
-        tip = string.Empty;
-        // 播放喝水的音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("喝_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 20);
-        TimeManager.Instance.AddTime(3);
     }
 }

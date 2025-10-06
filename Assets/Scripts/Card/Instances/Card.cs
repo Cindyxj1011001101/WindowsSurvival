@@ -597,6 +597,20 @@ public abstract class Card : IComparable<Card>
     {
         TurnTo(cardId, targetBag, out _);
     }
+
+    protected void EasyEvent(out string tip, string sound, int eventIndex = 0)
+    {
+        tip = string.Empty;
+        // 销毁自身
+        DestroyThis();
+        // 播放音效
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound(sound, true);
+        // 应用状态变化
+        StateManager.Instance.ApplyPlayerStateChange(Events[eventIndex].GetPlayerEffects());
+        // 消耗时间
+        TimeManager.Instance.AddTime(Events[eventIndex].GetTimeEffect());
+    }
 }
 
 //事件类

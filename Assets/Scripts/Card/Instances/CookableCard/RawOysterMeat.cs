@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 生贝肉
 /// </summary>
@@ -9,26 +7,12 @@ public class RawOysterMeat : CookableCard
     {
         Events = new()
         {
-            new Event("食用", "吃得很快，但不管饱", Event_Eat, null, () => 5,
-            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.Fullness, 6 }, { PlayerStateEnum.Health, -1.2f } })
+            new Event("食用", "吃得很快，但不管饱", (out string s) => EasyEvent(out s, "吃_01"), null, () => 5,
+            () => new()
+            {
+                { PlayerStateEnum.Fullness, 6 },
+                { PlayerStateEnum.Health, -1.2f }
+            })
         };
     }
-
-    #region 食用
-    private void Event_Eat(out string tip)
-    {
-        DestroyThis();
-
-        tip = string.Empty;
-        // 播放吃的音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("吃_01", true);
-        //+6饱食
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 6);
-        //-1.2健康
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -1.2f);
-        //消耗5分钟
-        TimeManager.Instance.AddTime(5);
-    }
-    #endregion
 }

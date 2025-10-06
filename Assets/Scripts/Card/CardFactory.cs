@@ -135,6 +135,7 @@ public static class CardFactory
             { "熟恶臭肉", typeof(CookedFoulSmellingMeat) },
             { "废铁矛", typeof(ScrapIronSpear) },
             { "废铁棍", typeof(ScrapIronRod) },
+            { "活菌丝", typeof(LiveMycelium) },
         };
     }
 

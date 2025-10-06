@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-/// <summary>
+﻿/// <summary>
 /// 熟触手
 /// </summary>
 public class CookedTentacle : CookableCard
@@ -9,23 +7,12 @@ public class CookedTentacle : CookableCard
     {
         Events = new()
         {
-            new Event("食用", "食用熟触手", Event_Eat, null, () => 30,
-            () => new Dictionary<PlayerStateEnum, float>()
+            new Event("食用", "食用熟触手", (out string s) => EasyEvent(out s, "吃_01"), null, () => 30,
+            () => new()
             {
                 { PlayerStateEnum.Fullness, 24 },
                 { PlayerStateEnum.San, -1 },
             })
         };
-    }
-    private void Event_Eat(out string tip)
-    {
-        DestroyThis();
-
-        tip = string.Empty;
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 24);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -1);
-        TimeManager.Instance.AddTime(30);
     }
 }

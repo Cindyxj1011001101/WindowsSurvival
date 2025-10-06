@@ -1,30 +1,16 @@
-﻿using System.Collections.Generic;
-
-public class CookedOysterMeat : CookableCard
+﻿public class CookedOysterMeat : CookableCard
 {
     private CookedOysterMeat()
     {
         Events = new()
         {
-            new Event("食用", "食用熟贝肉", Event_Eat, null, () => 3,
-            () => new Dictionary<PlayerStateEnum, float>()
+            new Event("食用", "食用熟贝肉", (out string s) => EasyEvent(out s, "吃_01"), null, () => 3,
+            () => new()
             {
                 { PlayerStateEnum.Fullness, 8 },
                 { PlayerStateEnum.Health, 1 },
                 { PlayerStateEnum.San, 1 },
             })
         };
-    }
-    private void Event_Eat(out string tip)
-    {
-        DestroyThis();
-
-        tip = string.Empty;
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("吃_01", true);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, 8);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, 1);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 1);
-        TimeManager.Instance.AddTime(3);
     }
 }

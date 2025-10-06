@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 public class CoralReef : Card
 {
     private RandomDropList dropList = new(
@@ -15,7 +13,11 @@ public class CoralReef : Card
         {
             new Event("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig, () => 45),
             new Event("欣赏", "一天内多次欣赏获得的数值会衰减", Event_Enjoy, null,() => 15,
-            () => new Dictionary<PlayerStateEnum, float>() { { PlayerStateEnum.San, 6 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId) }, { PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId)} })
+            () => new()
+            {
+                { PlayerStateEnum.San, 6 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId) },
+                { PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId)}
+            })
         };
     }
 

@@ -18,7 +18,14 @@ public class DataTransmissionStation : ConstructionCard
             Event_Transmit,
             Judge_Transmit,
             () => 60,
-            () => new() { { PlayerStateEnum.Sobriety, -10 } }, () => new() { { EnvironmentStateEnum.Electricity, -5f } }),
+            () => new()
+            {
+                { PlayerStateEnum.Sobriety, -10 }
+            },
+            () => new()
+            {
+                { EnvironmentStateEnum.Electricity, -5f }
+            }),
         };
     }
 
