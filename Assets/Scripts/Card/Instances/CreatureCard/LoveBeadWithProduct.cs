@@ -9,9 +9,25 @@ public class LoveBeadWithProduct : Card
     private RandomDropList dropList = new(
         new Drop(3, ("玻璃沙", 2)),
         new Drop(3, ("废金属", 2)),
-        new Drop(3, ("珊瑚", 1)),
-        new Drop(3, ("韧性胶管", 1)),
-        new Drop(3, ("白爆矿", 1))
+        new Drop(4, ("珊瑚", 1)),
+        new Drop(5, ("韧性胶管", 1)),
+        new Drop(3, ("白爆矿", 1)),
+        new Drop(4, ("磁性触手", 1)),
+        new Drop(1, ("钢材", 1)),
+        new Drop(1, ("玻璃", 1)),
+        new Drop(1, ("石砖", 1)),
+        new Drop(1, ("育卵液", 1)),
+        new Drop(2, ("瓶装水", 1)),
+        new Drop(1, ("恶臭肉", 1)),
+        new Drop(1, ("小块生肉", 1)),
+        new Drop(1, ("老鼠尸体", 1)),
+        new Drop(1, ("水壶兰种子", 1)),
+        new Drop(2, ("燃素", 1)),
+        new Drop(2, ("海麻线", 2)),
+        new Drop(1, ("电池", 1)),
+        new Drop(1, ("海爬虫", 1)),
+        new Drop(2, ("压缩饼干", 1)),
+        new Drop(2, ("菱果", 1))
         );
 
     private LoveBeadWithProduct()
