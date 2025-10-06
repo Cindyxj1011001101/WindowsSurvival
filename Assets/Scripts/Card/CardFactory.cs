@@ -139,6 +139,10 @@ public static class CardFactory
             { "谜样菇", typeof(MysteryMushroom) },
             { "松动巨石", typeof(LooseBoulders) },
             { "小型气穴", typeof(SmallAirFilledCave) },
+            { "凉拌海蜇", typeof(ColdJellyfishSalad) },
+            { "水果布丁", typeof(FruitPudding) },
+            { "坚果酥", typeof(NutCrisp) },
+            { "蠕动盛宴", typeof(CreepFeast) },
         };
     }
 
