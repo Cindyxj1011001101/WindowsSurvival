@@ -4,9 +4,9 @@
 public class WhiteBlastMineStack : Card
 {
     private RandomDropList dropList = new(
-       new Drop("白爆矿", 2, 4),
-       new Drop("白爆矿", 1, 8),
-       new Drop("玻璃沙", 1, 4)
+       new Drop(4, ("白爆矿", 2)),
+       new Drop(8, ("白爆矿", 1)),
+       new Drop(4, ("玻璃沙", 1))
        );
 
     private WhiteBlastMineStack()

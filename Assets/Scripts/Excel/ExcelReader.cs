@@ -254,46 +254,43 @@ public static class ExcelReader
                     OverwriteProgress = ParseBool(row[9].ToString()),
                     OverwriteInnerContents = ParseBool(row[11].ToString())
                 };
-                // 创建卡牌实例
-                var card = CardFactory.CreateCard(config.CardId);
-                // 覆写卡牌属性
-                if (config.OverwriteFreshness)
+
+                List<Card> droppedCards = new();
+
+                for (int j = 0; j < config.DropNum; j++)
                 {
-                    if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                        freshnessComponent.freshness = ParseInt(row[4].ToString()); // 设置新鲜度
-                }
-                if (config.OverwriteDurability)
-                {
-                    if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                        durabilityComponent.durability = ParseInt(row[6].ToString()); // 设置耐久度
-                }
-                if (config.OverwriteGrowth)
-                {
-                    if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                        growthComponent.growth = ParseInt(row[8].ToString()); // 设置生长进度
-                }
-                if (config.OverwriteProgress)
-                {
-                    if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                        progressComponent.progress = ParseInt(row[10].ToString()); // 设置产物进度
-                }
-                if (config.OverwriteInnerContents)
-                {
-                    var startRowIndex = ParseInt(row[12].ToString());
-                    var endRowIndex = ParseInt(row[13].ToString());
-                    if (card.TryGetComponent<InnerContentsComponent>(out var innerContentsComponent))
+                    var card = CardFactory.CreateCard(config.CardId);
+                    // 覆写卡牌属性
+                    if (config.OverwriteFreshness && card.TryGetComponent<FreshnessComponent>(out var f))
+                    {
+                        f.freshness = ParseInt(row[4].ToString()); // 覆写新鲜度
+                    }
+                    if (config.OverwriteDurability && card.TryGetComponent<DurabilityComponent>(out var d))
+                    {
+                        d.durability = ParseInt(row[6].ToString()); // 覆写耐久度
+                    }
+                    if (config.OverwriteGrowth && card.TryGetComponent<GrowthComponent>(out var g))
+                    {
+                        g.growth = ParseInt(row[8].ToString()); // 覆写生长进度
+                    }
+                    if (config.OverwriteProgress && card.TryGetComponent<ProgressComponent>(out var p))
+                    {
+                        p.progress = ParseInt(row[10].ToString()); // 覆写产物进度
+                    }
+                    if (config.OverwriteInnerContents && card.TryGetComponent<InnerContentsComponent>(out var inn))
+                    {
+                        var startRowIndex = ParseInt(row[12].ToString()); // 覆写内容物
+                        var endRowIndex = ParseInt(row[13].ToString());
                         foreach (var c in ReadInnerContents(table, startRowIndex, endRowIndex))
                         {
-                            innerContentsComponent.bag.AddCard(c);
+                            inn.bag.AddCard(c);
                         }
+                    }
+                    droppedCards.Add(card);
                 }
+
                 // 添加到掉落列表
-                dropList.Add(new Drop
-                {
-                    card = card,
-                    dropNum = config.DropNum,
-                    dropProb = config.DropProb
-                });
+                dropList.Add(new Drop(config.DropProb, droppedCards));
             }
             // 保存为Json
             DisposableDropList disposableDropList = new() { maxCount = dropList.Count, dropList = dropList };

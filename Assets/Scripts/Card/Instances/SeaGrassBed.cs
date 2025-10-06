@@ -1,12 +1,14 @@
+using System.Collections.Generic;
+
 /// <summary>
 /// 海麻线丛
 /// </summary>
 public class SeaGrassBed : Card
 {
     private RandomDropList dropListHand = new(
-           new Drop("海麻线", 2, 4),
-           new Drop("海麻线", 1, 12),
-           new Drop("海爬虫", 1, 3),
+           new Drop(4, ("海麻线", 2)),
+           new Drop(12, ("海麻线", 1)),
+           new Drop(3, ("海爬虫", 1)),
            new Drop(2, (out string tip) =>
            {
                tip = "手被划伤了";
@@ -17,9 +19,9 @@ public class SeaGrassBed : Card
            );
 
     private RandomDropList dropListKnife = new(
-       new Drop("海麻线", 2, 10),
-       new Drop("海麻线", 1, 5),
-       new Drop("海爬虫", 1, 3)
+       new Drop(10, ("海麻线", 2)),
+       new Drop(5, ("海麻线", 1)),
+       new Drop(3, ("海爬虫", 1))
        );
 
     private SeaGrassBed()

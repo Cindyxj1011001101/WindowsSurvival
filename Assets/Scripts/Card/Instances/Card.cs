@@ -490,14 +490,14 @@ public abstract class Card : IComparable<Card>
     }
 
     /// <summary>
-    /// 掉落卡牌，适用于资源点的探索
+    /// 掉落卡牌
     /// </summary>
     /// <returns></returns>
-    public void DropCards(List<Card> cards, UnityAction rightBeforeDrop)
+    public void DropCards(List<Card> cards, UnityAction beforeDrop)
     {
         if (Transform == null || cards.IsNullOrEmpty()) return;
 
-        if (Destroyed)
+        if (CardType != CardType.ResourcePoint)
         {
             AddCards(cards, true);
         }
@@ -505,7 +505,7 @@ public abstract class Card : IComparable<Card>
         {
             var tween = Transform.PunchAndBounce(() =>
             {
-                rightBeforeDrop?.Invoke();
+                beforeDrop?.Invoke();
                 AddCards(cards, true);
             });
 
@@ -513,7 +513,7 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    public void RandomDrop(RandomDropList dropList, out string tip, int times = 1, UnityAction rightBeforeDrop = null)
+    public void RandomDrop(RandomDropList dropList, out string tip, int times = 1, UnityAction beforeDrop = null)
     {
         tip = string.Empty;
         var droppedCards = new List<Card>();
@@ -521,7 +521,7 @@ public abstract class Card : IComparable<Card>
         {
             droppedCards.AddRange(dropList.RandomDrop(out tip));
         }
-        DropCards(droppedCards, rightBeforeDrop);
+        DropCards(droppedCards, beforeDrop);
     }
 
     /// <summary>
@@ -663,3 +663,4 @@ public class Event
 
 public delegate T OutStringAction<T>(out string s);
 public delegate void OutStringAction(out string s);
+public delegate void OutStringFunc<T>(out string s, T arg);

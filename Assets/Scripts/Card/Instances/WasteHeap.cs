@@ -4,13 +4,13 @@
 public class WasteHeap : Card
 {
     private RandomDropList dropList = new(
-       new Drop("废金属", 2, 5),
-       new Drop("废金属", 1, 4),
-       new Drop("韧性胶管", 1, 4),
-       new Drop("压缩饼干", 1, 3),
-       new Drop("老鼠尸体", 1, 1),
-       new Drop("腐烂物", 1, 1),
-       new Drop("氧烛", 1, 2)
+       new Drop(5, ("废金属", 2)),
+       new Drop(4, ("废金属", 1)),
+       new Drop(4, ("韧性胶管", 1)),
+       new Drop(3, ("压缩饼干", 1)),
+       new Drop(1, ("老鼠尸体", 1)),
+       new Drop(1, ("腐烂物", 1)),
+       new Drop(2, ("氧烛", 1))
        );
 
     private WasteHeap()
@@ -25,7 +25,7 @@ public class WasteHeap : Card
     private void Event_Dig(out string tip)
     {
         //掉落卡牌
-        RandomDrop(dropList, out tip, rightBeforeDrop: () =>
+        RandomDrop(dropList, out tip, beforeDrop: () =>
         {
             //消耗1点耐久度
             Use();
@@ -57,7 +57,7 @@ public class WasteHeap : Card
     private void DigByTool(Card tool, out string tip)
     {
         //掉落卡牌
-        RandomDrop(dropList, out tip, rightBeforeDrop: () =>
+        RandomDrop(dropList, out tip, beforeDrop: () =>
         {
             //消耗1点耐久度
             Use();

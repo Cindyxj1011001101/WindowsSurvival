@@ -4,59 +4,57 @@ using System.Collections.Generic;
 [System.Serializable]
 public class Drop
 {
-    public Card card; // 卡牌
-    public string cardId; // 卡牌id
-    public int dropNum; // 掉落数量
-    public int dropProb; // 掉落概率，是正整数，dropProb除以一个掉落列表中所有地dropProb之和为真实掉落概率
+    public List<(string cardId, int dropNum)> dropConfig = new(); // 掉落配置(卡牌id，数量)
+    public int dropProb;
 
-    [JsonIgnore] public OutStringAction onDropped;
+    public List<Card> droppedCards = new(); // 已掉落的卡牌
+
+    [JsonIgnore] public OutStringAction onDrop;
 
     public Drop() { }
 
-    public Drop(Card card, int dropNum, int dropProb, OutStringAction onDropped = null)
+    public Drop(int dropProb, List<(string cardId, int dropNum)> dropConfig)
     {
-        this.card = card;
-        this.dropNum = dropNum;
+        this.dropConfig = dropConfig;
         this.dropProb = dropProb;
-        this.onDropped = onDropped;
     }
 
-    public Drop(string cardId, int dropNum, int dropProb, OutStringAction onDropped = null)
+    public Drop(int dropProb, params (string cardId, int dropNum)[] dropConfig)
     {
-        this.cardId = cardId;
-        this.dropNum = dropNum;
+        this.dropConfig = new(dropConfig);
         this.dropProb = dropProb;
-        this.onDropped = onDropped;
     }
 
-    public Drop(int dropProb, OutStringAction onDropped)
+    public Drop(int dropProb, List<Card> droppedCards)
     {
         this.dropProb = dropProb;
-        this.onDropped = onDropped;
+        this.droppedCards = droppedCards;
+    }
+
+    public Drop(int dropProb, OutStringAction onDrop)
+    {
+        this.dropProb = dropProb;
+        this.onDrop = onDrop;
     }
 
     public List<Card> GetDroppedCards(out string tip)
     {
         tip = string.Empty;
 
-        List<Card> droppedCards = new();
-        // 创建卡牌
-        for (int i = 0; i < dropNum; i++)
+        if (!droppedCards.IsNullOrEmpty()) return droppedCards;
+
+        droppedCards = new();
+        foreach (var (cardId, dropNum) in dropConfig)
         {
-            Card toDrop = null;
-            
-            if (card != null)
-                toDrop = JsonManager.DeepCopy(card);
-            else if (!string.IsNullOrEmpty(cardId))
-                toDrop = CardFactory.CreateCard(cardId);
+            if (string.IsNullOrEmpty(cardId) || dropNum <= 0) continue;
 
-            if (toDrop == null) continue;
-
-            // 深拷贝
-            droppedCards.Add(toDrop);
+            for (int i = 0; i < dropNum; i++)
+            {
+                droppedCards.Add(CardFactory.CreateCard(cardId));
+            }
         }
 
-        onDropped?.Invoke(out tip);
+        onDrop?.Invoke(out tip);
 
         return droppedCards;
     }

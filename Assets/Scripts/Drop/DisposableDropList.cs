@@ -70,10 +70,14 @@ public class DisposableDropList
         for (int i = 0; i < dropList.Count; i++)
         {
             Drop drop = dropList[i];
-            if (drop.card.CardId == cardId)
+            foreach (var c in drop.droppedCards)
             {
-                dropList.RemoveAt(i);
-                return drop.GetDroppedCards(out _);
+                if (c.CardId == cardId)
+                {
+                    // 从剩余列表中移除（一次性掉落）
+                    dropList.RemoveAt(i);
+                    return drop.GetDroppedCards(out _);
+                }
             }
         }
 

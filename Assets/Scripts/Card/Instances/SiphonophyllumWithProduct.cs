@@ -4,9 +4,9 @@
 public class SiphonophyllumWithProduct : Card
 {
     private RandomDropList dropList = new(
-       new Drop("废金属", 2, 3),
-       new Drop("废金属", 1, 2),
-       new Drop("磁性触手", 1, 1)
+       new Drop(3, ("废金属", 2)),
+       new Drop(2, ("废金属", 1)),
+       new Drop(1, ("磁性触手", 1))
        );
 
     private SiphonophyllumWithProduct()

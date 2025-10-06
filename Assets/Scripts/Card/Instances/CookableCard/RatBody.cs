@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class RatBody : CookableCard
 {
     private RandomDropList dropList = new(
-       new Drop("小块生肉", 1, 3),
+       new Drop(3, ("小块生肉", 1)),
        new Drop(1, (out string tip) => { tip = "肉被糟蹋了，什么都没得到"; })
        );
 

@@ -21,11 +21,7 @@ public class RandomDropList
         }
 
         // 计算总概率
-        int totalProb = 0;
-        foreach (var drop in dropList)
-        {
-            totalProb += drop.dropProb;
-        }
+        int totalProb = CalcTotalProb();
 
         // 随机选择
         int randomValue = Random.Range(0, totalProb);
@@ -44,5 +40,16 @@ public class RandomDropList
         // 理论上不会执行到这里
         Debug.LogError("Drop selection failed!");
         return null;
+    }
+
+    private int CalcTotalProb()
+    {
+        int totalProb = 0;
+        foreach (var drop in dropList)
+        {
+            totalProb += drop.dropProb;
+        }
+
+        return totalProb;
     }
 }

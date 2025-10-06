@@ -7,11 +7,11 @@ using System.Linq;
 public class LoveBeadWithProduct : Card
 {
     private RandomDropList dropList = new(
-        new Drop("玻璃沙", 2, 3),
-        new Drop("废金属", 2, 3),
-        new Drop("珊瑚", 1, 3),
-        new Drop("韧性胶管", 1, 3),
-        new Drop("白爆矿", 1, 3)
+        new Drop(3, ("玻璃沙", 2)),
+        new Drop(3, ("废金属", 2)),
+        new Drop(3, ("珊瑚", 1)),
+        new Drop(3, ("韧性胶管", 1)),
+        new Drop(3, ("白爆矿", 1))
         );
 
     private LoveBeadWithProduct()
