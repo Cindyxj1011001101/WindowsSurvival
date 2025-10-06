@@ -1078,5 +1078,11 @@ public class WeaponComponent : CardComponent
     {
         target.TakeDamage(atk, GameManager.Instance.Player);
     }
+
+    public bool WithinAttackRange(IEntity target)
+    {
+        var dist = target.Coordinate.DistanceTo(GameManager.Instance.Player.Coordinate);
+        return dist <= maxAtkDist && dist >= minAtkDist;
+    }
 }
 #endregion

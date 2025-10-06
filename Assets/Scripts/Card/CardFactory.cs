@@ -131,6 +131,10 @@ public static class CardFactory
             { "未处理的海蜇皮", typeof(JellyfishSkin) },
             { "腌渍中的海蜇皮", typeof(PickledJellyfishSkin) },
             { "已处理的海蜇皮", typeof(ProcessedJellyfishSkin) },
+            { "恶臭肉", typeof(FoulSmellingMeat) },
+            { "熟恶臭肉", typeof(CookedFoulSmellingMeat) },
+            { "废铁矛", typeof(ScrapIronSpear) },
+            { "废铁棍", typeof(ScrapIronRod) },
         };
     }
 
