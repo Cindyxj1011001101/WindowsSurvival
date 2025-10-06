@@ -73,7 +73,7 @@ public class SpaceshipSeat : ConstructionCard
         hint = string.Empty;
         if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
         {
-            hint = "只能在非水域地点休息";
+            hint = "无法在水域地点休息";
             return false;
         }
         return true;
