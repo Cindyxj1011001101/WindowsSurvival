@@ -31,7 +31,7 @@ public class WasteHeap : Card
             Use();
 
             //消耗45分钟
-            TimeManager.Instance.AddTime(45);
+            TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
 
             if (SoundManager.Instance != null)
                 SoundManager.Instance.PlaySound("挖掘废料_01", true);
@@ -65,7 +65,7 @@ public class WasteHeap : Card
             tool.Use();
 
             //消耗15分钟
-            TimeManager.Instance.AddTime(15);
+            TimeManager.Instance.AddTime(Events[1].GetTimeEffect());
 
             if (SoundManager.Instance != null)
                 SoundManager.Instance.PlaySound("挖掘废料_01", true);
@@ -75,10 +75,9 @@ public class WasteHeap : Card
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
-        // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            tip = "用铲子挖";
+            tip = Events[1].name;
             return true;
         }
         return false;
