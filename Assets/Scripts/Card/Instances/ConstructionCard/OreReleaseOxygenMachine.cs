@@ -22,7 +22,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         {
             new Event("接电", "接电后矿石释氧机每2小时消耗1块白爆矿,产生180氧气", Event_Open, Judge_Open),
             new Event("断电", "断电后,将不再工作", Event_Close, Judge_Close),
-            new Event("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气", Event_GetOxygen, Judge_GetOxygen)
+            new Event("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen)
         };
     }
 
@@ -109,42 +109,6 @@ public class OreReleaseOxygenMachine : ConstructionCard
     {
         hint = string.Empty;
         return stateMachine.currentStateName == "已开启";
-    }
-    #endregion
-
-    #region 获取氧气
-    private bool Judge_GetOxygen(out string hint)
-    {
-        hint = string.Empty;
-        // 玩家氧气剩余容量大于0，并且氧气储量大于0时可获取
-        var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
-        if (remainingCapacity == 0)
-        {
-            hint = "麦麦的氧气已满";
-            return false;
-        }
-        var toRelease = Mathf.Min(oxygenStorage.value, remainingCapacity);
-        if (toRelease == 0)
-        {
-            hint = "机器的氧气存储不足";
-            return false;
-        }
-        return true;
-    }
-
-    private void Event_GetOxygen(out string tip)
-    {
-        tip = string.Empty;
-        // 玩家氧气剩余容量
-        var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
-        // 计算释放量
-        var toRelease = Mathf.Min(oxygenStorage.value, remainingCapacity);
-        if (toRelease > 0)
-            // 释放氧气
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, toRelease);
-
-        // 氧气存量减少
-        oxygenStorage.AddValue(-toRelease);
     }
     #endregion
 

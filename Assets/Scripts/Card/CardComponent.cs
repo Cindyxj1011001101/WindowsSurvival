@@ -771,6 +771,40 @@ public class SalineWaterStorageComponent : ContinuousValueComponent
 public class OxygenStorageComponent : ContinuousValueComponent
 {
     public OxygenStorageComponent(float maxValue) : base(0, maxValue) { }
+
+    public bool Judge_GetOxygen(out string hint)
+    {
+        hint = string.Empty;
+        // 玩家氧气剩余容量大于0，并且氧气储量大于0时可获取
+        var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
+        if (remainingCapacity == 0)
+        {
+            hint = "麦麦的氧气已满";
+            return false;
+        }
+        var toRelease = Mathf.Min(value, remainingCapacity);
+        if (toRelease == 0)
+        {
+            hint = "氧气存储不足";
+            return false;
+        }
+        return true;
+    }
+
+    public void Event_GetOxygen(out string tip)
+    {
+        tip = string.Empty;
+        // 玩家氧气剩余容量
+        var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
+        // 计算释放量
+        var toRelease = Mathf.Min(value, remainingCapacity);
+        if (toRelease > 0)
+            // 释放氧气
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, toRelease);
+
+        // 氧气存量减少
+        AddValue(-toRelease);
+    }
 }
 #endregion
 

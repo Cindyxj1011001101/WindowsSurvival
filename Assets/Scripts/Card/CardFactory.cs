@@ -138,6 +138,7 @@ public static class CardFactory
             { "活菌丝", typeof(LiveMycelium) },
             { "谜样菇", typeof(MysteryMushroom) },
             { "松动巨石", typeof(LooseBoulders) },
+            { "小型气穴", typeof(SmallAirFilledCave) },
         };
     }
 

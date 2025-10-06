@@ -1,6 +1,0 @@
-/// <summary>
-/// Ð¡ÐÍÆøÑ¨
-/// </summary>
-public class SmallAirFilledCave
-{
-}
