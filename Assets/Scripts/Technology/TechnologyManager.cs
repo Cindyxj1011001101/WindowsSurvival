@@ -16,6 +16,16 @@ public class TechnologyManager
     private TechnologyManager()
     {
         techData = GameDataManager.Instance.TechnologyData;
+    }
+
+    public void Init()
+    {
+        techData = GameDataManager.Instance.TechnologyData;
+
+        if (CurStudiedTechNode != null)
+            Study(CurStudiedTechNode);
+
+        CurStudyRate = CalcStudyRate();
 
         // 解锁一遍物品配方
         foreach (var techNode in Resources.LoadAll<ScriptableTechnologyNode>($"ScriptableObject/Technology"))
@@ -28,14 +38,6 @@ public class TechnologyManager
                 }
             }
         }
-    }
-
-    public void Init()
-    {
-        if (CurStudiedTechNode != null)
-            Study(CurStudiedTechNode);
-
-        CurStudyRate = CalcStudyRate();
 
         // 监听数据传输台的数量变化
         EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, OnCardNumChanged);

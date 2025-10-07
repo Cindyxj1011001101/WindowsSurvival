@@ -36,12 +36,12 @@ public class InGameEventManager
     {
         // 注册所有事件
         RegistInGameEvents();
-        // 读取存档数据
-        LoadData();
     }
 
     public void Init()
     {
+        // 读取存档数据
+        LoadData();
         // 监听结算事件
         UpdateManager.Instance.InGameEventUpdate.AddListener(Update);
     }
@@ -139,7 +139,7 @@ public class InGameEventManager
         // 更新趋势值
         UpdateTrendValue(selectedEvent.threatLevel);
 
-        // 触发事件
+        // TODO：触发事件
         //selectedEvent.TriggerThisEvent();
     }
 
