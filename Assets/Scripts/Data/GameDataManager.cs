@@ -65,6 +65,8 @@ public class GameDataManager
         globalData = JsonManager.LoadData<GlobalData>(CurLoadName, "GlobalData");
         // 玩家数据
         playerData = JsonManager.LoadData<Player>(CurLoadName, "PlayerData");
+        // 游戏事件数据
+        inGameEventData = JsonManager.LoadData<InGameEventData>(CurLoadName, "InGameEventData");
     }
 
     public void SaveAllData()
@@ -98,6 +100,8 @@ public class GameDataManager
         SaveGlobalData();
         // 玩家数据
         SavePlayerData();
+        // 游戏事件数据
+        SaveInGameEventData();
 
         if (loadData == null)
         {
@@ -280,24 +284,6 @@ public class GameDataManager
     }
 
     #endregion
-
-    //#region 合成
-
-    //private List<string> unlockedRecipes;
-
-    //public List<string> UnlockedRecipes => unlockedRecipes;
-
-    //public void SaveUnlockedRecipes()
-    //{
-    //    JsonManager.SaveData(unlockedRecipes, CurLoadName, "UnlockedRecipes");
-    //}
-
-    //public void LoadUnlockedRecipes()
-    //{
-    //    unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
-    //}
-
-    //#endregion
 
     #region 科技
 
@@ -505,6 +491,22 @@ public class GameDataManager
     public void SavePlayerData()
     {
         JsonManager.SaveData(playerData, CurLoadName, "PlayerData");
+    }
+    #endregion
+
+    #region 游戏事件数据
+    private InGameEventData inGameEventData;
+
+    public InGameEventData InGameEventData => inGameEventData;
+
+    public void SaveInGameEventData()
+    {
+        inGameEventData = new()
+        {
+            eventsOnCooldown = InGameEventManager.Instance.EventsOnCooldown,
+            trendValue = InGameEventManager.Instance.TrendValue,
+        };
+        JsonManager.SaveData(inGameEventData, CurLoadName, "InGameEventData");
     }
     #endregion
 }

@@ -18,18 +18,6 @@ public class OreReleaseOxygenMachine : ConstructionCard
 
     private OreReleaseOxygenMachine()
     {
-        Events = new()
-        {
-            new CardEvent("接电", "接电后矿石释氧机每2小时消耗1块白爆矿,产生180氧气", Event_Open, Judge_Open),
-            new CardEvent("断电", "断电后,将不再工作", Event_Close, Judge_Close),
-            new CardEvent("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen)
-        };
-    }
-
-    public override void Awake()
-    {
-        base.Awake();
-
         // 未布置和已布置两种状态
         if (!TryGetComponent(out stateMachine))
         {
@@ -48,7 +36,38 @@ public class OreReleaseOxygenMachine : ConstructionCard
             oxygenStorage = new OxygenStorageComponent(360);
             AddComponent(oxygenStorage);
         }
+
+        Events = new()
+        {
+            new CardEvent("接电", "接电后矿石释氧机每2小时消耗1块白爆矿,产生180氧气", Event_Open, Judge_Open),
+            new CardEvent("断电", "断电后,将不再工作", Event_Close, Judge_Close),
+            new CardEvent("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen)
+        };
     }
+
+    //public override void Awake()
+    //{
+    //    base.Awake();
+
+    //    // 未布置和已布置两种状态
+    //    if (!TryGetComponent(out stateMachine))
+    //    {
+    //        var states = new List<CardState>()
+    //        {
+    //            new ("已关闭", "0", false, true, false),
+    //            new ("已开启", "1", true, true, true),
+    //        };
+    //        stateMachine = new StateMachineComponent("已关闭", states);
+    //        AddComponent(stateMachine);
+    //    }
+
+    //    // 添加氧气存储组件
+    //    if (!TryGetComponent(out oxygenStorage))
+    //    {
+    //        oxygenStorage = new OxygenStorageComponent(360);
+    //        AddComponent(oxygenStorage);
+    //    }
+    //}
 
     private bool ContentFilter(Card c, out string s)
     {
