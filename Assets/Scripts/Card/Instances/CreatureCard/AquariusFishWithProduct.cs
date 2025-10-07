@@ -21,7 +21,7 @@ public class AquariusFishWithProduct : Card
                 // 获得一张“有产物的被捉住的水瓶鱼”
                 // 继承产物进度
                 // 添加到玩家背包
-                TurnTo("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag, out var card);
+                AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag, out var card);
                 card.InheritComponent<ProgressComponent>(this, out _);
             })
         );
@@ -61,7 +61,6 @@ public class AquariusFishWithProduct : Card
     }
     #endregion
 
-
     private void Catch(Card tool, out string tip)
     {
         tip = string.Empty;
@@ -76,7 +75,7 @@ public class AquariusFishWithProduct : Card
 
         // 3. 掉落卡牌
         // 获得一张“有产物的被捉住的水瓶鱼”
-        TurnTo("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
+        AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
