@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class CraftManager
 {
-    private static CraftManager instance = new();
-    public static CraftManager Instance => instance;
+    public static CraftManager Instance { get; } = new();
 
     private Dictionary<RecipeType, ScriptableRecipeLibrary> libraryDict = new(); // 以配方类型-配方库的形式存储所有可用配方
 
@@ -12,7 +11,9 @@ public class CraftManager
 
     public Dictionary<RecipeType, ScriptableRecipeLibrary> LibraryDict => libraryDict;
 
-    private CraftManager()
+    private CraftManager() { }
+
+    public void Init()
     {
         // 加载每一种类型的配方库
         foreach (var library in Resources.LoadAll<ScriptableRecipeLibrary>("ScriptableObject/Craft/Libraries"))

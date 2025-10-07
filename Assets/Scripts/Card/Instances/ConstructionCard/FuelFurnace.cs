@@ -216,7 +216,7 @@ public class FuelFurnace : ConstructionCard
         if (leftRounds <= 0)
         {
             // 得到产物
-            var outcomeCardId = ProcessManager.GetProcessOutcomeID(cardsToProcesss, temperatureRecord);
+            var outcomeCardId = ProcessManager.Instance.GetProcessOutcomeID(cardsToProcesss, temperatureRecord);
             
             leftRounds = 0;
             isProcessing = false;

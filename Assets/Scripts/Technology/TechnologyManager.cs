@@ -3,8 +3,7 @@ using UnityEngine;
 
 public class TechnologyManager
 {
-    private static TechnologyManager instance = new();
-    public static TechnologyManager Instance => instance;
+    public static TechnologyManager Instance { get; } = new();
 
     private TechnologyData techData;
 
@@ -14,10 +13,7 @@ public class TechnologyManager
 
     public bool IsIntermediateTechnologiesUnlocked => techData.isIntermediateTechnologiesUnlocked;
 
-    private TechnologyManager()
-    {
-        techData = GameDataManager.Instance.TechnologyData;
-    }
+    private TechnologyManager() { }
 
     public void Init()
     {
