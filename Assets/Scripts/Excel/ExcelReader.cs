@@ -51,13 +51,13 @@ public static class ExcelReader
                 HasInnerContents = ParseBool(row[23].ToString()),
                 IsFlammable = ParseBool(row[25].ToString()),
                 HasFoodProperty = ParseBool(row[27].ToString()),
-                IsPassage = ParseBool(row[36].ToString()),
-                CanCook = ParseBool(row[40].ToString()),
-                IsConstruction = ParseBool(row[43].ToString()),
-                IsPlant = ParseBool(row[51].ToString()),
-                HasCoordinate = ParseBool(row[56].ToString()),
-                IsWeapon = ParseBool(row[58].ToString()),
-                IsEntity = ParseBool(row[63].ToString()),
+                IsPassage = ParseBool(row[37].ToString()),
+                CanCook = ParseBool(row[41].ToString()),
+                IsConstruction = ParseBool(row[44].ToString()),
+                IsPlant = ParseBool(row[52].ToString()),
+                HasCoordinate = ParseBool(row[57].ToString()),
+                IsWeapon = ParseBool(row[59].ToString()),
+                IsEntity = ParseBool(row[64].ToString()),
             };
             // 可选字段
             if (cardConfig.HasFreshness)
@@ -96,69 +96,70 @@ public static class ExcelReader
             {
                 cardConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>
                 {
-                    { FoodProperty.EatableDegree, ParseInt(row[28].ToString()) },   // 可食用度
-                    { FoodProperty.UneatableDegree, ParseInt(row[29].ToString()) }, // 不可食用度   
-                    { FoodProperty.Meatiness, ParseInt(row[30].ToString()) },       // 肉度
-                    { FoodProperty.Fishiness, ParseInt(row[31].ToString()) },       // 鱼度
-                    { FoodProperty.Shellfishiness, ParseInt(row[32].ToString()) },  // 贝度
-                    { FoodProperty.Wateriness, ParseInt(row[33].ToString()) },      // 水度
-                    { FoodProperty.Vegetableness, ParseInt(row[34].ToString()) },   // 菜度
-                    { FoodProperty.Fruitiness, ParseInt(row[35].ToString()) }       // 果度
+                    { FoodProperty.EatableDegree, ParseInt(row[28].ToString()) },     // 可食用度
+                    { FoodProperty.UneatableDegree, ParseInt(row[29].ToString()) },   // 不可食用度   
+                    { FoodProperty.Meatiness, ParseInt(row[30].ToString()) },         // 肉度
+                    { FoodProperty.Fishiness, ParseInt(row[31].ToString()) },         // 鱼度
+                    { FoodProperty.Shellfishiness, ParseInt(row[32].ToString()) },    // 贝度
+                    { FoodProperty.Wateriness, ParseInt(row[33].ToString()) },        // 水度
+                    { FoodProperty.Vegetableness, ParseInt(row[34].ToString()) },     // 菜度
+                    { FoodProperty.Fruitiness, ParseInt(row[35].ToString()) },        // 果度
+                    { FoodProperty.FoulSmellingDegree, ParseInt(row[36].ToString()) } // 恶臭度
                 };
             }
             if (cardConfig.IsPassage)
             {
-                cardConfig.MoveTime = ParseInt(row[37].ToString());
-                cardConfig.TargetPlace = Enum.Parse<PlaceEnum>(row[38].ToString());
-                cardConfig.InteractAudio = row[39].ToString();
+                cardConfig.MoveTime = ParseInt(row[38].ToString());
+                cardConfig.TargetPlace = Enum.Parse<PlaceEnum>(row[39].ToString());
+                cardConfig.InteractAudio = row[40].ToString();
             }
             if (cardConfig.CanCook)
             {
-                cardConfig.CookTime = ParseInt(row[41].ToString());
-                cardConfig.OutcomeCardId = row[42].ToString();
+                cardConfig.CookTime = ParseInt(row[42].ToString());
+                cardConfig.OutcomeCardId = row[43].ToString();
             }
             if (cardConfig.IsConstruction)
             {
-                cardConfig.OnlyInWater = ParseBool(row[44].ToString());
-                cardConfig.OnlyOutWater = ParseBool(row[45].ToString());
-                cardConfig.OnlyInDoor = ParseBool(row[46].ToString());
-                cardConfig.OnlyOutDoor = ParseBool(row[47].ToString());
-                cardConfig.NeedCable = ParseBool(row[48].ToString());
-                cardConfig.CanBeDemolished = ParseBool(row[49].ToString());
-                cardConfig.DemolitionDebris = row[50].ToString();
+                cardConfig.OnlyInWater = ParseBool(row[45].ToString());
+                cardConfig.OnlyOutWater = ParseBool(row[46].ToString());
+                cardConfig.OnlyInDoor = ParseBool(row[47].ToString());
+                cardConfig.OnlyOutDoor = ParseBool(row[48].ToString());
+                cardConfig.NeedCable = ParseBool(row[49].ToString());
+                cardConfig.CanBeDemolished = ParseBool(row[50].ToString());
+                cardConfig.DemolitionDebris = row[51].ToString();
             }
             if (cardConfig.IsPlant)
             {
-                cardConfig.GrowthRate = ParseFloat(row[52].ToString());
-                string[] tempretures = row[53].ToString().Split('_');
+                cardConfig.GrowthRate = ParseFloat(row[53].ToString());
+                string[] tempretures = row[54].ToString().Split('_');
                 cardConfig.MinConfortTempreture = ParseFloat(tempretures[0]);
                 cardConfig.MaxConfortTempreture = ParseFloat(tempretures[1]);
                 cardConfig.MinGrowTempture = ParseFloat(tempretures[2]);
                 cardConfig.MaxGrowTempture = ParseFloat(tempretures[3]);
                 cardConfig.MinLiveTempture = ParseFloat(tempretures[4]);
                 cardConfig.MaxLiveTempture = ParseFloat(tempretures[5]);
-                cardConfig.DeadcardName = row[54].ToString();
-                cardConfig.Pressures = ParsePressureLevels(row[55].ToString());
+                cardConfig.DeadcardName = row[55].ToString();
+                cardConfig.Pressures = ParsePressureLevels(row[56].ToString());
             }
             if (cardConfig.HasCoordinate)
             {
-                cardConfig.Position = ParseFloat(row[57].ToString());
+                cardConfig.Position = ParseFloat(row[58].ToString());
             }
             if (cardConfig.IsWeapon)
             {
-                cardConfig.WeaponAtk = ParseFloat(row[59].ToString());
-                cardConfig.MinAtkDist = ParseFloat(row[60].ToString());
-                cardConfig.MaxAtkDist = ParseFloat(row[61].ToString());
-                cardConfig.AtkForm = Enum.Parse<AttackForm>(row[62].ToString());
+                cardConfig.WeaponAtk = ParseFloat(row[60].ToString());
+                cardConfig.MinAtkDist = ParseFloat(row[61].ToString());
+                cardConfig.MaxAtkDist = ParseFloat(row[62].ToString());
+                cardConfig.AtkForm = Enum.Parse<AttackForm>(row[63].ToString());
             }
             if (cardConfig.IsEntity)
             {
-                cardConfig.MaxHealth = ParseFloat(row[64].ToString());
-                cardConfig.EntityAtk = ParseFloat(row[65].ToString());
-                cardConfig.MoveDistPerMin = ParseFloat(row[66].ToString());
-                cardConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[67].ToString());
-                cardConfig.AIRefreshInterval = ParseInt(row[68].ToString());
-                cardConfig.DeadDrops = row[69].ToString();
+                cardConfig.MaxHealth = ParseFloat(row[65].ToString());
+                cardConfig.EntityAtk = ParseFloat(row[66].ToString());
+                cardConfig.MoveDistPerMin = ParseFloat(row[67].ToString());
+                cardConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[68].ToString());
+                cardConfig.AIRefreshInterval = ParseInt(row[69].ToString());
+                cardConfig.DeadDrops = row[70].ToString();
             }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }

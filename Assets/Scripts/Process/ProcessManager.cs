@@ -14,14 +14,15 @@ public enum TempertureType
 }
 public enum FoodProperty
 {
-    EatableDegree,//可食用度
-    UneatableDegree,//不可食用度
-    Meatiness,//肉度
-    Fishiness,//鱼度
-    Shellfishiness,//贝度
-    Wateriness,//水度
-    Vegetableness,//菜度
-    Fruitiness,//果度
+    EatableDegree,     // 可食用度
+    UneatableDegree,   // 不可食用度
+    Meatiness,         // 肉度
+    Fishiness,         // 鱼度
+    Shellfishiness,    // 贝度
+    Wateriness,        // 水度
+    Vegetableness,     // 菜度
+    Fruitiness,        // 果度
+    FoulSmellingDegree // 恶臭度
 }
 public enum CalculateType
 {
