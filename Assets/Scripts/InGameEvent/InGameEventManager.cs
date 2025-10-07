@@ -106,7 +106,7 @@ public class InGameEventManager
     /// <summary>
     /// 尝试触发事件
     /// </summary>
-    public void TryTriggerEvent()
+    private void TryTriggerEvent()
     {
         // 首先根据基础概率决定是否尝试触发事件
         if (UnityEngine.Random.value > EVENT_TRIGGER_PROB) return;
