@@ -5,8 +5,9 @@ public class TimeManager : MonoBehaviour
 {
     public DateTime StartDateTime { get; private set; } = new(2020, 1, 1, 0, 0, 0);
     public DateTime CurTime { get; private set; }
-    public int SettleInterval;
-    public int curInterval;
+    public int SettleInterval { get; private set; } // 结算间隔
+    public int CurInterval { get; private set; }
+
     private DateTime lastDay;
 
     public int Day => (CurTime - StartDateTime).Days + 1;
@@ -49,13 +50,13 @@ public class TimeManager : MonoBehaviour
         {
             //默认初始化
             CurTime = StartDateTime;
-            curInterval = SettleInterval;
+            CurInterval = SettleInterval;
         }
         else
         {
             //从存档初始化
             CurTime = GameDataManager.Instance.TimeData.curTime;
-            curInterval = GameDataManager.Instance.TimeData.curIntervel;
+            CurInterval = GameDataManager.Instance.TimeData.curIntervel;
         }
 
         // 初始化lastDay
@@ -74,16 +75,16 @@ public class TimeManager : MonoBehaviour
 
         while (timespan != 0)
         {
-            if (timespan >= curInterval)
+            if (timespan >= CurInterval)
             {
-                timespan -= curInterval;
-                curInterval = SettleInterval;
+                timespan -= CurInterval;
+                CurInterval = SettleInterval;
                 // ChatConditionManager.Instance.TrackCurrentStatus();
                 EventManager.Instance.TriggerEvent(EventType.Update);
             }
             else
             {
-                curInterval -= timespan;
+                CurInterval -= timespan;
                 timespan = 0;
             }
         }

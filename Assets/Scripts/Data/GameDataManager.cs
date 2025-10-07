@@ -382,7 +382,7 @@ public class GameDataManager
     {
         timeData.init = true;
         timeData.curTime = TimeManager.Instance.CurTime;
-        timeData.curIntervel = TimeManager.Instance.curInterval;
+        timeData.curIntervel = TimeManager.Instance.CurInterval;
         JsonManager.SaveData(timeData, CurLoadName, "TimeData");
     }
 

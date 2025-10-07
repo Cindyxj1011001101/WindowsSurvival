@@ -441,7 +441,7 @@ public static class ExcelReader
     }
 
     #region 读取加工表配置
-    public static List<ProcessConfig> ReadProcess(string filename)
+    public static List<ProcessConfig> ReadProcessConfig(string filename)
     {
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
@@ -457,6 +457,32 @@ public static class ExcelReader
         }
 
         return processConfigList;
+    }
+    #endregion
+
+    #region 读取事件配置
+    public static List<InGameEventConfig> ReadInGameEventConfig(string filename)
+    {
+        // 打开Excel文件
+        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
+        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+        DataSet result = excelReader.AsDataSet();
+        DataTable table = result.Tables[0]; // 配置在第一张表中
+        List<InGameEventConfig> eventConfigList = new();
+        for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
+        {
+            DataRow row = table.Rows[i];
+            if (string.IsNullOrEmpty(row[0].ToString())) continue; // 如果事件名称为空，跳过读取
+            InGameEventConfig config = new()
+            {
+                EventName = row[0].ToString(),
+                ThreatLevel = ParseInt(row[1].ToString()),
+                BasicTriggerWeight = ParseFloat(row[2].ToString()),
+                TriggerInterval = ParseFloat(row[4].ToString())
+            };
+            eventConfigList.Add(config);
+        }
+        return eventConfigList;
     }
     #endregion
 }
