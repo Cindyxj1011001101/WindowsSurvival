@@ -20,6 +20,24 @@ public class CraftManager
         }
     }
 
+    public void Init()
+    {
+        unlockedRecipes.Clear();
+        var techData = GameDataManager.Instance.TechnologyData;
+
+        // 解锁一遍物品配方
+        foreach (var techNode in Resources.LoadAll<ScriptableTechnologyNode>($"ScriptableObject/Technology"))
+        {
+            if (techData.studiedTechNodes.Contains(techNode.techName))
+            {
+                foreach (var recipe in techNode.recipes)
+                {
+                    CraftManager.Instance.UnlockRecipe(recipe.cardId);
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// 判断合成配方是否解锁
     /// </summary>

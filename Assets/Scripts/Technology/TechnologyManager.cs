@@ -27,18 +27,6 @@ public class TechnologyManager
 
         CurStudyRate = CalcStudyRate();
 
-        // 解锁一遍物品配方
-        foreach (var techNode in Resources.LoadAll<ScriptableTechnologyNode>($"ScriptableObject/Technology"))
-        {
-            if (techData.studiedTechNodes.Contains(techNode.techName))
-            {
-                foreach (var recipe in techNode.recipes)
-                {
-                    CraftManager.Instance.UnlockRecipe(recipe.cardId);
-                }
-            }
-        }
-
         // 监听数据传输台的数量变化
         EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, OnCardNumChanged);
     }
