@@ -170,7 +170,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         }
 
         // 制氧进度增加
-        generateProcess -= TimeManager.Instance.SettleInterval;
+        generateProcess -= TimeManager.SETTLEMENT_INTERVAL;
 
 		if (TryGetComponent<TimerComponent>(out var timer))
         {

@@ -46,7 +46,7 @@ public class FreshnessComponent : CardComponent, IUpdate
         if (freshness <= 0) return;
 
         // 随时间自动减少新鲜度
-        freshness -= Mathf.CeilToInt(TimeManager.Instance.SettleInterval * updateRate);
+        freshness -= Mathf.CeilToInt(TimeManager.SETTLEMENT_INTERVAL * updateRate);
 
         if (freshness <= 0)
         {
@@ -102,7 +102,7 @@ public class GrowthComponent : CardComponent, IUpdate
         if (growth >= maxGrowth) return;
 
         // 随时间自动增加生长度
-        growth += Mathf.CeilToInt(TimeManager.Instance.SettleInterval * updateRate);
+        growth += Mathf.CeilToInt(TimeManager.SETTLEMENT_INTERVAL * updateRate);
 
         if (growth >= maxGrowth)
         {
@@ -148,7 +148,7 @@ public class ProgressComponent : CardComponent, IUpdate
         if (progress >= maxProgress) return;
 
         // 随时间自动增加产物进度
-        progress += Mathf.CeilToInt(TimeManager.Instance.SettleInterval * updateRate);
+        progress += Mathf.CeilToInt(TimeManager.SETTLEMENT_INTERVAL * updateRate);
 
         if (progress >= maxProgress)
         {
@@ -502,7 +502,7 @@ public class CookComponent : CardComponent
     {
         if (leftCookTime <= 0) return;
 
-        leftCookTime -= TimeManager.Instance.SettleInterval;
+        leftCookTime -= TimeManager.SETTLEMENT_INTERVAL;
 
         if (leftCookTime <= 0)
         {

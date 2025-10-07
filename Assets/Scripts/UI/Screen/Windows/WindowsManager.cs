@@ -96,7 +96,7 @@ public class WindowsManager : MonoBehaviour
         window.getConfirmEffects = (t) =>
         {
             Dictionary<PlayerStateEnum, float> p = null;
-            float sobrietyChange = t / TimeManager.Instance.SettleInterval * sobrietyChangeRateWhileSleeping;
+            float sobrietyChange = t / TimeManager.SETTLEMENT_INTERVAL * sobrietyChangeRateWhileSleeping;
             if (sobrietyChange > 0)
             {
                 p = new()

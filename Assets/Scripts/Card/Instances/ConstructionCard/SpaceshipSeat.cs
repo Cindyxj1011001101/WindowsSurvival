@@ -54,8 +54,8 @@ public class SpaceshipSeat : ConstructionCard
         window.getConfirmEffects += (t) =>
         {
             Dictionary<PlayerStateEnum, float> p = null;
-            float sobrietyChange = t / TimeManager.Instance.SettleInterval * sobrietyChangeRate;
-            float sanChange = t / TimeManager.Instance.SettleInterval * sanChangeRate;
+            float sobrietyChange = t / TimeManager.SETTLEMENT_INTERVAL * sobrietyChangeRate;
+            float sanChange = t / TimeManager.SETTLEMENT_INTERVAL * sanChangeRate;
             if (sobrietyChange > 0)
             {
                 p = new()

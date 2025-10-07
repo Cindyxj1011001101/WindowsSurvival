@@ -19,13 +19,13 @@ public class UITimer : UIStateSlider
     {
         base.SetValue(value, maxValue);
 
-        int separatorCount = Mathf.FloorToInt(maxValue / TimeManager.Instance.SettleInterval);
+        int separatorCount = Mathf.FloorToInt(maxValue / TimeManager.SETTLEMENT_INTERVAL);
 
         for (int i = 1; i < separatorLayout.transform.childCount - 1; i++)
         {
             separatorLayout.transform.GetChild(i).gameObject.SetActive(i - 1 < separatorCount);
         }
 
-        separatorLayout.spacing = TimeManager.Instance.SettleInterval * (fillRectHeight - (separatorCount - 1) * separatorHeight) / maxValue;
+        separatorLayout.spacing = TimeManager.SETTLEMENT_INTERVAL * (fillRectHeight - (separatorCount - 1) * separatorHeight) / maxValue;
     }
 }

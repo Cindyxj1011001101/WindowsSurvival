@@ -154,7 +154,7 @@ public class FuelFurnace : ConstructionCard
         };
 
         // 添加计时器组件
-        AddComponent(new TimerComponent(maxRounds * TimeManager.Instance.SettleInterval) { tipText = "加工完成" });
+        AddComponent(new TimerComponent(maxRounds * TimeManager.SETTLEMENT_INTERVAL) { tipText = "加工完成" });
         RefreshSlot();
     }
 
@@ -209,7 +209,7 @@ public class FuelFurnace : ConstructionCard
         // 刷新计时器
         if (TryGetComponent<TimerComponent>(out var timer))
         {
-            timer.SetValue(leftRounds * TimeManager.Instance.SettleInterval);
+            timer.SetValue(leftRounds * TimeManager.SETTLEMENT_INTERVAL);
         }
 
         // 加工完成

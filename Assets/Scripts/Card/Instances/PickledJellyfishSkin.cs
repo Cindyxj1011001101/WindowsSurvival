@@ -42,7 +42,7 @@ public class PickledJellyfishSkin : Card
 
     private void HandlePickle()
     {
-        timer.AddValue(-TimeManager.Instance.SettleInterval);
+        timer.AddValue(-TimeManager.SETTLEMENT_INTERVAL);
 
         if (timer.value <= 0)
         {

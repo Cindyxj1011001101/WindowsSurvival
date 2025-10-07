@@ -95,7 +95,7 @@ public class InGameEventManager
         var keys = new List<string>(EventsOnCooldown.Keys);
         foreach (var eventName in keys)
         {
-            EventsOnCooldown[eventName] -= TimeManager.Instance.SettleInterval;
+            EventsOnCooldown[eventName] -= TimeManager.SETTLEMENT_INTERVAL;
             if (EventsOnCooldown[eventName] <= 0)
             {
                 EventsOnCooldown.Remove(eventName);

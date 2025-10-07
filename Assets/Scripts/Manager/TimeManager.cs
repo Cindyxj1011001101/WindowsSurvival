@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
+    public const int SETTLEMENT_INTERVAL = 15; // 结算间隔
     public DateTime StartDateTime { get; private set; } = new(2020, 1, 1, 0, 0, 0);
     public DateTime CurTime { get; private set; }
-    public int SettleInterval { get; private set; } // 结算间隔
     public int CurInterval { get; private set; }
 
     private DateTime lastDay;
@@ -50,7 +50,7 @@ public class TimeManager : MonoBehaviour
         {
             //默认初始化
             CurTime = StartDateTime;
-            CurInterval = SettleInterval;
+            CurInterval = SETTLEMENT_INTERVAL;
         }
         else
         {
@@ -78,7 +78,7 @@ public class TimeManager : MonoBehaviour
             if (timespan >= CurInterval)
             {
                 timespan -= CurInterval;
-                CurInterval = SettleInterval;
+                CurInterval = SETTLEMENT_INTERVAL;
                 // ChatConditionManager.Instance.TrackCurrentStatus();
                 EventManager.Instance.TriggerEvent(EventType.Update);
             }
