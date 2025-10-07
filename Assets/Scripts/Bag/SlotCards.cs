@@ -53,14 +53,18 @@ public class SlotCards : IComparable<SlotCards>
         Cards.Sort((a, b) => a.CompareTo(b));
 
         card.SetSlotCards(this);
-
-        Bag.OnAddCard(card);
         
         // 如果卡牌从不同的背包添加而来
         if (oBag != Bag)
         {
             // oBag为空说明卡牌是第一次创建
-            if (oBag != null) card.OnRemove(oBag); // 不必担心卡牌被销毁时执行不到这里的OnRemove方法，它会转而在RemoveCard中执行
+            if (oBag != null)
+            {
+                oBag.OnRemoveCard(card); // 先执行原背包的OnRemoveCard
+                card.OnRemove(oBag); // 不必担心卡牌被销毁时执行不到这里的OnRemove方法，它会转而在RemoveCard中执行
+            }
+
+            Bag.OnAddCard(card);
             card.OnAdd(Bag);
         }
     }
@@ -75,10 +79,12 @@ public class SlotCards : IComparable<SlotCards>
 
         Cards.Remove(card);
 
-        Bag.OnRemoveCard(card);
-
         // 如果卡牌要被销毁，说明它不会进入AddCard方法，需要在这里执行OnRemove
-        if (card.Destroyed) card.OnRemove(Bag);
+        if (card.Destroyed)
+        {
+            Bag.OnRemoveCard(card);
+            card.OnRemove(Bag);
+        }
 
         card.RefreshSlot();
     }
