@@ -475,10 +475,7 @@ public class GameManager : MonoBehaviour
             // 掉落卡牌
             droppedCards = disposableDropList.RandomDrop();
             if (droppedCards.IsNullOrEmpty())
-            {
-                tip = "什么也没有得到";
                 return;
-            }
 
             // 探索度变化
             EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, (CurEnvironmentBag.DiscoveryDegree, CurEnvironmentBag.ExploreCompleted));
@@ -489,7 +486,8 @@ public class GameManager : MonoBehaviour
             droppedCards = repeatableDropList.RandomDrop();
             if (droppedCards.IsNullOrEmpty())
             {
-                tip = "什么也没有得到";
+                tip = "地点资源缺乏，什么都没找到";
+                SoundManager.Instance.PlaySound("错误提示");
                 return;
             }
         }
