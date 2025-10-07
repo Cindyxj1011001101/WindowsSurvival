@@ -46,6 +46,7 @@ public class StudyWindow : WindowBase
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
         EventManager.Instance.AddListener(EventType.StudyStopped, OnStudyStopped);
         EventManager.Instance.AddListener(EventType.LockUnlockIntermediateTechnologies, RefreshDisplay);
+        EventManager.Instance.AddListener(EventType.DataTransmissionStationOutOfPower, OnDataTransmissionStationOutOfPower);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
 
@@ -71,6 +72,7 @@ public class StudyWindow : WindowBase
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
         EventManager.Instance.RemoveListener(EventType.StudyStopped, OnStudyStopped);
         EventManager.Instance.RemoveListener(EventType.LockUnlockIntermediateTechnologies, RefreshDisplay);
+        EventManager.Instance.RemoveListener(EventType.DataTransmissionStationOutOfPower, OnDataTransmissionStationOutOfPower);
     }
 
     private void OnStudyStarted(ScriptableTechnologyNode techNode)
@@ -91,6 +93,12 @@ public class StudyWindow : WindowBase
         RefreshDisplay();
 
         DisplayStudyState(2, null);
+    }
+
+    private void OnDataTransmissionStationOutOfPower()
+    {
+        studyButton.ShowTip("数据传输台断电，研究停止");
+        SoundManager.Instance.PlaySound("错误提示");
     }
 
     protected override void Init()

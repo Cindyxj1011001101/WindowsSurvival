@@ -144,6 +144,7 @@ public class DataTransmissionStation : ConstructionCard
             ShowTip("电力不足，研究已自动停止");
             if (SoundManager.Instance != null)
                 SoundManager.Instance.PlaySound("数据传输台没电", true);
+            EventManager.Instance.TriggerEvent(EventType.DataTransmissionStationOutOfPower);
         }
     }
 }

@@ -1,31 +1,31 @@
 ﻿public enum EventType
 {
-    Update,
-    ChangeCardProperty, // 卡牌属性变化
-    ChangeEnv,//场景移动界面刷新
-    RefreshPlayerState,//更新玩家状态数据
-    RefreshEnvironmentState,//更新环境状态数据
-    ChangeDiscoveryDegree, // 探索度变化
-    ChangePlayerBagCards, // 玩家背包卡牌变化
-    ChangeStudyProgress, // 研究进度变化
-    UnlockRecipe, // 解锁合成配方
-    GameOver, // 游戏结束
-    TriggerParagraph, // 触发对话
-    DialogueCondition, // 触发对话条件
-    //ChangeWaterLevel, // 水平面变化
-    AnotherDay,//跨天行为触发
-    StudyStarted, // 研究开始
-    StudyStopped, // 研究暂停
-    StudyComplished, // 研究完成
-    StartChangeTime,
-    EndChangeTime,
-    PickUpCard, // 拿起一张卡牌
-    PutDownCard, // 放下一张卡牌
-    StartSleeping, // 开始睡觉
-    StopSleeping, // 停止睡觉
-    LockUnlockIntermediateTechnologies,
-    CardNumChange,
-    PlayerMove, // 玩家移动
+    Update,                             // 回合结算
+    ChangeCardProperty,                 // 卡牌属性变化
+    ChangeEnv,                          // 场景移动界面刷新
+    RefreshPlayerState,                 // 更新玩家状态数据
+    RefreshEnvironmentState,            // 更新环境状态数据
+    ChangeDiscoveryDegree,              // 探索度变化
+    ChangePlayerBagCards,               // 玩家背包卡牌变化
+    ChangeStudyProgress,                // 研究进度变化
+    UnlockRecipe,                       // 解锁合成配方
+    GameOver,                           // 游戏结束
+    TriggerParagraph,                   // 触发对话
+    DialogueCondition,                  // 触发对话条件
+    AnotherDay,                         // 跨天行为触发
+    StudyStarted,                       // 研究开始
+    StudyStopped,                       // 研究暂停
+    StudyComplished,                    // 研究完成
+    StartChangeTime,                    // 时间变化开始
+    EndChangeTime,                      // 时间变化结束
+    PickUpCard,                         // 拿起一张卡牌
+    PutDownCard,                        // 放下一张卡牌
+    StartSleeping,                      // 开始睡觉
+    StopSleeping,                       // 停止睡觉
+    LockUnlockIntermediateTechnologies, // 锁定/解锁中间科技
+    CardNumChange,                      // 卡牌数量变化
+    PlayerMove,                         // 玩家移动
+    DataTransmissionStationOutOfPower,  // 数据传输台断电
 }
 
 public class ChangeStateArgs
