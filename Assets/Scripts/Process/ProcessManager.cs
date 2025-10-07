@@ -8,12 +8,10 @@ public class ProcessManager
 
 	private List<ProcessConfig> processConfigList;
 
-	private ProcessManager() { }
-
-	public void Init()
-	{
-		processConfigList = ExcelReader.ReadProcessConfig("ProcessConfig");
-	}
+	private ProcessManager()
+    {
+        processConfigList = ExcelReader.ReadProcessConfig("ProcessConfig");
+    }
 
 	public string GetProcessOutcomeID(List<Card> processedCards, Dictionary<TemperatureType, int> temperatureRecord)
 	{

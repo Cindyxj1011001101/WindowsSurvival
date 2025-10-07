@@ -118,8 +118,6 @@ public class GameManager : MonoBehaviour
     {
         Init();
 
-        CraftManager.Instance.Init();
-        ProcessManager.Instance.Init();
 		TechnologyManager.Instance.Init();
 		InGameEventManager.Instance.Init();
 	}

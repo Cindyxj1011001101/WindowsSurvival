@@ -11,10 +11,8 @@ public class CraftManager
 
     public Dictionary<RecipeType, ScriptableRecipeLibrary> LibraryDict => libraryDict;
 
-    private CraftManager() { }
-
-    public void Init()
-    {
+    private CraftManager()
+    { 
         // 加载每一种类型的配方库
         foreach (var library in Resources.LoadAll<ScriptableRecipeLibrary>("ScriptableObject/Craft/Libraries"))
         {
