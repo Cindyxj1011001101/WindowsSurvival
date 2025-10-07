@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -29,21 +30,17 @@ public class DisposableDropList
             return new();
         }
 
-        // 计算总概率
-        int totalProb = 0;
-        foreach (var drop in dropList)
-        {
-            totalProb += drop.dropWeight;
-        }
+        // 计算总权重
+        int totalWeight = dropList.Sum(d => d.dropWeight); 
 
         // 随机选择
-        int randomValue = Random.Range(0, totalProb);
-        int currentProb = 0;
+        int randomValue = Random.Range(0, totalWeight);
+        int currentSum = 0;
 
         for (int i = 0; i < dropList.Count; i++)
         {
-            currentProb += dropList[i].dropWeight;
-            if (randomValue < currentProb)
+            currentSum += dropList[i].dropWeight;
+            if (randomValue < currentSum)
             {
                 // 获取掉落项
                 Drop drop = dropList[i];

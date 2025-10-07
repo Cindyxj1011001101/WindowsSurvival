@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class RandomDropList
@@ -20,17 +21,17 @@ public class RandomDropList
             return new();
         }
 
-        // 计算总概率
-        int totalProb = CalcTotalProb();
+        // 计算总权重
+        int totalWeight = CalcTotalWeight();
 
         // 随机选择
-        int randomValue = Random.Range(0, totalProb);
-        int currentProb = 0;
+        int randomValue = Random.Range(0, totalWeight);
+        int currentSum = 0;
 
         for (int i = 0; i < dropList.Count; i++)
         {
-            currentProb += dropList[i].dropWeight;
-            if (randomValue < currentProb)
+            currentSum += dropList[i].dropWeight;
+            if (randomValue < currentSum)
             {
                 // 获取掉落项
                 return dropList[i].GetDroppedCards(out tip);
@@ -42,14 +43,8 @@ public class RandomDropList
         return null;
     }
 
-    private int CalcTotalProb()
+    private int CalcTotalWeight()
     {
-        int totalProb = 0;
-        foreach (var drop in dropList)
-        {
-            totalProb += drop.dropWeight;
-        }
-
-        return totalProb;
+        return dropList.Sum(d => d.dropWeight);
     }
 }
