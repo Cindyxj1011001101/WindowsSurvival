@@ -158,7 +158,7 @@ public class EnvironmentBagWindow : BagWindow
             GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
             GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
             // 提示
-            exploreButton.ShowTip(tip);
+            exploreButton.transform.ShowTip(tip, 1.4f);
         });
 
         // 等待抽牌动画完成

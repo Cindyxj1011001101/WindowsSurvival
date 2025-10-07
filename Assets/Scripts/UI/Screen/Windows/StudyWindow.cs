@@ -87,7 +87,7 @@ public class StudyWindow : WindowBase
 
         DisplayStudyState(0, techNode);
 
-        studyButton.ShowTip($"科技\"{techNode.techName}\"研究完成");
+        studyStateButton.transform.ShowTip($"科技\"{techNode.techName}\"研究完成", 1.4f);
     }
 
     private void OnStudyStopped()
@@ -99,7 +99,7 @@ public class StudyWindow : WindowBase
 
     private void OnDataTransmissionStationOutOfPower()
     {
-        studyButton.ShowTip("数据传输台断电，研究停止");
+        studyStateButton.transform.ShowTip("数据传输台断电，研究停止", 1.4f);
         SoundManager.Instance.PlaySound("错误提示");
     }
 
