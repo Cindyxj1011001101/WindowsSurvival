@@ -248,7 +248,7 @@ public static class ExcelReader
                 {
                     CardId = row[0].ToString(),
                     DropNum = ParseInt(row[1].ToString()),
-                    DropProb = ParseInt(row[2].ToString()),
+                    DropWeight = ParseInt(row[2].ToString()),
                     OverwriteFreshness = ParseBool(row[3].ToString()),
                     OverwriteDurability = ParseBool(row[5].ToString()),
                     OverwriteGrowth = ParseBool(row[7].ToString()),
@@ -291,7 +291,7 @@ public static class ExcelReader
                 }
 
                 // 添加到掉落列表
-                dropList.Add(new Drop(config.DropProb, droppedCards));
+                dropList.Add(new Drop(config.DropWeight, droppedCards));
             }
             // 保存为Json
             DisposableDropList disposableDropList = new() { maxCount = dropList.Count, dropList = dropList };
@@ -313,12 +313,10 @@ public static class ExcelReader
             {
                 CardId = row[0].ToString(),
                 DropNum = ParseInt(row[1].ToString()),
-                //DropProb = ParseInt(row[2].ToString()),
                 OverwriteFreshness = ParseBool(row[3].ToString()),
                 OverwriteDurability = ParseBool(row[5].ToString()),
                 OverwriteGrowth = ParseBool(row[7].ToString()),
                 OverwriteProgress = ParseBool(row[9].ToString()),
-                //OverwriteInnerContents = ParseBool(row[11].ToString())
             };
             // 创建卡牌实例
             var card = CardFactory.CreateCard(config.CardId);

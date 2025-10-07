@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Drop
 {
     public List<(string cardId, int dropNum)> dropConfig = new(); // 掉落配置(卡牌id，数量)
-    public int dropProb;
+    public int dropWeight; // 掉落权重
 
     public List<Card> droppedCards = new(); // 已掉落的卡牌
 
@@ -13,27 +13,27 @@ public class Drop
 
     public Drop() { }
 
-    public Drop(int dropProb, List<(string cardId, int dropNum)> dropConfig)
+    public Drop(int dropWeight, List<(string cardId, int dropNum)> dropConfig)
     {
         this.dropConfig = dropConfig;
-        this.dropProb = dropProb;
+        this.dropWeight = dropWeight;
     }
 
-    public Drop(int dropProb, params (string cardId, int dropNum)[] dropConfig)
+    public Drop(int dropWeight, params (string cardId, int dropNum)[] dropConfig)
     {
         this.dropConfig = new(dropConfig);
-        this.dropProb = dropProb;
+        this.dropWeight = dropWeight;
     }
 
-    public Drop(int dropProb, List<Card> droppedCards)
+    public Drop(int dropWeight, List<Card> droppedCards)
     {
-        this.dropProb = dropProb;
+        this.dropWeight = dropWeight;
         this.droppedCards = droppedCards;
     }
 
-    public Drop(int dropProb, OutStringAction onDrop)
+    public Drop(int dropWeight, OutStringAction onDrop)
     {
-        this.dropProb = dropProb;
+        this.dropWeight = dropWeight;
         this.onDrop = onDrop;
     }
 

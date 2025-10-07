@@ -29,7 +29,7 @@ public class RandomDropList
 
         for (int i = 0; i < dropList.Count; i++)
         {
-            currentProb += dropList[i].dropProb;
+            currentProb += dropList[i].dropWeight;
             if (randomValue < currentProb)
             {
                 // 获取掉落项
@@ -47,7 +47,7 @@ public class RandomDropList
         int totalProb = 0;
         foreach (var drop in dropList)
         {
-            totalProb += drop.dropProb;
+            totalProb += drop.dropWeight;
         }
 
         return totalProb;
