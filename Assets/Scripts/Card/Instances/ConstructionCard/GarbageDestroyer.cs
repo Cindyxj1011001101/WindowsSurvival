@@ -8,7 +8,7 @@ public class GarbageDestroyer : ConstructionCard
     {
         Events = new()
         {
-            new Event("销毁", "销毁所有内容物", Event_Destroy, Judge_Destroy),
+            new CardEvent("销毁", "销毁所有内容物", Event_Destroy, Judge_Destroy),
         };
     }
 

@@ -20,9 +20,9 @@ public class OreReleaseOxygenMachine : ConstructionCard
     {
         Events = new()
         {
-            new Event("接电", "接电后矿石释氧机每2小时消耗1块白爆矿,产生180氧气", Event_Open, Judge_Open),
-            new Event("断电", "断电后,将不再工作", Event_Close, Judge_Close),
-            new Event("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen)
+            new CardEvent("接电", "接电后矿石释氧机每2小时消耗1块白爆矿,产生180氧气", Event_Open, Judge_Open),
+            new CardEvent("断电", "断电后,将不再工作", Event_Close, Judge_Close),
+            new CardEvent("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen)
         };
     }
 

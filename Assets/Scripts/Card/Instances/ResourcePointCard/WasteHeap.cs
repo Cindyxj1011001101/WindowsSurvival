@@ -17,8 +17,8 @@ public class WasteHeap : Card
     {
         Events = new()
         {
-            new Event("用手挖掘", "这会费时费力", Event_Dig, null, () => 45),
-            new Event("用铲子挖", "比用手轻松一些", Event_DigByTool, Judge_DigByTool, () => 15),
+            new CardEvent("用手挖掘", "这会费时费力", Event_Dig, null, () => 45),
+            new CardEvent("用铲子挖", "比用手轻松一些", Event_DigByTool, Judge_DigByTool, () => 15),
         };
     }
 

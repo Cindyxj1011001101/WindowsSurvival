@@ -13,7 +13,7 @@ public class LooseBoulders : Card
     {
         Events = new()
         {
-            new Event("用铲子凿", "", Event_DigByTool, Judge_DigByTool, () => 15),
+            new CardEvent("用铲子凿", "", Event_DigByTool, Judge_DigByTool, () => 15),
         };
     }
 

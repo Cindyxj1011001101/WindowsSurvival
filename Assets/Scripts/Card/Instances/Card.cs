@@ -46,7 +46,7 @@ public abstract class Card : IComparable<Card>
     protected Dictionary<Type, CardComponent> components = new();
 
     [JsonIgnore]
-    public List<Event> Events { get; protected set; } = new(); // 可交互事件
+    public List<CardEvent> Events { get; protected set; } = new(); // 可交互事件
 
     [JsonIgnore]
     public string CardName => CardFactory.GetCardName(CardId);
@@ -615,7 +615,7 @@ public abstract class Card : IComparable<Card>
 }
 
 //事件类
-public class Event
+public class CardEvent
 {
     public string name;
     public string description;
@@ -628,7 +628,7 @@ public class Event
 
     public string Description => string.IsNullOrEmpty(hint) ? description : hint;
 
-    public Event(string name, string description, OutStringAction action, OutStringAction<bool> condition,
+    public CardEvent(string name, string description, OutStringAction action, OutStringAction<bool> condition,
         Func<int> getTimeEffect = null, Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects = null, Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects = null)
     {
         this.name = name;

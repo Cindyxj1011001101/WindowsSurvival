@@ -15,7 +15,7 @@ public class FuelDistiller : ConstructionCard
     {
         Events = new()
         {
-            new Event("倒入盐水", "消耗盐水，使蒸馏器的盐水储量+12\n！可能会造成浪费！", Event_AddSalineWater, Judge_AddSalineWater),
+            new CardEvent("倒入盐水", "消耗盐水，使蒸馏器的盐水储量+12\n！可能会造成浪费！", Event_AddSalineWater, Judge_AddSalineWater),
         };
     }
 

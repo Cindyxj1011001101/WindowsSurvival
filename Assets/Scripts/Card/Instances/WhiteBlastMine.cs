@@ -7,7 +7,7 @@ public class WhiteBlastMine : Card
     {
         Events = new()
         {
-            new Event("敲碎", "会产生少量氧气", Event_Break, null, () => 3,
+            new CardEvent("敲碎", "会产生少量氧气", Event_Break, null, () => 3,
             () => new()
             {
                 { PlayerStateEnum.Oxygen, 80 }

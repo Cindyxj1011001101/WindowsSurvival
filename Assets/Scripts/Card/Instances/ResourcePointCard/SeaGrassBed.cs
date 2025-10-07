@@ -26,8 +26,8 @@ public class SeaGrassBed : Card
     {
         Events = new()
         {
-            new Event("用手采集", "获得的东西更少且有可能划伤手", Event_CollectByHand, null, () => 30),
-            new Event("用刀采集", "耗时更少但获得更多产物", Event_CollectByKnife, Judge_CollectByKnife, () => 15),
+            new CardEvent("用手采集", "获得的东西更少且有可能划伤手", Event_CollectByHand, null, () => 30),
+            new CardEvent("用刀采集", "耗时更少但获得更多产物", Event_CollectByKnife, Judge_CollectByKnife, () => 15),
         };
     }
 

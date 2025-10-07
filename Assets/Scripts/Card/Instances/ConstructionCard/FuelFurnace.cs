@@ -31,7 +31,7 @@ public class FuelFurnace : ConstructionCard
     {
         Events = new()
         {
-            new Event("开始加工" , "", Event_Process, Judge_Process),
+            new CardEvent("开始加工" , "", Event_Process, Judge_Process),
         };
     }
 

@@ -4,7 +4,7 @@ public class PlasticBag : EquipmentCard
     private InnerContentsComponent innerContents;
     private PlasticBag() : base()
     {
-        Events.Add(new Event("切割", "切割塑料袋", Event_Cut, Judge_Cut));
+        Events.Add(new CardEvent("切割", "切割塑料袋", Event_Cut, Judge_Cut));
     }
 
     public override void Awake()

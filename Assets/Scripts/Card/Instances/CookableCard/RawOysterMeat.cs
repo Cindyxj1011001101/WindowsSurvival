@@ -7,7 +7,7 @@ public class RawOysterMeat : CookableCard
     {
         Events = new()
         {
-            new Event("食用", "吃得很快，但不管饱", (out string s) => EasyEvent(out s, "吃_01"), null, () => 5,
+            new CardEvent("食用", "吃得很快，但不管饱", (out string s) => EasyEvent(out s, "吃_01"), null, () => 5,
             () => new()
             {
                 { PlayerStateEnum.Fullness, 6 },

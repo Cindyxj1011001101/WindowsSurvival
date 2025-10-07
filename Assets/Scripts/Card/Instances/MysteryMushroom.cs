@@ -9,7 +9,7 @@ public class MysteryMushroom : Card
     {
         Events = new()
         {
-            new Event("³Ôµô", "³ÔµôÃÕÑù¹½¡£»áÓÐÆæ¹ÖµÄ¸Ð¾õ", Event_Eat, null, () => 5,
+            new CardEvent("³Ôµô", "³ÔµôÃÕÑù¹½¡£»áÓÐÆæ¹ÖµÄ¸Ð¾õ", Event_Eat, null, () => 5,
             () => new()
             {
                 { PlayerStateEnum.Fullness, +11 }

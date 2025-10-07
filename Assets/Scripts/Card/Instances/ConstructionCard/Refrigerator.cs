@@ -14,8 +14,8 @@ public class Refrigerator : ConstructionCard
     {
         Events = new()
         {
-            new Event("接电", "使其接入电路。接入电路后每15分钟消耗0.3电力，冰箱里的内容物腐烂速度减半", Event_ConnectElectricity, Judge_ConnectElectricity),
-            new Event("断电", "", Event_DisconnectElectricity, Judge_DisconnectElectricity),
+            new CardEvent("接电", "使其接入电路。接入电路后每15分钟消耗0.3电力，冰箱里的内容物腐烂速度减半", Event_ConnectElectricity, Judge_ConnectElectricity),
+            new CardEvent("断电", "", Event_DisconnectElectricity, Judge_DisconnectElectricity),
         };
     }
 

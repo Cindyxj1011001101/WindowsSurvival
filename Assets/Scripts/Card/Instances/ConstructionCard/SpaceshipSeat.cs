@@ -9,7 +9,7 @@ public class SpaceshipSeat : ConstructionCard
     {
         Events = new()
         {
-            new Event(
+            new CardEvent(
                 "靠着休息",
                 "靠在驾驶座上休息。\n" +
                 "+2.7清醒度/15min\n" +

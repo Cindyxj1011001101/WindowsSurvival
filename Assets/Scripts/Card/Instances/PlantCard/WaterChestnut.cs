@@ -12,8 +12,8 @@ public class WaterChestnut : Card
     {
         Events = new()
         {
-            new Event("采集", "采集四角菱结出的菱果", Event_Collect, Judge_Collect, () => 15),
-            new Event("铲起", "将四角菱连根铲起。将会获得一颗菱果", Event_DigUp, Judge_DigUp, () => 15),
+            new CardEvent("采集", "采集四角菱结出的菱果", Event_Collect, Judge_Collect, () => 15),
+            new CardEvent("铲起", "将四角菱连根铲起。将会获得一颗菱果", Event_DigUp, Judge_DigUp, () => 15),
         };
     }
 

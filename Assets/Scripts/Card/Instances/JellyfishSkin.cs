@@ -7,7 +7,7 @@ public class JellyfishSkin : Card
     {
         Events = new()
         {
-            new Event("Ê³ÓÃ", "", (out string s) => EasyEvent(out s, "³Ô_01"), null, () => 15,
+            new CardEvent("Ê³ÓÃ", "", (out string s) => EasyEvent(out s, "³Ô_01"), null, () => 15,
             () => new()
             {
                 { PlayerStateEnum.Fullness, 15 },
@@ -15,7 +15,7 @@ public class JellyfishSkin : Card
                 { PlayerStateEnum.San, -5 },
                 { PlayerStateEnum.Itchiness, +45 }
             }),
-            new Event("ëç×ÕÍÑ¶¾", "", Event_Pickle, Judge_Pickle, () => 5),
+            new CardEvent("ëç×ÕÍÑ¶¾", "", Event_Pickle, Judge_Pickle, () => 5),
         };
     }
 

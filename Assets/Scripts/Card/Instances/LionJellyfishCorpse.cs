@@ -13,7 +13,7 @@ public class LionJellyfishCorpse : Card
     {
         Events = new()
         {
-            new Event("ÓÃµ¶ÇÐ¸î", "", Event_PeelByKnife, Judge_PeelByKnife, () => 15),
+            new CardEvent("ÓÃµ¶ÇÐ¸î", "", Event_PeelByKnife, Judge_PeelByKnife, () => 15),
         };
     }
 

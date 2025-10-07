@@ -9,8 +9,8 @@
     {
         Events = new()
         {
-            new Event("通过", "", Event_Enter, Judge_Enter),
-            new Event("移至附近", "", Event_MoveNear, Judge_MoveNear)
+            new CardEvent("通过", "", Event_Enter, Judge_Enter),
+            new CardEvent("移至附近", "", Event_MoveNear, Judge_MoveNear)
         };
     }
 

@@ -9,7 +9,7 @@ public class PlankBed : ConstructionCard
     {
         Events = new()
         {
-            new Event(
+            new CardEvent(
                 "睡觉",
                 @"在板床上睡觉。
                 +3.5清醒度/15min

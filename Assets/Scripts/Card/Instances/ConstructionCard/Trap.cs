@@ -24,7 +24,7 @@ public class Trap : ConstructionCard
     {
         Events = new()
         {
-            new Event("布置", "布置诱捕陷阱，对当前地点内的生物进行诱捕", Event_Arrange, Judge_Arrange, () => 15),
+            new CardEvent("布置", "布置诱捕陷阱，对当前地点内的生物进行诱捕", Event_Arrange, Judge_Arrange, () => 15),
         };
     }
 

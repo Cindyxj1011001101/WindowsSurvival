@@ -9,7 +9,7 @@ public class SmallAirFilledCave : Card
     {
         Events = new()
         {
-            new Event("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen)
+            new CardEvent("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen)
         };
     }
 

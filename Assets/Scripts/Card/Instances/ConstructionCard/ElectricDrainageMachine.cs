@@ -14,8 +14,8 @@ public class ElectricDrainageMachine : ConstructionCard
     {
         Events = new()
         {
-            new Event("开启", "开启后每15分钟消耗0.5电力，降低2水平面高度", Event_Open, Judge_Open),
-            new Event("关闭", "", Event_Close, Judge_Close)
+            new CardEvent("开启", "开启后每15分钟消耗0.5电力，降低2水平面高度", Event_Open, Judge_Open),
+            new CardEvent("关闭", "", Event_Close, Judge_Close)
         };
     }
 

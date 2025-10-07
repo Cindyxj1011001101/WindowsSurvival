@@ -13,7 +13,7 @@ public class WhiteBlastMineStack : Card
     {
         Events = new()
         {
-            new Event("用铲子凿", "用铲子凿白爆矿堆",Event_Dig, Judge_Dig, () => 30)
+            new CardEvent("用铲子凿", "用铲子凿白爆矿堆",Event_Dig, Judge_Dig, () => 30)
         };
     }
 

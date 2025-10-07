@@ -7,9 +7,9 @@ public class WaterChestnutFruit : Card
     {
         Events = new()
         {
-            new Event("用手敲", "用手将果实敲开。将会获得四角菱果肉", Event_BreakByHand, null, () => 15,
+            new CardEvent("用手敲", "用手将果实敲开。将会获得四角菱果肉", Event_BreakByHand, null, () => 15,
                 () => new() { { PlayerStateEnum.PainLevel, +20 } }),
-            new Event("用锤子敲", "用锤子将果实敲开。将会获得四角菱果肉", Event_BreakByTool, Judge_BreakByTool, () => 3),
+            new CardEvent("用锤子敲", "用锤子将果实敲开。将会获得四角菱果肉", Event_BreakByTool, Judge_BreakByTool, () => 3),
         };
     }
 

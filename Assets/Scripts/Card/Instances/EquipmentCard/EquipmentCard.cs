@@ -8,8 +8,8 @@ public abstract class EquipmentCard : Card
     {
         Events = new()
         {
-            new Event("装备", "", Event_Equip, Judge_Equip),
-            new Event("卸下", "", Event_UnEquip, Judge_UnEquip)
+            new CardEvent("装备", "", Event_Equip, Judge_Equip),
+            new CardEvent("卸下", "", Event_UnEquip, Judge_UnEquip)
         };
     }
 

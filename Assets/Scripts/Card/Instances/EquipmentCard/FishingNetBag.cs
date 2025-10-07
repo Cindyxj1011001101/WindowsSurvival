@@ -4,7 +4,7 @@ public class FishingNetBag : EquipmentCard
     private InnerContentsComponent innerContents;
     private FishingNetBag() : base()
     {
-        Events.Add(new Event("切割", "切割渔获袋", Event_Cut, Judge_Cut));
+        Events.Add(new CardEvent("切割", "切割渔获袋", Event_Cut, Judge_Cut));
     }
 
     public override void Awake()

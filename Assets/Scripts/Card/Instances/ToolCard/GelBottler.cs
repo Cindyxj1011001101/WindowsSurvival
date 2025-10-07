@@ -7,7 +7,7 @@ public class GelBottler : Card
     {
         Events = new()
         {
-            new Event("液体装瓶", "消耗当前地点中的水，获得一瓶盐水", Event_Bottling, Judge_Bottling, () => 15, null, () =>
+            new CardEvent("液体装瓶", "消耗当前地点中的水，获得一瓶盐水", Event_Bottling, Judge_Bottling, () => 15, null, () =>
             {
                 if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
                 {

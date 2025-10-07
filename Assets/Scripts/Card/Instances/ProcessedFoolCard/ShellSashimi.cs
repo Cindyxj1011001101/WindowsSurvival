@@ -7,7 +7,7 @@ public class ShellSashimi : Card
     {
         Events = new()
         {
-            new Event("食用", "食用贝类刺身", (out string s) => EasyEvent(out s, "吃_01"), null, () => 5,
+            new CardEvent("食用", "食用贝类刺身", (out string s) => EasyEvent(out s, "吃_01"), null, () => 5,
             () => new()
             {
                 { PlayerStateEnum.Fullness, 54 },

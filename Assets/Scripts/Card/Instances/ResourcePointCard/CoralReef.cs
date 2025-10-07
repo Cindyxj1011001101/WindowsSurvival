@@ -11,8 +11,8 @@ public class CoralReef : Card
     {
         Events = new()
         {
-            new Event("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig, () => 45),
-            new Event("欣赏", "一天内多次欣赏获得的数值会衰减", Event_Enjoy, null,() => 15,
+            new CardEvent("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig, () => 45),
+            new CardEvent("欣赏", "一天内多次欣赏获得的数值会衰减", Event_Enjoy, null,() => 15,
             () => new()
             {
                 { PlayerStateEnum.San, 6 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId) },

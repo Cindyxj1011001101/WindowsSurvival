@@ -7,7 +7,7 @@ public class Painkillers : Card
     {
         Events = new()
         {
-            new Event("使用", "使用止痛药。这可以缓解疼痛，但是一天内使用多次效果会变差", Event_Use, null, () => 5,
+            new CardEvent("使用", "使用止痛药。这可以缓解疼痛，但是一天内使用多次效果会变差", Event_Use, null, () => 5,
             () => new ()
             {
                 { PlayerStateEnum.PainLevel, -50 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId) }

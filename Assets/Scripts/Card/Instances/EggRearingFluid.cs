@@ -7,7 +7,7 @@ public class EggRearingFluid : Card
     {
         Events = new()
         {
-            new Event("饮用", "", (out string s) => EasyEvent(out s, "喝_01"), null, () => 3,
+            new CardEvent("饮用", "", (out string s) => EasyEvent(out s, "喝_01"), null, () => 3,
             () => new()
             {
                 { PlayerStateEnum.Thirst, 40 },

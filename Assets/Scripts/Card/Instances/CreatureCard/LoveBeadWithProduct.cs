@@ -34,7 +34,7 @@ public class LoveBeadWithProduct : Card
     {
         Events = new()
         {
-            new Event("撬开", "像开宝箱一样获得随机产物", Event_OpenByTool, Judge_OpenByTool, () => 15),
+            new CardEvent("撬开", "像开宝箱一样获得随机产物", Event_OpenByTool, Judge_OpenByTool, () => 15),
         };
     }
 

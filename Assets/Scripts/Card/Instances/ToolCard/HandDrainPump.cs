@@ -7,7 +7,7 @@ public class HandDrainPump : Card
     {
         Events = new()
         {
-            new Event("手压排水", "手压排水", Event_Drain, Judge_Drain, () => 30, () => new() { { PlayerStateEnum.Sobriety, -3 } }, () => new(){ { EnvironmentStateEnum.WaterLevel, -9 } }),
+            new CardEvent("手压排水", "手压排水", Event_Drain, Judge_Drain, () => 30, () => new() { { PlayerStateEnum.Sobriety, -3 } }, () => new(){ { EnvironmentStateEnum.WaterLevel, -9 } }),
         };
 
     }
