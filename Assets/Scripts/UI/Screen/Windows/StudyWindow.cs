@@ -86,6 +86,8 @@ public class StudyWindow : WindowBase
         RefreshDisplay();
 
         DisplayStudyState(0, techNode);
+
+        studyButton.ShowTip($"科技\"{techNode.techName}\"研究完成");
     }
 
     private void OnStudyStopped()
