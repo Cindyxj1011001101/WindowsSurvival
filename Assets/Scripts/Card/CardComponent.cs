@@ -396,6 +396,19 @@ public class InnerContentsComponent : CardComponent
 #endregion
 
 #region 食物属性
+public enum FoodProperty
+{
+    EatableDegree,     // 可食用度
+    UneatableDegree,   // 不可食用度
+    Meatiness,         // 肉度
+    Fishiness,         // 鱼度
+    Shellfishiness,    // 贝度
+    Wateriness,        // 水度
+    Vegetableness,     // 菜度
+    Fruitiness,        // 果度
+    FoulSmellingDegree // 恶臭度
+}
+
 public class FoodPropertyComponent : CardComponent
 {
     public Dictionary<FoodProperty, int> foodPropertyDict;

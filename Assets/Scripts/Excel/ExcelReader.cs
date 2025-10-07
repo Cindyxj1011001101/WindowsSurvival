@@ -443,122 +443,22 @@ public static class ExcelReader
     }
 
     #region 读取加工表配置
-    public static List<ProcessData> ReadProcess(string filename)
+    public static List<ProcessConfig> ReadProcess(string filename)
     {
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
-        List<ProcessData> processDataList = new();
-        foreach (DataTable table in result.Tables)
+        DataTable table = result.Tables[0]; // 配置在第一张表中
+        
+        List<ProcessConfig> processConfigList = new();
+
+        for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
         {
-            DataRow row;
-            for (int i = 1; i < table.Rows.Count; i++)
-            {
-                row = table.Rows[i];
-                processDataList.Add(new ProcessData(row));
-            }
+            processConfigList.Add(ProcessConfig.Parse(table.Rows[i]));
         }
-        return processDataList;
+
+        return processConfigList;
     }
     #endregion
-}
-
-public class CardConfig
-{
-    public string CardId; // 卡牌ID
-    public string CardName; // 卡牌名称
-    public string CardExtraInfo; // 额外信息
-    public string CardDesc; // 卡牌描述
-    public string CardImagePath; // 卡牌图片路径
-    public CardType CardType; // 卡牌类型
-    public int MaxStackNum; // 最大堆叠数
-    public bool Moveable; // 是否可移动
-    public float Weight; // 重量
-    public List<CardTag> Tags = new(); // 标签
-    public bool HasFreshness; // 是否有新鲜度
-    public int MaxFreshness; // 新鲜度最大值
-    public bool HasDurability; // 是否有耐久度
-    public int MaxDurability; // 耐久度最大值
-    public bool HasGrowth; // 是否有生长进度
-    public int MaxGrowth; // 生长最大进度
-    public bool HasProgress; // 是否有产物进度
-    public int MaxProgress; // 产物最大进度
-    public bool IsEquipment; // 是否是装备
-    public EquipmentType EquipmentType; // 装备类型
-    public bool IsTool; // 是否是工具
-    public List<ToolType> ToolTypes; // 工具类型
-    public bool IsBigIcon; // 是否是大图标
-    public bool HasInnerContents; // 是否有内部内容（如生物、建筑等）
-    public int InnerContentSlotCount; // 内部内容槽位数量
-    public bool IsFlammable; // 是否有可燃烧组件
-    public int FuelValue; // 可燃烧时间
-    public bool HasFoodProperty; // 是否有食物属性
-    public Dictionary<FoodProperty, int> FoodPropertyDict; // 食物属性
-    public bool IsPassage; // 是否是通道
-    public int MoveTime; // 移动时间
-    public PlaceEnum TargetPlace; // 目标地点
-    public string InteractAudio; // 交互音效
-    public bool CanCook; // 能否烹饪
-    public int CookTime; // 烹饪时长
-    public string OutcomeCardId; // 烹饪产物
-    public bool IsConstruction; // 是否是建筑
-    public bool OnlyInWater; // 是否仅建造在水域地点
-    public bool OnlyOutWater; // 是否仅建造在陆地地点
-    public bool OnlyInDoor; // 是否仅建造在室内
-    public bool OnlyOutDoor; // 是否仅建造在室外
-    public bool NeedCable; // 是否需要电缆
-    public bool CanBeDemolished; // 能否被拆毁
-    public string DemolitionDebris; // 拆毁后产物ID
-    public bool IsPlant; // 是否是植物
-    public float GrowthRate; // 生长速度
-    public float MinConfortTempreture; // 舒适温度下限
-    public float MaxConfortTempreture; // 舒适温度上限
-    public float MinGrowTempture; // 生长温度下限
-    public float MaxGrowTempture; // 生长温度上限
-    public float MinLiveTempture; // 存活温度下限
-    public float MaxLiveTempture; // 存活温度上限
-    public string DeadcardName; // 死亡后掉落的卡帕名称
-    public List<PressureLevel> Pressures; // 存活压强(_隔开)
-    public bool HasCoordinate; // 是否有坐标
-    public float Position; // 坐标位置
-    public bool IsWeapon; // 是否是武器
-    public float WeaponAtk; // 武器攻击力
-    public float MinAtkDist; // 最小攻击距离
-    public float MaxAtkDist; // 最大攻击距离
-    public AttackForm AtkForm; // 攻击方式
-    public bool IsEntity; // 是否是实体
-    public float MaxHealth; // 最大生命值
-    public float EntityAtk; // 实体攻击力
-    public float MoveDistPerMin; // 每分钟移动距离
-    public BehavioralTendency BehavioralTendency; // 行为倾向
-    public int AIRefreshInterval; // AI刷新间隔
-    public string DeadDrops; // 死亡掉落
-}
-
-public class DropConfig
-{
-    public string CardId; // 卡牌
-    public int DropNum; // 掉落数量
-    public int DropProb;
-    public bool OverwriteFreshness; // 是否覆盖新鲜度
-    public bool OverwriteDurability; // 是否覆盖耐久度
-    public bool OverwriteGrowth;
-    public bool OverwriteProgress; // 是否覆盖产物进度
-    public bool OverwriteInnerContents; // 是否覆盖内容物
-}
-
-public class PopulationConfig
-{
-    public string CardId; // 卡牌ID
-    public int DropNum; // 掉落数量
-    public int Size; // 人口数量
-    public int MaxSize; // 最大人口数量
-    public int SizeChangePerRound; // 每回合数量变化
-    public int SizeChangeOnCaught; // 捕捞后的数量变化
-    public bool OverwriteFreshness; // 是否覆盖新鲜度
-    public bool OverwriteDurability; // 是否覆盖耐久度
-    public bool OverwriteGrowth;
-    public bool OverwriteProgress; // 是否覆盖产物进度
-    public bool Trappable;
 }

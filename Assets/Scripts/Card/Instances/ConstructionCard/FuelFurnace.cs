@@ -24,7 +24,7 @@ public class FuelFurnace : ConstructionCard
     public int leftRounds = 0; // 当前加工轮数
     public int maxRounds = 16; // 总加工轮数
     public bool isProcessing = false; // 是否正在加工
-    public List<TempertureData> tempertureData = new(); // 温度数据，用来处理产物获取
+    public Dictionary<TemperatureType, int> temperatureRecord = new(); // 温度数据，用来处理产物获取
     public bool processComplished = false;
     public override bool HasLoopSound => true;
 
@@ -146,12 +146,12 @@ public class FuelFurnace : ConstructionCard
             }
         }
         // 记录温度状态
-        tempertureData = new()
+        temperatureRecord = new()
         {
-            new (TempertureType.Normal, 0),
-            new (TempertureType.Low, 0),
-            new (TempertureType.Medium, 0),
-            new (TempertureType.High, 0)
+            { TemperatureType.Normal, 0 },
+            { TemperatureType.Low, 0 },
+            { TemperatureType.Medium, 0 },
+            { TemperatureType.High, 0 },
         };
 
         // 添加计时器组件
@@ -198,12 +198,16 @@ public class FuelFurnace : ConstructionCard
     {
         if (!isProcessing || leftRounds <= 0) return;
 
-        if (temperatureComponent.value <= 50) tempertureData[0].round++;
-        else if (temperatureComponent.value <= 100) tempertureData[1].round++;
-        else if (temperatureComponent.value <= 200) tempertureData[2].round++;
-        else tempertureData[3].round++;
+        // 记录温度数据
+        if (temperatureComponent.value <= 50) temperatureRecord[TemperatureType.Normal]++;
+        else if (temperatureComponent.value <= 100) temperatureRecord[TemperatureType.Low]++;
+        else if (temperatureComponent.value <= 200) temperatureRecord[TemperatureType.Medium]++;
+        else temperatureRecord[TemperatureType.High]++;
+
+        // 剩余回合数-1
         leftRounds--;
 
+        // 刷新计时器
         if (TryGetComponent<TimerComponent>(out var timer))
         {
             timer.SetValue(leftRounds * TimeManager.Instance.SettleInterval);
@@ -213,11 +217,11 @@ public class FuelFurnace : ConstructionCard
         if (leftRounds <= 0)
         {
             // 得到产物
-            var outcomeCardId = ProcessManager.GetProcessOutcomeID(cardsToProcesss, tempertureData);
+            var outcomeCardId = ProcessManager.GetProcessOutcomeID(cardsToProcesss, temperatureRecord);
             
             leftRounds = 0;
             isProcessing = false;
-            tempertureData.Clear();
+            temperatureRecord.Clear();
             innerContents.Clear(); // 销毁内容物
             cardsToProcesss.Clear(); // 清空加工列表
 
