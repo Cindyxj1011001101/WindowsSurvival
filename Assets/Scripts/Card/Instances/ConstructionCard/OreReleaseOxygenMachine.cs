@@ -136,11 +136,13 @@ public class OreReleaseOxygenMachine : ConstructionCard
         // 计算释放量
         var toRelease = Mathf.Min(oxygenStorage.value, remainingCapacity);
         if (toRelease > 0)
+        {
             // 释放氧气
             env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, toRelease);
-
-        // 氧气存量减少
-        oxygenStorage.AddValue(-toRelease);
+            // 氧气存量减少
+            oxygenStorage.AddValue(-toRelease);
+            ShowTip("矿石释氧机向当前地点释放了 " + toRelease + " 单位的氧气");
+        }
     }
 
     // 制氧

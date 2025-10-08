@@ -33,6 +33,7 @@ public class EnvironmentBagWindow : BagWindow
     [SerializeField] private HoverableButton executeMoveButton;
     [SerializeField] private Text targetPosition;
     [SerializeField] private Text currentPosition;
+    [SerializeField] private Text deltaPosition;
     [SerializeField] private Image fillBetween;
 
     private const float MoveDistResolution = .5f; // 移动距离分辨率
@@ -43,6 +44,7 @@ public class EnvironmentBagWindow : BagWindow
     private EnvironmentBag CurEnv => GameManager.Instance.CurEnvironmentBag;
     private Player Player => GameManager.Instance.Player;
     private float TargetPosition => targetCoordSlider.value * MoveDistResolution;
+    private float DeltaPosition => TargetPosition - Player.Coordinate.Position;
 
     protected override void Awake()
     {
@@ -80,16 +82,17 @@ public class EnvironmentBagWindow : BagWindow
         });
 
         // 当前坐标显示
-        currentCoordSlider.onValueChanged.AddListener((v) =>
+        currentCoordSlider.onValueChanged.AddListener((_) =>
         {
-            currentPosition.text = (v * MoveDistResolution).ToString("0.0");
-            FillBetween();    
+            currentPosition.text = Player.Coordinate.Position.ToString("0.0");
+            FillBetween();
         });
 
         // 选择距离
-        targetCoordSlider.onValueChanged.AddListener((v) =>
+        targetCoordSlider.onValueChanged.AddListener((_) =>
         {
-            targetPosition.text = (v * MoveDistResolution).ToString("0.0");
+            targetPosition.text = TargetPosition.ToString("0.0");
+            deltaPosition.text = DeltaPosition.ToString("0.0");
             FillBetween();
         });
         moveLeftButton.onClick.AddListener(() =>
@@ -299,7 +302,7 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void FillBetween()
     {
-        fillBetween.transform.position = (currentCoordSlider.handleRect.position + targetCoordSlider.handleRect.position) / 2;
+        fillBetween.transform.position = new((currentCoordSlider.handleRect.position.x + targetCoordSlider.handleRect.position.x) / 2, fillBetween.transform.position.y);
         fillBetween.rectTransform.sizeDelta = new(Mathf.Abs(currentCoordSlider.handleRect.position.x - targetCoordSlider.handleRect.position.x), fillBetween.rectTransform.sizeDelta.y);
     }
 
@@ -311,6 +314,7 @@ public class EnvironmentBagWindow : BagWindow
         currentCoordSlider.value = targetCoordSlider.value = Player.Coordinate.Position / MoveDistResolution;
 
         currentPosition.text = targetPosition.text = Player.Coordinate.Position.ToString("0.0");
+        deltaPosition.text = "0.0";
         FillBetween();
     }
 
