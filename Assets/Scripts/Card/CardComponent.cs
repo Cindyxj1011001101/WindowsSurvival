@@ -812,11 +812,12 @@ public class OxygenStorageComponent : ContinuousValueComponent
         // 计算释放量
         var toRelease = Mathf.Min(value, remainingCapacity);
         if (toRelease > 0)
+        {
             // 释放氧气
             StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, toRelease);
-
-        // 氧气存量减少
-        AddValue(-toRelease);
+            // 氧气存量减少
+            AddValue(-toRelease);
+        }
     }
 }
 #endregion
