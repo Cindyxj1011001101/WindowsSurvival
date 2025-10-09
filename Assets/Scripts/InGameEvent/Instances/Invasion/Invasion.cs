@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InvasionEventConfig
 {
-    public int basicIntensity = 1;                  // 基础入侵事件强度
+    public float basicIntensity = 1f;                  // 基础入侵事件强度
     public float maxSurvivalDayEffect = 50f;        // 生存天数最大影响上限
     public float threatCoefficient = 1f;            // 威胁系数
     public float minRandomFactor = 0.7f;            // 最小随机系数
@@ -18,7 +18,7 @@ public class Invasion : InGameEvent
 {
     private List<InvasionComposition> allCompositions = new();
 
-    private int basicIntensity;               // 基础入侵事件强度
+    private float basicIntensity;               // 基础入侵事件强度
     private float maxSurvivalDayEffect;       // 生存天数最大影响上限
     private float threatCoefficient;          // 威胁系数
     private float minRandomFactor;            // 最小随机系数
