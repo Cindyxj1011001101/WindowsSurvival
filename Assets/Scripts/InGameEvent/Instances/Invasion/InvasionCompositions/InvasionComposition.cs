@@ -128,18 +128,18 @@ public abstract class InvasionComposition
             var selectedCreature = SelectCreatureByWeight(availableCreatures);
             if (selectedCreature == null) break;
 
-            var cost = creatureThreatPointsDict[selectedCreature.CardId];
+            var cost = creatureThreatPointsDict[selectedCreature];
             // 检查是否能够支付该生物的威胁点数
             if (cost <= remainingThreatPoints)
             {
                 // 添加生物到结果中
-                result.Add(selectedCreature);
+                result.Add(CardFactory.CreateCard(selectedCreature));
                 remainingThreatPoints -= cost;
             }
             else
             {
                 // 如果无法支付，将该生物从池子中移除
-                availableCreatures.Remove(selectedCreature.CardId);
+                availableCreatures.Remove(selectedCreature);
             }
         }
 
@@ -149,7 +149,7 @@ public abstract class InvasionComposition
     /// <summary>
     /// 加权随机选择生物
     /// </summary>
-    private Card SelectCreatureByWeight(List<string> creatures)
+    private string SelectCreatureByWeight(List<string> creatures)
     {
         if (creatures.IsNullOrEmpty()) return null;
 
@@ -161,9 +161,9 @@ public abstract class InvasionComposition
         {
             currentSum += invasionCreatureWeights[c];
             if (randomValue <= currentSum)
-                return CardFactory.CreateCard(c);
+                return c;
         }
 
-        return CardFactory.CreateCard(creatures.Last());
+        return creatures.Last();
     }
 }
