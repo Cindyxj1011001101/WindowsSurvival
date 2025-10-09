@@ -143,6 +143,10 @@ public static class CardFactory
             { "水果布丁", typeof(FruitPudding) },
             { "坚果酥", typeof(NutCrisp) },
             { "蠕动盛宴", typeof(CreepFeast) },
+            { "食果鲀", typeof(Fruitfish) },
+            { "吸盘蠕虫", typeof(SuckerWorm) },
+            { "裙水母", typeof(SkirtJellyfish) },
+            { "狮子水母", typeof(LionJellyfish) },
         };
     }
 

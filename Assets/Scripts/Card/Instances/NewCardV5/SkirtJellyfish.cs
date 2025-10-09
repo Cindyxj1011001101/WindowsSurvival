@@ -1,6 +1,6 @@
 /// <summary>
 /// 裙水母
 /// </summary>
-public class SkirtJellyfish
+public class SkirtJellyfish : EntityCard
 {
 }

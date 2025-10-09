@@ -5,6 +5,6 @@ public class InspirationFlash : InGameEvent
 {
     public override void TriggerThisEvent()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

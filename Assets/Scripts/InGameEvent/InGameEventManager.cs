@@ -7,18 +7,6 @@ public class InGameEventManager
 {
     public static InGameEventManager Instance { get; } = new InGameEventManager();
 
-    private Dictionary<string, Type> eventNameTypeDict = new()
-    {
-        { "入侵", typeof(Invasion) },
-        { "恒星耀斑", typeof(StellarFlare) },
-        { "生物迁徙经过", typeof(BiologicalMigration) },
-        { "出现裂缝", typeof(CracksAppear) },
-        { "流星坠落", typeof(MeteorFall) },
-        { "鼠患", typeof(RatInfestation) },
-        { "灵光乍现", typeof(InspirationFlash) },
-        { "呕吐", typeof(Vomit) },
-    };
-
     private List<InGameEvent> allEvents = new();
 
     public Dictionary<string, float> EventsOnCooldown { get; private set; } = new(); // 冷却中的事件字典，键为事件名称，值为剩余冷却时间
@@ -30,12 +18,14 @@ public class InGameEventManager
     private const float MAX_TREND_VALUE = 4f;
     private const float MIN_TREND_VALUE = -4f;
 
-    private const float EVENT_TRIGGER_PROB = 1 / 96f; // 每次结算触发事件的基础概率（约1.04%）
+    private const float EVENT_TRIGGER_PROB = 1f; // 每次结算触发事件的基础概率（约1.04%）
+
+    public InvasionEventConfig InvasionEventConfig { get; private set; }
 
     private InGameEventManager()
     {
         // 注册所有事件
-        RegistInGameEvents();
+        RegisterAllEvents();
     }
 
     public void Init()
@@ -47,13 +37,9 @@ public class InGameEventManager
     }
 
     #region 初始化
-    private void RegistInGameEvents()
+    private void RegisterAllEvents()
     {
-        var configs = ExcelReader.ReadInGameEventConfig("InGameEventConfig");
-        foreach (var config in configs)
-        {
-            allEvents.Add(CreateEventInstance(config));
-        }
+        allEvents = ExcelReader.ReadInGameEventConfig("InGameEventConfig");
     }
 
     private void LoadData()
@@ -64,23 +50,8 @@ public class InGameEventManager
         TrendValue = data.trendValue;
         // 读取冷却中的事件
         EventsOnCooldown = data.eventsOnCooldown;
-    }
-
-    private InGameEvent CreateEventInstance(InGameEventConfig config)
-    {
-        if (eventNameTypeDict.TryGetValue(config.EventName, out Type eventType))
-        {
-            var instance = (InGameEvent)Activator.CreateInstance(eventType);
-            instance.eventName = config.EventName;
-            instance.threatLevel = config.ThreatLevel;
-            instance.basicTriggerWeight = config.BasicTriggerWeight;
-            instance.triggerInterval = config.TriggerInterval;
-            return instance;
-        }
-        else
-        {
-            throw new ArgumentException($"未知的事件名称: {config.EventName}");
-        }
+        // 读取入侵事件配置
+        InvasionEventConfig = data.invasionConfig;
     }
     #endregion
 
@@ -115,12 +86,6 @@ public class InGameEventManager
 
         // 获取可触发的事件候选列表（检查每个事件的独立冷却）
         var candidateEvents = GetCandidateEvents();
-
-        foreach (var e in candidateEvents)
-        {
-            Debug.Log($"候选事件: {e.eventName}");
-        }
-
         if (candidateEvents.IsNullOrEmpty()) return;
 
         // 计算每个事件的触发权重
@@ -139,8 +104,8 @@ public class InGameEventManager
         // 更新趋势值
         UpdateTrendValue(selectedEvent.threatLevel);
 
-        // TODO：触发事件
-        //selectedEvent.TriggerThisEvent();
+        // 触发事件
+        selectedEvent.TriggerThisEvent();
     }
 
     /// <summary>

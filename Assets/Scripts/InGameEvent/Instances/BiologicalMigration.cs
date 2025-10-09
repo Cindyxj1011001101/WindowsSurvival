@@ -5,6 +5,6 @@ public class BiologicalMigration: InGameEvent
 {
     public override void TriggerThisEvent()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

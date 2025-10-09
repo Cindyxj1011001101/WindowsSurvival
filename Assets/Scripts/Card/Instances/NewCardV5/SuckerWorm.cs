@@ -1,6 +1,6 @@
 /// <summary>
 /// ÎüÅÌÈä³æ
 /// </summary>
-public class SuckerWorm
+public class SuckerWorm : EntityCard
 {
 }
