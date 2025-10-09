@@ -1,7 +1,7 @@
 /// <summary>
-/// Á÷ÐÇ×¹Âä
+/// Ò»Ñõ»¯Ì¼±¬Õ¨
 /// </summary>
-public class MeteorFall: InGameEvent
+public class CarbonMonoxideExplosion : InGameEvent
 {
     public override void TriggerThisEvent()
     {

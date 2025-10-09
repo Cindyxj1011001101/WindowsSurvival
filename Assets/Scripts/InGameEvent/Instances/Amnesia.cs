@@ -1,7 +1,7 @@
 /// <summary>
-/// ºãĞÇÒ«°ß
+/// ½¡ÍüÖ¢
 /// </summary>
-public class StellarFlare: InGameEvent
+public class Amnesia : InGameEvent
 {
     public override void TriggerThisEvent()
     {

@@ -12,13 +12,18 @@ public abstract class InGameEvent
     private static Dictionary<string, Type> eventNameTypeDict = new()
     {
         { "入侵", typeof(Invasion) },
-        { "恒星耀斑", typeof(StellarFlare) },
-        { "生物迁徙经过", typeof(BiologicalMigration) },
-        { "出现裂缝", typeof(CracksAppear) },
-        { "流星坠落", typeof(MeteorFall) },
+        { "行星磁暴", typeof(MagneticStorm) },
+        { "裂缝", typeof(CracksAppear) },
         { "鼠患", typeof(RatInfestation) },
-        { "灵光乍现", typeof(InspirationFlash) },
+        { "灵光乍现", typeof(FlashOfInspiration) },
         { "呕吐", typeof(Vomit) },
+        { "太空垃圾", typeof(SpaceJunk) },
+        { "泥沙涌动", typeof(SedimentSurge) },
+        { "恒星食", typeof(StellarEclipse) },
+        { "健忘症", typeof(Amnesia) },
+        { "一氧化碳爆炸", typeof(CarbonMonoxideExplosion) },
+        { "制作激励", typeof(ProductionIncentive) },
+        { "移动激励", typeof(MovementIncentive) },
     };
 
     public string eventName;         // 事件名称

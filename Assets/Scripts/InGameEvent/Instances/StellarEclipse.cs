@@ -1,7 +1,7 @@
 /// <summary>
-/// ¡Èπ‚’ßœ÷
+/// ∫„–« ≥
 /// </summary>
-public class InspirationFlash : InGameEvent
+public class StellarEclipse : InGameEvent
 {
     public override void TriggerThisEvent()
     {

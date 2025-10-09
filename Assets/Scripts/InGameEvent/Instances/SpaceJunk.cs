@@ -1,7 +1,7 @@
 /// <summary>
-/// ÉúÎïÇ¨áã
+/// Ì«¿ÕÀ¬»ø
 /// </summary>
-public class BiologicalMigration: InGameEvent
+public class SpaceJunk: InGameEvent
 {
     public override void TriggerThisEvent()
     {
