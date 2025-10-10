@@ -20,7 +20,6 @@ public abstract class InGameEvent
         { "太空垃圾", typeof(SpaceJunk) },
         { "泥沙涌动", typeof(SedimentSurge) },
         { "恒星食", typeof(StellarEclipse) },
-        { "健忘症", typeof(Amnesia) },
         { "一氧化碳爆炸", typeof(CarbonMonoxideExplosion) },
         { "制作激励", typeof(ProductionIncentive) },
         { "移动激励", typeof(MovementIncentive) },
