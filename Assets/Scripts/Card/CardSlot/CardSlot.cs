@@ -224,12 +224,13 @@ public class CardSlot : MonoBehaviour
         if (!componentSliders.TryGetValue(component.GetType(), out UIStateSlider slider))
         {
             if (component is TemperatureComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TemperatureComponent", parent).GetComponent<UIStateSlider>();
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(TemperatureComponent), parent).GetComponent<UIStateSlider>();
             else if (component is TimerComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TimerComponent", parent).GetComponent<UIStateSlider>();
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(TimerComponent), parent).GetComponent<UIStateSlider>();
+            else if (component is CoordinateComponent)
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(CoordinateComponent), parent).GetComponent<UIStateSlider>();
             else
                 slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent).GetComponent<UIStateSlider>();
-
 
             slider.transform.SetAsLastSibling();
 
@@ -325,6 +326,10 @@ public class CardSlot : MonoBehaviour
                     leftTime += $"{minute}min";
 
                 slider.tipController.SetTip($"距 {timerComponent.tipText} 剩余:  {leftTime}", slider.fillColor);
+                break;
+            case CoordinateComponent coordinateComponent:
+                slider.SetValue(coordinateComponent.coordinate.Position, GameManager.Instance.CurEnvironmentBag.PlaceData.maxCoord);
+                slider.tipController.SetTip($"当前坐标:  {coordinateComponent.coordinate.Position:0.0}\n距离麦麦:  {coordinateComponent.coordinate.DistanceTo(GameManager.Instance.Player.Coordinate):0.0}");
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
@@ -438,6 +443,9 @@ public class CardSlot : MonoBehaviour
         // 显示植物生长度
         if (card.TryGetComponent<PlantGrowthComponent>(out var pg))
             DisplayContinuousValueComponent(pg, middle);
+        // 显示坐标
+        if (card.TryGetComponent<CoordinateComponent>(out var cc))
+            DisplayContinuousValueComponent(cc, middle);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;
