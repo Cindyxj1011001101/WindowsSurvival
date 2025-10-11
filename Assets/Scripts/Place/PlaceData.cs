@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlaceData", menuName = "ScriptableObject/PlaceData")]
 public class PlaceData : ScriptableObject
@@ -14,8 +16,18 @@ public class PlaceData : ScriptableObject
     [HideInInspector] public float minCoord = 0;
     public float maxCoord;
 
+    public InitialBagStateConfig initialBagStateConfig;
+
     private void OnValidate()
     {
         placeName = name;
     }
+}
+
+[Serializable]
+public class InitialBagStateConfig
+{
+    public bool hasCable;
+    public List<string> containedCards;
+    public PressureLevel pressureLevel;
 }

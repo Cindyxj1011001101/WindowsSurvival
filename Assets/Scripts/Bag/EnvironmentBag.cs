@@ -33,12 +33,14 @@ public class EnvironmentBag : Bag
 
         FirstInitState();
         FirstInitDropList();
-        if (PlaceData.isInSpacecraft)
+
+        hasCable = PlaceData.initialBagStateConfig.hasCable;
+        foreach (var cardId in PlaceData.initialBagStateConfig.containedCards)
         {
-            hasCable = true;
-            AddCard(CardFactory.CreateCard("渗水裂缝"));
+            AddCard(CardFactory.CreateCard(cardId));
         }
-        pressureLevel = PressureLevel.Standard;
+
+        pressureLevel = PlaceData.initialBagStateConfig.pressureLevel;
     }
 
     public override void Init()
