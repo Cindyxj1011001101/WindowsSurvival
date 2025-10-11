@@ -92,10 +92,16 @@ public class GameManager : MonoBehaviour
     public EnvironmentBag CurEnvironmentBag { get; private set; }
     public EquipmentBag EquipmentBag { get; private set; }
     public Player Player { get; private set; }
+    public Dictionary<PlaceEnum, PlaceData> PlaceDataDict { get; private set; } = new();
 
     private void Awake()
     {
         instance = this;
+
+        foreach (var placeData in Resources.LoadAll<PlaceData>("ScriptableObject/Place"))
+        {
+            PlaceDataDict.Add(placeData.placeType, placeData);
+        }
 
         // 玩家背包
         PlayerBag = GameDataManager.Instance.PlayerBagData;
@@ -613,9 +619,4 @@ public class GameManager : MonoBehaviour
         EventManager.Instance.TriggerEvent(EventType.ChangeEnv, CurEnvironmentBag);
     }
     #endregion
-
-    public string ParsePlaceEnum(PlaceEnum place)
-    {
-        return EnvironmentBags[place].PlaceData.placeName;
-    }
 }

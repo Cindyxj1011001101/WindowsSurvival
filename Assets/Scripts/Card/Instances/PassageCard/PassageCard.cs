@@ -20,7 +20,7 @@
         TryGetComponent(out coordinate);
         TryGetComponent(out passage);
 
-        Events[0].description = "前往" + GameManager.Instance.ParsePlaceEnum(passage.targetPlace) +
+        Events[0].description = "前往" + ParsePlaceEnum(passage.targetPlace) +
             GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
         Events[0].getTimeEffect = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).time;
         Events[0].getPlayerEffects = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerEffects;
@@ -51,10 +51,15 @@
     {
         if (state == PlayerStateEnum.Load)
         {
-            Events[0].description = "前往" + GameManager.Instance.ParsePlaceEnum(passage.targetPlace) +
+            Events[0].description = "前往" + ParsePlaceEnum(passage.targetPlace) +
                 GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
             RefreshSlot();
         }
+    }
+
+    private string ParsePlaceEnum(PlaceEnum place)
+    {
+        return GameManager.Instance.PlaceDataDict[place].placeName;
     }
 
     private void OnPlayerMove()

@@ -390,14 +390,14 @@ public class SoundManager : MonoBehaviour
             case PlaceEnum.LifeSupportCabin:
                 if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
                     break;
-                SoundManager.Instance.StopBGM();
-                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                StopBGM();
+                PlayBGM("飞船内_01", true);
                 break;
             case PlaceEnum.CoralCoast:
             case PlaceEnum.PhosphorTomb:
             case PlaceEnum.SpaceshipOuterHull:
-                SoundManager.Instance.StopBGM();
-                SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
+                StopBGM();
+                PlayBGM("珊瑚礁海域_01", true);
                 break;
         }
     }
@@ -412,12 +412,12 @@ public class SoundManager : MonoBehaviour
             case PlaceEnum.PowerCabin:
             case PlaceEnum.Cockpit:
             case PlaceEnum.LifeSupportCabin:
-                SoundManager.Instance.PlayBGM("飞船内_01", true);
+                PlayBGM("飞船内_01", true);
                 break;
             case PlaceEnum.CoralCoast:
             case PlaceEnum.PhosphorTomb:
             case PlaceEnum.SpaceshipOuterHull:
-                SoundManager.Instance.PlayBGM("珊瑚礁海域_01", true);
+                PlayBGM("珊瑚礁海域_01", true);
                 break;
         }
     }

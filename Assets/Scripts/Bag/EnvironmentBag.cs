@@ -1,36 +1,31 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class EnvironmentBag : Bag
 {
-    [JsonProperty] private string placeName;
+    [JsonProperty] private PlaceEnum placeType;
     [JsonProperty] private bool hasCable;
     [JsonProperty] private PressureLevel pressureLevel;
     [JsonProperty] private DisposableDropList disposableDropList = new();
     [JsonProperty] private DeepExploreDropList repeatableDropList = new();
     [JsonProperty] private Dictionary<EnvironmentStateEnum, State> stateDict = new();
-    private PlaceData placeData;
 
     [JsonIgnore] public bool HasCable => hasCable;
     [JsonIgnore] public PressureLevel PressureLevel => pressureLevel;
-    [JsonIgnore] public string PlaceName => placeName;
+    [JsonIgnore] public string PlaceName => GameManager.Instance.PlaceDataDict[placeType].placeName;
     [JsonIgnore] public DisposableDropList DisposableDropList => disposableDropList;
     [JsonIgnore] public DeepExploreDropList RepeatableDropList => repeatableDropList;
     [JsonIgnore] public Dictionary<EnvironmentStateEnum, State> StateDict => stateDict;
-    [JsonIgnore]
-    public PlaceData PlaceData
-    {
-        get
-        {
-            placeData = placeData != null ? placeData : Resources.Load<PlaceData>("ScriptableObject/Place/" + placeName);
-            return placeData;
-        }
-    }
+    [JsonIgnore] public PlaceData PlaceData => GameManager.Instance.PlaceDataDict[placeType];
     [JsonIgnore] public float DiscoveryDegree => 1 - DisposableDropList.RemainingDropsRate;
     [JsonIgnore] public bool ExploreCompleted => DisposableDropList.IsEmpty && RepeatableDropList.IsEmpty;
     [JsonIgnore] public List<IEntity> Entities { get; private set; } = new();
+
+    public void SetPlaceType(PlaceEnum placeType)
+    {
+        this.placeType = placeType;
+    }
 
     protected override void FirstInit()
     {
@@ -163,7 +158,7 @@ public class EnvironmentBag : Bag
                 var state = StateDict[stateEnum];
                 state.AddChangeRate(delta);
                 // 刷新前端显示
-                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, stateEnum)
+                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(PlaceData.placeType, stateEnum)
                 {
                     stateValue = state
                 });

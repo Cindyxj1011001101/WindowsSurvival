@@ -9,17 +9,11 @@ public abstract class Bag
     [JsonProperty] private List<SlotCards> slots = new();
 
     [JsonIgnore] public List<SlotCards> Slots => slots;
-
     [JsonIgnore] public int SlotCount => Slots.Count;
-
     [JsonIgnore] public int EmptySlotCount => Slots.Count(s => s.IsEmpty);
-
     [JsonIgnore] public bool IsFull => EmptySlotCount == 0; // 背包是否已满
-
     [JsonIgnore] public bool IsEmpty => EmptySlotCount == SlotCount; // 背包是否为空
-
     [JsonIgnore] public SlotCards this[int index] => Slots[index];
-
     [JsonIgnore] public BagWindow Window {  get; protected set; }
 
     public void SetBagWindow(BagWindow window)
@@ -56,7 +50,13 @@ public abstract class Bag
             var newSlot = new SlotCards();
             newSlot.SetBag(this);
             Slots.Add(newSlot);
-            if (Window != null) Window.AddSlot().Init(newSlot);
+
+            if (Window == null) continue;
+
+            if (i < Window.Slots.Count)
+                Window.Slots[i].Init(newSlot);
+            else
+                Window.AddSlot().Init(newSlot);
         }
     }
 

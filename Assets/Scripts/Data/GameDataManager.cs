@@ -36,20 +36,26 @@ public class GameDataManager
         lastPlace = JsonManager.LoadData<int>(CurLoadName, "LastPlace");
         // 环境
         environmentBagDataDict = new();
-        foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
+        foreach (PlaceEnum placeType in Enum.GetValues(typeof(PlaceEnum)))
         {
-            environmentBagDataDict.Add(place,
-                JsonManager.LoadData<EnvironmentBag>(CurLoadName, place.ToString() + "Bag"));
+            var env = JsonManager.LoadData<EnvironmentBag>(CurLoadName, placeType.ToString() + "Bag");
+            env.SetPlaceType(placeType);
+            environmentBagDataDict.Add(placeType, env);
         }
 
         // 状态数据 
         stateData = JsonManager.LoadData<StateData>(CurLoadName, "State");
         // 音频数据
         audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
-        // 已解锁的配方
-        //unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
         // 科技数据
         technologyData = JsonManager.LoadData<TechnologyData>(CurLoadName, "Technology");
+        if (technologyData.techNodeDict.IsNullOrEmpty())
+        {
+            foreach (var node in Resources.LoadAll<ScriptableTechnologyNode>("ScriptableObject/Technology"))
+            {
+                technologyData.techNodeDict.Add(node.techName, new TechNodeData { name = node.techName, progress = 0 });
+            }
+        }
         // 装备数据
         equipmentData = JsonManager.LoadData<EquipmentBag>(CurLoadName, "Equipment");
         // 已生成的对话
@@ -81,8 +87,6 @@ public class GameDataManager
         SaveStateData();
         // 音频数据
         SaveAudioData();
-        // 已解锁的配方
-        //SaveUnlockedRecipes();
         // 科技数据
         SaveTechnologyData();
         // 装备数据

@@ -105,13 +105,6 @@ public class StudyWindow : WindowBase
 
     protected override void Init()
     {
-        //GameDataManager.Instance.TechnologyData.techNodeDict = new();
-        //foreach (var node in GetComponentsInChildren<UITechNode>())
-        //{
-        //    GameDataManager.Instance.TechnologyData.techNodeDict.Add(node.gameObject.name, new TechNodeData { name = node.gameObject.name, progress = 0 });
-        //}
-        //GameDataManager.Instance.SaveTechnologyData();
-
         if (GameDataManager.Instance.CurLoad.SkipGuide || GameDataManager.Instance.WindowsData.unlockedShortcuts.Contains(AppName))
             DisplayStudyState(2, null);
         else

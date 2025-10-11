@@ -1,5 +1,10 @@
 ﻿public class EquipmentBag : Bag
 {
+    protected override void FirstInit()
+    {
+        AddSlot(4);
+    }
+
     /// <summary>
     /// 得到指定部位的装备
     /// </summary>
