@@ -45,6 +45,7 @@ public abstract class Bag
     /// <param name="amount"></param>
     public void AddSlot(int amount = 1)
     {
+        var slotCount = Slots.Count;
         for (int i = 0; i < amount; i++)
         {
             var newSlot = new SlotCards();
@@ -53,8 +54,8 @@ public abstract class Bag
 
             if (Window == null) continue;
 
-            if (i < Window.Slots.Count)
-                Window.Slots[i].Init(newSlot);
+            if (i + slotCount < Window.Slots.Count)
+                Window.Slots[i + slotCount].Init(newSlot);
             else
                 Window.AddSlot().Init(newSlot);
         }
