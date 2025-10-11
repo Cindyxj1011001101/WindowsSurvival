@@ -49,7 +49,7 @@ public abstract class InvasionComposition
 
     private static (float, float) ParseThreatIntensityRange(string rangeStr)
     {
-        var parts = rangeStr.Trim(new char[] { '[', ']', ' ' }).Split('，');
+        var parts = rangeStr.Split('，').Select(s => s.Trim(new char[] { '[', ']', ' ' })).ToArray();
 
         var leftLimitStr = parts[0];
         var rightLimitStr = parts[1];
