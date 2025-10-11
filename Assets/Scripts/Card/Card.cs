@@ -599,6 +599,22 @@ public abstract class Card : IComparable<Card>
         TurnTo(cardId, targetBag, out _);
     }
 
+    /// <summary>
+    /// 解析配置并掉落卡牌
+    /// </summary>
+    /// <param name="configStr">格式为：卡牌ID * 数量 + 卡牌ID * 数量 + ...</param>
+    /// <returns></returns>
+    public void ParseAndDrop(string configStr)
+    {
+        // 格式为：卡牌ID * 数量 + 卡牌ID * 数量 + ...
+        string[] config;
+        foreach (var str in configStr.Replace(" ", "").Split('+'))
+        {
+            config = str.Split('*');
+            AddCards(config[0], int.Parse(config[1]), false);
+        }
+    }
+
     protected void EasyEvent(out string tip, string sound, int eventIndex = 0)
     {
         tip = string.Empty;

@@ -1058,7 +1058,8 @@ public class EntityComponent : CardComponent, IUpdate
             health = 0;
             BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
             BelongedCard.DestroyThis();
-            // TODO：掉落死亡掉落物
+            // 掉落死亡掉落物
+            BelongedCard.ParseAndDrop(deadDrops);
             onDead?.Invoke();
         }
 
