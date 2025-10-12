@@ -180,6 +180,10 @@ public class CardSlot : MonoBehaviour
         (iconImage.transform as RectTransform).anchoredPosition = offset;
         // 设置原始大小
         iconImage.SetNativeSize();
+
+        // 设置组件布局的中心点
+        var posY = isBigIcon ? 57 : 65;
+        middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, posY);
     }
 
     private void DisplayStackNum(int stackNum, int maxStackNum, bool displayStack)
