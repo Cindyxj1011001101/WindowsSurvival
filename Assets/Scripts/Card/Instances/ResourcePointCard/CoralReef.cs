@@ -62,7 +62,7 @@ public class CoralReef : Card
 
     private void DigByTool(Card tool, out string tip)
     {
-        RandomDrop(dropList, out tip, 2, beforeDrop: () =>
+        RandomDrop(dropList, out tip, 2, onDrop: () =>
         {
             tool.Use();
 

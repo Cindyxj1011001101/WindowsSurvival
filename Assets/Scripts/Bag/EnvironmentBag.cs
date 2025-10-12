@@ -46,7 +46,7 @@ public class EnvironmentBag : Bag
     public override void Init()
     {
         base.Init();
-        InitEntites();
+        InitEntitesAndCardLocation();
         RepeatableDropList.StartUpdating();
         // 每回合结算地点状态
         UpdateManager.Instance.EnvironmentUpdate.AddListener(Update);
@@ -75,7 +75,7 @@ public class EnvironmentBag : Bag
     /// <summary>
     /// 将地点内的所有实体加入实体列表
     /// </summary>
-    private void InitEntites()
+    private void InitEntitesAndCardLocation()
     {
         foreach (var slot in Slots)
         {
@@ -84,6 +84,10 @@ public class EnvironmentBag : Bag
                 if (card is IEntity entity)
                 {
                     AddEntity(entity);
+                }
+                else if (card.TryGetComponent<CoordinateComponent>(out var c))
+                {
+                    c.coordinate.SetLocation(this);
                 }
             }
         }
@@ -248,5 +252,33 @@ public class EnvironmentBag : Bag
     {
         entity.Coordinate.SetLocation(null);
         Entities.Remove(entity);
+    }
+
+    public override void OnAddCard(Card card)
+    {
+        base.OnAddCard(card);
+
+        if (card is IEntity entity)
+        {
+            AddEntity(entity);
+        }
+        else if (card.TryGetComponent<CoordinateComponent>(out var c))
+        {
+            c.coordinate.SetLocation(this);
+        }
+    }
+
+    public override void OnRemoveCard(Card card)
+    {
+        base.OnRemoveCard(card);
+
+        if (card is IEntity entity)
+        {
+            RemoveEntity(entity);
+        }
+        else if (card.TryGetComponent<CoordinateComponent>(out var c))
+        {
+            c.coordinate.SetLocation(null);
+        }
     }
 }

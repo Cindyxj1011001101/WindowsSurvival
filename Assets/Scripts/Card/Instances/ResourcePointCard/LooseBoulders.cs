@@ -47,7 +47,7 @@ public class LooseBoulders : Card
     private void DigByTool(Card tool, out string tip)
     {
         //µôÂä¿¨ÅÆ
-        RandomDrop(dropList, out tip, beforeDrop: () =>
+        RandomDrop(dropList, out tip, onDrop: () =>
         {
             //ÏûºÄ1µãÄÍ¾Ã¶È
             Use();

@@ -3,7 +3,7 @@
     private PassageComponent passage;
     private CoordinateComponent coordinate;
 
-    private const float MaxAvailableDist = 3.0f; // 小于等于该距离时可以使用通道
+    private const float MAX_AVAILABLE_DIST = 3.0f; // 小于等于该距离时可以使用通道
 
     protected PassageCard()
     {
@@ -121,13 +121,13 @@
 
     private bool IsPlayerNear()
     {
-        return GameManager.Instance.Player.Coordinate.DistanceTo(coordinate.coordinate) <= MaxAvailableDist;
+        return GameManager.Instance.Player.Coordinate.DistanceTo(coordinate.coordinate) <= MAX_AVAILABLE_DIST;
     }
 
     private float GetNearestAvailablePosition()
     {
         var playerPos = GameManager.Instance.Player.Coordinate.Position;
         var passagePos = coordinate.coordinate.Position;
-        return playerPos > passagePos ? passagePos + MaxAvailableDist : passagePos - MaxAvailableDist;
+        return playerPos > passagePos ? passagePos + MAX_AVAILABLE_DIST : passagePos - MAX_AVAILABLE_DIST;
     }
 }

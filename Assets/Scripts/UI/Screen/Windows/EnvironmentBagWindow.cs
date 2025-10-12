@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public enum PressureLevel
@@ -114,8 +115,6 @@ public class EnvironmentBagWindow : BagWindow
                 continuousValueStates.Add((EnvironmentStateEnum)Enum.Parse(typeof(EnvironmentStateEnum), c.name), s);
         }
 
-        // 注册探索度变化事件
-        EventManager.Instance.AddListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         // 注册地点改变事件
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
         // 注册环境状态变化事件
@@ -128,8 +127,6 @@ public class EnvironmentBagWindow : BagWindow
 
     private void OnDestroy()
     {
-        // 移除事件
-        EventManager.Instance.RemoveListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
@@ -143,7 +140,7 @@ public class EnvironmentBagWindow : BagWindow
     {
         if (state != PlayerStateEnum.Load) return;
 
-        DisplayDiscoveryDegree((CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted));
+        DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
         executeMoveButton.Interactable = GameManager.Instance.CanMoveExplore();
     }
 
@@ -156,12 +153,26 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void Explore()
     {
+        GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
+        AddCards(droppedCards, () =>
+        {
+            MouseManager.Instance.Wait();
+            DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
+            exploreButton.transform.ShowTip(tip, 1.4f);
+        });
+    }
+
+    /// <summary>
+    /// 从地点牌堆中添加卡牌
+    /// </summary>
+    /// <param name="cards"></param>
+    /// <param name="onDrop"></param>
+    public void AddCards(List<Card> cards, UnityAction onDrop = null)
+    {
         var seq = envCardTransform.PunchAndBounce(() =>
         {
-            GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
-            GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
-            // 提示
-            exploreButton.transform.ShowTip(tip, 1.4f);
+            onDrop?.Invoke();
+            GameManager.Instance.AddCardsWithTween(cards, false, envCardTransform.position);
         });
 
         // 等待抽牌动画完成
@@ -212,7 +223,7 @@ public class EnvironmentBagWindow : BagWindow
         placeNameText.text = $"{env.PlaceData.placeName}";
 
         // 探索事件
-        DisplayDiscoveryDegree((env.DiscoveryDegree, env.ExploreCompleted));
+        DisplayDiscoveryDegree(env.DiscoveryDegree, env.ExploreCompleted);
 
         // 显示图片
         environmentImage.sprite = env.PlaceData.placeImage;
@@ -249,13 +260,13 @@ public class EnvironmentBagWindow : BagWindow
         }
     }
 
-    private void DisplayDiscoveryDegree((float degree, bool completed) args)
+    private void DisplayDiscoveryDegree(float degree, bool completed)
     {
         // 显示探索度
-        discoveryDegreeSlider.SetValue(args.degree, 1);
+        discoveryDegreeSlider.SetValue(degree, 1);
 
         var text = exploreButton.GetComponentInChildren<Text>();
-        if (args.completed)
+        if (completed)
         {
             exploreButton.normalImage.gameObject.SetActive(false);
             exploreButton.Interactable = false;
@@ -265,7 +276,7 @@ public class EnvironmentBagWindow : BagWindow
             // 不再显示探索提示
             exploreTipController.enabled = false;
         }
-        else if (args.degree == 1)
+        else if (degree == 1)
         {
             // 深入探索
             exploreButton.normalImage.gameObject.SetActive(true);

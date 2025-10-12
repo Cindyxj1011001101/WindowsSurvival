@@ -94,6 +94,8 @@ public class GameManager : MonoBehaviour
     public Player Player { get; private set; }
     public Dictionary<PlaceEnum, PlaceData> PlaceDataDict { get; private set; } = new();
 
+    private EnvironmentBagWindow envBagWindow;
+
     private void Awake()
     {
         instance = this;
@@ -111,6 +113,8 @@ public class GameManager : MonoBehaviour
         CurEnvironmentBag = EnvironmentBags[GameDataManager.Instance.LastPlace];
         EquipmentBag = GameDataManager.Instance.EquipmentData;
         Player = GameDataManager.Instance.PlayerData;
+
+        envBagWindow = FindObjectOfType<EnvironmentBagWindow>();
 
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
@@ -166,8 +170,8 @@ public class GameManager : MonoBehaviour
     /// <param name="targetBag"></param>
     public void AddCard(Card card, Bag targetBag)
     {
-        targetBag.AddCard(card);
         card.StartUpdating();
+        targetBag.AddCard(card);
     }
 
     public void AddCard(Card card, bool toPlayerBag)
@@ -243,6 +247,21 @@ public class GameManager : MonoBehaviour
         }
 
         return AddCardsWithTween(cards, toPlayerBag, startPos);
+    }
+
+    public void AddCardsToTargetEnv(List<Card> cards, EnvironmentBag targetEnv)
+    {
+        if (targetEnv == CurEnvironmentBag)
+        {
+            envBagWindow.AddCards(cards);
+        }
+        else
+        {
+            foreach (var card in cards)
+            {
+                AddCard(card, targetEnv);
+            }
+        }
     }
     #endregion
 
@@ -484,9 +503,6 @@ public class GameManager : MonoBehaviour
             droppedCards = disposableDropList.RandomDrop();
             if (droppedCards.IsNullOrEmpty())
                 return;
-
-            // 探索度变化
-            EventManager.Instance.TriggerEvent(EventType.ChangeDiscoveryDegree, (CurEnvironmentBag.DiscoveryDegree, CurEnvironmentBag.ExploreCompleted));
         }
         // 如果还可以重复探索
         else if (!repeatableDropList.IsEmpty)

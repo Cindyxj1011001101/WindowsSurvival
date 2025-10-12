@@ -494,7 +494,7 @@ public abstract class Card : IComparable<Card>
     /// 掉落卡牌
     /// </summary>
     /// <returns></returns>
-    public void DropCards(List<Card> cards, UnityAction beforeDrop)
+    public void DropCards(List<Card> cards, UnityAction onDrop)
     {
         if (Transform == null || cards.IsNullOrEmpty()) return;
 
@@ -506,7 +506,7 @@ public abstract class Card : IComparable<Card>
         {
             var tween = Transform.PunchAndBounce(() =>
             {
-                beforeDrop?.Invoke();
+                onDrop?.Invoke();
                 AddCards(cards, true);
             });
 
@@ -514,7 +514,7 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    public void RandomDrop(RandomDropList dropList, out string tip, int times = 1, UnityAction beforeDrop = null)
+    public void RandomDrop(RandomDropList dropList, out string tip, int times = 1, UnityAction onDrop = null)
     {
         tip = string.Empty;
         var droppedCards = new List<Card>();
@@ -522,7 +522,7 @@ public abstract class Card : IComparable<Card>
         {
             droppedCards.AddRange(dropList.RandomDrop(out tip));
         }
-        DropCards(droppedCards, beforeDrop);
+        DropCards(droppedCards, onDrop);
     }
 
     /// <summary>

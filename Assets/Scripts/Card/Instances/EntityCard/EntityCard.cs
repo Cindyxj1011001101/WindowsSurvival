@@ -19,21 +19,13 @@
         }
     }
 
-    public override void OnAdd(Bag bag)
+    protected override void Start()
     {
-        base.OnAdd(bag);
-
-        var env = bag as EnvironmentBag;
-        // 将自身添加到地点的实体列表中
-        env.AddEntity(this);
+        EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
-    public override void OnRemove(Bag bag)
+    protected override void OnDestroy()
     {
-        base.OnRemove(bag);
-
-        var env = bag as EnvironmentBag;
-        // 将自身从地点的实体列表中移除
-        env.RemoveEntity(this);
+        EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
 }

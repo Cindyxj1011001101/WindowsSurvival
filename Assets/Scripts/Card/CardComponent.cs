@@ -18,7 +18,7 @@ public abstract class CardComponent
 {
     public Card BelongedCard { get; private set; }
 
-    public virtual void SetBelongedCard(Card card)
+    public void SetBelongedCard(Card card)
     {
         BelongedCard = card;
     }
@@ -1083,12 +1083,6 @@ public class CoordinateComponent : CardComponent
     public CoordinateComponent(float position)
     {
         coordinate.SetPosition(position);
-    }
-
-    public override void SetBelongedCard(Card card)
-    {
-        base.SetBelongedCard(card);
-        coordinate.SetLocation(BelongedCard.Bag as EnvironmentBag);
     }
 }
 #endregion

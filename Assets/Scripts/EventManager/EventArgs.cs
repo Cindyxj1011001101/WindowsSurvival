@@ -5,7 +5,6 @@
     ChangeEnv,                          // 场景移动界面刷新
     RefreshPlayerState,                 // 更新玩家状态数据
     RefreshEnvironmentState,            // 更新环境状态数据
-    ChangeDiscoveryDegree,              // 探索度变化
     ChangePlayerBagCards,               // 玩家背包卡牌变化
     ChangeStudyProgress,                // 研究进度变化
     UnlockRecipe,                       // 解锁合成配方
