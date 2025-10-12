@@ -15,6 +15,7 @@ public class PlaceData : ScriptableObject
     public int exploreTime;
     [HideInInspector] public float minCoord = 0;
     public float maxCoord;
+    public PlaceEnum connectedOutdoorPlace;
 
     public InitialBagStateConfig initialBagStateConfig;
 
