@@ -27,18 +27,6 @@
     DataTransmissionStationOutOfPower,  // 数据传输台断电
 }
 
-public class ChangeStateArgs
-{
-    public PlayerStateEnum state;
-    public float value;
-
-    public ChangeStateArgs(PlayerStateEnum s, float i)
-    {
-        state = s;
-        value = i;
-    }
-}
-
 public class ChangePlayerBagCardsArgs
 {
     public Card card;
