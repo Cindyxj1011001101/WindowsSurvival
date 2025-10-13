@@ -1,91 +1,13 @@
 using DG.Tweening;
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
-
-/// <summary>
-/// 探索、移动等行为的额外效果
-/// </summary>
-public class BehaviourExtraEffects
-{
-    // <原因，(最终时间倍率，玩家状态额外变化值)>
-    public Dictionary<string, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)> extraEffects = new();
-
-    [JsonIgnore]
-    public float FinalTimeMultiplier
-    {
-        get
-        {
-            float multiplier = 1f;
-            foreach (var (timeMultiplier, _) in extraEffects.Values)
-            {
-                multiplier *= 1 + timeMultiplier;
-            }
-            return multiplier;
-        }
-    }
-
-    public void AddEffect(string reason, float finalTimeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
-    {
-        if (extraEffects.ContainsKey(reason)) return; // 如果已经存在该原因的效果，则不添加
-        extraEffects.Add(reason, (finalTimeMultiplier, playerEffects));
-    }
-
-    public void RemoveEffect(string reason)
-    {
-        if (extraEffects.ContainsKey(reason))
-        {
-            extraEffects.Remove(reason);
-        }
-    }
-
-    public int GetFinalTime(int basicTime)
-    {
-        return Mathf.CeilToInt(basicTime * FinalTimeMultiplier);
-    }
-
-    public string GetEffectsDescription()
-    {
-        string desc = string.Empty;
-        foreach (var (reason, (timeMultiplier, playerEffects)) in extraEffects)
-        {
-            desc += $"\n{reason}，时间额外消耗{timeMultiplier * 100}%";
-            if (playerEffects.IsNullOrEmpty()) continue;
-            foreach (var (state, delta) in playerEffects)
-            {
-                desc += $"，{StateManager.ParsePlayerState(state)}额外{(delta > 0 ? "+" : "")}{delta}";
-            }
-        }
-        return desc.TrimEnd('\n');
-    }
-
-    public Dictionary<PlayerStateEnum, float> GetFinalPlayerEffects(Dictionary<PlayerStateEnum, float> currentEffects)
-    {
-        static void AddEffects(Dictionary<PlayerStateEnum, float> final, Dictionary<PlayerStateEnum, float> current)
-        {
-            if (current.IsNullOrEmpty()) return;
-            foreach (var (state, delta) in current)
-            {
-                if (final.ContainsKey(state)) final[state] += delta;
-                else final.Add(state, delta);
-            }
-        }
-        Dictionary<PlayerStateEnum, float> finalEffects = new();
-        foreach (var (_, playerEffects) in extraEffects.Values)
-        {
-            AddEffects(finalEffects, playerEffects);
-        }
-        AddEffects(finalEffects, currentEffects);
-        return finalEffects;
-    }
-}
 
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
     public static GameManager Instance => instance;
 
-    private float addCardAnimDuration = 0.4f;
+    private float addCardTransition = 0.4f;
 
     public PlayerBag PlayerBag { get; private set; }
     public Dictionary<PlaceEnum, EnvironmentBag> EnvironmentBags { get; private set; } = new();
@@ -95,6 +17,11 @@ public class GameManager : MonoBehaviour
     public Dictionary<PlaceEnum, PlaceData> PlaceDataDict { get; private set; } = new();
 
     private EnvironmentBagWindow envBagWindow;
+
+    public List<GlobalEffect> GlobalEffects { get; private set; } = new(); // 全局效果
+
+    public bool IsCurrentEnvironment(Bag bag) => bag is EnvironmentBag env && env == CurEnvironmentBag;
+
 
     private void Awake()
     {
@@ -114,6 +41,9 @@ public class GameManager : MonoBehaviour
         EquipmentBag = GameDataManager.Instance.EquipmentData;
         Player = GameDataManager.Instance.PlayerData;
 
+        // 全局效果
+        GlobalEffects = GameDataManager.Instance.GlobalEffects;
+
         envBagWindow = FindObjectOfType<EnvironmentBagWindow>();
 
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
@@ -122,16 +52,21 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
+        UpdateManager.Instance.GlobalEffectUpdate.RemoveListener(UpdateGlobalEffects);
     }
+
+    #region 初始化
 
     private void Start()
     {
         Init();
 
-		TechnologyManager.Instance.Init();
+        TechnologyManager.Instance.Init();
         CraftManager.Instance.Init();
         InGameEventManager.Instance.Init();
-	}
+
+        UpdateManager.Instance.GlobalEffectUpdate.AddListener(UpdateGlobalEffects);
+    }
 
     private void Init()
     {
@@ -158,8 +93,29 @@ public class GameManager : MonoBehaviour
             ExploreInWaterExtraEffects = data.exploreInWaterExtraEffects;
         }
     }
+    #endregion
 
-    public bool IsCurrentEnvironment(Bag bag) => bag is EnvironmentBag env && env == CurEnvironmentBag;
+    #region 全局效果
+    public void AddGlobalEffect(GlobalEffect newEffect)
+    {
+        GlobalEffects.Add(newEffect);
+        newEffect.OnBegin();
+    }
+
+    private void UpdateGlobalEffects()
+    {
+        for (int i = GlobalEffects.Count - 1; i >= 0; i--)
+        {
+            var effect = GlobalEffects[i];
+            effect.OnUpdate();
+            if (effect.Duration <= 0)
+            {
+                effect.OnEnd();
+                GlobalEffects.RemoveAt(i);
+            }    
+        }
+    }
+    #endregion
 
     #region AddCard
 
@@ -196,7 +152,7 @@ public class GameManager : MonoBehaviour
             card,
             1,
             startPos,
-            addCardAnimDuration,
+            addCardTransition,
             onComplete: () =>
             {
                 card.RefreshSlot();
@@ -213,7 +169,7 @@ public class GameManager : MonoBehaviour
         return MFXUtility.MoveCards(
             cards,
             startPos,
-            addCardAnimDuration,
+            addCardTransition,
             onComplete: (card) =>
             {
                 card.RefreshSlot();

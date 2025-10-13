@@ -6,6 +6,7 @@ public class UpdateManager : MonoBehaviour
     private static UpdateManager instance;
     public static UpdateManager Instance => instance;
 
+    public UnityEvent GlobalEffectUpdate { get; private set; } = new();
     public UnityEvent InGameEventUpdate { get; private set; } = new();
     public UnityEvent PlayerUpdate { get; private set; } = new();
     public UnityEvent EnvironmentUpdate { get; private set; } = new();
@@ -27,21 +28,23 @@ public class UpdateManager : MonoBehaviour
 
     private void OnUpdate()
     {
-        InGameEventUpdate?.Invoke();
-        CardUpdate?.Invoke();
-        EnvironmentUpdate?.Invoke();
-        PlayerUpdate?.Invoke();
-        PopulationUpdate?.Invoke();
-        TechnologyUpdate?.Invoke();
+        GlobalEffectUpdate.Invoke();
+        InGameEventUpdate.Invoke();
+        CardUpdate.Invoke();
+        EnvironmentUpdate.Invoke();
+        PlayerUpdate.Invoke();
+        PopulationUpdate.Invoke();
+        TechnologyUpdate.Invoke();
     }
 
     private void Clear()
     {
-        InGameEventUpdate?.RemoveAllListeners();
-        PlayerUpdate?.RemoveAllListeners();
-        EnvironmentUpdate?.RemoveAllListeners();
-        CardUpdate?.RemoveAllListeners();
-        PopulationUpdate?.RemoveAllListeners();
-        TechnologyUpdate?.RemoveAllListeners();
+        GlobalEffectUpdate.RemoveAllListeners();
+        InGameEventUpdate.RemoveAllListeners();
+        PlayerUpdate.RemoveAllListeners();
+        EnvironmentUpdate.RemoveAllListeners();
+        CardUpdate.RemoveAllListeners();
+        PopulationUpdate.RemoveAllListeners();
+        TechnologyUpdate.RemoveAllListeners();
     }
 }

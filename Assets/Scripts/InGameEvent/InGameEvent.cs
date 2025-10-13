@@ -32,6 +32,29 @@ public abstract class InGameEvent
 
     [JsonIgnore] public int TriggerIntervalMinutes => Mathf.CeilToInt(triggerInterval * 24 * 60); // 触发间隔(分钟)
 
+    /// <summary>
+    /// 计算威胁事件强度
+    /// 公式：(基础值 + Min(生存天数, 生存天数最大影响上限) * 威胁系数) * 随机系数
+    /// </summary>
+    protected float CalculateThreatIntensity()
+    {
+        var config = InGameEventManager.Instance.InvasionEventConfig;
+        // 计算生存天数影响部分（受上限限制）
+        float effectiveSurvivalDays = Mathf.Min(TimeManager.Instance.Day, config.maxSurvivalDayEffect);
+        float survivalPart = effectiveSurvivalDays * config.threatCoefficient;
+
+        // 计算基础部分
+        float basePart = config.basicIntensity + survivalPart;
+
+        // 生成随机系数
+        float randomFactor = UnityEngine.Random.value * (config.maxRandomFactor - config.minRandomFactor) + config.minRandomFactor;
+
+        // 计算最终强度
+        float finalIntensity = basePart * randomFactor;
+
+        return finalIntensity;
+    }
+
     public static InGameEvent ParseDataRow(DataRow row)
     {
         var eventName = row[0].ToString();

@@ -18,55 +18,16 @@ public class Invasion : InGameEvent
 {
     private List<InvasionComposition> allCompositions = new();
 
-    private float basicIntensity;             // 基础入侵事件强度
-    private float maxSurvivalDayEffect;       // 生存天数最大影响上限
-    private float threatCoefficient;          // 威胁系数
-    private float minRandomFactor;            // 最小随机系数
-    private float maxRandomFactor;            // 最大随机系数
-
     public override void TriggerThisEvent()
     {
-        ReadConfig();
         RegisterAllCompositions();
         GenerateInvasion(CalculateThreatIntensity());
-    }
-
-    private void ReadConfig()
-    {
-        var config = InGameEventManager.Instance.InvasionEventConfig;
-        basicIntensity = config.basicIntensity;
-        maxSurvivalDayEffect = config.maxSurvivalDayEffect;
-        threatCoefficient = config.threatCoefficient;
-        minRandomFactor = config.minRandomFactor;
-        maxRandomFactor = config.maxRandomFactor;
     }
 
     private void RegisterAllCompositions()
     {
         if (allCompositions.IsNullOrEmpty())
             allCompositions = ExcelReader.ReadInvasionCompositionConfig("InvasionCompositionConfig");
-    }
-
-    /// <summary>
-    /// 计算威胁事件强度
-    /// 公式：(基础值 + Min(生存天数, 生存天数最大影响上限) * 威胁系数) * 随机系数
-    /// </summary>
-    private float CalculateThreatIntensity()
-    {
-        // 计算生存天数影响部分（受上限限制）
-        float effectiveSurvivalDays = Mathf.Min(TimeManager.Instance.Day, maxSurvivalDayEffect);
-        float survivalPart = effectiveSurvivalDays * threatCoefficient;
-
-        // 计算基础部分
-        float basePart = basicIntensity + survivalPart;
-
-        // 生成随机系数
-        float randomFactor = Random.value * (maxRandomFactor - minRandomFactor) + minRandomFactor;
-
-        // 计算最终强度
-        float finalIntensity = basePart * randomFactor;
-
-        return finalIntensity;
     }
 
     /// <summary>

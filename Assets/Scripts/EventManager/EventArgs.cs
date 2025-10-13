@@ -25,6 +25,8 @@
     CardNumChange,                      // 卡牌数量变化
     PlayerMove,                         // 玩家移动
     DataTransmissionStationOutOfPower,  // 数据传输台断电
+    OnGlobalEffectBegin,                // 全局效果生效
+    OnGlobalEffectEnd,                  // 全局效果失效
 }
 
 public class ChangePlayerBagCardsArgs

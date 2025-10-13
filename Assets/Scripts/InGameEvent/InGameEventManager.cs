@@ -18,18 +18,16 @@ public class InGameEventManager
     private const float MAX_TREND_VALUE = 4f;
     private const float MIN_TREND_VALUE = -4f;
 
-    private const float EVENT_TRIGGER_PROB = 1f; // 每次结算触发事件的基础概率（约1.04%）
+    private const float EVENT_TRIGGER_PROB = 1f; // 每次结算触发事件的基础概率（约1.04%），期望触发间隔为24小时
 
     public InvasionEventConfig InvasionEventConfig { get; private set; }
 
-    private InGameEventManager()
-    {
-        // 注册所有事件
-        RegisterAllEvents();
-    }
+    private InGameEventManager() { }
 
     public void Init()
     {
+        // 注册所有事件
+        RegisterAllEvents();
         // 读取存档数据
         LoadData();
         // 监听结算事件
@@ -39,6 +37,7 @@ public class InGameEventManager
     #region 初始化
     private void RegisterAllEvents()
     {
+        allEvents.Clear();
         allEvents = ExcelReader.ReadInGameEventConfig("InGameEventConfig");
     }
 
