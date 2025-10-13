@@ -153,30 +153,15 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void Explore()
     {
-        GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
-        AddCards(droppedCards, () =>
+        var tween = envCardTransform.PunchAndBounce(() =>
         {
-            MouseManager.Instance.Wait();
+            GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
             DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
+            GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
             exploreButton.transform.ShowTip(tip, 1.4f);
         });
-    }
 
-    /// <summary>
-    /// 从地点牌堆中添加卡牌
-    /// </summary>
-    /// <param name="cards"></param>
-    /// <param name="onDrop"></param>
-    public void AddCards(List<Card> cards, UnityAction onDrop = null)
-    {
-        var seq = envCardTransform.PunchAndBounce(() =>
-        {
-            onDrop?.Invoke();
-            GameManager.Instance.AddCardsWithTween(cards, false, envCardTransform.position);
-        });
-
-        // 等待抽牌动画完成
-        MouseManager.Instance.Wait(seq.Duration());
+        MouseManager.Instance.Wait(tween.Duration());
     }
 
     public override void DisplayBag(Bag bag)

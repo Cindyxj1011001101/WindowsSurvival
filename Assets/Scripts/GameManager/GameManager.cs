@@ -16,8 +16,6 @@ public class GameManager : MonoBehaviour
     public Player Player { get; private set; }
     public Dictionary<PlaceEnum, PlaceData> PlaceDataDict { get; private set; } = new();
 
-    private EnvironmentBagWindow envBagWindow;
-
     public List<GlobalEffect> GlobalEffects { get; private set; } = new(); // 全局效果
 
     public bool IsCurrentEnvironment(Bag bag) => bag is EnvironmentBag env && env == CurEnvironmentBag;
@@ -43,8 +41,6 @@ public class GameManager : MonoBehaviour
 
         // 全局效果
         GlobalEffects = GameDataManager.Instance.GlobalEffects;
-
-        envBagWindow = FindObjectOfType<EnvironmentBagWindow>();
 
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
@@ -100,6 +96,11 @@ public class GameManager : MonoBehaviour
     {
         GlobalEffects.Add(newEffect);
         newEffect.OnBegin();
+    }
+
+    public bool ContainsGlobalEffect<T>() where T : GlobalEffect
+    {
+        return GlobalEffects.Find(g => g.GetType() == typeof(T)) != null;
     }
 
     private void UpdateGlobalEffects()
@@ -209,7 +210,7 @@ public class GameManager : MonoBehaviour
     {
         if (targetEnv == CurEnvironmentBag)
         {
-            envBagWindow.AddCards(cards);
+            AddCardsWithTween(cards, false, Vector2.up * 600);
         }
         else
         {
