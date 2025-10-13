@@ -7,7 +7,7 @@ public class CompactBiscuit : Card
     {
         Events = new()
         {
-            new CardEvent("食用", "食用压缩饼干", (out string s) => EasyEvent(out s, "吃_01"), null, () => 3,
+            new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 3,
             () => new()
             {
                 { PlayerStateEnum.Fullness, 14 }

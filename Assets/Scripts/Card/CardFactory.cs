@@ -147,6 +147,13 @@ public static class CardFactory
             { "吸盘蠕虫", typeof(SuckerWorm) },
             { "裙水母", typeof(SkirtJellyfish) },
             { "狮子水母", typeof(LionJellyfish) },
+            { "燃料发电机", typeof(FuelGenerator) },
+            { "大块生鱼肉", typeof(RawFish) },
+            { "大块熟鱼肉", typeof(CookedFish) },
+            { "鱼皮", typeof(FishSkin) },
+            { "立鳞烧", typeof(Tatsuage) },
+            { "老鼠", typeof(Rat) },
+            { "垃圾包裹", typeof(JunkPackage) },
         };
     }
 

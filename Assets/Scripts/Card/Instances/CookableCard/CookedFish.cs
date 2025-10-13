@@ -1,17 +1,18 @@
 ﻿/// <summary>
-/// 熟触手
+/// 大块熟鱼肉
 /// </summary>
-public class CookedTentacle : CookableCard
+public class CookedFish : CookableCard
 {
-    private CookedTentacle()
+    private CookedFish()
     {
         Events = new()
         {
             new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 30,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 24 },
-                { PlayerStateEnum.San, -1 },
+                { PlayerStateEnum.Fullness, 38 },
+                { PlayerStateEnum.San, 3 },
+                { PlayerStateEnum.Health, 10 },
             })
         };
     }
