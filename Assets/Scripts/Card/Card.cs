@@ -12,6 +12,7 @@ public enum CardTag
     Plants,  // 素食
     Meat,    // 肉食
     Hunter,  // 猎人
+    Food,    // 食物
 }
 
 public enum CardType
