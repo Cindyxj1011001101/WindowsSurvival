@@ -250,23 +250,23 @@ public class CardSlot : MonoBehaviour
         switch (component)
         {
             case DurabilityComponent durabilityComponent:
-                slider.SetValue(durabilityComponent.durability, durabilityComponent.maxDurability);
+                slider.SetValue(durabilityComponent.value, durabilityComponent.maxValue);
                 slider.tipController.SetTip($"耐久度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case FreshnessComponent freshnessComponent:
-                slider.SetValue(freshnessComponent.freshness, freshnessComponent.maxFreshness);
+                slider.SetValue(freshnessComponent.value, freshnessComponent.maxValue);
                 slider.tipController.SetTip($"新鲜度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case GrowthComponent growthComponent:
-                slider.SetValue(growthComponent.growth, growthComponent.maxGrowth);
+                slider.SetValue(growthComponent.value, growthComponent.maxValue);
                 slider.tipController.SetTip($"生长度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case PlantGrowthComponent plantGrowthComponent:
-                slider.SetValue(plantGrowthComponent.growth, plantGrowthComponent.maxGrowth);
+                slider.SetValue(plantGrowthComponent.value, plantGrowthComponent.maxValue);
                 slider.tipController.SetTip($"生长度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case ProgressComponent progressComponent:
-                slider.SetValue(progressComponent.progress, progressComponent.maxProgress);
+                slider.SetValue(progressComponent.value, progressComponent.maxValue);
                 slider.tipController.SetTip($"产物进度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case FuelStorageComponent fuelStorageComponent:

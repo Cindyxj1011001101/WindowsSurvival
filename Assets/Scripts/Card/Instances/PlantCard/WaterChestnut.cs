@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// </summary>
 public class WaterChestnut : Card
 {
-    private PlantGrowthComponent plant;
+    private PlantGrowthComponent plantGrowth;
     private StateMachineComponent stateMachine;
 
     private WaterChestnut()
@@ -21,7 +21,7 @@ public class WaterChestnut : Card
     {
         base.Awake();
 
-        TryGetComponent(out plant);
+        TryGetComponent(out plantGrowth);
 
         if (!TryGetComponent(out stateMachine))
         {
@@ -40,7 +40,7 @@ public class WaterChestnut : Card
 
     private void UpdatePlantState()
     {
-        var growth = plant.growth;
+        var growth = plantGrowth.value;
 
         // 幼苗期
         if (growth >= 0 && growth <= 10)
@@ -64,7 +64,7 @@ public class WaterChestnut : Card
     private void Event_Collect(out string tip)
     {
         tip = string.Empty;
-        plant.AddGrowth(-100); // 生长进度-100
+        plantGrowth.AddValue(-100); // 生长进度-100
         TimeManager.Instance.AddTime(15);
         AddCard("菱果", Bag);
         UpdatePlantState();
@@ -73,7 +73,7 @@ public class WaterChestnut : Card
     private bool Judge_Collect(out string hint)
     {
         hint = string.Empty;
-        if (!plant.IsMature)
+        if (!plantGrowth.IsMature)
         {
             hint = "四角菱尚未成熟，无法采集";
             return false;
@@ -92,7 +92,7 @@ public class WaterChestnut : Card
         DestroyThis();
         tool.Use();
         TimeManager.Instance.AddTime(15);
-        AddCard(plant.deadCardId, Bag);
+        AddCard(plantGrowth.deadCardId, Bag);
     }
 
     private bool Judge_DigUp(out string hint)

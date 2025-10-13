@@ -121,7 +121,7 @@ public class GMCommand
     {
         var card = AddCard("老鼠尸体");
         card.TryGetComponent<FreshnessComponent>(out var c);
-        c.freshness = 20;
+        c.SetValue(20);
         card.RefreshSlot();
     }
 

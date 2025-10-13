@@ -41,6 +41,6 @@ public class LightenedOxygenCandle : Card
         Use();
 
         TryGetComponent<DurabilityComponent>(out var d);
-        if (d.durability == 0) ShowTip("氧烛燃烧殆尽了");
+        if (d.value == 0) ShowTip("氧烛燃烧殆尽了");
     }
 }

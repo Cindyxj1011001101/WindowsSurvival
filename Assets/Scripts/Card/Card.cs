@@ -389,31 +389,31 @@ public abstract class Card : IComparable<Card>
         {
             // 新鲜度低的优先
             other.TryGetComponent<FreshnessComponent>(out var o);
-            return a.freshness - o.freshness;
+            return Mathf.CeilToInt(a.value - o.value);
         }
         else if (TryGetComponent<ProgressComponent>(out var b))
         {
             // 产物进度高的优先
             other.TryGetComponent<ProgressComponent>(out var o);
-            return o.progress - b.progress;
+            return Mathf.CeilToInt(o.value - b.value);
         }
         else if (TryGetComponent<DurabilityComponent>(out var c))
         {
             // 耐久度低的优先
             other.TryGetComponent<DurabilityComponent>(out var o);
-            return c.durability - o.durability;
+            return Mathf.CeilToInt(c.value - o.value);
         }
         else if (other.TryGetComponent<PlantGrowthComponent>(out var p))
         {
             // 生长度高的优先
             other.TryGetComponent<PlantGrowthComponent>(out var o);
-            return Mathf.CeilToInt(o.growth - p.growth);
+            return Mathf.CeilToInt(o.value - p.value);
         }
         else if (other.TryGetComponent<GrowthComponent>(out var g))
         {
             // 生长度高的优先
             other.TryGetComponent<GrowthComponent>(out var o);
-            return Mathf.CeilToInt(o.growth - g.growth);
+            return Mathf.CeilToInt(o.value - g.value);
         }
         else
         {

@@ -265,19 +265,19 @@ public static class ExcelReader
                     // 覆写卡牌属性
                     if (config.OverwriteFreshness && card.TryGetComponent<FreshnessComponent>(out var f))
                     {
-                        f.freshness = ParseInt(row[4].ToString()); // 覆写新鲜度
+                        f.SetValue(ParseInt(row[4].ToString())); // 覆写新鲜度
                     }
                     if (config.OverwriteDurability && card.TryGetComponent<DurabilityComponent>(out var d))
                     {
-                        d.durability = ParseInt(row[6].ToString()); // 覆写耐久度
+                        d.SetValue(ParseInt(row[6].ToString())); // 覆写耐久度
                     }
                     if (config.OverwriteGrowth && card.TryGetComponent<GrowthComponent>(out var g))
                     {
-                        g.growth = ParseInt(row[8].ToString()); // 覆写生长进度
+                        g.SetValue(ParseInt(row[8].ToString())); // 覆写生长进度
                     }
                     if (config.OverwriteProgress && card.TryGetComponent<ProgressComponent>(out var p))
                     {
-                        p.progress = ParseInt(row[10].ToString()); // 覆写产物进度
+                        p.SetValue(ParseInt(row[10].ToString())); // 覆写产物进度
                     }
                     if (config.OverwriteInnerContents && card.TryGetComponent<InnerContentsComponent>(out var inn))
                     {
@@ -325,22 +325,22 @@ public static class ExcelReader
             if (config.OverwriteFreshness)
             {
                 if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                    freshnessComponent.freshness = ParseInt(row[4].ToString()); // 设置新鲜度
+                    freshnessComponent.SetValue(ParseInt(row[4].ToString())); // 设置新鲜度
             }
             if (config.OverwriteDurability)
             {
                 if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                    durabilityComponent.durability = ParseInt(row[6].ToString()); // 设置耐久度
+                    durabilityComponent.SetValue(ParseInt(row[6].ToString())); // 设置耐久度
             }
             if (config.OverwriteGrowth)
             {
                 if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                    growthComponent.growth = ParseInt(row[8].ToString()); // 设置生长进度
+                    growthComponent.SetValue(ParseInt(row[8].ToString())); // 设置生长进度
             }
             if (config.OverwriteProgress)
             {
                 if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                    progressComponent.progress = ParseInt(row[10].ToString()); // 设置产物进度
+                    progressComponent.SetValue(ParseInt(row[10].ToString())); // 设置产物进度
             }
             // 添加到掉落列表
             for (int j = 0; j < config.DropNum; j++)
@@ -400,22 +400,22 @@ public static class ExcelReader
                 if (config.OverwriteFreshness)
                 {
                     if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                        freshnessComponent.freshness = ParseInt(row[8].ToString()); // 设置新鲜度
+                        freshnessComponent.SetValue(ParseInt(row[8].ToString())); // 设置新鲜度
                 }
                 if (config.OverwriteDurability)
                 {
                     if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                        durabilityComponent.durability = ParseInt(row[10].ToString()); // 设置耐久度
+                        durabilityComponent.SetValue(ParseInt(row[10].ToString())); // 设置耐久度
                 }
                 if (config.OverwriteGrowth)
                 {
                     if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                        growthComponent.growth = ParseInt(row[12].ToString()); // 设置生长进度
+                        growthComponent.SetValue(ParseInt(row[12].ToString())); // 设置生长进度
                 }
                 if (config.OverwriteProgress)
                 {
                     if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                        progressComponent.progress = ParseInt(row[14].ToString()); // 设置产物进度
+                        progressComponent.SetValue(ParseInt(row[14].ToString())); // 设置产物进度
                 }
                 // 添加到掉落列表
                 populationList.Add(new Population()
