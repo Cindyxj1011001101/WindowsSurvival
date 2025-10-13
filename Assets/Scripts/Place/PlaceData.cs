@@ -11,6 +11,7 @@ public class PlaceData : ScriptableObject
     public bool isIndoor;
     public bool isInWater;
     public bool isInSpacecraft;
+    public bool isInCave;
     public Sprite placeImage;
     public int exploreTime;
     [HideInInspector] public float minCoord = 0;
