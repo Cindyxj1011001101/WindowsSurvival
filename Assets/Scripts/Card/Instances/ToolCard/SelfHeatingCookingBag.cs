@@ -11,7 +11,12 @@ public class SelfHeatingCookingBag : Card
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
-        return card.TryGetComponent<CookComponent>(out var cook) && cook.leftCookTime > 0;
+        if (card.TryGetComponent<CookComponent>(out var cook) && cook.leftCookTime > 0)
+        {
+            tip = "÷Û Ï ≥ŒÔ";
+            return true;
+        }
+        return false;
     }
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)

@@ -198,12 +198,12 @@ public class KettleFlower : Card
         {
             if (component.toolTypes.Contains(ToolType.Cut))
             {
-                tip = "划一个口";
+                tip = Events[0].name;
                 return true;
             }
             if (component.toolTypes.Contains(ToolType.Dig))
             {
-                tip = "铲起";
+                tip = Events[1].name;
                 return true;
             }
         }

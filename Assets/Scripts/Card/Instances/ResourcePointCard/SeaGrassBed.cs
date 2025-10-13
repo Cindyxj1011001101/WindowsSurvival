@@ -74,7 +74,7 @@ public class SeaGrassBed : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            tip = "用刀采集";
+            tip = Events[1].name;
             return true;
         }
         return false;

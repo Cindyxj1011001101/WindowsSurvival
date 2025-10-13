@@ -75,7 +75,7 @@ public class LoveBeadWithProduct : Card
         tip = string.Empty;
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Intersect(new List<ToolType> { ToolType.Cut, ToolType.Dig }).Any())
         {
-            tip = "撬开";
+            tip = Events[0].name;
             return true;
         }
         return false;

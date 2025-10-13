@@ -51,7 +51,7 @@ public class WhiteBlastMineStack : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            tip = "用铲子凿";
+            tip = Events[0].name;
             return true;
         }
         return false;

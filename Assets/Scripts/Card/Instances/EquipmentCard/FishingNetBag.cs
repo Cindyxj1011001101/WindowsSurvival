@@ -59,7 +59,7 @@ public class FishingNetBag : EquipmentCard
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut) && innerContents.bag.IsEmpty)
         {
             // 如果是切割工具，并且渔获袋是空的，可以快速交互
-            tip = "切割";
+            tip = Events[0].name;
             return true;
         }
         return innerContents.CanQuickInteract(card, out tip);

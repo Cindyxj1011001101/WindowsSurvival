@@ -82,7 +82,7 @@ public class CaughtAquariusFishWithProduct : Card
         tip = string.Empty;
         if (card.CardId == "凝胶装瓶器")
         {
-            tip = "液体装瓶";
+            tip = Events[1].name;
             return true;
         }
         return false;

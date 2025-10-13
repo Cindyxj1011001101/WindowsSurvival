@@ -134,13 +134,13 @@ public class SafeInsurance : ConstructionCard
         // 用铲子凿
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            tip = "用铲子凿";
+            tip = Events[1].name;
             return true;
         }
 
         if (card.CardId == "钢锤")
         {
-            tip = "用锤子砸";
+            tip = Events[2].name;
             return true;
         }
 

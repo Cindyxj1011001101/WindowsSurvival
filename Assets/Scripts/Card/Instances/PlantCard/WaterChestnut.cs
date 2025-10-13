@@ -117,7 +117,7 @@ public class WaterChestnut : Card
         tip = string.Empty;
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            tip = "²ùÆð";
+            tip = Events[1].name;
             return true;
         }
 

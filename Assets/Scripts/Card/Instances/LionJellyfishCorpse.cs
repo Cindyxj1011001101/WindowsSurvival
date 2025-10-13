@@ -51,7 +51,7 @@ public class LionJellyfishCorpse : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            tip = "用刀切割";
+            tip = Events[0].name;
             return true;
         }
         return false;
