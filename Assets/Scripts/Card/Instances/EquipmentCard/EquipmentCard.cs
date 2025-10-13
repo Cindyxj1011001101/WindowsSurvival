@@ -1,7 +1,4 @@
-﻿/// <summary>
-/// 氧气罐
-/// </summary>
-public abstract class EquipmentCard : Card
+﻿public abstract class EquipmentCard : Card
 {
     protected EquipmentComponent equipment;
     protected EquipmentCard()

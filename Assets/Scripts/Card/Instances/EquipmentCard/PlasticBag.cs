@@ -1,4 +1,6 @@
-
+/// <summary>
+/// 塑料袋
+/// </summary>
 public class PlasticBag : EquipmentCard
 {
     private InnerContentsComponent innerContents;

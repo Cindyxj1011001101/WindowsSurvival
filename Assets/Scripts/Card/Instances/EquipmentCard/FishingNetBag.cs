@@ -1,4 +1,6 @@
-
+/// <summary>
+/// 渔获袋
+/// </summary>
 public class FishingNetBag : EquipmentCard
 {
     private InnerContentsComponent innerContents;
