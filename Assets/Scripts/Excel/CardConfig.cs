@@ -63,6 +63,7 @@ public class CardConfig
     public float MinAtkDist; // 最小攻击距离
     public float MaxAtkDist; // 最大攻击距离
     public AttackForm AtkForm; // 攻击方式
+    public int AtkTime; // 攻击时间
     public bool IsEntity; // 是否是实体
     public float MaxHealth; // 最大生命值
     public float EntityAtk; // 实体攻击力

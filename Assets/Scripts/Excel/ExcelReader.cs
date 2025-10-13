@@ -57,7 +57,7 @@ public static class ExcelReader
                 IsPlant = ParseBool(row[52].ToString()),
                 HasCoordinate = ParseBool(row[57].ToString()),
                 IsWeapon = ParseBool(row[59].ToString()),
-                IsEntity = ParseBool(row[64].ToString()),
+                IsEntity = ParseBool(row[65].ToString()),
             };
             // 可选字段
             if (cardConfig.HasFreshness)
@@ -151,15 +151,16 @@ public static class ExcelReader
                 cardConfig.MinAtkDist = ParseFloat(row[61].ToString());
                 cardConfig.MaxAtkDist = ParseFloat(row[62].ToString());
                 cardConfig.AtkForm = Enum.Parse<AttackForm>(row[63].ToString());
+                cardConfig.AtkTime = ParseInt(row[64].ToString());
             }
             if (cardConfig.IsEntity)
             {
-                cardConfig.MaxHealth = ParseFloat(row[65].ToString());
-                cardConfig.EntityAtk = ParseFloat(row[66].ToString());
-                cardConfig.MoveDistPerMin = ParseFloat(row[67].ToString());
-                cardConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[68].ToString());
-                cardConfig.AIRefreshInterval = ParseInt(row[69].ToString());
-                cardConfig.DeadDrops = row[70].ToString();
+                cardConfig.MaxHealth = ParseFloat(row[66].ToString());
+                cardConfig.EntityAtk = ParseFloat(row[67].ToString());
+                cardConfig.MoveDistPerMin = ParseFloat(row[68].ToString());
+                cardConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[69].ToString());
+                cardConfig.AIRefreshInterval = ParseInt(row[70].ToString());
+                cardConfig.DeadDrops = row[71].ToString();
             }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }

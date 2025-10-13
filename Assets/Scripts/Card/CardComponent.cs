@@ -1102,24 +1102,31 @@ public enum AttackForm
 
 public class WeaponComponent : CardComponent
 {
-    public float atk; // 攻击力
-    public float minAtkDist; // 最小攻击距离
-    public float maxAtkDist; // 最大攻击距离
+    public float atk;             // 攻击力
+    public float minAtkDist;      // 最小攻击距离
+    public float maxAtkDist;      // 最大攻击距离
     public AttackForm attackForm; // 攻击方式
+    public int attackTime;        // 攻击时间(分钟)
 
     public WeaponComponent() { }
 
-    public WeaponComponent(float atk, float minAtkDist, float maxAtkDist, AttackForm attackForm)
+    public WeaponComponent(float atk, float minAtkDist, float maxAtkDist, AttackForm attackForm, int attackTime)
     {
         this.atk = atk;
         this.minAtkDist = minAtkDist;
         this.maxAtkDist = maxAtkDist;
         this.attackForm = attackForm;
+        this.attackTime = attackTime;
     }
 
     public void DealDamage(IEntity target)
     {
+        // 消耗武器耐久
+        BelongedCard.Use();
+        // 造成伤害
         target.TakeDamage(atk, GameManager.Instance.Player);
+        // 消耗时间
+        TimeManager.Instance.AddTime(attackTime);
     }
 
     public bool WithinAttackRange(IEntity target)
