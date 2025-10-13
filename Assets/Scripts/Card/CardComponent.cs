@@ -260,7 +260,7 @@ public class DurabilityComponent : ContinuousValueComponent
     {
     }
 
-    public void Use(float durabilityConsumption = 1)
+    public void Use(float durabilityConsumption)
     {
         if (value <= 0) return;
 

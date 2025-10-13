@@ -377,7 +377,8 @@ public class GameManager : MonoBehaviour
         GetMoveEffects(float targetPosition)
     {
         var dist = Mathf.Abs(Player.Coordinate.Position - targetPosition);
-        var basicMoveTime = Mathf.CeilToInt(dist / Player.moveDistPerMin);
+
+        var basicMoveTime = Mathf.CeilToInt(dist / Player.MoveSpeed);
         return GetMoveEffects(basicMoveTime, CurEnvironmentBag.PlaceData.placeType);
     }
 
@@ -537,17 +538,12 @@ public class GameManager : MonoBehaviour
     {
         if (!CanMoveExplore()) return;
 
-        // 计算移动距离
         // 限制坐标范围
         targetPosition = Mathf.Clamp(targetPosition, CurEnvironmentBag.PlaceData.minCoord, CurEnvironmentBag.PlaceData.maxCoord);
-        var dist = Mathf.Abs(targetPosition - Player.Coordinate.Position);
-
-        // 计算移动时间
-        var basicMoveTime = Mathf.CeilToInt(dist / Player.moveDistPerMin);
-
+        
         // 移动消耗
         (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) =
-            GetMoveEffects(basicMoveTime, CurEnvironmentBag.PlaceData.placeType);
+            GetMoveEffects(targetPosition);
 
         // 执行移动
         SetPlayerPosition(targetPosition);

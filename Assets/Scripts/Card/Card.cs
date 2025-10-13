@@ -240,11 +240,11 @@ public abstract class Card : IComparable<Card>
         isUpdatePaused = false;
     }
 
-    public virtual void Use(int times = 1)
+    public virtual void Use(float durabilityConsumption = 1)
     {
         if (TryGetComponent<DurabilityComponent>(out var component))
         {
-            component.Use(times);
+            component.Use(durabilityConsumption);
         }
     }
 
