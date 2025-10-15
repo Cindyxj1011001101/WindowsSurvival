@@ -37,45 +37,43 @@ public class FuelGenerator : ConstructionCard
 
         Events = new()
         {
-            new CardEvent("点燃", $"点燃燃料发电机。每15分钟可以产生{ELECTRICITY_PRODUCTION}单位电力。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, CanIgnite),
+            new CardEvent("点燃", $"点燃{CardName}。每15分钟可以产生{ELECTRICITY_PRODUCTION}单位电力。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, CanIgnite),
             new CardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish),
         };
     }
 
     protected override void Start()
     {
-        base.Start();
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
     }
 
     protected override void OnDestroy()
     {
-        base.OnDestroy();
         EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
         EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
     }
 
     private void OnElectromagneticInterferenceBegin(Type type)
     {
-        if (type != typeof(ElectromagneticInterference)) return;
+        if (type != typeof(PowerNetworkFailure)) return;
 
         Extinguish(out _);
-        ShowTip("由于电磁干扰，燃料发电机已熄灭");
+        ShowTip($"由于电网故障，{CardName}已停止工作");
     }
 
     private void OnElectromagneticInterferenceEnd(Type type)
     {
-        if (type != typeof(ElectromagneticInterference)) return;
+        if (type != typeof(PowerNetworkFailure)) return;
 
         RefreshSlot();
     }
 
     private bool CanIgnite(out string s)
     {
-        if (GameManager.Instance.ContainsGlobalEffect<ElectromagneticInterference>())
+        if (GameManager.Instance.ContainsGlobalEffect<PowerNetworkFailure>())
         {
-            s = "受电磁干扰影响，电网停止工作，无法为其供电";
+            s = $"由于电网故障，{CardName}无法为其供电";
             return false;
         }
 
@@ -89,11 +87,11 @@ public class FuelGenerator : ConstructionCard
     {
         fuelStorage.Ignite(out s);
 
-        stateMachine.ChangeState("已点燃");
-
         SoundManager.Instance.PlaySound("点火_02");
 
         StateManager.Instance.ChangeElectricityChangeRate(ELECTRICITY_PRODUCTION);
+
+        stateMachine.ChangeState("已点燃");
     }
 
     /// <summary>
@@ -103,13 +101,13 @@ public class FuelGenerator : ConstructionCard
     {
         fuelStorage.Extinguish(out s);
 
-        stateMachine.ChangeState("未点燃");
-
         // 只有玩家在同一地点时才停止音效
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
 
         StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_PRODUCTION);
+
+        stateMachine.ChangeState("未点燃");
     }
 
     public override bool CanQuickInteract(Card card, out string tip)

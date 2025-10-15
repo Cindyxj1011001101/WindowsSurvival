@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// 冰箱
@@ -8,14 +9,14 @@ public class Refrigerator : ConstructionCard
     private InnerContentsComponent innerContents;
     private StateMachineComponent stateMachine;
 
-    public float electricityConsume = .3f; // 每回合电力消耗
+    private const float ELECTRICITY_CONSUMPTION = 0.3f; // 每回合电力消耗
 
     private Refrigerator()
     {
         Events = new()
         {
-            new CardEvent("接电", "使其接入电路。接入电路后每15分钟消耗0.3电力，冰箱里的内容物腐烂速度减半", Event_ConnectElectricity, Judge_ConnectElectricity),
-            new CardEvent("断电", "", Event_DisconnectElectricity, Judge_DisconnectElectricity),
+            new CardEvent("开启", $"使其接入电路。接电后每15分钟消耗{ELECTRICITY_CONSUMPTION}电力，内容物腐烂速度减半", Event_TurnOn, Judge_TurnOn),
+            new CardEvent("关闭", "", Event_TurnOff, Judge_TurnOff),
         };
     }
 
@@ -50,6 +51,32 @@ public class Refrigerator : ConstructionCard
             }
         };
     }
+    protected override void Start()
+    {
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+    }
+
+    protected override void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+    }
+
+    private void OnPowerNetworkFailureBegin(Type type)
+    {
+        if (type != typeof(PowerNetworkFailure)) return;
+
+        Event_TurnOff(out _);
+        ShowTip($"由于电网故障，{CardName}已停止工作");
+    }
+
+    private void OnPowerNetworkFailureEnd(Type type)
+    {
+        if (type != typeof(PowerNetworkFailure)) return;
+
+        RefreshSlot();
+    }
 
     private bool ContentFilter(Card c, out string s)
     {
@@ -62,50 +89,33 @@ public class Refrigerator : ConstructionCard
         return true;
     }
 
-    private void StartWorking()
-    {
-        foreach (var slot in innerContents.bag.Slots)
-        {
-            foreach (var card in slot.Cards)
-            {
-                if (card.TryGetComponent<FreshnessComponent>(out var f))
-                {
-                    f.updateRate = .5f;
-                }
-            }
-        }
-    }
-
-    private void StopWorking()
-    {
-        foreach (var slot in innerContents.bag.Slots)
-        {
-            foreach (var card in slot.Cards)
-            {
-                if (card.TryGetComponent<FreshnessComponent>(out var f))
-                {
-                    f.updateRate = 1f;
-                }
-            }
-        }
-    }
-
     /// <summary>
     /// 接电
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_ConnectElectricity(out string tip)
+    private void Event_TurnOn(out string tip)
     {
         tip = string.Empty;
+        innerContents.ForEachCard(c =>
+        {
+            if (c.TryGetComponent<FreshnessComponent>(out var f))
+            {
+                f.updateRate *= .5f;
+            }
+        });
         stateMachine.ChangeState("已接电");
-        StartWorking();
     }
 
-    private bool Judge_ConnectElectricity(out string hint)
+    private bool Judge_TurnOn(out string hint)
     {
         hint = string.Empty;
+        if (GameManager.Instance.ContainsGlobalEffect<PowerNetworkFailure>())
+        {
+            hint = $"由于电网故障，{CardName}缺少电力供应，无法开启";
+            return false;
+        }
 
-        if (StateManager.Instance.Electricity.CurValue < electricityConsume)
+        if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION)
         {
             hint = "电力不足";
             return false;
@@ -118,14 +128,20 @@ public class Refrigerator : ConstructionCard
     /// 断电
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_DisconnectElectricity(out string tip)
+    private void Event_TurnOff(out string tip)
     {
         tip = string.Empty;
+        innerContents.ForEachCard(c =>
+        {
+            if (c.TryGetComponent<FreshnessComponent>(out var f))
+            {
+                f.updateRate /= .5f;
+            }
+        });
         stateMachine.ChangeState("未接电");
-        StopWorking();
     }
 
-    private bool Judge_DisconnectElectricity(out string hint)
+    private bool Judge_TurnOff(out string hint)
     {
         hint = string.Empty;
         return stateMachine.currentStateName == "已接电";
@@ -137,11 +153,10 @@ public class Refrigerator : ConstructionCard
 
         if (stateMachine.currentStateName == "未接电") return;
 
-        if (StateManager.Instance.Electricity.CurValue < electricityConsume)
+        if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION)
         {
-            stateMachine.ChangeState("未接电");
-            StopWorking();
-            ShowTip("电力不足，冰箱已自动断电");
+            Event_TurnOff(out _);
+            ShowTip($"电力不足，{CardName}已停止工作");
         }
     }
 }

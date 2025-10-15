@@ -940,7 +940,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip)) // tip不为空说明不是因为正在燃烧中而导致无法点燃
         {
             Extinguish(out _);
-            BelongedCard.ShowTip($"{tip}，{BelongedCard.CardName}已自动熄灭");
+            BelongedCard.ShowTip($"{tip}，{BelongedCard.CardName}已熄灭");
         }
     }
 }

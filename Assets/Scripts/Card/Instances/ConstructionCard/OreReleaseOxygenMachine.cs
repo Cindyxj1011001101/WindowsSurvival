@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,23 +12,14 @@ public class OreReleaseOxygenMachine : ConstructionCard
     private InnerContentsComponent innerContents;
     private OxygenStorageComponent oxygenStorage;
 
-    public float generateProcess = 120;
-    public float maxGenerateProcess = 120;
-    public float oxygenRelease = 180; // 氧气释放量
-    public int oreConsumption = 1; // 白爆矿消耗量
-    public float electricityConsumption = 1; // 电力消耗量
+    private const int MAX_PRODUCTION_PROCESS = 120;  // 最大氧气产生进度
+    private const int OXYGEN_PRODUCTION = 180;       // 氧气产出
+    private const int ORE_CONSUMPTION = 1;           // 白爆矿消耗量
+    private const float ELECTRICITY_CONSUMPTION = 1; // 电力消耗量
 
-    private OreReleaseOxygenMachine()
-    {
-        Events = new()
-        {
-            new CardEvent("接电", "接电后矿石释氧机每2小时消耗1块白爆矿,产生180氧气", Event_Open, Judge_Open),
-            new CardEvent("断电", "断电后,将不再工作", Event_Close, Judge_Close),
-            new CardEvent("获取氧气", "消耗矿石释氧机的氧气储存，补充自身氧气",
-                (out string s) => oxygenStorage.Event_GetOxygen(out s),
-                (out string s) => oxygenStorage.Judge_GetOxygen(out s))
-        };
-    }
+    [JsonProperty] private int leftProductionProgress = MAX_PRODUCTION_PROCESS;
+
+    private OreReleaseOxygenMachine() { }
 
     public override void Awake()
     {
@@ -50,6 +43,40 @@ public class OreReleaseOxygenMachine : ConstructionCard
             oxygenStorage = new OxygenStorageComponent(360);
             AddComponent(oxygenStorage);
         }
+
+        Events = new()
+        {
+            new CardEvent("开启", $"开启后{CardName}每{MAX_PRODUCTION_PROCESS}分钟消耗{ORE_CONSUMPTION}块白爆矿和{ELECTRICITY_CONSUMPTION}单位电力，产生{OXYGEN_PRODUCTION}单位氧气", Event_TurnOn, Judge_TurnOn),
+            new CardEvent("关闭", "", Event_TurnOff, Judge_TurnOff),
+            new CardEvent("获取氧气", $"消耗{CardName}的氧气储存，补充麦麦的氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen)
+        };
+    }
+
+    protected override void Start()
+    {
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
+    }
+
+    protected override void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
+    }
+
+    private void OnElectromagneticInterferenceBegin(Type type)
+    {
+        if (type != typeof(PowerNetworkFailure)) return;
+
+        Event_TurnOff(out _);
+        ShowTip($"由于电网故障，{CardName}已停止工作");
+    }
+
+    private void OnElectromagneticInterferenceEnd(Type type)
+    {
+        if (type != typeof(PowerNetworkFailure)) return;
+
+        RefreshSlot();
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -82,32 +109,39 @@ public class OreReleaseOxygenMachine : ConstructionCard
     }
 
     #region 开关
-    private void Event_Open(out string tip)
+    private void Event_TurnOn(out string tip)
     {
         tip = string.Empty;
 
-		// 添加计时器组件
-		var timer = new TimerComponent(generateProcess, maxGenerateProcess);
-		timer.tipText = "下次制氧";
-		AddComponent(timer);
+        // 添加计时器组件
+        var timer = new TimerComponent(leftProductionProgress, MAX_PRODUCTION_PROCESS)
+        {
+            tipText = "下次制氧"
+        };
+        AddComponent(timer);
 
 		stateMachine.ChangeState("已开启");
     }
 
-    private bool Judge_Open(out string hint)
+    private bool Judge_TurnOn(out string hint)
     {
         hint = string.Empty;
+        if (GameManager.Instance.ContainsGlobalEffect<PowerNetworkFailure>())
+        {
+            hint = $"由于电网故障，{CardName}缺少电力供应，无法开启";
+            return false;
+        }
         return stateMachine.currentStateName == "已关闭";
     }
 
-    private void Event_Close(out string tip)
+    private void Event_TurnOff(out string tip)
     {
         tip = string.Empty;
-        stateMachine.ChangeState("已关闭");
         RemoveComponent<TimerComponent>();
+        stateMachine.ChangeState("已关闭");
     }
 
-    private bool Judge_Close(out string hint)
+    private bool Judge_TurnOff(out string hint)
     {
         hint = string.Empty;
         return stateMachine.currentStateName == "已开启";
@@ -141,7 +175,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
             env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, toRelease);
             // 氧气存量减少
             oxygenStorage.AddValue(-toRelease);
-            ShowTip("矿石释氧机向当前地点释放了 " + toRelease + " 单位的氧气");
+            ShowTip($"{CardName}向当前地点释放了 " + toRelease + " 单位的氧气");
         }
     }
 
@@ -154,22 +188,22 @@ public class OreReleaseOxygenMachine : ConstructionCard
             return;
         }
 
-        // 制氧进度增加
-        generateProcess -= TimeManager.SETTLEMENT_INTERVAL;
+        // 剩余制氧进度减少
+        leftProductionProgress -= TimeManager.SETTLEMENT_INTERVAL;
 
 		if (TryGetComponent<TimerComponent>(out var timer))
         {
-            timer.SetValue(generateProcess);
+            timer.SetValue(leftProductionProgress);
         }
 
         // 进度不满不制氧
-        if (generateProcess > 0)
+        if (leftProductionProgress > 0)
         {
             return;
         }
 
         // 氧气存储要超了不制氧
-        if (oxygenStorage.value + oxygenRelease > oxygenStorage.maxValue)
+        if (oxygenStorage.value + OXYGEN_PRODUCTION > oxygenStorage.maxValue)
         {
             return;
         }
@@ -182,26 +216,26 @@ public class OreReleaseOxygenMachine : ConstructionCard
         }
 
         // 电力不足不制氧
-        if (StateManager.Instance.Electricity.CurValue < electricityConsumption)
+        if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION)
         {
             return;
         }
 
         // 白爆矿不够不制氧
-        if (!TryConsumeOre(oreConsumption))
+        if (!TryConsumeOre(ORE_CONSUMPTION))
         {
             return;
         }
 
-        //归零生产进度
-        generateProcess = 0;
-        timer?.SetValue(generateProcess);
+        // 重置生产进度
+        leftProductionProgress = MAX_PRODUCTION_PROCESS;
+        timer?.SetValue(leftProductionProgress);
 
         // 消耗电力
-        StateManager.Instance.ChangeElectricity(-electricityConsumption);
+        StateManager.Instance.ChangeElectricity(-ELECTRICITY_CONSUMPTION);
 
         // 氧气存量增加
-        oxygenStorage.AddValue(oxygenRelease);
+        oxygenStorage.AddValue(OXYGEN_PRODUCTION);
     }
 
     private bool TryConsumeOre(int amount)

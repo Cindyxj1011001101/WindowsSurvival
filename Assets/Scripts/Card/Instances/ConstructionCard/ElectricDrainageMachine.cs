@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -7,14 +8,15 @@ public class ElectricDrainageMachine : ConstructionCard
 {
     private StateMachineComponent stateMachine;
 
-    public float electricityConsume = 0.5f; // 每回合电力消耗
+    private const float WATER_LEVEL_REDUCTION = 2f;     // 每回合水平面降低量
+    private const float ELECTRICITY_CONSUMPTION = 0.5f; // 每回合电力消耗
 
     private ElectricDrainageMachine()
     {
         Events = new()
         {
-            new CardEvent("开启", "开启后每15分钟消耗0.5电力，降低2水平面高度", Event_Open, Judge_Open),
-            new CardEvent("关闭", "", Event_Close, Judge_Close)
+            new CardEvent("开启", $"开启后每15分钟消耗{ELECTRICITY_CONSUMPTION}单位电力，降低{WATER_LEVEL_REDUCTION}单位水平面高度", Event_TurnOn, Judge_TurnOn),
+            new CardEvent("关闭", "", Event_TurnOff, Judge_TurnOff)
         };
     }
 
@@ -34,47 +36,66 @@ public class ElectricDrainageMachine : ConstructionCard
         }
     }
 
-    private void StartWorking()
+    protected override void Start()
     {
-        if (stateMachine.currentStateName == "已开启") return;
-
-        stateMachine.ChangeState("已开启");
-        StateManager.Instance.ChangeElectricityChangeRate(-electricityConsume);
-        StateManager.Instance.ChangeWaterLevelChangeRate(-2f);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
     }
 
-    private void StopWorking()
+    protected override void OnDestroy()
     {
-        if (stateMachine.currentStateName == "已关闭") return;
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
+    }
 
-        stateMachine.ChangeState("已关闭");
-        // 停止工作时，恢复电力和水平面变化率
-        StateManager.Instance.ChangeElectricityChangeRate(+electricityConsume);
-        StateManager.Instance.ChangeWaterLevelChangeRate(+2f);
+    private void OnElectromagneticInterferenceBegin(Type type)
+    {
+        if (type != typeof(PowerNetworkFailure)) return;
+
+        Event_TurnOff(out _);
+        ShowTip($"由于电网故障，{CardName}已停止工作");
+    }
+
+    private void OnElectromagneticInterferenceEnd(Type type)
+    {
+        if (type != typeof(PowerNetworkFailure)) return;
+
+        RefreshSlot();
     }
 
     #region 开关
-    private void Event_Open(out string tip)
+    private void Event_TurnOn(out string tip)
     {
         tip = string.Empty;
 
-        StartWorking();
+        StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_CONSUMPTION);
+        StateManager.Instance.ChangeWaterLevelChangeRate(-WATER_LEVEL_REDUCTION);
+        stateMachine.ChangeState("已开启");
     }
 
-    private bool Judge_Open(out string hint)
+    private bool Judge_TurnOn(out string hint)
     {
         hint = string.Empty;
+        if (GameManager.Instance.ContainsGlobalEffect<PowerNetworkFailure>())
+        {
+            hint = $"由于电网故障，{CardName}缺少电力供应，无法开启";
+            return false;
+        }
+        
         return stateMachine.currentStateName == "已关闭";
     }
 
-    private void Event_Close(out string tip)
+    private void Event_TurnOff(out string tip)
     {
         tip = string.Empty;
 
-        StopWorking();
+        // 停止工作时，恢复电力和水平面变化率
+        StateManager.Instance.ChangeElectricityChangeRate(ELECTRICITY_CONSUMPTION);
+        StateManager.Instance.ChangeWaterLevelChangeRate(WATER_LEVEL_REDUCTION);
+        stateMachine.ChangeState("已关闭");
     }
 
-    private bool Judge_Close(out string hint)
+    private bool Judge_TurnOff(out string hint)
     {
         hint = string.Empty;
         return stateMachine.currentStateName == "已开启";
@@ -88,15 +109,15 @@ public class ElectricDrainageMachine : ConstructionCard
         if (stateMachine.currentStateName == "已关闭") return;
 
         // 如果电力小于0.5或者水平面小于0时，自动停止工作
-        if (StateManager.Instance.Electricity.CurValue < electricityConsume)
+        if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION)
         {
-            StopWorking();
-            ShowTip("电力不足，排水机已自动停止工作");
+            Event_TurnOff(out _);
+            ShowTip($"电力不足，{CardName}已停止工作");
         }
         else if (StateManager.Instance.WaterLevel.CurValue <= 0)
         {
-            StopWorking();
-            ShowTip("水平面已为0，排水机已自动停止工作");
+            Event_TurnOff(out _);
+            ShowTip($"水平面已为0，{CardName}自动停止工作");
         }
     }
 }
