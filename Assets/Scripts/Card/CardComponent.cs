@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -797,45 +798,45 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
 {
     [JsonProperty] public bool isBurning { get; private set; } // 是否正在燃烧
 
-    public int basicFuelComsume; // 基础燃料消耗
-    public int extraFuelComsumeWhenWinter; // 冰层季导致的额外燃料消耗
-    public int extreFuelComsumeWhenWaterLevelHigh; // 水平面高时导致的额外燃料消耗
-    public int autoExtinguishWaterLevelThreshold; // 导致自动熄灭的水平面高度
-    public float oxygenChangeWhileBurning; // 燃烧时导致的氧气变化
-    public float carbonMonoxideWhileBurning; // 燃烧时导致的一氧化碳变化
+    public int basicFuelConsumption;                       // 基础燃料消耗
+    public int extraFuelConsumptionWhenWinter;             // 冰层季导致的额外燃料消耗
+    public int extraFuelConsumptionWhenWaterLevelHigh;     // 水平面高时导致的额外燃料消耗
+    public int autoExtinguishWaterLevelThreshold;          // 导致自动熄灭的水平面高度
+    public float oxygenConsumptionWhileBurning;            // 燃烧时导致的氧气变化
+    public float carbonMonoxideProductionWhileBurning;     // 燃烧时导致的一氧化碳变化
 
-    [JsonIgnore] public UnityAction actionWhileBurning; // 燃烧时每回合处理
-    [JsonIgnore] public UnityAction actionWhileNotBurning; // 非燃烧时每回合处理
-    [JsonIgnore] public UnityAction actionOnIgnite; // 点燃时触发
-    [JsonIgnore] public UnityAction actionOnExtinguish; // 熄灭时触发
-
+    [JsonIgnore] public UnityAction whileBurning;    // 燃烧时每回合处理
+    [JsonIgnore] public UnityAction whileNotBurning; // 非燃烧时每回合处理
+    
     [JsonIgnore]
-    public int FuelComsume
+    public int FuelConsumption
     {
         get
         {
-            int consume = basicFuelComsume;
+            int consume = basicFuelConsumption;
             if (StateManager.Instance.WaterLevel.CurValue > 0)
-                consume += extreFuelComsumeWhenWaterLevelHigh;
+                consume += extraFuelConsumptionWhenWaterLevelHigh;
             // TODO: 冰层季的额外消耗
 
             return consume;
         }
     }
 
-    public FuelStorageComponent(float maxValue, int basicFuelComsume,
-        int extreFuelComsumeWhenWaterLevelHigh = 2,
-        int extraFuelComsumeWhenWinter = 4,
+    public FuelStorageComponent(
+        float maxValue,
+        int basicFuelConsumption = 1,
+        int extraFuelConsumptionWhenWaterLevelHigh = 2,
+        int extraFuelConsumptionWhenWinter = 4,
         int autoExtinguishWaterLevelThreshold = 30, 
-        float oxygenChangeWhileBurning = -4,
-        float carbonMonoxideWhileBurning = +0.6f) : base(0, maxValue)
+        float oxygenConsumptionWhileBurning = 4,
+        float carbonMonoxideProductionWhileBurning = 2) : base(0, maxValue)
     {
-        this.basicFuelComsume = basicFuelComsume;
-        this.extraFuelComsumeWhenWinter = extraFuelComsumeWhenWinter;
-        this.extreFuelComsumeWhenWaterLevelHigh = extreFuelComsumeWhenWaterLevelHigh;
+        this.basicFuelConsumption = basicFuelConsumption;
+        this.extraFuelConsumptionWhenWinter = extraFuelConsumptionWhenWinter;
+        this.extraFuelConsumptionWhenWaterLevelHigh = extraFuelConsumptionWhenWaterLevelHigh;
         this.autoExtinguishWaterLevelThreshold = autoExtinguishWaterLevelThreshold;
-        this.oxygenChangeWhileBurning = oxygenChangeWhileBurning;
-        this.carbonMonoxideWhileBurning = carbonMonoxideWhileBurning;
+        this.oxygenConsumptionWhileBurning = oxygenConsumptionWhileBurning;
+        this.carbonMonoxideProductionWhileBurning = carbonMonoxideProductionWhileBurning;
     }
 
     /// <summary>
@@ -845,7 +846,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     {
         tip = string.Empty;
 
-        if (value < FuelComsume)
+        if (value < FuelConsumption)
         {
             tip = "燃料不足";
             return false;
@@ -873,49 +874,33 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     /// <summary>
     /// 点燃
     /// </summary>
-    public void Ignite()
+    public void Ignite(out string s)
     {
+        s = string.Empty;
+
         isBurning = true;
 
         var env = BelongedCard.Bag as EnvironmentBag;
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, oxygenChangeWhileBurning);
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, carbonMonoxideWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -oxygenConsumptionWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, carbonMonoxideProductionWhileBurning);
 
         BelongedCard.RefreshSlot();
-        actionOnIgnite?.Invoke();
     }
 
     /// <summary>
     /// 熄灭
     /// </summary>
-    public void Extinguish()
+    public void Extinguish(out string s)
     {
+        s = string.Empty;
+
         isBurning = false;
 
         var env = BelongedCard.Bag as EnvironmentBag;
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -oxygenChangeWhileBurning);
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, -carbonMonoxideWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, oxygenConsumptionWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, -carbonMonoxideProductionWhileBurning);
 
         BelongedCard.RefreshSlot();
-        actionOnExtinguish?.Invoke();
-    }
-
-    public void AddEvents(string tipOnIgnite = "", string tipOnExtinguish = "")
-    {
-        void IgniteEvent(out string tip)
-        {
-            tip = string.Empty;
-            Ignite();
-        }
-
-        void ExtinguishEvent(out string tip)
-        {
-            tip = string.Empty;
-            Extinguish();
-        }
-
-        BelongedCard.Events.Insert(0, new("点燃", tipOnIgnite, IgniteEvent, CanIgnite));
-        BelongedCard.Events.Insert(1, new("熄灭", tipOnExtinguish, ExtinguishEvent, CanExtinguish));
     }
 
     public bool CanQuickInteract(Card card)
@@ -941,20 +926,20 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         if (!isBurning)
         {
             // 非燃烧时每回合处理
-            actionWhileNotBurning?.Invoke();
+            whileNotBurning?.Invoke();
             return;
         }
 
         // 燃烧时每回合处理
-        actionWhileBurning?.Invoke();
+        whileBurning?.Invoke();
 
         // 燃料减少
-        AddValue(-FuelComsume);
+        AddValue(-FuelConsumption);
 
         // 自动熄灭
-        if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip))
+        if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip)) // tip不为空说明不是因为正在燃烧中而导致无法点燃
         {
-            Extinguish();
+            Extinguish(out _);
             BelongedCard.ShowTip($"{tip}，{BelongedCard.CardName}已自动熄灭");
         }
     }

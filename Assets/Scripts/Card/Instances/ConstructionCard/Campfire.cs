@@ -11,10 +11,7 @@ public class Campfire : ConstructionCard
 
     public override bool HasLoopSound => true;
 
-    private Campfire()
-    {
-
-    }
+    private Campfire() { }
 
     public override void Awake()
     {
@@ -22,18 +19,11 @@ public class Campfire : ConstructionCard
         // 手动添加燃料存储组件
         if (!TryGetComponent(out fuelStorage))
         {
-            fuelStorage = new FuelStorageComponent(96, 2);
+            fuelStorage = new FuelStorageComponent(96);
             AddComponent(fuelStorage);
         }
 
-        fuelStorage.actionWhileBurning = WhileBurning;
-
-        fuelStorage.actionOnIgnite = OnIgnite;
-
-        fuelStorage.actionOnExtinguish = OnExtinguish;
-
-        // 添加点燃熄灭事件
-        fuelStorage.AddEvents("点燃营火。可以对部分食物进行简单的烧烤。\n点燃状态下会导致室内氧气消耗与一氧化碳增加");
+        fuelStorage.whileBurning = WhileBurning;
 
         // 放入内容物时，暂停卡牌每回合更新
         innerContents.onAddCard = (c) =>
@@ -53,6 +43,7 @@ public class Campfire : ConstructionCard
                 c.AddComponent(timer);
             }
         };
+
         // 取出时恢复每回合更新
         innerContents.onRemoveCard = (c) =>
         {
@@ -76,13 +67,21 @@ public class Campfire : ConstructionCard
             stateMachine = new StateMachineComponent("未点燃", states);
             AddComponent(stateMachine);
         }
+
+        Events = new()
+        {
+            new CardEvent("点燃", "点燃营火。可以对部分食物进行简单的烧烤。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite),
+            new CardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish)
+        };
     }
 
     /// <summary>
     /// 点燃时触发
     /// </summary>
-    private void OnIgnite()
+    private void Ignite(out string s)
     {
+        fuelStorage.Ignite(out s);
+
         // 点燃后暂停所有卡牌每回合更新
         innerContents.PauseUpdating();
 
@@ -113,8 +112,10 @@ public class Campfire : ConstructionCard
     /// <summary>
     /// 熄灭时触发
     /// </summary>
-    private void OnExtinguish()
+    private void Extinguish(out string s)
     {
+        fuelStorage.Extinguish(out s);
+
         // 熄灭后恢复所有卡牌每回合更新
         innerContents.ContinueUpdating();
 

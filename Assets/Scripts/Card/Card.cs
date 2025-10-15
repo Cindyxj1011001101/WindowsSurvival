@@ -616,18 +616,25 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    protected void EasyEvent(out string tip, string sound, int eventIndex = 0)
+    protected void EasyEvent(out string tip, string sound = "", bool destroyThis = true, int eventIndex = 0)
     {
         tip = string.Empty;
+        
         // 销毁自身
-        DestroyThis();
+        if (destroyThis)
+            DestroyThis();
+        
         // 播放音效
-        if (SoundManager.Instance != null)
+        if (!string.IsNullOrEmpty(sound) && SoundManager.Instance != null)
             SoundManager.Instance.PlaySound(sound, true);
+
+        var e = Events[eventIndex];
+
         // 应用状态变化
-        StateManager.Instance.ApplyPlayerStateChange(Events[eventIndex].GetPlayerEffects());
+        StateManager.Instance.ApplyPlayerStateChange(e.GetPlayerEffects());
+        GameManager.Instance.CurEnvironmentBag.ApplyEnvEffects(e.GetEnvEffects());
         // 消耗时间
-        TimeManager.Instance.AddTime(Events[eventIndex].GetTimeEffect());
+        TimeManager.Instance.AddTime(e.GetTimeEffect());
     }
 }
 
@@ -682,13 +689,13 @@ public class CardEvent
 
     public Dictionary<PlayerStateEnum, float> GetPlayerEffects()
     {
-        if (getPlayerEffects == null) return null;
+        if (getPlayerEffects == null) return new();
         return getPlayerEffects.Invoke();
     }
 
     public Dictionary<EnvironmentStateEnum, float> GetEnvEffects()
     {
-        if (getEnvEffects == null) return null;
+        if (getEnvEffects == null) return new();
         return getEnvEffects.Invoke();
     }
 }
