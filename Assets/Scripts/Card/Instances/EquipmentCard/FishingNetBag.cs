@@ -9,9 +9,9 @@ public class FishingNetBag : EquipmentCard
         Events.Add(new CardEvent("切割", "切割渔获袋", Event_Cut, Judge_Cut));
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
         innerContents.weightLossRate = 0.6f;
     }
 

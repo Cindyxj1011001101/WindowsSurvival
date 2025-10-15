@@ -28,13 +28,15 @@ public class UpdateManager : MonoBehaviour
 
     private void OnUpdate()
     {
+        EventManager.Instance.TriggerEvent(EventType.UpdateBegin);
+        // 顺序很重要
         GlobalEffectUpdate.Invoke();
         InGameEventUpdate.Invoke();
-        CardUpdate.Invoke();
+        TechnologyUpdate.Invoke();
         EnvironmentUpdate.Invoke();
+        CardUpdate.Invoke();
         PlayerUpdate.Invoke();
         PopulationUpdate.Invoke();
-        TechnologyUpdate.Invoke();
     }
 
     private void Clear()

@@ -3,8 +3,9 @@
 /// </summary>
 public class WebbedFeet : EquipmentCard
 {
-    protected override void Start()
+    public override void Init()
     {
+        base.Init();
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
     }
 

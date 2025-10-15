@@ -13,9 +13,9 @@ public class FuelGenerator : ConstructionCard
 
     private FuelGenerator() { }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         // 手动添加燃料存储组件
         if (!TryGetComponent(out fuelStorage))
@@ -42,8 +42,9 @@ public class FuelGenerator : ConstructionCard
         };
     }
 
-    protected override void Start()
+    public override void Init()
     {
+        base.Init();
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
     }

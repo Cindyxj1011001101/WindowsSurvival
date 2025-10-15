@@ -4,9 +4,9 @@
 public abstract class ConstructionCard : Card
 {
     private ConstructionComponent construction;
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
         TryGetComponent(out construction);
         if (construction.canBeDemolished)
         {

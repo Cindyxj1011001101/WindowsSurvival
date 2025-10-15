@@ -27,6 +27,7 @@ public class EnvironmentBag : Bag
         this.placeType = placeType;
     }
 
+    #region Init
     protected override void FirstInit()
     {
         AddSlot(9);
@@ -48,8 +49,9 @@ public class EnvironmentBag : Bag
         base.Init();
         InitEntitesAndCardLocation();
         RepeatableDropList.StartUpdating();
+        EventManager.Instance.AddListener(EventType.UpdateBegin, OnEnvUpdateBegin);
         // 每回合结算地点状态
-        UpdateManager.Instance.EnvironmentUpdate.AddListener(Update);
+        UpdateManager.Instance.EnvironmentUpdate.AddListener(EnvUpdate);
     }
 
     private void FirstInitState()
@@ -97,22 +99,29 @@ public class EnvironmentBag : Bag
             AddEntity(GameManager.Instance.Player);
         }
     }
+    #endregion
 
-    private Dictionary<EnvironmentStateEnum, float> temp = new(); // 记录地点状态的当前变化率，防止地点状态的结算顺序影响结算结果
+    #region Update
+    private Dictionary<EnvironmentStateEnum, float> envStateChangeRatesSnapshot = new(); // 记录地点状态的当前变化率，防止地点状态的结算顺序影响结算结果
 
-    private void Update()
+    private void OnEnvUpdateBegin()
     {
-        temp.Clear();
+        // 记录所有状态变化率的快照
+        envStateChangeRatesSnapshot.Clear();
         foreach (var (type, state) in stateDict)
         {
             if (state.ChangeRate != 0)
             {
-                temp.Add(type, state.ChangeRate);
+                envStateChangeRatesSnapshot.Add(type, state.ChangeRate);
             }
         }
-
-        ApplyEnvEffects(temp);
     }
+
+    private void EnvUpdate()
+    {
+        ApplyEnvEffects(envStateChangeRatesSnapshot);
+    }
+    #endregion
 
     /// <summary>
     /// 改变环境状态，电力变化不要在这里处理

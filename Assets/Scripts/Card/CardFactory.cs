@@ -419,7 +419,7 @@ public static class CardFactory
         else
         {
             var card = CreateCard(cardId);
-            card.Awake();
+            card.LateConstrcutor();
             cardInstances.Add(cardId, card);
             return card;
         }

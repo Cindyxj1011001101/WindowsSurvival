@@ -137,7 +137,7 @@ public class DeveloperPanel : MonoBehaviour
             if (bag != null && bag.CanAddCard(card, out _))
             {
                 bag.AddCard(card);
-                card.StartUpdating();
+                card.Init();
                 card.RefreshSlot();
             }
         }

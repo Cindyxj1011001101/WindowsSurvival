@@ -20,9 +20,9 @@ public class Refrigerator : ConstructionCard
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         // 未布置和已布置两种状态
         if (!TryGetComponent(out stateMachine))
@@ -51,8 +51,9 @@ public class Refrigerator : ConstructionCard
             }
         };
     }
-    protected override void Start()
+    public override void Init()
     {
+        base.Init();
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
     }

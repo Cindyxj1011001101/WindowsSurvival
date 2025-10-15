@@ -15,15 +15,16 @@ public class CoralReef : Card
             new CardEvent("欣赏", "一天内多次欣赏获得的数值会衰减", Event_Enjoy, null,() => 15,
             () => new()
             {
-                { PlayerStateEnum.San, 6 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId) },
-                { PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId)}
+                { PlayerStateEnum.San, 6 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId) },
+                { PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId)}
             })
         };
     }
 
-    protected override void Start()
+    public override void Init()
     {
-        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
+        base.Init();
+        GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2));
 
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天刷新
     }
@@ -52,10 +53,10 @@ public class CoralReef : Card
     private void Event_Enjoy(out string tip)
     {
         tip = string.Empty;
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 6 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId));
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.saveData.GetReduceRate(CardId));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, 6 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId));
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId));
 
-        GlobalDataManager.Instance.saveData.AddReduceCount(CardId);
+        GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId);
 
         TimeManager.Instance.AddTime(15);
     }

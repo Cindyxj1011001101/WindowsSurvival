@@ -97,6 +97,23 @@ public abstract class Bag
 
     public virtual void OnRemoveCard(Card card) { }
 
+    public void OnUpdateBegin()
+    {
+        foreach (var slot in Slots)
+        {
+            slot.OnUpdateBegin();
+        }
+    }
+
+    public void Update()
+    {
+        var snapshot = new List<SlotCards>(Slots);
+        foreach (var slot in snapshot)
+        {
+            slot.Update();
+        }
+    }
+
     /// <summary>
     /// 能否添加新的卡牌
     /// </summary>

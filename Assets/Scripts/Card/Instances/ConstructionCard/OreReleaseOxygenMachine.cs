@@ -21,9 +21,9 @@ public class OreReleaseOxygenMachine : ConstructionCard
 
     private OreReleaseOxygenMachine() { }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         // 未布置和已布置两种状态
         if (!TryGetComponent(out stateMachine))
@@ -52,8 +52,9 @@ public class OreReleaseOxygenMachine : ConstructionCard
         };
     }
 
-    protected override void Start()
+    public override void Init()
     {
+        base.Init();
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
     }

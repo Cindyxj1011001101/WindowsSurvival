@@ -31,9 +31,9 @@ public class FuelFurnace : ConstructionCard
 
     private FuelFurnace() { }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         // 添加燃料存储组件
         if (!TryGetComponent(out fuelStorage))

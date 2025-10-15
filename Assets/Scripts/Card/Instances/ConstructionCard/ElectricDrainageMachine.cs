@@ -20,9 +20,9 @@ public class ElectricDrainageMachine : ConstructionCard
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         if (!TryGetComponent(out stateMachine))
         {
@@ -36,8 +36,9 @@ public class ElectricDrainageMachine : ConstructionCard
         }
     }
 
-    protected override void Start()
+    public override void Init()
     {
+        base.Init();
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
     }
@@ -79,6 +80,12 @@ public class ElectricDrainageMachine : ConstructionCard
         if (GameManager.Instance.ContainsGlobalEffect<PowerNetworkFailure>())
         {
             hint = $"由于电网故障，{CardName}缺少电力供应，无法开启";
+            return false;
+        }
+
+        if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION)
+        {
+            hint = "电力不足";
             return false;
         }
         

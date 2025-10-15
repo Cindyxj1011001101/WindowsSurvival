@@ -1,15 +1,17 @@
-﻿public abstract class EntityCard : Card, IEntity
+﻿using Newtonsoft.Json;
+
+public abstract class EntityCard : Card, IEntity
 {
     private EntityComponent entity;
     private CoordinateComponent coordinate;
 
-    public Coordinate Coordinate => coordinate.coordinate;
+    [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;
 
     public void TakeDamage(float damage, IEntity damageDealer) => entity.TakeDamage(damage, damageDealer);
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         TryGetComponent(out entity);
         if (!TryGetComponent(out coordinate))
@@ -19,8 +21,9 @@
         }
     }
 
-    protected override void Start()
+    public override void Init()
     {
+        base.Init();
         EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 

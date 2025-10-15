@@ -43,29 +43,25 @@ public class GameManager : MonoBehaviour
         GlobalEffects = GameDataManager.Instance.GlobalEffects;
 
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
+        EventManager.Instance.AddListener(EventType.UpdateBegin, OnCardUpdateBegin);
     }
 
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
-        UpdateManager.Instance.GlobalEffectUpdate.RemoveListener(UpdateGlobalEffects);
+        EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnCardUpdateBegin);
+        UpdateManager.Instance.GlobalEffectUpdate.RemoveListener(GlobalEffectUpdate);
+        UpdateManager.Instance.CardUpdate.RemoveListener(CardUpdate);
     }
 
     #region 初始化
 
     private void Start()
     {
-        Init();
-
         TechnologyManager.Instance.Init();
         CraftManager.Instance.Init();
         InGameEventManager.Instance.Init();
 
-        UpdateManager.Instance.GlobalEffectUpdate.AddListener(UpdateGlobalEffects);
-    }
-
-    private void Init()
-    {
         lastLoadLevel = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
         PlayerBag.Init();
         EquipmentBag.Init();
@@ -74,6 +70,10 @@ public class GameManager : MonoBehaviour
             bag.Init();
         }
         InitBehaviourExtraEffects();
+
+        UpdateManager.Instance.GlobalEffectUpdate.AddListener(GlobalEffectUpdate);
+        UpdateManager.Instance.CardUpdate.AddListener(CardUpdate);
+
         ChangeEnv(GameDataManager.Instance.LastPlace);
         SoundManager.Instance.PlayCurEnvironmentMusic();
     }
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
         return GlobalEffects.Find(g => g.GetType() == typeof(T)) != null;
     }
 
-    private void UpdateGlobalEffects()
+    private void GlobalEffectUpdate()
     {
         for (int i = GlobalEffects.Count - 1; i >= 0; i--)
         {
@@ -118,6 +118,28 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    #region 卡牌更新
+    private void OnCardUpdateBegin()
+    {
+        foreach (var bag in EnvironmentBags.Values)
+        {
+            bag.OnUpdateBegin();
+        }
+        PlayerBag.OnUpdateBegin();
+        EquipmentBag.OnUpdateBegin();
+    }
+
+    private void CardUpdate()
+    {
+        foreach (var bag in EnvironmentBags.Values)
+        {
+            bag.Update();
+        }
+        PlayerBag.Update();
+        EquipmentBag.Update();
+    }
+    #endregion
+
     #region AddCard
 
     /// <summary>
@@ -127,7 +149,7 @@ public class GameManager : MonoBehaviour
     /// <param name="targetBag"></param>
     public void AddCard(Card card, Bag targetBag)
     {
-        card.StartUpdating();
+        card.Init();
         targetBag.AddCard(card);
     }
 

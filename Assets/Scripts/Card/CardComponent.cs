@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -9,7 +8,8 @@ using UnityEngine.Events;
 
 public interface IUpdate
 {
-    public void Update();
+    void OnUpdateBegin();
+    void Update();
 }
 
 /// <summary>
@@ -79,12 +79,19 @@ public class FreshnessComponent : ContinuousValueComponent, IUpdate
     {
     }
 
+    private float updateRateSnapshot;
+
+    public void OnUpdateBegin()
+    {
+        updateRateSnapshot = updateRate;
+    }
+
     public void Update()
     {
         if (value <= 0) return;
 
         // 随时间自动减少新鲜度
-        AddValue(-TimeManager.SETTLEMENT_INTERVAL * updateRate);
+        AddValue(-TimeManager.SETTLEMENT_INTERVAL * updateRateSnapshot);
 
         if (value <= 0)
         {
@@ -125,12 +132,19 @@ public class GrowthComponent : ContinuousValueComponent, IUpdate
     {
     }
 
+    private float updateRateSnapshot;
+
+    public void OnUpdateBegin()
+    {
+        updateRateSnapshot = updateRate;
+    }
+
     public void Update()
     {
         if (value >= maxValue) return;
 
         // 随时间自动增加生长度
-        AddValue(TimeManager.SETTLEMENT_INTERVAL * updateRate);
+        AddValue(TimeManager.SETTLEMENT_INTERVAL * updateRateSnapshot);
 
         if (value >= maxValue)
         {
@@ -162,12 +176,19 @@ public class ProgressComponent : ContinuousValueComponent, IUpdate
     {
     }
 
+    private float updateRateSnapshot;
+
+    public void OnUpdateBegin()
+    {
+        updateRateSnapshot = updateRate;
+    }
+
     public void Update()
     {
         if (value >= maxValue) return;
 
         // 随时间自动增加产物进度
-        AddValue(TimeManager.SETTLEMENT_INTERVAL * updateRate);
+        AddValue(TimeManager.SETTLEMENT_INTERVAL * updateRateSnapshot);
 
         if (value >= maxValue)
         {
@@ -295,7 +316,7 @@ public class DurabilityComponent : ContinuousValueComponent
 #region 内容物组件
 public delegate bool CardFilterDelegate(Card card, out string s);
 
-public class InnerContentsComponent : CardComponent
+public class InnerContentsComponent : CardComponent, IUpdate
 {
     public float weightLossRate = 1f; // 减重率
 
@@ -325,6 +346,10 @@ public class InnerContentsComponent : CardComponent
         bag.SetComponent(this);
         bag.Init();
     }
+
+    public void OnUpdateBegin() => bag.OnUpdateBegin();
+
+    public void Update() => bag.Update();
 
     public void Clear() => bag.Clear();
 
@@ -636,6 +661,16 @@ public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
             BelongedCard.DisplayComponentValueChange(typeof(PlantGrowthComponent), delta);
     }
 
+    private PressureLevel pressureLevelSnapshot;
+    private float envTemptureSnapshot;
+
+    public void OnUpdateBegin()
+    {
+        var env = BelongedCard.Bag as EnvironmentBag;
+        pressureLevelSnapshot = env.PressureLevel;
+        envTemptureSnapshot = GetEnvTempreture(env);
+    }
+
     public void Update()
     {
         if (deadProgress <= 0) return; // 已死亡
@@ -647,9 +682,7 @@ public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
 
     private void HandleGrowth()
     {
-        var env = BelongedCard.Bag as EnvironmentBag;
-
-        if (!pressureList.Contains(env.PressureLevel))
+        if (!pressureList.Contains(pressureLevelSnapshot))
         {
             // 压强不合适不生长，并且死亡进度增加
             deadProgress--;
@@ -657,18 +690,17 @@ public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
         }
 
         // 获取当前地点的温度
-        float envTempture = GetEnvTempreture();
-        if (envTempture <= maxConfortTempreture && envTempture > minConfortTempreture)
+        if (envTemptureSnapshot <= maxConfortTempreture && envTemptureSnapshot > minConfortTempreture)
         {
             deadProgress = INITIAL_DEATH_PROGRESS; // 恢复死亡进度
             Grow(growthRate * 1.2f); // 舒适区生长加快
         }
-        else if (envTempture <= maxGrowTempture && envTempture > minGrowTempture)
+        else if (envTemptureSnapshot <= maxGrowTempture && envTemptureSnapshot > minGrowTempture)
         {
             deadProgress = INITIAL_DEATH_PROGRESS; // 恢复死亡进度
             Grow(growthRate * 1f);
         }
-        else if (envTempture <= maxLiveTempture && envTempture > minLiveTempture)
+        else if (envTemptureSnapshot <= maxLiveTempture && envTemptureSnapshot > minLiveTempture)
         {
             // 不生长
             deadProgress = INITIAL_DEATH_PROGRESS; // 恢复死亡进度
@@ -680,9 +712,8 @@ public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
         }
     }
 
-    private float GetEnvTempreture()
+    private float GetEnvTempreture(EnvironmentBag env)
     {
-        var env = BelongedCard.Bag as EnvironmentBag;
         // 获取当前地点的温度
         if (env.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var roomTemperature))
         {
@@ -921,6 +952,13 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         }
     }
 
+    private float fuelConsumptionSnapshot;
+
+    public void OnUpdateBegin()
+    {
+        fuelConsumptionSnapshot = FuelConsumption;
+    }
+
     public void Update()
     {
         if (!isBurning)
@@ -934,7 +972,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         whileBurning?.Invoke();
 
         // 燃料减少
-        AddValue(-FuelConsumption);
+        AddValue(-fuelConsumptionSnapshot);
 
         // 自动熄灭
         if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip)) // tip不为空说明不是因为正在燃烧中而导致无法点燃
@@ -966,7 +1004,7 @@ public enum BehavioralTendency
     Hostile
 }
 
-public class EntityComponent : CardComponent, IUpdate
+public class EntityComponent : CardComponent
 {
     public float maxHealth; // 最大生命值
     public float health; // 当前生命值
@@ -976,7 +1014,6 @@ public class EntityComponent : CardComponent, IUpdate
     public string deadDrops; // 死亡凋落物
 
     public int aiRefreshInterval; // ai刷新间隔
-    [JsonIgnore] public UnityAction aiLogic; // ai行为逻辑
 
     [JsonIgnore] public UnityAction onDead;
 
@@ -1012,11 +1049,6 @@ public class EntityComponent : CardComponent, IUpdate
         }
 
         BelongedCard.RefreshSlot();
-    }
-
-    public void Update()
-    {
-        aiLogic?.Invoke();
     }
 }
 #endregion

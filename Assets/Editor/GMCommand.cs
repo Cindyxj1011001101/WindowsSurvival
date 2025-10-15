@@ -10,7 +10,7 @@ public class GMCommand
         var window = GetFocusedBagWindow();
         if (window != null && window.Bag != null && window.Bag.CanAddCard(card, out _))
             window.Bag.AddCard(card);
-        card.StartUpdating();
+        card.Init();
         card.RefreshSlot();
 
         return card;

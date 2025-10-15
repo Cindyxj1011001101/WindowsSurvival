@@ -14,9 +14,9 @@
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
         TryGetComponent(out coordinate);
         TryGetComponent(out passage);
 
@@ -31,8 +31,9 @@
         Events[1].getPlayerEffects = () => GameManager.Instance.GetMoveEffects(pos).playerEffects;
     }
 
-    protected override void Start()
+    public override void Init()
     {
+        base.Init();
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
         EventManager.Instance.AddListener(EventType.PlayerMove, OnPlayerMove);
     }

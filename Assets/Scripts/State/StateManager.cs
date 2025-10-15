@@ -78,6 +78,7 @@ public class StateManager : MonoBehaviour
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
         // 玩家生命值不高于0时死亡
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
+        EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
     }
 
     private void CheckPlayerState(PlayerStateEnum stateEnum)
@@ -101,6 +102,7 @@ public class StateManager : MonoBehaviour
         UpdateManager.Instance.EnvironmentUpdate.RemoveListener(EnvironmentUpdate);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
+        EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
     }
 
     private void OnChangeEnv(EnvironmentBag env)
@@ -637,36 +639,45 @@ public class StateManager : MonoBehaviour
     #endregion
 
     #region 定时结算相关
+    private float electricityChangeRateSnapshot;
+    private float waterLevelChangeRateSnapshot;
+
+    private Dictionary<PlayerStateEnum, float> playerStateChangeRatesSnapshot = new(); // 记录玩家状态的当前变化率，防止玩家状态的结算顺序影响结算结果
+
+    private void OnUpdateBegin()
+    {
+        // 记录快照
+        electricityChangeRateSnapshot = Electricity.ChangeRate;
+        waterLevelChangeRateSnapshot = WaterLevel.ChangeRate;
+
+        CalcBodyTemperatureChangeRate(GameManager.Instance.CurEnvironmentBag);
+        CalcCarbonMonoxidePoisoningChangeRate(GameManager.Instance.CurEnvironmentBag);
+
+        playerStateChangeRatesSnapshot.Clear();
+        foreach (var (type, state) in PlayerStateDict)
+        {
+            if (state.ChangeRate != 0)
+            {
+                playerStateChangeRatesSnapshot.Add(type, state.ChangeRate);
+            }
+        }
+    }
+    
     /// <summary>
     /// 定时结算环境状态
     /// </summary>
     private void EnvironmentUpdate()
     {
-        ChangeElectricity(Electricity.ChangeRate);
-        ChangeWaterLevel(WaterLevel.ChangeRate);
+        ChangeElectricity(electricityChangeRateSnapshot);
+        ChangeWaterLevel(waterLevelChangeRateSnapshot);
     }
-
-    private Dictionary<PlayerStateEnum, float> temp = new(); // 记录玩家状态的当前变化率，防止玩家状态的结算顺序影响结算结果
 
     /// <summary>
     /// 定时结算玩家状态
     /// </summary>
     private void PlayerUpdate()
     {
-        CalcBodyTemperatureChangeRate(GameManager.Instance.CurEnvironmentBag);
-        CalcCarbonMonoxidePoisoningChangeRate(GameManager.Instance.CurEnvironmentBag);
-
-        temp.Clear();
-        foreach (var (type, state) in PlayerStateDict)
-        {
-            if (state.ChangeRate != 0)
-            {
-                //ChangePlayerState(type, state.ChangeRate);
-                temp.Add(type, state.ChangeRate);
-            }
-        }
-
-        ApplyPlayerStateChange(temp);
+        ApplyPlayerStateChange(playerStateChangeRatesSnapshot);
     }
 
     /// <summary>
@@ -733,7 +744,6 @@ public class StateManager : MonoBehaviour
             return;
         }
 
-        // 温度差 = 室温 - 体温
         var value = env.StateDict[EnvironmentStateEnum.CarbonMonoxideLevel].NormedValue;
 
         float rate;

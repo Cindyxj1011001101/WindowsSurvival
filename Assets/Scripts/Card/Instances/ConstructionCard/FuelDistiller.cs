@@ -13,9 +13,9 @@ public class FuelDistiller : ConstructionCard
 
     private FuelDistiller() { }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         // 手动添加燃料存储组件
         if (!TryGetComponent(out fuelStorage))
