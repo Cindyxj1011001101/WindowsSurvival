@@ -34,8 +34,6 @@ public class StudyWindow : WindowBase
 
     private ScriptableTechnologyNode curSelectedTechNode; // 记录当前选中的科技节点
 
-    private List<GameObject> temp = new();
-
     private Dictionary<TechType, RectTransform> menuItemTransforms = new();
 
     protected override void Awake()
@@ -46,7 +44,7 @@ public class StudyWindow : WindowBase
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
         EventManager.Instance.AddListener(EventType.StudyStopped, OnStudyStopped);
         EventManager.Instance.AddListener(EventType.LockUnlockIntermediateTechnologies, RefreshDisplay);
-        EventManager.Instance.AddListener(EventType.DataTransmissionStationOutOfPower, OnDataTransmissionStationOutOfPower);
+        EventManager.Instance.AddListener<string>(EventType.StudyInterrupted, OnStudyInterrupted);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
 
@@ -72,7 +70,7 @@ public class StudyWindow : WindowBase
         EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
         EventManager.Instance.RemoveListener(EventType.StudyStopped, OnStudyStopped);
         EventManager.Instance.RemoveListener(EventType.LockUnlockIntermediateTechnologies, RefreshDisplay);
-        EventManager.Instance.RemoveListener(EventType.DataTransmissionStationOutOfPower, OnDataTransmissionStationOutOfPower);
+        EventManager.Instance.RemoveListener<string>(EventType.StudyInterrupted, OnStudyInterrupted);
     }
 
     private void OnStudyStarted(ScriptableTechnologyNode techNode)
@@ -87,7 +85,7 @@ public class StudyWindow : WindowBase
 
         DisplayStudyState(0, techNode);
 
-        studyStateButton.transform.ShowTip($"科技\"{techNode.techName}\"研究完成", 1.4f);
+        studyStateButton.transform.ShowTip($"\"{techNode.techName}\"研究完成！", 1.4f);
     }
 
     private void OnStudyStopped()
@@ -97,9 +95,11 @@ public class StudyWindow : WindowBase
         DisplayStudyState(2, null);
     }
 
-    private void OnDataTransmissionStationOutOfPower()
+    private void OnStudyInterrupted(string reason)
     {
-        studyStateButton.transform.ShowTip("数据传输台断电，研究停止", 1.4f);
+        if (string.IsNullOrEmpty(reason)) return;
+
+        studyStateButton.transform.ShowTip($"由于{reason}，研究中止！", 1.4f);
         SoundManager.Instance.PlaySound("错误提示");
     }
 
@@ -185,6 +185,8 @@ public class StudyWindow : WindowBase
         if (curSelectedTechNode != null)
             DisplayTechTree(curSelectedTechNode.techType);
     }
+
+    private List<GameObject> temp = new();
 
     private void DisplayTechNodeDetails(ScriptableTechnologyNode techNode)
     {

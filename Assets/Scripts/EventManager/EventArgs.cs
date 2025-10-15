@@ -1,6 +1,7 @@
 ﻿public enum EventType
 {
     Update,                             // 回合结算
+    UpdateBegin,                        // 回合结算开始
     ChangeCardProperty,                 // 卡牌属性变化
     ChangeEnv,                          // 场景移动界面刷新
     RefreshPlayerState,                 // 更新玩家状态数据
@@ -24,7 +25,7 @@
     LockUnlockIntermediateTechnologies, // 锁定/解锁中间科技
     CardNumChange,                      // 卡牌数量变化
     PlayerMove,                         // 玩家移动
-    DataTransmissionStationOutOfPower,  // 数据传输台断电
+    StudyInterrupted,                   // 研究中断
     OnGlobalEffectBegin,                // 全局效果生效
     OnGlobalEffectEnd,                  // 全局效果失效
 }

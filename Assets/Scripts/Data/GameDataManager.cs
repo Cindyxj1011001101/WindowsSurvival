@@ -42,20 +42,12 @@ public class GameDataManager
             env.SetPlaceType(placeType);
             environmentBagDataDict.Add(placeType, env);
         }
-
         // 状态数据 
         stateData = JsonManager.LoadData<StateData>(CurLoadName, "State");
         // 音频数据
         audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
         // 科技数据
         technologyData = JsonManager.LoadData<TechnologyData>(CurLoadName, "Technology");
-        if (technologyData.techNodeDict.IsNullOrEmpty())
-        {
-            foreach (var node in Resources.LoadAll<ScriptableTechnologyNode>("ScriptableObject/Technology"))
-            {
-                technologyData.techNodeDict.Add(node.techName, new TechNodeData { name = node.techName, progress = 0 });
-            }
-        }
         // 装备数据
         equipmentData = JsonManager.LoadData<EquipmentBag>(CurLoadName, "Equipment");
         // 已生成的对话
@@ -67,7 +59,6 @@ public class GameDataManager
         // 探索移动额外消耗数据
         behaviourExtraEffectsData = JsonManager.LoadData<BehaviourExtraEffectsData>(CurLoadName, "BehaviourExtraEffectsData");
         // 全局数据
-        saveData = JsonManager.LoadData<GlobalData>(CurLoadName, "SaveData");
         globalData = JsonManager.LoadData<GlobalData>(CurLoadName, "GlobalData");
         // 玩家数据
         playerData = JsonManager.LoadData<Player>(CurLoadName, "PlayerData");
@@ -102,7 +93,6 @@ public class GameDataManager
         // 探索移动额外消耗数据
         SaveBehaviourExtraEffectsData();
         // 全局数据
-        SaveSaveData();
         SaveGlobalData();
         // 玩家数据
         SavePlayerData();
@@ -162,17 +152,6 @@ public class GameDataManager
 
     public void SavePlayerBag()
     {
-        //PlayerBag bag = GameManager.Instance.PlayerBag;
-        //playerBagData = new()
-        //{
-        //    init = true,
-        //    cardSlots = new()
-        //};
-        //foreach (var slot in bag.Slots)
-        //{
-        //    playerBagData.cardSlots.Add(new List<Card>(slot.Cards));
-        //}
-
         JsonManager.SaveData(playerBagData, CurLoadName, "PlayerBag");
     }
 
@@ -471,22 +450,12 @@ public class GameDataManager
     #endregion
 
     #region 全局数据
-    private GlobalData saveData;
-
-    public GlobalData SaveData => saveData;
-
-    public void SaveSaveData()
-    {
-        JsonManager.SaveData(saveData, CurLoadName, "SaveData");
-    }
-
     private GlobalData globalData;
 
     public GlobalData GlobalData => globalData;
 
     public void SaveGlobalData()
     {
-        // TODO: 这个全局数据应该是存档无关的
         JsonManager.SaveData(globalData, CurLoadName, "GlobalData");
     }
     #endregion
