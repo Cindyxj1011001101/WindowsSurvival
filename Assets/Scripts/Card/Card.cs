@@ -635,8 +635,8 @@ public abstract class Card : IComparable<Card>
         var e = Events[eventIndex];
 
         // 应用状态变化
-        StateManager.Instance.ApplyPlayerStateChange(e.GetPlayerEffects());
         GameManager.Instance.CurEnvironmentBag.ApplyEnvEffects(e.GetEnvEffects());
+        StateManager.Instance.ApplyPlayerStateChange(e.GetPlayerEffects());
         // 消耗时间
         TimeManager.Instance.AddTime(e.GetTimeEffect());
     }

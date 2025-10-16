@@ -41,11 +41,8 @@ public class GelBottler : Card
         tip = string.Empty;
         Use();
         AddCard("盐水", true);
-        if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
-        {
-            StateManager.Instance.ChangeWaterLevel(-2);
-        }
-        TimeManager.Instance.AddTime(15);
+        GameManager.Instance.CurEnvironmentBag.ApplyEnvEffects(Events[0].GetEnvEffects());
+        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
     }
 
     private bool Judge_Bottling(out string hint)

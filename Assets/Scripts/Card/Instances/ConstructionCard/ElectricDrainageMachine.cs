@@ -15,8 +15,8 @@ public class ElectricDrainageMachine : ConstructionCard
     {
         Events = new()
         {
-            new CardEvent("开启", $"开启后每15分钟消耗{ELECTRICITY_CONSUMPTION}单位电力，降低{WATER_LEVEL_REDUCTION}单位水平面高度", Event_TurnOn, Judge_TurnOn),
-            new CardEvent("关闭", "", Event_TurnOff, Judge_TurnOff)
+            new CardEvent("接电", $"将其接入电网。接电后每15分钟消耗{ELECTRICITY_CONSUMPTION}单位电力，降低{WATER_LEVEL_REDUCTION}单位水平面高度", Event_TurnOn, Judge_TurnOn),
+            new CardEvent("断电", "", Event_TurnOff, Judge_TurnOff)
         };
     }
 
@@ -51,10 +51,10 @@ public class ElectricDrainageMachine : ConstructionCard
 
     private void OnElectromagneticInterferenceBegin(Type type)
     {
-        if (type != typeof(PowerNetworkFailure)) return;
+        if (type != typeof(PowerNetworkFailure) || !Judge_TurnOff(out _)) return;
 
         Event_TurnOff(out _);
-        ShowTip($"由于电网故障，{CardName}已停止工作");
+        ShowTip($"由于电网故障，{CardName}已断电并停止工作");
     }
 
     private void OnElectromagneticInterferenceEnd(Type type)
@@ -79,13 +79,13 @@ public class ElectricDrainageMachine : ConstructionCard
         hint = string.Empty;
         if (GameManager.Instance.ContainsGlobalEffect<PowerNetworkFailure>())
         {
-            hint = $"由于电网故障，{CardName}缺少电力供应，无法开启";
+            hint = $"由于电网故障，无法接电";
             return false;
         }
 
-        if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION)
+        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION)
         {
-            hint = "电力不足";
+            hint = "电力供应不足";
             return false;
         }
         
@@ -116,15 +116,15 @@ public class ElectricDrainageMachine : ConstructionCard
         if (stateMachine.currentStateName == "已关闭") return;
 
         // 如果电力小于0.5或者水平面小于0时，自动停止工作
-        if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION)
+        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
         {
             Event_TurnOff(out _);
-            ShowTip($"电力不足，{CardName}已停止工作");
+            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
         }
         else if (StateManager.Instance.WaterLevel.CurValue <= 0)
         {
             Event_TurnOff(out _);
-            ShowTip($"水平面已为0，{CardName}自动停止工作");
+            ShowTip($"水平面已降至0，{CardName}自动停止工作");
         }
     }
 }

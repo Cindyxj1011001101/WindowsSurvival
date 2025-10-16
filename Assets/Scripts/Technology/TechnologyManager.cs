@@ -50,7 +50,7 @@ public class TechnologyManager
         }
 
         // 中极科技是否解锁
-        isIntermediateTechnologiesUnlocked = GlobalDataManager.Instance.GetCardNum("数据传输台") >= 1 && StateManager.Instance.Electricity.CurValue >= ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES;
+        isIntermediateTechnologiesUnlocked = GlobalDataManager.Instance.GetCardNum("数据传输台") >= 1 && StateManager.Instance.Electricity.GetPredictedVariableValue() >= ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES;
 
         CurStudyRate = CalcStudyRate();
 
@@ -185,9 +185,9 @@ public class TechnologyManager
                 return true;
             }
 
-            if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES)
+            if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES)
             {
-                reason = "电力不足";
+                reason = "电力供应不足";
                 return true;
             }
         }
@@ -230,28 +230,38 @@ public class TechnologyManager
         // 当数据传输台的数量变化时，锁定或解锁中级科技
         if (args.cardId != "数据传输台") return;
 
-        if (args.num <= 0)
+        // 中级科技未解锁
+        if (!isIntermediateTechnologiesUnlocked)
         {
-            SetIsIntermediateTechnologiesUnlocked(false, "缺少数据传输台");
+            SetIsIntermediateTechnologiesUnlocked(StateManager.Instance.Electricity.GetPredictedVariableValue() >= ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES && GlobalDataManager.Instance.GetCardNum("数据传输台") > 0);
+            return;
         }
-        else
-        {
-            SetIsIntermediateTechnologiesUnlocked(StateManager.Instance.Electricity.CurValue >= ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES);
-        }
+
+        // 中级科技已解锁
+        SetIsIntermediateTechnologiesUnlocked(GlobalDataManager.Instance.GetCardNum("数据传输台") > 0, "缺少数据传输台");
     }
 
     private void OnElectricityChange(RefreshEnvironmentStateArgs args)
     {
         if (args.stateEnum != EnvironmentStateEnum.Electricity) return;
 
-        if (args.stateValue.CurValue < ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES)
+        // 中级科技未解锁
+        if (!isIntermediateTechnologiesUnlocked)
         {
-            SetIsIntermediateTechnologiesUnlocked(false, "电力不足");
+            SetIsIntermediateTechnologiesUnlocked(args.stateValue.GetPredictedVariableValue() >= ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES && GlobalDataManager.Instance.GetCardNum("数据传输台") > 0);
+            return;
         }
-        else
+
+        // 中级科技已解锁
+        // 正在研究中级科技
+        if (CurStudiedTechNode != null && CurStudiedTechNode.techLevel == TechLevl.Intermediate)
         {
-            SetIsIntermediateTechnologiesUnlocked(GlobalDataManager.Instance.GetCardNum("数据传输台") > 0);
+            SetIsIntermediateTechnologiesUnlocked(args.stateValue.GetPredictedVariableValue() >= 0, "电力供应不足"); // 已经接电了这里就要判断 >= 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
+            return;
         }
+
+        // 没在研究中级科技
+        SetIsIntermediateTechnologiesUnlocked(args.stateValue.GetPredictedVariableValue() >= ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES, "电力供应不足");
     }
 
     private void SetIsIntermediateTechnologiesUnlocked(bool value, string reason = "")

@@ -426,6 +426,8 @@ public class StateManager : MonoBehaviour
 
     public void ApplyPlayerStateChange(Dictionary<PlayerStateEnum, float> playerEffects)
     {
+        if (playerEffects.IsNullOrEmpty()) return;
+
         foreach (var (state, delta) in playerEffects)
         {
             ChangePlayerState(state, delta);

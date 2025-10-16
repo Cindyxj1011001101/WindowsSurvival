@@ -74,6 +74,11 @@ public class State
         }
     }
 
+    public float GetPredictedVariableValue()
+    {
+        return variableValue + basicChangeRate + extraChangeRate;
+    }
+
     private void ClampVariableValue()
     {
         variableValue = Mathf.Clamp(variableValue, 0, MaxValue);

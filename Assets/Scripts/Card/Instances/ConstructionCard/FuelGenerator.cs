@@ -37,7 +37,7 @@ public class FuelGenerator : ConstructionCard
 
         Events = new()
         {
-            new CardEvent("点燃", $"点燃{CardName}。每15分钟可以产生{ELECTRICITY_PRODUCTION}单位电力。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, CanIgnite),
+            new CardEvent("点燃", $"点燃{CardName}。点然后每15分钟可以产生{ELECTRICITY_PRODUCTION}单位电力。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, CanIgnite),
             new CardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish),
         };
     }
@@ -57,10 +57,10 @@ public class FuelGenerator : ConstructionCard
 
     private void OnElectromagneticInterferenceBegin(Type type)
     {
-        if (type != typeof(PowerNetworkFailure)) return;
+        if (type != typeof(PowerNetworkFailure) || !fuelStorage.CanExtinguish(out _)) return;
 
         Extinguish(out _);
-        ShowTip($"由于电网故障，{CardName}已停止工作");
+        ShowTip($"由于电网故障，{CardName}已断电并停止工作");
     }
 
     private void OnElectromagneticInterferenceEnd(Type type)

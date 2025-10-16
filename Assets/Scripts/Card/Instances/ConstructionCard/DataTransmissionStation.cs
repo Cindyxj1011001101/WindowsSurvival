@@ -10,11 +10,7 @@ public class DataTransmissionStation : ConstructionCard
     {
         Events = new()
         {
-            new CardEvent("数据传输", "使当前研究科技的研究进度+28" +
-            $"\n（数据传输1天内最多可以进行2次）",
-            Event_Transmit,
-            Judge_Transmit,
-            () => 60,
+            new CardEvent("数据传输", "使当前研究科技的研究进度+28\n（数据传输1天内最多可以进行2次）", Event_Transmit, Judge_Transmit, () => 60,
             () => new()
             {
                 { PlayerStateEnum.Sobriety, -10 }
@@ -96,7 +92,8 @@ public class DataTransmissionStation : ConstructionCard
 
         GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId); // 使用次数增加
 
-        StateManager.Instance.ApplyPlayerStateChange(Events[0].GetPlayerEffects());
+		GameManager.Instance.CurEnvironmentBag.ApplyEnvEffects(Events[0].GetEnvEffects());
+		StateManager.Instance.ApplyPlayerStateChange(Events[0].GetPlayerEffects());
         TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
     }
 
@@ -116,29 +113,12 @@ public class DataTransmissionStation : ConstructionCard
             return false;
         }
 
-        if (StateManager.Instance.Electricity.CurValue < 5f)
+        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < 5f)
         {
-            hint = "电力不足，无法进行数据传输";
+            hint = "电力供应不足";
             return false;
         }
 
         return true;
     }
-
-    //protected override void OnUpdate()
-    //{
-    //    base.OnUpdate();
-
-    //    if (stateMachine.currentStateName == "待机中") return;
-
-    //    // 电力不足自动停止研究
-    //    if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION * GlobalDataManager.Instance.GetCardNum(CardId))
-    //    {
-    //        TechnologyManager.Instance.StopStudy(); // StopStudy会触发StopWorking方法，所以不用再在这里写一遍
-    //        ShowTip("电力不足，研究已自动停止");
-    //        if (SoundManager.Instance != null)
-    //            SoundManager.Instance.PlaySound("数据传输台没电", true);
-    //        EventManager.Instance.TriggerEvent(EventType.DataTransmissionStationOutOfPower);
-    //    }
-    //}
 }

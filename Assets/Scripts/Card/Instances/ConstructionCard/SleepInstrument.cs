@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
@@ -12,15 +13,9 @@ public class SleepInstrument : ConstructionCard
     private const float EXTRA_SOBRIETY_INCREASE = 1.2f; // 额外清醒度增加
     private const float EXTRA_HEALTH_INCREASE = 1.2f;   // 额外清醒度增加
 
-    private SleepInstrument()
-    {
-        Events = new()
-        {
-            new CardEvent("开启", $"使其接入电路。接入电路后当麦麦在安装了睡眠脉冲仪的地点休息，休息时每15分钟额外+{EXTRA_SOBRIETY_INCREASE}清醒度和{EXTRA_HEALTH_INCREASE}健康，" +
-                            $"并消耗{ELECTRICITY_CONSUMPTION}单位电力",Event_TurnOn, Judge_TurnOn),
-            new CardEvent("关闭", "", Event_TurnOff, Judge_TurnOff),
-        };
-    }
+    [JsonProperty] private bool isWorking = false;
+
+    private SleepInstrument() { }
 
     public override void LateConstrcutor()
     {
@@ -35,8 +30,15 @@ public class SleepInstrument : ConstructionCard
             };
             stateMachine = new StateMachineComponent("未接电", states);
             AddComponent(stateMachine);
-        }
-    }
+		}
+
+		Events = new()
+		{
+			new CardEvent("接电", $"将其接入电网。接电后当麦麦在安装了{CardName}的地点休息时，每15分钟额外+{EXTRA_SOBRIETY_INCREASE}清醒度和{EXTRA_HEALTH_INCREASE}健康，" +
+							$"并消耗{ELECTRICITY_CONSUMPTION}单位电力",Event_TurnOn, Judge_TurnOn),
+			new CardEvent("断电", "", Event_TurnOff, Judge_TurnOff),
+		};
+	}
 
     public override void Init()
     {
@@ -57,11 +59,10 @@ public class SleepInstrument : ConstructionCard
 
     private void OnElectromagneticInterferenceBegin(Type type)
     {
-        if (type != typeof(PowerNetworkFailure)) return;
+        if (type != typeof(PowerNetworkFailure) || !Judge_TurnOff(out _)) return;
 
-        StopWorking();
-        stateMachine.ChangeState("未接电");
-        ShowTip($"由于电网故障，{CardName}已停止工作");
+        Event_TurnOff(out _);
+        ShowTip($"由于电网故障，{CardName}已断电并停止工作");
     }
 
     private void OnElectromagneticInterferenceEnd(Type type)
@@ -74,20 +75,21 @@ public class SleepInstrument : ConstructionCard
 
     private void OnStartSleeping()
     {
-        if (GameManager.Instance.CurEnvironmentBag != Bag || stateMachine.currentStateName == "未接电") return;
+        if (GameManager.Instance.CurEnvironmentBag != Bag || stateMachine.currentStateName == "未接电" || isWorking) return;
 
         StartWorking();
     }
 
     private void OnStopSleeping()
     {
-        if (GameManager.Instance.CurEnvironmentBag != Bag || stateMachine.currentStateName == "未接电") return;
+        if (!isWorking) return;
 
         StopWorking();
     }
 
     private void StartWorking()
     {
+        isWorking = true;
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, EXTRA_SOBRIETY_INCREASE);
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, EXTRA_HEALTH_INCREASE);
         StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_CONSUMPTION);
@@ -95,6 +97,7 @@ public class SleepInstrument : ConstructionCard
 
     private void StopWorking()
     {
+        isWorking = false;
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, -EXTRA_SOBRIETY_INCREASE);
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, -EXTRA_HEALTH_INCREASE);
         StateManager.Instance.ChangeElectricityChangeRate(+ELECTRICITY_CONSUMPTION);
@@ -114,9 +117,9 @@ public class SleepInstrument : ConstructionCard
     {
         hint = string.Empty;
 
-        if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION)
+        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION)
         {
-            hint = "电力不足";
+            hint = "电力供应不足";
             return false;
         }
 
@@ -130,7 +133,9 @@ public class SleepInstrument : ConstructionCard
     private void Event_TurnOff(out string tip)
     {
         tip = string.Empty;
-        stateMachine.ChangeState("未接电");
+		if (isWorking)
+			StopWorking();
+		stateMachine.ChangeState("未接电");
     }
 
     private bool Judge_TurnOff(out string hint)
@@ -145,11 +150,10 @@ public class SleepInstrument : ConstructionCard
 
         if (stateMachine.currentStateName == "未接电") return;
 
-        if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION)
-        {
-            StopWorking();
-            stateMachine.ChangeState("未接电");
-            ShowTip($"电力不足，{CardName}已停止工作");
-        }
-    }
+		if (StateManager.Instance.Electricity.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
+		{
+			Event_TurnOff(out _);
+			ShowTip($"电力供应不足，{CardName}已断电并停止工作");
+		}
+	}
 }

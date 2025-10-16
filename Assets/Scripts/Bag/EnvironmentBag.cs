@@ -133,8 +133,11 @@ public class EnvironmentBag : Bag
         switch (stateEnum)
         {
             case EnvironmentStateEnum.Electricity:
+                StateManager.Instance.ChangeElectricity(delta);
+                break;
             case EnvironmentStateEnum.WaterLevel:
-                throw new ArgumentException("修改电力或水平面请通过StateManager.Instance.ChangeElectricity/ChangeWaterLevel方法");
+                StateManager.Instance.ChangeWaterLevel(delta);
+                break;
             case EnvironmentStateEnum.HasCable:
             case EnvironmentStateEnum.PressureLevel:
                 throw new ArgumentException("修改是否铺设电缆或压强请通过ChangeHasCable/ChangePressureLevel方法");
@@ -183,6 +186,8 @@ public class EnvironmentBag : Bag
 
     public void ApplyEnvEffects(Dictionary<EnvironmentStateEnum, float> envEffects)
     {
+        if (envEffects.IsNullOrEmpty()) return;
+
         foreach (var (state, delta) in envEffects)
         {
             ChangeEnvironmentState(state, delta);

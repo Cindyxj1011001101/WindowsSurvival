@@ -70,7 +70,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         if (type != typeof(PowerNetworkFailure)) return;
 
         Event_TurnOff(out _);
-        ShowTip($"由于电网故障，{CardName}已停止工作");
+        ShowTip($"由于电网故障，{CardName}已断电并停止工作");
     }
 
     private void OnElectromagneticInterferenceEnd(Type type)
@@ -216,8 +216,8 @@ public class OreReleaseOxygenMachine : ConstructionCard
             return;
         }
 
-        // 电力不足不制氧
-        if (StateManager.Instance.Electricity.CurValue < ELECTRICITY_CONSUMPTION)
+        // 电力供应不足不制氧
+        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION)
         {
             return;
         }
