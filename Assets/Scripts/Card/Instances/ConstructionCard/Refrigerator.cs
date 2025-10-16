@@ -56,17 +56,19 @@ public class Refrigerator : ConstructionCard
         base.Init();
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
         EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 
     protected override void OnDestroy()
     {
         EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
         EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 
     private void OnPowerNetworkFailureBegin(Type type)
     {
-        if (type != typeof(PowerNetworkFailure) || !Judge_TurnOff(out _)) return;
+        if (type != typeof(PowerNetworkFailure) || stateMachine.currentStateName == "未接电") return;
 
         Event_TurnOff(out _);
         ShowTip($"由于电网故障，{CardName}已断电并停止工作");
@@ -77,6 +79,17 @@ public class Refrigerator : ConstructionCard
         if (type != typeof(PowerNetworkFailure)) return;
 
         RefreshSlot();
+    }
+
+    private void OnElectricityChange(RefreshEnvironmentStateArgs args)
+    {
+        if (args.stateEnum != EnvironmentStateEnum.Electricity || stateMachine.currentStateName == "未接电") return;
+
+        if (args.stateValue.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
+        {
+            Event_TurnOff(out _);
+            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
+        }
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -148,18 +161,5 @@ public class Refrigerator : ConstructionCard
     {
         hint = string.Empty;
         return stateMachine.currentStateName == "已接电";
-    }
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        if (stateMachine.currentStateName == "未接电") return;
-
-        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
-        {
-            Event_TurnOff(out _);
-            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
-        }
     }
 }

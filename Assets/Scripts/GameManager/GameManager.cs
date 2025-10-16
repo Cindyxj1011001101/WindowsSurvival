@@ -43,15 +43,12 @@ public class GameManager : MonoBehaviour
         GlobalEffects = GameDataManager.Instance.GlobalEffects;
 
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
-        EventManager.Instance.AddListener(EventType.UpdateBegin, OnCardUpdateBegin);
     }
 
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
-        EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnCardUpdateBegin);
         UpdateManager.Instance.GlobalEffectUpdate.RemoveListener(GlobalEffectUpdate);
-        UpdateManager.Instance.CardUpdate.RemoveListener(CardUpdate);
     }
 
     #region 初始化
@@ -72,7 +69,6 @@ public class GameManager : MonoBehaviour
         InitBehaviourExtraEffects();
 
         UpdateManager.Instance.GlobalEffectUpdate.AddListener(GlobalEffectUpdate);
-        UpdateManager.Instance.CardUpdate.AddListener(CardUpdate);
 
         ChangeEnv(GameDataManager.Instance.LastPlace);
         SoundManager.Instance.PlayCurEnvironmentMusic();
@@ -115,28 +111,6 @@ public class GameManager : MonoBehaviour
                 GlobalEffects.RemoveAt(i);
             }    
         }
-    }
-    #endregion
-
-    #region 卡牌更新
-    private void OnCardUpdateBegin()
-    {
-        foreach (var bag in EnvironmentBags.Values)
-        {
-            bag.OnUpdateBegin();
-        }
-        PlayerBag.OnUpdateBegin();
-        EquipmentBag.OnUpdateBegin();
-    }
-
-    private void CardUpdate()
-    {
-        foreach (var bag in EnvironmentBags.Values)
-        {
-            bag.Update();
-        }
-        PlayerBag.Update();
-        EquipmentBag.Update();
     }
     #endregion
 

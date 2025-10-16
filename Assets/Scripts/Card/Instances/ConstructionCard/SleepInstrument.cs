@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 
 /// <summary>
 /// 睡眠脉冲仪
@@ -45,37 +46,58 @@ public class SleepInstrument : ConstructionCard
         base.Init();
         EventManager.Instance.AddListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.AddListener(EventType.StopSleeping, OnStopSleeping);
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 
     protected override void OnDestroy()
     {
         EventManager.Instance.RemoveListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.RemoveListener(EventType.StopSleeping, OnStopSleeping);
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 
-    private void OnElectromagneticInterferenceBegin(Type type)
+    private void OnPowerNetworkFailureBegin(Type type)
     {
-        if (type != typeof(PowerNetworkFailure) || !Judge_TurnOff(out _)) return;
+        if (type != typeof(PowerNetworkFailure) || stateMachine.currentStateName == "未接电") return;
 
         Event_TurnOff(out _);
         ShowTip($"由于电网故障，{CardName}已断电并停止工作");
     }
 
-    private void OnElectromagneticInterferenceEnd(Type type)
+    private void OnPowerNetworkFailureEnd(Type type)
     {
         if (type != typeof(PowerNetworkFailure)) return;
 
         RefreshSlot();
     }
 
+    private void OnElectricityChange(RefreshEnvironmentStateArgs args)
+    {
+        if (args.stateEnum != EnvironmentStateEnum.Electricity || !isWorking) return;
+
+        if (args.stateValue.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
+        {
+            Event_TurnOff(out _);
+            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
+        }
+    }
+
 
     private void OnStartSleeping()
     {
         if (GameManager.Instance.CurEnvironmentBag != Bag || stateMachine.currentStateName == "未接电" || isWorking) return;
+
+        // 开始睡觉时判断电力是否充足
+        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION)
+        {
+            Event_TurnOff(out _);
+            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
+            return;
+        }
 
         StartWorking();
     }
@@ -116,13 +138,6 @@ public class SleepInstrument : ConstructionCard
     private bool Judge_TurnOn(out string hint)
     {
         hint = string.Empty;
-
-        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION)
-        {
-            hint = "电力供应不足";
-            return false;
-        }
-
         return stateMachine.currentStateName == "未接电";
     }
 
@@ -143,17 +158,4 @@ public class SleepInstrument : ConstructionCard
         hint = string.Empty;
         return stateMachine.currentStateName == "已接电";
     }
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        if (stateMachine.currentStateName == "未接电") return;
-
-		if (StateManager.Instance.Electricity.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
-		{
-			Event_TurnOff(out _);
-			ShowTip($"电力供应不足，{CardName}已断电并停止工作");
-		}
-	}
 }

@@ -55,25 +55,25 @@ public class OreReleaseOxygenMachine : ConstructionCard
     public override void Init()
     {
         base.Init();
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
     }
 
     protected override void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
     }
 
-    private void OnElectromagneticInterferenceBegin(Type type)
+    private void OnPowerNetworkFailureBegin(Type type)
     {
         if (type != typeof(PowerNetworkFailure)) return;
 
         Event_TurnOff(out _);
-        ShowTip($"由于电网故障，{CardName}已断电并停止工作");
+        ShowTip($"由于电网故障，{CardName}已关闭并停止工作");
     }
 
-    private void OnElectromagneticInterferenceEnd(Type type)
+    private void OnPowerNetworkFailureEnd(Type type)
     {
         if (type != typeof(PowerNetworkFailure)) return;
 

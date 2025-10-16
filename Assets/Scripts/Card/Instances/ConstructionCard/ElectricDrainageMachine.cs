@@ -39,29 +39,55 @@ public class ElectricDrainageMachine : ConstructionCard
     public override void Init()
     {
         base.Init();
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnWaterLevelChange);
     }
 
     protected override void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnElectromagneticInterferenceBegin);
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnElectromagneticInterferenceEnd);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnWaterLevelChange);
     }
 
-    private void OnElectromagneticInterferenceBegin(Type type)
+    private void OnPowerNetworkFailureBegin(Type type)
     {
-        if (type != typeof(PowerNetworkFailure) || !Judge_TurnOff(out _)) return;
+        if (type != typeof(PowerNetworkFailure) || stateMachine.currentStateName == "已关闭") return;
 
         Event_TurnOff(out _);
         ShowTip($"由于电网故障，{CardName}已断电并停止工作");
     }
 
-    private void OnElectromagneticInterferenceEnd(Type type)
+    private void OnPowerNetworkFailureEnd(Type type)
     {
         if (type != typeof(PowerNetworkFailure)) return;
 
         RefreshSlot();
+    }
+
+    private void OnElectricityChange(RefreshEnvironmentStateArgs args)
+    {
+        if (args.stateEnum != EnvironmentStateEnum.Electricity || stateMachine.currentStateName == "已关闭") return;
+
+        if (args.stateValue.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
+        {
+            Event_TurnOff(out _);
+            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
+        }
+    }
+
+    private void OnWaterLevelChange(RefreshEnvironmentStateArgs args)
+    {
+        if (args.stateEnum != EnvironmentStateEnum.WaterLevel || stateMachine.currentStateName == "已关闭") return;
+
+        if (args.stateValue.CurValue <= 0)
+        {
+            Event_TurnOff(out _);
+            ShowTip($"水平面已降至0，{CardName}自动停止工作");
+        }
     }
 
     #region 开关
@@ -108,23 +134,4 @@ public class ElectricDrainageMachine : ConstructionCard
         return stateMachine.currentStateName == "已开启";
     }
     #endregion
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        if (stateMachine.currentStateName == "已关闭") return;
-
-        // 如果电力小于0.5或者水平面小于0时，自动停止工作
-        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
-        {
-            Event_TurnOff(out _);
-            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
-        }
-        else if (StateManager.Instance.WaterLevel.CurValue <= 0)
-        {
-            Event_TurnOff(out _);
-            ShowTip($"水平面已降至0，{CardName}自动停止工作");
-        }
-    }
 }

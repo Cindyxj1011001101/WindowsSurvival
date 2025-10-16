@@ -29,23 +29,6 @@ public class SlotCards : IComparable<SlotCards>
         }
     }
 
-    public void OnUpdateBegin()
-    {
-        foreach (var card in Cards)
-        {
-            card.OnUpdateBegin();
-        }
-    }
-
-    public void Update()
-    {
-        var snapshot = new List<Card>(Cards);
-        foreach (var card in snapshot)
-        {
-            card.Update();
-        }
-    }
-
     public void SetMaxStackNum(int maxStackNum)
     {
         this.maxStackNum = maxStackNum;

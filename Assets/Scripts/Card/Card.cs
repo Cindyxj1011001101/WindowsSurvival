@@ -192,20 +192,26 @@ public abstract class Card : IComparable<Card>
         }
 
         GlobalDataManager.Instance.AddCardNum(CardId);
+
+        EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
+        UpdateManager.Instance.CardUpdate.AddListener(Update);
     }
     #endregion
 
     #region Update
     [JsonProperty] private bool isUpdatePaused = false; // 是否暂停每回合更新
 
-    public void Update()
+    private void Update()
     {
-        if (!isUpdatePaused && !Destroyed)
-            OnUpdate();
+        if (isUpdatePaused || Destroyed) return;
+
+        OnUpdate();
     }
 
-    public void OnUpdateBegin()
+    private void OnUpdateBegin()
     {
+        if (isUpdatePaused || Destroyed) return;
+
         foreach (var component in components.Values)
         {
             if (component is IUpdate iu) iu.OnUpdateBegin();
@@ -251,6 +257,9 @@ public abstract class Card : IComparable<Card>
         OnLeaveEnvironment();
 
         GlobalDataManager.Instance.ReduceCardNum(CardId);
+
+        EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
+        UpdateManager.Instance.CardUpdate.RemoveListener(Update);
     }
 
     protected virtual void OnDestroy() { }

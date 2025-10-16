@@ -30,13 +30,13 @@ public class UpdateManager : MonoBehaviour
     {
         EventManager.Instance.TriggerEvent(EventType.UpdateBegin);
         // 顺序很重要
-        GlobalEffectUpdate.Invoke();
-        InGameEventUpdate.Invoke();
         TechnologyUpdate.Invoke();
-        EnvironmentUpdate.Invoke();
         CardUpdate.Invoke();
+        EnvironmentUpdate.Invoke();
         PlayerUpdate.Invoke();
         PopulationUpdate.Invoke();
+        GlobalEffectUpdate.Invoke();
+        InGameEventUpdate.Invoke();
     }
 
     private void Clear()

@@ -113,7 +113,7 @@ public class DataTransmissionStation : ConstructionCard
             return false;
         }
 
-        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < 5f)
+        if (StateManager.Instance.Electricity.CurValue < 5f)
         {
             hint = "电力供应不足";
             return false;

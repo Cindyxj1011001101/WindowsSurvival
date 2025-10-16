@@ -316,7 +316,7 @@ public class DurabilityComponent : ContinuousValueComponent
 #region 内容物组件
 public delegate bool CardFilterDelegate(Card card, out string s);
 
-public class InnerContentsComponent : CardComponent, IUpdate
+public class InnerContentsComponent : CardComponent
 {
     public float weightLossRate = 1f; // 减重率
 
@@ -346,10 +346,6 @@ public class InnerContentsComponent : CardComponent, IUpdate
         bag.SetComponent(this);
         bag.Init();
     }
-
-    public void OnUpdateBegin() => bag.OnUpdateBegin();
-
-    public void Update() => bag.Update();
 
     public void Clear() => bag.Clear();
 
