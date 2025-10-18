@@ -4,34 +4,51 @@ using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
-public class DisposableDropList
+public class DropList
 {
+    public bool disposable = false; // 一次性掉落，掉落后从列表中移除
     public int maxCount;
+    public List<Drop> dropList = new();
 
-    public List<Drop> dropList = new List<Drop>();
-
-    [JsonIgnore]
-    public bool IsEmpty => dropList.IsNullOrEmpty();
+    [JsonIgnore] public bool IsEmpty => dropList.IsNullOrEmpty();
 
     /// <summary>
     /// 剩余掉落占比
     /// </summary>
-    [JsonIgnore]
-    public float RemainingDropsRate => (float)dropList.Count / maxCount;
+    [JsonIgnore] public float RemainingDropsRate => (float)dropList.Count / maxCount;
+
+    public DropList() { }
+
+    public DropList(params Drop[] drops)
+    {
+        dropList = drops.ToList();
+        maxCount = drops.Length;
+    }
+
+    public DropList(List<Drop> drops, bool disposable)
+    {
+        dropList = drops;
+        maxCount = drops.Count;
+        this.disposable = disposable;
+    }
+
+    private int CalcTotalWeight()
+    {
+        return dropList.Sum(d => d.dropWeight);
+    }
 
     /// <summary>
     /// 随机掉落
     /// </summary>
     /// <returns></returns>
-    public List<Card> RandomDrop()
+    public List<Card> RandomDrop(out string tip)
     {
-        if (dropList.Count == 0)
-        {
+        tip = string.Empty;
+        if (dropList.IsNullOrEmpty())
             return new();
-        }
 
         // 计算总权重
-        int totalWeight = dropList.Sum(d => d.dropWeight); 
+        int totalWeight = CalcTotalWeight();
 
         // 随机选择
         int randomValue = Random.Range(0, totalWeight);
@@ -45,10 +62,11 @@ public class DisposableDropList
                 // 获取掉落项
                 Drop drop = dropList[i];
 
-                // 从剩余列表中移除（一次性掉落）
-                dropList.RemoveAt(i);
+                if (disposable)
+                    // 从剩余列表中移除（一次性掉落）
+                    dropList.RemoveAt(i);
 
-                return drop.GetDroppedCards(out _);
+                return drop.GetDroppedCards(out tip);
             }
         }
 
@@ -71,8 +89,10 @@ public class DisposableDropList
             {
                 if (c.CardId == cardId)
                 {
-                    // 从剩余列表中移除（一次性掉落）
-                    dropList.RemoveAt(i);
+                    if (disposable)
+                        // 从剩余列表中移除（一次性掉落）
+                        dropList.RemoveAt(i);
+
                     return drop.GetDroppedCards(out _);
                 }
             }

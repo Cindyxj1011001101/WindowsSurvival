@@ -3,7 +3,7 @@
 /// </summary>
 public class AquariusFish : Card
 {
-    private RandomDropList dropList;
+    private DropList dropList;
 
     private AquariusFish()
     {

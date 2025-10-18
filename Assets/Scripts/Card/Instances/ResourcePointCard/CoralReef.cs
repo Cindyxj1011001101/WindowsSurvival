@@ -1,6 +1,6 @@
 public class CoralReef : Card
 {
-    private RandomDropList dropList = new(
+    private DropList dropList = new(
        new Drop(30, ("珊瑚", 1)),
        new Drop(8, ("海爬虫", 1)),
        new Drop(5, ("白爆矿", 1)),

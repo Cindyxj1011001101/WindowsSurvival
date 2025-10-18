@@ -7,14 +7,14 @@ public class EnvironmentBag : Bag
     [JsonProperty] private PlaceEnum placeType;
     [JsonProperty] private bool hasCable;
     [JsonProperty] private PressureLevel pressureLevel;
-    [JsonProperty] private DisposableDropList disposableDropList = new();
+    [JsonProperty] private DropList disposableDropList = new();
     [JsonProperty] private DeepExploreDropList repeatableDropList = new();
     [JsonProperty] private Dictionary<EnvironmentStateEnum, State> stateDict = new();
 
     [JsonIgnore] public bool HasCable => hasCable;
     [JsonIgnore] public PressureLevel PressureLevel => pressureLevel;
     [JsonIgnore] public string PlaceName => GameManager.Instance.PlaceDataDict[placeType].placeName;
-    [JsonIgnore] public DisposableDropList DisposableDropList => disposableDropList;
+    [JsonIgnore] public DropList DisposableDropList => disposableDropList;
     [JsonIgnore] public DeepExploreDropList RepeatableDropList => repeatableDropList;
     [JsonIgnore] public Dictionary<EnvironmentStateEnum, State> StateDict => stateDict;
     [JsonIgnore] public PlaceData PlaceData => GameManager.Instance.PlaceDataDict[placeType];

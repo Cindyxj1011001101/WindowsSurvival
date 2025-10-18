@@ -3,7 +3,7 @@
 /// </summary>
 public class SeaGrassBed : Card
 {
-    private RandomDropList dropListHand = new(
+    private DropList dropListHand = new(
         new Drop(4, ("海麻线", 2)),
         new Drop(12, ("海麻线", 1)),
         new Drop(3, ("海爬虫", 1)),
@@ -16,7 +16,7 @@ public class SeaGrassBed : Card
         })
         );
 
-    private RandomDropList dropListKnife = new(
+    private DropList dropListKnife = new(
         new Drop(10, ("海麻线", 2)),
         new Drop(5, ("海麻线", 1)),
         new Drop(3, ("海爬虫", 1))

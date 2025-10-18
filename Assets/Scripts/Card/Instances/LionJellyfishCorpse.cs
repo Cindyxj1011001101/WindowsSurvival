@@ -3,7 +3,7 @@
 /// </summary>
 public class LionJellyfishCorpse : Card
 {
-    private RandomDropList dropList = new(
+    private DropList dropList = new(
        new Drop(2, ("未处理的海蜇皮", 1), ("盐水", 1)),
        new Drop(2, ("未处理的海蜇皮", 2)),
        new Drop(1, ("未处理的海蜇皮", 1))

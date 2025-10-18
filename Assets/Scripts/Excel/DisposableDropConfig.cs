@@ -1,4 +1,4 @@
-﻿public class DropConfig
+﻿public class DisposableDropConfig
 {
     public string CardId;               // 卡牌
     public int DropNum;                 // 掉落数量

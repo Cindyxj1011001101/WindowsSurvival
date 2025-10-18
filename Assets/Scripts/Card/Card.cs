@@ -526,7 +526,7 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    public void RandomDrop(RandomDropList dropList, out string tip, int times = 1, UnityAction onDrop = null)
+    public void RandomDrop(DropList dropList, out string tip, int times = 1, UnityAction onDrop = null)
     {
         tip = string.Empty;
         var droppedCards = new List<Card>();

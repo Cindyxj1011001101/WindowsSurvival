@@ -224,14 +224,14 @@ public static class ExcelReader
         return result;
     }
 
-    public static Dictionary<PlaceEnum, DisposableDropList> GenerateDisposableDropList()
+    public static Dictionary<PlaceEnum, DropList> GenerateDisposableDropList()
     {
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/DisposableDropListConfig.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
 
-        Dictionary<PlaceEnum, DisposableDropList> dict = new();
+        Dictionary<PlaceEnum, DropList> dict = new();
 
         foreach (DataTable table in result.Tables)
         {
@@ -245,7 +245,7 @@ public static class ExcelReader
                 if (string.IsNullOrEmpty(row[0].ToString())) break; // 遇到空行说明读取完毕了，后续是内容物的配置
 
                 // 读取掉落配置
-                DropConfig config = new()
+                DisposableDropConfig config = new()
                 {
                     CardId = row[0].ToString(),
                     DropNum = ParseInt(row[1].ToString()),
@@ -295,7 +295,7 @@ public static class ExcelReader
                 dropList.Add(new Drop(config.DropWeight, droppedCards));
             }
             // 保存为Json
-            DisposableDropList disposableDropList = new() { maxCount = dropList.Count, dropList = dropList };
+            DropList disposableDropList = new(dropList, true);
             dict.Add(Enum.Parse<PlaceEnum>(table.TableName), disposableDropList);
         }
         return dict;
@@ -310,7 +310,7 @@ public static class ExcelReader
         {
             row = table.Rows[i];
             // 读取掉落配置
-            DropConfig config = new()
+            DisposableDropConfig config = new()
             {
                 CardId = row[0].ToString(),
                 DropNum = ParseInt(row[1].ToString()),

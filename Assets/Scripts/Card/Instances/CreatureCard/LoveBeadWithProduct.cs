@@ -6,7 +6,7 @@ using System.Linq;
 /// </summary>
 public class LoveBeadWithProduct : Card
 {
-    private RandomDropList dropList = new(
+    private DropList dropList = new(
         new Drop(3, ("玻璃沙", 2)),
         new Drop(3, ("废金属", 2)),
         new Drop(4, ("珊瑚", 1)),

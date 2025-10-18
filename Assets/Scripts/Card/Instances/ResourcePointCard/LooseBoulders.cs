@@ -3,7 +3,7 @@
 /// </summary>
 public class LooseBoulders : Card
 {
-    private RandomDropList dropList = new(
+    private DropList dropList = new(
        new Drop(3, ("²£Á§É³", 1)),
        new Drop(2, ("°×±¬¿ó", 1)),
        new Drop(1, ("º£ÅÀ³æ", 1))

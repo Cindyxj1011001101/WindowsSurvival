@@ -372,19 +372,19 @@ public static class CardFactory
     }
 
     // 环境一次性掉落列表
-    private static Dictionary<PlaceEnum, DisposableDropList> disposableDropListDict = null;
+    private static Dictionary<PlaceEnum, DropList> disposableDropListDict = null;
 
     private static void InitDisposableDropList()
     {
         disposableDropListDict ??= ExcelReader.GenerateDisposableDropList();
     }
 
-    public static DisposableDropList GetDisposableDropList(PlaceEnum place)
+    public static DropList GetDisposableDropList(PlaceEnum place)
     {
         InitDisposableDropList();
         if (disposableDropListDict.ContainsKey(place))
             return disposableDropListDict[place];
-        return new DisposableDropList();
+        return new DropList();
     }
 
     // 环境重复掉落列表

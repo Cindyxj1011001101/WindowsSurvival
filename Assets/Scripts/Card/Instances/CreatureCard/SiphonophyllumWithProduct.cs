@@ -3,7 +3,7 @@
 /// </summary>
 public class SiphonophyllumWithProduct : Card
 {
-    private RandomDropList dropList = new(
+    private DropList dropList = new(
        new Drop(3, ("废金属", 2)),
        new Drop(2, ("废金属", 1)),
        new Drop(3, ("磁性触手", 1))

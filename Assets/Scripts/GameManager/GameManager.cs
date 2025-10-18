@@ -458,9 +458,7 @@ public class GameManager : MonoBehaviour
         if (!disposableDropList.IsEmpty)
         {
             // 掉落卡牌
-            droppedCards = disposableDropList.RandomDrop();
-            if (droppedCards.IsNullOrEmpty())
-                return;
+            droppedCards = disposableDropList.RandomDrop(out tip);
         }
         // 如果还可以重复探索
         else if (!repeatableDropList.IsEmpty)
@@ -470,7 +468,6 @@ public class GameManager : MonoBehaviour
             {
                 tip = "地点资源缺乏，什么都没找到";
                 SoundManager.Instance.PlaySound("错误提示");
-                return;
             }
         }
     }

@@ -3,7 +3,7 @@
 /// </summary>
 public class WhiteBlastMineStack : Card
 {
-    private RandomDropList dropList = new(
+    private DropList dropList = new(
        new Drop(4, ("白爆矿", 2)),
        new Drop(8, ("白爆矿", 1)),
        new Drop(4, ("玻璃沙", 1))
