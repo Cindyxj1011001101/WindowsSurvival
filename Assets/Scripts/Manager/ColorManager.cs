@@ -31,6 +31,7 @@ public static class ColorManager
         { typeof(OxygenStorageComponent), SkyBlue },
         { typeof(FreshWaterStorageComponent), FreshWater },
         { typeof(SalineWaterStorageComponent), SalineWater },
+        { typeof(EntityComponent), Red },
     };
 
     public static Dictionary<int, Color32> LoadColors = new()

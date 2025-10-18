@@ -89,7 +89,6 @@ public class CardSlot : MonoBehaviour
     }
 
     #region 显示
-
     private void OnCardPickedUp(Card card)
     {
         if (Cards == null) return;
@@ -335,6 +334,10 @@ public class CardSlot : MonoBehaviour
                 slider.SetValue(coordinateComponent.coordinate.Position, GameManager.Instance.CurEnvironmentBag.PlaceData.maxCoord);
                 slider.tipController.SetTip($"当前坐标:  {coordinateComponent.coordinate.Position:0.0}\n距离麦麦:  {coordinateComponent.coordinate.DistanceTo(GameManager.Instance.Player.Coordinate):0.0}");
                 break;
+            case EntityComponent entityComponent:
+                slider.SetValue(entityComponent.health, entityComponent.maxHealth);
+                slider.tipController.SetTip($"生命值:  {entityComponent.health}/{entityComponent.maxHealth}", slider.fillColor);
+                break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
                 break;
@@ -439,7 +442,7 @@ public class CardSlot : MonoBehaviour
         // 显示计时器
         if (card.TryGetComponent<TimerComponent>(out var tm))
             DisplayContinuousValueComponent(tm, left);
-        else if (componentSliders.TryGetValue(typeof(TimerComponent), out var timer))
+        else if (componentSliders.TryGetValue(typeof(TimerComponent), out var timer)) // 因为计时器可能被移除，所以这里要检查一下，如果有就移除
         {
             componentSliders.Remove(typeof(TimerComponent));
             ObjectBufferPool.Instance.Restore(timer.gameObject);
@@ -450,6 +453,9 @@ public class CardSlot : MonoBehaviour
         // 显示坐标
         if (card.TryGetComponent<CoordinateComponent>(out var cc))
             DisplayContinuousValueComponent(cc, middle);
+        // 显示实体生命值
+        if (card.TryGetComponent<EntityComponent>(out var ec))
+            DisplayContinuousValueComponent(ec, middle);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;

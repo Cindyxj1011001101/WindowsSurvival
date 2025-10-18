@@ -136,8 +136,8 @@ public class DeveloperPanel : MonoBehaviour
             var card = CardFactory.CreateCard(cardId);
             if (bag != null && bag.CanAddCard(card, out _))
             {
-                bag.AddCard(card);
                 card.Init();
+                bag.AddCard(card);
                 card.RefreshSlot();
             }
         }

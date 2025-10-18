@@ -52,7 +52,6 @@ public class GameManager : MonoBehaviour
     }
 
     #region 初始化
-
     private void Start()
     {
         TechnologyManager.Instance.Init();
@@ -115,7 +114,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region AddCard
-
     /// <summary>
     /// 添加卡牌到指定背包
     /// </summary>
