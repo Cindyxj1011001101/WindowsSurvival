@@ -178,10 +178,10 @@ public abstract class Bag
         }
     }
 
+    #region 查询
     /// <summary>
     /// 查找卡牌
     /// </summary>
-    /// <param name="cardName"></param>
     /// <returns></returns>
     public Card FindCard(Func<SlotCards, bool> predicate)
     {
@@ -191,7 +191,6 @@ public abstract class Bag
 
         return slot.PeekCard();
     }
-
 
     /// <summary>
     /// 根据名称查找卡牌
@@ -211,6 +210,27 @@ public abstract class Bag
     public Card FindCardOfId(string cardId)
     {
         return FindCard(s => s.ContainsByCardId(cardId));
+    }
+
+    /// <summary>
+    /// 根据tag查找卡牌
+    /// </summary>
+    /// <param name="tag"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public List<Card> FindCardsOfTag(CardTag tag)
+    {
+        var result = new List<Card>();
+
+        foreach (var slot in Slots)
+        {
+            if (slot.IsEmpty) continue;
+
+            if (!slot.PeekCard().Tags.Contains(tag)) continue;
+
+            result.AddRange(slot.Cards);
+        }
+
+        return result;
     }
 
     /// <summary>
@@ -254,6 +274,7 @@ public abstract class Bag
             return false;
         });
     }
+    #endregion
 
     /// <summary>
     /// 移除指定类型的指定数量的卡牌
