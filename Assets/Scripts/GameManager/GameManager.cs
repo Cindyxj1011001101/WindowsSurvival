@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -213,6 +214,11 @@ public class GameManager : MonoBehaviour
                 AddCard(card, targetEnv);
             }
         }
+    }
+
+    public void AddCardsToTargetEnv(EnvironmentBag targetEnv, params Card[] cards)
+    {
+        AddCardsToTargetEnv(cards.ToList(), targetEnv);
     }
     #endregion
 
