@@ -376,6 +376,8 @@ public class InnerContentsComponent : CardComponent
         }
     }
 
+    public void AddCard(Card card) => bag.AddCard(card);
+
     public void PauseUpdating()
     {
         ForEachCard(c => c.PauseUpdating());

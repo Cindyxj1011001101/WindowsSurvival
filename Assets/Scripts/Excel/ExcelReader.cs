@@ -285,7 +285,7 @@ public static class ExcelReader
                         var endRowIndex = ParseInt(row[13].ToString());
                         foreach (var c in ReadInnerContents(table, startRowIndex, endRowIndex))
                         {
-                            inn.bag.AddCard(c);
+                            inn.AddCard(c);
                         }
                     }
                     droppedCards.Add(card);
