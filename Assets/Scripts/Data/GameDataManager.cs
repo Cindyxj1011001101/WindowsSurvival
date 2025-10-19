@@ -63,7 +63,7 @@ public class GameDataManager
         // 玩家数据
         playerData = JsonManager.LoadData<Player>(CurLoadName, "PlayerData");
         // 游戏事件数据
-        inGameEventData = JsonManager.LoadData<InGameEventData>(CurLoadName, "InGameEventData");
+        gameEventData = JsonManager.LoadData<GameEventData>(CurLoadName, "GameEventData");
     }
 
     public void SaveAllData()
@@ -95,7 +95,7 @@ public class GameDataManager
         // 玩家数据
         SavePlayerData();
         // 游戏事件数据
-        SaveInGameEventData();
+        SaveGameEventData();
 
         if (loadData == null)
         {
@@ -468,18 +468,20 @@ public class GameDataManager
     #endregion
 
     #region 游戏事件数据
-    private InGameEventData inGameEventData;
+    private GameEventData gameEventData;
 
-    public InGameEventData InGameEventData => inGameEventData;
+    public GameEventData GameEventData => gameEventData;
 
-    public void SaveInGameEventData()
+    public void SaveGameEventData()
     {
-        inGameEventData = new()
+        gameEventData = new()
         {
-            eventsOnCooldown = GameEventManager.Instance.EventsOnCooldown,
             trendValue = GameEventManager.Instance.TrendValue,
+            invasionConfig = GameEventManager.Instance.InvasionEventConfig,
+            eventsOnCooldown = GameEventManager.Instance.EventsOnCooldown,
+            ongoingEvents = GameEventManager.Instance.OngoingEvents
         };
-        JsonManager.SaveData(inGameEventData, CurLoadName, "InGameEventData");
+        JsonManager.SaveData(gameEventData, CurLoadName, "GameEventData");
     }
     #endregion
 }

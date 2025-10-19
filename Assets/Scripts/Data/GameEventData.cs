@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-public class InGameEventData
+public class GameEventData
 {
     public float trendValue = 0; // 趋势值
     public InvasionEventConfig invasionConfig = new(); // 入侵事件配置

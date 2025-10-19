@@ -48,7 +48,7 @@ public class GameEventManager
 
     private void LoadData()
     {
-        var data = GameDataManager.Instance.InGameEventData;
+        var data = GameDataManager.Instance.GameEventData;
         // 读取趋势值
         TrendValue = data.trendValue;
         // 读取冷却中的事件
