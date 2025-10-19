@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 出现裂缝
 /// </summary>
-public class CracksAppear: InGameEvent
+public class CracksAppear : GameEvent
 {
     public override bool CanTriggerThisEvent()
     {
@@ -14,7 +14,7 @@ public class CracksAppear: InGameEvent
             GameManager.Instance.CurEnvironmentBag.PlaceData.placeType == PlaceEnum.SpaceshipOuterHull;
     }
 
-    public override void TriggerThisEvent()
+    protected override void OnTrigger()
     {
         // 随机一个飞船内地点
         var envs = GameManager.Instance.EnvironmentBags.Values.Where(e => e.PlaceData.isInSpacecraft).ToArray();

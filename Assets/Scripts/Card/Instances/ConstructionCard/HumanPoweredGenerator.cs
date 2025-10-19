@@ -24,9 +24,9 @@ public class HumanPoweredGenerator : ConstructionCard
     {
         hint = string.Empty;
 
-        if (GameManager.Instance.ContainsGlobalEffect<PowerNetworkFailure>())
+        if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            hint = $"由于电网故障，{CardName}无法为其供电";
+            hint = $"由于行星磁暴，{CardName}无法为其供电";
             return false;
         }
 

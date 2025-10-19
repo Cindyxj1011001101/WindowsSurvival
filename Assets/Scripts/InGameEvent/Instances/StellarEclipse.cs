@@ -1,9 +1,9 @@
 /// <summary>
 /// ∫„–« ≥
 /// </summary>
-public class StellarEclipse : InGameEvent
+public class StellarEclipse : GameEvent
 {
-    public override void TriggerThisEvent()
+    protected override void OnTrigger()
     {
         
     }

@@ -1,9 +1,9 @@
 /// <summary>
 /// ÒÆ¶¯¼¤Àø
 /// </summary>
-public class MovementIncentive : InGameEvent
+public class MovementIncentive : GameEvent
 {
-    public override void TriggerThisEvent()
+    protected override void OnTrigger()
     {
         
     }

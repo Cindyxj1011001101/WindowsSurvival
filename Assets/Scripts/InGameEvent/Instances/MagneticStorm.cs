@@ -3,15 +3,13 @@ using UnityEngine;
 /// <summary>
 /// 行星磁暴
 /// </summary>
-public class MagneticStorm: InGameEvent
+public class MagneticStorm : GameEvent
 {
-    public override void TriggerThisEvent()
+    protected override void OnTrigger()
     {
         // 计算威胁事件强度
         var threatIntensity = CalculateThreatIntensity();
         // 计算持续事件
-        var duration = Mathf.CeilToInt((.75f + threatIntensity / 100) * Random.Range(190, 4501));
-        // 添加电网故障效果
-        GameManager.Instance.AddGlobalEffect(new PowerNetworkFailure(duration));
+        remainingTime = Mathf.CeilToInt((.75f + threatIntensity / 100) * Random.Range(190, 4501));
     }
 }

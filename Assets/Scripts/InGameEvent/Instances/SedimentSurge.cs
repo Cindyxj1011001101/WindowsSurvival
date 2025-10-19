@@ -1,9 +1,9 @@
 /// <summary>
 /// ÄàÉ³·­Ó¿
 /// </summary>
-public class SedimentSurge: InGameEvent
+public class SedimentSurge : GameEvent
 {
-    public override void TriggerThisEvent()
+    protected override void OnTrigger()
     {
         
     }

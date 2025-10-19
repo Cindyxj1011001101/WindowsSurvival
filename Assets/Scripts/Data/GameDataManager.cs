@@ -64,8 +64,6 @@ public class GameDataManager
         playerData = JsonManager.LoadData<Player>(CurLoadName, "PlayerData");
         // 游戏事件数据
         inGameEventData = JsonManager.LoadData<InGameEventData>(CurLoadName, "InGameEventData");
-        // 全局效果数据
-        globalEffects = JsonManager.LoadData<List<GlobalEffect>>(CurLoadName, "GlobalEffectsData");
     }
 
     public void SaveAllData()
@@ -98,8 +96,6 @@ public class GameDataManager
         SavePlayerData();
         // 游戏事件数据
         SaveInGameEventData();
-        // 全局效果数据
-        SaveGlobalEffectsData();
 
         if (loadData == null)
         {
@@ -480,21 +476,10 @@ public class GameDataManager
     {
         inGameEventData = new()
         {
-            eventsOnCooldown = InGameEventManager.Instance.EventsOnCooldown,
-            trendValue = InGameEventManager.Instance.TrendValue,
+            eventsOnCooldown = GameEventManager.Instance.EventsOnCooldown,
+            trendValue = GameEventManager.Instance.TrendValue,
         };
         JsonManager.SaveData(inGameEventData, CurLoadName, "InGameEventData");
-    }
-    #endregion
-
-    #region 全局效果数据
-    private List<GlobalEffect> globalEffects;
-
-    public List<GlobalEffect> GlobalEffects => globalEffects;
-
-    public void SaveGlobalEffectsData()
-    {
-        JsonManager.SaveData(globalEffects, CurLoadName, "GlobalEffectsData");
     }
     #endregion
 }

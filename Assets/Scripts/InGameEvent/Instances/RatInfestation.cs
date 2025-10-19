@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 鼠患
 /// </summary>
-public class RatInfestation: InGameEvent
+public class RatInfestation : GameEvent
 {
     private List<Card> foodCards = new();
 
@@ -14,7 +14,7 @@ public class RatInfestation: InGameEvent
         return !foodCards.IsNullOrEmpty();
     }
 
-    public override void TriggerThisEvent()
+    protected override void OnTrigger()
     {
         var destroyCount = Random.Range(2, 8); // 随机破坏2~7张食物卡牌
         destroyCount = Mathf.Min(destroyCount, foodCards.Count); // 不超过现有食物卡牌数量

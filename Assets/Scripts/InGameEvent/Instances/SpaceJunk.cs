@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 太空垃圾
 /// </summary>
-public class SpaceJunk: InGameEvent
+public class SpaceJunk : GameEvent
 {
     private List<PlaceEnum> candidatePlaces = new()
     {
@@ -25,7 +25,7 @@ public class SpaceJunk: InGameEvent
         new Drop(1, "炸虫串", 1)
         ) { disposable = true };
 
-    public override void TriggerThisEvent()
+    protected override void OnTrigger()
     {
         // 随机一个地点
         var placeType = candidatePlaces[Random.Range(0, candidatePlaces.Count)];

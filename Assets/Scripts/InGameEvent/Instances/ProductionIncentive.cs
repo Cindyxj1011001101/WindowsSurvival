@@ -1,9 +1,9 @@
 /// <summary>
 /// ÖÆ×÷¼¤Àø
 /// </summary>
-public class ProductionIncentive : InGameEvent
+public class ProductionIncentive : GameEvent
 {
-    public override void TriggerThisEvent()
+    protected override void OnTrigger()
     {
         
     }

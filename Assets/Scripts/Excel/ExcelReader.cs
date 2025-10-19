@@ -462,19 +462,19 @@ public static class ExcelReader
     #endregion
 
     #region 读取事件配置
-    public static List<InGameEvent> ReadInGameEventConfig(string filename)
+    public static List<GameEvent> ReadInGameEventConfig(string filename)
     {
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
         DataTable table = result.Tables[0]; // 配置在第一张表中
-        List<InGameEvent> eventList = new();
+        List<GameEvent> eventList = new();
         for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
         {
             DataRow row = table.Rows[i];
             if (string.IsNullOrEmpty(row[0].ToString())) continue; // 如果事件名称为空，跳过读取
-            InGameEvent e = InGameEvent.ParseDataRow(row);
+            GameEvent e = GameEvent.ParseDataRow(row);
             if (e == null) continue;
             eventList.Add(e);
         }

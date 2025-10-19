@@ -17,8 +17,6 @@ public class GameManager : MonoBehaviour
     public Player Player { get; private set; }
     public Dictionary<PlaceEnum, PlaceData> PlaceDataDict { get; private set; } = new();
 
-    public List<GlobalEffect> GlobalEffects { get; private set; } = new(); // 全局效果
-
     public bool IsCurrentEnvironment(Bag bag) => bag is EnvironmentBag env && env == CurEnvironmentBag;
 
 
@@ -40,16 +38,12 @@ public class GameManager : MonoBehaviour
         EquipmentBag = GameDataManager.Instance.EquipmentData;
         Player = GameDataManager.Instance.PlayerData;
 
-        // 全局效果
-        GlobalEffects = GameDataManager.Instance.GlobalEffects;
-
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
 
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
-        UpdateManager.Instance.GlobalEffectUpdate.RemoveListener(GlobalEffectUpdate);
     }
 
     #region 初始化
@@ -57,7 +51,7 @@ public class GameManager : MonoBehaviour
     {
         TechnologyManager.Instance.Init();
         CraftManager.Instance.Init();
-        InGameEventManager.Instance.Init();
+        GameEventManager.Instance.Init();
 
         lastLoadLevel = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
         PlayerBag.Init();
@@ -67,8 +61,6 @@ public class GameManager : MonoBehaviour
             bag.Init();
         }
         InitBehaviourExtraEffects();
-
-        UpdateManager.Instance.GlobalEffectUpdate.AddListener(GlobalEffectUpdate);
 
         ChangeEnv(GameDataManager.Instance.LastPlace);
         SoundManager.Instance.PlayCurEnvironmentMusic();
@@ -83,33 +75,6 @@ public class GameManager : MonoBehaviour
             MoveToWaterExtraEffects = data.moveToWaterExtraEffects;
             ExploreExtraEffects = data.exploreExtraEffects;
             ExploreInWaterExtraEffects = data.exploreInWaterExtraEffects;
-        }
-    }
-    #endregion
-
-    #region 全局效果
-    public void AddGlobalEffect(GlobalEffect newEffect)
-    {
-        GlobalEffects.Add(newEffect);
-        newEffect.OnBegin();
-    }
-
-    public bool ContainsGlobalEffect<T>() where T : GlobalEffect
-    {
-        return GlobalEffects.Find(g => g.GetType() == typeof(T)) != null;
-    }
-
-    private void GlobalEffectUpdate()
-    {
-        for (int i = GlobalEffects.Count - 1; i >= 0; i--)
-        {
-            var effect = GlobalEffects[i];
-            effect.OnUpdate();
-            if (effect.Duration <= 0)
-            {
-                effect.OnEnd();
-                GlobalEffects.RemoveAt(i);
-            }    
         }
     }
     #endregion

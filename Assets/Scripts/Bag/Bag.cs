@@ -213,27 +213,6 @@ public abstract class Bag
     }
 
     /// <summary>
-    /// 根据tag查找卡牌
-    /// </summary>
-    /// <param name="tag"></param>
-    /// <exception cref="NotImplementedException"></exception>
-    public List<Card> FindCardsOfTag(CardTag tag)
-    {
-        var result = new List<Card>();
-
-        foreach (var slot in Slots)
-        {
-            if (slot.IsEmpty) continue;
-
-            if (!slot.PeekCard().Tags.Contains(tag)) continue;
-
-            result.AddRange(slot.Cards);
-        }
-
-        return result;
-    }
-
-    /// <summary>
     /// 根据工具类型查找卡牌，参数之间是“或”的关系
     /// </summary>
     /// <param name="toolTypes"></param>
@@ -273,6 +252,32 @@ public abstract class Bag
 
             return false;
         });
+    }
+
+    public List<Card> FindCards(Func<Card, bool> predicate)
+    {
+        var result = new List<Card>();
+
+        foreach (var slot in Slots)
+        {
+            if (slot.IsEmpty) continue;
+
+            if (!predicate(slot.PeekCard())) continue;
+
+            result.AddRange(slot.Cards);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 根据tag查找卡牌
+    /// </summary>
+    /// <param name="tag"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public List<Card> FindCardsOfTag(CardTag tag)
+    {
+        return FindCards(c => c.Tags.Contains(tag));
     }
     #endregion
 

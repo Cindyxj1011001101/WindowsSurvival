@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class InGameEventManager
+/// <summary>
+/// 游戏事件管理器
+/// </summary>
+public class GameEventManager
 {
-    public static InGameEventManager Instance { get; } = new InGameEventManager();
+    public static GameEventManager Instance { get; } = new GameEventManager();
 
-    private List<InGameEvent> allEvents = new();
+    private List<GameEvent> eventTemplates = new();
+
+    public Dictionary<string, GameEvent> OngoingEvents { get; private set; } = new(); // 进行中的事件列表
 
     public Dictionary<string, float> EventsOnCooldown { get; private set; } = new(); // 冷却中的事件字典，键为事件名称，值为剩余冷却时间
 
@@ -22,7 +27,7 @@ public class InGameEventManager
 
     public InvasionEventConfig InvasionEventConfig { get; private set; }
 
-    private InGameEventManager() { }
+    private GameEventManager() { }
 
     public void Init()
     {
@@ -37,18 +42,19 @@ public class InGameEventManager
     #region 初始化
     private void RegisterAllEvents()
     {
-        allEvents.Clear();
-        allEvents = ExcelReader.ReadInGameEventConfig("InGameEventConfig");
+        eventTemplates.Clear();
+        eventTemplates = ExcelReader.ReadInGameEventConfig("InGameEventConfig");
     }
 
     private void LoadData()
     {
         var data = GameDataManager.Instance.InGameEventData;
-
         // 读取趋势值
         TrendValue = data.trendValue;
         // 读取冷却中的事件
         EventsOnCooldown = data.eventsOnCooldown;
+        // 读取持续中的事件
+        OngoingEvents = data.ongoingEvents;
         // 读取入侵事件配置
         InvasionEventConfig = data.invasionConfig;
     }
@@ -57,20 +63,41 @@ public class InGameEventManager
     private void Update()
     {
         UpdateEventCooldowns();
+        UpdateOngoingEvents();
         TryTriggerEvent();
     }
 
     private void UpdateEventCooldowns()
     {
         var keys = new List<string>(EventsOnCooldown.Keys);
-        foreach (var eventName in keys)
+        foreach (var eventTypeName in keys)
         {
-            EventsOnCooldown[eventName] -= TimeManager.SETTLEMENT_INTERVAL;
-            if (EventsOnCooldown[eventName] <= 0)
+            EventsOnCooldown[eventTypeName] -= TimeManager.SETTLEMENT_INTERVAL;
+            if (EventsOnCooldown[eventTypeName] <= 0)
             {
-                EventsOnCooldown.Remove(eventName);
+                EventsOnCooldown.Remove(eventTypeName);
             }
         }
+    }
+
+    private void UpdateOngoingEvents()
+    {
+        var keys = new List<string>(OngoingEvents.Keys);
+        foreach (var eventTypeName in keys)
+        {
+            var gameEvent = OngoingEvents[eventTypeName];
+            gameEvent.Update();
+            if (gameEvent.IsEventEnded())
+            {
+                OngoingEvents.Remove(eventTypeName);
+                gameEvent.CancelThisEvent();
+            }
+        }
+    }
+
+    public bool IsEventOngoing<T>() where T : GameEvent
+    {
+        return OngoingEvents.ContainsKey(typeof(T).Name);
     }
 
     /// <summary>
@@ -91,47 +118,54 @@ public class InGameEventManager
         var eventWeights = CalculateEventWeights(candidateEvents);
 
         // 根据权重随机选择事件
-        var selectedEvent = SelectEventByWeight(eventWeights);
+        var selectedEventTemplete = SelectEventByWeight(eventWeights);
+        // 深拷贝实例
+        var selectedEvent = JsonManager.DeepCopy(selectedEventTemplete);
 
         if (selectedEvent == null) return;
-
-        Debug.Log($"触发事件: {selectedEvent.eventName}");
-
-        // 更新该事件冷却时间
-        EventsOnCooldown.Add(selectedEvent.eventName, selectedEvent.TriggerIntervalMinutes);
 
         // 更新趋势值
         UpdateTrendValue(selectedEvent.threatLevel);
 
+        var eventTypeName = selectedEvent.GetType().Name;
+
+        // 从事件触发时开始计算冷却时间
+        EventsOnCooldown.Add(eventTypeName, selectedEvent.CoolDown);
+
         // 触发事件
         selectedEvent.TriggerThisEvent();
+
+        // 对于持续性事件，添加到持续事件列表
+        if (selectedEvent.remainingTime > 0)
+            OngoingEvents.Add(eventTypeName, selectedEvent);
     }
 
     /// <summary>
     /// 获取可触发的事件列表（检查每个事件的独立冷却时间）
     /// </summary>
-    private List<InGameEvent> GetCandidateEvents()
+    private List<GameEvent> GetCandidateEvents()
     {
-        return allEvents.Where(e => e.CanTriggerThisEvent() && IsEventReady(e)).ToList();
+        return eventTemplates.Where(e => e.CanTriggerThisEvent() && IsEventReady(e)).ToList();
     }
 
     /// <summary>
-    /// 检查事件是否已冷却完成
+    /// 检查事件是否不在持续并且冷却完成
     /// </summary>
-    private bool IsEventReady(InGameEvent gameEvent)
+    private bool IsEventReady(GameEvent gameEvent)
     {
-        return !EventsOnCooldown.ContainsKey(gameEvent.eventName);
+        var eventTypeName = gameEvent.GetType().Name;
+        return !EventsOnCooldown.ContainsKey(eventTypeName) && !OngoingEvents.ContainsKey(eventTypeName);
     }
 
     /// <summary>
     /// 计算所有候选事件的触发权重
     /// </summary>
-    private Dictionary<InGameEvent, float> CalculateEventWeights(List<InGameEvent> candidates)
+    private Dictionary<GameEvent, float> CalculateEventWeights(List<GameEvent> candidates)
     {
-        var weights = new Dictionary<InGameEvent, float>();
+        var weights = new Dictionary<GameEvent, float>();
 
         // 首先计算每个事件的分子部分
-        var numerators = new Dictionary<InGameEvent, float>();
+        var numerators = new Dictionary<GameEvent, float>();
         float denominator = 0f;
 
         foreach (var gameEvent in candidates)
@@ -156,7 +190,7 @@ public class InGameEventManager
     /// <summary>
     /// 根据权重随机选择事件
     /// </summary>
-    private InGameEvent SelectEventByWeight(Dictionary<InGameEvent, float> eventWeights)
+    private GameEvent SelectEventByWeight(Dictionary<GameEvent, float> eventWeights)
     {
         // 计算总权重
         float totalWeight = eventWeights.Values.Sum();

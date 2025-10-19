@@ -54,29 +54,29 @@ public class Refrigerator : ConstructionCard
     public override void Init()
     {
         base.Init();
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnMagneticStormBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnMagneticStormEnd);
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 
     protected override void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnMagneticStormBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnMagneticStormEnd);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 
-    private void OnPowerNetworkFailureBegin(Type type)
+    private void OnMagneticStormBegin(Type type)
     {
-        if (type != typeof(PowerNetworkFailure) || stateMachine.currentStateName == "未接电") return;
+        if (type != typeof(MagneticStorm) || stateMachine.currentStateName == "未接电") return;
 
         Event_TurnOff(out _);
-        ShowTip($"由于电网故障，{CardName}已断电并停止工作");
+        ShowTip($"由于行星磁暴，{CardName}已断电并停止工作");
     }
 
-    private void OnPowerNetworkFailureEnd(Type type)
+    private void OnMagneticStormEnd(Type type)
     {
-        if (type != typeof(PowerNetworkFailure)) return;
+        if (type != typeof(MagneticStorm)) return;
 
         RefreshSlot();
     }
@@ -124,9 +124,9 @@ public class Refrigerator : ConstructionCard
     private bool Judge_TurnOn(out string hint)
     {
         hint = string.Empty;
-        if (GameManager.Instance.ContainsGlobalEffect<PowerNetworkFailure>())
+        if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            hint = $"由于电网故障，无法接电";
+            hint = $"由于行星磁暴，无法接电";
             return false;
         }
 

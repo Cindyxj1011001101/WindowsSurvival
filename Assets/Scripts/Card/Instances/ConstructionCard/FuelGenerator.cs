@@ -45,36 +45,36 @@ public class FuelGenerator : ConstructionCard
     public override void Init()
     {
         base.Init();
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnMagneticStormBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnMagneticStormEnd);
     }
 
     protected override void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnPowerNetworkFailureBegin);
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnPowerNetworkFailureEnd);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnMagneticStormBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnMagneticStormEnd);
     }
 
-    private void OnPowerNetworkFailureBegin(Type type)
+    private void OnMagneticStormBegin(Type type)
     {
-        if (type != typeof(PowerNetworkFailure) || !fuelStorage.CanExtinguish(out _)) return;
+        if (type != typeof(MagneticStorm) || !fuelStorage.CanExtinguish(out _)) return;
 
         Extinguish(out _);
-        ShowTip($"由于电网故障，{CardName}已熄灭并停止工作");
+        ShowTip($"由于行星磁暴，{CardName}已熄灭并停止工作");
     }
 
-    private void OnPowerNetworkFailureEnd(Type type)
+    private void OnMagneticStormEnd(Type type)
     {
-        if (type != typeof(PowerNetworkFailure)) return;
+        if (type != typeof(MagneticStorm)) return;
 
         RefreshSlot();
     }
 
     private bool CanIgnite(out string s)
     {
-        if (GameManager.Instance.ContainsGlobalEffect<PowerNetworkFailure>())
+        if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            s = $"由于电网故障，{CardName}无法为其供电";
+            s = $"由于行星磁暴，{CardName}无法为其供电";
             return false;
         }
 

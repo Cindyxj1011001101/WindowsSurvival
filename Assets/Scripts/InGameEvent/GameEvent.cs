@@ -7,8 +7,9 @@ using UnityEngine;
 /// <summary>
 /// 游戏内事件基类
 /// </summary>
-public abstract class InGameEvent
+public abstract class GameEvent
 {
+    #region 读取
     private static Dictionary<string, Type> eventNameTypeDict = new()
     {
         { "入侵", typeof(Invasion) },
@@ -25,12 +26,34 @@ public abstract class InGameEvent
         { "移动激励", typeof(MovementIncentive) },
     };
 
+    public static GameEvent ParseDataRow(DataRow row)
+    {
+        var eventName = row[0].ToString();
+        if (string.IsNullOrEmpty(eventName)) return null; // 如果事件名称为空，跳过读取
+
+        if (!eventNameTypeDict.TryGetValue(eventName, out Type eventType))
+        {
+            Debug.LogError($"未知的事件名称: {eventName}");
+            return null;
+        }
+
+        GameEvent instance = (GameEvent)Activator.CreateInstance(eventType);
+        instance.eventName = eventName;
+        instance.threatLevel = ExcelReader.ParseInt(row[1].ToString());
+        instance.basicTriggerWeight = ExcelReader.ParseFloat(row[2].ToString());
+        instance.triggerInterval = ExcelReader.ParseFloat(row[4].ToString());
+
+        return instance;
+    }
+    #endregion
+
     public string eventName;         // 事件名称
     public int threatLevel;          // 威胁程度
     public float basicTriggerWeight; // 基础触发权重
     public float triggerInterval;    // 触发间隔(天)
+    public int remainingTime;        // 剩余持续时间(分钟)
 
-    [JsonIgnore] public int TriggerIntervalMinutes => Mathf.CeilToInt(triggerInterval * 24 * 60); // 触发间隔(分钟)
+    [JsonIgnore] public int CoolDown => Mathf.CeilToInt(triggerInterval * 24 * 60); // 触发间隔(分钟)
 
     /// <summary>
     /// 计算威胁事件强度
@@ -38,7 +61,7 @@ public abstract class InGameEvent
     /// </summary>
     protected float CalculateThreatIntensity()
     {
-        var config = InGameEventManager.Instance.InvasionEventConfig;
+        var config = GameEventManager.Instance.InvasionEventConfig;
         // 计算生存天数影响部分（受上限限制）
         float effectiveSurvivalDays = Mathf.Min(TimeManager.Instance.Day, config.maxSurvivalDayEffect);
         float survivalPart = effectiveSurvivalDays * config.threatCoefficient;
@@ -55,30 +78,33 @@ public abstract class InGameEvent
         return finalIntensity;
     }
 
-    public static InGameEvent ParseDataRow(DataRow row)
+    public virtual bool IsEventEnded() => remainingTime <= 0;
+
+    public virtual bool CanTriggerThisEvent() => true;
+
+    public void TriggerThisEvent()
     {
-        var eventName = row[0].ToString();
-        if (string.IsNullOrEmpty(eventName)) return null; // 如果事件名称为空，跳过读取
-
-        if (!eventNameTypeDict.TryGetValue(eventName, out Type eventType))
-        {
-            Debug.LogError($"未知的事件名称: {eventName}");
-            return null;
-        }
-
-        InGameEvent instance = (InGameEvent)Activator.CreateInstance(eventType);
-        instance.eventName = eventName;
-        instance.threatLevel = ExcelReader.ParseInt(row[1].ToString());
-        instance.basicTriggerWeight = ExcelReader.ParseFloat(row[2].ToString());
-        instance.triggerInterval = ExcelReader.ParseFloat(row[4].ToString());
-
-        return instance;
+        OnTrigger();
+        EventManager.Instance.TriggerEvent(EventType.OnGlobalEffectBegin, GetType());
+        Debug.Log($"触发事件：{GetType().Name}，持续时间：{remainingTime}分钟");
     }
 
-    public virtual bool CanTriggerThisEvent()
+    public void CancelThisEvent()
     {
-        return true;
+        OnEnd();
+        EventManager.Instance.TriggerEvent(EventType.OnGlobalEffectEnd, GetType());
+        Debug.Log($"事件结束：{GetType().Name}");
     }
 
-    public abstract void TriggerThisEvent();
+    public void Update()
+    {
+        remainingTime -= TimeManager.SETTLEMENT_INTERVAL;
+        OnUpdate();
+    }
+
+    protected virtual void OnTrigger() { }
+
+    protected virtual void OnUpdate() { }
+
+    protected virtual void OnEnd() { }
 }

@@ -14,11 +14,11 @@ public class InvasionEventConfig
 /// <summary>
 /// »Î«÷
 /// </summary>
-public class Invasion : InGameEvent
+public class Invasion : GameEvent
 {
     private List<InvasionComposition> allCompositions = new();
 
-    public override void TriggerThisEvent()
+    protected override void OnTrigger()
     {
         RegisterAllCompositions();
         GenerateInvasion(CalculateThreatIntensity());
