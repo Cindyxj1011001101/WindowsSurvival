@@ -70,7 +70,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         if (type != typeof(MagneticStorm)) return;
 
         Event_TurnOff(out _);
-        ShowTip($"由于行星磁暴，{CardName}已关闭并停止工作");
+        ShowTip($"受行星磁暴影响，{CardName}已关闭并停止工作");
     }
 
     private void OnMagneticStormEnd(Type type)
@@ -129,7 +129,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         hint = string.Empty;
         if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            hint = $"由于行星磁暴，{CardName}缺少电力供应，无法开启";
+            hint = $"受行星磁暴影响，{CardName}缺少电力供应，无法开启";
             return false;
         }
         return stateMachine.currentStateName == "已关闭";

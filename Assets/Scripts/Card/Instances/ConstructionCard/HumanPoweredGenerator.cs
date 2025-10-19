@@ -26,7 +26,7 @@ public class HumanPoweredGenerator : ConstructionCard
 
         if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            hint = $"由于行星磁暴，{CardName}无法为其供电";
+            hint = $"受行星磁暴影响，{CardName}无法为其供电";
             return false;
         }
 

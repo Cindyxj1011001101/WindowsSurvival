@@ -58,7 +58,7 @@ public class ElectricDrainageMachine : ConstructionCard
         if (type != typeof(MagneticStorm) || stateMachine.currentStateName == "已关闭") return;
 
         Event_TurnOff(out _);
-        ShowTip($"由于行星磁暴，{CardName}已断电并停止工作");
+        ShowTip($"受行星磁暴影响，{CardName}已断电并停止工作");
     }
 
     private void OnMagneticStormEnd(Type type)
@@ -105,7 +105,7 @@ public class ElectricDrainageMachine : ConstructionCard
         hint = string.Empty;
         if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            hint = $"由于行星磁暴，无法接电";
+            hint = $"受行星磁暴影响，无法接电";
             return false;
         }
 

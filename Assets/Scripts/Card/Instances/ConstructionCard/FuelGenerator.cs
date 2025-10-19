@@ -60,7 +60,7 @@ public class FuelGenerator : ConstructionCard
         if (type != typeof(MagneticStorm) || !fuelStorage.CanExtinguish(out _)) return;
 
         Extinguish(out _);
-        ShowTip($"由于行星磁暴，{CardName}已熄灭并停止工作");
+        ShowTip($"受行星磁暴影响，{CardName}已熄灭并停止工作");
     }
 
     private void OnMagneticStormEnd(Type type)
@@ -74,7 +74,7 @@ public class FuelGenerator : ConstructionCard
     {
         if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            s = $"由于行星磁暴，{CardName}无法为其供电";
+            s = $"受行星磁暴影响，{CardName}无法为其供电";
             return false;
         }
 
