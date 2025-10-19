@@ -25,7 +25,7 @@ public class SpaceJunk : GameEvent
         new Drop(1, "炸虫串", 1)
         ) { disposable = true };
 
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         // 随机一个地点
         var placeType = candidatePlaces[Random.Range(0, candidatePlaces.Count)];

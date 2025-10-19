@@ -3,7 +3,7 @@
 /// </summary>
 public class MovementIncentive : GameEvent
 {
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         
     }

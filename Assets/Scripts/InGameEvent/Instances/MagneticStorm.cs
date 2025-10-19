@@ -5,7 +5,7 @@ using UnityEngine;
 /// </summary>
 public class MagneticStorm : GameEvent
 {
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         // 计算威胁事件强度
         var threatIntensity = CalculateThreatIntensity();

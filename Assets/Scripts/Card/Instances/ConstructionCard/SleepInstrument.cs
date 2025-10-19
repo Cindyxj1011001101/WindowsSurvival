@@ -46,8 +46,8 @@ public class SleepInstrument : ConstructionCard
         base.Init();
         EventManager.Instance.AddListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.AddListener(EventType.StopSleeping, OnStopSleeping);
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnMagneticStormBegin);
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnMagneticStormEnd);
+        EventManager.Instance.AddListener<Type>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGameEventEnd, OnMagneticStormEnd);
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 
@@ -55,8 +55,8 @@ public class SleepInstrument : ConstructionCard
     {
         EventManager.Instance.RemoveListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.RemoveListener(EventType.StopSleeping, OnStopSleeping);
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnMagneticStormBegin);
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnMagneticStormEnd);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGameEventEnd, OnMagneticStormEnd);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 

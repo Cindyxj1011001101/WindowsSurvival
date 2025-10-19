@@ -11,7 +11,7 @@ public class FlashOfInspiration : GameEvent
         return san.CurValue / san.MaxValue >= SAN_THRESHOLD;
     }
 
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         // 立刻完成当前科技
         if (TechnologyManager.Instance.CurStudiedTechNode != null)

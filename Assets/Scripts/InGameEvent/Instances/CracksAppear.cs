@@ -14,7 +14,7 @@ public class CracksAppear : GameEvent
             GameManager.Instance.CurEnvironmentBag.PlaceData.placeType == PlaceEnum.SpaceshipOuterHull;
     }
 
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         // 随机一个飞船内地点
         var envs = GameManager.Instance.EnvironmentBags.Values.Where(e => e.PlaceData.isInSpacecraft).ToArray();

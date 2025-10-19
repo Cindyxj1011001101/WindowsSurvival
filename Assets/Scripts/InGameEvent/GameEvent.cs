@@ -82,29 +82,9 @@ public abstract class GameEvent
 
     public virtual bool CanTriggerThisEvent() => true;
 
-    public void TriggerThisEvent()
-    {
-        OnTrigger();
-        EventManager.Instance.TriggerEvent(EventType.OnGlobalEffectBegin, GetType());
-        Debug.Log($"触发事件：{GetType().Name}，持续时间：{remainingTime}分钟");
-    }
+    public virtual void OnTrigger() { }
 
-    public void CancelThisEvent()
-    {
-        OnEnd();
-        EventManager.Instance.TriggerEvent(EventType.OnGlobalEffectEnd, GetType());
-        Debug.Log($"事件结束：{GetType().Name}");
-    }
+    public virtual void OnUpdate() { remainingTime -= TimeManager.SETTLEMENT_INTERVAL; }
 
-    public void Update()
-    {
-        remainingTime -= TimeManager.SETTLEMENT_INTERVAL;
-        OnUpdate();
-    }
-
-    protected virtual void OnTrigger() { }
-
-    protected virtual void OnUpdate() { }
-
-    protected virtual void OnEnd() { }
+    public virtual void OnEnd() { }
 }

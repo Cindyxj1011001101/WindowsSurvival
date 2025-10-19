@@ -18,7 +18,7 @@ public class Invasion : GameEvent
 {
     private List<InvasionComposition> allCompositions = new();
 
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         RegisterAllCompositions();
         GenerateInvasion(CalculateThreatIntensity());

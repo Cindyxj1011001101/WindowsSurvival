@@ -86,18 +86,20 @@ public class GameEventManager
         foreach (var eventTypeName in keys)
         {
             var gameEvent = OngoingEvents[eventTypeName];
-            gameEvent.Update();
+            gameEvent.OnUpdate();
             if (gameEvent.IsEventEnded())
             {
-                OngoingEvents.Remove(eventTypeName);
-                gameEvent.CancelThisEvent();
+                CancelGameEvent(gameEvent);
             }
         }
     }
 
-    public bool IsEventOngoing<T>() where T : GameEvent
+    private void CancelGameEvent(GameEvent gameEvent)
     {
-        return OngoingEvents.ContainsKey(typeof(T).Name);
+        OngoingEvents.Remove(gameEvent.GetType().Name);
+        gameEvent.OnEnd();
+        EventManager.Instance.TriggerEvent(EventType.OnGameEventEnd, gameEvent.GetType());
+        Debug.Log($"事件结束：{gameEvent.eventName}");
     }
 
     /// <summary>
@@ -124,20 +126,28 @@ public class GameEventManager
 
         if (selectedEvent == null) return;
 
-        // 更新趋势值
-        UpdateTrendValue(selectedEvent.threatLevel);
+        TriggerGameEvent(selectedEvent);
+    }
 
-        var eventTypeName = selectedEvent.GetType().Name;
+    private void TriggerGameEvent(GameEvent gameEvent)
+    {
+        var eventTypeName = gameEvent.GetType().Name;
+
+        // 更新趋势值
+        UpdateTrendValue(gameEvent.threatLevel);
 
         // 从事件触发时开始计算冷却时间
-        EventsOnCooldown.Add(eventTypeName, selectedEvent.CoolDown);
+        EventsOnCooldown.Add(eventTypeName, gameEvent.CoolDown);
 
-        // 触发事件
-        selectedEvent.TriggerThisEvent();
+        // 事件触发逻辑
+        gameEvent.OnTrigger();
 
         // 对于持续性事件，添加到持续事件列表
-        if (selectedEvent.remainingTime > 0)
-            OngoingEvents.Add(eventTypeName, selectedEvent);
+        if (gameEvent.remainingTime > 0)
+            OngoingEvents.Add(eventTypeName, gameEvent);
+
+        EventManager.Instance.TriggerEvent(EventType.OnGameEventTrigger, gameEvent.GetType());
+        Debug.Log($"触发事件：{gameEvent.eventName}，持续时间：{gameEvent.remainingTime}分钟");
     }
 
     /// <summary>
@@ -146,6 +156,11 @@ public class GameEventManager
     private List<GameEvent> GetCandidateEvents()
     {
         return eventTemplates.Where(e => e.CanTriggerThisEvent() && IsEventReady(e)).ToList();
+    }
+
+    public bool IsEventOngoing<T>() where T : GameEvent
+    {
+        return OngoingEvents.ContainsKey(typeof(T).Name);
     }
 
     /// <summary>

@@ -13,7 +13,7 @@ public class Vomit : GameEvent
         return san.CurValue / san.MaxValue <= SAN_THRESHOLD;
     }
 
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         var thirstChange = -Random.Range(10, 51);
         var fullnessChange = -Random.Range(10, 41);

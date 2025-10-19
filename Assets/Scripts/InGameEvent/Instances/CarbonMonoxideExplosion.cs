@@ -18,7 +18,7 @@ public class CarbonMonoxideExplosion : GameEvent
         return coLevel >= CO_LEVEL_THRESHOLD && !fireSources.IsNullOrEmpty(); // 当一氧化碳浓度高且有燃烧源时，事件可以触发
     }
 
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         // 减少70氧气
 

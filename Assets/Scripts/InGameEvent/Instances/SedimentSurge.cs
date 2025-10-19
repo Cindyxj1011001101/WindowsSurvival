@@ -3,7 +3,7 @@
 /// </summary>
 public class SedimentSurge : GameEvent
 {
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         
     }

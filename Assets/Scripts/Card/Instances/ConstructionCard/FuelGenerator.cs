@@ -45,14 +45,14 @@ public class FuelGenerator : ConstructionCard
     public override void Init()
     {
         base.Init();
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectBegin, OnMagneticStormBegin);
-        EventManager.Instance.AddListener<Type>(EventType.OnGlobalEffectEnd, OnMagneticStormEnd);
+        EventManager.Instance.AddListener<Type>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGameEventEnd, OnMagneticStormEnd);
     }
 
     protected override void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectBegin, OnMagneticStormBegin);
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGlobalEffectEnd, OnMagneticStormEnd);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGameEventEnd, OnMagneticStormEnd);
     }
 
     private void OnMagneticStormBegin(Type type)

@@ -3,7 +3,7 @@
 /// </summary>
 public class ProductionIncentive : GameEvent
 {
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         
     }

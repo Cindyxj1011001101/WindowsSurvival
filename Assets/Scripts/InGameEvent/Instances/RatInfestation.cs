@@ -14,7 +14,7 @@ public class RatInfestation : GameEvent
         return !foodCards.IsNullOrEmpty();
     }
 
-    protected override void OnTrigger()
+    public override void OnTrigger()
     {
         var destroyCount = Random.Range(2, 8); // 随机破坏2~7张食物卡牌
         destroyCount = Mathf.Min(destroyCount, foodCards.Count); // 不超过现有食物卡牌数量
