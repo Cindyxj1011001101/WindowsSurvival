@@ -3,7 +3,7 @@
 /// </summary>
 public class SeaGrassBed : Card
 {
-    private RandomDropList dropListHand = new(
+    private DropList dropListHand = new(
         new Drop(4, ("海麻线", 2)),
         new Drop(12, ("海麻线", 1)),
         new Drop(3, ("海爬虫", 1)),
@@ -16,7 +16,7 @@ public class SeaGrassBed : Card
         })
         );
 
-    private RandomDropList dropListKnife = new(
+    private DropList dropListKnife = new(
         new Drop(10, ("海麻线", 2)),
         new Drop(5, ("海麻线", 1)),
         new Drop(3, ("海爬虫", 1))
@@ -74,7 +74,7 @@ public class SeaGrassBed : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            tip = "用刀采集";
+            tip = Events[1].name;
             return true;
         }
         return false;

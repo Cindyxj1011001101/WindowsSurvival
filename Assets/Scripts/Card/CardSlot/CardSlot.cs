@@ -89,7 +89,6 @@ public class CardSlot : MonoBehaviour
     }
 
     #region 显示
-
     private void OnCardPickedUp(Card card)
     {
         if (Cards == null) return;
@@ -180,6 +179,10 @@ public class CardSlot : MonoBehaviour
         (iconImage.transform as RectTransform).anchoredPosition = offset;
         // 设置原始大小
         iconImage.SetNativeSize();
+
+        // 设置组件布局的中心点
+        var posY = isBigIcon ? 57 : 65;
+        middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, posY);
     }
 
     private void DisplayStackNum(int stackNum, int maxStackNum, bool displayStack)
@@ -224,12 +227,13 @@ public class CardSlot : MonoBehaviour
         if (!componentSliders.TryGetValue(component.GetType(), out UIStateSlider slider))
         {
             if (component is TemperatureComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TemperatureComponent", parent).GetComponent<UIStateSlider>();
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(TemperatureComponent), parent).GetComponent<UIStateSlider>();
             else if (component is TimerComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", "TimerComponent", parent).GetComponent<UIStateSlider>();
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(TimerComponent), parent).GetComponent<UIStateSlider>();
+            else if (component is CoordinateComponent)
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(CoordinateComponent), parent).GetComponent<UIStateSlider>();
             else
                 slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent).GetComponent<UIStateSlider>();
-
 
             slider.transform.SetAsLastSibling();
 
@@ -245,23 +249,23 @@ public class CardSlot : MonoBehaviour
         switch (component)
         {
             case DurabilityComponent durabilityComponent:
-                slider.SetValue(durabilityComponent.durability, durabilityComponent.maxDurability);
+                slider.SetValue(durabilityComponent.value, durabilityComponent.maxValue);
                 slider.tipController.SetTip($"耐久度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case FreshnessComponent freshnessComponent:
-                slider.SetValue(freshnessComponent.freshness, freshnessComponent.maxFreshness);
+                slider.SetValue(freshnessComponent.value, freshnessComponent.maxValue);
                 slider.tipController.SetTip($"新鲜度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case GrowthComponent growthComponent:
-                slider.SetValue(growthComponent.growth, growthComponent.maxGrowth);
+                slider.SetValue(growthComponent.value, growthComponent.maxValue);
                 slider.tipController.SetTip($"生长度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case PlantGrowthComponent plantGrowthComponent:
-                slider.SetValue(plantGrowthComponent.growth, plantGrowthComponent.maxGrowth);
+                slider.SetValue(plantGrowthComponent.value, plantGrowthComponent.maxValue);
                 slider.tipController.SetTip($"生长度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case ProgressComponent progressComponent:
-                slider.SetValue(progressComponent.progress, progressComponent.maxProgress);
+                slider.SetValue(progressComponent.value, progressComponent.maxValue);
                 slider.tipController.SetTip($"产物进度:  {slider.value * 100:0.0}%", slider.fillColor);
                 break;
             case FuelStorageComponent fuelStorageComponent:
@@ -273,9 +277,9 @@ public class CardSlot : MonoBehaviour
                 fireIcon.color = fuelStorageComponent.isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
 
                 // 显示燃料消耗
-                tip += $"\n自然消耗:  -{fuelStorageComponent.basicFuelComsume}/15min";
+                tip += $"\n自然消耗:  -{fuelStorageComponent.basicFuelConsumption}/15min";
                 if (StateManager.Instance.WaterLevel.CurValue > 0)
-                    tip += $"\n地面积水:  -{fuelStorageComponent.extreFuelComsumeWhenWaterLevelHigh}/15min";
+                    tip += $"\n地面积水:  -{fuelStorageComponent.extraFuelConsumptionWhenWaterLevelHigh}/15min";
 
                 // TODO: 冰层季额外消耗
                 slider.tipController.SetTip(tip, slider.fillColor);
@@ -325,6 +329,14 @@ public class CardSlot : MonoBehaviour
                     leftTime += $"{minute}min";
 
                 slider.tipController.SetTip($"距 {timerComponent.tipText} 剩余:  {leftTime}", slider.fillColor);
+                break;
+            case CoordinateComponent coordinateComponent:
+                slider.SetValue(coordinateComponent.coordinate.Position, GameManager.Instance.CurEnvironmentBag.PlaceData.maxCoord);
+                slider.tipController.SetTip($"当前坐标:  {coordinateComponent.coordinate.Position:0.0}\n距离麦麦:  {coordinateComponent.coordinate.DistanceTo(GameManager.Instance.Player.Coordinate):0.0}");
+                break;
+            case EntityComponent entityComponent:
+                slider.SetValue(entityComponent.health, entityComponent.maxHealth);
+                slider.tipController.SetTip($"生命值:  {entityComponent.health}/{entityComponent.maxHealth}", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");
@@ -430,7 +442,7 @@ public class CardSlot : MonoBehaviour
         // 显示计时器
         if (card.TryGetComponent<TimerComponent>(out var tm))
             DisplayContinuousValueComponent(tm, left);
-        else if (componentSliders.TryGetValue(typeof(TimerComponent), out var timer))
+        else if (componentSliders.TryGetValue(typeof(TimerComponent), out var timer)) // 因为计时器可能被移除，所以这里要检查一下，如果有就移除
         {
             componentSliders.Remove(typeof(TimerComponent));
             ObjectBufferPool.Instance.Restore(timer.gameObject);
@@ -438,6 +450,12 @@ public class CardSlot : MonoBehaviour
         // 显示植物生长度
         if (card.TryGetComponent<PlantGrowthComponent>(out var pg))
             DisplayContinuousValueComponent(pg, middle);
+        // 显示坐标
+        if (card.TryGetComponent<CoordinateComponent>(out var cc))
+            DisplayContinuousValueComponent(cc, middle);
+        // 显示实体生命值
+        if (card.TryGetComponent<EntityComponent>(out var ec))
+            DisplayContinuousValueComponent(ec, middle);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;

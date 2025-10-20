@@ -3,7 +3,7 @@
 /// </summary>
 public class WhiteBlastMineStack : Card
 {
-    private RandomDropList dropList = new(
+    private DropList dropList = new(
        new Drop(4, ("白爆矿", 2)),
        new Drop(8, ("白爆矿", 1)),
        new Drop(4, ("玻璃沙", 1))
@@ -51,7 +51,7 @@ public class WhiteBlastMineStack : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            tip = "用铲子凿";
+            tip = Events[0].name;
             return true;
         }
         return false;

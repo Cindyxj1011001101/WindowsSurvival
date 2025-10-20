@@ -240,12 +240,9 @@ public class StartSceneManager : MonoBehaviour
     #endregion
     
     #region 创建新存档
-
     //创建新存档(从初始存档位置复制)
     void CreateNewLoad(int Index, bool skipGuide)
     {
-        //源路径
-        string sourcePath = Path.Combine(Application.streamingAssetsPath, "GameData0");
         //目标路径
         string targetFolder = Application.persistentDataPath + "/GameData" + Index + "/";
         // 如果目标文件夹不存在，先创建
@@ -253,13 +250,7 @@ public class StartSceneManager : MonoBehaviour
         {
             Directory.CreateDirectory(targetFolder);
         }
-        foreach (string file in Directory.GetFiles(sourcePath, "*.json"))
-        {
-            File.Copy(file, Path.Combine(targetFolder, Path.GetFileName(file)), true);
-        }
-
         GameDataManager.Instance.CreateNewLoad(Index, skipGuide);
     }
-
     #endregion
 }

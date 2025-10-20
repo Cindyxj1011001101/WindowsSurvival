@@ -9,17 +9,11 @@ public abstract class Bag
     [JsonProperty] private List<SlotCards> slots = new();
 
     [JsonIgnore] public List<SlotCards> Slots => slots;
-
     [JsonIgnore] public int SlotCount => Slots.Count;
-
     [JsonIgnore] public int EmptySlotCount => Slots.Count(s => s.IsEmpty);
-
     [JsonIgnore] public bool IsFull => EmptySlotCount == 0; // 背包是否已满
-
     [JsonIgnore] public bool IsEmpty => EmptySlotCount == SlotCount; // 背包是否为空
-
     [JsonIgnore] public SlotCards this[int index] => Slots[index];
-
     [JsonIgnore] public BagWindow Window {  get; protected set; }
 
     public void SetBagWindow(BagWindow window)
@@ -51,12 +45,19 @@ public abstract class Bag
     /// <param name="amount"></param>
     public void AddSlot(int amount = 1)
     {
+        var slotCount = Slots.Count;
         for (int i = 0; i < amount; i++)
         {
             var newSlot = new SlotCards();
             newSlot.SetBag(this);
             Slots.Add(newSlot);
-            if (Window != null) Window.AddSlot().Init(newSlot);
+
+            if (Window == null) continue;
+
+            if (i + slotCount < Window.Slots.Count)
+                Window.Slots[i + slotCount].Init(newSlot);
+            else
+                Window.AddSlot().Init(newSlot);
         }
     }
 
@@ -177,10 +178,10 @@ public abstract class Bag
         }
     }
 
+    #region 查询
     /// <summary>
     /// 查找卡牌
     /// </summary>
-    /// <param name="cardName"></param>
     /// <returns></returns>
     public Card FindCard(Func<SlotCards, bool> predicate)
     {
@@ -190,7 +191,6 @@ public abstract class Bag
 
         return slot.PeekCard();
     }
-
 
     /// <summary>
     /// 根据名称查找卡牌
@@ -253,6 +253,33 @@ public abstract class Bag
             return false;
         });
     }
+
+    public List<Card> FindCards(Func<Card, bool> predicate)
+    {
+        var result = new List<Card>();
+
+        foreach (var slot in Slots)
+        {
+            if (slot.IsEmpty) continue;
+
+            if (!predicate(slot.PeekCard())) continue;
+
+            result.AddRange(slot.Cards);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 根据tag查找卡牌
+    /// </summary>
+    /// <param name="tag"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public List<Card> FindCardsOfTag(CardTag tag)
+    {
+        return FindCards(c => c.Tags.Contains(tag));
+    }
+    #endregion
 
     /// <summary>
     /// 移除指定类型的指定数量的卡牌

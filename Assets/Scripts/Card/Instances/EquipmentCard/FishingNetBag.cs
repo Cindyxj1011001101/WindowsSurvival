@@ -1,4 +1,6 @@
-
+/// <summary>
+/// 渔获袋
+/// </summary>
 public class FishingNetBag : EquipmentCard
 {
     private InnerContentsComponent innerContents;
@@ -7,9 +9,9 @@ public class FishingNetBag : EquipmentCard
         Events.Add(new CardEvent("切割", "切割渔获袋", Event_Cut, Judge_Cut));
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
         innerContents.weightLossRate = 0.6f;
     }
 
@@ -57,7 +59,7 @@ public class FishingNetBag : EquipmentCard
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut) && innerContents.bag.IsEmpty)
         {
             // 如果是切割工具，并且渔获袋是空的，可以快速交互
-            tip = "切割";
+            tip = Events[0].name;
             return true;
         }
         return innerContents.CanQuickInteract(card, out tip);

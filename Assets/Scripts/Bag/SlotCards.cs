@@ -25,7 +25,7 @@ public class SlotCards : IComparable<SlotCards>
         foreach (var card in Cards)
         {
             card.SetSlotCards(this);
-            card.StartUpdating();
+            card.Init();
         }
     }
 

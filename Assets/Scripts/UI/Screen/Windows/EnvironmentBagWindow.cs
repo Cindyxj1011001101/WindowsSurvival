@@ -2,6 +2,7 @@ using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public enum PressureLevel
@@ -33,6 +34,7 @@ public class EnvironmentBagWindow : BagWindow
     [SerializeField] private HoverableButton executeMoveButton;
     [SerializeField] private Text targetPosition;
     [SerializeField] private Text currentPosition;
+    [SerializeField] private Text deltaPosition;
     [SerializeField] private Image fillBetween;
 
     private const float MoveDistResolution = .5f; // 移动距离分辨率
@@ -43,6 +45,7 @@ public class EnvironmentBagWindow : BagWindow
     private EnvironmentBag CurEnv => GameManager.Instance.CurEnvironmentBag;
     private Player Player => GameManager.Instance.Player;
     private float TargetPosition => targetCoordSlider.value * MoveDistResolution;
+    private float DeltaPosition => TargetPosition - Player.Coordinate.Position;
 
     protected override void Awake()
     {
@@ -80,16 +83,17 @@ public class EnvironmentBagWindow : BagWindow
         });
 
         // 当前坐标显示
-        currentCoordSlider.onValueChanged.AddListener((v) =>
+        currentCoordSlider.onValueChanged.AddListener((_) =>
         {
-            currentPosition.text = (v * MoveDistResolution).ToString("0.0");
-            FillBetween();    
+            currentPosition.text = Player.Coordinate.Position.ToString("0.0");
+            FillBetween();
         });
 
         // 选择距离
-        targetCoordSlider.onValueChanged.AddListener((v) =>
+        targetCoordSlider.onValueChanged.AddListener((_) =>
         {
-            targetPosition.text = (v * MoveDistResolution).ToString("0.0");
+            targetPosition.text = TargetPosition.ToString("0.0");
+            deltaPosition.text = DeltaPosition.ToString("0.0");
             FillBetween();
         });
         moveLeftButton.onClick.AddListener(() =>
@@ -111,8 +115,6 @@ public class EnvironmentBagWindow : BagWindow
                 continuousValueStates.Add((EnvironmentStateEnum)Enum.Parse(typeof(EnvironmentStateEnum), c.name), s);
         }
 
-        // 注册探索度变化事件
-        EventManager.Instance.AddListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         // 注册地点改变事件
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
         // 注册环境状态变化事件
@@ -125,8 +127,6 @@ public class EnvironmentBagWindow : BagWindow
 
     private void OnDestroy()
     {
-        // 移除事件
-        EventManager.Instance.RemoveListener<(float, bool)>(EventType.ChangeDiscoveryDegree, DisplayDiscoveryDegree);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
@@ -140,7 +140,7 @@ public class EnvironmentBagWindow : BagWindow
     {
         if (state != PlayerStateEnum.Load) return;
 
-        DisplayDiscoveryDegree((CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted));
+        DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
         executeMoveButton.Interactable = GameManager.Instance.CanMoveExplore();
     }
 
@@ -153,16 +153,15 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void Explore()
     {
-        var seq = envCardTransform.PunchAndBounce(() =>
+        var tween = envCardTransform.PunchAndBounce(() =>
         {
             GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
+            DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
             GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
-            // 提示
             exploreButton.transform.ShowTip(tip, 1.4f);
         });
 
-        // 等待抽牌动画完成
-        MouseManager.Instance.Wait(seq.Duration());
+        MouseManager.Instance.Wait(tween.Duration());
     }
 
     public override void DisplayBag(Bag bag)
@@ -209,7 +208,7 @@ public class EnvironmentBagWindow : BagWindow
         placeNameText.text = $"{env.PlaceData.placeName}";
 
         // 探索事件
-        DisplayDiscoveryDegree((env.DiscoveryDegree, env.ExploreCompleted));
+        DisplayDiscoveryDegree(env.DiscoveryDegree, env.ExploreCompleted);
 
         // 显示图片
         environmentImage.sprite = env.PlaceData.placeImage;
@@ -246,13 +245,13 @@ public class EnvironmentBagWindow : BagWindow
         }
     }
 
-    private void DisplayDiscoveryDegree((float degree, bool completed) args)
+    private void DisplayDiscoveryDegree(float degree, bool completed)
     {
         // 显示探索度
-        discoveryDegreeSlider.SetValue(args.degree, 1);
+        discoveryDegreeSlider.SetValue(degree, 1);
 
         var text = exploreButton.GetComponentInChildren<Text>();
-        if (args.completed)
+        if (completed)
         {
             exploreButton.normalImage.gameObject.SetActive(false);
             exploreButton.Interactable = false;
@@ -262,7 +261,7 @@ public class EnvironmentBagWindow : BagWindow
             // 不再显示探索提示
             exploreTipController.enabled = false;
         }
-        else if (args.degree == 1)
+        else if (degree == 1)
         {
             // 深入探索
             exploreButton.normalImage.gameObject.SetActive(true);
@@ -299,7 +298,7 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void FillBetween()
     {
-        fillBetween.transform.position = (currentCoordSlider.handleRect.position + targetCoordSlider.handleRect.position) / 2;
+        fillBetween.transform.position = new((currentCoordSlider.handleRect.position.x + targetCoordSlider.handleRect.position.x) / 2, fillBetween.transform.position.y);
         fillBetween.rectTransform.sizeDelta = new(Mathf.Abs(currentCoordSlider.handleRect.position.x - targetCoordSlider.handleRect.position.x), fillBetween.rectTransform.sizeDelta.y);
     }
 
@@ -311,6 +310,7 @@ public class EnvironmentBagWindow : BagWindow
         currentCoordSlider.value = targetCoordSlider.value = Player.Coordinate.Position / MoveDistResolution;
 
         currentPosition.text = targetPosition.text = Player.Coordinate.Position.ToString("0.0");
+        deltaPosition.text = "0.0";
         FillBetween();
     }
 

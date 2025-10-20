@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 人力发电机
 /// </summary>
@@ -9,35 +7,29 @@ public class HumanPoweredGenerator : ConstructionCard
     {
         Events = new()
         {
-            new CardEvent("人力发电", "踩轮子发电", Event_Generate, Judge_Generate, () => 60,
-            () => new() { { PlayerStateEnum.Thirst, -5 }, { PlayerStateEnum.Sobriety, -6 } },
-            () => new Dictionary < EnvironmentStateEnum, float >() { { EnvironmentStateEnum.Electricity, 10 } })
+            new CardEvent("人力发电", "踩轮子发电", (out string s) => EasyEvent(out s, destroyThis: false), Judge_Generate, () => 60,
+            () => new()
+            {
+                { PlayerStateEnum.Thirst, -5 },
+                { PlayerStateEnum.Sobriety, -6 }
+            },
+            () => new()
+            {
+                { EnvironmentStateEnum.Electricity, 10 }
+            })
         };
-    }
-
-    private void Event_Generate(out string tip)
-    {
-        tip = string.Empty;
-        // 电力+10
-        StateManager.Instance.ChangeElectricity(+10);
-        // 水分-5
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, -5);
-        // 清醒-6
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -6);
-        // 消耗60分钟
-        TimeManager.Instance.AddTime(60);
     }
 
     private bool Judge_Generate(out string hint)
     {
         hint = string.Empty;
 
-        var env = Bag as EnvironmentBag;
-        if (!env.HasCable)
+        if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            hint = "需要将该地点连入电网";
+            hint = $"受行星磁暴影响，{CardName}无法为其供电";
             return false;
         }
+
         return true;
     }
 }

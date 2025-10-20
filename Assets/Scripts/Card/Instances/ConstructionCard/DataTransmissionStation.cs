@@ -6,18 +6,11 @@ using System.Collections.Generic;
 public class DataTransmissionStation : ConstructionCard
 {
     private StateMachineComponent stateMachine;
-
-    public float electricityConsume = 0.5f; // 每回合电力消耗
-
     private DataTransmissionStation()
     {
         Events = new()
         {
-            new CardEvent("数据传输", "使当前研究科技的研究进度加28" +
-            $"\n（数据传输1天内最多可以进行2次）",
-            Event_Transmit,
-            Judge_Transmit,
-            () => 60,
+            new CardEvent("数据传输", "使当前研究科技的研究进度+28\n（数据传输1天内最多可以进行2次）", Event_Transmit, Judge_Transmit, () => 60,
             () => new()
             {
                 { PlayerStateEnum.Sobriety, -10 }
@@ -29,9 +22,9 @@ public class DataTransmissionStation : ConstructionCard
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         // 未布置和已布置两种状态
         if (!TryGetComponent(out stateMachine))
@@ -46,10 +39,11 @@ public class DataTransmissionStation : ConstructionCard
         }
     }
 
-    protected override void Start()
+    public override void Init()
     {
+        base.Init();
         // 添加数据传输台使用次数的记录
-        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2));
+        GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2));
 
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天时刷新
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, StartWorking);
@@ -78,7 +72,6 @@ public class DataTransmissionStation : ConstructionCard
         if (stateMachine.currentStateName == "运行中") return;
 
         stateMachine.ChangeState("运行中");
-        StateManager.Instance.ChangeElectricityChangeRate(-electricityConsume);
     }
 
     private void StopWorking()
@@ -86,7 +79,6 @@ public class DataTransmissionStation : ConstructionCard
         if (stateMachine.currentStateName == "待机中") return;
 
         stateMachine.ChangeState("待机中");
-        StateManager.Instance.ChangeElectricityChangeRate(+electricityConsume);
     }
 
     /// <summary>
@@ -96,21 +88,20 @@ public class DataTransmissionStation : ConstructionCard
     private void Event_Transmit(out string tip)
     {
         tip = string.Empty;
-        StateManager.Instance.ChangeElectricity(-5f);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -10);
-
         TechnologyManager.Instance.AddStudyProcess(28); // 研究进度增加
 
-        GlobalDataManager.Instance.saveData.AddReduceCount(CardId); // 使用次数增加
+        GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId); // 使用次数增加
 
-        TimeManager.Instance.AddTime(60);
+		GameManager.Instance.CurEnvironmentBag.ApplyEnvEffects(Events[0].GetEnvEffects());
+		StateManager.Instance.ApplyPlayerStateChange(Events[0].GetPlayerEffects());
+        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
     }
 
     private bool Judge_Transmit(out string hint)
     {
         hint = string.Empty;
 
-        if (GlobalDataManager.Instance.saveData.IsReduceCountMax(CardId))
+        if (GlobalDataManager.Instance.GlobalData.IsReduceCountMax(CardId))
         {
             hint = "当日内可以进行的数据传输次数已达上限";
             return false;
@@ -124,27 +115,10 @@ public class DataTransmissionStation : ConstructionCard
 
         if (StateManager.Instance.Electricity.CurValue < 5f)
         {
-            hint = "当前电力过低，无法进行数据传输";
+            hint = "电力供应不足";
             return false;
         }
 
         return true;
-    }
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        if (stateMachine.currentStateName == "待机中") return;
-
-        // 电力不足自动停止研究
-        if (StateManager.Instance.Electricity.CurValue < electricityConsume * GlobalDataManager.Instance.GetCardNum(CardId))
-        {
-            TechnologyManager.Instance.StopStudy(); // StopStudy会触发StopWorking方法，所以不用再在这里写一遍
-            ShowTip("电力不足，研究已自动停止");
-            if (SoundManager.Instance != null)
-                SoundManager.Instance.PlaySound("数据传输台没电", true);
-            EventManager.Instance.TriggerEvent(EventType.DataTransmissionStationOutOfPower);
-        }
     }
 }

@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   techName: "\u71C3\u6599\u53D1\u7535"
   techDescription: "\u4F7F\u7528\u6709\u673A\u71C3\u6599\u8FDB\u884C\u53D1\u7535\uFF0C\u4E0E\u4EBA\u529B\u53D1\u7535\u7684\u533A\u522B\u5728\u4E8E\u538B\u8FEB\u6B7B\u8005\u8FD8\u662F\u751F\u8005\u3002"
-  recipes: []
+  recipes:
+  - {fileID: 11400000, guid: 842ac17f2a2ca8c49a420de00b723be2, type: 2}
   prerequisites:
   - {fileID: 11400000, guid: 9443e3941f824e047806e521390c80b1, type: 2}
   cost: 120
   techType: 4
+  techLevel: 0

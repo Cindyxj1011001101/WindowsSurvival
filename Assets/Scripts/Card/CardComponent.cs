@@ -8,7 +8,8 @@ using UnityEngine.Events;
 
 public interface IUpdate
 {
-    public void Update();
+    void OnUpdateBegin();
+    void Update();
 }
 
 /// <summary>
@@ -18,40 +19,82 @@ public abstract class CardComponent
 {
     public Card BelongedCard { get; private set; }
 
-    public virtual void SetBelongedCard(Card card)
+    public void SetBelongedCard(Card card)
     {
         BelongedCard = card;
     }
 }
 
-#region 新鲜度组件
-public class FreshnessComponent : CardComponent, IUpdate
+#region 连续值组件
+public abstract class ContinuousValueComponent : CardComponent
 {
-    public int freshness;
-    public int maxFreshness;
+    [JsonProperty] public float value { get; protected set; }
+    [JsonProperty] public float maxValue { get; protected set; }
 
+    public ContinuousValueComponent() { }
+
+    public ContinuousValueComponent(float value, float maxValue)
+    {
+        this.value = value;
+        this.maxValue = maxValue;
+    }
+
+    public virtual void AddValue(float delta)
+    {
+        value += delta;
+        value = Mathf.Clamp(value, 0, maxValue);
+        BelongedCard.RefreshSlot();
+    }
+
+    public void SetValue(float value)
+    {
+        this.value = value;
+        BelongedCard.RefreshSlot();
+    }
+
+    public void SetMaxValue(float maxValue)
+    {
+        this.maxValue = maxValue;
+        value = Mathf.Clamp(value, 0, maxValue);
+        BelongedCard.RefreshSlot();
+    }
+
+    public void ResetValue()
+    {
+        SetValue(0);
+    }
+}
+#endregion
+
+#region 新鲜度组件
+public class FreshnessComponent : ContinuousValueComponent, IUpdate
+{
     public float updateRate = 1.0f;
 
     [JsonIgnore] public UnityAction onRotton;
 
     public FreshnessComponent() { }
 
-    public FreshnessComponent(int maxFreshness)
+    public FreshnessComponent(float maxFreshness) : base(maxFreshness, maxFreshness)
     {
-        freshness = this.maxFreshness = maxFreshness;
+    }
+
+    private float updateRateSnapshot;
+
+    public void OnUpdateBegin()
+    {
+        updateRateSnapshot = updateRate;
     }
 
     public void Update()
     {
-        if (freshness <= 0) return;
+        if (value <= 0) return;
 
         // 随时间自动减少新鲜度
-        freshness -= Mathf.CeilToInt(TimeManager.SETTLEMENT_INTERVAL * updateRate);
+        AddValue(-TimeManager.SETTLEMENT_INTERVAL * updateRateSnapshot);
 
-        if (freshness <= 0)
+        if (value <= 0)
         {
-            freshness = 0;
-
             if (BelongedCard.CardType == CardType.Food)
                 BelongedCard.ShowTip($"{BelongedCard.CardName}腐烂了");
             else if (BelongedCard.CardType == CardType.Medicine)
@@ -63,16 +106,13 @@ public class FreshnessComponent : CardComponent, IUpdate
                 BelongedCard.TurnTo("腐烂物", BelongedCard.Bag);
 
             onRotton?.Invoke();
-            return;
         }
-
-        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append($"新鲜度: {freshness}/{maxFreshness}\t");
+        sb.Append($"新鲜度: {value}/{maxValue}\t");
         sb.Append($"更新速率: {updateRate}");
         return sb.ToString();
     }
@@ -80,45 +120,43 @@ public class FreshnessComponent : CardComponent, IUpdate
 #endregion
 
 #region 生长度组件
-public class GrowthComponent : CardComponent, IUpdate
+public class GrowthComponent : ContinuousValueComponent, IUpdate
 {
-    public int growth;
-    public int maxGrowth;
-
     public float updateRate = 1.0f;
 
     [JsonIgnore] public UnityAction onGrownUp;
 
     public GrowthComponent() { }
 
-    public GrowthComponent(int maxGrowth)
+    public GrowthComponent(int maxGrowth) : base(0, maxGrowth)
     {
-        this.maxGrowth = maxGrowth;
-        growth = 0;
+    }
+
+    private float updateRateSnapshot;
+
+    public void OnUpdateBegin()
+    {
+        updateRateSnapshot = updateRate;
     }
 
     public void Update()
     {
-        if (growth >= maxGrowth) return;
+        if (value >= maxValue) return;
 
         // 随时间自动增加生长度
-        growth += Mathf.CeilToInt(TimeManager.SETTLEMENT_INTERVAL * updateRate);
+        AddValue(TimeManager.SETTLEMENT_INTERVAL * updateRateSnapshot);
 
-        if (growth >= maxGrowth)
+        if (value >= maxValue)
         {
-            growth = maxGrowth;
             BelongedCard.DestroyThis();
             onGrownUp?.Invoke();
-            return;
         }
-
-        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append($"生长度: {growth}/{maxGrowth}\t");
+        sb.Append($"生长度: {value}/{maxValue}\t");
         sb.Append($"更新速率: {updateRate}");
         return sb.ToString();
     }
@@ -126,45 +164,43 @@ public class GrowthComponent : CardComponent, IUpdate
 #endregion
 
 #region 产物进度组件
-public class ProgressComponent : CardComponent, IUpdate
+public class ProgressComponent : ContinuousValueComponent, IUpdate
 {
-    public int progress;
-    public int maxProgress;
-
     public float updateRate = 1.0f;
 
     [JsonIgnore] public UnityAction onProgressFull;
 
     public ProgressComponent() { }
 
-    public ProgressComponent(int maxProgress)
+    public ProgressComponent(int maxProgress) : base(0, maxProgress)
     {
-        this.maxProgress = maxProgress;
-        progress = 0;
+    }
+
+    private float updateRateSnapshot;
+
+    public void OnUpdateBegin()
+    {
+        updateRateSnapshot = updateRate;
     }
 
     public void Update()
     {
-        if (progress >= maxProgress) return;
+        if (value >= maxValue) return;
 
         // 随时间自动增加产物进度
-        progress += Mathf.CeilToInt(TimeManager.SETTLEMENT_INTERVAL * updateRate);
+        AddValue(TimeManager.SETTLEMENT_INTERVAL * updateRateSnapshot);
 
-        if (progress >= maxProgress)
+        if (value >= maxValue)
         {
-            progress = maxProgress;
             BelongedCard.TurnTo($"有产物的{BelongedCard.CardName}", BelongedCard.Bag);
             onProgressFull?.Invoke();
-            return;
         }
-
-        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append($"产物进度: {progress}/{maxProgress}\t");
+        sb.Append($"产物进度: {value}/{maxValue}\t");
         sb.Append($"更新速率: {updateRate}");
         return sb.ToString();
     }
@@ -236,50 +272,42 @@ public class ToolComponent : CardComponent
 #endregion
 
 #region 耐久度组件
-public class DurabilityComponent : CardComponent
+public class DurabilityComponent : ContinuousValueComponent
 {
-    public int durability;
-    public int maxDurability;
-
     [JsonIgnore] public UnityAction onBroken;
 
     public DurabilityComponent() { }
 
-    public DurabilityComponent(int maxDurability)
+    public DurabilityComponent(int maxDurability) : base(maxDurability, maxDurability)
     {
-        durability = this.maxDurability = maxDurability;
     }
 
-    public void Use(int times = 1)
+    public void Use(float durabilityConsumption)
     {
-        if (durability <= 0) return;
+        if (value <= 0) return;
 
-        durability -= times;
+        AddValue(-durabilityConsumption);
 
         StackTrace stackTrace = new();
         MethodBase callerMethod = stackTrace.GetFrame(2).GetMethod();
 
         if (callerMethod.Name != "OnUpdate")
-            BelongedCard.DisplayComponentValueChange(typeof(DurabilityComponent), -times);
+            BelongedCard.DisplayComponentValueChange(typeof(DurabilityComponent), -durabilityConsumption);
 
-        if (durability <= 0)
+        if (value <= 0)
         {
             if (BelongedCard.CardType == CardType.Tool || BelongedCard.CardType == CardType.Equipment)
                 BelongedCard.ShowTip($"{BelongedCard.CardName}损坏了");
 
-            durability = 0;
             BelongedCard.DestroyThis();
             onBroken?.Invoke();
-            return;
         }
-
-        BelongedCard.RefreshSlot();
     }
 
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append($"耐久度: {durability}/{maxDurability}");
+        sb.Append($"耐久度: {value}/{maxValue}");
         return sb.ToString();
     }
 }
@@ -347,6 +375,8 @@ public class InnerContentsComponent : CardComponent
             toAdd.RefreshSlot();
         }
     }
+
+    public void AddCard(Card card) => bag.AddCard(card);
 
     public void PauseUpdating()
     {
@@ -583,12 +613,12 @@ public class StateMachineComponent : CardComponent
 #endregion
 
 #region 植物生长组件
-public class PlantGrowthComponent : CardComponent, IUpdate
+public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
 {
-    private const int InitialDeadProgress = 5; // 初始死亡进度
+    private const int INITIAL_DEATH_PROGRESS = 5; // 初始死亡进度
+    private const int MAX_GROWTH = 100; // 最大生长度
+
     public float growthRate; // 生长速率
-    [JsonProperty] public float growth { get; private set; } // 生长进度
-    public float maxGrowth; // 最大生长进度
     public int deadProgress; // 死亡进度
     public float minConfortTempreture; // 最低舒适温度
     public float maxConfortTempreture; // 最高舒适温度
@@ -597,13 +627,14 @@ public class PlantGrowthComponent : CardComponent, IUpdate
     public float minLiveTempture; // 最低存活温度
     public float maxLiveTempture; // 最高存活温度
     public string deadCardId; // 死亡后变成的卡牌ID 
-    public List<PressureLevel> pressureList = new List<PressureLevel>();
+    public List<PressureLevel> pressureList = new();
     public bool growStopped = false;
 
     [JsonIgnore] public UnityAction onDead;
-    [JsonIgnore] public bool IsMature => growth >= maxGrowth; // 是否成熟
+    [JsonIgnore] public bool IsMature => value >= maxValue; // 是否成熟
 
-    public PlantGrowthComponent(float growthRate, float minConfortTempreture, float maxConfortTempreture, float minGrowTempture, float maxGrowTempture, float minLiveTempture, float maxLiveTempture, string deadCardId, List<PressureLevel> pressureList)
+    public PlantGrowthComponent(float growthRate, float minConfortTempreture, float maxConfortTempreture, float minGrowTempture, float maxGrowTempture,
+        float minLiveTempture, float maxLiveTempture, string deadCardId, List<PressureLevel> pressureList) : base(MAX_GROWTH, MAX_GROWTH)
     {
         this.growthRate = growthRate;
         this.minConfortTempreture = minConfortTempreture;
@@ -614,21 +645,28 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         this.maxLiveTempture = maxLiveTempture;
         this.deadCardId = deadCardId;
         this.pressureList = pressureList;
-        growth = maxGrowth = 100;
-        deadProgress = InitialDeadProgress; // 初始死亡进度
+        deadProgress = INITIAL_DEATH_PROGRESS; // 初始死亡进度
     }
 
-    public void AddGrowth(float delta)
+    public override void AddValue(float delta)
     {
-        growth += delta;
-        growth = Mathf.Clamp(growth, 0, 100);
-        BelongedCard.RefreshSlot();
+        base.AddValue(delta);
 
         StackTrace stackTrace = new();
         MethodBase callerMethod = stackTrace.GetFrame(2).GetMethod();
 
         if (callerMethod.Name != nameof(Grow))
             BelongedCard.DisplayComponentValueChange(typeof(PlantGrowthComponent), delta);
+    }
+
+    private PressureLevel pressureLevelSnapshot;
+    private float envTemptureSnapshot;
+
+    public void OnUpdateBegin()
+    {
+        var env = BelongedCard.Bag as EnvironmentBag;
+        pressureLevelSnapshot = env.PressureLevel;
+        envTemptureSnapshot = GetEnvTempreture(env);
     }
 
     public void Update()
@@ -642,9 +680,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
 
     private void HandleGrowth()
     {
-        var env = BelongedCard.Bag as EnvironmentBag;
-
-        if (!pressureList.Contains(env.PressureLevel))
+        if (!pressureList.Contains(pressureLevelSnapshot))
         {
             // 压强不合适不生长，并且死亡进度增加
             deadProgress--;
@@ -652,26 +688,39 @@ public class PlantGrowthComponent : CardComponent, IUpdate
         }
 
         // 获取当前地点的温度
-        float envTempture = GetEnvTempreture();
-        if (envTempture <= maxConfortTempreture && envTempture > minConfortTempreture)
+        if (envTemptureSnapshot <= maxConfortTempreture && envTemptureSnapshot > minConfortTempreture)
         {
-            deadProgress = InitialDeadProgress; // 恢复死亡进度
+            deadProgress = INITIAL_DEATH_PROGRESS; // 恢复死亡进度
             Grow(growthRate * 1.2f); // 舒适区生长加快
         }
-        else if (envTempture <= maxGrowTempture && envTempture > minGrowTempture)
+        else if (envTemptureSnapshot <= maxGrowTempture && envTemptureSnapshot > minGrowTempture)
         {
-            deadProgress = InitialDeadProgress; // 恢复死亡进度
+            deadProgress = INITIAL_DEATH_PROGRESS; // 恢复死亡进度
             Grow(growthRate * 1f);
         }
-        else if (envTempture <= maxLiveTempture && envTempture > minLiveTempture)
+        else if (envTemptureSnapshot <= maxLiveTempture && envTemptureSnapshot > minLiveTempture)
         {
             // 不生长
-            deadProgress = InitialDeadProgress; // 恢复死亡进度
+            deadProgress = INITIAL_DEATH_PROGRESS; // 恢复死亡进度
         }
         else
         {
             // 死亡进度增加
             deadProgress--;
+        }
+    }
+
+    private float GetEnvTempreture(EnvironmentBag env)
+    {
+        // 获取当前地点的温度
+        if (env.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var roomTemperature))
+        {
+            return roomTemperature.NormedValue;
+        }
+        else
+        {
+            UnityEngine.Debug.LogWarning("当前地点没有环境温度信息，使用默认环境温度25度");
+            return 25;
         }
     }
 
@@ -692,63 +741,7 @@ public class PlantGrowthComponent : CardComponent, IUpdate
     {
         if (IsMature || growStopped) return;
 
-        AddGrowth(delta);
-    }
-
-    private float GetEnvTempreture()
-    {
-        var env = BelongedCard.Bag as EnvironmentBag;
-        // 获取当前地点的温度
-        if (env.StateDict.TryGetValue(EnvironmentStateEnum.RoomTemperature, out var roomTemperature))
-        {
-            return roomTemperature.NormedValue;
-        }
-        else
-        {
-            UnityEngine.Debug.LogWarning("当前地点没有环境温度信息，使用默认环境温度25度");
-            return 25;
-        }
-    }
-}
-#endregion
-
-#region 连续值组件
-public abstract class ContinuousValueComponent : CardComponent
-{
-    [JsonProperty] public float value { get; protected set; }
-    [JsonProperty] public float maxValue { get; protected set; }
-
-    public ContinuousValueComponent() { }
-
-    public ContinuousValueComponent(float value, float maxValue)
-    {
-        this.value = value;
-        this.maxValue = maxValue;
-    }
-
-    public void AddValue(float delta)
-    {
-        value += delta;
-        value = Mathf.Clamp(value, 0, maxValue);
-        BelongedCard.RefreshSlot();
-    }
-
-    public void SetValue(float value)
-    {
-        this.value = value;
-        BelongedCard.RefreshSlot();
-    }
-
-    public void SetMaxValue(float maxValue)
-    {
-        this.maxValue = maxValue;
-        value = Mathf.Clamp(value, 0, maxValue);
-        BelongedCard.RefreshSlot();
-    }
-
-    public void ResetValue()
-    {
-        SetValue(0);
+        AddValue(delta);
     }
 }
 #endregion
@@ -834,45 +827,45 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
 {
     [JsonProperty] public bool isBurning { get; private set; } // 是否正在燃烧
 
-    public int basicFuelComsume; // 基础燃料消耗
-    public int extraFuelComsumeWhenWinter; // 冰层季导致的额外燃料消耗
-    public int extreFuelComsumeWhenWaterLevelHigh; // 水平面高时导致的额外燃料消耗
-    public int autoExtinguishWaterLevelThreshold; // 导致自动熄灭的水平面高度
-    public float oxygenChangeWhileBurning; // 燃烧时导致的氧气变化
-    public float carbonMonoxideWhileBurning; // 燃烧时导致的一氧化碳变化
+    public int basicFuelConsumption;                       // 基础燃料消耗
+    public int extraFuelConsumptionWhenWinter;             // 冰层季导致的额外燃料消耗
+    public int extraFuelConsumptionWhenWaterLevelHigh;     // 水平面高时导致的额外燃料消耗
+    public int autoExtinguishWaterLevelThreshold;          // 导致自动熄灭的水平面高度
+    public float oxygenConsumptionWhileBurning;            // 燃烧时导致的氧气变化
+    public float carbonMonoxideProductionWhileBurning;     // 燃烧时导致的一氧化碳变化
 
-    [JsonIgnore] public UnityAction actionWhileBurning; // 燃烧时每回合处理
-    [JsonIgnore] public UnityAction actionWhileNotBurning; // 非燃烧时每回合处理
-    [JsonIgnore] public UnityAction actionOnIgnite; // 点燃时触发
-    [JsonIgnore] public UnityAction actionOnExtinguish; // 熄灭时触发
-
+    [JsonIgnore] public UnityAction whileBurning;    // 燃烧时每回合处理
+    [JsonIgnore] public UnityAction whileNotBurning; // 非燃烧时每回合处理
+    
     [JsonIgnore]
-    public int FuelComsume
+    public int FuelConsumption
     {
         get
         {
-            int consume = basicFuelComsume;
+            int consume = basicFuelConsumption;
             if (StateManager.Instance.WaterLevel.CurValue > 0)
-                consume += extreFuelComsumeWhenWaterLevelHigh;
+                consume += extraFuelConsumptionWhenWaterLevelHigh;
             // TODO: 冰层季的额外消耗
 
             return consume;
         }
     }
 
-    public FuelStorageComponent(float maxValue, int basicFuelComsume,
-        int extreFuelComsumeWhenWaterLevelHigh = 2,
-        int extraFuelComsumeWhenWinter = 4,
+    public FuelStorageComponent(
+        float maxValue,
+        int basicFuelConsumption = 1,
+        int extraFuelConsumptionWhenWaterLevelHigh = 2,
+        int extraFuelConsumptionWhenWinter = 4,
         int autoExtinguishWaterLevelThreshold = 30, 
-        float oxygenChangeWhileBurning = -4,
-        float carbonMonoxideWhileBurning = +0.6f) : base(0, maxValue)
+        float oxygenConsumptionWhileBurning = 4,
+        float carbonMonoxideProductionWhileBurning = 2) : base(0, maxValue)
     {
-        this.basicFuelComsume = basicFuelComsume;
-        this.extraFuelComsumeWhenWinter = extraFuelComsumeWhenWinter;
-        this.extreFuelComsumeWhenWaterLevelHigh = extreFuelComsumeWhenWaterLevelHigh;
+        this.basicFuelConsumption = basicFuelConsumption;
+        this.extraFuelConsumptionWhenWinter = extraFuelConsumptionWhenWinter;
+        this.extraFuelConsumptionWhenWaterLevelHigh = extraFuelConsumptionWhenWaterLevelHigh;
         this.autoExtinguishWaterLevelThreshold = autoExtinguishWaterLevelThreshold;
-        this.oxygenChangeWhileBurning = oxygenChangeWhileBurning;
-        this.carbonMonoxideWhileBurning = carbonMonoxideWhileBurning;
+        this.oxygenConsumptionWhileBurning = oxygenConsumptionWhileBurning;
+        this.carbonMonoxideProductionWhileBurning = carbonMonoxideProductionWhileBurning;
     }
 
     /// <summary>
@@ -882,7 +875,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     {
         tip = string.Empty;
 
-        if (value < FuelComsume)
+        if (value < FuelConsumption)
         {
             tip = "燃料不足";
             return false;
@@ -910,49 +903,33 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     /// <summary>
     /// 点燃
     /// </summary>
-    public void Ignite()
+    public void Ignite(out string s)
     {
+        s = string.Empty;
+
         isBurning = true;
 
         var env = BelongedCard.Bag as EnvironmentBag;
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, oxygenChangeWhileBurning);
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, carbonMonoxideWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -oxygenConsumptionWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, carbonMonoxideProductionWhileBurning);
 
         BelongedCard.RefreshSlot();
-        actionOnIgnite?.Invoke();
     }
 
     /// <summary>
     /// 熄灭
     /// </summary>
-    public void Extinguish()
+    public void Extinguish(out string s)
     {
+        s = string.Empty;
+
         isBurning = false;
 
         var env = BelongedCard.Bag as EnvironmentBag;
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -oxygenChangeWhileBurning);
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, -carbonMonoxideWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, oxygenConsumptionWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, -carbonMonoxideProductionWhileBurning);
 
         BelongedCard.RefreshSlot();
-        actionOnExtinguish?.Invoke();
-    }
-
-    public void AddEvents(string tipOnIgnite = "", string tipOnExtinguish = "")
-    {
-        void IgniteEvent(out string tip)
-        {
-            tip = string.Empty;
-            Ignite();
-        }
-
-        void ExtinguishEvent(out string tip)
-        {
-            tip = string.Empty;
-            Extinguish();
-        }
-
-        BelongedCard.Events.Insert(0, new("点燃", tipOnIgnite, IgniteEvent, CanIgnite));
-        BelongedCard.Events.Insert(1, new("熄灭", tipOnExtinguish, ExtinguishEvent, CanExtinguish));
     }
 
     public bool CanQuickInteract(Card card)
@@ -973,26 +950,33 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         }
     }
 
+    private float fuelConsumptionSnapshot;
+
+    public void OnUpdateBegin()
+    {
+        fuelConsumptionSnapshot = FuelConsumption;
+    }
+
     public void Update()
     {
         if (!isBurning)
         {
             // 非燃烧时每回合处理
-            actionWhileNotBurning?.Invoke();
+            whileNotBurning?.Invoke();
             return;
         }
 
         // 燃烧时每回合处理
-        actionWhileBurning?.Invoke();
+        whileBurning?.Invoke();
 
         // 燃料减少
-        AddValue(-FuelComsume);
+        AddValue(-fuelConsumptionSnapshot);
 
         // 自动熄灭
-        if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip))
+        if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip)) // tip不为空说明不是因为正在燃烧中而导致无法点燃
         {
-            Extinguish();
-            BelongedCard.ShowTip($"{tip}，{BelongedCard.CardName}已自动熄灭");
+            Extinguish(out _);
+            BelongedCard.ShowTip($"{tip}，{BelongedCard.CardName}已熄灭");
         }
     }
 }
@@ -1018,7 +1002,7 @@ public enum BehavioralTendency
     Hostile
 }
 
-public class EntityComponent : CardComponent, IUpdate
+public class EntityComponent : CardComponent
 {
     public float maxHealth; // 最大生命值
     public float health; // 当前生命值
@@ -1028,7 +1012,6 @@ public class EntityComponent : CardComponent, IUpdate
     public string deadDrops; // 死亡凋落物
 
     public int aiRefreshInterval; // ai刷新间隔
-    [JsonIgnore] public UnityAction aiLogic; // ai行为逻辑
 
     [JsonIgnore] public UnityAction onDead;
 
@@ -1058,16 +1041,12 @@ public class EntityComponent : CardComponent, IUpdate
             health = 0;
             BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
             BelongedCard.DestroyThis();
-            // TODO：掉落死亡掉落物
+            // 掉落死亡掉落物
+            BelongedCard.ParseAndDrop(deadDrops);
             onDead?.Invoke();
         }
 
         BelongedCard.RefreshSlot();
-    }
-
-    public void Update()
-    {
-        aiLogic?.Invoke();
     }
 }
 #endregion
@@ -1082,12 +1061,6 @@ public class CoordinateComponent : CardComponent
     public CoordinateComponent(float position)
     {
         coordinate.SetPosition(position);
-    }
-
-    public override void SetBelongedCard(Card card)
-    {
-        base.SetBelongedCard(card);
-        coordinate.SetLocation(BelongedCard.Bag as EnvironmentBag);
     }
 }
 #endregion
@@ -1107,24 +1080,31 @@ public enum AttackForm
 
 public class WeaponComponent : CardComponent
 {
-    public float atk; // 攻击力
-    public float minAtkDist; // 最小攻击距离
-    public float maxAtkDist; // 最大攻击距离
+    public float atk;             // 攻击力
+    public float minAtkDist;      // 最小攻击距离
+    public float maxAtkDist;      // 最大攻击距离
     public AttackForm attackForm; // 攻击方式
+    public int attackTime;        // 攻击时间(分钟)
 
     public WeaponComponent() { }
 
-    public WeaponComponent(float atk, float minAtkDist, float maxAtkDist, AttackForm attackForm)
+    public WeaponComponent(float atk, float minAtkDist, float maxAtkDist, AttackForm attackForm, int attackTime)
     {
         this.atk = atk;
         this.minAtkDist = minAtkDist;
         this.maxAtkDist = maxAtkDist;
         this.attackForm = attackForm;
+        this.attackTime = attackTime;
     }
 
     public void DealDamage(IEntity target)
     {
+        // 消耗武器耐久
+        BelongedCard.Use();
+        // 造成伤害
         target.TakeDamage(atk, GameManager.Instance.Player);
+        // 消耗时间
+        TimeManager.Instance.AddTime(attackTime);
     }
 
     public bool WithinAttackRange(IEntity target)

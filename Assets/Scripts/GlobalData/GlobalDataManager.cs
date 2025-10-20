@@ -6,8 +6,7 @@ public class GlobalDataManager : MonoBehaviour
     private static GlobalDataManager instance;
     public static GlobalDataManager Instance => instance;
 
-    public GlobalData globalData;
-    public GlobalData saveData;
+    public GlobalData GlobalData { get; private set; }
 
     #region 卡牌数量
     // 不需要持久化，这个是运行时数据
@@ -51,8 +50,7 @@ public class GlobalDataManager : MonoBehaviour
     private void Awake()
     {
         instance = this;
-        globalData = GameDataManager.Instance.GlobalData;
-        saveData = GameDataManager.Instance.SaveData;
+        GlobalData = GameDataManager.Instance.GlobalData;
         EventManager.Instance.AddListener(EventType.AnotherDay, OnAnotherDay);
     }
 
@@ -63,12 +61,12 @@ public class GlobalDataManager : MonoBehaviour
 
     private void OnAnotherDay()
     {
-        SolveReduce();
+        ResetReduceCount();
     }
 
-    private void SolveReduce()
+    private void ResetReduceCount()
     {
-        foreach (var reduce in saveData.reduceActionDict.Values)
+        foreach (var reduce in GlobalData.reduceActionDict.Values)
         {
             reduce.curReduceCount = 0;
         }

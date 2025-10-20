@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 /// <summary>
@@ -19,38 +20,35 @@ public class FuelFurnace : ConstructionCard
     private FuelStorageComponent fuelStorage;
     private TemperatureComponent temperatureComponent;
 
-    public List<Card> cardsToProcesss = new(); // 待加工卡牌
-    public int leftRounds = 0; // 当前加工轮数
-    public int maxRounds = 16; // 总加工轮数
-    public bool isProcessing = false; // 是否正在加工
-    public Dictionary<TemperatureType, int> temperatureRecord = new(); // 温度数据，用来处理产物获取
-    public bool processComplished = false;
+    private const int MAX_PROCESS_ROUNDS = 16; // 总加工轮数
+
+    [JsonProperty] private int leftProcessRounds = MAX_PROCESS_ROUNDS; // 剩余加工轮数
+    [JsonProperty] private bool isProcessing = false;                  // 是否正在加工
+    [JsonProperty] private bool processComplished = false;             // 加工是否完成
+    [JsonProperty] private Dictionary<TemperatureType, int> temperatureRecord = new(); // 温度数据，用来处理产物获取
+
     public override bool HasLoopSound => true;
 
-    private FuelFurnace()
-    {
-        Events = new()
-        {
-            new CardEvent("开始加工" , "", Event_Process, Judge_Process),
-        };
-    }
+    private FuelFurnace() { }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
+
         // 添加燃料存储组件
         if (!TryGetComponent(out fuelStorage))
         {
-            fuelStorage = new FuelStorageComponent(96, 1);
+            fuelStorage = new FuelStorageComponent(96);
             AddComponent(fuelStorage);
         }
-        fuelStorage.actionWhileBurning = () =>
+
+        fuelStorage.whileBurning = () =>
         {
             // 点燃时，每回合温度增加
             temperatureComponent.AddValue(17); // 温度+17
         };
 
-        fuelStorage.actionWhileNotBurning = () =>
+        fuelStorage.whileNotBurning = () =>
         {
             // 熄灭时，每回合温度减少
             var waterLevel = StateManager.Instance.WaterLevel.CurValue;
@@ -64,21 +62,6 @@ public class FuelFurnace : ConstructionCard
                 temperatureComponent.AddValue(-4);
             }
         };
-
-        fuelStorage.actionOnIgnite = () =>
-        {
-            SoundManager.Instance.PlaySound("点火_02");
-            if (GameManager.Instance.IsCurrentEnvironment(Bag))
-                SoundManager.Instance.PlayCardLoopSound(CardId, "燃料炉音效", 1f);
-        };
-
-        fuelStorage.actionOnExtinguish = () =>
-        {
-            if (GameManager.Instance.IsCurrentEnvironment(Bag))
-                SoundManager.Instance.StopCardLoopSound(CardId);
-        };
-        // 添加点燃熄灭事件
-        fuelStorage.AddEvents("点燃燃料炉。点燃后可以使燃料炉快速升温");
 
         // 添加温度组件
         if (!TryGetComponent(out temperatureComponent))
@@ -103,6 +86,31 @@ public class FuelFurnace : ConstructionCard
                 RefreshSlot();
             }
         };
+
+        Events = new()
+        {
+            new CardEvent("点燃", "点燃燃料炉。点燃后可以使燃料炉快速升温。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite),
+            new CardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish),
+            new CardEvent("开始加工" , "", Event_Process, Judge_Process),
+
+        };
+    }
+
+    private void Ignite(out string s)
+    {
+        fuelStorage.Ignite(out s);
+
+        SoundManager.Instance.PlaySound("点火_02");
+        if (GameManager.Instance.IsCurrentEnvironment(Bag))
+            SoundManager.Instance.PlayCardLoopSound(CardId, "燃料炉音效", 1f);
+    }
+
+    private void Extinguish(out string s)
+    {
+        fuelStorage.Extinguish(out s);
+
+        if (GameManager.Instance.IsCurrentEnvironment(Bag))
+            SoundManager.Instance.StopCardLoopSound(CardId);
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -126,7 +134,7 @@ public class FuelFurnace : ConstructionCard
         tip = string.Empty;
 
         isProcessing = true;
-        leftRounds = maxRounds;
+        leftProcessRounds = MAX_PROCESS_ROUNDS;
 
         // 暂停内容物的更新
         innerContents.PauseUpdating();
@@ -136,25 +144,17 @@ public class FuelFurnace : ConstructionCard
         innerContents.notAllowRemoveReason = "加工中，不能移除待加工物";
         innerContents.notAllowAddReason = "加工中，不能添加待加工物";
 
-        // 记录当前炉内的卡牌，即需要加工的卡牌
-        foreach (var slot in innerContents.bag.Slots)
-        {
-            foreach (var card in slot.Cards)
-            {
-                cardsToProcesss.Add(card);
-            }
-        }
         // 记录温度状态
         temperatureRecord = new()
         {
             { TemperatureType.Normal, 0 },
-            { TemperatureType.Low, 0 },
+            { TemperatureType.Low,    0 },
             { TemperatureType.Medium, 0 },
-            { TemperatureType.High, 0 },
+            { TemperatureType.High,   0 },
         };
 
         // 添加计时器组件
-        AddComponent(new TimerComponent(maxRounds * TimeManager.SETTLEMENT_INTERVAL) { tipText = "加工完成" });
+        AddComponent(new TimerComponent(MAX_PROCESS_ROUNDS * TimeManager.SETTLEMENT_INTERVAL) { tipText = "加工完成" });
         RefreshSlot();
     }
 
@@ -195,7 +195,7 @@ public class FuelFurnace : ConstructionCard
     /// </summary>
     private void HandleProcessRound()
     {
-        if (!isProcessing || leftRounds <= 0) return;
+        if (!isProcessing || leftProcessRounds <= 0) return;
 
         // 记录温度数据
         if (temperatureComponent.value <= 50) temperatureRecord[TemperatureType.Normal]++;
@@ -204,25 +204,30 @@ public class FuelFurnace : ConstructionCard
         else temperatureRecord[TemperatureType.High]++;
 
         // 剩余回合数-1
-        leftRounds--;
+        leftProcessRounds--;
 
         // 刷新计时器
         if (TryGetComponent<TimerComponent>(out var timer))
         {
-            timer.SetValue(leftRounds * TimeManager.SETTLEMENT_INTERVAL);
+            timer.SetValue(leftProcessRounds * TimeManager.SETTLEMENT_INTERVAL);
         }
 
         // 加工完成
-        if (leftRounds <= 0)
+        if (leftProcessRounds <= 0)
         {
             // 得到产物
-            var outcomeCardId = ProcessManager.Instance.GetProcessOutcomeID(cardsToProcesss, temperatureRecord);
+            var processedCards = new List<Card>()
+            {
+                innerContents.bag.Slots[0].PeekCard(),
+                innerContents.bag.Slots[1].PeekCard(),
+                innerContents.bag.Slots[2].PeekCard(),
+            };
+            var outcomeCardId = ProcessManager.Instance.GetProcessOutcomeID(processedCards, temperatureRecord);
             
-            leftRounds = 0;
+            leftProcessRounds = 0;
             isProcessing = false;
             temperatureRecord.Clear();
             innerContents.Clear(); // 销毁内容物
-            cardsToProcesss.Clear(); // 清空加工列表
 
             processComplished = true; // 加工完成
 

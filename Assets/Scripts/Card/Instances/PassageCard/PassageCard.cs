@@ -3,7 +3,7 @@
     private PassageComponent passage;
     private CoordinateComponent coordinate;
 
-    private const float MaxAvailableDist = 3.0f; // 小于等于该距离时可以使用通道
+    private const float MAX_AVAILABLE_DIST = 3.0f; // 小于等于该距离时可以使用通道
 
     protected PassageCard()
     {
@@ -14,13 +14,13 @@
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
         TryGetComponent(out coordinate);
         TryGetComponent(out passage);
 
-        Events[0].description = "前往" + GameManager.Instance.ParsePlaceEnum(passage.targetPlace) +
+        Events[0].description = "前往" + ParsePlaceEnum(passage.targetPlace) +
             GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
         Events[0].getTimeEffect = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).time;
         Events[0].getPlayerEffects = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerEffects;
@@ -31,8 +31,9 @@
         Events[1].getPlayerEffects = () => GameManager.Instance.GetMoveEffects(pos).playerEffects;
     }
 
-    protected override void Start()
+    public override void Init()
     {
+        base.Init();
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
         EventManager.Instance.AddListener(EventType.PlayerMove, OnPlayerMove);
     }
@@ -51,10 +52,15 @@
     {
         if (state == PlayerStateEnum.Load)
         {
-            Events[0].description = "前往" + GameManager.Instance.ParsePlaceEnum(passage.targetPlace) +
+            Events[0].description = "前往" + ParsePlaceEnum(passage.targetPlace) +
                 GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
             RefreshSlot();
         }
+    }
+
+    private string ParsePlaceEnum(PlaceEnum place)
+    {
+        return GameManager.Instance.PlaceDataDict[place].placeName;
     }
 
     private void OnPlayerMove()
@@ -116,13 +122,13 @@
 
     private bool IsPlayerNear()
     {
-        return GameManager.Instance.Player.Coordinate.DistanceTo(coordinate.coordinate) <= MaxAvailableDist;
+        return GameManager.Instance.Player.Coordinate.DistanceTo(coordinate.coordinate) <= MAX_AVAILABLE_DIST;
     }
 
     private float GetNearestAvailablePosition()
     {
         var playerPos = GameManager.Instance.Player.Coordinate.Position;
         var passagePos = coordinate.coordinate.Position;
-        return playerPos > passagePos ? passagePos + MaxAvailableDist : passagePos - MaxAvailableDist;
+        return playerPos > passagePos ? passagePos + MAX_AVAILABLE_DIST : passagePos - MAX_AVAILABLE_DIST;
     }
 }

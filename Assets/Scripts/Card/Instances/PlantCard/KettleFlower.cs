@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class KettleFlower : Card
 {
-    private PlantGrowthComponent plant;
+    private PlantGrowthComponent plantGrowth;
     private StateMachineComponent stateMachine;
 
     public bool hasWound = false;
@@ -23,11 +23,11 @@ public class KettleFlower : Card
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
-        TryGetComponent(out plant);
+        TryGetComponent(out plantGrowth);
 
         if (!TryGetComponent(out stateMachine))
         {
@@ -48,7 +48,7 @@ public class KettleFlower : Card
 
     private void UpdatePlantState()
     {
-        var growth = plant.growth;
+        var growth = plantGrowth.value;
 
         // 幼苗期
         if (growth >= 0 && growth <= 10)
@@ -82,9 +82,9 @@ public class KettleFlower : Card
         tool.Use(); // 工具耐久减少
 
         hasWound = true; // 产生伤口
-        plant.AddGrowth(-10); // 生长进度-10
+        plantGrowth.AddValue(-10); // 生长进度-10
 
-        plant.growStopped = true; // 停止生长
+        plantGrowth.growStopped = true; // 停止生长
 
         TimeManager.Instance.AddTime(15);
 
@@ -104,7 +104,7 @@ public class KettleFlower : Card
             hint = "已有伤口";
             return false;
         }
-        if (plant.growth < 30)
+        if (plantGrowth.value < 30)
         {
             hint = "需要生长度大于等于30%";
             return false;
@@ -128,7 +128,7 @@ public class KettleFlower : Card
         DestroyThis();
         tool.Use();
         TimeManager.Instance.AddTime(15);
-        AddCard(plant.deadCardId, Bag);
+        AddCard(plantGrowth.deadCardId, Bag);
     }
 
     private bool Judge_DigUp(out string hint)
@@ -149,7 +149,7 @@ public class KettleFlower : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("喝_01", true);
 
-        plant.AddGrowth(-20); // 生长进度-20
+        plantGrowth.AddValue(-20); // 生长进度-20
 
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, 14);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
@@ -165,7 +165,7 @@ public class KettleFlower : Card
             hint = "需要切口";
             return false;
         }
-        if (plant.growth < 20)
+        if (plantGrowth.value < 20)
         {
             hint = "需要生长度大于等于20%";
             return false;
@@ -184,7 +184,7 @@ public class KettleFlower : Card
             {
                 hasWound = false;
                 recoverProgress = 0;
-                plant.growStopped = false;
+                plantGrowth.growStopped = false;
             }
         }
 
@@ -198,12 +198,12 @@ public class KettleFlower : Card
         {
             if (component.toolTypes.Contains(ToolType.Cut))
             {
-                tip = "划一个口";
+                tip = Events[0].name;
                 return true;
             }
             if (component.toolTypes.Contains(ToolType.Dig))
             {
-                tip = "铲起";
+                tip = Events[1].name;
                 return true;
             }
         }

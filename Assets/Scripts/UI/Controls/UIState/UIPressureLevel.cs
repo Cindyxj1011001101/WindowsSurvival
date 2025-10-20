@@ -7,14 +7,12 @@ public class UIPressureLevel : MonoBehaviour
 
     public Image[] levels;
 
-    public Color[] colors;
-
     public HoverableButton button;
 
     public void SetValue(PressureLevel level)
     {
         // 压强对应的颜色
-        var color = colors[(int)level - 1];
+        var color = ColorManager.PressureLevelColors[(int)level - 1];
 
         for (int i = 0; i < levels.Length; i++)
         {

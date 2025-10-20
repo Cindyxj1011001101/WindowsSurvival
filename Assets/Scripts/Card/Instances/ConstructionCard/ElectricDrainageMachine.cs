@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 /// <summary>
@@ -7,20 +8,21 @@ public class ElectricDrainageMachine : ConstructionCard
 {
     private StateMachineComponent stateMachine;
 
-    public float electricityConsume = 0.5f; // 每回合电力消耗
+    private const float WATER_LEVEL_REDUCTION = 2f;     // 每回合水平面降低量
+    private const float ELECTRICITY_CONSUMPTION = 0.5f; // 每回合电力消耗
 
     private ElectricDrainageMachine()
     {
         Events = new()
         {
-            new CardEvent("开启", "开启后每15分钟消耗0.5电力，降低2水平面高度", Event_Open, Judge_Open),
-            new CardEvent("关闭", "", Event_Close, Judge_Close)
+            new CardEvent("接电", $"将其接入电网。接电后每15分钟消耗{ELECTRICITY_CONSUMPTION}单位电力，降低{WATER_LEVEL_REDUCTION}单位水平面高度", Event_TurnOn, Judge_TurnOn),
+            new CardEvent("断电", "", Event_TurnOff, Judge_TurnOff)
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         if (!TryGetComponent(out stateMachine))
         {
@@ -34,69 +36,102 @@ public class ElectricDrainageMachine : ConstructionCard
         }
     }
 
-    private void StartWorking()
+    public override void Init()
     {
-        if (stateMachine.currentStateName == "已开启") return;
-
-        stateMachine.ChangeState("已开启");
-        StateManager.Instance.ChangeElectricityChangeRate(-electricityConsume);
-        StateManager.Instance.ChangeWaterLevelChangeRate(-2f);
+        base.Init();
+        EventManager.Instance.AddListener<Type>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGameEventEnd, OnMagneticStormEnd);
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnWaterLevelChange);
     }
 
-    private void StopWorking()
+    protected override void OnDestroy()
     {
-        if (stateMachine.currentStateName == "已关闭") return;
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGameEventEnd, OnMagneticStormEnd);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnWaterLevelChange);
+    }
 
-        stateMachine.ChangeState("已关闭");
-        // 停止工作时，恢复电力和水平面变化率
-        StateManager.Instance.ChangeElectricityChangeRate(+electricityConsume);
-        StateManager.Instance.ChangeWaterLevelChangeRate(+2f);
+    private void OnMagneticStormBegin(Type type)
+    {
+        if (type != typeof(MagneticStorm) || stateMachine.currentStateName == "已关闭") return;
+
+        Event_TurnOff(out _);
+        ShowTip($"受行星磁暴影响，{CardName}已断电并停止工作");
+    }
+
+    private void OnMagneticStormEnd(Type type)
+    {
+        if (type != typeof(MagneticStorm)) return;
+
+        RefreshSlot();
+    }
+
+    private void OnElectricityChange(RefreshEnvironmentStateArgs args)
+    {
+        if (args.stateEnum != EnvironmentStateEnum.Electricity || stateMachine.currentStateName == "已关闭") return;
+
+        if (args.stateValue.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
+        {
+            Event_TurnOff(out _);
+            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
+        }
+    }
+
+    private void OnWaterLevelChange(RefreshEnvironmentStateArgs args)
+    {
+        if (args.stateEnum != EnvironmentStateEnum.WaterLevel || stateMachine.currentStateName == "已关闭") return;
+
+        if (args.stateValue.CurValue <= 0)
+        {
+            Event_TurnOff(out _);
+            ShowTip($"水平面已降至0，{CardName}自动停止工作");
+        }
     }
 
     #region 开关
-    private void Event_Open(out string tip)
+    private void Event_TurnOn(out string tip)
     {
         tip = string.Empty;
 
-        StartWorking();
+        StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_CONSUMPTION);
+        StateManager.Instance.ChangeWaterLevelChangeRate(-WATER_LEVEL_REDUCTION);
+        stateMachine.ChangeState("已开启");
     }
 
-    private bool Judge_Open(out string hint)
+    private bool Judge_TurnOn(out string hint)
     {
         hint = string.Empty;
+        if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
+        {
+            hint = $"受行星磁暴影响，无法接电";
+            return false;
+        }
+
+        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION)
+        {
+            hint = "电力供应不足";
+            return false;
+        }
+        
         return stateMachine.currentStateName == "已关闭";
     }
 
-    private void Event_Close(out string tip)
+    private void Event_TurnOff(out string tip)
     {
         tip = string.Empty;
 
-        StopWorking();
+        // 停止工作时，恢复电力和水平面变化率
+        StateManager.Instance.ChangeElectricityChangeRate(ELECTRICITY_CONSUMPTION);
+        StateManager.Instance.ChangeWaterLevelChangeRate(WATER_LEVEL_REDUCTION);
+        stateMachine.ChangeState("已关闭");
     }
 
-    private bool Judge_Close(out string hint)
+    private bool Judge_TurnOff(out string hint)
     {
         hint = string.Empty;
         return stateMachine.currentStateName == "已开启";
     }
     #endregion
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        if (stateMachine.currentStateName == "已关闭") return;
-
-        // 如果电力小于0.5或者水平面小于0时，自动停止工作
-        if (StateManager.Instance.Electricity.CurValue < electricityConsume)
-        {
-            StopWorking();
-            ShowTip("电力不足，排水机已自动停止工作");
-        }
-        else if (StateManager.Instance.WaterLevel.CurValue <= 0)
-        {
-            StopWorking();
-            ShowTip("水平面已为0，排水机已自动停止工作");
-        }
-    }
 }

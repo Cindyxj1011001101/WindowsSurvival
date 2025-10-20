@@ -18,7 +18,13 @@ MonoBehaviour:
   isIndoor: 0
   isInWater: 1
   isInSpacecraft: 0
+  isInCave: 1
   placeImage: {fileID: 1928536217, guid: c24a177f618f8b44aac53ecfcbbcf87e, type: 3}
   exploreTime: 15
   minCoord: 0
   maxCoord: 50
+  connectedOutdoorPlace: 0
+  initialBagStateConfig:
+    hasCable: 0
+    containedCards: []
+    pressureLevel: 4

@@ -44,7 +44,7 @@ public class WaterCrack : Card
         tip = string.Empty;
         if (card.CardId == "裂缝填充物")
         {
-            tip = "堵住";
+            tip = Events[0].name;
             return true;
         }
         return false;

@@ -1,4 +1,6 @@
-
+/// <summary>
+/// 塑料袋
+/// </summary>
 public class PlasticBag : EquipmentCard
 {
     private InnerContentsComponent innerContents;
@@ -7,9 +9,9 @@ public class PlasticBag : EquipmentCard
         Events.Add(new CardEvent("切割", "切割塑料袋", Event_Cut, Judge_Cut));
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
         innerContents.weightLossRate = 0.5f; // 塑料袋的减重率
     }
 
@@ -57,7 +59,7 @@ public class PlasticBag : EquipmentCard
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut) && innerContents.bag.IsEmpty)
         {
             // 如果是切割工具，并且渔获袋是空的，可以快速交互
-            tip = "切割";
+            tip = Events[0].name;
             return true;
         }
 

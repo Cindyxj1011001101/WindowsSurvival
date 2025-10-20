@@ -57,7 +57,7 @@ public static class ExcelReader
                 IsPlant = ParseBool(row[52].ToString()),
                 HasCoordinate = ParseBool(row[57].ToString()),
                 IsWeapon = ParseBool(row[59].ToString()),
-                IsEntity = ParseBool(row[64].ToString()),
+                IsEntity = ParseBool(row[65].ToString()),
             };
             // 可选字段
             if (cardConfig.HasFreshness)
@@ -151,15 +151,16 @@ public static class ExcelReader
                 cardConfig.MinAtkDist = ParseFloat(row[61].ToString());
                 cardConfig.MaxAtkDist = ParseFloat(row[62].ToString());
                 cardConfig.AtkForm = Enum.Parse<AttackForm>(row[63].ToString());
+                cardConfig.AtkTime = ParseInt(row[64].ToString());
             }
             if (cardConfig.IsEntity)
             {
-                cardConfig.MaxHealth = ParseFloat(row[65].ToString());
-                cardConfig.EntityAtk = ParseFloat(row[66].ToString());
-                cardConfig.MoveDistPerMin = ParseFloat(row[67].ToString());
-                cardConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[68].ToString());
-                cardConfig.AIRefreshInterval = ParseInt(row[69].ToString());
-                cardConfig.DeadDrops = row[70].ToString();
+                cardConfig.MaxHealth = ParseFloat(row[66].ToString());
+                cardConfig.EntityAtk = ParseFloat(row[67].ToString());
+                cardConfig.MoveDistPerMin = ParseFloat(row[68].ToString());
+                cardConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[69].ToString());
+                cardConfig.AIRefreshInterval = ParseInt(row[70].ToString());
+                cardConfig.DeadDrops = row[71].ToString();
             }
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
@@ -223,14 +224,14 @@ public static class ExcelReader
         return result;
     }
 
-    public static Dictionary<PlaceEnum, DisposableDropList> GenerateDisposableDropList()
+    public static Dictionary<PlaceEnum, DropList> GenerateDisposableDropList()
     {
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/DisposableDropListConfig.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
 
-        Dictionary<PlaceEnum, DisposableDropList> dict = new();
+        Dictionary<PlaceEnum, DropList> dict = new();
 
         foreach (DataTable table in result.Tables)
         {
@@ -244,7 +245,7 @@ public static class ExcelReader
                 if (string.IsNullOrEmpty(row[0].ToString())) break; // 遇到空行说明读取完毕了，后续是内容物的配置
 
                 // 读取掉落配置
-                DropConfig config = new()
+                DisposableDropConfig config = new()
                 {
                     CardId = row[0].ToString(),
                     DropNum = ParseInt(row[1].ToString()),
@@ -264,19 +265,19 @@ public static class ExcelReader
                     // 覆写卡牌属性
                     if (config.OverwriteFreshness && card.TryGetComponent<FreshnessComponent>(out var f))
                     {
-                        f.freshness = ParseInt(row[4].ToString()); // 覆写新鲜度
+                        f.SetValue(ParseInt(row[4].ToString())); // 覆写新鲜度
                     }
                     if (config.OverwriteDurability && card.TryGetComponent<DurabilityComponent>(out var d))
                     {
-                        d.durability = ParseInt(row[6].ToString()); // 覆写耐久度
+                        d.SetValue(ParseInt(row[6].ToString())); // 覆写耐久度
                     }
                     if (config.OverwriteGrowth && card.TryGetComponent<GrowthComponent>(out var g))
                     {
-                        g.growth = ParseInt(row[8].ToString()); // 覆写生长进度
+                        g.SetValue(ParseInt(row[8].ToString())); // 覆写生长进度
                     }
                     if (config.OverwriteProgress && card.TryGetComponent<ProgressComponent>(out var p))
                     {
-                        p.progress = ParseInt(row[10].ToString()); // 覆写产物进度
+                        p.SetValue(ParseInt(row[10].ToString())); // 覆写产物进度
                     }
                     if (config.OverwriteInnerContents && card.TryGetComponent<InnerContentsComponent>(out var inn))
                     {
@@ -284,7 +285,7 @@ public static class ExcelReader
                         var endRowIndex = ParseInt(row[13].ToString());
                         foreach (var c in ReadInnerContents(table, startRowIndex, endRowIndex))
                         {
-                            inn.bag.AddCard(c);
+                            inn.AddCard(c);
                         }
                     }
                     droppedCards.Add(card);
@@ -294,7 +295,7 @@ public static class ExcelReader
                 dropList.Add(new Drop(config.DropWeight, droppedCards));
             }
             // 保存为Json
-            DisposableDropList disposableDropList = new() { maxCount = dropList.Count, dropList = dropList };
+            DropList disposableDropList = new(dropList, true);
             dict.Add(Enum.Parse<PlaceEnum>(table.TableName), disposableDropList);
         }
         return dict;
@@ -309,7 +310,7 @@ public static class ExcelReader
         {
             row = table.Rows[i];
             // 读取掉落配置
-            DropConfig config = new()
+            DisposableDropConfig config = new()
             {
                 CardId = row[0].ToString(),
                 DropNum = ParseInt(row[1].ToString()),
@@ -324,22 +325,22 @@ public static class ExcelReader
             if (config.OverwriteFreshness)
             {
                 if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                    freshnessComponent.freshness = ParseInt(row[4].ToString()); // 设置新鲜度
+                    freshnessComponent.SetValue(ParseInt(row[4].ToString())); // 设置新鲜度
             }
             if (config.OverwriteDurability)
             {
                 if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                    durabilityComponent.durability = ParseInt(row[6].ToString()); // 设置耐久度
+                    durabilityComponent.SetValue(ParseInt(row[6].ToString())); // 设置耐久度
             }
             if (config.OverwriteGrowth)
             {
                 if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                    growthComponent.growth = ParseInt(row[8].ToString()); // 设置生长进度
+                    growthComponent.SetValue(ParseInt(row[8].ToString())); // 设置生长进度
             }
             if (config.OverwriteProgress)
             {
                 if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                    progressComponent.progress = ParseInt(row[10].ToString()); // 设置产物进度
+                    progressComponent.SetValue(ParseInt(row[10].ToString())); // 设置产物进度
             }
             // 添加到掉落列表
             for (int j = 0; j < config.DropNum; j++)
@@ -399,22 +400,22 @@ public static class ExcelReader
                 if (config.OverwriteFreshness)
                 {
                     if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                        freshnessComponent.freshness = ParseInt(row[8].ToString()); // 设置新鲜度
+                        freshnessComponent.SetValue(ParseInt(row[8].ToString())); // 设置新鲜度
                 }
                 if (config.OverwriteDurability)
                 {
                     if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                        durabilityComponent.durability = ParseInt(row[10].ToString()); // 设置耐久度
+                        durabilityComponent.SetValue(ParseInt(row[10].ToString())); // 设置耐久度
                 }
                 if (config.OverwriteGrowth)
                 {
                     if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                        growthComponent.growth = ParseInt(row[12].ToString()); // 设置生长进度
+                        growthComponent.SetValue(ParseInt(row[12].ToString())); // 设置生长进度
                 }
                 if (config.OverwriteProgress)
                 {
                     if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                        progressComponent.progress = ParseInt(row[14].ToString()); // 设置产物进度
+                        progressComponent.SetValue(ParseInt(row[14].ToString())); // 设置产物进度
                 }
                 // 添加到掉落列表
                 populationList.Add(new Population()
@@ -461,28 +462,44 @@ public static class ExcelReader
     #endregion
 
     #region 读取事件配置
-    public static List<InGameEventConfig> ReadInGameEventConfig(string filename)
+    public static List<GameEvent> ReadInGameEventConfig(string filename)
     {
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
         DataSet result = excelReader.AsDataSet();
         DataTable table = result.Tables[0]; // 配置在第一张表中
-        List<InGameEventConfig> eventConfigList = new();
+        List<GameEvent> eventList = new();
         for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
         {
             DataRow row = table.Rows[i];
             if (string.IsNullOrEmpty(row[0].ToString())) continue; // 如果事件名称为空，跳过读取
-            InGameEventConfig config = new()
-            {
-                EventName = row[0].ToString(),
-                ThreatLevel = ParseInt(row[1].ToString()),
-                BasicTriggerWeight = ParseFloat(row[2].ToString()),
-                TriggerInterval = ParseFloat(row[4].ToString())
-            };
-            eventConfigList.Add(config);
+            GameEvent e = GameEvent.ParseDataRow(row);
+            if (e == null) continue;
+            eventList.Add(e);
         }
-        return eventConfigList;
+        return eventList;
+    }
+    #endregion
+
+    #region 读取入侵组合配置
+    public static List<InvasionComposition> ReadInvasionCompositionConfig(string filename)
+    {
+        // 打开Excel文件
+        using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
+        IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+        DataSet result = excelReader.AsDataSet();
+        DataTable table = result.Tables[0]; // 配置在第一张表中
+        List<InvasionComposition> compositionList = new();
+        for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
+        {
+            DataRow row = table.Rows[i];
+            if (string.IsNullOrEmpty(row[0].ToString())) continue; // 如果组合称为空，跳过读取
+            InvasionComposition composition = InvasionComposition.ParseDataRow(row);
+            if (composition == null) continue;
+            compositionList.Add(composition);
+        }
+        return compositionList;
     }
     #endregion
 }

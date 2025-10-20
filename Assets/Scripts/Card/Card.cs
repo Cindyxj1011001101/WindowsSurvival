@@ -12,6 +12,7 @@ public enum CardTag
     Plants,  // 素食
     Meat,    // 肉食
     Hunter,  // 猎人
+    Food,    // 食物
 }
 
 public enum CardType
@@ -140,23 +141,6 @@ public abstract class Card : IComparable<Card>
     public CardSlot Slot => SlotCards?.CardSlot;
     #endregion
 
-    private void Update()
-    {
-        if (!isUpdatePaused && !Destroyed)
-            OnUpdate();
-    }
-
-    /// <summary>
-    /// 每回合结算时执行
-    /// </summary>
-    protected virtual void OnUpdate()
-    {
-        foreach (var component in components.Values)
-        {
-            if (component is IUpdate update) update.Update();
-        }
-    }
-
     public virtual void OnAdd(Bag bag) { }
     public virtual void OnRemove(Bag bag) { }
 
@@ -170,10 +154,11 @@ public abstract class Card : IComparable<Card>
         SlotCards = slotCards;
     }
 
+    #region Init
     /// <summary>
     /// 用于在卡牌实例化后进行额外的初始化操作，主要用于为卡牌手动添加组件或者对组件的数值进行修改
     /// </summary>
-    public virtual void Awake()
+    public virtual void LateConstrcutor()
     {
         if (TryGetComponent<InnerContentsComponent>(out var i))
         {
@@ -182,32 +167,23 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    /// <summary>
-    /// 在Awake之后调用，主要用于处理游戏内事件的监听
-    /// </summary>
-    protected virtual void Start() { }
-
-    private bool isUpdating = false; // 是否已启用每回合更新
-
-    [JsonProperty] private bool isUpdatePaused = false; // 是否暂停每回合更新
+    private bool init = false; // 是否已初始化
 
     /// <summary>
-    /// 开始监听每回合的结算
+    /// 在LateConstrcutor之后调用，主要用于处理游戏内事件的监听
     /// </summary>
-    public void StartUpdating()
+    public virtual void Init()
     {
-        if (isUpdating) return;
+        if (init) return;
 
-        isUpdating = true;
+        init = true;
 
         foreach (var c in components.Values)
         {
             c.SetBelongedCard(this);
         }
 
-        Awake();
-
-        UpdateManager.Instance.CardUpdate.AddListener(Update);
+        LateConstrcutor();
 
         // 如果有内容物组件，则开始监听内容物的更新
         if (TryGetComponent<InnerContentsComponent>(out var component))
@@ -215,18 +191,42 @@ public abstract class Card : IComparable<Card>
             component.Init();
         }
 
-        Start();
-
         GlobalDataManager.Instance.AddCardNum(CardId);
+
+        EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
+        UpdateManager.Instance.CardUpdate.AddListener(Update);
+    }
+    #endregion
+
+    #region Update
+    [JsonProperty] private bool isUpdatePaused = false; // 是否暂停每回合更新
+
+    private void Update()
+    {
+        if (isUpdatePaused || Destroyed) return;
+
+        OnUpdate();
+    }
+
+    private void OnUpdateBegin()
+    {
+        if (isUpdatePaused || Destroyed) return;
+
+        foreach (var component in components.Values)
+        {
+            if (component is IUpdate iu) iu.OnUpdateBegin();
+        }
     }
 
     /// <summary>
-    /// 结束监听每回合的结算
+    /// 每回合结算时执行
     /// </summary>
-    public void StopUpdating()
+    protected virtual void OnUpdate()
     {
-        PauseUpdating();
-        UpdateManager.Instance.CardUpdate.RemoveListener(Update);
+        foreach (var component in components.Values)
+        {
+            if (component is IUpdate iu) iu.Update();
+        }
     }
 
     public void PauseUpdating()
@@ -239,32 +239,9 @@ public abstract class Card : IComparable<Card>
         isUpdatePaused = false;
     }
 
-    public virtual void Use(int times = 1)
-    {
-        if (TryGetComponent<DurabilityComponent>(out var component))
-        {
-            component.Use(times);
-        }
-    }
+    #endregion
 
-    public void RefreshSlot()
-    {
-        if (Slot != null) Slot.RefreshDisplay();
-        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
-    }
-
-    public void DisplayComponentValueChange(Type componentType, float value)
-    {
-        if (Slot != null) Slot.DisplayComponentValueChange(componentType, value);
-        if (transform != null && transform.TryGetComponent<CardSlot>(out var slot))
-            slot.DisplayComponentValueChange(componentType, value);
-    }
-
-    public void ShowTip(string tip)
-    {
-        if (Transform != null) Transform.ShowTip(tip);
-    }
-
+    #region Destroy
     public void DestroyThis()
     {
         if (Destroyed) return;
@@ -273,8 +250,6 @@ public abstract class Card : IComparable<Card>
 
         OnDestroy();
 
-        StopUpdating();
-
         SlotCards.RemoveCard(this);
 
         //if (TryGetComponent<InnerContentsComponent>(out var innerContents)) innerContents.Clear();
@@ -282,49 +257,22 @@ public abstract class Card : IComparable<Card>
         OnLeaveEnvironment();
 
         GlobalDataManager.Instance.ReduceCardNum(CardId);
+
+        EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
+        UpdateManager.Instance.CardUpdate.RemoveListener(Update);
     }
 
     protected virtual void OnDestroy() { }
-
-    #region 拖动交互
-    /// <summary>
-    /// 能否拖动交互
-    /// </summary>
-    /// <param name="card">被拿起的卡牌</param>
-    /// <returns></returns>
-    public virtual bool CanQuickInteract(Card card, out string tip)
-    {
-        tip = string.Empty;
-        return false;
-    }
-
-    /// <summary>
-    /// 拖动交互的具体逻辑
-    /// </summary>
-    /// <param name="slot">被拿起的卡牌对应的SlotCards</param>
-    /// <param name="count">需要快捷交互的卡牌数量</param>
-    public virtual void QuickIneract(SlotCards slot, int count, out string tip) { tip = string.Empty; }
     #endregion
 
-    /// <summary>
-    /// 进入当前环境时（如玩家进入该卡牌所在地点）（通常用于播放卡牌对应的循环音）
-    /// </summary>
-    public virtual void OnEnterEnvironment() { }
-
-    /// <summary>
-    /// 离开当前环境时（如玩家离开该卡牌所在地点）
-    /// </summary>
-    public virtual void OnLeaveEnvironment() { }
-
-    /// <summary>
-    /// 打开卡牌详情时（通常用于调大卡牌对应的循环音）
-    /// </summary>
-    public virtual void OnDetailOpen() { }
-
-    /// <summary>
-    /// 关闭卡牌详情时（通常用于调小卡牌对应的循环音）
-    /// </summary>
-    public virtual void OnDetailClose() { }
+    #region Component
+    public virtual void Use(float durabilityConsumption = 1)
+    {
+        if (TryGetComponent<DurabilityComponent>(out var component))
+        {
+            component.Use(durabilityConsumption);
+        }
+    }
 
     /// <summary>
     /// 获取卡牌的组件
@@ -381,6 +329,69 @@ public abstract class Card : IComparable<Card>
         return false;
     }
 
+    #endregion
+
+    #region UI
+    public void RefreshSlot()
+    {
+        if (Slot != null) Slot.RefreshDisplay();
+        EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
+    }
+
+    public void DisplayComponentValueChange(Type componentType, float value)
+    {
+        if (Slot != null) Slot.DisplayComponentValueChange(componentType, value);
+        if (transform != null && transform.TryGetComponent<CardSlot>(out var slot))
+            slot.DisplayComponentValueChange(componentType, value);
+    }
+
+    public void ShowTip(string tip)
+    {
+        if (Transform != null) Transform.ShowTip(tip);
+    }
+
+    #endregion
+
+    #region 拖动交互
+    /// <summary>
+    /// 能否拖动交互
+    /// </summary>
+    /// <param name="card">被拿起的卡牌</param>
+    /// <returns></returns>
+    public virtual bool CanQuickInteract(Card card, out string tip)
+    {
+        tip = string.Empty;
+        return false;
+    }
+
+    /// <summary>
+    /// 拖动交互的具体逻辑
+    /// </summary>
+    /// <param name="slot">被拿起的卡牌对应的SlotCards</param>
+    /// <param name="count">需要快捷交互的卡牌数量</param>
+    public virtual void QuickIneract(SlotCards slot, int count, out string tip) { tip = string.Empty; }
+    #endregion
+
+    /// <summary>
+    /// 进入当前环境时（如玩家进入该卡牌所在地点）（通常用于播放卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnEnterEnvironment() { }
+
+    /// <summary>
+    /// 离开当前环境时（如玩家离开该卡牌所在地点）
+    /// </summary>
+    public virtual void OnLeaveEnvironment() { }
+
+    /// <summary>
+    /// 打开卡牌详情时（通常用于调大卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnDetailOpen() { }
+
+    /// <summary>
+    /// 关闭卡牌详情时（通常用于调小卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnDetailClose() { }
+
     public int CompareTo(Card other)
     {
         if (other.GetType() != GetType()) return 0;
@@ -388,31 +399,31 @@ public abstract class Card : IComparable<Card>
         {
             // 新鲜度低的优先
             other.TryGetComponent<FreshnessComponent>(out var o);
-            return a.freshness - o.freshness;
+            return Mathf.CeilToInt(a.value - o.value);
         }
         else if (TryGetComponent<ProgressComponent>(out var b))
         {
             // 产物进度高的优先
             other.TryGetComponent<ProgressComponent>(out var o);
-            return o.progress - b.progress;
+            return Mathf.CeilToInt(o.value - b.value);
         }
         else if (TryGetComponent<DurabilityComponent>(out var c))
         {
             // 耐久度低的优先
             other.TryGetComponent<DurabilityComponent>(out var o);
-            return c.durability - o.durability;
+            return Mathf.CeilToInt(c.value - o.value);
         }
         else if (other.TryGetComponent<PlantGrowthComponent>(out var p))
         {
             // 生长度高的优先
             other.TryGetComponent<PlantGrowthComponent>(out var o);
-            return Mathf.CeilToInt(o.growth - p.growth);
+            return Mathf.CeilToInt(o.value - p.value);
         }
         else if (other.TryGetComponent<GrowthComponent>(out var g))
         {
             // 生长度高的优先
             other.TryGetComponent<GrowthComponent>(out var o);
-            return Mathf.CeilToInt(o.growth - g.growth);
+            return Mathf.CeilToInt(o.value - g.value);
         }
         else
         {
@@ -465,6 +476,7 @@ public abstract class Card : IComparable<Card>
         }
     }
 
+    #region AddCard
     public Tween AddCard(string cardId, bool toPlayerBag, out Card card)
     {
         return GameManager.Instance.AddCardWithTween(cardId, toPlayerBag, Transform.position, out card);
@@ -494,7 +506,7 @@ public abstract class Card : IComparable<Card>
     /// 掉落卡牌
     /// </summary>
     /// <returns></returns>
-    public void DropCards(List<Card> cards, UnityAction beforeDrop)
+    public void DropCards(List<Card> cards, UnityAction onDrop)
     {
         if (Transform == null || cards.IsNullOrEmpty()) return;
 
@@ -506,7 +518,7 @@ public abstract class Card : IComparable<Card>
         {
             var tween = Transform.PunchAndBounce(() =>
             {
-                beforeDrop?.Invoke();
+                onDrop?.Invoke();
                 AddCards(cards, true);
             });
 
@@ -514,7 +526,7 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    public void RandomDrop(RandomDropList dropList, out string tip, int times = 1, UnityAction beforeDrop = null)
+    public void RandomDrop(DropList dropList, out string tip, int times = 1, UnityAction onDrop = null)
     {
         tip = string.Empty;
         var droppedCards = new List<Card>();
@@ -522,7 +534,7 @@ public abstract class Card : IComparable<Card>
         {
             droppedCards.AddRange(dropList.RandomDrop(out tip));
         }
-        DropCards(droppedCards, beforeDrop);
+        DropCards(droppedCards, onDrop);
     }
 
     /// <summary>
@@ -599,18 +611,43 @@ public abstract class Card : IComparable<Card>
         TurnTo(cardId, targetBag, out _);
     }
 
-    protected void EasyEvent(out string tip, string sound, int eventIndex = 0)
+    /// <summary>
+    /// 解析配置并掉落卡牌
+    /// </summary>
+    /// <param name="configStr">格式为：卡牌ID * 数量 + 卡牌ID * 数量 + ...</param>
+    /// <returns></returns>
+    public void ParseAndDrop(string configStr)
+    {
+        // 格式为：卡牌ID * 数量 + 卡牌ID * 数量 + ...
+        string[] config;
+        foreach (var str in configStr.Replace(" ", "").Split('+'))
+        {
+            config = str.Split('*');
+            AddCards(config[0], int.Parse(config[1]), false);
+        }
+    }
+
+    #endregion
+
+    protected void EasyEvent(out string tip, string sound = "", bool destroyThis = true, int eventIndex = 0)
     {
         tip = string.Empty;
+        
         // 销毁自身
-        DestroyThis();
+        if (destroyThis)
+            DestroyThis();
+        
         // 播放音效
-        if (SoundManager.Instance != null)
+        if (!string.IsNullOrEmpty(sound) && SoundManager.Instance != null)
             SoundManager.Instance.PlaySound(sound, true);
+
+        var e = Events[eventIndex];
+
         // 应用状态变化
-        StateManager.Instance.ApplyPlayerStateChange(Events[eventIndex].GetPlayerEffects());
+        GameManager.Instance.CurEnvironmentBag.ApplyEnvEffects(e.GetEnvEffects());
+        StateManager.Instance.ApplyPlayerStateChange(e.GetPlayerEffects());
         // 消耗时间
-        TimeManager.Instance.AddTime(Events[eventIndex].GetTimeEffect());
+        TimeManager.Instance.AddTime(e.GetTimeEffect());
     }
 }
 
@@ -665,13 +702,13 @@ public class CardEvent
 
     public Dictionary<PlayerStateEnum, float> GetPlayerEffects()
     {
-        if (getPlayerEffects == null) return null;
+        if (getPlayerEffects == null) return new();
         return getPlayerEffects.Invoke();
     }
 
     public Dictionary<EnvironmentStateEnum, float> GetEnvEffects()
     {
-        if (getEnvEffects == null) return null;
+        if (getEnvEffects == null) return new();
         return getEnvEffects.Invoke();
     }
 }

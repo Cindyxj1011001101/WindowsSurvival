@@ -51,12 +51,14 @@ public class ShortcutsController : MonoBehaviour
     private void Start()
     {
         #region 新手教程
+        var unlockedShortcuts = GameDataManager.Instance.WindowsData.unlockedShortcuts;
         if (!GameDataManager.Instance.CurLoad.SkipGuide) // 如果新手教程未跳过
         {
+            unlockedShortcuts.Add("Chat");
             // 显示已解锁的快捷方式
             foreach (var appName in shortcuts.Keys)
             {
-                SetLocked(appName, !GameDataManager.Instance.WindowsData.unlockedShortcuts.Contains(appName), false);
+                SetLocked(appName, !unlockedShortcuts.Contains(appName), false);
             }
 
             #region 临时

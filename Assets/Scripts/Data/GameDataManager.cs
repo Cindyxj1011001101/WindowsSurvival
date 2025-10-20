@@ -36,18 +36,16 @@ public class GameDataManager
         lastPlace = JsonManager.LoadData<int>(CurLoadName, "LastPlace");
         // 环境
         environmentBagDataDict = new();
-        foreach (PlaceEnum place in Enum.GetValues(typeof(PlaceEnum)))
+        foreach (PlaceEnum placeType in Enum.GetValues(typeof(PlaceEnum)))
         {
-            environmentBagDataDict.Add(place,
-                JsonManager.LoadData<EnvironmentBag>(CurLoadName, place.ToString() + "Bag"));
+            var env = JsonManager.LoadData<EnvironmentBag>(CurLoadName, placeType.ToString() + "Bag");
+            env.SetPlaceType(placeType);
+            environmentBagDataDict.Add(placeType, env);
         }
-
         // 状态数据 
         stateData = JsonManager.LoadData<StateData>(CurLoadName, "State");
         // 音频数据
         audioData = JsonManager.LoadData<AudioData>(CurLoadName, "Audio");
-        // 已解锁的配方
-        //unlockedRecipes = JsonManager.LoadData<List<string>>(CurLoadName, "UnlockedRecipes");
         // 科技数据
         technologyData = JsonManager.LoadData<TechnologyData>(CurLoadName, "Technology");
         // 装备数据
@@ -61,12 +59,11 @@ public class GameDataManager
         // 探索移动额外消耗数据
         behaviourExtraEffectsData = JsonManager.LoadData<BehaviourExtraEffectsData>(CurLoadName, "BehaviourExtraEffectsData");
         // 全局数据
-        saveData = JsonManager.LoadData<GlobalData>(CurLoadName, "SaveData");
         globalData = JsonManager.LoadData<GlobalData>(CurLoadName, "GlobalData");
         // 玩家数据
         playerData = JsonManager.LoadData<Player>(CurLoadName, "PlayerData");
         // 游戏事件数据
-        inGameEventData = JsonManager.LoadData<InGameEventData>(CurLoadName, "InGameEventData");
+        gameEventData = JsonManager.LoadData<GameEventData>(CurLoadName, "GameEventData");
     }
 
     public void SaveAllData()
@@ -81,8 +78,6 @@ public class GameDataManager
         SaveStateData();
         // 音频数据
         SaveAudioData();
-        // 已解锁的配方
-        //SaveUnlockedRecipes();
         // 科技数据
         SaveTechnologyData();
         // 装备数据
@@ -96,12 +91,11 @@ public class GameDataManager
         // 探索移动额外消耗数据
         SaveBehaviourExtraEffectsData();
         // 全局数据
-        SaveSaveData();
         SaveGlobalData();
         // 玩家数据
         SavePlayerData();
         // 游戏事件数据
-        SaveInGameEventData();
+        SaveGameEventData();
 
         if (loadData == null)
         {
@@ -154,17 +148,6 @@ public class GameDataManager
 
     public void SavePlayerBag()
     {
-        //PlayerBag bag = GameManager.Instance.PlayerBag;
-        //playerBagData = new()
-        //{
-        //    init = true,
-        //    cardSlots = new()
-        //};
-        //foreach (var slot in bag.Slots)
-        //{
-        //    playerBagData.cardSlots.Add(new List<Card>(slot.Cards));
-        //}
-
         JsonManager.SaveData(playerBagData, CurLoadName, "PlayerBag");
     }
 
@@ -463,22 +446,12 @@ public class GameDataManager
     #endregion
 
     #region 全局数据
-    private GlobalData saveData;
-
-    public GlobalData SaveData => saveData;
-
-    public void SaveSaveData()
-    {
-        JsonManager.SaveData(saveData, CurLoadName, "SaveData");
-    }
-
     private GlobalData globalData;
 
     public GlobalData GlobalData => globalData;
 
     public void SaveGlobalData()
     {
-        // TODO: 这个全局数据应该是存档无关的
         JsonManager.SaveData(globalData, CurLoadName, "GlobalData");
     }
     #endregion
@@ -495,18 +468,20 @@ public class GameDataManager
     #endregion
 
     #region 游戏事件数据
-    private InGameEventData inGameEventData;
+    private GameEventData gameEventData;
 
-    public InGameEventData InGameEventData => inGameEventData;
+    public GameEventData GameEventData => gameEventData;
 
-    public void SaveInGameEventData()
+    public void SaveGameEventData()
     {
-        inGameEventData = new()
+        gameEventData = new()
         {
-            eventsOnCooldown = InGameEventManager.Instance.EventsOnCooldown,
-            trendValue = InGameEventManager.Instance.TrendValue,
+            trendValue = GameEventManager.Instance.TrendValue,
+            invasionConfig = GameEventManager.Instance.InvasionEventConfig,
+            eventsOnCooldown = GameEventManager.Instance.EventsOnCooldown,
+            ongoingEvents = GameEventManager.Instance.OngoingEvents
         };
-        JsonManager.SaveData(inGameEventData, CurLoadName, "InGameEventData");
+        JsonManager.SaveData(gameEventData, CurLoadName, "GameEventData");
     }
     #endregion
 }

@@ -7,7 +7,7 @@ public class CookedTentacle : CookableCard
     {
         Events = new()
         {
-            new CardEvent("食用", "食用熟触手", (out string s) => EasyEvent(out s, "吃_01"), null, () => 30,
+            new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 30,
             () => new()
             {
                 { PlayerStateEnum.Fullness, 24 },

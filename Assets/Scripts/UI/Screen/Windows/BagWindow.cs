@@ -10,6 +10,8 @@ public abstract class BagWindow : WindowBase
 
     [SerializeField] protected List<CardSlot> slots;
 
+    public List<CardSlot> Slots => slots;
+
     public Bag Bag {  get; protected set; }
 
     public virtual void RefreshDisplay()

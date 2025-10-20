@@ -3,7 +3,7 @@
 /// </summary>
 public class LooseBoulders : Card
 {
-    private RandomDropList dropList = new(
+    private DropList dropList = new(
        new Drop(3, ("²£Á§É³", 1)),
        new Drop(2, ("°×±¬¿ó", 1)),
        new Drop(1, ("º£ÅÀ³æ", 1))
@@ -17,9 +17,9 @@ public class LooseBoulders : Card
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         TryGetComponent<DurabilityComponent>(out var d);
         d.onBroken = () =>
@@ -47,7 +47,7 @@ public class LooseBoulders : Card
     private void DigByTool(Card tool, out string tip)
     {
         //µôÂä¿¨ÅÆ
-        RandomDrop(dropList, out tip, beforeDrop: () =>
+        RandomDrop(dropList, out tip, onDrop: () =>
         {
             //ÏûºÄ1µãÄÍ¾Ã¶È
             Use();

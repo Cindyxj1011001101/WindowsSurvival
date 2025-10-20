@@ -52,7 +52,7 @@ public class WaterChestnutFruit : Card
         tip = string.Empty;
         if (card.CardId == "¸Ö´¸")
         {
-            tip = "ÓÃ´¸×ÓÇÃ";
+            tip = Events[1].name;
             return true;
         }
         return false;

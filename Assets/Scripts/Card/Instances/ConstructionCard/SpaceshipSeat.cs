@@ -21,9 +21,10 @@ public class SpaceshipSeat : ConstructionCard
         };
     }
 
-    protected override void Start()
+    public override void Init()
     {
-        GlobalDataManager.Instance.saveData.AddReduceAction(CardId, new Reduce(2, .5f));
+        base.Init();
+        GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2, .5f));
 
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天刷新
     }
@@ -39,8 +40,8 @@ public class SpaceshipSeat : ConstructionCard
 
         // 获取实际的状态变化率
         // 实际状态变化率 = 基础变化率 * 衰减率
-        var sobrietyChangeRate = +2.7f * GlobalDataManager.Instance.saveData.GetReduceRate(CardId);
-        var sanChangeRate = +2f * GlobalDataManager.Instance.saveData.GetReduceRate(CardId);
+        var sobrietyChangeRate = +2.7f * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId);
+        var sanChangeRate = +2f * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId);
 
         // 唤起时间窗口，设置休息时长为0-60分钟
         var window = (WindowsManager.Instance.OpenWindow("TimeSelect", true) as TimeSelectWindow);
@@ -49,7 +50,7 @@ public class SpaceshipSeat : ConstructionCard
         {
             StateManager.Instance.Rest(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRate }, { PlayerStateEnum.San, sanChangeRate } });
             // 衰减次数+1
-            GlobalDataManager.Instance.saveData.AddReduceCount(CardId);
+            GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId);
         };
         window.getConfirmEffects += (t) =>
         {

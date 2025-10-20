@@ -20,9 +20,9 @@ public class PickledJellyfishSkin : Card
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
         if (!TryGetComponent(out timer))
         {
             timer = new(720)

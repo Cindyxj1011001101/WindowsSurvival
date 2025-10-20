@@ -1,11 +1,11 @@
 ﻿public enum EventType
 {
     Update,                             // 回合结算
+    UpdateBegin,                        // 回合结算开始，记录快照
     ChangeCardProperty,                 // 卡牌属性变化
     ChangeEnv,                          // 场景移动界面刷新
     RefreshPlayerState,                 // 更新玩家状态数据
     RefreshEnvironmentState,            // 更新环境状态数据
-    ChangeDiscoveryDegree,              // 探索度变化
     ChangePlayerBagCards,               // 玩家背包卡牌变化
     ChangeStudyProgress,                // 研究进度变化
     UnlockRecipe,                       // 解锁合成配方
@@ -25,19 +25,9 @@
     LockUnlockIntermediateTechnologies, // 锁定/解锁中间科技
     CardNumChange,                      // 卡牌数量变化
     PlayerMove,                         // 玩家移动
-    DataTransmissionStationOutOfPower,  // 数据传输台断电
-}
-
-public class ChangeStateArgs
-{
-    public PlayerStateEnum state;
-    public float value;
-
-    public ChangeStateArgs(PlayerStateEnum s, float i)
-    {
-        state = s;
-        value = i;
-    }
+    StudyInterrupted,                   // 研究中断
+    OnGameEventTrigger,                // 全局效果生效
+    OnGameEventEnd,                  // 全局效果失效
 }
 
 public class ChangePlayerBagCardsArgs

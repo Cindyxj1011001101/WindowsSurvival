@@ -1,7 +1,4 @@
-﻿/// <summary>
-/// 氧气罐
-/// </summary>
-public abstract class EquipmentCard : Card
+﻿public abstract class EquipmentCard : Card
 {
     protected EquipmentComponent equipment;
     protected EquipmentCard()
@@ -13,9 +10,9 @@ public abstract class EquipmentCard : Card
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
         TryGetComponent(out equipment);
 
         if (TryGetComponent<DurabilityComponent>(out var d))

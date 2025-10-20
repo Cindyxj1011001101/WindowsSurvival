@@ -3,7 +3,7 @@
 /// </summary>
 public class RatBody : CookableCard
 {
-    private RandomDropList dropList = new(
+    private DropList dropList = new(
        new Drop(3, ("小块生肉", 1)),
        new Drop(1, (out string tip) => { tip = "肉被糟蹋了，什么都没得到"; })
        );
@@ -81,7 +81,7 @@ public class RatBody : CookableCard
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            tip = "用刀切割";
+            tip = Events[2].name;
             return true;
         }
         return false;

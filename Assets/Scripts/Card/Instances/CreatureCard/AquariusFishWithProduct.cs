@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 水瓶鱼
 /// </summary>
 public class AquariusFishWithProduct : Card
 {
-    private RandomDropList dropList;
+    private DropList dropList;
     private AquariusFishWithProduct()
     {
         dropList = new(
@@ -83,7 +81,7 @@ public class AquariusFishWithProduct : Card
         tip = string.Empty;
         if (card.CardId == "捞网")
         {
-            tip = "用捞网捉";
+            tip = Events[0].name;
             return true;
         }
         return false;

@@ -1,6 +1,6 @@
 /// <summary>
 /// й╗вск╝д╦
 /// </summary>
-public class LionJellyfish
+public class LionJellyfish : EntityCard
 {
 }

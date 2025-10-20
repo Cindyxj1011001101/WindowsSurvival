@@ -1,6 +1,6 @@
 ﻿public class AudioData
 {
-    public float masterVolume;
-    public float bgmVolume;
-    public float sfxVolume;
+    public float masterVolume = .5f;
+    public float bgmVolume = 1f;
+    public float sfxVolume = 1f;
 }

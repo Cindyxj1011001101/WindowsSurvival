@@ -4,9 +4,9 @@
 public abstract class ConstructionCard : Card
 {
     private ConstructionComponent construction;
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
         TryGetComponent(out construction);
         if (construction.canBeDemolished)
         {
@@ -56,23 +56,6 @@ public abstract class ConstructionCard : Card
             return false;
         }
         return true;
-    }
-
-    /// <summary>
-    /// 解析拆毁产物
-    /// </summary>
-    /// <param name="s"></param>
-    /// <returns></returns>
-    private void ParseAndDrop(string s)
-    {
-        // 格式为：卡牌ID * 数量 + 卡牌ID * 数量 + ...
-        var strs = s.Replace(" ", "").Split('+');
-        string[] config;
-        foreach (var str in strs)
-        {
-            config = str.Split('*');
-            AddCards(config[0], int.Parse(config[1]), false);
-        }
     }
 
     public override bool CanQuickInteract(Card card, out string tip)

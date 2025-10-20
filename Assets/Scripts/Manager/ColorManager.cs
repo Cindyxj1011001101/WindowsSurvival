@@ -16,7 +16,7 @@ public static class ColorManager
     public static Color32 Yellow { get; private set; } = new(255, 232, 13, 255);
     public static Color32 Orange { get; private set; } = new(255, 128, 11, 255);
     public static Color32 BurntOrange { get; private set; } = new(255, 82, 13, 255);
-    public static Color32 Red { get; private set; } = new(255, 9, 9, 255);
+    public static Color32 Red { get; private set; } = new(255, 64, 59, 255);
     public static Color32 FreshWater { get; private set; } = new(147, 219, 247, 255);
     public static Color32 SalineWater { get; private set; } = new(59, 124, 246, 255);
 
@@ -31,6 +31,7 @@ public static class ColorManager
         { typeof(OxygenStorageComponent), SkyBlue },
         { typeof(FreshWaterStorageComponent), FreshWater },
         { typeof(SalineWaterStorageComponent), SalineWater },
+        { typeof(EntityComponent), Red },
     };
 
     public static Dictionary<int, Color32> LoadColors = new()
@@ -44,6 +45,15 @@ public static class ColorManager
     public static Dictionary<int, Color32> TemperatureColors = new()
     {
         { 0, DarkBlue },
+        { 1, SkyBlue },
+        { 2, Green },
+        { 3, Yellow },
+        { 4, Red },
+    };
+
+    public static Dictionary<int, Color32> PressureLevelColors = new()
+    {
+        { 0, Blue },
         { 1, SkyBlue },
         { 2, Green },
         { 3, Yellow },

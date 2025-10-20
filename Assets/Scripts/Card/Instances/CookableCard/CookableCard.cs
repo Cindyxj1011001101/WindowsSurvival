@@ -2,9 +2,9 @@
 {
     private CookComponent cookComponent;
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
         TryGetComponent(out cookComponent);
     }
 

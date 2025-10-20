@@ -15,10 +15,16 @@ MonoBehaviour:
   placeName: "\u6700\u540E\u5E87\u62A4\u6240"
   placeDesc: 
   placeType: 8
-  isIndoor: 0
+  isIndoor: 1
   isInWater: 1
   isInSpacecraft: 0
+  isInCave: 1
   placeImage: {fileID: 1928536217, guid: c24a177f618f8b44aac53ecfcbbcf87e, type: 3}
   exploreTime: 15
   minCoord: 0
   maxCoord: 15
+  connectedOutdoorPlace: 7
+  initialBagStateConfig:
+    hasCable: 0
+    containedCards: []
+    pressureLevel: 4

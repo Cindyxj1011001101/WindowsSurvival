@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// 冰箱
@@ -8,20 +9,20 @@ public class Refrigerator : ConstructionCard
     private InnerContentsComponent innerContents;
     private StateMachineComponent stateMachine;
 
-    public float electricityConsume = .3f; // 每回合电力消耗
+    private const float ELECTRICITY_CONSUMPTION = 0.3f; // 每回合电力消耗
 
     private Refrigerator()
     {
         Events = new()
         {
-            new CardEvent("接电", "使其接入电路。接入电路后每15分钟消耗0.3电力，冰箱里的内容物腐烂速度减半", Event_ConnectElectricity, Judge_ConnectElectricity),
-            new CardEvent("断电", "", Event_DisconnectElectricity, Judge_DisconnectElectricity),
+            new CardEvent("接电", $"将其接入电网。接电后每15分钟消耗{ELECTRICITY_CONSUMPTION}电力，内容物腐烂速度减半", Event_TurnOn, Judge_TurnOn),
+            new CardEvent("断电", "", Event_TurnOff, Judge_TurnOff),
         };
     }
 
-    public override void Awake()
+    public override void LateConstrcutor()
     {
-        base.Awake();
+        base.LateConstrcutor();
 
         // 未布置和已布置两种状态
         if (!TryGetComponent(out stateMachine))
@@ -39,16 +40,56 @@ public class Refrigerator : ConstructionCard
         {
             if (c.TryGetComponent(out FreshnessComponent f) && stateMachine.currentStateName == "已接电")
             {
-                f.updateRate = .5f;
+                f.updateRate *= .5f;
             }
         };
         innerContents.onRemoveCard = (c) =>
         {
             if (c.TryGetComponent(out FreshnessComponent f))
             {
-                f.updateRate = 1f;
+                f.updateRate /= .5f;
             }
         };
+    }
+    public override void Init()
+    {
+        base.Init();
+        EventManager.Instance.AddListener<Type>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.AddListener<Type>(EventType.OnGameEventEnd, OnMagneticStormEnd);
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
+    }
+
+    protected override void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.RemoveListener<Type>(EventType.OnGameEventEnd, OnMagneticStormEnd);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
+    }
+
+    private void OnMagneticStormBegin(Type type)
+    {
+        if (type != typeof(MagneticStorm) || stateMachine.currentStateName == "未接电") return;
+
+        Event_TurnOff(out _);
+        ShowTip($"受行星磁暴影响，{CardName}已断电并停止工作");
+    }
+
+    private void OnMagneticStormEnd(Type type)
+    {
+        if (type != typeof(MagneticStorm)) return;
+
+        RefreshSlot();
+    }
+
+    private void OnElectricityChange(RefreshEnvironmentStateArgs args)
+    {
+        if (args.stateEnum != EnvironmentStateEnum.Electricity || stateMachine.currentStateName == "未接电") return;
+
+        if (args.stateValue.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
+        {
+            Event_TurnOff(out _);
+            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
+        }
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -62,52 +103,36 @@ public class Refrigerator : ConstructionCard
         return true;
     }
 
-    private void StartWorking()
-    {
-        foreach (var slot in innerContents.bag.Slots)
-        {
-            foreach (var card in slot.Cards)
-            {
-                if (card.TryGetComponent<FreshnessComponent>(out var f))
-                {
-                    f.updateRate = .5f;
-                }
-            }
-        }
-    }
-
-    private void StopWorking()
-    {
-        foreach (var slot in innerContents.bag.Slots)
-        {
-            foreach (var card in slot.Cards)
-            {
-                if (card.TryGetComponent<FreshnessComponent>(out var f))
-                {
-                    f.updateRate = 1f;
-                }
-            }
-        }
-    }
-
     /// <summary>
     /// 接电
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_ConnectElectricity(out string tip)
+    private void Event_TurnOn(out string tip)
     {
         tip = string.Empty;
+        innerContents.ForEachCard(c =>
+        {
+            if (c.TryGetComponent<FreshnessComponent>(out var f))
+            {
+                f.updateRate *= .5f;
+            }
+        });
+        StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_CONSUMPTION);
         stateMachine.ChangeState("已接电");
-        StartWorking();
     }
 
-    private bool Judge_ConnectElectricity(out string hint)
+    private bool Judge_TurnOn(out string hint)
     {
         hint = string.Empty;
-
-        if (StateManager.Instance.Electricity.CurValue < electricityConsume)
+        if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            hint = "电力不足";
+            hint = $"受行星磁暴影响，无法接电";
+            return false;
+        }
+
+        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION)
+        {
+            hint = "电力供应不足";
             return false;
         }
 
@@ -118,30 +143,41 @@ public class Refrigerator : ConstructionCard
     /// 断电
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_DisconnectElectricity(out string tip)
+    private void Event_TurnOff(out string tip)
     {
         tip = string.Empty;
+        innerContents.ForEachCard(c =>
+        {
+            if (c.TryGetComponent<FreshnessComponent>(out var f))
+            {
+                f.updateRate /= .5f;
+            }
+        });
+        StateManager.Instance.ChangeElectricityChangeRate(ELECTRICITY_CONSUMPTION);
         stateMachine.ChangeState("未接电");
-        StopWorking();
     }
 
-    private bool Judge_DisconnectElectricity(out string hint)
+    private bool Judge_TurnOff(out string hint)
     {
         hint = string.Empty;
         return stateMachine.currentStateName == "已接电";
     }
 
-    protected override void OnUpdate()
+    public override bool CanQuickInteract(Card card, out string tip)
     {
-        base.OnUpdate();
+        if (base.CanQuickInteract(card, out tip)) return true;
 
-        if (stateMachine.currentStateName == "未接电") return;
+        return innerContents.CanQuickInteract(card, out tip);
+    }
 
-        if (StateManager.Instance.Electricity.CurValue < electricityConsume)
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        if (base.CanQuickInteract(slot.PeekCard(), out _))
         {
-            stateMachine.ChangeState("未接电");
-            StopWorking();
-            ShowTip("电力不足，冰箱已自动断电");
+            base.QuickIneract(slot, count, out tip);
+            return;
         }
+
+        innerContents.QuickIneract(slot, count, out tip);
     }
 }

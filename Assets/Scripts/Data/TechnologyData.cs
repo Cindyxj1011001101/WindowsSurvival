@@ -16,12 +16,9 @@ public class TechnologyData
     public List<string> studiedTechNodes = new(); // 学习过的科技节点
 
     public string curStudiedTechNodeName = string.Empty; // 当前正在学习的科技节点
-    public TechType curStudiedTechNodeType;
 
-    public Dictionary<string, TechNodeData> techNodeDict = new();
-
-    public bool isIntermediateTechnologiesUnlocked = false;
+    public Dictionary<string, TechNodeData> techNodeProgressDict = new();
 
     [JsonIgnore]
-    public TechNodeData CurStudiedTechNodeData => techNodeDict[curStudiedTechNodeName];
+    public TechNodeData CurStudiedTechNodeData => techNodeProgressDict[curStudiedTechNodeName];
 }

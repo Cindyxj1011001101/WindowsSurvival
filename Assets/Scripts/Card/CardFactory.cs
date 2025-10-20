@@ -143,6 +143,17 @@ public static class CardFactory
             { "水果布丁", typeof(FruitPudding) },
             { "坚果酥", typeof(NutCrisp) },
             { "蠕动盛宴", typeof(CreepFeast) },
+            { "食果鲀", typeof(Fruitfish) },
+            { "吸盘蠕虫", typeof(SuckerWorm) },
+            { "裙水母", typeof(SkirtJellyfish) },
+            { "狮子水母", typeof(LionJellyfish) },
+            { "燃料发电机", typeof(FuelGenerator) },
+            { "大块生鱼肉", typeof(RawFish) },
+            { "大块熟鱼肉", typeof(CookedFish) },
+            { "鱼皮", typeof(FishSkin) },
+            { "立鳞烧", typeof(Tatsuage) },
+            { "老鼠", typeof(Rat) },
+            { "垃圾包裹", typeof(JunkPackage) },
         };
     }
 
@@ -350,7 +361,7 @@ public static class CardFactory
         }
         if (config.IsWeapon)
         {
-            card.AddComponent(new WeaponComponent(config.WeaponAtk, config.MinAtkDist, config.MaxAtkDist, config.AtkForm));
+            card.AddComponent(new WeaponComponent(config.WeaponAtk, config.MinAtkDist, config.MaxAtkDist, config.AtkForm, config.AtkTime));
         }
         if (config.IsEntity)
         {
@@ -361,19 +372,19 @@ public static class CardFactory
     }
 
     // 环境一次性掉落列表
-    private static Dictionary<PlaceEnum, DisposableDropList> disposableDropListDict = null;
+    private static Dictionary<PlaceEnum, DropList> disposableDropListDict = null;
 
     private static void InitDisposableDropList()
     {
         disposableDropListDict ??= ExcelReader.GenerateDisposableDropList();
     }
 
-    public static DisposableDropList GetDisposableDropList(PlaceEnum place)
+    public static DropList GetDisposableDropList(PlaceEnum place)
     {
         InitDisposableDropList();
         if (disposableDropListDict.ContainsKey(place))
             return disposableDropListDict[place];
-        return new DisposableDropList();
+        return new DropList();
     }
 
     // 环境重复掉落列表
@@ -408,7 +419,7 @@ public static class CardFactory
         else
         {
             var card = CreateCard(cardId);
-            card.Awake();
+            card.LateConstrcutor();
             cardInstances.Add(cardId, card);
             return card;
         }

@@ -1,65 +1,64 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class EnvironmentBag : Bag
 {
-    [JsonProperty] private string placeName;
+    [JsonProperty] private PlaceEnum placeType;
     [JsonProperty] private bool hasCable;
     [JsonProperty] private PressureLevel pressureLevel;
-    [JsonProperty] private DisposableDropList disposableDropList = new();
+    [JsonProperty] private DropList disposableDropList = new();
     [JsonProperty] private DeepExploreDropList repeatableDropList = new();
     [JsonProperty] private Dictionary<EnvironmentStateEnum, State> stateDict = new();
-    private PlaceData placeData;
 
     [JsonIgnore] public bool HasCable => hasCable;
     [JsonIgnore] public PressureLevel PressureLevel => pressureLevel;
-    [JsonIgnore] public string PlaceName => placeName;
-    [JsonIgnore] public DisposableDropList DisposableDropList => disposableDropList;
+    [JsonIgnore] public string PlaceName => GameManager.Instance.PlaceDataDict[placeType].placeName;
+    [JsonIgnore] public DropList DisposableDropList => disposableDropList;
     [JsonIgnore] public DeepExploreDropList RepeatableDropList => repeatableDropList;
     [JsonIgnore] public Dictionary<EnvironmentStateEnum, State> StateDict => stateDict;
-    [JsonIgnore]
-    public PlaceData PlaceData
-    {
-        get
-        {
-            placeData = placeData != null ? placeData : Resources.Load<PlaceData>("ScriptableObject/Place/" + placeName);
-            return placeData;
-        }
-    }
+    [JsonIgnore] public PlaceData PlaceData => GameManager.Instance.PlaceDataDict[placeType];
     [JsonIgnore] public float DiscoveryDegree => 1 - DisposableDropList.RemainingDropsRate;
     [JsonIgnore] public bool ExploreCompleted => DisposableDropList.IsEmpty && RepeatableDropList.IsEmpty;
     [JsonIgnore] public List<IEntity> Entities { get; private set; } = new();
 
+    public void SetPlaceType(PlaceEnum placeType)
+    {
+        this.placeType = placeType;
+    }
+
+    #region Init
     protected override void FirstInit()
     {
         AddSlot(9);
 
         FirstInitState();
         FirstInitDropList();
-        if (PlaceData.isInSpacecraft)
+
+        hasCable = PlaceData.initialBagStateConfig.hasCable;
+        foreach (var cardId in PlaceData.initialBagStateConfig.containedCards)
         {
-            hasCable = true;
-            AddCard(CardFactory.CreateCard("渗水裂缝"));
+            AddCard(CardFactory.CreateCard(cardId));
         }
-        pressureLevel = PressureLevel.Standard;
+
+        pressureLevel = PlaceData.initialBagStateConfig.pressureLevel;
     }
 
     public override void Init()
     {
         base.Init();
-        InitEntites();
+        InitEntitesAndCardLocation();
         RepeatableDropList.StartUpdating();
+        EventManager.Instance.AddListener(EventType.UpdateBegin, OnEnvUpdateBegin);
         // 每回合结算地点状态
-        UpdateManager.Instance.EnvironmentUpdate.AddListener(Update);
+        UpdateManager.Instance.EnvironmentUpdate.AddListener(EnvUpdate);
     }
 
     private void FirstInitState()
     {
-        // 在室内显示氧气
-        // 在室内显示一氧化碳
-        if (PlaceData.isIndoor)
+        // 在室内且非水域显示氧气
+        // 在室内且非水域显示一氧化碳
+        if (PlaceData.isIndoor && !PlaceData.isInWater)
         {
             StateDict.Add(EnvironmentStateEnum.Oxygen, new State(UnityEngine.Random.Range(400, 600), 1000));
             StateDict.Add(EnvironmentStateEnum.CarbonMonoxideLevel, new State(0, 100, -0.5f));
@@ -78,7 +77,7 @@ public class EnvironmentBag : Bag
     /// <summary>
     /// 将地点内的所有实体加入实体列表
     /// </summary>
-    private void InitEntites()
+    private void InitEntitesAndCardLocation()
     {
         foreach (var slot in Slots)
         {
@@ -88,6 +87,10 @@ public class EnvironmentBag : Bag
                 {
                     AddEntity(entity);
                 }
+                else if (card.TryGetComponent<CoordinateComponent>(out var c))
+                {
+                    c.coordinate.SetLocation(this);
+                }
             }
         }
 
@@ -96,22 +99,29 @@ public class EnvironmentBag : Bag
             AddEntity(GameManager.Instance.Player);
         }
     }
+    #endregion
 
-    private Dictionary<EnvironmentStateEnum, float> temp = new(); // 记录地点状态的当前变化率，防止地点状态的结算顺序影响结算结果
+    #region Update
+    private Dictionary<EnvironmentStateEnum, float> envStateChangeRatesSnapshot = new(); // 记录地点状态的当前变化率，防止地点状态的结算顺序影响结算结果
 
-    private void Update()
+    private void OnEnvUpdateBegin()
     {
-        temp.Clear();
+        // 记录所有状态变化率的快照
+        envStateChangeRatesSnapshot.Clear();
         foreach (var (type, state) in stateDict)
         {
             if (state.ChangeRate != 0)
             {
-                temp.Add(type, state.ChangeRate);
+                envStateChangeRatesSnapshot.Add(type, state.ChangeRate);
             }
         }
-
-        ApplyEnvEffects(temp);
     }
+
+    private void EnvUpdate()
+    {
+        ApplyEnvEffects(envStateChangeRatesSnapshot);
+    }
+    #endregion
 
     /// <summary>
     /// 改变环境状态，电力变化不要在这里处理
@@ -123,8 +133,11 @@ public class EnvironmentBag : Bag
         switch (stateEnum)
         {
             case EnvironmentStateEnum.Electricity:
+                StateManager.Instance.ChangeElectricity(delta);
+                break;
             case EnvironmentStateEnum.WaterLevel:
-                throw new ArgumentException("修改电力或水平面请通过StateManager.Instance.ChangeElectricity/ChangeWaterLevel方法");
+                StateManager.Instance.ChangeWaterLevel(delta);
+                break;
             case EnvironmentStateEnum.HasCable:
             case EnvironmentStateEnum.PressureLevel:
                 throw new ArgumentException("修改是否铺设电缆或压强请通过ChangeHasCable/ChangePressureLevel方法");
@@ -163,7 +176,7 @@ public class EnvironmentBag : Bag
                 var state = StateDict[stateEnum];
                 state.AddChangeRate(delta);
                 // 刷新前端显示
-                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(placeData.placeType, stateEnum)
+                EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(PlaceData.placeType, stateEnum)
                 {
                     stateValue = state
                 });
@@ -173,6 +186,8 @@ public class EnvironmentBag : Bag
 
     public void ApplyEnvEffects(Dictionary<EnvironmentStateEnum, float> envEffects)
     {
+        if (envEffects.IsNullOrEmpty()) return;
+
         foreach (var (state, delta) in envEffects)
         {
             ChangeEnvironmentState(state, delta);
@@ -251,5 +266,33 @@ public class EnvironmentBag : Bag
     {
         entity.Coordinate.SetLocation(null);
         Entities.Remove(entity);
+    }
+
+    public override void OnAddCard(Card card)
+    {
+        base.OnAddCard(card);
+
+        if (card is IEntity entity)
+        {
+            AddEntity(entity);
+        }
+        else if (card.TryGetComponent<CoordinateComponent>(out var c))
+        {
+            c.coordinate.SetLocation(this);
+        }
+    }
+
+    public override void OnRemoveCard(Card card)
+    {
+        base.OnRemoveCard(card);
+
+        if (card is IEntity entity)
+        {
+            RemoveEntity(entity);
+        }
+        else if (card.TryGetComponent<CoordinateComponent>(out var c))
+        {
+            c.coordinate.SetLocation(null);
+        }
     }
 }

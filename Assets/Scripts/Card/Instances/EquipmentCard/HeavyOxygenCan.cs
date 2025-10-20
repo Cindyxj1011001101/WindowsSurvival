@@ -1,4 +1,6 @@
-
+/// <summary>
+/// 重型氧气罐
+/// </summary>
 public class HeavyOxygenCan : EquipmentCard
 {
     public override void OnEquipped()
