@@ -32,5 +32,7 @@ public class RatInfestation : GameEvent
         {
             GameManager.Instance.AddCardsToTargetEnv(GameManager.Instance.CurEnvironmentBag, CardFactory.CreateCard("¿œ Û"));
         }
+
+        foodCards.Clear();
     }
 }

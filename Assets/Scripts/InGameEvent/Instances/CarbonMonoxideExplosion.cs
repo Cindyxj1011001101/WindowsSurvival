@@ -20,18 +20,33 @@ public class CarbonMonoxideExplosion : GameEvent
 
     public override void OnTrigger()
     {
+        var env = GameManager.Instance.CurEnvironmentBag;
         // 减少70氧气
-
+        env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -70f);
         // 减少70一氧化碳浓度
-
+        env.ChangeEnvironmentState(EnvironmentStateEnum.CarbonMonoxideLevel, -70f);
         // 减少30健康
-
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -30f);
         // 增加250疼痛
-
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 250f);
         // 所有实体减少60生命
-
+        foreach (var entity in GameManager.Instance.CurEnvironmentBag.Entities)
+        {
+            entity.TakeDamage(-60f, null);
+        }
         // 删除所有火源的内容物
-
-        // 火源被拆毁，掉落掉落物
+        foreach (var fireSource in fireSources)
+        {
+            if (fireSource.TryGetComponent<InnerContentsComponent>(out var inn))
+            {
+                inn.Clear();
+            }
+            // 火源被拆毁，掉落掉落物
+            if (fireSource is ConstructionCard con)
+            {
+                con.DemolishThis(null);
+            }
+        }
+        fireSources.Clear();
     }
 }

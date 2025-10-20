@@ -17,7 +17,7 @@ public abstract class ConstructionCard : Card
     /// <summary>
     /// 拆毁建筑物
     /// </summary>
-    private void DemolishThis(Card tool)
+    public void DemolishThis(Card tool)
     {
         if (construction == null || !construction.canBeDemolished || string.IsNullOrEmpty(construction.demolitionDebris)) return;
 
@@ -26,7 +26,7 @@ public abstract class ConstructionCard : Card
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("摧毁_01", true);
         // 消耗钢锤耐久
-        tool.Use();
+        tool?.Use();
 
         // 消耗15分钟
         TimeManager.Instance.AddTime(15);
