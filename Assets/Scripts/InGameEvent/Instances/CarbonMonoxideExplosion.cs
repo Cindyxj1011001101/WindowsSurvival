@@ -30,8 +30,10 @@ public class CarbonMonoxideExplosion : GameEvent
         // 增加250疼痛
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 250f);
         // 所有实体减少60生命
-        foreach (var entity in GameManager.Instance.CurEnvironmentBag.Entities)
+        var entites = new List<IEntity>(GameManager.Instance.CurEnvironmentBag.Entities);
+        foreach (var entity in entites)
         {
+            if (entity is Player) continue; // 玩家已经单独处理过
             entity.TakeDamage(-60f, null);
         }
         // 删除所有火源的内容物
