@@ -10890,9 +10890,16 @@ PrefabInstance:
       propertyPath: m_Text
       value: "\u65F6\u95F4"
       objectReference: {fileID: 0}
+    - target: {fileID: 9117391328418656105, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7549379001059998867, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
-    m_RemovedGameObjects: []
+    - {fileID: 3653338631443784132, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
+    - {fileID: 9117391328418656105, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 9150040992448981719, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8206f2a2b2c1d0f4c85edaf4cfbca115, type: 3}

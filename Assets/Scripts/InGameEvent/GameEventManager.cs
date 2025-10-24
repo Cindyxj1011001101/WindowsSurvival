@@ -98,7 +98,7 @@ public class GameEventManager
     {
         OngoingEvents.Remove(gameEvent.GetType().Name);
         gameEvent.OnEnd();
-        EventManager.Instance.TriggerEvent(EventType.OnGameEventEnd, gameEvent.GetType());
+        EventManager.Instance.TriggerEvent(EventType.OnGameEventEnd, gameEvent);
         Debug.Log($"事件结束：{gameEvent.eventName}");
     }
 
@@ -146,7 +146,7 @@ public class GameEventManager
         if (gameEvent.remainingTime > 0)
             OngoingEvents.Add(eventTypeName, gameEvent);
 
-        EventManager.Instance.TriggerEvent(EventType.OnGameEventTrigger, gameEvent.GetType());
+        EventManager.Instance.TriggerEvent(EventType.OnGameEventTrigger, gameEvent);
         Debug.Log($"触发事件：{gameEvent.eventName}，持续时间：{gameEvent.remainingTime}分钟");
     }
 

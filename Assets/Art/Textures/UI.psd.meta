@@ -1651,7 +1651,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_4
+      name: UI_EventTipFrame
       rect:
         serializedVersion: 2
         x: 155
@@ -1672,7 +1672,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_11
+      name: UI_EventTipShadow
       rect:
         serializedVersion: 2
         x: 155
@@ -1680,7 +1680,7 @@ TextureImporter:
         width: 42
         height: 18
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1706,7 +1706,6 @@ TextureImporter:
       UI_0: 940146804
       UI_1: -393629588
       UI_10: -1300053351
-      UI_11: 562162804
       UI_12: 1138885455
       UI_13: 973356370
       UI_2: 1505840638
@@ -1720,7 +1719,6 @@ TextureImporter:
       UI_29: -150795827
       UI_3: 488781603
       UI_30: -704582210
-      UI_4: 344038640
       UI_5: 1048413523
       UI_6: 956610979
       UI_7: -1974728413
@@ -1732,6 +1730,8 @@ TextureImporter:
       UI_CardHoveredFrame: -275653607
       UI_CardSlot: -1859285613
       UI_Charred: 336171763
+      UI_EventTipFrame: 344038640
+      UI_EventTipShadow: 562162804
       UI_FireOn: -343286534
       UI_FullScreenFrame: -710150027
       UI_HoveredFrame: 1242553631

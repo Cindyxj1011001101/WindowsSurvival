@@ -1,7 +1,7 @@
 /// <summary>
 /// ÖÆ×÷¼¤Àø
 /// </summary>
-public class ProductionIncentive : GameEvent
+public class CraftIncentive : GameEvent
 {
     public override void OnTrigger()
     {

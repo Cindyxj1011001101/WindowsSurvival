@@ -22,7 +22,7 @@ public abstract class GameEvent
         { "泥沙涌动", typeof(SedimentSurge) },
         { "恒星食", typeof(StellarEclipse) },
         { "一氧化碳爆炸", typeof(CarbonMonoxideExplosion) },
-        { "制作激励", typeof(ProductionIncentive) },
+        { "制作激励", typeof(CraftIncentive) },
         { "移动激励", typeof(MovementIncentive) },
     };
 
@@ -87,4 +87,6 @@ public abstract class GameEvent
     public virtual void OnUpdate() { remainingTime -= TimeManager.SETTLEMENT_INTERVAL; }
 
     public virtual void OnEnd() { }
+
+    public virtual string GetDetails() { return "123"; }
 }

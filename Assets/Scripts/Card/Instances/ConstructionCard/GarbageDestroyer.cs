@@ -18,7 +18,7 @@ public class GarbageDestroyer : ConstructionCard
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("简单点击_01", true);
         var window = WindowsManager.Instance.OpenWindow("Confirm", true) as ConfirmWindow;
-        window.SetText("确认要销毁所有内容物吗？");
+        window.SetContent("确认要销毁所有内容物吗？");
         window.onConfirm = () =>
         {
             if (SoundManager.Instance != null)

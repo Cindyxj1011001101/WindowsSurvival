@@ -119,7 +119,7 @@ public class WindowsManager : MonoBehaviour
             button.onClick.AddListener(() =>
             {
                 var window = (OpenWindow("Confirm", true) as ConfirmWindow);
-                window.SetText("是否要应用窗口布局预设" + buttonText + "？"); // 使用局部变量
+                window.SetContent("是否要应用窗口布局预设" + buttonText + "？"); // 使用局部变量
                 window.onConfirm += () =>
                 {
                     ApplyPreset(index); // 使用局部变量 index

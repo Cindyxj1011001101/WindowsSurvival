@@ -45,27 +45,27 @@ public class FuelGenerator : ConstructionCard
     public override void Init()
     {
         base.Init();
-        EventManager.Instance.AddListener<Type>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
-        EventManager.Instance.AddListener<Type>(EventType.OnGameEventEnd, OnMagneticStormEnd);
+        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
     }
 
     protected override void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
-        EventManager.Instance.RemoveListener<Type>(EventType.OnGameEventEnd, OnMagneticStormEnd);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
     }
 
-    private void OnMagneticStormBegin(Type type)
+    private void OnMagneticStormBegin(GameEvent gameEvent)
     {
-        if (type != typeof(MagneticStorm) || !fuelStorage.CanExtinguish(out _)) return;
+        if (gameEvent.GetType() != typeof(MagneticStorm) || !fuelStorage.CanExtinguish(out _)) return;
 
         Extinguish(out _);
         ShowTip($"受行星磁暴影响，{CardName}已熄灭并停止工作");
     }
 
-    private void OnMagneticStormEnd(Type type)
+    private void OnMagneticStormEnd(GameEvent gameEvent)
     {
-        if (type != typeof(MagneticStorm)) return;
+        if (gameEvent.GetType() != typeof(MagneticStorm)) return;
 
         RefreshSlot();
     }
