@@ -143,11 +143,11 @@ public class GameEventManager
         gameEvent.OnTrigger();
 
         // 对于持续性事件，添加到持续事件列表
-        if (gameEvent.remainingTime > 0)
+        if (gameEvent.remainingMinutes > 0)
             OngoingEvents.Add(eventTypeName, gameEvent);
 
         EventManager.Instance.TriggerEvent(EventType.OnGameEventTrigger, gameEvent);
-        Debug.Log($"触发事件：{gameEvent.eventName}，持续时间：{gameEvent.remainingTime}分钟");
+        Debug.Log($"触发事件：{gameEvent.eventName}，持续时间：{gameEvent.remainingMinutes}分钟");
     }
 
     /// <summary>

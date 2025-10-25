@@ -51,7 +51,7 @@ public abstract class GameEvent
     public int threatLevel;          // 威胁程度
     public float basicTriggerWeight; // 基础触发权重
     public float triggerInterval;    // 触发间隔(天)
-    public int remainingTime;        // 剩余持续时间(分钟)
+    public int remainingMinutes;     // 剩余持续时间(分钟)
 
     [JsonIgnore] public int CoolDown => Mathf.CeilToInt(triggerInterval * 24 * 60); // 触发间隔(分钟)
 
@@ -78,13 +78,13 @@ public abstract class GameEvent
         return finalIntensity;
     }
 
-    public virtual bool IsEventEnded() => remainingTime <= 0;
+    public virtual bool IsEventEnded() => remainingMinutes <= 0;
 
     public virtual bool CanTriggerThisEvent() => true;
 
     public virtual void OnTrigger() { }
 
-    public virtual void OnUpdate() { remainingTime -= TimeManager.SETTLEMENT_INTERVAL; }
+    public virtual void OnUpdate() { remainingMinutes -= TimeManager.SETTLEMENT_INTERVAL; }
 
     public virtual void OnEnd() { }
 

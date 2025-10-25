@@ -61,13 +61,10 @@ public class GameEventTipController : MonoBehaviour
         tip.SetGameEvent(icon, color, eventName);
         tip.onClick.AddListener(() =>
         {
+            // 隐藏提示
+            RemoveTip(tip);
             // 显示详情
             var window = WindowsManager.Instance.OpenWindow("Confirm", true) as ConfirmWindow;
-            window.SetHeadline(icon, eventName, color);
-            window.SetContent(eventDetails);
-            window.DisableCancelButton(); // 仅显示确认按钮
-            // 隐藏提示
-            tip.Hide();
         });
         tip.Show();
     }
