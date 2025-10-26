@@ -88,5 +88,5 @@ public abstract class GameEvent
 
     public virtual void OnEnd() { }
 
-    public virtual string GetDetails() { return "123"; }
+    public abstract string GetDetails();
 }

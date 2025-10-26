@@ -7,6 +7,13 @@ public class Vomit : GameEvent
 {
     private const float SAN_THRESHOLD = 0.15f; // 精神状态阈值
 
+    public override string GetDetails()
+    {
+        return @"麦麦突然吐了，吐得到处都是。
+                 也许最近她的精神压力太大了。
+                 麦麦的饱食和水分减少了。";
+    }
+
     public override bool CanTriggerThisEvent()
     {
         var san = StateManager.Instance.PlayerStateDict[PlayerStateEnum.San];

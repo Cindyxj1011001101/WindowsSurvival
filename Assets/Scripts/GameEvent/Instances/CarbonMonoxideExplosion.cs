@@ -6,7 +6,18 @@ using System.Collections.Generic;
 public class CarbonMonoxideExplosion : GameEvent
 {
     private const float CO_LEVEL_THRESHOLD = 75f; // 一氧化碳浓度阈值
+
     private List<Card> fireSources = new();
+
+    private string destroyedCardsStr;
+
+    public override string GetDetails()
+    {
+        return @"麦麦在有着高浓度一氧化碳的室内点火，真是勇敢。
+                 总之，地点中的火源爆炸了，麦麦以及该地点内的所有生物都被炸得体无完肤。
+                 地点里的一氧化碳和氧气减少了。
+                 这些东西被炸毁了: " + destroyedCardsStr;
+    }
 
     public override bool CanTriggerThisEvent()
     {
@@ -37,6 +48,7 @@ public class CarbonMonoxideExplosion : GameEvent
             entity.TakeDamage(-60f, null);
         }
         // 删除所有火源的内容物
+        destroyedCardsStr = "";
         foreach (var fireSource in fireSources)
         {
             if (fireSource.TryGetComponent<InnerContentsComponent>(out var inn))
@@ -48,7 +60,9 @@ public class CarbonMonoxideExplosion : GameEvent
             {
                 con.DemolishThis(null);
             }
+            destroyedCardsStr += $"{fireSource.CardName}、";
         }
+        destroyedCardsStr = destroyedCardsStr.TrimEnd('、');
         fireSources.Clear();
     }
 }

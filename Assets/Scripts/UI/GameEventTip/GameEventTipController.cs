@@ -64,7 +64,9 @@ public class GameEventTipController : MonoBehaviour
             // 隐藏提示
             RemoveTip(tip);
             // 显示详情
-            var window = WindowsManager.Instance.OpenWindow("Confirm", true) as ConfirmWindow;
+            var window = WindowsManager.Instance.OpenWindow("EventTip", true) as EventTipWindow;
+            window.SetContent(gameEvent.GetDetails());
+            window.SetTitle(icon, eventName, color);
         });
         tip.Show();
     }

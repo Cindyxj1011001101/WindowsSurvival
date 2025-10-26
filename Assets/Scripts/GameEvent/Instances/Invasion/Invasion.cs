@@ -18,6 +18,11 @@ public class Invasion : GameEvent
 {
     private List<InvasionComposition> allCompositions = new();
 
+    public override string GetDetails()
+    {
+        return "一群奇怪的生物入侵了这片区域，它们充满了恶意且以麦麦为猎杀目标。";
+    }
+
     public override void OnTrigger()
     {
         RegisterAllCompositions();

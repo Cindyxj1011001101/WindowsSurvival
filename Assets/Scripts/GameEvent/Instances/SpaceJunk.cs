@@ -12,6 +12,8 @@ public class SpaceJunk : GameEvent
         PlaceEnum.PhosphorTomb,
     };
 
+    private string landedPlaceStr;
+
     private DropList dropList = new(
         new Drop(35, "废金属", 5, 10),
         new Drop(35, "韧性胶管", 3, 8),
@@ -25,11 +27,20 @@ public class SpaceJunk : GameEvent
         new Drop(1, "炸虫串", 1)
         ) { disposable = true };
 
+    public override string GetDetails()
+    {
+        return @"一团巨大的太空垃圾包裹从天而降，说不定里面能找到些有用的物资。
+                 其实它们不一定是垃圾，或许是货物，但麦麦坚持这么说，反正也没人认领。
+                 包裹降落的地点: " + landedPlaceStr;
+    }
+
     public override void OnTrigger()
     {
         // 随机一个地点
         var placeType = candidatePlaces[Random.Range(0, candidatePlaces.Count)];
         var env = GameManager.Instance.EnvironmentBags[placeType];
+
+        landedPlaceStr = env.PlaceName;
 
         var junkPackage = CardFactory.CreateCard("垃圾包裹");
         junkPackage.TryGetComponent<InnerContentsComponent>(out var innerContents);

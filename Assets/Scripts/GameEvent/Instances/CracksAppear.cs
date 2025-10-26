@@ -7,6 +7,11 @@ using UnityEngine;
 /// </summary>
 public class CracksAppear : GameEvent
 {
+    public override string GetDetails()
+    {
+        return "麦麦听到了一声极其尖锐、高亢的撕裂声，紧接着是沉闷的爆裂声。这个声音非常熟悉，似乎是哪里又出现裂缝了。";
+    }
+
     public override bool CanTriggerThisEvent()
     {
         // 条件是当前地点在飞船内或者飞船外壳
