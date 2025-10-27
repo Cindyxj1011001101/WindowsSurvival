@@ -61,7 +61,7 @@ public class EnvironmentBag : Bag
         if (PlaceData.isIndoor && !PlaceData.isInWater)
         {
             StateDict.Add(EnvironmentStateEnum.Oxygen, new State(UnityEngine.Random.Range(400, 600), 1000));
-            StateDict.Add(EnvironmentStateEnum.CarbonMonoxideLevel, new State(0, 100, -0.5f));
+            StateDict.Add(EnvironmentStateEnum.COLevel, new State(0, 100, -0.5f));
         }
 
         // 室温

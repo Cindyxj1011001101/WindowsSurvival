@@ -3,39 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 玩家状态
-/// </summary>
-public enum PlayerStateEnum
-{
-    Health,
-    Fullness,
-    Thirst,
-    San,
-    Oxygen,
-    Sobriety,
-    Load,
-    CarbonMonoxidePoisoning,
-    Itchiness,
-    PainLevel,
-    BodyTemperature,
-}
-
-/// <summary>
-/// 环境状态
-/// </summary>
-public enum EnvironmentStateEnum
-{
-    Electricity,
-    Oxygen,
-    WaterLevel,
-    HasCable,
-    PressureLevel,
-    RoomTemperature,
-    CarbonMonoxideLevel,
-    Dirtiness,
-}
-
-/// <summary>
 /// 玩家状态类
 /// </summary>
 public class State
@@ -192,17 +159,17 @@ public class StateEffect
     public static StateEffect NoEffect = new();
 
     // 每回合变化
-    public float healthRate;      // 健康影响
-    public float sanityRate;      // 精神影响
-    public float fulnessRate;     // 饱食影响
-    public float thirstRate;      // 水分影响
-    public float sorbrietyRate;   // 清醒度影响
-    public float bodyTemperatureRate;         // 体温影响
-    public float carbonMonoxidePoisoningRate; // 一氧化碳中毒影响
+    public float healthRate;            // 健康影响
+    public float sanityRate;            // 精神影响
+    public float fulnessRate;           // 饱食影响
+    public float thirstRate;            // 水分影响
+    public float sorbrietyRate;         // 清醒度影响
+    public float bodyTemperatureRate;   // 体温影响
+    public float coPoisoningRate;       // 一氧化碳中毒影响
 
     // 瞬间变化
-    public float oxygenMax;       // 氧气上限
-    public float painConst;       // 疼痛固定值
+    public float oxygenMax;             // 氧气上限
+    public float painLevelConst;        // 疼痛固定值
 
     private void ApplyEffects(bool forward)
     {
@@ -214,12 +181,12 @@ public class StateEffect
         if (fulnessRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Fullness, fulnessRate * signal);
         if (thirstRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Thirst, thirstRate * signal);
         if (sorbrietyRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, sorbrietyRate * signal);
-        if (carbonMonoxidePoisoningRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.CarbonMonoxidePoisoning, carbonMonoxidePoisoningRate * signal);
+        if (coPoisoningRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.COPoisoning, coPoisoningRate * signal);
         if (bodyTemperatureRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.BodyTemperature, bodyTemperatureRate * signal);
 
         // 瞬时变化
         if (oxygenMax != 0) StateManager.Instance.ChangePlayerMaxState(PlayerStateEnum.Oxygen, oxygenMax * signal);
-        if (painConst != 0) StateManager.Instance.ChangePlayerConstState(PlayerStateEnum.PainLevel, painConst * signal);
+        if (painLevelConst != 0) StateManager.Instance.ChangePlayerConstState(PlayerStateEnum.PainLevel, painLevelConst * signal);
     }
 
     public void Apply()

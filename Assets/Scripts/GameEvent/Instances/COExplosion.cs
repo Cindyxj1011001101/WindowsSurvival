@@ -3,7 +3,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 一氧化碳爆炸
 /// </summary>
-public class CarbonMonoxideExplosion : GameEvent
+public class COExplosion : GameEvent
 {
     private const float CO_LEVEL_THRESHOLD = 75f; // 一氧化碳浓度阈值
 
@@ -21,7 +21,7 @@ public class CarbonMonoxideExplosion : GameEvent
 
     public override bool CanTriggerThisEvent()
     {
-        var coLevel = GameManager.Instance.CurEnvironmentBag.StateDict[EnvironmentStateEnum.CarbonMonoxideLevel].CurValue;
+        var coLevel = GameManager.Instance.CurEnvironmentBag.StateDict[EnvironmentStateEnum.COLevel].CurValue;
         fireSources = GameManager.Instance.CurEnvironmentBag.FindCards(c =>
         {
             return c.TryGetComponent<FuelStorageComponent>(out var fuelStorage) && fuelStorage.isBurning;
@@ -35,7 +35,7 @@ public class CarbonMonoxideExplosion : GameEvent
         // 减少70氧气
         env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -70f);
         // 减少70一氧化碳浓度
-        env.ChangeEnvironmentState(EnvironmentStateEnum.CarbonMonoxideLevel, -70f);
+        env.ChangeEnvironmentState(EnvironmentStateEnum.COLevel, -70f);
         // 减少30健康
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -30f);
         // 增加250疼痛

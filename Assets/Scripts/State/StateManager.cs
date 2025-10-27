@@ -111,7 +111,7 @@ public class StateManager : MonoBehaviour
 
         CalcBodyTemperatureChangeRate(env);
 
-        CalcCarbonMonoxidePoisoningChangeRate(env);
+        CalcCOPoisoningChangeRate(env);
     }
 
     #region 初始化玩家状态
@@ -126,7 +126,7 @@ public class StateManager : MonoBehaviour
         PlayerStateDict.Add(PlayerStateEnum.Sobriety, InitSobriety());
         PlayerStateDict.Add(PlayerStateEnum.Load, InitLoadState());
         PlayerStateDict.Add(PlayerStateEnum.BodyTemperature, InitBodyTemperatureState());
-        PlayerStateDict.Add(PlayerStateEnum.CarbonMonoxidePoisoning, InitCarbonMonoxideState());
+        PlayerStateDict.Add(PlayerStateEnum.COPoisoning, InitCOState());
         PlayerStateDict.Add(PlayerStateEnum.Itchiness, InitItchinessState());
         PlayerStateDict.Add(PlayerStateEnum.PainLevel, InitPainState());
 
@@ -296,11 +296,11 @@ public class StateManager : MonoBehaviour
         };
         var effects = new List<StateEffect>()
         {
-            new () { fulnessRate = -1.2f, healthRate = -1, bodyTemperatureRate = +2f, painConst = +50 },
+            new () { fulnessRate = -1.2f, healthRate = -1, bodyTemperatureRate = +2f, painLevelConst = +50 },
             new () { fulnessRate = -0.4f, bodyTemperatureRate = +1f },
             new () { sanityRate = +0.2f },
             new () { thirstRate = -0.5f, bodyTemperatureRate = -1f },
-            new () { thirstRate = -1.5f, healthRate = -1, bodyTemperatureRate = -2f, painConst = +50 },
+            new () { thirstRate = -1.5f, healthRate = -1, bodyTemperatureRate = -2f, painLevelConst = +50 },
         };
         var lowDangerLevels = new List<int>() { 1, 3 };
         var highDangerLevels = new List<int>() { 0, 4 };
@@ -308,7 +308,7 @@ public class StateManager : MonoBehaviour
         return new State(100, 200, 0f, thresholds, effects, lowDangerLevels, highDangerLevels, -100);
     }
 
-    private State InitCarbonMonoxideState()
+    private State InitCOState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -341,8 +341,8 @@ public class StateManager : MonoBehaviour
         var effects = new List<StateEffect>()
         {
             StateEffect.NoEffect,
-            new () { sanityRate = -0.1f, painConst = +20 },
-            new () { sanityRate = -0.3f, painConst = +75 },
+            new () { sanityRate = -0.1f, painLevelConst = +20 },
+            new () { sanityRate = -0.3f, painLevelConst = +75 },
         };
         var lowDangerLevels = new List<int>() { 1 };
         var highDangerLevels = new List<int>() { 2 };
@@ -653,7 +653,7 @@ public class StateManager : MonoBehaviour
         waterLevelChangeRateSnapshot = WaterLevel.ChangeRate;
 
         CalcBodyTemperatureChangeRate(GameManager.Instance.CurEnvironmentBag);
-        CalcCarbonMonoxidePoisoningChangeRate(GameManager.Instance.CurEnvironmentBag);
+        CalcCOPoisoningChangeRate(GameManager.Instance.CurEnvironmentBag);
 
         playerStateChangeRatesSnapshot.Clear();
         foreach (var (type, state) in PlayerStateDict)
@@ -736,17 +736,17 @@ public class StateManager : MonoBehaviour
     /// 计算室内一氧化碳浓度导致的一氧化碳中毒影响
     /// </summary>
     /// <param name="env"></param>
-    private void CalcCarbonMonoxidePoisoningChangeRate(EnvironmentBag env)
+    private void CalcCOPoisoningChangeRate(EnvironmentBag env)
     {
         float basicRate = -0.3f;
 
-        if (!env.StateDict.ContainsKey(EnvironmentStateEnum.CarbonMonoxideLevel))
+        if (!env.StateDict.ContainsKey(EnvironmentStateEnum.COLevel))
         {
-            SetPlayerStateBasicChangeRate(PlayerStateEnum.CarbonMonoxidePoisoning, basicRate);
+            SetPlayerStateBasicChangeRate(PlayerStateEnum.COPoisoning, basicRate);
             return;
         }
 
-        var value = env.StateDict[EnvironmentStateEnum.CarbonMonoxideLevel].NormedValue;
+        var value = env.StateDict[EnvironmentStateEnum.COLevel].NormedValue;
 
         float rate;
         if (value <= 0)
@@ -769,7 +769,7 @@ public class StateManager : MonoBehaviour
         {
             rate = +3f;
         }
-        SetPlayerStateBasicChangeRate(PlayerStateEnum.CarbonMonoxidePoisoning, rate + basicRate);
+        SetPlayerStateBasicChangeRate(PlayerStateEnum.COPoisoning, rate + basicRate);
     }
     #endregion
 
@@ -866,7 +866,7 @@ public class StateManager : MonoBehaviour
             PlayerStateEnum.Sobriety => "清醒",
             PlayerStateEnum.Load => "载重",
             PlayerStateEnum.BodyTemperature => "体温",
-            PlayerStateEnum.CarbonMonoxidePoisoning => "一氧化碳中毒",
+            PlayerStateEnum.COPoisoning => "一氧化碳中毒",
             PlayerStateEnum.Itchiness => "瘙痒",
             PlayerStateEnum.PainLevel => "疼痛",
             _ => playerState.ToString(),

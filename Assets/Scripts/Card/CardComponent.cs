@@ -832,7 +832,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     public int extraFuelConsumptionWhenWaterLevelHigh;     // 水平面高时导致的额外燃料消耗
     public int autoExtinguishWaterLevelThreshold;          // 导致自动熄灭的水平面高度
     public float oxygenConsumptionWhileBurning;            // 燃烧时导致的氧气变化
-    public float carbonMonoxideProductionWhileBurning;     // 燃烧时导致的一氧化碳变化
+    public float coProductionWhileBurning;     // 燃烧时导致的一氧化碳变化
 
     [JsonIgnore] public UnityAction whileBurning;    // 燃烧时每回合处理
     [JsonIgnore] public UnityAction whileNotBurning; // 非燃烧时每回合处理
@@ -858,14 +858,14 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         int extraFuelConsumptionWhenWinter = 4,
         int autoExtinguishWaterLevelThreshold = 30, 
         float oxygenConsumptionWhileBurning = 4,
-        float carbonMonoxideProductionWhileBurning = 2) : base(0, maxValue)
+        float coProductionWhileBurning = 2) : base(0, maxValue)
     {
         this.basicFuelConsumption = basicFuelConsumption;
         this.extraFuelConsumptionWhenWinter = extraFuelConsumptionWhenWinter;
         this.extraFuelConsumptionWhenWaterLevelHigh = extraFuelConsumptionWhenWaterLevelHigh;
         this.autoExtinguishWaterLevelThreshold = autoExtinguishWaterLevelThreshold;
         this.oxygenConsumptionWhileBurning = oxygenConsumptionWhileBurning;
-        this.carbonMonoxideProductionWhileBurning = carbonMonoxideProductionWhileBurning;
+        this.coProductionWhileBurning = coProductionWhileBurning;
     }
 
     /// <summary>
@@ -911,7 +911,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
 
         var env = BelongedCard.Bag as EnvironmentBag;
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -oxygenConsumptionWhileBurning);
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, carbonMonoxideProductionWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, coProductionWhileBurning);
 
         BelongedCard.RefreshSlot();
     }
@@ -927,7 +927,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
 
         var env = BelongedCard.Bag as EnvironmentBag;
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, oxygenConsumptionWhileBurning);
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.CarbonMonoxideLevel, -carbonMonoxideProductionWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, -coProductionWhileBurning);
 
         BelongedCard.RefreshSlot();
     }

@@ -21,7 +21,7 @@ public abstract class GameEvent
         { "太空垃圾", typeof(SpaceJunk) },
         { "泥沙涌动", typeof(SedimentSurge) },
         { "恒星食", typeof(StellarEclipse) },
-        { "一氧化碳爆炸", typeof(CarbonMonoxideExplosion) },
+        { "一氧化碳爆炸", typeof(COExplosion) },
         { "制作激励", typeof(CraftIncentive) },
         { "移动激励", typeof(MovementIncentive) },
     };
