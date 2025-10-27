@@ -61,7 +61,7 @@ public class GameDataManager
         // 全局数据
         globalData = JsonManager.LoadData<GlobalData>(CurLoadName, "GlobalData");
         // 玩家数据
-        playerData = JsonManager.LoadData<Player>(CurLoadName, "PlayerData");
+        playerData = JsonManager.LoadData<PlayerData>(CurLoadName, "PlayerData");
         // 游戏事件数据
         gameEventData = JsonManager.LoadData<GameEventData>(CurLoadName, "GameEventData");
     }
@@ -107,7 +107,7 @@ public class GameDataManager
         }
 
         // 保存时间
-        loadData.loads[curLoadIndex].GameTime = timeData.curTime;
+        loadData.loads[curLoadIndex].gameTime = timeData.curTime;
         // 保存存档数据
         SaveLoadData();
     }
@@ -337,7 +337,7 @@ public class GameDataManager
     public void LoadGeneratedChatData()
     {
         generatedChatData = JsonManager.LoadData<GeneratedChatData>(CurLoadName, "GeneratedChatData");
-        ChatManager.Instance.GeneratedChatDataList = generatedChatData.GeneratedChatDataList;
+        //ChatManager.Instance.GeneratedChatDataList = generatedChatData.GeneratedChatDataList;
     }
 
     #endregion
@@ -436,10 +436,10 @@ public class GameDataManager
         behaviourExtraEffectsData = new()
         {
             init = true,
-            moveExtraEffects = GameManager.Instance.MoveExtraEffects,
-            moveToWaterExtraEffects = GameManager.Instance.MoveToWaterExtraEffects,
-            exploreExtraEffects = GameManager.Instance.ExploreExtraEffects,
-            exploreInWaterExtraEffects = GameManager.Instance.ExploreInWaterExtraEffects
+            moveExtraEffects = MoveExploreManager.Instance.MoveExtraEffects,
+            moveToWaterExtraEffects = MoveExploreManager.Instance.MoveToWaterExtraEffects,
+            exploreExtraEffects = MoveExploreManager.Instance.ExploreExtraEffects,
+            exploreInWaterExtraEffects = MoveExploreManager.Instance.ExploreInWaterExtraEffects
         };
         JsonManager.SaveData(behaviourExtraEffectsData, CurLoadName, "BehaviourExtraEffectsData");
     }
@@ -457,12 +457,18 @@ public class GameDataManager
     #endregion
 
     #region 玩家数据
-    private Player playerData;
+    private PlayerData playerData;
 
-    public Player PlayerData => playerData;
+    public PlayerData PlayerData => playerData;
 
     public void SavePlayerData()
     {
+        playerData = new()
+        {
+            basicMoveDistPerMin = Player.Instance.BasicMoveDistPerMin,
+            moveSpeedMultiplier = Player.Instance.MoveSpeedMultiplier,
+            coordinate = Player.Instance.Coordinate,
+        };
         JsonManager.SaveData(playerData, CurLoadName, "PlayerData");
     }
     #endregion

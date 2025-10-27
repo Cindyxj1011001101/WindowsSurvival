@@ -15,7 +15,7 @@ public class StudyButton : HoverableButton
     public void DisplayButton(ScriptableTechnologyNode techNode, UnityAction startStuyding, UnityAction stopStudying)
     {
         #region 新手教程
-        if (!GameDataManager.Instance.CurLoad.SkipGuide) // 如果新手教程未跳过
+        if (!GameDataManager.Instance.CurLoad.skipGuide) // 如果新手教程未跳过
         {
             if (techNode.techName == "修理")
             {

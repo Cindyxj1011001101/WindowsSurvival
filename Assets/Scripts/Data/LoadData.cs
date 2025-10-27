@@ -1,29 +1,24 @@
 using System;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class LoadData
 {
-    public Load[] loads=new Load[4];
-    public LoadData()
-    {
-        loads=new Load[4];
-    }
+    public Load[] loads = new Load[4];
 }
+
 public class Load
 {
-    public DateTime GameTime;
-    public bool SkipGuide=true;
+    public DateTime gameTime;
+    public bool skipGuide = true;
     // public Sprite NPCSprite;
     // public DateTime LastPlayTime;
     public Load()
     {
-        GameTime=DateTime.MinValue;
-        SkipGuide=true;
+        gameTime = DateTime.MinValue;
+        skipGuide = true;
     }
-    public Load(DateTime time,bool SkipGuide)
+    public Load(DateTime time, bool skipGuide)
     {
-        GameTime=time;
-        this.SkipGuide=SkipGuide;
+        gameTime = time;
+        this.skipGuide = skipGuide;
     }
 }

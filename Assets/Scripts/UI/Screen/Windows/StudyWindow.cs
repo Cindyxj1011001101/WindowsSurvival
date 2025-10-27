@@ -105,7 +105,7 @@ public class StudyWindow : WindowBase
 
     protected override void Init()
     {
-        if (GameDataManager.Instance.CurLoad.SkipGuide || GameDataManager.Instance.WindowsData.unlockedShortcuts.Contains(AppName))
+        if (GameDataManager.Instance.CurLoad.skipGuide || GameDataManager.Instance.WindowsData.unlockedShortcuts.Contains(AppName))
             DisplayStudyState(2, null);
         else
             studyStateButton.SetVisiable(false);

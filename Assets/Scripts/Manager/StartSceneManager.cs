@@ -56,11 +56,11 @@ public class StartSceneManager : MonoBehaviour
         {
             GameObject button = LoadButton.transform.GetChild(i).gameObject;
             //显示存档名（存档1，存档2，存档3，存档4，无）
-            if (GameDataManager.Instance.LoadData.loads[i] != null && GameDataManager.Instance.LoadData.loads[i].GameTime != DateTime.MinValue)
+            if (GameDataManager.Instance.LoadData.loads[i] != null && GameDataManager.Instance.LoadData.loads[i].gameTime != DateTime.MinValue)
             {
                 button.transform.GetChild(0).transform.Find("Name").GetComponent<Text>().text = "存档" + (i + 1);
                 //显示存档时间
-                DateTime now = GameDataManager.Instance.LoadData.loads[i].GameTime;
+                DateTime now = GameDataManager.Instance.LoadData.loads[i].gameTime;
                 DateTime target = new DateTime(2020, 1, 1, 0, 0, 0);
                 TimeSpan span = now - target;
                 int days = span.Days;
