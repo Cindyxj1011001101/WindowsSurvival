@@ -18,6 +18,7 @@ public class FlashOfInspiration : GameEvent
 
     public override bool CanTriggerThisEvent()
     {
+        if (TechnologyManager.Instance.CurStudiedTechNode == null) return false;
         var san = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Sanity];
         return san.CurValue / san.MaxValue >= SAN_THRESHOLD;
     }
@@ -25,10 +26,7 @@ public class FlashOfInspiration : GameEvent
     public override void OnTrigger()
     {
         // 立刻完成当前科技
-        if (TechnologyManager.Instance.CurStudiedTechNode != null)
-        {
-            techName = TechnologyManager.Instance.CurStudiedTechNode.techName;
-            TechnologyManager.Instance.AddStudyProcess(9999); // 研究进度增加
-        }
+        techName = TechnologyManager.Instance.CurStudiedTechNode.techName;
+        TechnologyManager.Instance.AddStudyProcess(9999); // 研究进度增加
     }
 }
