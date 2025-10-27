@@ -12,9 +12,9 @@ public class RatInfestation : GameEvent
 
     public override string GetDetails()
     {
-        return @"一道黑影闪过，地上的食物就不见了。
-                 也许别把食物放在地上会比较好。
-                 损失了这些东西: " + lostCardsStr;
+        return $"一道黑影闪过，地上的食物就不见了。\n\n" +
+               $"也许别把食物放在地上会比较好。\n\n" +
+               $"损失了这些东西: " + lostCardsStr;
     }
 
     public override bool CanTriggerThisEvent()

@@ -7,8 +7,8 @@ public class MagneticStorm : GameEvent
 {
     public override string GetDetails()
     {
-        return @"所有的电器突然停止了运作，麦麦说可能是因为行星磁暴。
-                 总之，接下来的一段时间里，所有电器都无法使用了。但愿磁暴不会持续太久。";
+        return $"所有的电器突然停止了运作，麦麦说可能是因为行星磁暴。\n\n" +
+               $"总之，接下来的一段时间里，所有电器都无法使用了。但愿磁暴不会持续太久。";
     }
 
     public override void OnTrigger()

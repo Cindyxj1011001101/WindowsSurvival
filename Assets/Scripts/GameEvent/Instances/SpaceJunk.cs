@@ -29,9 +29,9 @@ public class SpaceJunk : GameEvent
 
     public override string GetDetails()
     {
-        return @"一团巨大的太空垃圾包裹从天而降，说不定里面能找到些有用的物资。
-                 其实它们不一定是垃圾，或许是货物，但麦麦坚持这么说，反正也没人认领。
-                 包裹降落的地点: " + landedPlaceStr;
+        return $"一团巨大的太空垃圾包裹从天而降，说不定里面能找到些有用的物资。\n\n" +
+               $"其实它们不一定是垃圾，或许是货物，但麦麦坚持这么说，反正也没人认领。\n\n" +
+               $"包裹降落的地点: " + ColorManager.Colorize(landedPlaceStr, ColorManager.Cyan);
     }
 
     public override void OnTrigger()

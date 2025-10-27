@@ -13,10 +13,10 @@ public class COExplosion : GameEvent
 
     public override string GetDetails()
     {
-        return @"麦麦在有着高浓度一氧化碳的室内点火，真是勇敢。
-                 总之，地点中的火源爆炸了，麦麦以及该地点内的所有生物都被炸得体无完肤。
-                 地点里的一氧化碳和氧气减少了。
-                 这些东西被炸毁了: " + destroyedCardsStr;
+        return "麦麦在有着高浓度一氧化碳的室内点火，真是勇敢。\n\n" +
+               "总之，地点中的火源爆炸了，麦麦以及该地点内的所有生物都被炸得体无完肤。\n\n" +
+               "地点里的一氧化碳和氧气减少了。\n\n" +
+               "这些东西被炸毁了: " + destroyedCardsStr;
     }
 
     public override bool CanTriggerThisEvent()

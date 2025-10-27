@@ -9,9 +9,9 @@ public class Vomit : GameEvent
 
     public override string GetDetails()
     {
-        return @"麦麦突然吐了，吐得到处都是。
-                 也许最近她的精神压力太大了。
-                 麦麦的饱食和水分减少了。";
+        return $"麦麦突然吐了，吐得到处都是。\n\n" +
+               $"也许最近她的精神压力太大了。\n\n" +
+               $"麦麦的饱食和水分减少了。";
     }
 
     public override bool CanTriggerThisEvent()
