@@ -8,18 +8,18 @@ public class EnvironmentBag : Bag
     [JsonProperty] private bool hasCable;
     [JsonProperty] private PressureLevel pressureLevel;
     [JsonProperty] private DropList disposableDropList = new();
-    [JsonProperty] private DeepExploreDropList repeatableDropList = new();
+    [JsonProperty] private DeepExploreDropList deepExploreDropList = new();
     [JsonProperty] private Dictionary<EnvironmentStateEnum, State> stateDict = new();
 
     [JsonIgnore] public bool HasCable => hasCable;
     [JsonIgnore] public PressureLevel PressureLevel => pressureLevel;
     [JsonIgnore] public string PlaceName => GameManager.Instance.PlaceDataDict[placeType].placeName;
     [JsonIgnore] public DropList DisposableDropList => disposableDropList;
-    [JsonIgnore] public DeepExploreDropList RepeatableDropList => repeatableDropList;
+    [JsonIgnore] public DeepExploreDropList DeepExploreDropList => deepExploreDropList;
     [JsonIgnore] public Dictionary<EnvironmentStateEnum, State> StateDict => stateDict;
     [JsonIgnore] public PlaceData PlaceData => GameManager.Instance.PlaceDataDict[placeType];
     [JsonIgnore] public float DiscoveryDegree => 1 - DisposableDropList.RemainingDropsRate;
-    [JsonIgnore] public bool ExploreCompleted => DisposableDropList.IsEmpty && RepeatableDropList.IsEmpty;
+    [JsonIgnore] public bool ExploreCompleted => DisposableDropList.IsEmpty && DeepExploreDropList.IsEmpty;
     [JsonIgnore] public List<IEntity> Entities { get; private set; } = new();
 
     public void SetPlaceType(PlaceEnum placeType)
@@ -40,7 +40,7 @@ public class EnvironmentBag : Bag
     {
         base.Init();
         InitEntitesAndCardLocation();
-        RepeatableDropList.StartUpdating();
+        DeepExploreDropList.StartUpdating();
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnEnvUpdateBegin);
         // 每回合结算地点状态
         UpdateManager.Instance.EnvironmentUpdate.AddListener(EnvUpdate);
@@ -85,7 +85,7 @@ public class EnvironmentBag : Bag
     private void FirstInitDropList()
     {
         disposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(PlaceData.placeType));
-        repeatableDropList = JsonManager.DeepCopy(CardFactory.GetDeepExploreDropList(PlaceData.placeType));
+        deepExploreDropList = JsonManager.DeepCopy(CardFactory.GetDeepExploreDropList(PlaceData.placeType));
     }
 
     private void FirstInitContainedCards()
@@ -118,7 +118,7 @@ public class EnvironmentBag : Bag
 
         if (GameManager.Instance.IsCurrentEnvironment(this))
         {
-            AddEntity(GameManager.Instance.Player);
+            AddEntity(Player.Instance);
         }
     }
     #endregion
