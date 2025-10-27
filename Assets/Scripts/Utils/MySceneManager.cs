@@ -13,8 +13,6 @@ public static class MySceneManager
         ObjectBufferPool.Instance.Clear();
         // 移除事件监听
         EventManager.Instance.ClearEvents();
-        // 移除正在进行的携程
-        PublicMono.Instance.Clear();
         // 卸载未使用的资源
         ResourcesManager.Instance.UnloadUnusedAssets(
             () => PublicMono.Instance.StartCoroutine(LoadSceneAsync(sceneBuildIndex))); // 卸载完成后异步加载场景
