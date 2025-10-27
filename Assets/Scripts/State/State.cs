@@ -7,18 +7,18 @@ using UnityEngine;
 /// </summary>
 public class State
 {
-    [JsonProperty] private float extraValue; // 额外值
-    [JsonProperty] private float maxValue; // 最大值
-    [JsonProperty] private float constValue; // 固定值
-    [JsonProperty] private float variableValue; // 可变值
-    [JsonProperty] private List<StateThreshold> thresholds = new();
-    [JsonProperty] private List<StateEffect> effects = new();
-    [JsonProperty] private int stateLevel = -1;
-    [JsonProperty] private float basicChangeRate;
-    [JsonProperty] private float extraChangeRate;
-    [JsonProperty] private List<int> lowDangerLevels = new();
-    [JsonProperty] private List<int> highDangerLevels = new();
-    [JsonProperty] private float normParam = 0;
+    [JsonProperty] private float extraValue;                        // 额外值
+    [JsonProperty] private float maxValue;                          // 最大值
+    [JsonProperty] private float constValue;                        // 固定值
+    [JsonProperty] private float variableValue;                     // 可变值
+    [JsonProperty] private List<StateThreshold> thresholds = new(); // 状态阈值列表
+    [JsonProperty] private List<StateEffect> effects = new();       // 达到某种阈值时的状态效果列表
+    [JsonProperty] private int stateLevel = -1;                     // 当前状态等级索引
+    [JsonProperty] private float basicChangeRate;                   // 基础变化率
+    [JsonProperty] private float extraChangeRate;                   // 额外变化率
+    [JsonProperty] private List<int> lowDangerLevels = new();       // 低危险等级对应的状态等级索引
+    [JsonProperty] private List<int> highDangerLevels = new();      // 高危险等级对应的状态等级索引
+    [JsonProperty] private float normParam = 0;                     // 归一化参数
 
     [JsonIgnore] public string StateLevelName => thresholds[stateLevel].levelName;
     [JsonIgnore] public int StateLevel => stateLevel;
@@ -41,11 +41,6 @@ public class State
         }
     }
 
-    public float GetPredictedVariableValue()
-    {
-        return variableValue + basicChangeRate + extraChangeRate;
-    }
-
     private void ClampVariableValue()
     {
         variableValue = Mathf.Clamp(variableValue, 0, MaxValue);
@@ -56,7 +51,6 @@ public class State
     {
         variableValue += delta;
         ClampVariableValue();
-
         CalcStateLevel();
     }
 
@@ -64,35 +58,50 @@ public class State
     {
         extraValue += delta;
         ClampVariableValue();
-
         CalcStateLevel();
     }
 
     public void AddConstValue(float delta)
     {
         constValue += delta;
-
         CalcStateLevel();
     }
 
     public void AddMaxValue(float delta)
     {
         maxValue += delta;
-
         CalcStateLevel();
+    }
+
+    public void SetConstValue(float value)
+    {
+        constValue = value;
+        CalcStateLevel();
+    }
+
+    /// <summary>
+    /// 得到下一次变化后的预测值
+    /// </summary>
+    /// <returns></returns>
+    public float GetPredictedVariableValue()
+    {
+        return variableValue + basicChangeRate + extraChangeRate;
     }
 
     public void CalcStateLevel()
     {
         for (int i = 0; i < thresholds.Count; i++)
         {
-            if (CurValue > thresholds[i].minValue && CurValue <= thresholds[i].maxValue)
+            if (CurValue > thresholds[i].minValueExclude && CurValue <= thresholds[i].maxValueInclude)
             {
                 // 如果状态等级发生了变化
                 if (stateLevel != i)
                 {
                     var oLevel = stateLevel; // 原来处于哪个等级
-                    stateLevel = i;
+                    stateLevel = i; // 更新当前等级
+
+                    if (effects.IsNullOrEmpty()) break;
+
                     // 离开stateLevel事件
                     if (oLevel != -1)
                         effects[oLevel].Revoke();
@@ -140,14 +149,14 @@ public class State
 [System.Serializable]
 public class StateThreshold
 {
-    public float minValue;
-    public float maxValue;
+    public float minValueExclude;
+    public float maxValueInclude;
     public string levelName;
 
-    public StateThreshold(float minValue, float maxValue, string levelName)
+    public StateThreshold(float minValueExclude, float maxValueInclude, string levelName)
     {
-        this.minValue = minValue;
-        this.maxValue = maxValue;
+        this.minValueExclude = minValueExclude;
+        this.maxValueInclude = maxValueInclude;
         this.levelName = levelName;
     }
 }

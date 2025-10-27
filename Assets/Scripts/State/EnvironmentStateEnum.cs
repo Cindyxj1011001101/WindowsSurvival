@@ -11,4 +11,5 @@ public enum EnvironmentStateEnum
     RoomTemperature,    // 室温
     COLevel,            // 一氧化碳浓度
     Dirtiness,          // 污染度
+    Brightness,         // 亮度
 }

@@ -31,17 +31,9 @@ public class EnvironmentBag : Bag
     protected override void FirstInit()
     {
         AddSlot(9);
-
         FirstInitState();
         FirstInitDropList();
-
-        hasCable = PlaceData.initialBagStateConfig.hasCable;
-        foreach (var cardId in PlaceData.initialBagStateConfig.containedCards)
-        {
-            AddCard(CardFactory.CreateCard(cardId));
-        }
-
-        pressureLevel = PlaceData.initialBagStateConfig.pressureLevel;
+        FirstInitContainedCards();
     }
 
     public override void Init()
@@ -56,6 +48,12 @@ public class EnvironmentBag : Bag
 
     private void FirstInitState()
     {
+        // 是否铺设电缆
+        hasCable = PlaceData.initialBagStateConfig.hasCable;
+
+        // 压强等级
+        pressureLevel = PlaceData.initialBagStateConfig.pressureLevel;
+
         // 在室内且非水域显示氧气
         // 在室内且非水域显示一氧化碳
         if (PlaceData.isIndoor && !PlaceData.isInWater)
@@ -65,15 +63,37 @@ public class EnvironmentBag : Bag
         }
 
         // 室温
-        stateDict.Add(EnvironmentStateEnum.RoomTemperature, new State(200, 400, normParam: -200));
+        stateDict.Add(EnvironmentStateEnum.RoomTemperature,
+            new State(PlaceData.initialBagStateConfig.roomTemperature, 400, normParam: -200));
 
         // 光照
+        var thresholds = new List<StateThreshold>
+        {
+            new (-1, 0, "漆黑"),
+            new (0, 20, "昏暗"),
+            new (20, 40, "柔和"),
+            new (40, 60, "微光"),
+            new (60, 80, "明亮"),
+            new (80, 100, "耀眼"),
+        };
+        var state = new State(0, 100, 0, thresholds, new(), new(), new());
+        var constBrightness = PlaceData.initialBagStateConfig.brightness; // TODO: 加恒星光照 * PlaceData.sunlightInfluenceFactor
+        state.SetConstValue(constBrightness);
+        stateDict.Add(EnvironmentStateEnum.Brightness, state);
     }
 
     private void FirstInitDropList()
     {
         disposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(PlaceData.placeType));
         repeatableDropList = JsonManager.DeepCopy(CardFactory.GetDeepExploreDropList(PlaceData.placeType));
+    }
+
+    private void FirstInitContainedCards()
+    {
+        foreach (var cardId in PlaceData.initialBagStateConfig.containedCards)
+        {
+            AddCard(CardFactory.CreateCard(cardId));
+        }
     }
 
     /// <summary>
@@ -125,8 +145,9 @@ public class EnvironmentBag : Bag
     }
     #endregion
 
+    #region 状态变化
     /// <summary>
-    /// 改变环境状态，电力变化不要在这里处理
+    /// 改变环境状态
     /// </summary>
     /// <param name="stateEnum"></param>
     /// <param name="delta"></param>
@@ -135,10 +156,10 @@ public class EnvironmentBag : Bag
         switch (stateEnum)
         {
             case EnvironmentStateEnum.Electricity:
-                StateManager.Instance.ChangeElectricity(delta);
+                StateManager.Instance.ChangeElectricity(delta); // 电力变化转发到StateManager处理
                 break;
             case EnvironmentStateEnum.WaterLevel:
-                StateManager.Instance.ChangeWaterLevel(delta);
+                StateManager.Instance.ChangeWaterLevel(delta); // 水平面变化转发到StateManager处理
                 break;
             case EnvironmentStateEnum.HasCable:
             case EnvironmentStateEnum.PressureLevel:
@@ -167,8 +188,11 @@ public class EnvironmentBag : Bag
         switch (stateEnum)
         {
             case EnvironmentStateEnum.Electricity:
+                StateManager.Instance.ChangeElectricityChangeRate(delta); // 电力变化转发到StateManager处理
+                break;
             case EnvironmentStateEnum.WaterLevel:
-                throw new ArgumentException("修改电力或水平面请通过StateManager.Instance.ChangeElectricityChangeRate/ChangeWaterLevelChangeRate方法");
+                StateManager.Instance.ChangeWaterLevelChangeRate(delta); // 水平面变化转发到StateManager处理
+                break;
             case EnvironmentStateEnum.HasCable:
             case EnvironmentStateEnum.PressureLevel:
                 throw new ArgumentException("修改是否铺设电缆或压强请通过ChangeHasCableChangeRate/ChangePressureLevelChangeRate方法");
@@ -195,6 +219,7 @@ public class EnvironmentBag : Bag
             ChangeEnvironmentState(state, delta);
         }
     }
+    #endregion
 
     // TODO
     //private void OnWaterLevelChanged(float level)

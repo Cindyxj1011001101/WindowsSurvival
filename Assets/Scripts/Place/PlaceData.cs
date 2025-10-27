@@ -5,20 +5,21 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlaceData", menuName = "ScriptableObject/PlaceData")]
 public class PlaceData : ScriptableObject
 {
-    public string placeName;
-    public string placeDesc;
-    public PlaceEnum placeType;
-    public bool isIndoor;
-    public bool isInWater;
-    public bool isInSpacecraft;
-    public bool isInCave;
-    public Sprite placeImage;
-    public int exploreTime;
-    [HideInInspector] public float minCoord = 0;
-    public float maxCoord;
-    public PlaceEnum connectedOutdoorPlace;
+    public string placeName;                        // 地点名称
+    public string placeDesc;                        // 地点描述
+    public PlaceEnum placeType;                     // 地点类型
+    public bool isIndoor;                           // 是否是室内
+    public bool isInWater;                          // 是否是水域
+    public bool isInSpacecraft;                     // 是否在飞船内
+    public bool isInCave;                           // 是否在洞穴内
+    public Sprite placeImage;                       // 地点图片
+    public int exploreTime;                         // 探索时间(分钟)
+    [HideInInspector] public float minCoord = 0;    // 最小坐标
+    public float maxCoord;                          // 最大坐标
+    public PlaceEnum connectedOutdoorPlace;         // 连接的户外地点
+    public float sunlightInfluenceFactor;           // 受光照影响程度
 
-    public InitialBagStateConfig initialBagStateConfig;
+    public InitialBagStateConfig initialBagStateConfig; // 初始背包状态配置
 
     private void OnValidate()
     {
@@ -29,7 +30,9 @@ public class PlaceData : ScriptableObject
 [Serializable]
 public class InitialBagStateConfig
 {
-    public bool hasCable;
-    public List<string> containedCards;
-    public PressureLevel pressureLevel;
+    public List<string> containedCards;     // 初始包含的卡牌列表
+    public bool hasCable;                   // 是否有电缆
+    public PressureLevel pressureLevel;     // 初始压力等级
+    public float brightness;                // 基础亮度
+    public float roomTemperature = 200;     // 初始室温
 }

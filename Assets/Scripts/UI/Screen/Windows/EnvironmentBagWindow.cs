@@ -198,6 +198,7 @@ public class EnvironmentBagWindow : BagWindow
         // 其他状态显示
         foreach (var (state, value) in env.StateDict)
         {
+            if (!continuousValueStates.ContainsKey(state)) continue;
             continuousValueStates[state].gameObject.SetActive(true);
             continuousValueStates[state].SetValue(value);
         }
