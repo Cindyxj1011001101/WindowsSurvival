@@ -26,7 +26,6 @@ public class Player : IEntity, IManager
     public void Init()
     {
         var data = GameDataManager.Instance.PlayerData;
-        BasicMoveDistPerMin = data.basicMoveDistPerMin;
         MoveSpeedMultiplier = data.moveSpeedMultiplier;
         Coordinate = data.coordinate;
     }
