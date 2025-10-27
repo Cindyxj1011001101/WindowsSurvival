@@ -65,7 +65,7 @@ public class GameEventTipController : MonoBehaviour
             RemoveTip(tip);
             // 显示详情
             var window = WindowsManager.Instance.OpenWindow("EventTip", true) as EventTipWindow;
-            window.SetContent(gameEvent.GetDetails());
+            window.SetContent(eventDetails);
             window.SetTitle(icon, eventName, color);
         });
         tip.Show();
@@ -82,7 +82,7 @@ public class GameEventTipController : MonoBehaviour
         var sb = new StringBuilder();
         sb.AppendLine(eventDetails);
         sb.AppendLine();
-        sb.AppendLine($"Day {TimeManager.Instance.Day} {TimeManager.Instance.CurTime.Hour} : {TimeManager.Instance.CurTime.Minute}");
+        sb.AppendLine($"-  Day {TimeManager.Instance.Day}  {TimeManager.Instance.CurTime:HH : mm}");
         return sb.ToString();
     }
 
