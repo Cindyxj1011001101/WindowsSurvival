@@ -1,8 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-public class TimeManager : MonoBehaviour
+public class TimeManager
 {
+    public static TimeManager Instance { get; private set; } = new();
+
     public const int SETTLEMENT_INTERVAL = 15; // 结算间隔
     public DateTime StartDateTime { get; private set; } = new(2020, 1, 1, 0, 0, 0);
     public DateTime CurTime { get; private set; }
@@ -11,36 +13,6 @@ public class TimeManager : MonoBehaviour
     private DateTime lastDay;
 
     public int Day => (CurTime - StartDateTime).Days + 1;
-
-    private static TimeManager instance;
-    public static TimeManager Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<TimeManager>();
-                if (instance == null)
-                {
-                    GameObject managerObj = new GameObject("TimeManager");
-                    instance = managerObj.AddComponent<TimeManager>();
-                }
-            }
-            return instance;
-        }
-    }
-
-    private void Awake()
-    {
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        instance = this;
-        Init();
-    }
 
     public void Init()
     {

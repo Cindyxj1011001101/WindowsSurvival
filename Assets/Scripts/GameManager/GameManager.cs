@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
     #region 初始化
     private void Start()
     {
+        TimeManager.Instance.Init();
         TechnologyManager.Instance.Init();
         CraftManager.Instance.Init();
         GameEventManager.Instance.Init();
