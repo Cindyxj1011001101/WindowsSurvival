@@ -1102,14 +1102,14 @@ public class WeaponComponent : CardComponent
         // 消耗武器耐久
         BelongedCard.Use();
         // 造成伤害
-        target.TakeDamage(atk, GameManager.Instance.Player);
+        target.TakeDamage(atk, Player.Instance);
         // 消耗时间
         TimeManager.Instance.AddTime(attackTime);
     }
 
     public bool WithinAttackRange(IEntity target)
     {
-        var dist = target.Coordinate.DistanceTo(GameManager.Instance.Player.Coordinate);
+        var dist = target.Coordinate.DistanceTo(Player.Instance.Coordinate);
         return dist <= maxAtkDist && dist >= minAtkDist;
     }
 }

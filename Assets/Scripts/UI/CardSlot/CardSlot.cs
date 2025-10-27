@@ -332,7 +332,7 @@ public class CardSlot : MonoBehaviour
                 break;
             case CoordinateComponent coordinateComponent:
                 slider.SetValue(coordinateComponent.coordinate.Position, GameManager.Instance.CurEnvironmentBag.PlaceData.maxCoord);
-                slider.tipController.SetTip($"当前坐标:  {coordinateComponent.coordinate.Position:0.0}\n距离麦麦:  {coordinateComponent.coordinate.DistanceTo(GameManager.Instance.Player.Coordinate):0.0}");
+                slider.tipController.SetTip($"当前坐标:  {coordinateComponent.coordinate.Position:0.0}\n距离麦麦:  {coordinateComponent.coordinate.DistanceTo(Player.Instance.Coordinate):0.0}");
                 break;
             case EntityComponent entityComponent:
                 slider.SetValue(entityComponent.health, entityComponent.maxHealth);

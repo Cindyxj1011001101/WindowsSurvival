@@ -1,19 +1,21 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-public class Player : IEntity
+public class Player : IEntity, IManager
 {
-    [JsonProperty] private float basicMoveDistPerMin = 0.5f;
+    public static Player Instance { get; } = new();
 
-    [JsonProperty] private List<float> moveSpeedMultiplier = new();
+    public float BasicMoveDistPerMin { get; private set; } = 0.5f;
 
-    [JsonIgnore]
+    public List<float> MoveSpeedMultiplier { get; private set; } = new();
+
+    public Coordinate Coordinate { get; private set; } = new();
+
     public float MoveSpeed
     {
         get
         {
-            var speed = basicMoveDistPerMin;
-            foreach (var m in moveSpeedMultiplier)
+            var speed = BasicMoveDistPerMin;
+            foreach (var m in MoveSpeedMultiplier)
             {
                 speed *= 1 + m;
             }
@@ -21,14 +23,26 @@ public class Player : IEntity
         }
     }
 
-    public Coordinate Coordinate { get; private set; } = new();
+    public void Init()
+    {
+        var data = GameDataManager.Instance.PlayerData;
+        BasicMoveDistPerMin = data.basicMoveDistPerMin;
+        MoveSpeedMultiplier = data.moveSpeedMultiplier;
+        Coordinate = data.coordinate;
+    }
+
+    public void Reset()
+    {
+        MoveSpeedMultiplier = new();
+        Coordinate = new();
+    }
 
     public void TakeDamage(float damage, IEntity damageDealer)
     {
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -damage);
     }
 
-    public void AddMoveSpeedMultiplier(float multipier) => moveSpeedMultiplier.Add(multipier);
+    public void AddMoveSpeedMultiplier(float multipier) => MoveSpeedMultiplier.Add(multipier);
 
-    public void RemoveMoveSpeedMultiplier(float multipier) => moveSpeedMultiplier.Remove(multipier);
+    public void RemoveMoveSpeedMultiplier(float multipier) => MoveSpeedMultiplier.Remove(multipier);
 }

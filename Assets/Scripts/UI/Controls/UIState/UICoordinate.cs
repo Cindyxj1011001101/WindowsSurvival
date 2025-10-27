@@ -7,7 +7,7 @@ public class UICoordinate : UIStateSlider
     public override void SetValue(float value, float maxValue)
     {
         slider.value = value / maxValue;
-        playerCoordSlider.value = GameManager.Instance.Player.Coordinate.Position / maxValue;
+        playerCoordSlider.value = Player.Instance.Coordinate.Position / maxValue;
 
         valueText.text = $"{value:0.0}";
     }
