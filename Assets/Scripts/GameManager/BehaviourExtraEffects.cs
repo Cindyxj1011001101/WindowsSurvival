@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 /// <summary>
@@ -43,19 +44,27 @@ public class BehaviourExtraEffects
         return Mathf.CeilToInt(basicTime * FinalTimeMultiplier);
     }
 
-    public string GetEffectsDescription()
+    public string GetDescription()
     {
-        string desc = string.Empty;
+        var desc = new StringBuilder();
         foreach (var (reason, (timeMultiplier, playerEffects)) in extraEffects)
         {
-            desc += $"\n{reason}，时间额外消耗{timeMultiplier * 100}%";
+            desc.AppendLine();
+            var str = $"{(timeMultiplier > 0 ? "+" : "")}{timeMultiplier * 100}%";
+            str = ColorManager.Colorize(str, timeMultiplier > 0 ? ColorManager.Red : ColorManager.Green);
+            desc.AppendLine($"{ColorManager.Colorize($"{reason}:", ColorManager.Yellow)}");
+            desc.AppendLine($"  - 时间消耗 {str}");
+
             if (playerEffects.IsNullOrEmpty()) continue;
+
             foreach (var (state, delta) in playerEffects)
             {
-                desc += $"，{StateManager.ParsePlayerState(state)}额外{(delta > 0 ? "+" : "")}{delta}";
+                str = $"{(delta > 0 ? "+" : "")}{delta}";
+                str = ColorManager.Colorize(str, delta < 0 ? ColorManager.Red : ColorManager.Green);
+                desc.AppendLine($"  - {StateManager.ParsePlayerState(state)} {str}");
             }
         }
-        return desc.TrimEnd('\n');
+        return desc.ToString().TrimEnd('\n');
     }
 
     public Dictionary<PlayerStateEnum, float> GetFinalPlayerEffects(Dictionary<PlayerStateEnum, float> currentEffects)

@@ -292,14 +292,14 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects) GetExploreEffects()
     {
-        string desc = ExploreExtraEffects.GetEffectsDescription();
+        string desc = ExploreExtraEffects.GetDescription();
         int time = ExploreExtraEffects.GetFinalTime(CurEnvironmentBag.PlaceData.exploreTime);
         Dictionary<PlayerStateEnum, float> playerEffects = ExploreExtraEffects.GetFinalPlayerEffects(new());
 
         // 对水域的探索额外消耗
         if (CurEnvironmentBag.PlaceData.isInWater)
         {
-            desc += ExploreInWaterExtraEffects.GetEffectsDescription();
+            desc += ExploreInWaterExtraEffects.GetDescription();
             time = ExploreInWaterExtraEffects.GetFinalTime(time);
             playerEffects = ExploreInWaterExtraEffects.GetFinalPlayerEffects(playerEffects);
         }
@@ -316,14 +316,14 @@ public class GameManager : MonoBehaviour
     public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects)
         GetMoveEffects(int basicMoveTime, PlaceEnum targetPlace)
     {
-        string desc = MoveExtraEffects.GetEffectsDescription();
+        string desc = MoveExtraEffects.GetDescription();
         int time = MoveExtraEffects.GetFinalTime(basicMoveTime);
         Dictionary<PlayerStateEnum, float> playerEffects = MoveExtraEffects.GetFinalPlayerEffects(new());
 
         // 前往水域的额外消耗
         if (EnvironmentBags[targetPlace].PlaceData.isInWater)
         {
-            desc += MoveToWaterExtraEffects.GetEffectsDescription();
+            desc += MoveToWaterExtraEffects.GetDescription();
             time = MoveToWaterExtraEffects.GetFinalTime(time);
             playerEffects = MoveToWaterExtraEffects.GetFinalPlayerEffects(playerEffects);
         }

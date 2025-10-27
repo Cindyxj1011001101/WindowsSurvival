@@ -59,4 +59,16 @@ public static class ColorManager
         { 3, Yellow },
         { 4, Red },
     };
+
+    /// <summary>
+    /// 为文本添加颜色
+    /// </summary>
+    /// <param name="text"></param>
+    /// <param name="color"></param>
+    /// <returns></returns>
+    public static string Colorize(string text, Color color)
+    {
+        string hexColor = ColorUtility.ToHtmlStringRGB(color);
+        return $"<color=#{hexColor}>{text}</color>";
+    }
 }
