@@ -58,8 +58,8 @@ public class EnvironmentBag : Bag
         // 在室内且非水域显示一氧化碳
         if (PlaceData.isIndoor && !PlaceData.isInWater)
         {
-            StateDict.Add(EnvironmentStateEnum.Oxygen, new State(UnityEngine.Random.Range(400, 600), 1000));
-            StateDict.Add(EnvironmentStateEnum.COLevel, new State(0, 100, -0.5f));
+            StateDict.Add(EnvironmentStateEnum.Oxygen, new State(UnityEngine.Random.Range(400, 600), 1000, higherIsBetter: true));
+            StateDict.Add(EnvironmentStateEnum.COLevel, new State(0, 100, -0.5f, lowerIsBetter: true));
         }
 
         // 室温

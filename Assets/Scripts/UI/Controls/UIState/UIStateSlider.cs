@@ -9,23 +9,20 @@ public class UIStateSlider : MonoBehaviour
     public Text valueText;
     public Slider slider;
 
-    public HoverableButton button;
-
-    public bool displayPercentage;
-
-    private DangerLevelEnum curDangerLevel;
-    private bool init;
-
     public Image arrow;
-
     public RectTransform ceil;
     public RectTransform floor;
-
     public Sprite[] arrowSprites;
 
-    private int curChangeLavel;
-
+    public HoverableButton button;
     public HoverTipController tipController;
+
+    public bool displayPercentage;          // 是否以百分比形式显示数值
+
+    private DangerLevelEnum curDangerLevel; // 当前危险等级
+    private bool init;                      // 是否已初始化
+
+    private int curChangeLavel;             // 当前变化率等级
 
     public Color fillColor = ColorManager.White;
 
@@ -76,7 +73,7 @@ public class UIStateSlider : MonoBehaviour
         SetValue(state.CurValue, state.MaxValue);
 
         // 显示变化率
-        DisplayChangeRate(state.ChangeRate, state.MaxValue);
+        DisplayChangeRate(state.ChangeRate, state.CurValue, state.MaxValue, state.HigherIsBetter, state.LowerIsBetter);
 
         // 根据状态的危险程度，给予提示
         PlayerStateDangerAlert(state.DangerLevel);
@@ -111,10 +108,11 @@ public class UIStateSlider : MonoBehaviour
             .SetEase(Ease.InOutSine);    // 设置缓动效果
     }
 
-    private void DisplayChangeRate(float changeRate, float maxValue)
+    private void DisplayChangeRate(float changeRate, float value, float maxValue,
+        bool higherIsBetter, bool lowerIsBetter)
     {
-        var value = changeRate / maxValue;
-        if (value == 0)
+        var percentage = changeRate / maxValue;
+        if (percentage == 0)
         {
             arrow.rectTransform.DOKill();
             arrow.gameObject.SetActive(false);
@@ -138,19 +136,31 @@ public class UIStateSlider : MonoBehaviour
 
 
         // 箭头显示
-        int level = CalcLevel(value);
-        if (curChangeLavel == level) return;
+        var lastLevel = curChangeLavel;
+        curChangeLavel = CalcLevel(percentage);
 
-        curChangeLavel = level;
+        // 如果当前值已经为0 且 变化率为负 且 低值更好
+        // 或者
+        // 当前值已经为最大值 且 变化率为正 且 高值更好
+        // 则不显示箭头
+        if (value <= 0 && changeRate < 0 && lowerIsBetter ||
+            value >= maxValue && changeRate > 0 && higherIsBetter)
+        {
+            arrow.rectTransform.DOKill();
+            arrow.gameObject.SetActive(false);
+            return;
+        }
+
+        if (curChangeLavel == lastLevel) return;
 
         arrow.gameObject.SetActive(true);
         arrow.rectTransform.DOKill();
 
-        arrow.sprite = arrowSprites[Mathf.Abs(level) - 1];
-        arrow.transform.localEulerAngles = new Vector3(value > 0 ? 0 : 180, 0, 0);
+        arrow.sprite = arrowSprites[Mathf.Abs(curChangeLavel) - 1];
+        arrow.transform.localEulerAngles = new Vector3(percentage > 0 ? 0 : 180, 0, 0);
 
         float duration = .35f;
-        if (value > 0)
+        if (percentage > 0)
         {
             arrow.rectTransform.DOAnchorPos(ceil.anchoredPosition, duration).From(floor.anchoredPosition).SetLoops(-1, LoopType.Yoyo);
         }

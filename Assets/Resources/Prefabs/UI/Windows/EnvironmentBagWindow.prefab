@@ -2806,13 +2806,14 @@ MonoBehaviour:
   stateNameText: {fileID: 0}
   valueText: {fileID: 3919898284699268905}
   slider: {fileID: 6246341764378261251}
-  button: {fileID: 0}
-  displayPercentage: 1
   arrow: {fileID: 0}
   ceil: {fileID: 0}
   floor: {fileID: 0}
   arrowSprites: []
+  button: {fileID: 0}
   tipController: {fileID: 0}
+  displayPercentage: 1
+  alwaysShowArrow: 1
   fillColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &5177177482958789841
 GameObject:
@@ -5556,6 +5557,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 1307717986450091551}
     m_Modifications:
     - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+      propertyPath: alwaysShowArrow
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
       propertyPath: displayPercentage
       value: 1
       objectReference: {fileID: 0}
@@ -6033,8 +6038,6 @@ MonoBehaviour:
   stateNameText: {fileID: 1482907220147536036}
   valueText: {fileID: 2913360743556534988}
   slider: {fileID: 2606662974464565243}
-  button: {fileID: 191631981236734606}
-  displayPercentage: 0
   arrow: {fileID: 7554107719662378003}
   ceil: {fileID: 5225061733763296830}
   floor: {fileID: 1439708197561951402}
@@ -6042,7 +6045,10 @@ MonoBehaviour:
   - {fileID: -1364170369, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: 688397521, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: -1067156244, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  button: {fileID: 191631981236734606}
   tipController: {fileID: 6527655283263610742}
+  displayPercentage: 0
+  alwaysShowArrow: 1
   fillColor: {r: 1, g: 1, b: 1, a: 1}
   levels: []
 --- !u!114 &5889874112837475390
@@ -6061,8 +6067,6 @@ MonoBehaviour:
   stateNameText: {fileID: 1482907220147536036}
   valueText: {fileID: 2913360743556534988}
   slider: {fileID: 2606662974464565243}
-  button: {fileID: 191631981236734606}
-  displayPercentage: 0
   arrow: {fileID: 7554107719662378003}
   ceil: {fileID: 5225061733763296830}
   floor: {fileID: 1439708197561951402}
@@ -6070,7 +6074,10 @@ MonoBehaviour:
   - {fileID: -1364170369, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: 688397521, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: -1067156244, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  button: {fileID: 191631981236734606}
   tipController: {fileID: 6527655283263610742}
+  displayPercentage: 0
+  alwaysShowArrow: 1
   fillColor: {r: 1, g: 1, b: 1, a: 1}
   levels: []
 --- !u!224 &4551475210616384079 stripped
@@ -6367,6 +6374,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1307717986450091551}
     m_Modifications:
+    - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+      propertyPath: alwaysShowArrow
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1680979510513311346, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
       propertyPath: m_Name
       value: Dirtiness
@@ -6837,6 +6848,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1307717986450091551}
     m_Modifications:
+    - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+      propertyPath: alwaysShowArrow
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
       propertyPath: displayPercentage
       value: 1

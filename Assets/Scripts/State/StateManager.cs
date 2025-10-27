@@ -119,16 +119,16 @@ public class StateManager : MonoBehaviour
     {
         // 初始化玩家状态
         PlayerStateDict.Add(PlayerStateEnum.Health, InitHealthState());
-        PlayerStateDict.Add(PlayerStateEnum.Hunger, InitFullnessState());
-        PlayerStateDict.Add(PlayerStateEnum.Hydration, InitThirstState());
+        PlayerStateDict.Add(PlayerStateEnum.Hunger, InitHungerState());
+        PlayerStateDict.Add(PlayerStateEnum.Hydration, InitHydrationState());
         PlayerStateDict.Add(PlayerStateEnum.Sanity, InitSanityState());
         PlayerStateDict.Add(PlayerStateEnum.Oxygen, InitOxygenState());
         PlayerStateDict.Add(PlayerStateEnum.Sobriety, InitSobriety());
         PlayerStateDict.Add(PlayerStateEnum.Load, InitLoadState());
         PlayerStateDict.Add(PlayerStateEnum.BodyTemperature, InitBodyTemperatureState());
-        PlayerStateDict.Add(PlayerStateEnum.COPoisoning, InitCOState());
+        PlayerStateDict.Add(PlayerStateEnum.COPoisoning, InitCOPoisoningState());
         PlayerStateDict.Add(PlayerStateEnum.Itchiness, InitItchinessState());
-        PlayerStateDict.Add(PlayerStateEnum.PainLevel, InitPainState());
+        PlayerStateDict.Add(PlayerStateEnum.PainLevel, InitPainLevelState());
 
         foreach (var state in PlayerStateDict.Values)
         {
@@ -155,10 +155,10 @@ public class StateManager : MonoBehaviour
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
 
-        return new State(100, 150, +0.5f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(100, 150, +0.5f, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true);
     }
 
-    private State InitFullnessState()
+    private State InitHungerState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -176,10 +176,10 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new State(100, 250, -1f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(100, 250, -1f, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true);
     }
 
-    private State InitThirstState()
+    private State InitHydrationState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -197,7 +197,7 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new State(100, 200, -1.3f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(100, 200, -1.3f, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true);
     }
 
     private State InitSanityState()
@@ -218,7 +218,7 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new State(100, 100, +0.1f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(100, 100, +0.1f, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true);
     }
 
     private State InitOxygenState()
@@ -239,7 +239,7 @@ public class StateManager : MonoBehaviour
             StateEffect.NoEffect,
             StateEffect.NoEffect,
         };
-        return new State(60, 60, -6f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(60, 60, -6f, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true);
     }
 
     private State InitSobriety()
@@ -260,7 +260,7 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new State(150, 180, -1, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(150, 180, -1, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true);
     }
 
     private State InitLoadState()
@@ -305,10 +305,10 @@ public class StateManager : MonoBehaviour
         var lowDangerLevels = new List<int>() { 1, 3 };
         var highDangerLevels = new List<int>() { 0, 4 };
 
-        return new State(100, 200, 0f, thresholds, effects, lowDangerLevels, highDangerLevels, -100);
+        return new State(100, 200, 0f, thresholds, effects, lowDangerLevels, highDangerLevels, normParam: -100);
     }
 
-    private State InitCOState()
+    private State InitCOPoisoningState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -327,7 +327,7 @@ public class StateManager : MonoBehaviour
         var lowDangerLevels = new List<int>() { 1, 2 };
         var highDangerLevels = new List<int>() { 3 };
 
-        return new State(0, 100, -0.3f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(0, 100, -0.3f, thresholds, effects, lowDangerLevels, highDangerLevels, lowerIsBetter: true);
     }
 
     private State InitItchinessState()
@@ -346,10 +346,10 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 1 };
         var highDangerLevels = new List<int>() { 2 };
-        return new State(0, 100, -1f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(0, 100, -1f, thresholds, effects, lowDangerLevels, highDangerLevels, lowerIsBetter: true);
     }
 
-    private State InitPainState()
+    private State InitPainLevelState()
     {
         var thresholds = new List<StateThreshold>()
         {
@@ -367,18 +367,18 @@ public class StateManager : MonoBehaviour
         };
         var lowDangerLevels = new List<int>() { 1, 2 };
         var highDangerLevels = new List<int>() { 3 };
-        return new State(0, 400, -2f, thresholds, effects, lowDangerLevels, highDangerLevels);
+        return new State(0, 400, -2f, thresholds, effects, lowDangerLevels, highDangerLevels, lowerIsBetter: true);
     }
     #endregion
 
     private void InitElectricity()
     {
-        Electricity = new(Random.Range(30, 45), 50);
+        Electricity = new(Random.Range(30, 45), 50, higherIsBetter: true);
     }
 
     private void InitWaterLevel()
     {
-        WaterLevel = new(0, 100);
+        WaterLevel = new(0, 100, lowerIsBetter: true);
     }
     #endregion
 

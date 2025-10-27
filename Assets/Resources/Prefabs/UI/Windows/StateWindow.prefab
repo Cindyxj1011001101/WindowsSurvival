@@ -324,6 +324,10 @@ PrefabInstance:
       propertyPath: icon
       value: 
       objectReference: {fileID: 8122711661049405466}
+    - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+      propertyPath: alwaysShowArrow
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1680979510513311346, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
       propertyPath: m_Name
       value: Itchiness
@@ -594,6 +598,10 @@ PrefabInstance:
       propertyPath: icon
       value: 
       objectReference: {fileID: 7483193905025212365}
+    - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+      propertyPath: alwaysShowArrow
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1680979510513311346, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
       propertyPath: m_Name
       value: COPoisoning
@@ -1693,8 +1701,6 @@ MonoBehaviour:
   stateNameText: {fileID: 7387355947281270914}
   valueText: {fileID: 6520974162722364138}
   slider: {fileID: 6214346745737893853}
-  button: {fileID: 8122700557890093736}
-  displayPercentage: 0
   arrow: {fileID: 1928919050295137333}
   ceil: {fileID: 4220528898689132056}
   floor: {fileID: 7055926346680478860}
@@ -1702,7 +1708,10 @@ MonoBehaviour:
   - {fileID: -1364170369, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: 688397521, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: -1067156244, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  button: {fileID: 8122700557890093736}
   tipController: {fileID: 2920464235495511888}
+  displayPercentage: 0
+  alwaysShowArrow: 1
   fillColor: {r: 1, g: 1, b: 1, a: 1}
   levels:
   - {fileID: 1537160113, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
@@ -1951,8 +1960,6 @@ MonoBehaviour:
   stateNameText: {fileID: 7331955803311592013}
   valueText: {fileID: 6429548859973730341}
   slider: {fileID: 6158871073688276242}
-  button: {fileID: 8357800147773134951}
-  displayPercentage: 0
   arrow: {fileID: 1837919744070700794}
   ceil: {fileID: 4167847538276400343}
   floor: {fileID: 7110849887195117123}
@@ -1960,7 +1967,10 @@ MonoBehaviour:
   - {fileID: -1364170369, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: 688397521, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   - {fileID: -1067156244, guid: 463677557ce92964a8482ac800b7428d, type: 3}
+  button: {fileID: 8357800147773134951}
   tipController: {fileID: 3153343630951894431}
+  displayPercentage: 0
+  alwaysShowArrow: 1
   fillColor: {r: 1, g: 1, b: 1, a: 1}
   levels:
   - {fileID: 720461001, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
@@ -2163,6 +2173,10 @@ PrefabInstance:
       propertyPath: icon
       value: 
       objectReference: {fileID: 2333178393389809124}
+    - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+      propertyPath: alwaysShowArrow
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1680979510513311346, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
       propertyPath: m_Name
       value: PainLevel

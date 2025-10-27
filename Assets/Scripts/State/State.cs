@@ -19,6 +19,8 @@ public class State
     [JsonProperty] private List<int> lowDangerLevels = new();       // 低危险等级对应的状态等级索引
     [JsonProperty] private List<int> highDangerLevels = new();      // 高危险等级对应的状态等级索引
     [JsonProperty] private float normParam = 0;                     // 归一化参数
+    [JsonProperty] private bool higherIsBetter;                     // 数值越高越好
+    [JsonProperty] private bool lowerIsBetter;                      // 数值越低越好
 
     [JsonIgnore] public string StateLevelName => thresholds[stateLevel].levelName;
     [JsonIgnore] public int StateLevel => stateLevel;
@@ -29,6 +31,8 @@ public class State
     [JsonIgnore] public float RemainingCapacity => MaxValue - CurValue;
     [JsonIgnore] public float BasicChangeRate => basicChangeRate;
     [JsonIgnore] public float ChangeRate => basicChangeRate + extraChangeRate;
+    [JsonIgnore] public bool HigherIsBetter => higherIsBetter;
+    [JsonIgnore] public bool LowerIsBetter => lowerIsBetter;
 
     [JsonIgnore]
     public DangerLevelEnum DangerLevel
@@ -127,12 +131,15 @@ public class State
 
     public State(float value, float maxValue, float basicChangeRate,
         List<StateThreshold> thresholds, List<StateEffect> effects,
-        List<int> lowDangerLevels, List<int> highDangerLevels, float normParam = 0)
+        List<int> lowDangerLevels, List<int> highDangerLevels,
+        bool higherIsBetter = false, bool lowerIsBetter = false, float normParam = 0)
     {
         constValue = 0;
         extraValue = 0;
         variableValue = value;
         this.maxValue = maxValue;
+        this.higherIsBetter = higherIsBetter;
+        this.lowerIsBetter = lowerIsBetter;
         this.thresholds = thresholds;
         this.effects = effects;
         this.basicChangeRate = basicChangeRate;
@@ -142,7 +149,8 @@ public class State
         this.normParam = normParam;
     }
 
-    public State(float value, float maxValue, float basicChangeRate = 0, float normParam = 0) : this(value, maxValue, basicChangeRate, new(), new(), new(), new(), normParam) { }
+    public State(float value, float maxValue, float basicChangeRate = 0, bool higherIsBetter = false, bool lowerIsBetter = false, float normParam = 0)
+        : this(value, maxValue, basicChangeRate, new(), new(), new(), new(), higherIsBetter, lowerIsBetter, normParam) { }
 }
 
 // 状态阈值配置
