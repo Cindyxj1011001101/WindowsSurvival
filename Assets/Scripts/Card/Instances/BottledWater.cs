@@ -10,7 +10,7 @@ public class BottledWater : Card
             new CardEvent("饮用", "连瓶子也喝掉", (out string s) => EasyEvent(out s, "喝_01"), null, () => 3,
             () => new()
             {
-                { PlayerStateEnum.Thirst, 20 }
+                { PlayerStateEnum.Hydration, 20 }
             })
         };
     }

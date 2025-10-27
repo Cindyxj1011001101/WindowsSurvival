@@ -15,14 +15,14 @@ public class RatBody : CookableCard
             new CardEvent("食用", "不做任何处理，连同皮毛和内脏一起吃下", (out string s) => EasyEvent(out s, "吃_01"), null, () => 30,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 18 },
-                { PlayerStateEnum.San, -20 },
+                { PlayerStateEnum.Hunger, 18 },
+                { PlayerStateEnum.Sanity, -20 },
                 { PlayerStateEnum.Health, -8 }
             }),
             new CardEvent("用手剥", "用手撕扯老鼠，这会弄得脏兮兮的，而且有小概率什么都拿不到", Event_PeelByHand, null, () => 45,
             () => new() 
             {
-                { PlayerStateEnum.San, -3 },
+                { PlayerStateEnum.Sanity, -3 },
                 { PlayerStateEnum.Health, -2 }
             }),
             new CardEvent("用刀切割", "可以采集到小块生肉", Event_PeelByKnife, Judge_PeelByKnife, () => 15),
@@ -36,7 +36,7 @@ public class RatBody : CookableCard
         DestroyThis();
 
         //-3精神值
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -3);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, -3);
         //-2健康
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -2);
         //消耗45分钟

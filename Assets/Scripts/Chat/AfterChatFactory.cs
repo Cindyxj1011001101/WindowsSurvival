@@ -109,13 +109,13 @@ public static class AfterChatFactory
                 StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, delta);
                 break;
             case "饱食":
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, delta);
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hunger, delta);
                 break;
             case "口渴":
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, delta);
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hydration, delta);
                 break;
             case "精神":
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, delta);
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, delta);
                 break;
             case "氧气":
                 StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, delta);

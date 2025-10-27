@@ -12,7 +12,7 @@ public class MysteryMushroom : Card
             new CardEvent("³Ôµô", "³ÔµôÃÕÑù¹½¡£»áÓÐÆæ¹ÖµÄ¸Ð¾õ", Event_Eat, null, () => 5,
             () => new()
             {
-                { PlayerStateEnum.Fullness, +11 }
+                { PlayerStateEnum.Hunger, +11 }
             }),
         };
     }
@@ -38,7 +38,7 @@ public class MysteryMushroom : Card
 
         if (r == 1)
         {
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, Random.Range(-14, 11));
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, Random.Range(-14, 11));
         }
         else if (r == 2)
         {
@@ -46,7 +46,7 @@ public class MysteryMushroom : Card
         }
         else if (r == 3)
         {
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, Random.Range(-24, 16));
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hydration, Random.Range(-24, 16));
         }
         else
         {

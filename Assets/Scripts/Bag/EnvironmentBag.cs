@@ -66,6 +66,8 @@ public class EnvironmentBag : Bag
 
         // 室温
         stateDict.Add(EnvironmentStateEnum.RoomTemperature, new State(200, 400, normParam: -200));
+
+        // 光照
     }
 
     private void FirstInitDropList()

@@ -10,8 +10,8 @@ public class CookedFoulSmellingMeat : CookableCard
             new CardEvent("Ê³ÓÃ", "", (out string s) => EasyEvent(out s, "³Ô_01"), null, () => 15,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 20 },
-                { PlayerStateEnum.San, -15 },
+                { PlayerStateEnum.Hunger, 20 },
+                { PlayerStateEnum.Sanity, -15 },
                 { PlayerStateEnum.Health, -10 }
             }),
         };

@@ -4,9 +4,9 @@
 public enum PlayerStateEnum
 {
     Health,             // 健康
-    Fullness,           // 饱食
-    Thirst,             // 饮水
-    San,                // 精神
+    Hunger,             // 饱食
+    Hydration,          // 水分
+    Sanity,             // 精神
     Oxygen,             // 氧气
     Sobriety,           // 清醒度
     Load,               // 负重

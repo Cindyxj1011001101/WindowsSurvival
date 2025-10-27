@@ -10,7 +10,7 @@ public class CookedWaterChestnutPulp : CookableCard
             new CardEvent("Ê³ÓÃ", "", (out string s) => EasyEvent(out s, "³Ô_01"), null, () => 15,
             () => new()
             {
-                { PlayerStateEnum.Fullness, +16 }
+                { PlayerStateEnum.Hunger, +16 }
             })
         };
     }

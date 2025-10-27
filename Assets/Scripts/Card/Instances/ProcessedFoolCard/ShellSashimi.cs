@@ -10,9 +10,9 @@ public class ShellSashimi : Card
             new CardEvent("食用", "食用贝类刺身", (out string s) => EasyEvent(out s, "吃_01"), null, () => 5,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 54 },
-                { PlayerStateEnum.Thirst, 14 },
-                { PlayerStateEnum.San, 13 },
+                { PlayerStateEnum.Hunger, 54 },
+                { PlayerStateEnum.Hydration, 14 },
+                { PlayerStateEnum.Sanity, 13 },
                 { PlayerStateEnum.Health, -3 }
             })
         };

@@ -10,7 +10,7 @@ public class AquariusFishWithProduct : Card
             new Drop(3, (out string tip) =>
             {
                 tip = "水瓶鱼逃跑了";
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.San, -2);
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, -2);
 
             }),
             new Drop(1, (out string tip) =>

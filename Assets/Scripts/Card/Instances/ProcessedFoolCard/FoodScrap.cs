@@ -8,8 +8,8 @@ public class FoodScrap : Card
             new CardEvent("食用", "和鱼抢吃的", (out string s) => EasyEvent(out s, "吃_01"), null, () => 15,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 12 },
-                { PlayerStateEnum.San, -3 }
+                { PlayerStateEnum.Hunger, 12 },
+                { PlayerStateEnum.Sanity, -3 }
             }),
         };
     }

@@ -7,7 +7,7 @@ public class CookedSeaLizard : CookableCard
             new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 15,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 9 },
+                { PlayerStateEnum.Hunger, 9 },
                 { PlayerStateEnum.Itchiness, 8 }
             })
         };

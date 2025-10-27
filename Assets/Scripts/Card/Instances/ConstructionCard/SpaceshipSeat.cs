@@ -48,7 +48,7 @@ public class SpaceshipSeat : ConstructionCard
         window.SetTimeRange(0, 60);
         window.onConfirm += (time) =>
         {
-            StateManager.Instance.Rest(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRate }, { PlayerStateEnum.San, sanChangeRate } });
+            StateManager.Instance.Rest(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRate }, { PlayerStateEnum.Sanity, sanChangeRate } });
             // 衰减次数+1
             GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId);
         };
@@ -62,7 +62,7 @@ public class SpaceshipSeat : ConstructionCard
                 p = new()
                     {
                         { PlayerStateEnum.Sobriety, sobrietyChange },
-                        { PlayerStateEnum.San, sanChange }
+                        { PlayerStateEnum.Sanity, sanChange }
                     };
             }
             return ($"靠在驾驶座上休息 {t} 分钟", t, p, null);

@@ -10,9 +10,9 @@ public class JellyfishSkin : Card
             new CardEvent("Ê³ÓÃ", "", (out string s) => EasyEvent(out s, "³Ô_01"), null, () => 15,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 15 },
+                { PlayerStateEnum.Hunger, 15 },
                 { PlayerStateEnum.Health, -4 },
-                { PlayerStateEnum.San, -5 },
+                { PlayerStateEnum.Sanity, -5 },
                 { PlayerStateEnum.Itchiness, +45 }
             }),
             new CardEvent("ëç×ÕÍÑ¶¾", "", Event_Pickle, Judge_Pickle, () => 5),

@@ -119,9 +119,9 @@ public class StateManager : MonoBehaviour
     {
         // 初始化玩家状态
         PlayerStateDict.Add(PlayerStateEnum.Health, InitHealthState());
-        PlayerStateDict.Add(PlayerStateEnum.Fullness, InitFullnessState());
-        PlayerStateDict.Add(PlayerStateEnum.Thirst, InitThirstState());
-        PlayerStateDict.Add(PlayerStateEnum.San, InitSanityState());
+        PlayerStateDict.Add(PlayerStateEnum.Hunger, InitFullnessState());
+        PlayerStateDict.Add(PlayerStateEnum.Hydration, InitThirstState());
+        PlayerStateDict.Add(PlayerStateEnum.Sanity, InitSanityState());
         PlayerStateDict.Add(PlayerStateEnum.Oxygen, InitOxygenState());
         PlayerStateDict.Add(PlayerStateEnum.Sobriety, InitSobriety());
         PlayerStateDict.Add(PlayerStateEnum.Load, InitLoadState());
@@ -823,10 +823,10 @@ public class StateManager : MonoBehaviour
     {
         int curLevel = int.MaxValue;
         curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Health].DangerLevel);
-        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Fullness].DangerLevel);
-        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Thirst].DangerLevel);
+        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Hunger].DangerLevel);
+        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Hydration].DangerLevel);
         curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Sobriety].DangerLevel);
-        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.San].DangerLevel);
+        curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Sanity].DangerLevel);
         curLevel = Mathf.Min(curLevel, (int)PlayerStateDict[PlayerStateEnum.Oxygen].DangerLevel);
 
         DangerLevelEnum danger = (DangerLevelEnum)curLevel;
@@ -859,9 +859,9 @@ public class StateManager : MonoBehaviour
         return playerState switch
         {
             PlayerStateEnum.Health => "健康",
-            PlayerStateEnum.Fullness => "饱食度",
-            PlayerStateEnum.Thirst => "水分",
-            PlayerStateEnum.San => "精神",
+            PlayerStateEnum.Hunger => "饱食度",
+            PlayerStateEnum.Hydration => "水分",
+            PlayerStateEnum.Sanity => "精神",
             PlayerStateEnum.Oxygen => "氧气",
             PlayerStateEnum.Sobriety => "清醒",
             PlayerStateEnum.Load => "载重",

@@ -16,7 +16,7 @@ public class Vomit : GameEvent
 
     public override bool CanTriggerThisEvent()
     {
-        var san = StateManager.Instance.PlayerStateDict[PlayerStateEnum.San];
+        var san = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Sanity];
         return san.CurValue / san.MaxValue <= SAN_THRESHOLD;
     }
 
@@ -24,8 +24,8 @@ public class Vomit : GameEvent
     {
         var thirstChange = -Random.Range(10, 51);
         var fullnessChange = -Random.Range(10, 41);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Thirst, thirstChange);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Fullness, fullnessChange);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hydration, thirstChange);
+        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hunger, fullnessChange);
         // µôÂä¸¯ÀÃÎï
         GameManager.Instance.AddCardsToTargetEnv(GameManager.Instance.CurEnvironmentBag, CardFactory.CreateCard("¸¯ÀÃÎï"));
     }

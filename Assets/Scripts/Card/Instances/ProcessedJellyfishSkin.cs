@@ -10,7 +10,7 @@ public class ProcessedJellyfishSkin : Card
             new CardEvent("Ê³ÓÃ", "", (out string s) => EasyEvent(out s, "³Ô_01"), null, () => 15,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 25 },
+                { PlayerStateEnum.Hunger, 25 },
                 { PlayerStateEnum.Itchiness, +5 }
             }),
         };

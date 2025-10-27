@@ -34,7 +34,7 @@ public class PlankBed : ConstructionCard
         window.SetTimeRange(60, 60 * 8); // 可休息1-8小时
         window.onConfirm += (time) =>
         {
-            StateManager.Instance.Rest(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRate }, { PlayerStateEnum.San, sanChangeRate } });
+            StateManager.Instance.Rest(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRate }, { PlayerStateEnum.Sanity, sanChangeRate } });
         };
         window.getConfirmEffects += (t) =>
         {
@@ -46,7 +46,7 @@ public class PlankBed : ConstructionCard
                 p = new()
                     {
                         { PlayerStateEnum.Sobriety, sobrietyChange },
-                        { PlayerStateEnum.San, sanChange }
+                        { PlayerStateEnum.Sanity, sanChange }
                     };
             }
             return ($"在板床上睡觉 {t} 分钟", t, p, null);

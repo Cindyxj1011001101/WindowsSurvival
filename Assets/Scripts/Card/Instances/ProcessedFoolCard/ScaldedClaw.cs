@@ -10,8 +10,8 @@ public class ScaldedClaw : Card
             new CardEvent("食用", "食用白灼触手", (out string s) => EasyEvent(out s, "吃_01"), null, () => 45,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 81 },
-                { PlayerStateEnum.San, -3 }
+                { PlayerStateEnum.Hunger, 81 },
+                { PlayerStateEnum.Sanity, -3 }
             })
         };
     }

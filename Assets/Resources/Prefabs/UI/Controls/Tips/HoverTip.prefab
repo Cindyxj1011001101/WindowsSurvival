@@ -835,7 +835,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6227934855364533768, guid: 46f4cdc187020bf47800faf6d371d5ce, type: 3}
       propertyPath: m_Name
-      value: P_CarbonMonoxidePoisoning
+      value: P_COPoisoning
       objectReference: {fileID: 0}
     - target: {fileID: 6227934855364533768, guid: 46f4cdc187020bf47800faf6d371d5ce, type: 3}
       propertyPath: m_IsActive
@@ -1883,7 +1883,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6227934855364533768, guid: 46f4cdc187020bf47800faf6d371d5ce, type: 3}
       propertyPath: m_Name
-      value: E_CarbonMonoxideLevel
+      value: E_COLevel
       objectReference: {fileID: 0}
     - target: {fileID: 6227934855364533768, guid: 46f4cdc187020bf47800faf6d371d5ce, type: 3}
       propertyPath: m_IsActive
@@ -2013,7 +2013,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6227934855364533768, guid: 46f4cdc187020bf47800faf6d371d5ce, type: 3}
       propertyPath: m_Name
-      value: P_Fullness
+      value: P_Hunger
       objectReference: {fileID: 0}
     - target: {fileID: 6227934855364533768, guid: 46f4cdc187020bf47800faf6d371d5ce, type: 3}
       propertyPath: m_IsActive
@@ -2403,7 +2403,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6227934855364533768, guid: 46f4cdc187020bf47800faf6d371d5ce, type: 3}
       propertyPath: m_Name
-      value: P_Thirst
+      value: P_Hydration
       objectReference: {fileID: 0}
     - target: {fileID: 6227934855364533768, guid: 46f4cdc187020bf47800faf6d371d5ce, type: 3}
       propertyPath: m_IsActive
@@ -2663,7 +2663,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6227934855364533768, guid: 46f4cdc187020bf47800faf6d371d5ce, type: 3}
       propertyPath: m_Name
-      value: P_San
+      value: P_Sanity
       objectReference: {fileID: 0}
     - target: {fileID: 6227934855364533768, guid: 46f4cdc187020bf47800faf6d371d5ce, type: 3}
       propertyPath: m_IsActive

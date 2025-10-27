@@ -177,9 +177,9 @@ public class StateEffect
 
         // 每回合变化
         if (healthRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, healthRate * signal);
-        if (sanityRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.San, sanityRate * signal);
-        if (fulnessRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Fullness, fulnessRate * signal);
-        if (thirstRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Thirst, thirstRate * signal);
+        if (sanityRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sanity, sanityRate * signal);
+        if (fulnessRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Hunger, fulnessRate * signal);
+        if (thirstRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Hydration, thirstRate * signal);
         if (sorbrietyRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, sorbrietyRate * signal);
         if (coPoisoningRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.COPoisoning, coPoisoningRate * signal);
         if (bodyTemperatureRate != 0) StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.BodyTemperature, bodyTemperatureRate * signal);

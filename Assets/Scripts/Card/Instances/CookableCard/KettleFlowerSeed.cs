@@ -10,8 +10,8 @@ public class KettleFlowerSeed : CookableCard
             new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 15,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 25 },
-                { PlayerStateEnum.Thirst, 14 },
+                { PlayerStateEnum.Hunger, 25 },
+                { PlayerStateEnum.Hydration, 14 },
             })
         };
     }

@@ -10,8 +10,8 @@ public class EggRearingFluid : Card
             new CardEvent("饮用", "", (out string s) => EasyEvent(out s, "喝_01"), null, () => 3,
             () => new()
             {
-                { PlayerStateEnum.Thirst, 40 },
-                { PlayerStateEnum.Fullness, 10 },
+                { PlayerStateEnum.Hydration, 40 },
+                { PlayerStateEnum.Hunger, 10 },
             })
         };
     }

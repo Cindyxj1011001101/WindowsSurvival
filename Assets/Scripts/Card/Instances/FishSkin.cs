@@ -10,7 +10,7 @@ public class FishSkin : Card
             new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 30,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 3 },
+                { PlayerStateEnum.Hunger, 3 },
                 { PlayerStateEnum.Health, 10 }
             })
         };

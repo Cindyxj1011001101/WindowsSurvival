@@ -10,8 +10,8 @@ public class BurntFood : CookableCard
             new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 15,
             () => new()
             {
-                { PlayerStateEnum.Fullness, 10 },
-                { PlayerStateEnum.Thirst, -20 },
+                { PlayerStateEnum.Hunger, 10 },
+                { PlayerStateEnum.Hydration, -20 },
                 { PlayerStateEnum.Health, -5 },
                 { PlayerStateEnum.BodyTemperature, 20 }
             })
