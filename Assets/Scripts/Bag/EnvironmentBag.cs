@@ -77,8 +77,8 @@ public class EnvironmentBag : Bag
             new (80, 100, "耀眼"),
         };
         var state = new State(0, 100, 0, thresholds, new(), new(), new());
-        var constBrightness = PlaceData.initialBagStateConfig.brightness; // TODO: 加恒星光照 * PlaceData.sunlightInfluenceFactor
-        state.SetConstValue(constBrightness);
+        state.SetConstValue("基础光照",  PlaceData.initialBagStateConfig.brightness);
+        state.SetConstValue("恒星光照", SunlightManager.Instance.Sunlight * PlaceData.sunlightInfluenceFactor);
         stateDict.Add(EnvironmentStateEnum.Brightness, state);
     }
 
