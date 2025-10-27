@@ -47,9 +47,10 @@ public class BehaviourExtraEffects
     public string GetDescription()
     {
         var desc = new StringBuilder();
+        desc.AppendLine();
+        desc.AppendLine();
         foreach (var (reason, (timeMultiplier, playerEffects)) in extraEffects)
         {
-            desc.AppendLine();
             var str = $"{(timeMultiplier > 0 ? "+" : "")}{timeMultiplier * 100}%";
             str = ColorManager.Colorize(str, timeMultiplier > 0 ? ColorManager.Red : ColorManager.Green);
             desc.AppendLine($"{ColorManager.Colorize($"{reason}:", ColorManager.Yellow)}");
