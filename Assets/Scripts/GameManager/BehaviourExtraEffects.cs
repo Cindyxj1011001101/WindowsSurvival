@@ -46,6 +46,8 @@ public class BehaviourExtraEffects
 
     public string GetDescription()
     {
+        if (extraEffects.IsNullOrEmpty()) return string.Empty;
+
         var desc = new StringBuilder();
         desc.AppendLine();
         desc.AppendLine();
