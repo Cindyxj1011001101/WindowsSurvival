@@ -465,7 +465,6 @@ public class GameDataManager
     {
         playerData = new()
         {
-            basicMoveDistPerMin = Player.Instance.BasicMoveDistPerMin,
             moveSpeedMultiplier = Player.Instance.MoveSpeedMultiplier,
             coordinate = Player.Instance.Coordinate,
         };
