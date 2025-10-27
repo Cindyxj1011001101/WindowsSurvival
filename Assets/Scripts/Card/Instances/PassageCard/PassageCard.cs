@@ -21,14 +21,14 @@
         TryGetComponent(out passage);
 
         Events[0].description = "前往" + ParsePlaceEnum(passage.targetPlace) +
-            GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
-        Events[0].getTimeEffect = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).time;
-        Events[0].getPlayerEffects = () => GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerEffects;
+            MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
+        Events[0].getTimeEffect = () => MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).time;
+        Events[0].getPlayerEffects = () => MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerEffects;
 
         var pos = GetNearestAvailablePosition();
-        Events[1].description = "移动到通道的附近" + GameManager.Instance.GetMoveEffects(pos).desc;
-        Events[1].getTimeEffect = () => GameManager.Instance.GetMoveEffects(pos).time;
-        Events[1].getPlayerEffects = () => GameManager.Instance.GetMoveEffects(pos).playerEffects;
+        Events[1].description = "移动到通道的附近" + MoveExploreManager.Instance.GetMoveEffects(pos).desc;
+        Events[1].getTimeEffect = () => MoveExploreManager.Instance.GetMoveEffects(pos).time;
+        Events[1].getPlayerEffects = () => MoveExploreManager.Instance.GetMoveEffects(pos).playerEffects;
     }
 
     public override void Init()
@@ -53,7 +53,7 @@
         if (state == PlayerStateEnum.Load)
         {
             Events[0].description = "前往" + ParsePlaceEnum(passage.targetPlace) +
-                GameManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
+                MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
             RefreshSlot();
         }
     }
@@ -65,7 +65,7 @@
 
     private void OnPlayerMove()
     {
-        Events[1].description = "移动到通道的附近" + GameManager.Instance.GetMoveEffects(GetNearestAvailablePosition()).desc;
+        Events[1].description = "移动到通道的附近" + MoveExploreManager.Instance.GetMoveEffects(GetNearestAvailablePosition()).desc;
         RefreshSlot();
     }
 
@@ -74,7 +74,7 @@
         tip = string.Empty;
         if (!string.IsNullOrEmpty(passage.audioClip))
             SoundManager.Instance.PlaySound(passage.audioClip, true);
-        GameManager.Instance.Move(passage.targetPlace, passage.time);
+        MoveExploreManager.Instance.Move(passage.targetPlace, passage.time);
     }
 
     protected virtual bool Judge_Enter(out string hint)
@@ -86,7 +86,7 @@
             return false;
         }
 
-        if (!GameManager.Instance.CanMoveExplore())
+        if (!MoveExploreManager.Instance.CanMoveExplore())
         {
             hint = "身上太重了，无法通过";
             return false;
@@ -98,7 +98,7 @@
     {
         tip = string.Empty;
         // 移动到最近的可用使用通道的坐标
-        GameManager.Instance.Move(GetNearestAvailablePosition());
+        MoveExploreManager.Instance.Move(GetNearestAvailablePosition());
     }
 
     protected virtual bool Judge_MoveNear(out string hint)
@@ -111,7 +111,7 @@
             return false;
         }
 
-        if (!GameManager.Instance.CanMoveExplore())
+        if (!MoveExploreManager.Instance.CanMoveExplore())
         {
             hint = "身上太重了，无法移动";
             return false;
@@ -122,12 +122,12 @@
 
     private bool IsPlayerNear()
     {
-        return GameManager.Instance.Player.Coordinate.DistanceTo(coordinate.coordinate) <= MAX_AVAILABLE_DIST;
+        return Player.Instance.Coordinate.DistanceTo(coordinate.coordinate) <= MAX_AVAILABLE_DIST;
     }
 
     private float GetNearestAvailablePosition()
     {
-        var playerPos = GameManager.Instance.Player.Coordinate.Position;
+        var playerPos = Player.Instance.Coordinate.Position;
         var passagePos = coordinate.coordinate.Position;
         return playerPos > passagePos ? passagePos + MAX_AVAILABLE_DIST : passagePos - MAX_AVAILABLE_DIST;
     }

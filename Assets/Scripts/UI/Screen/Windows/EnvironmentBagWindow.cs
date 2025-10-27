@@ -2,7 +2,6 @@ using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public enum PressureLevel
@@ -43,9 +42,8 @@ public class EnvironmentBagWindow : BagWindow
     private HoverTipController moveTipController;
 
     private EnvironmentBag CurEnv => GameManager.Instance.CurEnvironmentBag;
-    private Player Player => GameManager.Instance.Player;
     private float TargetPosition => targetCoordSlider.value * MoveDistResolution;
-    private float DeltaPosition => TargetPosition - Player.Coordinate.Position;
+    private float DeltaPosition => TargetPosition - Player.Instance.Coordinate.Position;
 
     protected override void Awake()
     {
@@ -58,9 +56,9 @@ public class EnvironmentBagWindow : BagWindow
         exploreTipController = exploreButton.gameObject.AddComponent<HoverTipController>();
         exploreTipController.onPointerEnter.AddListener(() =>
         {
-            if (GameManager.Instance.CanMoveExplore())
+            if (MoveExploreManager.Instance.CanMoveExplore())
             {
-                var (desc, time, playerEffects) = GameManager.Instance.GetExploreEffects();
+                var (desc, time, playerEffects) = MoveExploreManager.Instance.GetExploreEffects();
                 desc = "探索该地点" + desc;
                 exploreTipController.SetTip(desc, time, playerEffects, null);
             }
@@ -72,9 +70,9 @@ public class EnvironmentBagWindow : BagWindow
         moveTipController = executeMoveButton.gameObject.AddComponent<HoverTipController>();
         moveTipController.onPointerEnter.AddListener(() =>
         {
-            if (GameManager.Instance.CanMoveExplore())
+            if (MoveExploreManager.Instance.CanMoveExplore())
             {
-                var (desc, time, playerEffects) = GameManager.Instance.GetMoveEffects(TargetPosition);
+                var (desc, time, playerEffects) = MoveExploreManager.Instance.GetMoveEffects(TargetPosition);
                 desc = $"前往坐标 {TargetPosition:0.0} 处" + desc;
                 moveTipController.SetTip(desc, time, playerEffects, null);
             }
@@ -85,7 +83,7 @@ public class EnvironmentBagWindow : BagWindow
         // 当前坐标显示
         currentCoordSlider.onValueChanged.AddListener((_) =>
         {
-            currentPosition.text = Player.Coordinate.Position.ToString("0.0");
+            currentPosition.text = Player.Instance.Coordinate.Position.ToString("0.0");
             FillBetween();
         });
 
@@ -141,7 +139,7 @@ public class EnvironmentBagWindow : BagWindow
         if (state != PlayerStateEnum.Load) return;
 
         DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
-        executeMoveButton.Interactable = GameManager.Instance.CanMoveExplore();
+        executeMoveButton.Interactable = MoveExploreManager.Instance.CanMoveExplore();
     }
 
     protected override void Init()
@@ -155,7 +153,7 @@ public class EnvironmentBagWindow : BagWindow
     {
         var tween = envCardTransform.PunchAndBounce(() =>
         {
-            GameManager.Instance.HandleExplore(out var tip, out var droppedCards);
+            MoveExploreManager.Instance.HandleExplore(out var tip, out var droppedCards);
             DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
             GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
             exploreButton.transform.ShowTip(tip, 1.4f);
@@ -283,7 +281,7 @@ public class EnvironmentBagWindow : BagWindow
         }
 
         // 按钮是否能够交互
-        exploreButton.Interactable = exploreButton.Interactable && GameManager.Instance.CanMoveExplore();
+        exploreButton.Interactable = exploreButton.Interactable && MoveExploreManager.Instance.CanMoveExplore();
     }
 
     /// <summary>
@@ -308,9 +306,9 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void DisplayPlayerPosition()
     {
-        currentCoordSlider.value = targetCoordSlider.value = Player.Coordinate.Position / MoveDistResolution;
+        currentCoordSlider.value = targetCoordSlider.value = Player.Instance.Coordinate.Position / MoveDistResolution;
 
-        currentPosition.text = targetPosition.text = Player.Coordinate.Position.ToString("0.0");
+        currentPosition.text = targetPosition.text = Player.Instance.Coordinate.Position.ToString("0.0");
         deltaPosition.text = "0.0";
         FillBetween();
     }
@@ -320,8 +318,8 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void ExecuteMove()
     {
-        if (Mathf.Abs(TargetPosition - Player.Coordinate.Position) < MoveDistResolution) return;
+        if (Mathf.Abs(TargetPosition - Player.Instance.Coordinate.Position) < MoveDistResolution) return;
 
-        GameManager.Instance.Move(TargetPosition);
+        MoveExploreManager.Instance.Move(TargetPosition);
     }
 }

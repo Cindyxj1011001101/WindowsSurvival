@@ -11,11 +11,11 @@ public class MovementIncentive : GameEvent
 
     public override void OnTrigger()
     {
-        GameManager.Instance.AddMoveExtraEffect("ÒÆ¶¯¼¤Àø", -0.5f, null);
+        MoveExploreManager.Instance.AddMoveExtraEffect("ÒÆ¶¯¼¤Àø", -0.5f, null);
     }
 
     public override void OnEnd()
     {
-        GameManager.Instance.RemoveMoveExtraEffect("ÒÆ¶¯¼¤Àø");
+        MoveExploreManager.Instance.RemoveMoveExtraEffect("ÒÆ¶¯¼¤Àø");
     }
 }

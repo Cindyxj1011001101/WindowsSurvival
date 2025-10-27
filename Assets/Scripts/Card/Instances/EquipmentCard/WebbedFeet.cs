@@ -26,12 +26,12 @@ public class WebbedFeet : EquipmentCard
     public override void OnEquipped()
     {
         // 前往水域环境时消耗时间-30%
-        GameManager.Instance.AddMoveToWaterExtraEffect("装备了脚蹼", -0.3f, null);
+        MoveExploreManager.Instance.AddMoveToWaterExtraEffect("装备了脚蹼", -0.3f, null);
     }
 
     public override void OnUnEquipped()
     {
-        GameManager.Instance.RemoveMoveToWaterExtraEffect("装备了脚蹼");
+        MoveExploreManager.Instance.RemoveMoveToWaterExtraEffect("装备了脚蹼");
     }
 
     protected override void OnUpdate()
