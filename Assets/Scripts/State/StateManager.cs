@@ -12,8 +12,10 @@ public enum DangerLevelEnum
     None = 2,
 }
 
-public class StateManager : MonoBehaviour
+public class StateManager : IManager
 {
+    public static StateManager Instance { get; } = new();
+
     /// <summary>
     /// 玩家状态
     /// </summary>
@@ -29,38 +31,9 @@ public class StateManager : MonoBehaviour
     /// </summary>
     public State WaterLevel { get; private set; }
 
-    #region 单例
-    private static StateManager instance;
-    public static StateManager Instance
+    #region 初始化
+    public void Init()
     {
-        get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<StateManager>();
-                if (instance == null)
-                {
-                    GameObject managerObj = new GameObject("StateManager");
-                    instance = managerObj.AddComponent<StateManager>();
-                }
-            }
-            return instance;
-        }
-    }
-    #endregion
-
-    #region 初始化相关
-    private void Awake()
-    {
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        instance = this;
-
-        // 初始化
         var stateData = GameDataManager.Instance.StateData;
         if (!stateData.init)
         {
@@ -74,35 +47,37 @@ public class StateManager : MonoBehaviour
             WaterLevel = stateData.waterLevel;
             PlayerStateDict = stateData.playerState;
         }
-        // 当环境改变时尝试获取氧气
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
-        // 玩家生命值不高于0时死亡
-        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
-        EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
-    }
-
-    private void CheckPlayerState(PlayerStateEnum stateEnum)
-    {
-        if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0) Die();
-    }
-
-    private void Start()
-    {
-        // 评估危险状态，播放音乐
-        EvaluateDangerLevel();
 
         // 监听回合结算
         UpdateManager.Instance.PlayerUpdate.AddListener(PlayerUpdate);
         UpdateManager.Instance.EnvironmentUpdate.AddListener(EnvironmentUpdate);
+        EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
+
+        // 当环境改变时尝试获取氧气
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
+        
+        // 玩家生命值不高于0时死亡
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
+
+        // 评估危险状态，播放音乐
+        EvaluateDangerLevel();
     }
 
-    private void OnDestroy()
+    public void Reset()
     {
+        Electricity = new();
+        WaterLevel = new();
+        PlayerStateDict = new();
         UpdateManager.Instance.PlayerUpdate.RemoveListener(PlayerUpdate);
         UpdateManager.Instance.EnvironmentUpdate.RemoveListener(EnvironmentUpdate);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
         EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
+    }
+
+    private void CheckPlayerState(PlayerStateEnum stateEnum)
+    {
+        if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0) Die();
     }
 
     private void OnChangeEnv(EnvironmentBag env)
@@ -850,7 +825,7 @@ public class StateManager : MonoBehaviour
 
     private void Die()
     {
-        ChatManager.Instance.chatWindow = WindowsManager.Instance.OpenWindow("Chat",true) as ChatWindow;
+        WindowsManager.Instance.OpenWindow("Chat", true);
     }
     #endregion
 

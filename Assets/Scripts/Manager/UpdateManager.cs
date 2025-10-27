@@ -1,10 +1,8 @@
-﻿using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine.Events;
 
-public class UpdateManager : MonoBehaviour
+public class UpdateManager : IManager
 {
-    private static UpdateManager instance;
-    public static UpdateManager Instance => instance;
+    public static UpdateManager Instance { get; } = new();
 
     public UnityEvent InGameEventUpdate { get; private set; } = new();
     public UnityEvent PlayerUpdate { get; private set; } = new();
@@ -14,13 +12,12 @@ public class UpdateManager : MonoBehaviour
     public UnityEvent TechnologyUpdate { get; private set; } = new();
     public UnityEvent SunlightUpdate { get; private set; } = new();
 
-    private void Awake()
+    public void Init()
     {
-        instance = this;
         EventManager.Instance.AddListener(EventType.Update, OnUpdate);
     }
 
-    private void OnDestroy()
+    public void Reset()
     {
         Clear();
         EventManager.Instance.RemoveListener(EventType.Update, OnUpdate);

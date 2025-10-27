@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
-public class GlobalDataManager : MonoBehaviour
+public class GlobalDataManager : IManager
 {
-    private static GlobalDataManager instance;
-    public static GlobalDataManager Instance => instance;
+    public static GlobalDataManager Instance { get; } = new();
 
     public GlobalData GlobalData { get; private set; }
 
@@ -47,15 +45,16 @@ public class GlobalDataManager : MonoBehaviour
     }
     #endregion
 
-    private void Awake()
+    public void Init()
     {
-        instance = this;
         GlobalData = GameDataManager.Instance.GlobalData;
         EventManager.Instance.AddListener(EventType.AnotherDay, OnAnotherDay);
     }
 
-    private void OnDestroy()
+    public void Reset()
     {
+        cardNumDict.Clear();
+        GlobalData = null;
         EventManager.Instance.RemoveListener(EventType.AnotherDay, OnAnotherDay);
     }
 

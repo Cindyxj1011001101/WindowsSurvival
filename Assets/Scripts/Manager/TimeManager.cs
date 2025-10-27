@@ -1,9 +1,8 @@
 ﻿using System;
-using UnityEngine;
 
-public class TimeManager
+public class TimeManager : IManager
 {
-    public static TimeManager Instance { get; private set; } = new();
+    public static TimeManager Instance { get; } = new();
 
     public const int SETTLEMENT_INTERVAL = 15; // 结算间隔
     public DateTime StartDateTime { get; private set; } = new(2020, 1, 1, 0, 0, 0);
@@ -35,15 +34,17 @@ public class TimeManager
         lastDay = CurTime.Date;
     }
 
-    public void AddTime(int minute)
+    public void Reset() { }
+
+    public void AddTime(int minutes)
     {
         EventManager.Instance.TriggerEvent(EventType.StartChangeTime);
 
         // 等待动画
         MouseManager.Instance.Wait();
 
-        int timespan = minute;
-        CurTime = CurTime.AddMinutes(minute);
+        int timespan = minutes;
+        CurTime = CurTime.AddMinutes(minutes);
 
         while (timespan != 0)
         {

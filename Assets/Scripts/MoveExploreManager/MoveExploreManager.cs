@@ -18,7 +18,7 @@ public class MoveExploreManager : IManager
     public BehaviourExtraEffects MoveToWaterExtraEffects { get; private set; } = new();
 
     // 上次负重
-    private int lastLoadLevel = -1;
+    private int lastLoadLevel;
 
     private List<(string reason, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects) effect)> extraEffectsCausedByLoad = new()
     {
@@ -42,7 +42,6 @@ public class MoveExploreManager : IManager
 
     public void Reset()
     {
-        lastLoadLevel = -1;
         MoveExtraEffects = new();
         MoveToWaterExtraEffects = new();
         ExploreExtraEffects = new();
@@ -73,7 +72,6 @@ public class MoveExploreManager : IManager
     }
 
     #region 探索
-
     public void AddExploreExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
         => ExploreExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
 
@@ -166,7 +164,9 @@ public class MoveExploreManager : IManager
     /// <param name="state"></param>
     private void OnLoadChange(PlayerStateEnum state)
     {
-        if (state != PlayerStateEnum.Load || lastLoadLevel == StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel) return;
+        if (state != PlayerStateEnum.Load) return;
+
+        if (lastLoadLevel == StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel) return;
 
         // 载重等级发生变化，更新额外消耗
         int currentLoadLevel = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;

@@ -1,4 +1,4 @@
-﻿public class SunlightManager
+﻿public class SunlightManager : IManager
 {
     public static SunlightManager Instance { get; } = new SunlightManager();
 
@@ -10,6 +10,12 @@
 
         UpdateManager.Instance.SunlightUpdate.AddListener(Update);
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnStellarEclipseTrigger);
+    }
+
+    public void Reset()
+    {
+        UpdateManager.Instance.SunlightUpdate.RemoveListener(Update);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventTrigger, OnStellarEclipseTrigger);
     }
 
     private void OnStellarEclipseTrigger(GameEvent gameEvent)

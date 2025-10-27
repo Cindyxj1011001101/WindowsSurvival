@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 游戏事件管理器
 /// </summary>
-public class GameEventManager
+public class GameEventManager : IManager
 {
     public static GameEventManager Instance { get; } = new GameEventManager();
 
@@ -27,23 +27,27 @@ public class GameEventManager
 
     public InvasionEventConfig InvasionEventConfig { get; private set; }
 
-    private GameEventManager() { }
-
-    public void Init()
+    private GameEventManager()
     {
         // 注册所有事件
-        RegisterAllEvents();
+        eventTemplates = ExcelReader.ReadInGameEventConfig("InGameEventConfig");
+    }
+
+    #region 初始化
+    public void Init()
+    {
         // 读取存档数据
         LoadData();
         // 监听结算事件
         UpdateManager.Instance.InGameEventUpdate.AddListener(Update);
     }
 
-    #region 初始化
-    private void RegisterAllEvents()
+    public void Reset()
     {
-        eventTemplates.Clear();
-        eventTemplates = ExcelReader.ReadInGameEventConfig("InGameEventConfig");
+        OngoingEvents = new();
+        EventsOnCooldown = new();
+        InvasionEventConfig = new();
+        UpdateManager.Instance.InGameEventUpdate.RemoveListener(Update);
     }
 
     private void LoadData()

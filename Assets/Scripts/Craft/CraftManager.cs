@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class CraftManager
+public class CraftManager : IManager
 {
     public static CraftManager Instance { get; } = new();
 
@@ -11,18 +11,19 @@ public class CraftManager
 
     public Dictionary<RecipeType, ScriptableRecipeLibrary> LibraryDict => libraryDict;
 
-    private CraftManager()
-    { 
-        // 加载每一种类型的配方库
-        foreach (var library in Resources.LoadAll<ScriptableRecipeLibrary>("ScriptableObject/Craft/Libraries"))
-        {
-            libraryDict.Add(library.craftType, library);
-        }
-    }
+    private CraftManager() { }
 
     public void Init()
     {
-        unlockedRecipes.Clear();
+        if (libraryDict.IsNullOrEmpty())
+        {
+            // 加载每一种类型的配方库
+            foreach (var library in Resources.LoadAll<ScriptableRecipeLibrary>("ScriptableObject/Craft/Libraries"))
+            {
+                libraryDict.Add(library.craftType, library);
+            }
+        }
+
         var techData = GameDataManager.Instance.TechnologyData;
 
         // 解锁一遍物品配方
@@ -32,10 +33,15 @@ public class CraftManager
             {
                 foreach (var recipe in techNode.recipes)
                 {
-                    CraftManager.Instance.UnlockRecipe(recipe.cardId);
+                    UnlockRecipe(recipe.cardId);
                 }
             }
         }
+    }
+
+    public void Reset()
+    {
+        unlockedRecipes.Clear();
     }
 
     /// <summary>

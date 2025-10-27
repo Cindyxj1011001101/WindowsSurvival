@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class TechnologyManager
+public class TechnologyManager : IManager
 {
     public static TechnologyManager Instance { get; } = new();
 
@@ -26,17 +26,19 @@ public class TechnologyManager
 
     private bool isIntermediateTechnologiesUnlocked;
 
-    private TechnologyManager()
-    {
-        // 注册所有科技节点
-        foreach (var node in Resources.LoadAll<ScriptableTechnologyNode>("ScriptableObject/Technology"))
-        {
-            allTechNodes.Add(node.techName, node);
-        }
-    }
+    private TechnologyManager() { }
 
     public void Init()
     {
+        if (allTechNodes.IsNullOrEmpty())
+        {
+            // 注册所有科技节点
+            foreach (var node in Resources.LoadAll<ScriptableTechnologyNode>("ScriptableObject/Technology"))
+            {
+                allTechNodes.Add(node.techName, node);
+            }
+        }
+
         techData = GameDataManager.Instance.TechnologyData;
 
         // 初始化存档
@@ -60,6 +62,14 @@ public class TechnologyManager
         // 监听数据传输台的数量变化
         EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, OnCardNumChanged);
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
+    }
+
+    public void Reset()
+    {
+        techData = null;
+        UpdateManager.Instance.TechnologyUpdate.RemoveListener(OnStudy);
+        EventManager.Instance.RemoveListener<(string, int)>(EventType.CardNumChange, OnCardNumChanged);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 
     /// <summary>
