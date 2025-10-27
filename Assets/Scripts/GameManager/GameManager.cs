@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
 
     public bool IsCurrentEnvironment(Bag bag) => bag is EnvironmentBag env && env == CurEnvironmentBag;
 
-
     private void Awake()
     {
         instance = this;
@@ -264,45 +263,33 @@ public class GameManager : MonoBehaviour
     };
 
     public void AddExploreExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
-    {
-        ExploreExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
-    }
+        => ExploreExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
 
     public void RemoveExploreExtraEffect(string reason)
-    {
-        ExploreExtraEffects.RemoveEffect(reason);
-    }
+        => ExploreExtraEffects.RemoveEffect(reason);
 
     public void AddMoveExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
-    {
-        MoveExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
-    }
+        => MoveExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
 
     public void RemoveMoveExtraEffect(string reason)
-    {
-        MoveExtraEffects.RemoveEffect(reason);
-    }
+        => MoveExtraEffects.RemoveEffect(reason);
 
     public void AddExploreInWaterExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
-    {
-        ExploreInWaterExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
-    }
+        => ExploreInWaterExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
 
     public void RemoveExploreInWaterExtraEffect(string reason)
-    {
-        ExploreInWaterExtraEffects.RemoveEffect(reason);
-    }
+        => ExploreInWaterExtraEffects.RemoveEffect(reason);
 
     public void AddMoveToWaterExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
-    {
-        MoveToWaterExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
-    }
+        => MoveToWaterExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
 
     public void RemoveMoveToWaterExtraEffect(string reason)
-    {
-        MoveToWaterExtraEffects.RemoveEffect(reason);
-    }
+        => MoveToWaterExtraEffects.RemoveEffect(reason);
 
+    /// <summary>
+    /// 得到探索当前地点的消耗
+    /// </summary>
+    /// <returns></returns>
     public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects) GetExploreEffects()
     {
         string desc = ExploreExtraEffects.GetEffectsDescription();
@@ -320,6 +307,12 @@ public class GameManager : MonoBehaviour
         return (desc, time, playerEffects);
     }
 
+    /// <summary>
+    /// 得到移动到目标地点的消耗
+    /// </summary>
+    /// <param name="basicMoveTime"></param>
+    /// <param name="targetPlace"></param>
+    /// <returns></returns>
     public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects)
         GetMoveEffects(int basicMoveTime, PlaceEnum targetPlace)
     {
@@ -338,6 +331,11 @@ public class GameManager : MonoBehaviour
         return (desc, time, playerEffects);
     }
 
+    /// <summary>
+    /// 得到地点内移动到目标位置的消耗
+    /// </summary>
+    /// <param name="targetPosition"></param>
+    /// <returns></returns>
     public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects)
         GetMoveEffects(float targetPosition)
     {
@@ -375,7 +373,11 @@ public class GameManager : MonoBehaviour
         lastLoadLevel = currentLoadLevel;
     }
 
-    public bool CanMoveExplore() => StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel < 3;
+    /// <summary>
+    /// 能否进行探索移动
+    /// </summary>
+    /// <returns></returns>
+    public bool CanMoveExplore() => StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel < 3; // 负重过高时无法移动和探索
 
     /// <summary>
     /// 处理探索事件
@@ -412,6 +414,11 @@ public class GameManager : MonoBehaviour
         HandeleExploreDrop(out tip, out droppedCards);
     }
 
+    /// <summary>
+    /// 处理探索掉落
+    /// </summary>
+    /// <param name="tip"></param>
+    /// <param name="droppedCards"></param>
     private void HandeleExploreDrop(out string tip, out List<Card> droppedCards)
     {
         tip = string.Empty;
@@ -439,7 +446,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region 移动
-
     private void SetPlayerPosition(float targetPosition)
     {
         Player.Coordinate.SetPosition(targetPosition);
