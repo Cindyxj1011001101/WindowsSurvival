@@ -10,6 +10,7 @@ public class PublicMono : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     private event UnityAction update;
@@ -41,5 +42,13 @@ public class PublicMono : MonoBehaviour
     private void LateUpdate()
     {
         lateUpdate?.Invoke();
+    }
+
+    public void Clear()
+    {
+        StopAllCoroutines();
+        update = null;
+        fixedUpdate = null;
+        lateUpdate = null;
     }
 }
