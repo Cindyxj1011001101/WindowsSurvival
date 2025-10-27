@@ -9,7 +9,8 @@ public class State
 {
     [JsonProperty] private float extraValue;                        // 额外值
     [JsonProperty] private float maxValue;                          // 最大值
-    [JsonProperty] private float constValue;                        // 固定值
+    //[JsonProperty] private float constValue;                        // 固定值
+    [JsonProperty] private Dictionary<string, float> constValueDict = new(); // 固定值字典
     [JsonProperty] private float variableValue;                     // 可变值
     [JsonProperty] private List<StateThreshold> thresholds = new(); // 状态阈值列表
     [JsonProperty] private List<StateEffect> effects = new();       // 达到某种阈值时的状态效果列表
@@ -24,7 +25,7 @@ public class State
 
     [JsonIgnore] public string StateLevelName => thresholds[stateLevel].levelName;
     [JsonIgnore] public int StateLevel => stateLevel;
-    [JsonIgnore] public float CurValue => Mathf.Clamp(variableValue + constValue, 0, MaxValue);
+    [JsonIgnore] public float CurValue => Mathf.Clamp(variableValue + ConstValue, 0, MaxValue);
     [JsonIgnore] public float NormedValue => CurValue + normParam;
     [JsonIgnore] public float ExtraValue => extraValue;
     [JsonIgnore] public float MaxValue => maxValue + extraValue;
@@ -33,7 +34,19 @@ public class State
     [JsonIgnore] public float ChangeRate => basicChangeRate + extraChangeRate;
     [JsonIgnore] public bool HigherIsBetter => higherIsBetter;
     [JsonIgnore] public bool LowerIsBetter => lowerIsBetter;
-
+    [JsonIgnore]
+    public float ConstValue
+    {
+        get
+        {
+            float totalConstValue = 0;
+            foreach (var val in constValueDict.Values)
+            {
+                totalConstValue += val;
+            }
+            return totalConstValue;
+        }
+    }
     [JsonIgnore]
     public DangerLevelEnum DangerLevel
     {
@@ -65,10 +78,17 @@ public class State
         CalcStateLevel();
     }
 
+    public void AddConstValue(string key, float delta)
+    {
+        if (!constValueDict.ContainsKey(key))
+            constValueDict.Add(key, 0);
+        constValueDict[key] += delta;
+        CalcStateLevel();
+    }
+
     public void AddConstValue(float delta)
     {
-        constValue += delta;
-        CalcStateLevel();
+        AddConstValue("default", delta);
     }
 
     public void AddMaxValue(float delta)
@@ -77,9 +97,11 @@ public class State
         CalcStateLevel();
     }
 
-    public void SetConstValue(float value)
+    public void SetConstValue(string key, float value)
     {
-        constValue = value;
+        if (!constValueDict.ContainsKey(key))
+            constValueDict.Add(key, 0);
+        constValueDict[key] = value;
         CalcStateLevel();
     }
 
@@ -134,7 +156,6 @@ public class State
         List<int> lowDangerLevels, List<int> highDangerLevels,
         bool higherIsBetter = false, bool lowerIsBetter = false, float normParam = 0)
     {
-        constValue = 0;
         extraValue = 0;
         variableValue = value;
         this.maxValue = maxValue;
