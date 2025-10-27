@@ -2,7 +2,7 @@
 
 public class PlayerData
 {
-    public float basicMoveDistPerMin = 0.5f;
+    public float basicMoveDistPerMin;
     public List<float> moveSpeedMultiplier = new();
     public Coordinate coordinate = new();
 }
