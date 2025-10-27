@@ -1,3 +1,5 @@
+using UnityEngine;
+
 /// <summary>
 /// ÒÆ¶¯¼¤Àø
 /// </summary>
@@ -11,6 +13,7 @@ public class MovementIncentive : GameEvent
 
     public override void OnTrigger()
     {
+        remainingMinutes = Random.Range(120, 1441);
         MoveExploreManager.Instance.AddMoveExtraEffect("ÒÆ¶¯¼¤Àø", -0.5f, null);
     }
 
