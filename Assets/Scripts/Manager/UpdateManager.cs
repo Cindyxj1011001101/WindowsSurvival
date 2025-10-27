@@ -6,13 +6,13 @@ public class UpdateManager : MonoBehaviour
     private static UpdateManager instance;
     public static UpdateManager Instance => instance;
 
-    public UnityEvent GlobalEffectUpdate { get; private set; } = new();
     public UnityEvent InGameEventUpdate { get; private set; } = new();
     public UnityEvent PlayerUpdate { get; private set; } = new();
     public UnityEvent EnvironmentUpdate { get; private set; } = new();
     public UnityEvent CardUpdate { get; private set; } = new();
     public UnityEvent PopulationUpdate { get; private set; } = new();
     public UnityEvent TechnologyUpdate { get; private set; } = new();
+    public UnityEvent SunlightUpdate { get; private set; } = new();
 
     private void Awake()
     {
@@ -35,18 +35,18 @@ public class UpdateManager : MonoBehaviour
         EnvironmentUpdate.Invoke();
         PlayerUpdate.Invoke();
         PopulationUpdate.Invoke();
-        GlobalEffectUpdate.Invoke();
         InGameEventUpdate.Invoke();
+        SunlightUpdate.Invoke();
     }
 
     private void Clear()
     {
-        GlobalEffectUpdate.RemoveAllListeners();
         InGameEventUpdate.RemoveAllListeners();
         PlayerUpdate.RemoveAllListeners();
         EnvironmentUpdate.RemoveAllListeners();
         CardUpdate.RemoveAllListeners();
         PopulationUpdate.RemoveAllListeners();
         TechnologyUpdate.RemoveAllListeners();
+        SunlightUpdate.RemoveAllListeners();
     }
 }

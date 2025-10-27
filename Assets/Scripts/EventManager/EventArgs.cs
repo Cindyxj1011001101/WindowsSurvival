@@ -26,8 +26,9 @@
     CardNumChange,                      // 卡牌数量变化
     PlayerMove,                         // 玩家移动
     StudyInterrupted,                   // 研究中断
-    OnGameEventTrigger,                // 全局效果生效
-    OnGameEventEnd,                  // 全局效果失效
+    OnGameEventTrigger,                 // 全局效果生效
+    OnGameEventEnd,                     // 全局效果失效
+    UpdateSunlight,                     // 恒星光照更新
 }
 
 public class ChangePlayerBagCardsArgs
