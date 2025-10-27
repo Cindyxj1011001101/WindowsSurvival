@@ -13,8 +13,11 @@ public static class MySceneManager
         ObjectBufferPool.Instance.Clear();
         // 移除事件监听
         EventManager.Instance.ClearEvents();
+        // 移除正在进行的携程
+        PublicMono.Instance.Clear();
         // 卸载未使用的资源
-        ResourcesManager.Instance.UnloadUnusedAssets(() => PublicMono.Instance.StartCoroutine(LoadSceneAsync(sceneBuildIndex))); // 卸载完成后异步加载场景
+        ResourcesManager.Instance.UnloadUnusedAssets(
+            () => PublicMono.Instance.StartCoroutine(LoadSceneAsync(sceneBuildIndex))); // 卸载完成后异步加载场景
     }
 
     private static IEnumerator LoadSceneAsync(int sceneBuildIndex)
@@ -34,5 +37,8 @@ public static class MySceneManager
         {
             yield return null;
         }
+
+        // 再次卸载未使用资源
+        ResourcesManager.Instance.UnloadUnusedAssets();
     }
 }
