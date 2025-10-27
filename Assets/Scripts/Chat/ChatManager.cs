@@ -69,13 +69,12 @@ public class ChatManager : MonoBehaviour
         }
 
         instance = this;
-        //读取已生成的对话数据
-        GameDataManager.Instance.LoadGeneratedChatData();
+
         //添加对话段落触发监听
         EventManager.Instance.AddListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
         if (!GameDataManager.Instance.GeneratedChatData.init)
         {
-            if (!GameDataManager.Instance.LoadData.loads[GameDataManager.Instance.curLoadIndex].SkipGuide)
+            if (!GameDataManager.Instance.LoadData.loads[GameDataManager.Instance.curLoadIndex].skipGuide)
             {
                 ParagraphToTriggeer.Add("一切的开始");
             }

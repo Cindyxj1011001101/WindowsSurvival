@@ -46,11 +46,11 @@ public class ChatWindow : WindowBase, IPointerDownHandler
         // 点击发送消息
         submitButton.onClick.AddListener(Submit);
 
-        ChatManager.Instance.chatWindow = this;
+        // 如果未主动打开窗口，3s后自动开始剧情
         StartCoroutine(WaitToTriggerInit(3f));
     }
 
-    public IEnumerator  WaitToTriggerInit(float time)
+    public IEnumerator WaitToTriggerInit(float time)
     {
         yield return new WaitForSeconds(time);
         if (!init)

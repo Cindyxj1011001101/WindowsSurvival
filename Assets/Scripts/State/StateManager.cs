@@ -822,7 +822,6 @@ public class StateManager : IManager
     #endregion
 
     #region 死亡逻辑
-
     private void Die()
     {
         WindowsManager.Instance.OpenWindow("Chat", true);
