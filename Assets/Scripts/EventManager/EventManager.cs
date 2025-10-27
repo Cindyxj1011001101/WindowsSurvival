@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 // public void Start()
 // {
@@ -12,67 +11,15 @@ using UnityEngine;
 // }
 //EventManager.Instance.TriggerEvent(EventType.BodyConfirmed,new BodyConfirmedEventArgs(1));
 
-public class EventManager : MonoBehaviour
+public class EventManager
 {
-    private static EventManager instance;
-    public static EventManager Instance
-    { get
-        {
-            if (instance == null)
-            {
-                instance = FindObjectOfType<EventManager>();
-                if (instance == null)
-                {
-                    GameObject managerObj = new GameObject("EventManager");
-                    instance = managerObj.AddComponent<EventManager>();
-                    DontDestroyOnLoad(managerObj);
-                }
-            }
-            return instance;
-        }
-    }
+    public static EventManager Instance { get; } = new();
 
-    private void Awake()
-    {
-        // 确保只有一个实例
-        if (instance != null && instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        
-        instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-    
-    // 清理所有事件订阅
-    private void CleanupEvents()
-    {
-        if (eventDictionary != null)
-        {
-            eventDictionary.Clear();
-        }
-    }
-    
-    // 确保在销毁时清理事件
-    private void OnDestroy()
-    {
-        // 重要：不要在这里创建新对象!
-        // 只执行清理操作
-        if (instance == this)
-        {
-            CleanupEvents();
-            instance = null;
-        }
-    }
     // 事件字典：无参数事件
-    private Dictionary<EventType, Action> eventDictionary = new Dictionary<EventType, Action>();
+    private Dictionary<EventType, Action> eventDictionary = new();
 
     // 事件字典：带参数事件
-    private Dictionary<EventType, Dictionary<Type, Delegate>> paramEventDictionary
-        = new Dictionary<EventType, Dictionary<Type, Delegate>>();
-
-
+    private Dictionary<EventType, Dictionary<Type, Delegate>> paramEventDictionary = new();
 
     #region 无参数事件
     // 添加监听
