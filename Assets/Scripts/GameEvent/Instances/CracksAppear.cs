@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
@@ -6,14 +7,6 @@ using UnityEngine;
 /// </summary>
 public class CracksAppear : GameEvent
 {
-    private List<PlaceEnum> candidatePlaces = new()
-    {
-        PlaceEnum.SpaceshipOuterHull,
-        PlaceEnum.Cockpit,
-        PlaceEnum.PowerCabin,
-        PlaceEnum.LifeSupportCabin,
-    };
-
     public override string GetDetails()
     {
         return "麦麦听到了一声极其尖锐、高亢的撕裂声，紧接着是沉闷的爆裂声。这个声音非常熟悉，似乎是哪里又出现裂缝了。";
@@ -22,14 +15,15 @@ public class CracksAppear : GameEvent
     public override bool CanTriggerThisEvent()
     {
         // 条件是当前地点在飞船内或者飞船外壳
-        return candidatePlaces.Contains(GameManager.Instance.CurEnvironmentBag.PlaceData.placeType);
+        return GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft ||
+            GameManager.Instance.CurEnvironmentBag.PlaceData.placeType == PlaceEnum.SpaceshipOuterHull;
     }
 
     public override void OnTrigger()
     {
         // 随机一个飞船内地点
-        var randomIndex = Random.Range(0, candidatePlaces.Count);
-        var targetEnv = GameManager.Instance.EnvironmentBags[candidatePlaces[randomIndex]];
+        var candidateEnvs = GameManager.Instance.EnvironmentBags.Values.Where(e => e.PlaceData.isInSpacecraft).ToArray();
+        var targetEnv = candidateEnvs[Random.Range(0, candidateEnvs.Length)];
 
         // 随机裂缝个数
         var crackCount = Random.Range(1, 4); // 随机1~3个裂缝
