@@ -18,6 +18,11 @@ public class Invasion : GameEvent
 {
     private List<InvasionComposition> allCompositions = new();
 
+    public Invasion()
+    {
+        allCompositions = ExcelReader.ReadInvasionCompositionConfig("InvasionCompositionConfig");
+    }
+
     public override string GetDetails()
     {
         return "一群奇怪的生物入侵了这片区域，它们充满了恶意且以麦麦为猎杀目标。";
@@ -25,14 +30,8 @@ public class Invasion : GameEvent
 
     public override void OnTrigger()
     {
-        RegisterAllCompositions();
         GenerateInvasion(CalculateThreatIntensity());
-    }
-
-    private void RegisterAllCompositions()
-    {
-        if (allCompositions.IsNullOrEmpty())
-            allCompositions = ExcelReader.ReadInvasionCompositionConfig("InvasionCompositionConfig");
+        // TODO: 中止睡眠行为
     }
 
     /// <summary>

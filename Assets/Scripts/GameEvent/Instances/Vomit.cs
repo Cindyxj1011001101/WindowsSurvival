@@ -26,7 +26,10 @@ public class Vomit : GameEvent
         var fullnessChange = -Random.Range(10, 41);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hydration, thirstChange);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hunger, fullnessChange);
+
         // µôÂä¸¯ÀÃÎï
         GameManager.Instance.AddCardsToTargetEnv(GameManager.Instance.CurEnvironmentBag, CardFactory.CreateCard("¸¯ÀÃÎï"));
+
+        // TODO: ÖĞÖ¹Ë¯ÃßĞĞÎª
     }
 }
