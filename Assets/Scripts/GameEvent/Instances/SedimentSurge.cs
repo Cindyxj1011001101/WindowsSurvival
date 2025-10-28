@@ -1,3 +1,5 @@
+using UnityEngine;
+
 /// <summary>
 /// 泥沙翻涌
 /// </summary>
@@ -12,8 +14,27 @@ public class SedimentSurge : GameEvent
                $"受到影响的地点: " + ColorManager.Colorize(affectedPlacesStr, ColorManager.Yellow);
     }
 
+    public override bool CanTriggerThisEvent()
+    {
+        return GameManager.Instance.CurEnvironmentBag.PlaceData.isInCave;
+    }
+
     public override void OnTrigger()
     {
-        
+        // 计算威胁事件强度
+        var threatIntensity = CalculateThreatIntensity();
+        // 计算持续时间
+        remainingMinutes = Mathf.CeilToInt((.75f + threatIntensity / 100) * Random.Range(60, 601));
+
+        affectedPlacesStr = GameManager.Instance.CurEnvironmentBag.PlaceData.placeName;
+
+        // 地点光照-95
+        GameManager.Instance.CurEnvironmentBag.SetBrightnessConstValue("泥沙涌动", -95);
+    }
+
+    public override void OnEnd()
+    {
+        // 移除地点光照-95
+        GameManager.Instance.CurEnvironmentBag.SetBrightnessConstValue("泥沙涌动", 0);
     }
 }

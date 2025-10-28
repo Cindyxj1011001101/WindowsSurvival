@@ -30,7 +30,7 @@
         if (sunlight == Sunlight) return;
 
         Sunlight = sunlight;
-        EventManager.Instance.TriggerEvent(EventType.UpdateSunlight);
+        EventManager.Instance.TriggerEvent(EventType.UpdateSunlight, Sunlight);
     }
 
     private void Update()

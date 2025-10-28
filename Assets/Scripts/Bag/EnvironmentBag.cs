@@ -42,6 +42,7 @@ public class EnvironmentBag : Bag
         InitEntitesAndCardLocation();
         DeepExploreDropList.StartUpdating();
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnEnvUpdateBegin);
+        EventManager.Instance.AddListener<float>(EventType.UpdateSunlight, OnUpdateSunlight);
         // 每回合结算地点状态
         UpdateManager.Instance.EnvironmentUpdate.AddListener(EnvUpdate);
     }
@@ -121,6 +122,11 @@ public class EnvironmentBag : Bag
             AddEntity(Player.Instance);
         }
     }
+
+    private void OnUpdateSunlight(float sunlight)
+    {
+        SetBrightnessConstValue("恒星光照", sunlight * PlaceData.sunlightInfluenceFactor);
+    }
     #endregion
 
     #region Update
@@ -179,7 +185,7 @@ public class EnvironmentBag : Bag
     }
 
     /// <summary>
-    /// 改变环境状态的变化率，电力变化不要在这里处理
+    /// 改变环境状态的变化率
     /// </summary>
     /// <param name="stateEnum"></param>
     /// <param name="delta"></param>
@@ -218,6 +224,19 @@ public class EnvironmentBag : Bag
         {
             ChangeEnvironmentState(state, delta);
         }
+    }
+
+    public void SetBrightnessConstValue(string key, float value)
+    {
+        if (!StateDict.ContainsKey(EnvironmentStateEnum.Brightness)) return;
+
+        var state = StateDict[EnvironmentStateEnum.Brightness];
+        state.SetConstValue(key, value);
+        // 刷新前端显示
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(PlaceData.placeType, EnvironmentStateEnum.Brightness)
+        {
+            stateValue = state
+        });
     }
     #endregion
 
