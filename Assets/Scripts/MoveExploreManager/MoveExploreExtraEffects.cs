@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 探索、移动等行为的额外效果
 /// </summary>
-public class BehaviourExtraEffects
+public class MoveExploreExtraEffects
 {
     // <原因，(最终时间倍率，玩家状态额外变化值)>
     public Dictionary<string, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)> extraEffects = new();

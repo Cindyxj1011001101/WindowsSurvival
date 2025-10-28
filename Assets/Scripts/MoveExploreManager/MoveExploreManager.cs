@@ -6,16 +6,16 @@ public class MoveExploreManager : IManager
     public static MoveExploreManager Instance { get; } = new();
 
     // 探索额外消耗
-    public BehaviourExtraEffects ExploreExtraEffects { get; private set; } = new();
+    public MoveExploreExtraEffects ExploreExtraEffects { get; private set; } = new();
 
     // 探索水域额外消耗
-    public BehaviourExtraEffects ExploreInWaterExtraEffects { get; private set; } = new();
+    public MoveExploreExtraEffects ExploreInWaterExtraEffects { get; private set; } = new();
 
     // 移动额外消耗
-    public BehaviourExtraEffects MoveExtraEffects { get; private set; } = new();
+    public MoveExploreExtraEffects MoveExtraEffects { get; private set; } = new();
 
     // 移动到水域额外消耗
-    public BehaviourExtraEffects MoveToWaterExtraEffects { get; private set; } = new();
+    public MoveExploreExtraEffects MoveToWaterExtraEffects { get; private set; } = new();
 
     // 上次负重
     private int lastLoadLevel;
