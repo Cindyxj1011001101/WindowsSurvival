@@ -19,6 +19,7 @@ public class FuelFurnace : ConstructionCard
     private InnerContentsComponent innerContents;
     private FuelStorageComponent fuelStorage;
     private TemperatureComponent temperatureComponent;
+    private StateMachineComponent stateMachine;
 
     private const int MAX_PROCESS_ROUNDS = 16; // 总加工轮数
 
@@ -86,6 +87,18 @@ public class FuelFurnace : ConstructionCard
                 RefreshSlot();
             }
         };
+
+        // 状态机
+        if (!TryGetComponent(out stateMachine))
+        {
+            var states = new List<CardState>()
+            {
+                new ("未加工", "5"),
+                new ("加工中", "6"),
+            };
+            stateMachine = new StateMachineComponent("未加工", states);
+            AddComponent(stateMachine);
+        }
 
         Events = new()
         {
@@ -155,7 +168,8 @@ public class FuelFurnace : ConstructionCard
 
         // 添加计时器组件
         AddComponent(new TimerComponent(MAX_PROCESS_ROUNDS * TimeManager.SETTLEMENT_INTERVAL) { tipText = "加工完成" });
-        RefreshSlot();
+
+        stateMachine.ChangeState("加工中");
     }
 
     private bool Judge_Process(out string hint)
@@ -244,7 +258,8 @@ public class FuelFurnace : ConstructionCard
 
             // 移除计时器
             RemoveComponent<TimerComponent>();
-            RefreshSlot();
+
+            stateMachine.ChangeState("未加工");
         }
     }
 
