@@ -38,6 +38,7 @@ public class Player : IEntity, IManager
 
     public void TakeDamage(float damage, IEntity damageDealer)
     {
+        // TODO: 中断睡眠行为
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -damage);
     }
 

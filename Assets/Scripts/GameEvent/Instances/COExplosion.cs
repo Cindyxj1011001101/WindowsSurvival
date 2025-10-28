@@ -36,15 +36,19 @@ public class COExplosion : GameEvent
         env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -70f);
         // 减少70一氧化碳浓度
         env.ChangeEnvironmentState(EnvironmentStateEnum.COLevel, -70f);
-        // 减少30健康
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -30f);
         // 增加250疼痛
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 250f);
         // 所有实体减少60生命
         var entites = new List<IEntity>(GameManager.Instance.CurEnvironmentBag.Entities);
         foreach (var entity in entites)
         {
-            if (entity is Player) continue; // 玩家已经单独处理过
+            // 玩家单独处理
+            if (entity is Player)
+            {
+                // 玩家减少30生命
+                entity.TakeDamage(-30f, null);
+                continue;
+            }
             entity.TakeDamage(-60f, null);
         }
         // 删除所有火源的内容物
