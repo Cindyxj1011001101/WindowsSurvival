@@ -30,7 +30,7 @@ public class GameEventManager : IManager
     private GameEventManager()
     {
         // 注册所有事件
-        eventTemplates = ExcelReader.ReadInGameEventConfig("InGameEventConfig");
+        eventTemplates = ExcelReader.ReadGameEventConfig("GameEventConfig");
     }
 
     #region 初始化

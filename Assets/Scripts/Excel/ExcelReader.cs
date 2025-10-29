@@ -462,7 +462,7 @@ public static class ExcelReader
     #endregion
 
     #region 读取事件配置
-    public static List<GameEvent> ReadInGameEventConfig(string filename)
+    public static List<GameEvent> ReadGameEventConfig(string filename)
     {
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
