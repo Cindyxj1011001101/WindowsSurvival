@@ -12,14 +12,14 @@ public class CraftIncentive : GameEvent
                $"并且制作时只消耗{ColorManager.Colorize("一半", ColorManager.Green)}材料。";
     }
 
-    public override bool CanTriggerThisEvent()
+    protected override bool CanTriggerThisEvent()
     {
         // TODO: 需要不在睡觉中
         var san = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Sanity];
         return san.CurValue / san.MaxValue >= SAN_THRESHOLD;
     }
 
-    public override void OnTrigger()
+    protected override void OnTrigger()
     {
         
     }

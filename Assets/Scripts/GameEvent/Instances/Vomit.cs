@@ -14,13 +14,13 @@ public class Vomit : GameEvent
                $"麦麦的饱食和水分减少了。";
     }
 
-    public override bool CanTriggerThisEvent()
+    protected override bool CanTriggerThisEvent()
     {
         var san = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Sanity];
         return san.CurValue / san.MaxValue <= SAN_THRESHOLD;
     }
 
-    public override void OnTrigger()
+    protected override void OnTrigger()
     {
         var thirstChange = -Random.Range(10, 51);
         var fullnessChange = -Random.Range(10, 41);

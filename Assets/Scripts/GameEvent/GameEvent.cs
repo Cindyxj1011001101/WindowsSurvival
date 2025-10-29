@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
@@ -52,8 +51,7 @@ public abstract class GameEvent
     public float basicTriggerWeight; // 基础触发权重
     public float triggerInterval;    // 触发间隔(天)
     public int remainingMinutes;     // 剩余持续时间(分钟)
-
-    [JsonIgnore] public int CoolDown => Mathf.CeilToInt(triggerInterval * 24 * 60); // 触发间隔(分钟)
+    public int remainingCoolDown;    // 剩余冷却时间(分钟)
 
     /// <summary>
     /// 计算威胁事件强度
@@ -78,15 +76,56 @@ public abstract class GameEvent
         return finalIntensity;
     }
 
-    public virtual bool IsEventEnded() => remainingMinutes <= 0;
+    public bool IsOngoing() => remainingMinutes > 0;
 
-    public virtual bool CanTriggerThisEvent() => true;
+    public bool IsInCoolDown() => remainingCoolDown > 0;
 
-    public virtual void OnTrigger() { }
+    public bool IsReady() => !IsOngoing() && !IsInCoolDown() && CanTriggerThisEvent();
 
-    public virtual void OnUpdate() { remainingMinutes -= TimeManager.SETTLEMENT_INTERVAL; }
+    public void Trigger()
+    {
+        // 设置冷却时间
+        remainingCoolDown = Mathf.CeilToInt(triggerInterval * 24 * 60);
+        OnTrigger();
+        EventManager.Instance.TriggerEvent(EventType.OnGameEventTrigger, this);
+        Debug.Log($"触发事件：{eventName}，持续时间：{remainingMinutes}分钟");
+    }
 
-    public virtual void OnEnd() { }
+    public void Update()
+    {
+        if (IsOngoing())
+        {
+            remainingMinutes -= TimeManager.SETTLEMENT_INTERVAL;
+            if (remainingMinutes <= 0)
+            {
+                // 持续时间结束
+                remainingMinutes = 0;
+                // 调用结束处理
+                OnEnd();
+                EventManager.Instance.TriggerEvent(EventType.OnGameEventEnd, this);
+                Debug.Log($"事件结束：{eventName}");
+            }
+        }
+
+        if (IsInCoolDown())
+        {
+            remainingCoolDown -= TimeManager.SETTLEMENT_INTERVAL;
+            if (remainingCoolDown <= 0)
+            {
+                remainingCoolDown = 0;
+            }
+        }
+
+        OnUpdate();
+    }
+
+    protected virtual bool CanTriggerThisEvent() => true;
+
+    protected virtual void OnTrigger() { }
+
+    protected virtual void OnUpdate() { }
+
+    protected virtual void OnEnd() { }
 
     public abstract string GetDetails();
 }

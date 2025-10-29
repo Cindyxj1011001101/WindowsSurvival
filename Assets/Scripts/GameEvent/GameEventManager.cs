@@ -10,11 +10,7 @@ public class GameEventManager : IManager
 {
     public static GameEventManager Instance { get; } = new GameEventManager();
 
-    private List<GameEvent> eventTemplates = new();
-
-    public Dictionary<string, GameEvent> OngoingEvents { get; private set; } = new(); // 进行中的事件列表
-
-    public Dictionary<string, float> EventsOnCooldown { get; private set; } = new(); // 冷却中的事件字典，键为事件名称，值为剩余冷却时间
+    public Dictionary<string, GameEvent> AllEvents { get; private set; } = new();
 
     private float sensitivity = 0.3f; // 敏感系数
     public float TrendValue { get; private set; } = 0; // 趋势值
@@ -25,13 +21,9 @@ public class GameEventManager : IManager
 
     private const float EVENT_TRIGGER_PROB = 1f; // 每次结算触发事件的基础概率（约1.04%），期望触发间隔为24小时
 
-    public InvasionEventConfig InvasionEventConfig { get; private set; }
+    public InvasionEventConfig InvasionEventConfig { get; private set; } = new();
 
-    private GameEventManager()
-    {
-        // 注册所有事件
-        eventTemplates = ExcelReader.ReadGameEventConfig("GameEventConfig");
-    }
+    private GameEventManager() { }
 
     #region 初始化
     public void Init()
@@ -44,8 +36,7 @@ public class GameEventManager : IManager
 
     public void Reset()
     {
-        OngoingEvents = new();
-        EventsOnCooldown = new();
+        AllEvents = new();
         InvasionEventConfig = new();
         UpdateManager.Instance.InGameEventUpdate.RemoveListener(Update);
     }
@@ -53,57 +44,45 @@ public class GameEventManager : IManager
     private void LoadData()
     {
         var data = GameDataManager.Instance.GameEventData;
-        // 读取趋势值
-        TrendValue = data.trendValue;
-        // 读取冷却中的事件
-        EventsOnCooldown = data.eventsOnCooldown;
-        // 读取持续中的事件
-        OngoingEvents = data.ongoingEvents;
-        // 读取入侵事件配置
-        InvasionEventConfig = data.invasionConfig;
+        if (data.init)
+        {
+            // 读取趋势值
+            TrendValue = data.trendValue;
+            // 读取所有事件
+            AllEvents = data.allEvents;
+            // 读取入侵事件配置
+            InvasionEventConfig = data.invasionConfig;
+        }
+        else
+        {
+            var events = ExcelReader.ReadGameEventConfig("GameEventConfig");
+            foreach (var e in events)
+            {
+                AllEvents.Add(e.GetType().Name, e);
+            }
+        }
     }
     #endregion
 
+    public bool IsEventOngoing<T>() where T : GameEvent
+    {
+        if (!AllEvents.TryGetValue(typeof(T).Name, out var e)) return false;
+
+        return e.IsOngoing();
+    }
+
     private void Update()
     {
-        UpdateEventCooldowns();
-        UpdateOngoingEvents();
+        UpdateGameEvents();
         TryTriggerEvent();
     }
 
-    private void UpdateEventCooldowns()
+    private void UpdateGameEvents()
     {
-        var keys = new List<string>(EventsOnCooldown.Keys);
-        foreach (var eventTypeName in keys)
+        foreach (var e in AllEvents.Values)
         {
-            EventsOnCooldown[eventTypeName] -= TimeManager.SETTLEMENT_INTERVAL;
-            if (EventsOnCooldown[eventTypeName] <= 0)
-            {
-                EventsOnCooldown.Remove(eventTypeName);
-            }
+            e.Update();
         }
-    }
-
-    private void UpdateOngoingEvents()
-    {
-        var keys = new List<string>(OngoingEvents.Keys);
-        foreach (var eventTypeName in keys)
-        {
-            var gameEvent = OngoingEvents[eventTypeName];
-            gameEvent.OnUpdate();
-            if (gameEvent.IsEventEnded())
-            {
-                CancelGameEvent(gameEvent);
-            }
-        }
-    }
-
-    private void CancelGameEvent(GameEvent gameEvent)
-    {
-        OngoingEvents.Remove(gameEvent.GetType().Name);
-        gameEvent.OnEnd();
-        EventManager.Instance.TriggerEvent(EventType.OnGameEventEnd, gameEvent);
-        Debug.Log($"事件结束：{gameEvent.eventName}");
     }
 
     /// <summary>
@@ -118,40 +97,22 @@ public class GameEventManager : IManager
 
         // 获取可触发的事件候选列表（检查每个事件的独立冷却）
         var candidateEvents = GetCandidateEvents();
+
         if (candidateEvents.IsNullOrEmpty()) return;
 
         // 计算每个事件的触发权重
         var eventWeights = CalculateEventWeights(candidateEvents);
 
         // 根据权重随机选择事件
-        var selectedEventTemplete = SelectEventByWeight(eventWeights);
-        // 深拷贝实例
-        var selectedEvent = JsonManager.DeepCopy(selectedEventTemplete);
+        var selectedEvent = SelectEventByWeight(eventWeights);
 
         if (selectedEvent == null) return;
 
-        TriggerGameEvent(selectedEvent);
-    }
-
-    private void TriggerGameEvent(GameEvent gameEvent)
-    {
-        var eventTypeName = gameEvent.GetType().Name;
-
         // 更新趋势值
-        UpdateTrendValue(gameEvent.threatLevel);
+        UpdateTrendValue(selectedEvent.threatLevel);
 
-        // 从事件触发时开始计算冷却时间
-        EventsOnCooldown.Add(eventTypeName, gameEvent.CoolDown);
-
-        // 事件触发逻辑
-        gameEvent.OnTrigger();
-
-        // 对于持续性事件，添加到持续事件列表
-        if (gameEvent.remainingMinutes > 0)
-            OngoingEvents.Add(eventTypeName, gameEvent);
-
-        EventManager.Instance.TriggerEvent(EventType.OnGameEventTrigger, gameEvent);
-        Debug.Log($"触发事件：{gameEvent.eventName}，持续时间：{gameEvent.remainingMinutes}分钟");
+        // 触发事件
+        selectedEvent.Trigger();
     }
 
     /// <summary>
@@ -159,21 +120,7 @@ public class GameEventManager : IManager
     /// </summary>
     private List<GameEvent> GetCandidateEvents()
     {
-        return eventTemplates.Where(e => e.CanTriggerThisEvent() && IsEventReady(e)).ToList();
-    }
-
-    public bool IsEventOngoing<T>() where T : GameEvent
-    {
-        return OngoingEvents.ContainsKey(typeof(T).Name);
-    }
-
-    /// <summary>
-    /// 检查事件是否不在持续并且冷却完成
-    /// </summary>
-    private bool IsEventReady(GameEvent gameEvent)
-    {
-        var eventTypeName = gameEvent.GetType().Name;
-        return !EventsOnCooldown.ContainsKey(eventTypeName) && !OngoingEvents.ContainsKey(eventTypeName);
+        return AllEvents.Values.Where(e => e.IsReady()).ToList();
     }
 
     /// <summary>

@@ -34,7 +34,7 @@ public class SpaceJunk : GameEvent
                $"包裹降落的地点: " + ColorManager.Colorize(landedPlaceStr, ColorManager.Cyan);
     }
 
-    public override void OnTrigger()
+    protected override void OnTrigger()
     {
         // 随机一个地点
         var placeType = candidatePlaces[Random.Range(0, candidatePlaces.Count)];

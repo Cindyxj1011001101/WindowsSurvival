@@ -17,26 +17,40 @@ public class RatInfestation : GameEvent
                $"损失了这些东西: " + lostCardsStr;
     }
 
-    public override bool CanTriggerThisEvent()
+    protected override bool CanTriggerThisEvent()
     {
         foodCards = GameManager.Instance.CurEnvironmentBag.FindCardsOfTag(CardTag.Food);
         return !foodCards.IsNullOrEmpty();
     }
 
-    public override void OnTrigger()
+    protected override void OnTrigger()
     {
         var destroyCount = Random.Range(2, 8); // 随机破坏2~7张食物卡牌
         destroyCount = Mathf.Min(destroyCount, foodCards.Count); // 不超过现有食物卡牌数量
 
-        lostCardsStr = "";
+        var destroyedCards = new Dictionary<string, int>();
+
         for (int i = 0; i < destroyCount; i++)
         {
+            // 随机选择一张食物卡牌进行破坏
             var index = Random.Range(0, foodCards.Count);
             var cardToDestroy = foodCards[index];
             foodCards.RemoveAt(index);
             cardToDestroy.DestroyThis();
-            lostCardsStr += $"{cardToDestroy.CardName}、";
+
+            // 记录被破坏的卡牌数量
+            if (!destroyedCards.ContainsKey(cardToDestroy.CardName))
+                destroyedCards.Add(cardToDestroy.CardName, 0);
+            else
+                destroyedCards[cardToDestroy.CardName]++;
         }
+
+        lostCardsStr = "";
+        foreach (var kvp in destroyedCards)
+        {
+            lostCardsStr += $"{kvp.Key} x {kvp.Value + 1}、";
+        }
+
         lostCardsStr = lostCardsStr.TrimEnd('、');
         foodCards.Clear();
 

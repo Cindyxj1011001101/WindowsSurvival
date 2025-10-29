@@ -11,7 +11,7 @@ public class MagneticStorm : GameEvent
                $"总之，接下来的一段时间里，所有电器都无法使用了。但愿磁暴不会持续太久。";
     }
 
-    public override void OnTrigger()
+    protected override void OnTrigger()
     {
         // 计算威胁事件强度
         var threatIntensity = CalculateThreatIntensity();

@@ -11,7 +11,7 @@ public class StellarEclipse : GameEvent
                $"在接下了的数小时甚至数天里将不会有任何恒星光照。";
     }
 
-    public override void OnTrigger()
+    protected override void OnTrigger()
     {
         // 计算威胁事件强度
         var threatIntensity = CalculateThreatIntensity();

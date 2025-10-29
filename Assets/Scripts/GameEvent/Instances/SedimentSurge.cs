@@ -14,12 +14,12 @@ public class SedimentSurge : GameEvent
                $"受到影响的地点: " + ColorManager.Colorize(affectedPlacesStr, ColorManager.Yellow);
     }
 
-    public override bool CanTriggerThisEvent()
+    protected override bool CanTriggerThisEvent()
     {
         return GameManager.Instance.CurEnvironmentBag.PlaceData.isInCave;
     }
 
-    public override void OnTrigger()
+    protected override void OnTrigger()
     {
         // 计算威胁事件强度
         var threatIntensity = CalculateThreatIntensity();
@@ -32,7 +32,7 @@ public class SedimentSurge : GameEvent
         GameManager.Instance.CurEnvironmentBag.SetBrightnessConstValue("泥沙涌动", -95);
     }
 
-    public override void OnEnd()
+    protected override void OnEnd()
     {
         // 移除地点光照-95
         GameManager.Instance.CurEnvironmentBag.SetBrightnessConstValue("泥沙涌动", 0);

@@ -481,10 +481,10 @@ public class GameDataManager
     {
         gameEventData = new()
         {
+            init = true,
             trendValue = GameEventManager.Instance.TrendValue,
             invasionConfig = GameEventManager.Instance.InvasionEventConfig,
-            eventsOnCooldown = GameEventManager.Instance.EventsOnCooldown,
-            ongoingEvents = GameEventManager.Instance.OngoingEvents
+            allEvents = GameEventManager.Instance.AllEvents,
         };
         JsonManager.SaveData(gameEventData, CurLoadName, "GameEventData");
     }

@@ -19,7 +19,7 @@ public class COExplosion : GameEvent
                "这些东西被炸毁了: " + destroyedCardsStr;
     }
 
-    public override bool CanTriggerThisEvent()
+    protected override bool CanTriggerThisEvent()
     {
         var coLevel = GameManager.Instance.CurEnvironmentBag.StateDict[EnvironmentStateEnum.COLevel].CurValue;
         fireSources = GameManager.Instance.CurEnvironmentBag.FindCards(c =>
@@ -29,7 +29,7 @@ public class COExplosion : GameEvent
         return coLevel >= CO_LEVEL_THRESHOLD && !fireSources.IsNullOrEmpty(); // 当一氧化碳浓度高且有燃烧源时，事件可以触发
     }
 
-    public override void OnTrigger()
+    protected override void OnTrigger()
     {
         var env = GameManager.Instance.CurEnvironmentBag;
         // 减少70氧气

@@ -16,14 +16,14 @@ public class FlashOfInspiration : GameEvent
                $"解锁的科技: " + ColorManager.Colorize(techName, ColorManager.Cyan);
     }
 
-    public override bool CanTriggerThisEvent()
+    protected override bool CanTriggerThisEvent()
     {
         if (TechnologyManager.Instance.CurStudiedTechNode == null) return false;
         var san = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Sanity];
         return san.CurValue / san.MaxValue >= SAN_THRESHOLD;
     }
 
-    public override void OnTrigger()
+    protected override void OnTrigger()
     {
         // 立刻完成当前科技
         techName = TechnologyManager.Instance.CurStudiedTechNode.techName;

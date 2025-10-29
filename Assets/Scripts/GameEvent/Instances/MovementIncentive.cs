@@ -13,19 +13,19 @@ public class MovementIncentive : GameEvent
                $"在接下来的一段时间里，麦麦{ColorManager.Colorize("-50%", ColorManager.Green)}移动时长。";
     }
 
-    public override bool CanTriggerThisEvent()
+    protected override bool CanTriggerThisEvent()
     {
         var san = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Sanity];
         return san.CurValue / san.MaxValue >= SAN_THRESHOLD;
     }
 
-    public override void OnTrigger()
+    protected override void OnTrigger()
     {
         remainingMinutes = Random.Range(120, 1441);
         MoveExploreManager.Instance.AddMoveExtraEffect("移动激励", -0.5f, null);
     }
 
-    public override void OnEnd()
+    protected override void OnEnd()
     {
         MoveExploreManager.Instance.RemoveMoveExtraEffect("移动激励");
     }
