@@ -145,34 +145,51 @@ public class CraftManager : IManager
         return result;
     }
 
+    public List<RecipeMaterial> GetMaterials(ScriptableRecipe recipe)
+    {
+        List<RecipeMaterial> result = new();
+
+        var craftIncentive = GameEventManager.Instance.IsEventOngoing<CraftIncentive>();
+
+        foreach (var m in recipe.materials)
+        {
+            var requiredNum = craftIncentive ? Mathf.CeilToInt((float)m.requiredNum / 2) : m.requiredNum;
+            result.Add(new RecipeMaterial(m.cardId, requiredNum));
+        }
+
+        return result;
+    }
+
+    public int GetCraftTime(ScriptableRecipe recipe)
+    {
+        var craftIncentive = GameEventManager.Instance.IsEventOngoing<CraftIncentive>();
+
+        return craftIncentive ? Mathf.CeilToInt((float)recipe.craftTime / 2) : recipe.craftTime;
+    }
+
     /// <summary>
     /// 合成卡牌 (调用前请务必先判断能否合成)
     /// </summary>
     /// <param name="recipe"></param>
-    public void Craft(ScriptableRecipe recipe, Vector2 startPos)
+    public Card Craft(ScriptableRecipe recipe)
     {
-        // 合成一个物品
+        // 消耗合成材料
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
-        foreach (var material in recipe.materials)
+        foreach (var material in GetMaterials(recipe))
         {
             playerBag.DestroyCardsByCardId(material.cardId, material.requiredNum);
         }
 
         // 消耗时间
-        TimeManager.Instance.AddTime(recipe.craftTime);
-        SoundManager.Instance.PlaySound("制作_03",true);
+        TimeManager.Instance.AddTime(GetCraftTime(recipe));
 
         // 创建一个新的卡牌
         var card = CardFactory.CreateCard(recipe.cardId);
 
-        // 掉落制作出的卡牌
-        // 如果是装备卡牌，则尝试直接穿上
-        if (card.TryGetComponent<EquipmentComponent>(out _) && GameManager.Instance.CanEquip(card, out _))
-            GameManager.Instance.Equip(card, startPos);
-        // 如果是建筑卡牌或者是有内容物的卡牌，则优先掉落到环境里
-        else
-            GameManager.Instance.AddCardWithTween(card, !(card.CardType == CardType.Construction || card.TryGetComponent<InnerContentsComponent>(out _)), startPos);
+        SoundManager.Instance.PlaySound("制作_03", true);
 
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", card.CardName));
+
+        return card;
     }
 }

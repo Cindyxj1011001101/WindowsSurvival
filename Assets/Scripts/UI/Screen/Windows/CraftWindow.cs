@@ -37,7 +37,11 @@ public class CraftWindow : WindowBase
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, RefreshDisplay);
         EventManager.Instance.AddListener(EventType.UnlockRecipe, RefreshDisplay);
         EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
+        // 触发或结束制作激励事件时，刷新显示
+        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnCraftIncentiveTriggerEnd);
+        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnCraftIncentiveTriggerEnd);
 
+        // 建筑制作限制
         foreach (Transform child in limitationLayout)
         {
             child.gameObject.AddComponent<HoverTipController>().SetTip(child.GetComponentInChildren<Text>(true).text);
@@ -46,6 +50,10 @@ public class CraftWindow : WindowBase
         cannotMove.SetActive(false);
         limitationLayout.gameObject.SetActive(false);
 
+        // 添加制作事件
+        craftButton.onClick.AddListener(CraftCard);
+
+        // 显示左侧配方库
         currentRecipeType = (RecipeType)Enum.Parse(typeof(RecipeType), recipeLibraryLayout.GetChild(0).name);
         DisplayRecipeLibraries();
     }
@@ -56,6 +64,8 @@ public class CraftWindow : WindowBase
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, RefreshDisplay);
         EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshDisplay);
         EventManager.Instance.RemoveListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventTrigger, OnCraftIncentiveTriggerEnd);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventEnd, OnCraftIncentiveTriggerEnd);
     }
 
     protected override void Init()
@@ -63,24 +73,19 @@ public class CraftWindow : WindowBase
         DisplayRecipesByType(currentRecipeType);
     }
 
-    private void RefreshDisplay(ChangePlayerBagCardsArgs args)
-    {
-        RefreshDisplay();
-    }
+    private void RefreshDisplay(ChangePlayerBagCardsArgs args) => RefreshDisplay();
 
-    private void RefreshDisplay(EnvironmentBag env)
-    {
-        RefreshDisplay();
-    }
+    private void RefreshDisplay(EnvironmentBag env) => RefreshDisplay();
 
-    private void RefreshDisplay((string, int) args)
-    {
-        RefreshDisplay();
-    }
+    private void RefreshDisplay((string, int) args) => RefreshDisplay();
 
-    private void RefreshDisplay()
+    private void RefreshDisplay() => DisplayRecipesByType(currentRecipeType, true); // 传递true表示是刷新操作
+
+    private void OnCraftIncentiveTriggerEnd(GameEvent gameEvent)
     {
-        DisplayRecipesByType(currentRecipeType, true); // 传递true表示是刷新操作
+        if (gameEvent.GetType() != typeof(CraftIncentive)) return;
+
+        RefreshDisplay();
     }
 
     /// <summary>
@@ -212,7 +217,7 @@ public class CraftWindow : WindowBase
 
         UIRecipeMaterial recipeMaterial;
         // 显示所需材料
-        foreach (var material in recipe.materials)
+        foreach (var material in CraftManager.Instance.GetMaterials(recipe))
         {
             recipeMaterial = ObjectBufferPool.Instance.Get(recipeMaterialPrefab, materialLayout).GetComponent<UIRecipeMaterial>();
             recipeMaterial.DisplayMaterial(
@@ -232,8 +237,9 @@ public class CraftWindow : WindowBase
         }
 
         // 显示制作时间
-        int hour = recipe.craftTime / 60;
-        int minute = recipe.craftTime % 60;
+        var craftTime = CraftManager.Instance.GetCraftTime(recipe);
+        int hour = craftTime / 60;
+        int minute = craftTime % 60;
         StringBuilder sb = new();
         sb.Append(hour > 0 ? $"{hour}h" : "");
         sb.Append(minute > 0 ? $"{minute}min" : "");
@@ -245,20 +251,6 @@ public class CraftWindow : WindowBase
 
         // 显示制作按钮
         craftButton.DisplayButton(CraftManager.Instance.IsRecipeLocked(recipe), canCraft, hint);
-
-        // 添加制作事件
-        craftButton.onClick.RemoveAllListeners();
-        craftButton.onClick.AddListener(() =>
-        {
-            var tween = slot.transform.PunchAndBounce(() =>
-            {
-                // 合成卡牌
-                CraftManager.Instance.Craft(recipe, slot.transform.position);
-                // 刷新显示
-                RefreshDisplay();
-            });
-            MouseManager.Instance.Wait(tween.Duration());
-        });
 
         // 显示放置限制
         if (limitations != null && limitations.Count > 0)
@@ -291,6 +283,34 @@ public class CraftWindow : WindowBase
 
         // 播放选择动效
         SelectRecipeWithTween(recipe.cardId);
+    }
+
+    private void CraftCard()
+    {
+        if (currentSelectedRecipe == null) return;
+
+        var tween = slot.transform.PunchAndBounce(() =>
+        {
+            // 合成卡牌
+            var outcomeCard = CraftManager.Instance.Craft(currentSelectedRecipe);
+
+            // 掉落制作出的卡牌
+            // 如果是装备卡牌，则尝试直接穿上
+            if (GameManager.Instance.CanEquip(outcomeCard, out _))
+            {
+                GameManager.Instance.Equip(outcomeCard, slot.transform.position);
+            }
+            // 如果是建筑卡牌或者是有内容物的卡牌，则优先掉落到环境里
+            else
+            {
+                var toPlayerBag = outcomeCard.CardType != CardType.Construction && !outcomeCard.TryGetComponent<InnerContentsComponent>(out _);
+                GameManager.Instance.AddCardWithTween(outcomeCard, toPlayerBag, slot.transform.position);
+            }
+
+            // 刷新显示
+            RefreshDisplay();
+        });
+        MouseManager.Instance.Wait(tween.Duration());
     }
 
     public void DisplayRecipe(string cardId)

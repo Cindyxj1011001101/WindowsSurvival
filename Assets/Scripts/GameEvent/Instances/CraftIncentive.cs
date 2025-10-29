@@ -1,3 +1,5 @@
+using UnityEngine;
+
 /// <summary>
 /// ÖÆ×÷¼¤Àø
 /// </summary>
@@ -21,6 +23,6 @@ public class CraftIncentive : GameEvent
 
     protected override void OnTrigger()
     {
-        
+        remainingMinutes = Random.Range(60, 541);
     }
 }

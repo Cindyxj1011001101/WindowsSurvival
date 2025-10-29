@@ -24,6 +24,12 @@ public class RecipeMaterial
     public Sprite CardImage => CardFactory.GetCardImage(cardId);
 
     public Card CardInstance => CardFactory.GetStaticCardInstance(cardId);
+
+    public RecipeMaterial(string cardId, int requiredNum)
+    {
+        this.cardId = cardId;
+        this.requiredNum = requiredNum;
+    }
 }
 
 
