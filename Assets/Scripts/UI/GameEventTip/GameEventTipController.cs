@@ -37,7 +37,7 @@ public class GameEventTipController : MonoBehaviour
 
     private void OnGameEventTrigger(GameEvent gameEvent)
     {
-        CreateTip(gameEvent, ParseColor(gameEvent.threatLevel));
+        CreateTip(gameEvent, ParseColor(gameEvent.ThreatLevel));
     }
 
     private void OnGameEventEnd(GameEvent gameEvent)
@@ -53,7 +53,7 @@ public class GameEventTipController : MonoBehaviour
 
         var icon = eventIconDict["Icons_" + gameEvent.GetType().Name];
         var eventDetails = GetDetails(gameEvent.GetDetails());
-        var eventName = gameEvent.eventName;
+        var eventName = gameEvent.EventName;
 
         var tip = ObjectBufferPool.Instance.Get(gameEventTipPrefab, transform).GetComponent<GameEventTip>();
         activeTips.Add(tip);

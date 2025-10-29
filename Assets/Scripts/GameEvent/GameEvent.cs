@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
@@ -46,12 +47,21 @@ public abstract class GameEvent
     }
     #endregion
 
-    public string eventName;         // 事件名称
-    public int threatLevel;          // 威胁程度
-    public float basicTriggerWeight; // 基础触发权重
-    public float triggerInterval;    // 触发间隔(天)
-    public int remainingMinutes;     // 剩余持续时间(分钟)
-    public int remainingCoolDown;    // 剩余冷却时间(分钟)
+    [JsonProperty] private string eventName;         // 事件名称
+    [JsonProperty] private int threatLevel;          // 威胁程度
+    [JsonProperty] private float basicTriggerWeight; // 基础触发权重
+    [JsonProperty] private float triggerInterval;    // 触发间隔(天)
+    [JsonProperty] private int remainingMinutes;     // 剩余持续时间(分钟)
+    [JsonProperty] private int remainingCoolDown;    // 剩余冷却时间(分钟)
+
+    [JsonIgnore] public int ThreatLevel => threatLevel;
+    [JsonIgnore] public float BasicTriggerWeight => basicTriggerWeight;
+    [JsonIgnore] public string EventName => eventName;
+
+    protected void SetRemainingMinutes(int remainingMinutes)
+    {
+        this.remainingMinutes = remainingMinutes;
+    }
 
     /// <summary>
     /// 计算威胁事件强度

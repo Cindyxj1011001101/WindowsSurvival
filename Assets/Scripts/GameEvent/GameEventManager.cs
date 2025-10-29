@@ -109,7 +109,7 @@ public class GameEventManager : IManager
         if (selectedEvent == null) return;
 
         // 更新趋势值
-        UpdateTrendValue(selectedEvent.threatLevel);
+        UpdateTrendValue(selectedEvent.ThreatLevel);
 
         // 触发事件
         selectedEvent.Trigger();
@@ -137,8 +137,8 @@ public class GameEventManager : IManager
         foreach (var gameEvent in candidates)
         {
             // 计算公式分子：基础触发权重 × e^(敏感系数 × 趋势值 × 威胁程度)
-            float exponent = sensitivity * TrendValue * gameEvent.threatLevel;
-            float numerator = gameEvent.basicTriggerWeight * Mathf.Exp(exponent);
+            float exponent = sensitivity * TrendValue * gameEvent.ThreatLevel;
+            float numerator = gameEvent.BasicTriggerWeight * Mathf.Exp(exponent);
 
             numerators[gameEvent] = numerator;
             denominator += numerator;

@@ -21,7 +21,7 @@ public class MovementIncentive : GameEvent
 
     protected override void OnTrigger()
     {
-        remainingMinutes = Random.Range(120, 1441);
+        SetRemainingMinutes(Random.Range(120, 1441));
         MoveExploreManager.Instance.AddMoveExtraEffect("ÒÆ¶¯¼¤Àø", -0.5f, null);
     }
 
