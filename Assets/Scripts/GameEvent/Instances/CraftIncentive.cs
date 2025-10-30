@@ -1,24 +1,24 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// ÖÆ×÷¼¤Àø
+/// åˆ¶ä½œæ¿€åŠ±
 /// </summary>
 public class CraftIncentive : GameEvent
 {
-    private const float SAN_THRESHOLD = 0.85f; // ¾«Éñ×´Ì¬ãÐÖµ
+    private const float SAN_THRESHOLD = 0.85f; // ç²¾ç¥žçŠ¶æ€é˜ˆå€¼
 
     public override string GetDetails()
     {
-        return $"ÂóÂó×î½ü¾«ÉñºÜºÃ£¬Á¬ÊÖ¶¼±äµÃÁéÇÉÁËÆðÀ´¡£\n\n" +
-               $"ÔÚ½ÓÏÂÀ´µÄÒ»¶ÎÊ±¼äÀï£¬ÂóÂóÄÜ{ColorManager.Colorize("-50%", ColorManager.Green)}µÄÖÆ×÷Ê±³¤£¬" +
-               $"²¢ÇÒÖÆ×÷Ê±Ö»ÏûºÄ{ColorManager.Colorize("Ò»°ë", ColorManager.Green)}²ÄÁÏ¡£";
+        return $"éº¦éº¦æœ€è¿‘ç²¾ç¥žå¾ˆå¥½ï¼Œè¿žæ‰‹éƒ½å˜å¾—çµå·§äº†èµ·æ¥ã€‚\n\n" +
+               $"åœ¨æŽ¥ä¸‹æ¥çš„ä¸€æ®µæ—¶é—´é‡Œï¼Œéº¦éº¦èƒ½{ColorManager.Colorize("-50%", ColorManager.Green)}çš„åˆ¶ä½œæ—¶é•¿ï¼Œ" +
+               $"å¹¶ä¸”åˆ¶ä½œæ—¶åªæ¶ˆè€—{ColorManager.Colorize("ä¸€åŠ", ColorManager.Green)}ææ–™ã€‚";
     }
 
     protected override bool CanTriggerThisEvent()
     {
-        // TODO: ÐèÒª²»ÔÚË¯¾õÖÐ
         var san = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Sanity];
-        return san.CurValue / san.MaxValue >= SAN_THRESHOLD;
+        // ä¸åœ¨ç¡çœ ä¸­å¹¶ä¸”ç²¾ç¥žå€¼é«˜äºŽé˜ˆå€¼
+        return !StateManager.Instance.IsResting && san.CurValue / san.MaxValue >= SAN_THRESHOLD;
     }
 
     protected override void OnTrigger()
