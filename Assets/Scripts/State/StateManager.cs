@@ -795,7 +795,7 @@ public class StateManager : IManager
 
         if (env.PlaceData.isInSpacecraft && WaterLevel.CurValue >= CAN_NOT_REST_ON_THE_GROUND_WATER_LEVEL_THRESHOLD)
         {
-            reason = "水位过高，无法在地上休息";
+            reason = "飞船内水位过高，无法在地上休息";
             return false;
         }
 

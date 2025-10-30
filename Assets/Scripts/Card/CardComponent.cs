@@ -883,7 +883,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
 
         if (StateManager.Instance.WaterLevel.CurValue >= autoExtinguishWaterLevelThreshold)
         {
-            tip = "水位过高";
+            tip = "飞船内水位过高";
             return false;
         }
 
