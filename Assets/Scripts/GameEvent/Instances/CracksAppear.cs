@@ -1,43 +1,44 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// ³öÏÖÁÑ·ì
+/// å‡ºç°è£‚ç¼
 /// </summary>
 public class CracksAppear : GameEvent
 {
     public override string GetDetails()
     {
-        return "ÂóÂóÌıµ½ÁËÒ»Éù¼«Æä¼âÈñ¡¢¸ß¿ºµÄËºÁÑÉù£¬½ô½Ó×ÅÊÇ³ÁÃÆµÄ±¬ÁÑÉù¡£Õâ¸öÉùÒô·Ç³£ÊìÏ¤£¬ËÆºõÊÇÄÄÀïÓÖ³öÏÖÁÑ·ìÁË¡£";
+        return "éº¦éº¦å¬åˆ°äº†ä¸€å£°æå…¶å°–é”ã€é«˜äº¢çš„æ’•è£‚å£°ï¼Œç´§æ¥ç€æ˜¯æ²‰é—·çš„çˆ†è£‚å£°ã€‚è¿™ä¸ªå£°éŸ³éå¸¸ç†Ÿæ‚‰ï¼Œä¼¼ä¹æ˜¯å“ªé‡Œåˆå‡ºç°è£‚ç¼äº†ã€‚";
     }
 
     protected override bool CanTriggerThisEvent()
     {
-        // Ìõ¼şÊÇµ±Ç°µØµãÔÚ·É´¬ÄÚ»òÕß·É´¬Íâ¿Ç
+        // æ¡ä»¶æ˜¯å½“å‰åœ°ç‚¹åœ¨é£èˆ¹å†…æˆ–è€…é£èˆ¹å¤–å£³
         return GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft ||
             GameManager.Instance.CurEnvironmentBag.PlaceData.placeType == PlaceEnum.SpaceshipOuterHull;
     }
 
     protected override void OnTrigger()
     {
-        // Ëæ»úÒ»¸ö·É´¬ÄÚµØµã
+        // éšæœºä¸€ä¸ªé£èˆ¹å†…åœ°ç‚¹
         var candidateEnvs = GameManager.Instance.EnvironmentBags.Values.Where(e => e.PlaceData.isInSpacecraft).ToArray();
         var targetEnv = candidateEnvs[Random.Range(0, candidateEnvs.Length)];
 
-        // Ëæ»úÁÑ·ì¸öÊı
-        var crackCount = Random.Range(1, 4); // Ëæ»ú1~3¸öÁÑ·ì
+        // éšæœºè£‚ç¼ä¸ªæ•°
+        var crackCount = Random.Range(1, 4); // éšæœº1~3ä¸ªè£‚ç¼
 
-        // ¼ÓÈëµ½Ä¿±êµØµã
+        // åŠ å…¥åˆ°ç›®æ ‡åœ°ç‚¹
         var cards = new List<Card>();
         for (int i = 0; i < crackCount; i++)
         {
-            cards.Add(CardFactory.CreateCard("ÉøË®ÁÑ·ì"));
+            cards.Add(CardFactory.CreateCard("æ¸—æ°´è£‚ç¼"));
         }
         GameManager.Instance.AddCardsToTargetEnv(cards, targetEnv);
 
-        Debug.Log($"ÔÚ{targetEnv.PlaceName}Éú³ÉÁË{crackCount}¸öÉøË®ÁÑ·ì");
+        Debug.Log($"åœ¨{targetEnv.PlaceName}ç”Ÿæˆäº†{crackCount}ä¸ªæ¸—æ°´è£‚ç¼");
 
-        // TODO: ÖĞÖ¹Ë¯ÃßĞĞÎª
+        // ä¸­æ–­ä¼‘æ¯è¡Œä¸º
+        StateManager.Instance.StopResting();
     }
 }

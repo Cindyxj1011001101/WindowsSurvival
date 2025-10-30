@@ -38,8 +38,9 @@ public class Player : IEntity, IManager
 
     public void TakeDamage(float damage, IEntity damageDealer)
     {
-        // TODO: 中断睡眠行为
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -damage);
+        // 中断休息行为
+        StateManager.Instance.StopResting();
     }
 
     public void AddMoveSpeedMultiplier(float multipier) => MoveSpeedMultiplier.Add(multipier);

@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// ÈëÇÖ
+/// å…¥ä¾µ
 /// </summary>
 public class Invasion : GameEvent
 {
@@ -16,56 +16,58 @@ public class Invasion : GameEvent
 
     public override string GetDetails()
     {
-        return "Ò»ÈºÆæ¹ÖµÄÉúÎïÈëÇÖÁËÕâÆ¬ÇøÓò£¬ËüÃÇ³äÂúÁË¶ñÒâÇÒÒÔÂóÂóÎªÁÔÉ±Ä¿±ê¡£";
+        return "ä¸€ç¾¤å¥‡æ€ªçš„ç”Ÿç‰©å…¥ä¾µäº†è¿™ç‰‡åŒºåŸŸï¼Œå®ƒä»¬å……æ»¡äº†æ¶æ„ä¸”ä»¥éº¦éº¦ä¸ºçŒæ€ç›®æ ‡ã€‚";
     }
 
     protected override void OnTrigger()
     {
         GenerateInvasion(CalculateThreatIntensity());
-        // TODO: ÖĞÖ¹Ë¯ÃßĞĞÎª
+
+        // ä¸­æ–­ä¼‘æ¯è¡Œä¸º
+        StateManager.Instance.StopResting();
     }
 
     /// <summary>
-    /// Éú³ÉÈëÇÖÊÂ¼ş
+    /// ç”Ÿæˆå…¥ä¾µäº‹ä»¶
     /// </summary>
-    /// <param name="threatIntensity">ÍşĞ²Ç¿¶È</param>
-    /// <returns>ÈëÇÖ½á¹û</returns>
+    /// <param name="threatIntensity">å¨èƒå¼ºåº¦</param>
+    /// <returns>å…¥ä¾µç»“æœ</returns>
     public void GenerateInvasion(float threatIntensity)
     {
-        // µÚÒ»²½£ºÅĞ¶ÏÂú×ãÌõ¼şµÄ×éºÏ£¬²¢³éÈ¡Ò»¸ö×éºÏ
+        // ç¬¬ä¸€æ­¥ï¼šåˆ¤æ–­æ»¡è¶³æ¡ä»¶çš„ç»„åˆï¼Œå¹¶æŠ½å–ä¸€ä¸ªç»„åˆ
         var selectedComposition = SelectInvasionComposition(threatIntensity);
         if (selectedComposition == null)
         {
-            Debug.LogError("Ã»ÓĞÕÒµ½ºÏÊÊµÄÈëÇÖ×éºÏ£¬ÈëÇÖÊÂ¼şÉú³ÉÊ§°Ü¡£");
+            Debug.LogError("æ²¡æœ‰æ‰¾åˆ°åˆé€‚çš„å…¥ä¾µç»„åˆï¼Œå…¥ä¾µäº‹ä»¶ç”Ÿæˆå¤±è´¥ã€‚");
             return;
         }
 
         var creatures = selectedComposition.Generate(threatIntensity);
-        Debug.Log($"ÈëÇÖÊÂ¼şÉú³É³É¹¦£¬ÍşĞ²Ç¿¶È£º{threatIntensity}£¬ÈëÇÖ×éºÏ£º{selectedComposition.compositionName}£¬ÈëÇÖÉúÎïÊıÁ¿£º{creatures.Count}");
+        Debug.Log($"å…¥ä¾µäº‹ä»¶ç”ŸæˆæˆåŠŸï¼Œå¨èƒå¼ºåº¦ï¼š{threatIntensity}ï¼Œå…¥ä¾µç»„åˆï¼š{selectedComposition.compositionName}ï¼Œå…¥ä¾µç”Ÿç‰©æ•°é‡ï¼š{creatures.Count}");
         foreach (var creature in creatures)
         {
-            Debug.Log($"ÈëÇÖÉúÎï£º{creature}");
+            Debug.Log($"å…¥ä¾µç”Ÿç‰©ï¼š{creature}");
         }
 
-        // ½«ÈëÇÖÉúÎïÌí¼Óµ½ÓÎÏ·ÖĞ
+        // å°†å…¥ä¾µç”Ÿç‰©æ·»åŠ åˆ°æ¸¸æˆä¸­
         var curEnv = GameManager.Instance.CurEnvironmentBag;
-        EnvironmentBag spawnEnv = curEnv.PlaceData.isIndoor ? GameManager.Instance.EnvironmentBags[curEnv.PlaceData.connectedOutdoorPlace] : curEnv; // ÈëÇÖÉúÎïµÄÉú³ÉµØµã
+        EnvironmentBag spawnEnv = curEnv.PlaceData.isIndoor ? GameManager.Instance.EnvironmentBags[curEnv.PlaceData.connectedOutdoorPlace] : curEnv; // å…¥ä¾µç”Ÿç‰©çš„ç”Ÿæˆåœ°ç‚¹
         GameManager.Instance.AddCardsToTargetEnv(creatures, spawnEnv);
     }
 
     /// <summary>
-    /// Ñ¡ÔñÈëÇÖ×éºÏ
+    /// é€‰æ‹©å…¥ä¾µç»„åˆ
     /// </summary>
     private InvasionComposition SelectInvasionComposition(float threatIntensity)
     {
-        // É¸Ñ¡Âú×ãÌõ¼şµÄ×éºÏ
+        // ç­›é€‰æ»¡è¶³æ¡ä»¶çš„ç»„åˆ
         var validCompositions = allCompositions
             .Where(c => c.CanGenerate(threatIntensity))
             .ToList();
 
         if (validCompositions.IsNullOrEmpty()) return null;
 
-        // ¸ù¾İÈ¨ÖØËæ»úÑ¡Ôñ
+        // æ ¹æ®æƒé‡éšæœºé€‰æ‹©
         float totalWeight = validCompositions.Sum(c => c.compositionWeight);
         float randomValue = Random.value * totalWeight;
         float currentSum = 0f;

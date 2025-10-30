@@ -1,17 +1,17 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// Å»ÍÂ
+/// å‘•å
 /// </summary>
 public class Vomit : GameEvent
 {
-    private const float SAN_THRESHOLD = 0.15f; // ¾«Éñ×´Ì¬ãĞÖµ
+    private const float SAN_THRESHOLD = 0.15f; // ç²¾ç¥çŠ¶æ€é˜ˆå€¼
 
     public override string GetDetails()
     {
-        return $"ÂóÂóÍ»È»ÍÂÁË£¬ÍÂµÃµ½´¦¶¼ÊÇ¡£\n\n" +
-               $"Ò²Ğí×î½üËıµÄ¾«ÉñÑ¹Á¦Ì«´óÁË¡£\n\n" +
-               $"ÂóÂóµÄ±¥Ê³ºÍË®·Ö¼õÉÙÁË¡£";
+        return $"éº¦éº¦çªç„¶åäº†ï¼Œåå¾—åˆ°å¤„éƒ½æ˜¯ã€‚\n\n" +
+               $"ä¹Ÿè®¸æœ€è¿‘å¥¹çš„ç²¾ç¥å‹åŠ›å¤ªå¤§äº†ã€‚\n\n" +
+               $"éº¦éº¦çš„é¥±é£Ÿå’Œæ°´åˆ†å‡å°‘äº†ã€‚";
     }
 
     protected override bool CanTriggerThisEvent()
@@ -27,9 +27,10 @@ public class Vomit : GameEvent
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hydration, thirstChange);
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hunger, fullnessChange);
 
-        // µôÂä¸¯ÀÃÎï
-        GameManager.Instance.AddCardsToTargetEnv(GameManager.Instance.CurEnvironmentBag, CardFactory.CreateCard("¸¯ÀÃÎï"));
+        // æ‰è½è…çƒ‚ç‰©
+        GameManager.Instance.AddCardsToTargetEnv(GameManager.Instance.CurEnvironmentBag, CardFactory.CreateCard("è…çƒ‚ç‰©"));
 
-        // TODO: ÖĞÖ¹Ë¯ÃßĞĞÎª
+        // ä¸­æ–­ä¼‘æ¯è¡Œä¸º
+        StateManager.Instance.StopResting();
     }
 }
