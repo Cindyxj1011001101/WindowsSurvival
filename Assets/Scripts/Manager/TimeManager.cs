@@ -13,6 +13,8 @@ public class TimeManager : IManager
 
     public int Day => (CurTime - StartDateTime).Days + 1;
 
+    private bool timePassStopped = false;
+
     public void Init()
     {
         var timeData = GameDataManager.Instance.TimeData;
@@ -38,19 +40,20 @@ public class TimeManager : IManager
 
     public void AddTime(int minutes)
     {
+        timePassStopped = false;
         EventManager.Instance.TriggerEvent(EventType.StartChangeTime);
 
         // 等待动画
         MouseManager.Instance.Wait();
 
         int timespan = minutes;
-        CurTime = CurTime.AddMinutes(minutes);
 
-        while (timespan != 0)
+        while (!timePassStopped && timespan > 0)
         {
             if (timespan >= CurInterval)
             {
                 timespan -= CurInterval;
+                CurTime = CurTime.AddMinutes(CurInterval);
                 CurInterval = SETTLEMENT_INTERVAL;
                 // ChatConditionManager.Instance.TrackCurrentStatus();
                 EventManager.Instance.TriggerEvent(EventType.Update);
@@ -58,21 +61,30 @@ public class TimeManager : IManager
             else
             {
                 CurInterval -= timespan;
+                CurTime = CurTime.AddMinutes(timespan);
                 timespan = 0;
             }
-        }
 
-        AnotherDay();
+            HandleAnotherDay();
+        }
 
         EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
     }
 
-    public bool AnotherDay()
+    private bool HandleAnotherDay()
     {
         if (CurTime.Date == lastDay) return false;
 
         lastDay = CurTime.Date;
         EventManager.Instance.TriggerEvent(EventType.AnotherDay);
         return true;
+    }
+
+    /// <summary>
+    /// 停止时间流逝
+    /// </summary>
+    public void StopTimePass()
+    {
+        timePassStopped = true;
     }
 }

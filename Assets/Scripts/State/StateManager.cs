@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -24,12 +25,12 @@ public class StateManager : IManager
     /// <summary>
     /// 电力
     /// </summary>
-    public State Electricity { get; private set; }
+    public State Electricity { get; private set; } = new();
 
     /// <summary>
     /// 飞船水平面高度
     /// </summary>
-    public State WaterLevel { get; private set; }
+    public State WaterLevel { get; private set; } = new();
 
     #region 初始化
     public void Init()
@@ -65,6 +66,8 @@ public class StateManager : IManager
 
     public void Reset()
     {
+        IsResting = false;
+        _lastDangerLevel = DangerLevelEnum.None;
         Electricity = new();
         WaterLevel = new();
         PlayerStateDict = new();
@@ -396,6 +399,13 @@ public class StateManager : IManager
     {
         if (!PlayerStateDict.ContainsKey(stateEnum)) return;
         PlayerStateDict[stateEnum].SetBasicChangeRate(value);
+        EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
+    }
+
+    public void SetPlayerStateTempBasicChangeRate(PlayerStateEnum stateEnum, float value)
+    {
+        if (!PlayerStateDict.ContainsKey(stateEnum)) return;
+        PlayerStateDict[stateEnum].SetTempBasicChangeRate(value);
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
     }
 
@@ -749,23 +759,21 @@ public class StateManager : IManager
     #endregion
 
     #region 休息
-    public void Rest(int time, Dictionary<PlayerStateEnum, float> playerStateBasicChangeRates)
+    public bool IsResting { get; private set; } = false;
+
+    private List<PlayerStateEnum> playerStateTempChangeRates;
+
+    public void Rest(int time, Dictionary<PlayerStateEnum, float> playerStateTempChangeRates)
     {
-        // 记录当前变化率
-        var current = new Dictionary<PlayerStateEnum, float>();
-        foreach (var state in playerStateBasicChangeRates.Keys)
+        this.playerStateTempChangeRates = playerStateTempChangeRates.Keys.ToList();
+
+        // 应用临时变化率
+        foreach (var (state, tempChangeRate) in playerStateTempChangeRates)
         {
-            if (PlayerStateDict.TryGetValue(state, out var value))
-            {
-                current.Add(state, value.BasicChangeRate);
-            }
+            SetPlayerStateTempBasicChangeRate(state, tempChangeRate);
         }
 
-        // 应用新的变化率
-        foreach (var (state, basicChangeRate) in playerStateBasicChangeRates)
-        {
-            SetPlayerStateBasicChangeRate(state, basicChangeRate);
-        }
+        IsResting = true;
 
         // 触发开始睡觉事件
         EventManager.Instance.TriggerEvent(EventType.StartSleeping);
@@ -773,24 +781,33 @@ public class StateManager : IManager
         // 时间增加
         TimeManager.Instance.AddTime(time);
 
+        StopResting();
+    }
+
+    public void StopResting()
+    {
+        if (!IsResting) return;
+
+        IsResting = false;
+
+        // 停止时间增加
+        TimeManager.Instance.StopTimePass();
+
         // 触发结束睡觉事件
         EventManager.Instance.TriggerEvent(EventType.StopSleeping);
 
         // 恢复原来的变化率
-        foreach (var (state, basicChangeRate) in current)
+        foreach (var state in playerStateTempChangeRates)
         {
-            SetPlayerStateBasicChangeRate(state, basicChangeRate);
+            SetPlayerStateTempBasicChangeRate(state, 0);
         }
+
+        playerStateTempChangeRates.Clear();
     }
+
     #endregion
 
     #region 危险状态
-
-    /// <summary>
-    /// 危险等级
-    /// </summary>
-    public DangerLevelEnum DangerLevel => _lastDangerLevel;
-
     // 缓存上次的危险状态
     private DangerLevelEnum _lastDangerLevel = DangerLevelEnum.None;
 

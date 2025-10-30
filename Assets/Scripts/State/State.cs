@@ -9,7 +9,6 @@ public class State
 {
     [JsonProperty] private float extraValue;                        // 额外值
     [JsonProperty] private float maxValue;                          // 最大值
-    //[JsonProperty] private float constValue;                        // 固定值
     [JsonProperty] private Dictionary<string, float> constValueDict = new(); // 固定值字典
     [JsonProperty] private float variableValue;                     // 可变值
     [JsonProperty] private List<StateThreshold> thresholds = new(); // 状态阈值列表
@@ -23,6 +22,9 @@ public class State
     [JsonProperty] private bool higherIsBetter;                     // 数值越高越好
     [JsonProperty] private bool lowerIsBetter;                      // 数值越低越好
 
+
+    private float tempBasicChangeRate;                              // 临时基础变化率
+
     [JsonIgnore] public string StateLevelName => thresholds[stateLevel].levelName;
     [JsonIgnore] public int StateLevel => stateLevel;
     [JsonIgnore] public float CurValue => Mathf.Clamp(variableValue + ConstValue, 0, MaxValue);
@@ -30,8 +32,7 @@ public class State
     [JsonIgnore] public float ExtraValue => extraValue;
     [JsonIgnore] public float MaxValue => maxValue + extraValue;
     [JsonIgnore] public float RemainingCapacity => MaxValue - CurValue;
-    [JsonIgnore] public float BasicChangeRate => basicChangeRate;
-    [JsonIgnore] public float ChangeRate => basicChangeRate + extraChangeRate;
+    [JsonIgnore] public float ChangeRate => tempBasicChangeRate == 0 ? basicChangeRate + extraChangeRate : tempBasicChangeRate + extraChangeRate;
     [JsonIgnore] public bool HigherIsBetter => higherIsBetter;
     [JsonIgnore] public bool LowerIsBetter => lowerIsBetter;
     [JsonIgnore]
@@ -147,6 +148,11 @@ public class State
     public void SetBasicChangeRate(float value)
     {
         basicChangeRate = value;
+    }
+
+    public void SetTempBasicChangeRate(float value)
+    {
+        tempBasicChangeRate = value;
     }
 
     public State() { }
