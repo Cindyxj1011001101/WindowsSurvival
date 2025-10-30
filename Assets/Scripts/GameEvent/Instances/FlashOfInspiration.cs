@@ -1,19 +1,25 @@
-/// <summary>
-/// Áé¹âÕ§ÏÖ
+ï»¿/// <summary>
+/// çµå…‰ä¹ç°
 /// </summary>
 public class FlashOfInspiration : GameEvent
 {
-    private const float SAN_THRESHOLD = 0.85f; // ¾«Éñ×´Ì¬ãĞÖµ
+    private const float SAN_THRESHOLD = 0.85f; // ç²¾ç¥çŠ¶æ€é˜ˆå€¼
 
     private string techName;
 
     public override string GetDetails()
     {
-        // TODO: ¸ù¾İÊÇ·ñË¯¾õµ÷ÕûÃèÊö
-        return $"ÂóÂó×î½ü¾«ÉñºÜºÃ£¬Á¬ÄÔ×Ó¶¼Áé¹âÁËÆğÀ´¡£ËıÍ»È»ÌÏÌÏ²»¾øµØ½²ÆğÁËËı¶ÔÑĞ¾¿µÄ¿´·¨¡£" +
-               $"ÕâĞ©µÄ¹ÛµãÊ®·ÖĞÂÓ±ÇÒ¾ßÓĞÊµ¼ÊÒâÒå£¬»òĞí±ÈÏµÍ³ÀïµÄÂÛÎÄ¸üÊÊºÏµ±ÏÂÇé¿ö¡£\n\n" +
-               $"×ÜÖ®£¬ÕâÏîÑĞ¾¿ÒÑ¾­Ã»±ØÒªÔÚ¼ÌĞøÁË£¬¹â¿¿ÂóÂó¾ÍÒÑ¾­È«²¿¸ã¶®ÁË£¬Õæ²»¿ÉË¼Òé¡£\n\n" +
-               $"½âËøµÄ¿Æ¼¼: " + ColorManager.Colorize(techName, ColorManager.Cyan);
+        var desc = $"éº¦éº¦æœ€è¿‘ç²¾ç¥å¾ˆå¥½ï¼Œè¿è„‘å­éƒ½çµå…‰äº†èµ·æ¥ã€‚å¥¹çªç„¶æ»”æ»”ä¸ç»åœ°è®²èµ·äº†å¥¹å¯¹ç ”ç©¶çš„çœ‹æ³•ã€‚" +
+                   $"è¿™äº›çš„è§‚ç‚¹ååˆ†æ–°é¢–ä¸”å…·æœ‰å®é™…æ„ä¹‰ï¼Œæˆ–è®¸æ¯”ç³»ç»Ÿé‡Œçš„è®ºæ–‡æ›´é€‚åˆå½“ä¸‹æƒ…å†µã€‚\n\n" +
+                   $"æ€»ä¹‹ï¼Œè¿™é¡¹ç ”ç©¶å·²ç»æ²¡å¿…è¦åœ¨ç»§ç»­äº†ï¼Œå…‰é éº¦éº¦å°±å·²ç»å…¨éƒ¨ææ‡‚äº†ï¼ŒçœŸä¸å¯æ€è®®ã€‚\n\n";
+
+        if (StateManager.Instance.IsResting)
+            desc = $"ç°åœ¨è¿›è¡Œçš„ç ”ç©¶æœ‰å¥½å¤šçœ‹ä¸æ‡‚çš„åœ°æ–¹ï¼Œä¸€äº›æåˆ°çš„ä¸œè¥¿ä½ å®Œå…¨æ²¡å¬è¯´è¿‡ã€‚å°±åœ¨è¿™æ—¶éº¦éº¦è¯´èµ·äº†å‡ å¥æ¨¡ç³Šä¸æ¸…çš„æ¢¦è¯ï¼Œå¥‡æ€ªçš„æ˜¯è¿™äº›è¯­å¥æ­£å¥½è§£é‡Šäº†è®ºæ–‡ä¸­ä½ æ‰€ä¸æ‡‚çš„åœ°æ–¹ï¼Œä½ ç¬é—´å°†é—®é¢˜æƒ³é€šï¼Œè¿™é¡¹ç§‘æŠ€ä½ å·²å®Œå…¨äº†è§£ã€‚\n\n" +
+                   $"çœŸä¸å¯æ€è®®ï¼Œå¥¹ç¡ç€çš„æ—¶å€™æ¯”é†’ç€æ—¶èªæ˜å¤šäº†ã€‚\n\n";
+
+        desc += $"è§£é”çš„ç§‘æŠ€: " + ColorManager.Colorize(techName, ColorManager.Cyan);
+
+        return desc;
     }
 
     protected override bool CanTriggerThisEvent()
@@ -25,8 +31,8 @@ public class FlashOfInspiration : GameEvent
 
     protected override void OnTrigger()
     {
-        // Á¢¿ÌÍê³Éµ±Ç°¿Æ¼¼
+        // ç«‹åˆ»å®Œæˆå½“å‰ç§‘æŠ€
         techName = TechnologyManager.Instance.CurStudiedTechNode.techName;
-        TechnologyManager.Instance.AddStudyProcess(9999); // ÑĞ¾¿½ø¶ÈÔö¼Ó
+        TechnologyManager.Instance.AddStudyProcess(9999); // ç ”ç©¶è¿›åº¦å¢åŠ 
     }
 }
