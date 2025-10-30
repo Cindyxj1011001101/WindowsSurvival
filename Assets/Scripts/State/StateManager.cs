@@ -60,6 +60,9 @@ public class StateManager : IManager
         // 玩家生命值不高于0时死亡
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
 
+        // 水平面高于20时停止睡眠
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, CheckEnvState);
+
         // 评估危险状态，播放音乐
         EvaluateDangerLevel();
     }
@@ -76,11 +79,21 @@ public class StateManager : IManager
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
         EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, CheckEnvState);
     }
 
     private void CheckPlayerState(PlayerStateEnum stateEnum)
     {
         if (PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0) Die();
+    }
+
+    private void CheckEnvState(RefreshEnvironmentStateArgs args)
+    {
+        if (args.stateEnum == EnvironmentStateEnum.WaterLevel)
+        {
+            // 在地上休息时，若水平面超过20，则停止休息
+            if (isRestingOnTheGround && !CanRestOnTheGround(out _)) StopResting();
+        }
     }
 
     private void OnChangeEnv(EnvironmentBag env)
@@ -761,7 +774,39 @@ public class StateManager : IManager
     #region 休息
     public bool IsResting { get; private set; } = false;
 
+    private bool isRestingOnTheGround = false; // 是否在地上休息
+
     private List<PlayerStateEnum> playerStateTempChangeRates;
+
+    private const int CAN_NOT_REST_ON_THE_GROUND_WATER_LEVEL_THRESHOLD = 20; // 不能在地上休息的水平面阈值
+
+    public const float SOBRIETY_CHANGE_RATE_WHILE_RESTING_ON_THE_GROUND = +2.8f; // 在地上休息时的清醒度变化率
+
+    public bool CanRestOnTheGround(out string reason)
+    {
+        reason = string.Empty;
+        var env = GameManager.Instance.CurEnvironmentBag;
+
+        if (env.PlaceData.isInWater)
+        {
+            reason = "不能在水域地点休息";
+            return false;
+        }
+
+        if (env.PlaceData.isInSpacecraft && WaterLevel.CurValue >= CAN_NOT_REST_ON_THE_GROUND_WATER_LEVEL_THRESHOLD)
+        {
+            reason = "水位过高，无法在地上休息";
+            return false;
+        }
+
+        return true;
+    }
+
+    public void RestOnTheGround(int time)
+    {
+        isRestingOnTheGround = true;
+        Rest(time, new() { { PlayerStateEnum.Sobriety, SOBRIETY_CHANGE_RATE_WHILE_RESTING_ON_THE_GROUND } });
+    }
 
     public void Rest(int time, Dictionary<PlayerStateEnum, float> playerStateTempChangeRates)
     {
@@ -789,6 +834,8 @@ public class StateManager : IManager
         if (!IsResting) return;
 
         IsResting = false;
+
+        if (isRestingOnTheGround) isRestingOnTheGround = false;
 
         // 停止时间增加
         TimeManager.Instance.StopTimePass();
