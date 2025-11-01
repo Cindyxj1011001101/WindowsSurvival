@@ -4,7 +4,7 @@ public class UpdateManager : IManager
 {
     public static UpdateManager Instance { get; } = new();
 
-    public UnityEvent InGameEventUpdate { get; private set; } = new();
+    public UnityEvent GameEventUpdate { get; private set; } = new();
     public UnityEvent PlayerUpdate { get; private set; } = new();
     public UnityEvent EnvironmentUpdate { get; private set; } = new();
     public UnityEvent CardUpdate { get; private set; } = new();
@@ -32,13 +32,13 @@ public class UpdateManager : IManager
         EnvironmentUpdate.Invoke();
         PlayerUpdate.Invoke();
         PopulationUpdate.Invoke();
-        InGameEventUpdate.Invoke();
+        GameEventUpdate.Invoke();
         SunlightUpdate.Invoke();
     }
 
     private void Clear()
     {
-        InGameEventUpdate.RemoveAllListeners();
+        GameEventUpdate.RemoveAllListeners();
         PlayerUpdate.RemoveAllListeners();
         EnvironmentUpdate.RemoveAllListeners();
         CardUpdate.RemoveAllListeners();

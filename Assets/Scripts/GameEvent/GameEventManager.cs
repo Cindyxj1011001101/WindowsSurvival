@@ -31,14 +31,14 @@ public class GameEventManager : IManager
         // 读取存档数据
         LoadData();
         // 监听结算事件
-        UpdateManager.Instance.InGameEventUpdate.AddListener(Update);
+        UpdateManager.Instance.GameEventUpdate.AddListener(Update);
     }
 
     public void Reset()
     {
         AllEvents = new();
         InvasionEventConfig = new();
-        UpdateManager.Instance.InGameEventUpdate.RemoveListener(Update);
+        UpdateManager.Instance.GameEventUpdate.RemoveListener(Update);
     }
 
     private void LoadData()
