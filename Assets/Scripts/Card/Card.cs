@@ -6,34 +6,6 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum CardTag
-{
-    Rubbish, // 垃圾
-    Plants,  // 素食
-    Meat,    // 肉食
-    Hunter,  // 猎人
-    Food,    // 食物
-}
-
-public enum CardType
-{
-    Place,         // 地点
-    ResourcePoint, // 资源点
-    LiveEntities,  // 实体
-    Creature,      // 生物
-    Crop,          // 作物
-    Seed,          // 种子
-    Construction,  // 建筑
-    Food,          // 食物
-    Liquids​,       // 液体
-    Medicine​,      // 药品
-    Resource,      // 资源
-    Tool,          // 工具
-    Weapon,        // 武器
-    Equipment,     // 装备
-    Other,         // 其他
-}
-
 /// <summary>
 /// 卡牌基类
 /// </summary>
@@ -650,69 +622,3 @@ public abstract class Card : IComparable<Card>
         TimeManager.Instance.AddTime(e.GetTimeEffect());
     }
 }
-
-//事件类
-public class CardEvent
-{
-    public string name;
-    public string description;
-    public string hint;
-    public OutStringAction action;
-    public OutStringAction<bool> condition;
-    public Func<int> getTimeEffect;
-    public Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects;
-    public Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects;
-
-    public string Description => string.IsNullOrEmpty(hint) ? description : hint;
-
-    public CardEvent(string name, string description, OutStringAction action, OutStringAction<bool> condition,
-        Func<int> getTimeEffect = null, Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects = null, Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects = null)
-    {
-        this.name = name;
-        this.description = description;
-        this.action = action;
-        this.condition = condition;
-        this.getTimeEffect = getTimeEffect;
-        this.getPlayerEffects = getPlayerEffects;
-        this.getEnvEffects = getEnvEffects;
-    }
-
-    public void Inovke(out string tip)
-    {
-        tip = string.Empty;
-        action?.Invoke(out tip);
-    }
-
-    public bool Judge()
-    {
-        hint = string.Empty;
-        if (condition == null || condition.Invoke(out hint))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public int GetTimeEffect()
-    {
-        if (getTimeEffect == null) return 0;
-        return getTimeEffect.Invoke();
-    }
-
-    public Dictionary<PlayerStateEnum, float> GetPlayerEffects()
-    {
-        if (getPlayerEffects == null) return new();
-        return getPlayerEffects.Invoke();
-    }
-
-    public Dictionary<EnvironmentStateEnum, float> GetEnvEffects()
-    {
-        if (getEnvEffects == null) return new();
-        return getEnvEffects.Invoke();
-    }
-}
-
-public delegate T OutStringAction<T>(out string s);
-public delegate void OutStringAction(out string s);
-public delegate void OutStringFunc<T>(out string s, T arg);

@@ -170,7 +170,7 @@ public static class CardFactory
             // 获取图集的所有图片
             var sprites = Resources.LoadAll<Sprite>("Sprites/" + config.CardType.ToString());
             // 找到图片的索引
-            if (int.TryParse(config.CardImagePath, out var index))
+            if (int.TryParse(config.CardImagePath, out var index) && index < sprites.Length)
             {
                 return sprites[index];
             }
@@ -187,7 +187,7 @@ public static class CardFactory
             // 获取图集的所有图片
             var sprites = Resources.LoadAll<Sprite>("Sprites/" + config.CardType.ToString());
             // 找到图片的索引
-            if (int.TryParse(imagePath, out var index))
+            if (int.TryParse(imagePath, out var index) && index < sprites.Length)
             {
                 return sprites[index];
             }
