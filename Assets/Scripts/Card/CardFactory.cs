@@ -10,12 +10,7 @@ public static class CardFactory
     // 键是卡牌ID，值是卡牌配置
     private static Dictionary<string, CardConfig> configCache = null;
     // 键是卡牌ID，值是对应的卡牌类类型
-    private static Dictionary<string, Type> classTypes = null;
-
-    private static void InitCardConfig()
-    {
-        configCache ??= ExcelReader.ReadCardConfig("CardConfig");
-        classTypes ??= new()
+    private static Dictionary<string, Type> classTypes = new()
         {
             { "从动力舱到驾驶室", typeof(FromPowerCabinToCockpit) },
             { "从驾驶室到动力舱", typeof(FromCockpitToPowerCabin) },
@@ -155,6 +150,10 @@ public static class CardFactory
             { "老鼠", typeof(Rat) },
             { "垃圾包裹", typeof(JunkPackage) },
         };
+
+    private static void InitCardConfig()
+    {
+        configCache ??= ExcelReader.ReadCardConfig("CardConfig");
     }
 
     public static bool ContainsCard(string cardId)
@@ -369,38 +368,6 @@ public static class CardFactory
         }
 
         return card;
-    }
-
-    // 环境一次性掉落列表
-    private static Dictionary<PlaceEnum, DropList> disposableDropListDict = null;
-
-    private static void InitDisposableDropList()
-    {
-        disposableDropListDict ??= ExcelReader.GenerateDisposableDropList();
-    }
-
-    public static DropList GetDisposableDropList(PlaceEnum place)
-    {
-        InitDisposableDropList();
-        if (disposableDropListDict.ContainsKey(place))
-            return disposableDropListDict[place];
-        return new DropList();
-    }
-
-    // 环境重复掉落列表
-    private static Dictionary<PlaceEnum, DeepExploreDropList> repeatableDropListDict = null;
-
-    private static void InitDeepExploreDropList()
-    {
-        repeatableDropListDict ??= ExcelReader.GenerateDeepExploreDropList();
-    }
-
-    public static DeepExploreDropList GetDeepExploreDropList(PlaceEnum place)
-    {
-        InitDeepExploreDropList();
-        if (repeatableDropListDict.ContainsKey(place))
-            return repeatableDropListDict[place];
-        return new DeepExploreDropList();
     }
 
     private static Dictionary<string, Card> cardInstances = new();

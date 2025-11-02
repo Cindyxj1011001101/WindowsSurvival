@@ -12,8 +12,8 @@ public static class ExcelReader
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{fileName}.xlsx", FileMode.Open, FileAccess.Read);
         var excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
-        var result = excelReader.AsDataSet();
-        DataTable table = result.Tables[0]; // 配置在第一张表中
+        var dataSet = excelReader.AsDataSet();
+        DataTable table = dataSet.Tables[0]; // 配置在第一张表中
 
         // 存储卡牌配置的字典
         Dictionary<string, CardConfig> cardConfigs = new();
@@ -224,81 +224,79 @@ public static class ExcelReader
         return result;
     }
 
-    public static Dictionary<PlaceEnum, DropList> GenerateDisposableDropList()
+    #region 掉落列表
+    public static DropList ReadDisposableDropListConfig(PlaceEnum placeType)
     {
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/DisposableDropListConfig.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
-        DataSet result = excelReader.AsDataSet();
+        DataSet dataSet = excelReader.AsDataSet();
 
-        Dictionary<PlaceEnum, DropList> dict = new();
+        if (!dataSet.Tables.Contains(placeType.ToString())) return new();
 
-        foreach (DataTable table in result.Tables)
+        var table = dataSet.Tables[placeType.ToString()];
+
+        // 假设每个表都是一次性掉落列表
+        List<Drop> dropList = new();
+        DataRow row;
+        for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
         {
-            // 假设每个表都是一次性掉落列表
-            List<Drop> dropList = new();
-            DataRow row;
-            for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
+            row = table.Rows[i];
+
+            if (string.IsNullOrEmpty(row[0].ToString())) break; // 遇到空行说明读取完毕了，后续是内容物的配置
+
+            // 读取掉落配置
+            DisposableDropConfig config = new()
             {
-                row = table.Rows[i];
+                CardId = row[0].ToString(),
+                DropNum = ParseInt(row[1].ToString()),
+                DropWeight = ParseInt(row[2].ToString()),
+                OverwriteFreshness = ParseBool(row[3].ToString()),
+                OverwriteDurability = ParseBool(row[5].ToString()),
+                OverwriteGrowth = ParseBool(row[7].ToString()),
+                OverwriteProgress = ParseBool(row[9].ToString()),
+                OverwriteInnerContents = ParseBool(row[11].ToString())
+            };
 
-                if (string.IsNullOrEmpty(row[0].ToString())) break; // 遇到空行说明读取完毕了，后续是内容物的配置
+            List<Card> droppedCards = new();
 
-                // 读取掉落配置
-                DisposableDropConfig config = new()
+            for (int j = 0; j < config.DropNum; j++)
+            {
+                var card = CardFactory.CreateCard(config.CardId);
+                // 覆写卡牌属性
+                if (config.OverwriteFreshness && card.TryGetComponent<FreshnessComponent>(out var f))
                 {
-                    CardId = row[0].ToString(),
-                    DropNum = ParseInt(row[1].ToString()),
-                    DropWeight = ParseInt(row[2].ToString()),
-                    OverwriteFreshness = ParseBool(row[3].ToString()),
-                    OverwriteDurability = ParseBool(row[5].ToString()),
-                    OverwriteGrowth = ParseBool(row[7].ToString()),
-                    OverwriteProgress = ParseBool(row[9].ToString()),
-                    OverwriteInnerContents = ParseBool(row[11].ToString())
-                };
-
-                List<Card> droppedCards = new();
-
-                for (int j = 0; j < config.DropNum; j++)
-                {
-                    var card = CardFactory.CreateCard(config.CardId);
-                    // 覆写卡牌属性
-                    if (config.OverwriteFreshness && card.TryGetComponent<FreshnessComponent>(out var f))
-                    {
-                        f.SetValue(ParseInt(row[4].ToString())); // 覆写新鲜度
-                    }
-                    if (config.OverwriteDurability && card.TryGetComponent<DurabilityComponent>(out var d))
-                    {
-                        d.SetValue(ParseInt(row[6].ToString())); // 覆写耐久度
-                    }
-                    if (config.OverwriteGrowth && card.TryGetComponent<GrowthComponent>(out var g))
-                    {
-                        g.SetValue(ParseInt(row[8].ToString())); // 覆写生长进度
-                    }
-                    if (config.OverwriteProgress && card.TryGetComponent<ProgressComponent>(out var p))
-                    {
-                        p.SetValue(ParseInt(row[10].ToString())); // 覆写产物进度
-                    }
-                    if (config.OverwriteInnerContents && card.TryGetComponent<InnerContentsComponent>(out var inn))
-                    {
-                        var startRowIndex = ParseInt(row[12].ToString()); // 覆写内容物
-                        var endRowIndex = ParseInt(row[13].ToString());
-                        foreach (var c in ReadInnerContents(table, startRowIndex, endRowIndex))
-                        {
-                            inn.AddCard(c);
-                        }
-                    }
-                    droppedCards.Add(card);
+                    f.SetValue(ParseInt(row[4].ToString())); // 覆写新鲜度
                 }
-
-                // 添加到掉落列表
-                dropList.Add(new Drop(config.DropWeight, droppedCards));
+                if (config.OverwriteDurability && card.TryGetComponent<DurabilityComponent>(out var d))
+                {
+                    d.SetValue(ParseInt(row[6].ToString())); // 覆写耐久度
+                }
+                if (config.OverwriteGrowth && card.TryGetComponent<GrowthComponent>(out var g))
+                {
+                    g.SetValue(ParseInt(row[8].ToString())); // 覆写生长进度
+                }
+                if (config.OverwriteProgress && card.TryGetComponent<ProgressComponent>(out var p))
+                {
+                    p.SetValue(ParseInt(row[10].ToString())); // 覆写产物进度
+                }
+                if (config.OverwriteInnerContents && card.TryGetComponent<InnerContentsComponent>(out var inn))
+                {
+                    var startRowIndex = ParseInt(row[12].ToString()); // 覆写内容物
+                    var endRowIndex = ParseInt(row[13].ToString());
+                    foreach (var c in ReadInnerContents(table, startRowIndex, endRowIndex))
+                    {
+                        inn.AddCard(c);
+                    }
+                }
+                droppedCards.Add(card);
             }
-            // 保存为Json
-            DropList disposableDropList = new(dropList, true);
-            dict.Add(Enum.Parse<PlaceEnum>(table.TableName), disposableDropList);
+
+            // 添加到掉落列表
+            dropList.Add(new Drop(config.DropWeight, droppedCards));
         }
-        return dict;
+
+        return new(dropList, true);
     }
 
     private static List<Card> ReadInnerContents(DataTable table, int startRowIndex, int endRowIndex)
@@ -352,94 +350,92 @@ public static class ExcelReader
         return result;
     }
 
-    public static Dictionary<PlaceEnum, DeepExploreDropList> GenerateDeepExploreDropList()
+    public static DeepExploreDropList ReadDeepExploreDropListConfig(PlaceEnum placeType)
     {
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/DeepExploreDropListConfig.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
-        DataSet result = excelReader.AsDataSet();
+        DataSet dataSet = excelReader.AsDataSet();
 
-        Dictionary<PlaceEnum, DeepExploreDropList> dict = new();
+        if (!dataSet.Tables.Contains(placeType.ToString())) return new();
 
-        foreach (DataTable table in result.Tables)
+        var table = dataSet.Tables[placeType.ToString()];
+
+        DataRow emptyPopulationConfig = table.Rows[1]; // 假设第一行是空种群配置
+
+        Population emptyPopulation = new()
         {
-            DataRow emptyPopulationConfig = table.Rows[1]; // 假设第一行是空种群配置
+            curSize = ParseInt(emptyPopulationConfig[2].ToString()),
+            maxSize = ParseInt(emptyPopulationConfig[3].ToString()),
+            sizeChangePerRound = ParseInt(emptyPopulationConfig[4].ToString()),
+        };
+        int sizeChangeOnNotCaught = ParseInt(emptyPopulationConfig[6].ToString());
 
-            Population emptyPopulation = new()
+        // 假设每个表都是重复掉落列表
+        List<Population> populationList = new();
+        DataRow row;
+        for (int i = 2; i < table.Rows.Count; i++) // 从2开始跳过表头个空种群配置
+        {
+            row = table.Rows[i];
+            // 读取掉落配置
+            PopulationConfig config = new()
             {
-                curSize = ParseInt(emptyPopulationConfig[2].ToString()),
-                maxSize = ParseInt(emptyPopulationConfig[3].ToString()),
-                sizeChangePerRound = ParseInt(emptyPopulationConfig[4].ToString()),
+                CardId = row[0].ToString(),
+                DropNum = ParseInt(row[1].ToString()),
+                Size = ParseInt(row[2].ToString()),
+                MaxSize = ParseInt(row[3].ToString()),
+                SizeChangePerRound = ParseInt(row[4].ToString()),
+                SizeChangeOnCaught = ParseInt(row[5].ToString()),
+                OverwriteFreshness = ParseBool(row[7].ToString()),
+                OverwriteDurability = ParseBool(row[9].ToString()),
+                OverwriteGrowth = ParseBool(row[11].ToString()),
+                OverwriteProgress = ParseBool(row[13].ToString()),
+                Trappable = ParseBool(row[15].ToString()),
             };
-            int sizeChangeOnNotCaught = ParseInt(emptyPopulationConfig[6].ToString());
-
-            // 假设每个表都是重复掉落列表
-            List<Population> populationList = new();
-            DataRow row;
-            for (int i = 2; i < table.Rows.Count; i++) // 从2开始跳过表头个空种群配置
+            // 创建卡牌实例
+            var card = CardFactory.CreateCard(config.CardId);
+            // 覆写卡牌属性
+            if (config.OverwriteFreshness)
             {
-                row = table.Rows[i];
-                // 读取掉落配置
-                PopulationConfig config = new()
-                {
-                    CardId = row[0].ToString(),
-                    DropNum = ParseInt(row[1].ToString()),
-                    Size = ParseInt(row[2].ToString()),
-                    MaxSize = ParseInt(row[3].ToString()),
-                    SizeChangePerRound = ParseInt(row[4].ToString()),
-                    SizeChangeOnCaught = ParseInt(row[5].ToString()),
-                    OverwriteFreshness = ParseBool(row[7].ToString()),
-                    OverwriteDurability = ParseBool(row[9].ToString()),
-                    OverwriteGrowth = ParseBool(row[11].ToString()),
-                    OverwriteProgress = ParseBool(row[13].ToString()),
-                    Trappable = ParseBool(row[15].ToString()),
-                };
-                // 创建卡牌实例
-                var card = CardFactory.CreateCard(config.CardId);
-                // 覆写卡牌属性
-                if (config.OverwriteFreshness)
-                {
-                    if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
-                        freshnessComponent.SetValue(ParseInt(row[8].ToString())); // 设置新鲜度
-                }
-                if (config.OverwriteDurability)
-                {
-                    if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
-                        durabilityComponent.SetValue(ParseInt(row[10].ToString())); // 设置耐久度
-                }
-                if (config.OverwriteGrowth)
-                {
-                    if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
-                        growthComponent.SetValue(ParseInt(row[12].ToString())); // 设置生长进度
-                }
-                if (config.OverwriteProgress)
-                {
-                    if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
-                        progressComponent.SetValue(ParseInt(row[14].ToString())); // 设置产物进度
-                }
-                // 添加到掉落列表
-                populationList.Add(new Population()
-                {
-                    card = card,
-                    dropNum = config.DropNum,
-                    curSize = config.Size,
-                    maxSize = config.MaxSize,
-                    trappable = config.Trappable,
-                    sizeChangePerRound = config.SizeChangePerRound,
-                    sizeChangeOnCaught = config.SizeChangeOnCaught
-                });
+                if (card.TryGetComponent<FreshnessComponent>(out var freshnessComponent))
+                    freshnessComponent.SetValue(ParseInt(row[8].ToString())); // 设置新鲜度
             }
-            // 保存为Json
-            DeepExploreDropList repeatableDropList = new()
+            if (config.OverwriteDurability)
             {
-                emptyPopulation = emptyPopulation,
-                emptyPopulationSizeChangeOnNotCaught = sizeChangeOnNotCaught,
-                populationList = populationList
-            };
-            dict.Add(Enum.Parse<PlaceEnum>(table.TableName), repeatableDropList);
+                if (card.TryGetComponent<DurabilityComponent>(out var durabilityComponent))
+                    durabilityComponent.SetValue(ParseInt(row[10].ToString())); // 设置耐久度
+            }
+            if (config.OverwriteGrowth)
+            {
+                if (card.TryGetComponent<GrowthComponent>(out var growthComponent))
+                    growthComponent.SetValue(ParseInt(row[12].ToString())); // 设置生长进度
+            }
+            if (config.OverwriteProgress)
+            {
+                if (card.TryGetComponent<ProgressComponent>(out var progressComponent))
+                    progressComponent.SetValue(ParseInt(row[14].ToString())); // 设置产物进度
+            }
+            // 添加到掉落列表
+            populationList.Add(new Population()
+            {
+                card = card,
+                dropNum = config.DropNum,
+                curSize = config.Size,
+                maxSize = config.MaxSize,
+                trappable = config.Trappable,
+                sizeChangePerRound = config.SizeChangePerRound,
+                sizeChangeOnCaught = config.SizeChangeOnCaught
+            });
         }
-        return dict;
+
+        return new()
+        {
+            emptyPopulation = emptyPopulation,
+            emptyPopulationSizeChangeOnNotCaught = sizeChangeOnNotCaught,
+            populationList = populationList
+        };
     }
+    #endregion
 
     #region 读取加工表配置
     public static List<ProcessConfig> ReadProcessConfig(string filename)
@@ -447,8 +443,8 @@ public static class ExcelReader
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
-        DataSet result = excelReader.AsDataSet();
-        DataTable table = result.Tables[0]; // 配置在第一张表中
+        DataSet dataSet = excelReader.AsDataSet();
+        DataTable table = dataSet.Tables[0]; // 配置在第一张表中
         
         List<ProcessConfig> processConfigList = new();
 
@@ -467,8 +463,8 @@ public static class ExcelReader
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
-        DataSet result = excelReader.AsDataSet();
-        DataTable table = result.Tables[0]; // 配置在第一张表中
+        DataSet dataSet = excelReader.AsDataSet();
+        DataTable table = dataSet.Tables[0]; // 配置在第一张表中
         List<GameEvent> eventList = new();
         for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
         {
@@ -488,8 +484,8 @@ public static class ExcelReader
         // 打开Excel文件
         using FileStream fs = File.Open(Application.streamingAssetsPath + $"/Excel/{filename}.xlsx", FileMode.Open, FileAccess.Read);
         IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
-        DataSet result = excelReader.AsDataSet();
-        DataTable table = result.Tables[0]; // 配置在第一张表中
+        DataSet dataSet = excelReader.AsDataSet();
+        DataTable table = dataSet.Tables[0]; // 配置在第一张表中
         List<InvasionComposition> compositionList = new();
         for (int i = 1; i < table.Rows.Count; i++) // 从1开始跳过表头
         {

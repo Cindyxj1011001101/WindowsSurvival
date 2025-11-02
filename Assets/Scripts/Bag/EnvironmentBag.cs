@@ -85,8 +85,8 @@ public class EnvironmentBag : Bag
 
     private void FirstInitDropList()
     {
-        disposableDropList = JsonManager.DeepCopy(CardFactory.GetDisposableDropList(PlaceData.placeType));
-        deepExploreDropList = JsonManager.DeepCopy(CardFactory.GetDeepExploreDropList(PlaceData.placeType));
+        disposableDropList = ExcelReader.ReadDisposableDropListConfig(placeType);
+        deepExploreDropList = ExcelReader.ReadDeepExploreDropListConfig(placeType);
     }
 
     private void FirstInitContainedCards()
