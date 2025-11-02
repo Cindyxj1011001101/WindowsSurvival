@@ -8,6 +8,7 @@ public enum TechType
     Oxygen,
     Tool,
     Resource,
+    Combat,
 }
 
 public enum TechLevl

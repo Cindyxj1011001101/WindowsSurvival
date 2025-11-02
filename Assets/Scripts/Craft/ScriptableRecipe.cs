@@ -14,6 +14,7 @@ public enum RecipeType
     Material = 4,
     Equipment = 5,
     Construction = 6,
+    Combat = 7,
 }
 
 [Serializable]
