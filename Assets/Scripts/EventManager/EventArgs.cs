@@ -2,6 +2,7 @@
 {
     Update,                             // 回合结算
     UpdateBegin,                        // 回合结算开始，记录快照
+    AddOneMinute,                       // 经过一分钟
     ChangeCardProperty,                 // 卡牌属性变化
     ChangeEnv,                          // 场景移动界面刷新
     RefreshPlayerState,                 // 更新玩家状态数据

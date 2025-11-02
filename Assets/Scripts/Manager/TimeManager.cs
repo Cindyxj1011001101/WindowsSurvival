@@ -50,25 +50,24 @@ public class TimeManager : IManager
 
         while (!timePassStopped && timespan > 0)
         {
-            if (timespan >= CurInterval)
-            {
-                timespan -= CurInterval;
-                CurTime = CurTime.AddMinutes(CurInterval);
-                CurInterval = SETTLEMENT_INTERVAL;
-                // ChatConditionManager.Instance.TrackCurrentStatus();
-                EventManager.Instance.TriggerEvent(EventType.Update);
-            }
-            else
-            {
-                CurInterval -= timespan;
-                CurTime = CurTime.AddMinutes(timespan);
-                timespan = 0;
-            }
-
-            HandleAnotherDay();
+            timespan--;
+            UpdateCurInterval();
         }
 
         EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
+    }
+
+    private void UpdateCurInterval()
+    {
+        CurInterval--;
+        EventManager.Instance.TriggerEvent(EventType.AddOneMinute);
+        if (CurInterval <= 0)
+        {
+            CurInterval = SETTLEMENT_INTERVAL;
+            EventManager.Instance.TriggerEvent(EventType.Update);
+        }
+        CurTime = CurTime.AddMinutes(1);
+        HandleAnotherDay();
     }
 
     private bool HandleAnotherDay()
