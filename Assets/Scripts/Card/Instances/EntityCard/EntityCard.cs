@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 public abstract class EntityCard : Card, IEntity
 {
@@ -6,6 +7,24 @@ public abstract class EntityCard : Card, IEntity
     private CoordinateComponent coordinate;
 
     [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;
+
+    [JsonProperty] private bool firstInit;              // 是否第一次初始化完成
+
+    [JsonProperty] protected Dictionary<string, EntityIntention> intentions; // 所有可能的意图
+
+    [JsonProperty] private string currentIntention;     // 当前意图
+
+    [JsonProperty] private int aiRefreshCooldown;       // ai刷新冷却
+
+    private EntityIntention CurrentIntention
+    {
+        get
+        {
+            if (string.IsNullOrEmpty(currentIntention) || !intentions.ContainsKey(currentIntention)) return null;
+
+            return intentions[currentIntention];
+        }
+    }
 
     public void TakeDamage(float damage, IEntity damageDealer) => entity.TakeDamage(damage, damageDealer);
 
@@ -19,16 +38,29 @@ public abstract class EntityCard : Card, IEntity
             coordinate = new();
             AddComponent(coordinate);
         }
+
+        // 注册意图
+        RegisterIntentions();
     }
 
     public override void Init()
     {
         base.Init();
+
+        if (!firstInit)
+        {
+            firstInit = true;
+            // 第一次生成时，判断一下意图
+            TryGetNewIntention();
+        }
+
+        EventManager.Instance.AddListener(EventType.AddOneMinute, UpdateAI);
         EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
     protected override void OnDestroy()
     {
+        EventManager.Instance.RemoveListener(EventType.AddOneMinute, UpdateAI);
         EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
 
@@ -38,6 +70,7 @@ public abstract class EntityCard : Card, IEntity
         if (card.TryGetComponent<WeaponComponent>(out var weapon) && weapon.WithinAttackRange(this))
         {
             tip = $"攻击该单位\n耗时:  {weapon.attackTime}分钟\n造成伤害:  {weapon.atk}";
+            // TODO: 造成伤害
             return true;
         }
         return false;
@@ -48,6 +81,87 @@ public abstract class EntityCard : Card, IEntity
         tip = string.Empty;
         var card = slot.PeekCard();
         card.TryGetComponent<WeaponComponent>(out var weapon);
-        weapon.DealDamage(this);
+        weapon.DealDamage(this); // 消耗时间在dealdamage方法里面处理了
     }
+
+    #region AI
+    /// <summary>
+    /// 得到优先级最高的意图
+    /// </summary>
+    protected abstract string GetHighestPriorityIntention();
+
+    /// <summary>
+    /// 注册该实体的所有可能意图
+    /// </summary>
+    protected abstract void RegisterIntentions();
+
+    /// <summary>
+    /// 更新AI逻辑
+    /// </summary>
+    private void UpdateAI()
+    {
+        // AI冷却中
+        if (aiRefreshCooldown > 0)
+        {
+            // 更新AI冷却
+            UpdateAIRefreshCooldown();
+        }
+        // 意图准备中
+        else
+        {
+            // 更新当前意图
+            UpdateCurrentIntention();
+        }
+    }
+
+    /// <summary>
+    /// 更新AI冷却
+    /// </summary>
+    private void UpdateAIRefreshCooldown()
+    {
+        aiRefreshCooldown--;
+        // 冷却时间结束
+        if (aiRefreshCooldown <= 0)
+        {
+            aiRefreshCooldown = 0;
+            // 重新获取意图
+            TryGetNewIntention();
+        }
+    }
+
+    /// <summary>
+    /// 尝试获取新意图
+    /// </summary>
+    private void TryGetNewIntention()
+    {
+        // 获取最高优先级意图
+        currentIntention = GetHighestPriorityIntention();
+
+        // 没有可执行的意图
+        if (CurrentIntention == null)
+        {
+            // 重置ai冷却
+            aiRefreshCooldown = entity.aiRefreshInterval;
+        }
+        // 有可执行意图
+        else
+        {
+            // 开始准备意图
+            CurrentIntention.Prepare();
+        }
+    }
+
+    /// <summary>
+    /// 更新当前意图
+    /// </summary>
+    private void UpdateCurrentIntention()
+    {
+        // 为true时表示意图准备完毕，并且已经执行
+        if (CurrentIntention.UpdatePreparationCountdown())
+        {
+            // 当前意图已执行，刷新意图
+            TryGetNewIntention();
+        }
+    }
+    #endregion
 }
