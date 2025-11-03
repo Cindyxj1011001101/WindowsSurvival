@@ -11,6 +11,8 @@ public class EntityIntention
     [JsonProperty] private int preparationMinutes;  // 意图执行准备时间
     [JsonIgnore] public UnityAction action;         // 意图执行逻辑
 
+    [JsonIgnore] public int PreparationMinutes => preparationMinutes;
+
     public EntityIntention(int preparationMinutes)
     {
         this.preparationMinutes = preparationMinutes;

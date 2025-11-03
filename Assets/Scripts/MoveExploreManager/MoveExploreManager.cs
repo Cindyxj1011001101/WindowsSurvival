@@ -323,10 +323,6 @@ public class MoveExploreManager : IManager
     {
         if (!CanMoveExplore()) return;
 
-        var env = GameManager.Instance.CurEnvironmentBag;
-        // 限制坐标范围
-        targetPosition = Mathf.Clamp(targetPosition, env.PlaceData.minCoord, env.PlaceData.maxCoord);
-
         // 移动消耗
         (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) =
             GetMoveEffects(targetPosition);

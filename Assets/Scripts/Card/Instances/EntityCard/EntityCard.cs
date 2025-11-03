@@ -1,10 +1,16 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public abstract class EntityCard : Card, IEntity
 {
     private EntityComponent entity;
     private CoordinateComponent coordinate;
+
+    protected float health => entity.health;
+    protected float maxHealth => entity.maxHealth;
+    protected float atk => entity.atk;
+    protected float moveDistPerMin => entity.moveDistPerMin;
 
     [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;
 
@@ -94,6 +100,15 @@ public abstract class EntityCard : Card, IEntity
     /// 注册该实体的所有可能意图
     /// </summary>
     protected abstract void RegisterIntentions();
+
+    protected void AddIntention(string name, int preparationMinutes, UnityAction action)
+    {
+        if (!intentions.ContainsKey(name))
+        {
+            intentions.Add(name, new(preparationMinutes));
+        }
+        intentions[name].action = action;
+    }
 
     /// <summary>
     /// 更新AI逻辑

@@ -51,4 +51,9 @@ public static class ExtensionClass
     {
         MFXUtility.ShowTip(tip, target.position + (target as RectTransform).sizeDelta.y * vecticalOffsetScale * Vector3.up);
     }
+
+    public static float DistanceTo(this IEntity target, IEntity other) => target.Coordinate.DistanceTo(other.Coordinate);
+    public static void Move(this IEntity target, float dist) => target.Coordinate.Move(dist);
+    public static void MoveTowards(this IEntity target, IEntity other, float dist) => target.Coordinate.MoveTowards(other.Coordinate, dist);
+    public static void MoveAwayFrom(this IEntity target, IEntity other, float dist) => target.Coordinate.MoveAwayFrom(other.Coordinate, dist);
 }
