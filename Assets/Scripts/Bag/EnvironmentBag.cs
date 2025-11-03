@@ -325,6 +325,7 @@ public class EnvironmentBag : Bag
         else if (card.TryGetComponent<CoordinateComponent>(out var c))
         {
             c.coordinate.SetLocation(this);
+            c.coordinate.SetPosition(c.initialPosition);
         }
     }
 

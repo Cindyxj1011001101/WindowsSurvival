@@ -335,8 +335,8 @@ public class CardSlot : MonoBehaviour
                 slider.tipController.SetTip($"当前坐标:  {coordinateComponent.coordinate.Position:0.0}\n距离麦麦:  {coordinateComponent.coordinate.DistanceTo(Player.Instance.Coordinate):0.0}");
                 break;
             case EntityComponent entityComponent:
-                slider.SetValue(entityComponent.health, entityComponent.maxHealth);
-                slider.tipController.SetTip($"生命值:  {entityComponent.health}/{entityComponent.maxHealth}", slider.fillColor);
+                slider.SetValue(entityComponent.value, entityComponent.maxValue);
+                slider.tipController.SetTip($"生命值:  {entityComponent.value}/{entityComponent.maxValue}", slider.fillColor);
                 break;
             default:
                 Debug.LogWarning($"未知组件类型: {component.GetType()}");

@@ -1,19 +1,18 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 
 /// <summary>
-/// ËÄ½ÇÁâ
+/// å››è§’è±
 /// </summary>
-public class WaterChestnut : Card
+public class WaterChestnut : PlantCard
 {
-    private PlantGrowthComponent plantGrowth;
     private StateMachineComponent stateMachine;
 
     private WaterChestnut()
     {
         Events = new()
         {
-            new CardEvent("²É¼¯", "²É¼¯ËÄ½ÇÁâ½á³öµÄÁâ¹û", Event_Collect, Judge_Collect, () => 15),
-            new CardEvent("²ùÆğ", "½«ËÄ½ÇÁâÁ¬¸ù²ùÆğ¡£½«»á»ñµÃÒ»¿ÅÁâ¹û", Event_DigUp, Judge_DigUp, () => 15),
+            new CardEvent("é‡‡é›†", "é‡‡é›†å››è§’è±ç»“å‡ºçš„è±æœ", Event_Collect, Judge_Collect, () => 15),
+            new CardEvent("é“²èµ·", "å°†å››è§’è±è¿æ ¹é“²èµ·ã€‚å°†ä¼šè·å¾—ä¸€é¢—è±æœ", Event_DigUp, Judge_DigUp, () => 15),
         };
     }
 
@@ -21,16 +20,14 @@ public class WaterChestnut : Card
     {
         base.LateConstrcutor();
 
-        TryGetComponent(out plantGrowth);
-
         if (!TryGetComponent(out stateMachine))
         {
             var states = new List<CardState>()
             {
-                new ("Ó×ÃçÆÚ", "6"),
-                new ("Éú³¤ÆÚ1", "7") { displayName = "Éú³¤ÆÚ"},
-                new ("Éú³¤ÆÚ2", "8") { displayName = "Éú³¤ÆÚ"},
-                new ("³ÉÊìÆÚ", "9"),
+                new ("å¹¼è‹—æœŸ", "6"),
+                new ("ç”Ÿé•¿æœŸ1", "7") { displayName = "ç”Ÿé•¿æœŸ"},
+                new ("ç”Ÿé•¿æœŸ2", "8") { displayName = "ç”Ÿé•¿æœŸ"},
+                new ("æˆç†ŸæœŸ", "9"),
             };
             stateMachine = new StateMachineComponent(states);
             AddComponent(stateMachine);
@@ -38,44 +35,44 @@ public class WaterChestnut : Card
         }
     }
 
-    private void UpdatePlantState()
+    protected override void UpdatePlantState()
     {
         var growth = plantGrowth.value;
 
-        // Ó×ÃçÆÚ
+        // å¹¼è‹—æœŸ
         if (growth >= 0 && growth <= 10)
         {
-            stateMachine.ChangeState("Ó×ÃçÆÚ");
+            stateMachine.ChangeState("å¹¼è‹—æœŸ");
         }
         else if (growth <= 50)
         {
-            stateMachine.ChangeState("Éú³¤ÆÚ1");
+            stateMachine.ChangeState("ç”Ÿé•¿æœŸ1");
         }
         else if (growth < 100)
         {
-            stateMachine.ChangeState("Éú³¤ÆÚ2");
+            stateMachine.ChangeState("ç”Ÿé•¿æœŸ2");
         }
         else
         {
-            stateMachine.ChangeState("³ÉÊìÆÚ");
+            stateMachine.ChangeState("æˆç†ŸæœŸ");
         }
     }
 
     private void Event_Collect(out string tip)
     {
         tip = string.Empty;
-        plantGrowth.AddValue(-100); // Éú³¤½ø¶È-100
-        TimeManager.Instance.AddTime(15);
-        AddCard("Áâ¹û", Bag);
+        plantGrowth.AddValue(-100); // ç”Ÿé•¿è¿›åº¦-100
+        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
+        AddCard("è±æœ", Bag);
         UpdatePlantState();
     }
 
     private bool Judge_Collect(out string hint)
     {
         hint = string.Empty;
-        if (!plantGrowth.IsMature)
+        if (!IsRipe)
         {
-            hint = "ËÄ½ÇÁâÉĞÎ´³ÉÊì£¬ÎŞ·¨²É¼¯";
+            hint = "å››è§’è±å°šæœªæˆç†Ÿï¼Œæ— æ³•é‡‡é›†";
             return false;
         }
         return true;
@@ -91,7 +88,7 @@ public class WaterChestnut : Card
         tip = string.Empty;
         DestroyThis();
         tool.Use();
-        TimeManager.Instance.AddTime(15);
+        TimeManager.Instance.AddTime(Events[1].GetTimeEffect());
         AddCard(plantGrowth.deadCardId, Bag);
     }
 
@@ -100,7 +97,7 @@ public class WaterChestnut : Card
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig) == null)
         {
-            hint = "ĞèÒªÍÚ¾òÀà¹¤¾ß";
+            hint = "éœ€è¦æŒ–æ˜ç±»å·¥å…·";
             return false;
         }
         return true;

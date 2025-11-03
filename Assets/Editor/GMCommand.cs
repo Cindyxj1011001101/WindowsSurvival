@@ -7,10 +7,10 @@ public class GMCommand
     private static Card AddCard(string cardName)
     {
         var card = CardFactory.CreateCard(cardName);
+        card.Init();
         var window = GetFocusedBagWindow();
         if (window != null && window.Bag != null && window.Bag.CanAddCard(card, out _))
             window.Bag.AddCard(card);
-        card.Init();
         card.RefreshSlot();
 
         return card;
@@ -47,6 +47,11 @@ public class GMCommand
     public static void A()
     {
         AddCard("冰箱");
+    }
+    [MenuItem("Command/添加/食果鲀")]
+    public static void SGT()
+    {
+        AddCard("食果鲀");
     }
     [MenuItem("Command/添加/珊瑚礁")]
     public static void Coral()

@@ -4,9 +4,8 @@ using UnityEngine;
 /// <summary>
 /// 水壶兰
 /// </summary>
-public class KettleFlower : Card
+public class KettleFlower : PlantCard
 {
-    private PlantGrowthComponent plantGrowth;
     private StateMachineComponent stateMachine;
 
     public bool hasWound = false;
@@ -19,15 +18,18 @@ public class KettleFlower : Card
         {
             new CardEvent("划一个口", "在水壶兰的茎部划一个口，从而可以饮用其中的汁液，并且有概率获得一颗种子。\n伤口需要一段时间愈合，愈合前水壶兰不会生长", Event_Hurt, Judge_Hurt, () => 15),
             new CardEvent("铲起", "将水壶兰连根铲起。将会获得一颗种子", Event_DigUp, Judge_DigUp, () => 15),
-            new CardEvent("饮用汁液", "", Event_Drink, Judge_Drink, () => 15, () => new(){ { PlayerStateEnum.Hydration, +14 }, { PlayerStateEnum.Sanity, -3 } }),
+            new CardEvent("饮用汁液", "", Event_Drink, Judge_Drink, () => 15,
+            () => new()
+            {
+                { PlayerStateEnum.Hydration, +14 },
+                { PlayerStateEnum.Sanity, -3 }
+            }),
         };
     }
 
     public override void LateConstrcutor()
     {
         base.LateConstrcutor();
-
-        TryGetComponent(out plantGrowth);
 
         if (!TryGetComponent(out stateMachine))
         {
@@ -46,7 +48,7 @@ public class KettleFlower : Card
         }
     }
 
-    private void UpdatePlantState()
+    protected override void UpdatePlantState()
     {
         var growth = plantGrowth.value;
 
@@ -86,7 +88,7 @@ public class KettleFlower : Card
 
         plantGrowth.growStopped = true; // 停止生长
 
-        TimeManager.Instance.AddTime(15);
+        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
 
         if (Random.Range(0, 100) <= 5) // 5%概率获得水壶兰种子
         {
@@ -127,7 +129,7 @@ public class KettleFlower : Card
         tip = string.Empty;
         DestroyThis();
         tool.Use();
-        TimeManager.Instance.AddTime(15);
+        TimeManager.Instance.AddTime(Events[1].GetTimeEffect());
         AddCard(plantGrowth.deadCardId, Bag);
     }
 
@@ -151,10 +153,9 @@ public class KettleFlower : Card
 
         plantGrowth.AddValue(-20); // 生长进度-20
 
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hydration, 14);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, -3);
+        StateManager.Instance.ApplyPlayerStateChange(Events[2].GetPlayerEffects());
 
-        TimeManager.Instance.AddTime(15);
+        TimeManager.Instance.AddTime(Events[2].GetTimeEffect());
     }
 
     private bool Judge_Drink(out string hint)

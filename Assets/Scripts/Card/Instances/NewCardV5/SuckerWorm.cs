@@ -5,11 +5,11 @@ public class SuckerWorm : EntityCard
 {
     protected override string GetHighestPriorityIntention()
     {
-        throw new System.NotImplementedException();
+        return null;
     }
 
     protected override void RegisterIntentions()
     {
-        throw new System.NotImplementedException();
+        
     }
 }

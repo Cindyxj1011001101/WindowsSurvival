@@ -631,7 +631,7 @@ public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
     public bool growStopped = false;
 
     [JsonIgnore] public UnityAction onDead;
-    [JsonIgnore] public bool IsMature => value >= maxValue; // 是否成熟
+    [JsonIgnore] public bool IsRipe => value >= maxValue; // 是否成熟
 
     public PlantGrowthComponent(float growthRate, float minConfortTempreture, float maxConfortTempreture, float minGrowTempture, float maxGrowTempture,
         float minLiveTempture, float maxLiveTempture, string deadCardId, List<PressureLevel> pressureList) : base(MAX_GROWTH, MAX_GROWTH)
@@ -739,7 +739,7 @@ public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
 
     private void Grow(float delta)
     {
-        if (IsMature || growStopped) return;
+        if (IsRipe || growStopped) return;
 
         AddValue(delta);
     }
@@ -1002,10 +1002,8 @@ public enum BehavioralTendency
     Hostile
 }
 
-public class EntityComponent : CardComponent
+public class EntityComponent : ContinuousValueComponent
 {
-    public float maxHealth; // 最大生命值
-    public float health; // 当前生命值
     public float atk; // 攻击力
     public float moveDistPerMin; // 每分钟移动距离
     public BehavioralTendency behavioralTendency; // 行为倾向
@@ -1019,9 +1017,8 @@ public class EntityComponent : CardComponent
 
     public EntityComponent() { }
 
-    public EntityComponent(float maxHealth, float atk, float moveDistPerMin, int aiRefreshInterval, BehavioralTendency behavioralTendency, string deadDrops)
+    public EntityComponent(float maxHealth, float atk, float moveDistPerMin, int aiRefreshInterval, BehavioralTendency behavioralTendency, string deadDrops) : base(maxHealth, maxHealth)
     {
-        this.maxHealth = health = maxHealth;
         this.atk = atk;
         this.moveDistPerMin = moveDistPerMin;
         this.aiRefreshInterval = aiRefreshInterval;
@@ -1031,22 +1028,19 @@ public class EntityComponent : CardComponent
 
     public void TakeDamage(float damage, IEntity damageDealer)
     {
-        if (health <= 0) return;
+        if (value <= 0) return;
 
-        UnityEngine.Debug.Log($"{BelongedCard}受到伤害！伤害值：{damage}，伤害者：{damageDealer}");
+        UnityEngine.Debug.Log($"{BelongedCard.CardName}受到伤害！伤害值：{damage}，伤害者：{damageDealer}");
 
-        health -= damage;
-        if (health <= 0)
+        AddValue(-damage);
+        if (value <= 0)
         {
-            health = 0;
             BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
             BelongedCard.DestroyThis();
             // 掉落死亡掉落物
             BelongedCard.ParseAndDrop(deadDrops);
             onDead?.Invoke();
         }
-
-        BelongedCard.RefreshSlot();
     }
 }
 #endregion
@@ -1056,11 +1050,13 @@ public class CoordinateComponent : CardComponent
 {
     public Coordinate coordinate = new();
 
+    public float initialPosition;
+
     public CoordinateComponent() { }
 
-    public CoordinateComponent(float position)
+    public CoordinateComponent(float initialPosition)
     {
-        coordinate.SetPosition(position);
+        this.initialPosition = initialPosition;
     }
 }
 #endregion

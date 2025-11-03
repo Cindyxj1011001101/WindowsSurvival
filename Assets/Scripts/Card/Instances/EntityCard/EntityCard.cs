@@ -7,16 +7,17 @@ public abstract class EntityCard : Card, IEntity
     private EntityComponent entity;
     private CoordinateComponent coordinate;
 
-    protected float health => entity.health;
-    protected float maxHealth => entity.maxHealth;
+    protected float health => entity.value;
+    protected float maxHealth => entity.maxValue;
     protected float atk => entity.atk;
     protected float moveDistPerMin => entity.moveDistPerMin;
+    protected string deadDrops => entity.deadDrops;
 
     [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;
 
     [JsonProperty] private bool firstInit;              // 是否第一次初始化完成
 
-    [JsonProperty] protected Dictionary<string, EntityIntention> intentions; // 所有可能的意图
+    [JsonProperty] protected Dictionary<string, EntityIntention> intentions = new(); // 所有可能的意图
 
     [JsonProperty] private string currentIntention;     // 当前意图
 
@@ -52,14 +53,6 @@ public abstract class EntityCard : Card, IEntity
     public override void Init()
     {
         base.Init();
-
-        if (!firstInit)
-        {
-            firstInit = true;
-            // 第一次生成时，判断一下意图
-            TryGetNewIntention();
-        }
-
         EventManager.Instance.AddListener(EventType.AddOneMinute, UpdateAI);
         EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
@@ -70,13 +63,24 @@ public abstract class EntityCard : Card, IEntity
         EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
 
+    public override void OnAdd(Bag bag)
+    {
+        base.OnAdd(bag);
+
+        if (!firstInit)
+        {
+            firstInit = true;
+            // 第一次生成时，判断一下意图
+            TryGetNewIntention();
+        }
+    }
+
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
         if (card.TryGetComponent<WeaponComponent>(out var weapon) && weapon.WithinAttackRange(this))
         {
             tip = $"攻击该单位\n耗时:  {weapon.attackTime}分钟\n造成伤害:  {weapon.atk}";
-            // TODO: 造成伤害
             return true;
         }
         return false;
@@ -115,6 +119,8 @@ public abstract class EntityCard : Card, IEntity
     /// </summary>
     private void UpdateAI()
     {
+        if (Destroyed) return;
+
         // AI冷却中
         if (aiRefreshCooldown > 0)
         {
