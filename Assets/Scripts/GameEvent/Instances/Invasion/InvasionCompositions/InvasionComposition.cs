@@ -11,9 +11,9 @@ public abstract class InvasionComposition
 {
     private static Dictionary<string, float> creatureThreatPointsDict = new()
     {
-        { "吸盘蠕虫", 1f },
-        { "裙水母", 2f },
-        { "狮子水母", 2f },
+        { "吸盘蠕虫", 2f },
+        { "裙水母", 1.2f },
+        { "狮子水母", 3.5f },
     };
 
     private static Dictionary<string, Type> compositiontNameTypeDict = new()
@@ -93,14 +93,14 @@ public abstract class InvasionComposition
         return threatIntensity >= threatIntensityRange.Item1 && threatIntensity <= threatIntensityRange.Item2;
     }
 
-    protected virtual bool IsOtherConditionsMet(float threatIntensity)
+    protected virtual bool AreOtherConditionsMet(float threatIntensity)
     {
         return true;
     }
 
     public bool CanGenerate(float threatIntensity)
     {
-        return IsThreatIntensityInRange(threatIntensity) && IsOtherConditionsMet(threatIntensity);
+        return IsThreatIntensityInRange(threatIntensity) && AreOtherConditionsMet(threatIntensity);
     }
 
     /// <summary>
