@@ -12,6 +12,7 @@ public abstract class EntityCard : Card, IEntity
     protected float atk => entity.atk;
     protected float moveDistPerMin => entity.moveDistPerMin;
     protected string deadDrops => entity.deadDrops;
+    protected BehavioralTendency behavioralTendency => entity.behavioralTendency;
 
     [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;
     [JsonProperty] public string UUID { get; private set; }
@@ -34,7 +35,26 @@ public abstract class EntityCard : Card, IEntity
         }
     }
 
-    public void TakeDamage(float damage, IEntity damageDealer) => entity.TakeDamage(damage, damageDealer);
+    [JsonProperty] protected List<string> aggroList = new();    // 仇恨列表
+
+    public void TakeDamage(float damage, IEntity damageDealer)
+    {
+        // 受到伤害
+        entity.TakeDamage(damage, damageDealer);
+        // 记录仇恨
+        if (damageDealer != null)
+            AddToAggroList(damageDealer);
+    }
+
+    public void AddToAggroList(IEntity entity)
+    {
+        if (aggroList.Contains(entity.UUID))
+        {
+            aggroList.Remove(entity.UUID);
+        }
+
+        aggroList.Insert(0, entity.UUID);
+    }
 
     public override void LateConstrcutor()
     {
@@ -59,6 +79,11 @@ public abstract class EntityCard : Card, IEntity
             UUID = System.Guid.NewGuid().ToString();
         // 记录到全局数据中
         GlobalDataManager.Instance.AddEntity(this);
+
+        // 对于敌对生物，将玩家加入仇恨列表
+        if (behavioralTendency == BehavioralTendency.Hostile)
+            AddToAggroList(Player.Instance);
+
         EventManager.Instance.AddListener(EventType.AddOneMinute, UpdateAI);
         EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }

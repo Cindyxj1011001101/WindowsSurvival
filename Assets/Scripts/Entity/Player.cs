@@ -30,6 +30,9 @@ public class Player : IEntity, IManager
         var data = GameDataManager.Instance.PlayerData;
         MoveSpeedMultiplier = data.moveSpeedMultiplier;
         Coordinate = data.coordinate;
+
+        // 加入到实体的全局记录
+        GlobalDataManager.Instance.AddEntity(this);
     }
 
     public void Reset()

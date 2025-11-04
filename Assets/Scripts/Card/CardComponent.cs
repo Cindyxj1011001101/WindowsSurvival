@@ -1013,8 +1013,6 @@ public class EntityComponent : ContinuousValueComponent
 
     [JsonIgnore] public UnityAction onDead;
 
-    [JsonIgnore] public List<IEntity> arrgoEntities; // 当前仇恨的生物
-
     public EntityComponent() { }
 
     public EntityComponent(float maxHealth, float atk, float moveDistPerMin, int aiRefreshInterval, BehavioralTendency behavioralTendency, string deadDrops) : base(maxHealth, maxHealth)
