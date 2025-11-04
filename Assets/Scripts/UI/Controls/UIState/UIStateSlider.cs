@@ -128,7 +128,7 @@ public class UIStateSlider : MonoBehaviour
         if (displayPercentage)
             tip = $"{changeRate / maxValue * 100:0.0}%";
         else
-            tip = changeRate.ToString();
+            tip = changeRate.ToString("0.0");
 
         tip = (changeRate > 0 ? "+" : "") + tip + "/15min";
 

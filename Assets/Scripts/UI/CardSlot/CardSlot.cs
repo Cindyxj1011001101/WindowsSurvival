@@ -277,9 +277,9 @@ public class CardSlot : MonoBehaviour
                 fireIcon.color = fuelStorageComponent.isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
 
                 // 显示燃料消耗
-                tip += $"\n自然消耗:  -{fuelStorageComponent.basicFuelConsumption}/15min";
+                tip += $"\n自然消耗:  -{fuelStorageComponent.basicFuelConsumption:0.0}/15min";
                 if (StateManager.Instance.WaterLevel.CurValue > 0)
-                    tip += $"\n地面积水:  -{fuelStorageComponent.extraFuelConsumptionWhenWaterLevelHigh}/15min";
+                    tip += $"\n地面积水:  -{fuelStorageComponent.extraFuelConsumptionWhenWaterLevelHigh:0.0}/15min";
 
                 // TODO: 冰层季额外消耗
                 slider.tipController.SetTip(tip, slider.fillColor);

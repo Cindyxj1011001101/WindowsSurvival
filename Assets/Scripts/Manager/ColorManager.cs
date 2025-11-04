@@ -71,4 +71,15 @@ public static class ColorManager
         string hexColor = ColorUtility.ToHtmlStringRGB(color);
         return $"<color=#{hexColor}>{text}</color>";
     }
+
+    public static string Colorize(double number, Color color, bool saveSign = true)
+    {
+        string hexColor = ColorUtility.ToHtmlStringRGB(color);
+        var text = number.ToString("0.0");
+
+        if (saveSign)
+            text = (number > 0 ? "+" : "") + text;
+
+        return $"<color=#{hexColor}>{text}</color>";
+    }
 }

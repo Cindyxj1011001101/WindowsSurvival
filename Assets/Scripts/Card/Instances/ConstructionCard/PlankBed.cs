@@ -5,15 +5,18 @@ using System.Collections.Generic;
 /// </summary>
 public class PlankBed : ConstructionCard
 {
+    private const float SOBRIETY_CHANGE_RATE = +3.5f;
+    private const float SANITY_CHANGE_RATE = +0.4f;
+
     private PlankBed()
     {
         Events = new()
         {
             new CardEvent(
                 "睡觉",
-                @"在板床上睡觉。
-                +3.5清醒度/15min
-                +0.4精神/15min",
+                $"在板床上睡觉。\n" +
+                $"{ColorManager.Colorize(SOBRIETY_CHANGE_RATE, ColorManager.Green)}清醒度/15min\n" +
+                $"{ColorManager.Colorize(SANITY_CHANGE_RATE, ColorManager.Green)}精神/15min\n",
                 Event_Rest,
                 Judge_Rest
             ),
@@ -24,23 +27,18 @@ public class PlankBed : ConstructionCard
     {
         tip = string.Empty;
 
-        // 获取实际的状态变化率
-        // 实际状态变化率 = 基础变化率 * 衰减率
-        var sobrietyChangeRate = +3.5f;
-        var sanChangeRate = +0.4f;
-
         // 唤起时间窗口，设置休息时长为0-60分钟
         var window = (WindowsManager.Instance.OpenWindow("TimeSelect", true) as TimeSelectWindow);
         window.SetTimeRange(60, 60 * 8); // 可休息1-8小时
         window.onConfirm += (time) =>
         {
-            StateManager.Instance.Rest(time, new() { { PlayerStateEnum.Sobriety, sobrietyChangeRate }, { PlayerStateEnum.Sanity, sanChangeRate } });
+            StateManager.Instance.Rest(time, new() { { PlayerStateEnum.Sobriety, SOBRIETY_CHANGE_RATE }, { PlayerStateEnum.Sanity, SANITY_CHANGE_RATE } });
         };
         window.getConfirmEffects += (t) =>
         {
             Dictionary<PlayerStateEnum, float> p = null;
-            float sobrietyChange = t / TimeManager.SETTLEMENT_INTERVAL * sobrietyChangeRate;
-            float sanChange = t / TimeManager.SETTLEMENT_INTERVAL * sanChangeRate;
+            float sobrietyChange = t / TimeManager.SETTLEMENT_INTERVAL * SOBRIETY_CHANGE_RATE;
+            float sanChange = t / TimeManager.SETTLEMENT_INTERVAL * SANITY_CHANGE_RATE;
             if (sobrietyChange > 0)
             {
                 p = new()
