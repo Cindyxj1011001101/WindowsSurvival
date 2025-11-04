@@ -567,7 +567,7 @@ public abstract class Card : IComparable<Card>
         // 播放动效
         if (Transform != null)
         {
-            var tween = MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot());
+            var tween = MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot(), pauseTime: true);
             MouseManager.Instance.Wait(tween.Duration());
         }
     }

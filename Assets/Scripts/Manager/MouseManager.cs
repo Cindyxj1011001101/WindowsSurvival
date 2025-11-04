@@ -20,7 +20,7 @@ public class MouseManager : MonoBehaviour
     private static MouseManager instance;
     public static MouseManager Instance => instance;
 
-    public const float BasicWaitTime = 19f / 24;
+    public const float DEFAULT_WAIT_TIME = 19f / 24;
 
     public Stack<ChangeMouseType> curChangeMouseType = new Stack<ChangeMouseType>();
 
@@ -46,8 +46,9 @@ public class MouseManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-        else{
-            instance=this;
+        else
+        {
+            instance = this;
         }
         animator.gameObject.SetActive(false);
         ChangeMouseState(MouseState.Default);
@@ -57,7 +58,6 @@ public class MouseManager : MonoBehaviour
     {
         SetCursor();
 
-        
         if (_isWaiting && Time.time >= _endTime)
         {
             EndWaiting();
@@ -158,14 +158,8 @@ public class MouseManager : MonoBehaviour
     }
 
     #region 等待
-
     private float _endTime;  // 等待结束时间
     private bool _isWaiting; // 当前是否在等待
-
-    /// <summary>
-    /// 当前是否处于等待状态
-    /// </summary>
-    public bool IsWaiting => _isWaiting;
 
     private void StartWaiting()
     {
@@ -204,7 +198,7 @@ public class MouseManager : MonoBehaviour
     /// 设置等待时间（如果已经在等待，则延长等待时间）
     /// </summary>
     /// <param name="waitTime">等待时间（秒）</param>
-    public void Wait(float waitTime = BasicWaitTime)
+    public void Wait(float waitTime = DEFAULT_WAIT_TIME)
     {
         float currentTime = Time.time;
 

@@ -70,10 +70,10 @@ public class MFXUtility
         int count,
         Vector3 sourcePosition,
         float duration = 0.3f,
-        bool bounce = false,
-        System.Action onStart = null,
-        System.Action onComplete = null,
-        Ease ease = Ease.OutQuad)
+        UnityAction onStart = null,
+        UnityAction onComplete = null,
+        Ease ease = Ease.OutQuad,
+        bool pauseTime = false)
     {
         var slot = CreateSlot(sourcePosition);
 
@@ -86,24 +86,23 @@ public class MFXUtility
 
         var seq = DOTween.Sequence();
 
-        seq.Join(slot.transform.DOMove(card.Slot.transform.position, duration)
-             .SetEase(ease)
-             .OnStart(() => onStart?.Invoke())
-             .OnComplete(() =>
-             {
-                 onComplete?.Invoke();
-                 SoundManager.Instance.PlaySound("放置卡牌", true);
-             }));
+        seq.Join(slot.transform.DOMove(card.Slot.transform.position, duration).SetEase(ease));
 
         seq.Join(slot.transform.DOScale(1f, duration));
 
-        if (bounce)
-            seq.Join(slot.transform.Bounce().SetDelay(duration));
-
+        seq.OnStart(() =>
+        {
+            onStart?.Invoke();
+        });
         seq.OnComplete(() =>
         {
+            onComplete?.Invoke();
             ObjectBufferPool.Instance.Restore(slot.gameObject);
+            SoundManager.Instance.PlaySound("放置卡牌", true);
         });
+
+        if (pauseTime)
+            TimeManager.Instance.PauseTimePass(seq.Duration());
 
         return seq;
     }
@@ -124,10 +123,10 @@ public class MFXUtility
         Vector3 sourcePosition,
         float duration = 0.3f,
         float interval = 0.1f,
-        bool bounce = false,
-        System.Action onStart = null,
-        System.Action<Card> onComplete = null,
-        Ease ease = Ease.OutQuad
+        UnityAction onStart = null,
+        UnityAction<Card> onComplete = null,
+        Ease ease = Ease.OutQuad,
+        bool pauseTime = false
         )
     {
         var seq = DOTween.Sequence();
@@ -140,13 +139,13 @@ public class MFXUtility
                 1,
                 sourcePosition,
                 duration,
-                bounce,
                 onStart,
                 () =>
                 {
                     onComplete?.Invoke(card);
                 },
-                ease
+                ease,
+                pauseTime
                 ).SetDelay(i * interval));
         }
 
@@ -161,7 +160,12 @@ public class MFXUtility
     /// <param name="onStart"></param>
     /// <param name="onComplete"></param>
     /// <returns></returns>
-    public static Tween TurnTo(Card sourceCard, Card targetCard, UnityAction onStart = null, UnityAction onComplete = null)
+    public static Tween TurnTo(
+        Card sourceCard,
+        Card targetCard,
+        UnityAction onStart = null,
+        UnityAction onComplete = null,
+        bool pauseTime = false)
     {
         var slot = CreateSlot(sourceCard.Transform.position);
         slot.DisplayCard(sourceCard, 1, false);
@@ -197,7 +201,10 @@ public class MFXUtility
 
         mainSeq.Join(rotateSeq); // 总时长0.9s
 
-        mainSeq.OnStart(() => onStart?.Invoke());
+        mainSeq.OnStart(() =>
+        {
+            onStart?.Invoke();
+        });
 
         mainSeq.OnComplete(() =>
         {
@@ -205,6 +212,9 @@ public class MFXUtility
             ObjectBufferPool.Instance.Restore(slot.gameObject);
             SoundManager.Instance.PlaySound("放置卡牌", true);
         });
+
+        if (pauseTime)
+            TimeManager.Instance.PauseTimePass(mainSeq.Duration());
 
         return mainSeq;
     }

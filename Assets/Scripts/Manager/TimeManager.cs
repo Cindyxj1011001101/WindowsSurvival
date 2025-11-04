@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public class TimeManager : IManager
 {
@@ -13,7 +14,10 @@ public class TimeManager : IManager
 
     public int Day => (CurTime - StartDateTime).Days + 1;
 
-    private bool timePassStopped = false;
+    private bool timePassStopped = false;   // 时间流逝停止
+    private bool timePassPaused = false;    // 时间流逝暂停
+    private float timePauseEndTime = 0;     // 时间流逝暂停结束时间
+    private int minutesToPass = 0;          // 待流逝的时间
 
     public void Init()
     {
@@ -34,13 +38,31 @@ public class TimeManager : IManager
 
         // 初始化lastDay
         lastDay = CurTime.Date;
+
+        // 处理帧更新事件
+        PublicMono.Instance.AddUpdateListener(Update);
     }
 
-    public void Reset() { }
+    public void Reset()
+    {
+        PublicMono.Instance.RemoveUpdateListener(Update);
+    }
+
+    private void Update()
+    {
+        if (timePassPaused && Time.time >= timePauseEndTime)
+        {
+            // 继续时间流逝
+            AddTime(minutesToPass);
+        }
+    }
 
     public void AddTime(int minutes)
     {
         timePassStopped = false;
+        timePassPaused = false;
+        minutesToPass = 0;
+
         EventManager.Instance.TriggerEvent(EventType.StartChangeTime);
 
         // 等待动画
@@ -48,10 +70,23 @@ public class TimeManager : IManager
 
         int timespan = minutes;
 
+        // 以一分钟为粒度流逝时间
         while (!timePassStopped && timespan > 0)
         {
             timespan--;
             UpdateCurInterval();
+
+            // 时间流逝暂停
+            if (timePassPaused)
+            {
+                if (timespan > 0)
+                    // 记录下待流逝的时间
+                    minutesToPass = timespan;
+                else
+                    timePassPaused = false;
+                // 退出循环
+                break;
+            }
         }
 
         EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
@@ -63,6 +98,7 @@ public class TimeManager : IManager
         EventManager.Instance.TriggerEvent(EventType.AddOneMinute);
         if (CurInterval <= 0)
         {
+            // 每15分钟触发一次Update事件
             CurInterval = SETTLEMENT_INTERVAL;
             EventManager.Instance.TriggerEvent(EventType.Update);
         }
@@ -85,5 +121,14 @@ public class TimeManager : IManager
     public void StopTimePass()
     {
         timePassStopped = true;
+    }
+
+    /// <summary>
+    /// 暂停时间流逝
+    /// </summary>
+    public void PauseTimePass(float duration)
+    {
+        timePassPaused = true;
+        timePauseEndTime = Mathf.Max(timePauseEndTime, Time.time + duration);
     }
 }
