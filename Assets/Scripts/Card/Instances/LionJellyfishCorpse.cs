@@ -1,23 +1,31 @@
-/// <summary>
-/// Ê¨×ÓË®Ä¸Ê¬Ìå
+ï»¿/// <summary>
+/// ç‹®å­æ°´æ¯å°¸ä½“
 /// </summary>
 public class LionJellyfishCorpse : Card
 {
     private DropList dropList = new(
-       new Drop(2, ("Î´´¦ÀíµÄº£òØÆ¤", 1), ("ÑÎË®", 1)),
-       new Drop(2, ("Î´´¦ÀíµÄº£òØÆ¤", 2)),
-       new Drop(1, ("Î´´¦ÀíµÄº£òØÆ¤", 1))
+       new Drop(2, ("æœªå¤„ç†çš„æµ·èœ‡çš®", 1), ("ç›æ°´", 1)),
+       new Drop(2, ("æœªå¤„ç†çš„æµ·èœ‡çš®", 2)),
+       new Drop(1, ("æœªå¤„ç†çš„æµ·èœ‡çš®", 1))
        );
 
     private LionJellyfishCorpse()
     {
         Events = new()
         {
-            new CardEvent("ÓÃµ¶ÇĞ¸î", "", Event_PeelByKnife, Judge_PeelByKnife, () => 15),
+            new CardEvent("ç”¨åˆ€åˆ‡å‰²", "", Event_PeelByKnife, Judge_PeelByKnife, () => 15),
+            new CardEvent("å’¬ä¸€å£", "", Event_Bite, null, () => 15,
+            () => new()
+            {
+                { PlayerStateEnum.Hunger, +8 },
+                { PlayerStateEnum.Health, -4 },
+                { PlayerStateEnum.Sanity, -5 },
+                { PlayerStateEnum.Itchiness, +45 },
+            }),
         };
     }
 
-    #region ÓÃµ¶ÇĞ¸î
+    #region ç”¨åˆ€åˆ‡å‰²
     private void Event_PeelByKnife(out string tip)
     {
         PeelByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
@@ -28,7 +36,7 @@ public class LionJellyfishCorpse : Card
         hint = string.Empty;
         if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) == null)
         {
-            hint = "ĞèÒªÇĞ¸îÀà¹¤¾ß";
+            hint = "éœ€è¦åˆ‡å‰²ç±»å·¥å…·";
             return false;
         }
         return true;
@@ -39,16 +47,29 @@ public class LionJellyfishCorpse : Card
         Use();
         knife.Use();
 
-        //ÏûºÄ15·ÖÖÓ
-        TimeManager.Instance.AddTime(15);
+        //æ¶ˆè€—15åˆ†é’Ÿ
+        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
         RandomDrop(dropList, out tip);
     }
     #endregion
 
+    /// <summary>
+    /// å’¬ä¸€å£
+    /// </summary>
+    /// <param name="tip"></param>
+    private void Event_Bite(out string tip)
+    {
+        tip = string.Empty;
+        Use();
+
+        StateManager.Instance.ApplyPlayerStateChange(Events[1].GetPlayerEffects());
+        TimeManager.Instance.AddTime(Events[1].GetTimeEffect());
+    }
+
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
-        // ÔÊĞíºÍ´øÓĞÇĞ¸î±êÇ©µÄ¿¨ÅÆ¿ìËÙ½»»¥
+        // å…è®¸å’Œå¸¦æœ‰åˆ‡å‰²æ ‡ç­¾çš„å¡ç‰Œå¿«é€Ÿäº¤äº’
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
             tip = Events[0].name;
