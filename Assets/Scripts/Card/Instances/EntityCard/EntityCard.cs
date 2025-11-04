@@ -14,6 +14,7 @@ public abstract class EntityCard : Card, IEntity
     protected string deadDrops => entity.deadDrops;
 
     [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;
+    [JsonProperty] public string UUID { get; private set; }
 
     [JsonProperty] private bool firstInit;              // 是否第一次初始化完成
 
@@ -53,12 +54,18 @@ public abstract class EntityCard : Card, IEntity
     public override void Init()
     {
         base.Init();
+        // 设置uuid
+        if (string.IsNullOrEmpty(UUID))
+            UUID = System.Guid.NewGuid().ToString();
+        // 记录到全局数据中
+        GlobalDataManager.Instance.AddEntity(this);
         EventManager.Instance.AddListener(EventType.AddOneMinute, UpdateAI);
         EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
     protected override void OnDestroy()
     {
+        GlobalDataManager.Instance.RemoveEntity(UUID);
         EventManager.Instance.RemoveListener(EventType.AddOneMinute, UpdateAI);
         EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }

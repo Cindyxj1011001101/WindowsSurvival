@@ -23,6 +23,8 @@ public class Player : IEntity, IManager
         }
     }
 
+    public string UUID => "player";
+
     public void Init()
     {
         var data = GameDataManager.Instance.PlayerData;

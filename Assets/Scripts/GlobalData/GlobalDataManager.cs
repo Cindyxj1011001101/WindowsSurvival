@@ -45,6 +45,37 @@ public class GlobalDataManager : IManager
     }
     #endregion
 
+    #region 实体记录
+    private Dictionary<string, IEntity> allEntities = new();
+
+    public void AddEntity(IEntity entity)
+    {
+        if (allEntities.ContainsKey(entity.UUID)) return;
+
+        allEntities.Add(entity.UUID, entity);
+    }
+
+    public void RemoveEntity(string uuid)
+    {
+        if (!allEntities.ContainsKey(uuid)) return;
+
+        allEntities.Remove(uuid);
+    }
+
+    public IEntity GetEntity(string uuid)
+    {
+        if (allEntities.ContainsKey(uuid))
+            return allEntities[uuid];
+
+        return null;
+    }
+
+    public bool ExistsEntity(string uuid)
+    {
+        return allEntities.ContainsKey(uuid);
+    }
+    #endregion
+
     public void Init()
     {
         GlobalData = GameDataManager.Instance.GlobalData;
@@ -54,6 +85,7 @@ public class GlobalDataManager : IManager
     public void Reset()
     {
         cardNumDict.Clear();
+        allEntities.Clear();
         GlobalData = null;
         EventManager.Instance.RemoveListener(EventType.AnotherDay, OnAnotherDay);
     }
