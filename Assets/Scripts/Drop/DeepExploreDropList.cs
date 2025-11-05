@@ -60,7 +60,7 @@ public class DeepExploreDropList
     /// <summary>
     /// 种群数量开始变化
     /// </summary>
-    public void StartUpdating()
+    public void Init()
     {
         if (IsEmpty) return;
 

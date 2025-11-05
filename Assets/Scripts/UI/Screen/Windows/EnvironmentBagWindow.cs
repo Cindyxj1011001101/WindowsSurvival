@@ -144,6 +144,7 @@ public class EnvironmentBagWindow : BagWindow
 
     protected override void Init()
     {
+        DisplayBag(GameManager.Instance.CurEnvironmentBag);
     }
 
     /// <summary>

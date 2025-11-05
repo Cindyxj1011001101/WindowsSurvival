@@ -32,8 +32,6 @@ public class MoveExploreManager : IManager
     {
         lastLoadLevel = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
         InitBehaviourExtraEffects();
-        // 切换场景
-        ChangeEnv(GameDataManager.Instance.LastPlace);
         // 播放环境音乐
         SoundManager.Instance.PlayCurEnvironmentMusic();
         // 监听负重变化
@@ -294,10 +292,6 @@ public class MoveExploreManager : IManager
             passage.RefreshSlot();
         }
 
-        // 将玩家实体添加到新地点
-        lastEnv.RemoveEntity(Player.Instance);
-        env.AddEntity(Player.Instance);
-
         // 玩家坐标设置在通道位置
         passage ??= env.FindCardOfId(passageCardId);
         if (passage != null)
@@ -336,10 +330,12 @@ public class MoveExploreManager : IManager
     /// <summary>
     /// 切换地点
     /// </summary>
-    /// <param name="targetPlace">目标地点</param>
-    private void ChangeEnv(PlaceEnum targetPlace)
+    /// <param name="targetEnv">目标地点</param>
+    private void ChangeEnv(PlaceEnum targetEnv)
     {
         var env = GameManager.Instance.CurEnvironmentBag;
+        // 玩家实体从原地点移除
+        env.RemoveEntity(Player.Instance);
 
         // 离开旧地点：关闭有循环音的卡牌的循环音
         foreach (var slot in env.Slots)
@@ -352,7 +348,9 @@ public class MoveExploreManager : IManager
             }
         }
 
-        env = GameManager.Instance.EnvironmentBags[targetPlace];
+        env = GameManager.Instance.EnvironmentBags[targetEnv];
+        // 玩家实体添加到新地点
+        env.AddEntity(Player.Instance);
 
         // 进入新地点：播放新地点离有循环音的卡牌
         foreach (var slot in env.Slots)

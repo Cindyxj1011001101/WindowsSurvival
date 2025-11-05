@@ -43,6 +43,9 @@ public class GameManager : IManager
         {
             bag.Init();
         }
+
+        // 将玩家实体加入当前地点
+        CurEnvironmentBag.AddEntity(Player.Instance);
     }
 
     public void Reset()

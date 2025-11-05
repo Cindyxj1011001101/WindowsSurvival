@@ -39,8 +39,7 @@ public class EnvironmentBag : Bag
     public override void Init()
     {
         base.Init();
-        InitEntitesAndCardLocation();
-        DeepExploreDropList.StartUpdating();
+        DeepExploreDropList.Init();
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnEnvUpdateBegin);
         EventManager.Instance.AddListener<float>(EventType.UpdateSunlight, OnUpdateSunlight);
         // 每回合结算地点状态
@@ -94,32 +93,6 @@ public class EnvironmentBag : Bag
         foreach (var cardId in PlaceData.initialBagStateConfig.containedCards)
         {
             AddCard(CardFactory.CreateCard(cardId));
-        }
-    }
-
-    /// <summary>
-    /// 将地点内的所有实体加入实体列表
-    /// </summary>
-    private void InitEntitesAndCardLocation()
-    {
-        foreach (var slot in Slots)
-        {
-            foreach (var card in slot.Cards)
-            {
-                if (card is IEntity entity)
-                {
-                    AddEntity(entity);
-                }
-                else if (card.TryGetComponent<CoordinateComponent>(out var c))
-                {
-                    c.coordinate.SetLocation(this);
-                }
-            }
-        }
-
-        if (GameManager.Instance.IsCurrentEnvironment(this))
-        {
-            AddEntity(Player.Instance);
         }
     }
 
@@ -240,26 +213,6 @@ public class EnvironmentBag : Bag
     }
     #endregion
 
-    // TODO
-    //private void OnWaterLevelChanged(float level)
-    //{
-    //    // 如果当前是水域环境
-    //    if (placeData.isInWater)
-    //    {
-    //        // 如果水平面下降
-    //        if (level < StateManager.Instance.WaterLevel.MaxValue)
-    //            // 变回陆地环境
-    //            placeData.isInWater = false;
-    //    }
-    //    // 如果当前是陆地环境
-    //    else
-    //    {
-    //        if (level >= StateManager.Instance.WaterLevel.MaxValue)
-    //            // 变成水域环境
-    //            placeData.isInWater = true;
-    //    }
-    //}
-
     public override bool CanAddCard(Card card, out string tip)
     {
         tip = string.Empty;
@@ -310,6 +263,8 @@ public class EnvironmentBag : Bag
 
     public void RemoveEntity(IEntity entity)
     {
+        if (!Entities.Contains(entity)) return;
+
         entity.Coordinate.SetLocation(null);
         Entities.Remove(entity);
     }
