@@ -55,8 +55,12 @@ public class Coordinate
         SetPosition(Position + dist);
     }
 
-    public void MoveTowards(Coordinate other, float dist)
+    public void MoveTowards(Coordinate other, float dist, bool stopAfterReach = true)
     {
+        if (stopAfterReach)
+        {
+            dist = Mathf.Min(dist, DistanceTo(other));
+        }
         Move(DirectionTo(other) * dist);
     }
 
