@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: e6004646e76543b44ae68fb84420e94d
+guid: 239f6b8b6cfb5ab4786b244edc0884d2
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,1702 +97,1597 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Crop_0
+      name: UI_btn_Minimized_defult
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 496
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a6306a939ab538448e4e47000de59af
+      internalID: -1399726919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_btn_FullScreen_defult
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 496
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8abf01a1a56968f429366be02428fa09
+      internalID: -836057702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_btn_Arrange_defult
       rect:
         serializedVersion: 2
         x: 0
-        y: 368
-        width: 46
-        height: 46
+        y: 496
+        width: 31
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: db1830a77cc71be4986e004adaab4188
-      internalID: -1850444882
+      spriteID: d9bf909fa076333499f0775a2a08f218
+      internalID: -757670956
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_1
+      name: UI_btn_Closed_defult
       rect:
         serializedVersion: 2
-        x: 46
-        y: 368
-        width: 46
-        height: 46
+        x: 75
+        y: 496
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e5a3ca93a9ff6d44eb6ec5ad934dc2fb
-      internalID: -425331757
+      spriteID: 9c19dc15f6cb6044691a8be3f142777f
+      internalID: -563433557
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_2
-      rect:
-        serializedVersion: 2
-        x: 92
-        y: 368
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 77bb1171ab517f5499eeba33d30614e2
-      internalID: 185592361
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_3
-      rect:
-        serializedVersion: 2
-        x: 138
-        y: 368
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 62101b5b493471743bf44ce65737d6a4
-      internalID: 1239653752
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_4
-      rect:
-        serializedVersion: 2
-        x: 184
-        y: 368
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 370450a7153f57a4182982da428a74e8
-      internalID: 335732007
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_5
-      rect:
-        serializedVersion: 2
-        x: 230
-        y: 368
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9ca0b83daa79858428e9765b44b41834
-      internalID: 451302297
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_6
-      rect:
-        serializedVersion: 2
-        x: 276
-        y: 368
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2c29c663e18783a4697ddca37d422e9c
-      internalID: 1587619117
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_7
-      rect:
-        serializedVersion: 2
-        x: 322
-        y: 368
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 578a16da6f0d4284883776dbca5292cc
-      internalID: 1367144859
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_8
-      rect:
-        serializedVersion: 2
-        x: 368
-        y: 368
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f77ca93d901794548a3d36c97863899c
-      internalID: -86991659
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_9
+      name: UI_btn_Arrange_hovered
       rect:
         serializedVersion: 2
         x: 0
-        y: 322
-        width: 46
-        height: 46
+        y: 479
+        width: 31
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9e683bf7ce396ae4bb248aedd350da3c
-      internalID: 1537803515
+      spriteID: 1755f3f2c6b804e44baea52cf200629a
+      internalID: 1569353146
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_10
+      name: UI_btn_Minimized_hovered
       rect:
         serializedVersion: 2
-        x: 46
-        y: 322
-        width: 46
-        height: 46
+        x: 35
+        y: 479
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f1101549297822e468aaeaccb39e720d
-      internalID: 31870644
+      spriteID: 58110d14a6a008842a707de876febfe6
+      internalID: -416697522
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_11
+      name: UI_btn_FullScreen_hovered
       rect:
         serializedVersion: 2
-        x: 92
-        y: 322
-        width: 46
-        height: 46
+        x: 55
+        y: 479
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 729543cfeefb63145a72b49b3836f093
-      internalID: -34628953
+      spriteID: ff6dd9185c7183b4982e0190312fa2a6
+      internalID: 1210181592
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_12
+      name: UI_btn_Closed_hovered
       rect:
         serializedVersion: 2
-        x: 138
-        y: 322
-        width: 46
-        height: 46
+        x: 75
+        y: 479
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d1b9ff10221b7864bb1971cbef055c7d
-      internalID: 1042656042
+      spriteID: d66f6323985e8084dab36fbd6b503095
+      internalID: 1634247039
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_13
+      name: UI_Panel
       rect:
         serializedVersion: 2
-        x: 184
-        y: 322
-        width: 46
-        height: 46
+        x: 93
+        y: 479
+        width: 32
+        height: 33
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 5, y: 5, z: 5, w: 5}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 77ef6f61140c592438da7318595c65d0
-      internalID: -421883688
+      spriteID: 85af449b1bd18d042bc014a44d18f4fb
+      internalID: -1503842033
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_14
+      name: UI_HoveredFrame
       rect:
         serializedVersion: 2
-        x: 230
-        y: 322
-        width: 46
-        height: 46
+        x: 126
+        y: 488
+        width: 24
+        height: 24
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4fd6cf12c2d9c114cb6d7ec74605a293
-      internalID: 887830112
+      spriteID: c8c1b0a7ede1d4e4bb6426b2272652a0
+      internalID: 1242553631
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_15
+      name: UI_ProgressBarFrame_2
       rect:
         serializedVersion: 2
-        x: 276
-        y: 322
-        width: 46
-        height: 46
+        x: 152
+        y: 495
+        width: 48
+        height: 9
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 3, z: 4, w: 3}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9619779de3ad49440ba82bc165fe21c4
-      internalID: -352969851
+      spriteID: a98d557f1fe7ffc4da456f55bba68da1
+      internalID: -1122912679
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_16
+      name: UI_ProgressBarFrame_1
       rect:
         serializedVersion: 2
-        x: 322
-        y: 322
-        width: 46
-        height: 46
+        x: 152
+        y: 506
+        width: 48
+        height: 6
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 2, y: 2, z: 2, w: 2}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d5846e2a0893f4247914e7beba7ea2fe
-      internalID: -126716575
+      spriteID: bc5b29a0ea0b37e4bb557b4309887a92
+      internalID: -1837554866
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_17
+      name: UI_Arrow
       rect:
         serializedVersion: 2
-        x: 368
-        y: 322
-        width: 46
-        height: 46
+        x: 3
+        y: 467
+        width: 7
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 48bdaf0b752867947a60ed0f81021a2f
-      internalID: 1923854136
+      spriteID: ef7995d5f56480c40be651e1beaa789e
+      internalID: -817005766
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_18
+      name: UI_btn_Up_hovered
       rect:
         serializedVersion: 2
-        x: 0
-        y: 276
-        width: 46
-        height: 46
+        x: 12
+        y: 467
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c8a607227e2017041a1a5cdcc62acc67
-      internalID: 1743906410
+      spriteID: d1ce31c9548f66f43beb0495683d0dcb
+      internalID: 2045139253
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_19
+      name: UI_btn_Left_hovered
       rect:
         serializedVersion: 2
-        x: 46
-        y: 276
-        width: 46
-        height: 46
+        x: 1
+        y: 456
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3b854bc121aa414080448c4c93ec923
-      internalID: 655781650
+      spriteID: 2fdf09c30b17f9f4896f82f0eafd2e4a
+      internalID: -587034484
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_20
+      name: UI_btn_Down_hovered
       rect:
         serializedVersion: 2
-        x: 92
-        y: 276
-        width: 46
-        height: 46
+        x: 12
+        y: 456
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 71e0002c16cb5cb468bfb8ac8a3ee560
-      internalID: -436420772
+      spriteID: 6103e4a8d4e6f9a439e6f50229b12e89
+      internalID: -2028475834
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_21
+      name: UI_btn_Right_hovered
       rect:
         serializedVersion: 2
-        x: 138
-        y: 276
-        width: 46
-        height: 46
+        x: 23
+        y: 456
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e6de7b2052a469843b5e18690a99d78e
-      internalID: -2093345932
+      spriteID: 1a88b404dc7327646be07039f971bf5b
+      internalID: -1658534207
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_22
+      name: UI_Slidingbar_hovered
       rect:
         serializedVersion: 2
-        x: 184
-        y: 276
-        width: 46
-        height: 46
+        x: 23
+        y: 467
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 3, y: 3, z: 3, w: 3}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5b084e1270c053c4697c56b0cf5a15a9
-      internalID: 1979821172
+      spriteID: cd2fa157af193834080ab7c7d4d9a9a6
+      internalID: 853517195
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_23
+      name: UI_Slidingbar_default
       rect:
         serializedVersion: 2
-        x: 230
-        y: 276
-        width: 46
-        height: 46
+        x: 34
+        y: 467
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8deba2edbffe3d34dbacc5707f785f99
-      internalID: -321963355
+      spriteID: c4024b51d61a1fc4f8024ef48973303d
+      internalID: 959292114
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_24
+      name: UI_btn_Up_defult
       rect:
         serializedVersion: 2
-        x: 276
-        y: 276
-        width: 46
-        height: 46
+        x: 45
+        y: 467
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f3288e8af3d6477428cd58a0c88429f3
-      internalID: 6253706
+      spriteID: 8a49473c75056a14e9c5c04b1e21ec9f
+      internalID: -1508199800
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_25
+      name: UI_btn_Left_defult
       rect:
         serializedVersion: 2
-        x: 322
-        y: 276
-        width: 46
-        height: 46
+        x: 34
+        y: 456
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2a9982ede94a77748965ad965a94ce4b
-      internalID: -1441891847
+      spriteID: 9a9bdb1117c344a43be3fbe021333386
+      internalID: 965470697
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_26
+      name: UI_btn_Down_defult
       rect:
         serializedVersion: 2
-        x: 368
-        y: 276
-        width: 46
-        height: 46
+        x: 45
+        y: 456
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b03f5134b09e8474e8fa20e46fc2b896
-      internalID: 691077252
+      spriteID: 121ff2b638f9ff447b3aafa85bcae8cb
+      internalID: 1652564440
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_27
+      name: UI_btn_Right_defult
       rect:
         serializedVersion: 2
-        x: 0
-        y: 230
-        width: 46
-        height: 46
+        x: 56
+        y: 456
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 163bc58b5fa89a84fad3fb7a6191f936
-      internalID: 757324733
+      spriteID: 44c56d938dbe32e41bdeb9cc81584b32
+      internalID: 1958250545
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_28
+      name: UI_NameTooltip
       rect:
         serializedVersion: 2
-        x: 46
-        y: 230
-        width: 46
-        height: 46
+        x: 108
+        y: 459
+        width: 30
+        height: 14
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 4}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f8bff66b75474c347bb168b3b210543e
-      internalID: 727190588
+      spriteID: 0366074f5d00a664dab68ca5c175f2fe
+      internalID: -1275816256
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_29
+      name: UI_arrow_3
       rect:
         serializedVersion: 2
-        x: 92
-        y: 230
-        width: 46
-        height: 46
+        x: 4
+        y: 342
+        width: 9
+        height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 954230cf37ab6094bb639bc99c917dc8
-      internalID: -1739477304
+      spriteID: 4c2951b8222c5564b977cdeade81c827
+      internalID: -1067156244
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_30
+      name: UI_arrow_2
       rect:
         serializedVersion: 2
-        x: 138
-        y: 230
-        width: 46
-        height: 46
+        x: 4
+        y: 328
+        width: 9
+        height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b52e774951401a0458aaee61b131fd76
-      internalID: 597386688
+      spriteID: a86d295882277174892b77993a56cba0
+      internalID: 688397521
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_31
+      name: UI_arrow_1
       rect:
         serializedVersion: 2
-        x: 184
-        y: 230
-        width: 46
-        height: 46
+        x: 4
+        y: 314
+        width: 9
+        height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3bbf19cf3a4e5c4288f7286cf3b1445
-      internalID: -1101051866
+      spriteID: f07dbf220f2e1cf42b148d84e1435b82
+      internalID: -1364170369
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_32
-      rect:
-        serializedVersion: 2
-        x: 230
-        y: 230
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9316f25fbe48a6543acd2fc18192fd90
-      internalID: -304910071
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_33
-      rect:
-        serializedVersion: 2
-        x: 276
-        y: 230
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1341a4e011ff90c4892868629aa09a68
-      internalID: -1532009283
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_34
-      rect:
-        serializedVersion: 2
-        x: 322
-        y: 230
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 2edbac03c61894c43ad6524f5aafa08a
-      internalID: 1426650300
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_35
-      rect:
-        serializedVersion: 2
-        x: 368
-        y: 230
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f7c81925ffe35f44e85d0ebe23cca268
-      internalID: -1282996008
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_36
+      name: UI_CardSlot
       rect:
         serializedVersion: 2
         x: 0
-        y: 184
-        width: 46
-        height: 46
+        y: 358
+        width: 66
+        height: 97
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 54760befc603ef5469b96e9dfdc32c7f
-      internalID: 1821875788
+      spriteID: 2dde5089e1d0d6346b7a89949fae518d
+      internalID: -1859285613
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_37
+      name: UI_Card
       rect:
         serializedVersion: 2
-        x: 46
-        y: 184
-        width: 46
-        height: 46
+        x: 68
+        y: 358
+        width: 66
+        height: 97
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2d36015ba215db54892d99ac2508294b
-      internalID: 1743728234
+      spriteID: f0cdf7a1dfdd7774bb26870f4254c995
+      internalID: 470443997
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_38
+      name: UI_CardHoveredFrame
       rect:
         serializedVersion: 2
-        x: 92
-        y: 184
-        width: 46
-        height: 46
+        x: 136
+        y: 355
+        width: 72
+        height: 103
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d8ae0054d494d88459190ec4047394e0
-      internalID: 1102340045
+      spriteID: 006b6677a33c3ed4f9c4fbe501353638
+      internalID: -275653607
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_39
+      name: UI_Number
       rect:
         serializedVersion: 2
-        x: 138
-        y: 184
-        width: 46
-        height: 46
+        x: 68
+        y: 457
+        width: 17
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 361b1a706c1b91644a7e492e690d1be5
-      internalID: -1875367357
+      spriteID: 9cdd576ff2b3cc74baca9601d95cfb23
+      internalID: -841556680
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_40
+      name: UI_MaximumNumber
       rect:
         serializedVersion: 2
-        x: 184
-        y: 184
-        width: 46
-        height: 46
+        x: 88
+        y: 457
+        width: 17
+        height: 15
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 52c4c55f389448d47acab53b49fdadd8
-      internalID: -2009523411
+      spriteID: 4fe75f804e83ac44e8d3b333859bb65a
+      internalID: -1474591250
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_41
+      name: UI_checkbox_checked
       rect:
         serializedVersion: 2
-        x: 230
-        y: 184
-        width: 46
-        height: 46
+        x: 129
+        y: 476
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 71b9efb03b4b14c49bb0869fb57e9de6
-      internalID: -1822460074
+      spriteID: 40ef9faec6113184f8ba5431a58f11af
+      internalID: -736511663
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_42
+      name: UI_checkbox_default
       rect:
         serializedVersion: 2
-        x: 276
-        y: 184
-        width: 46
-        height: 46
+        x: 140
+        y: 476
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a45f5ccac64543a4d88409149b4af094
-      internalID: -1871185498
+      spriteID: d96f093b66e1b1e4a9e1466f60b0bb28
+      internalID: 1879455347
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_43
+      name: UI_Locked
       rect:
         serializedVersion: 2
-        x: 322
-        y: 184
-        width: 46
-        height: 46
+        x: 152
+        y: 476
+        width: 9
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9f9de0538d8d9cd45b08e4dcb9ea25f4
-      internalID: 1230086759
+      spriteID: b8c1120b5f10a4a40a23c302598df7ad
+      internalID: -758408193
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_44
+      name: UI_Selectionbox_1
       rect:
         serializedVersion: 2
-        x: 368
-        y: 184
-        width: 46
-        height: 46
+        x: 171
+        y: 463
+        width: 31
+        height: 26
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 10, z: 7, w: 10}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cac81babfe4467f428e2519609537f17
-      internalID: -555375711
+      spriteID: 50f0a21887ae333428b322ebd5b98d1a
+      internalID: 1154874342
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_45
+      name: UI_btn_ReduceScreen_default
       rect:
         serializedVersion: 2
-        x: 0
-        y: 138
-        width: 46
-        height: 46
+        x: 222
+        y: 496
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1c6e88ce507db5d479aff2da971d3522
-      internalID: -882186806
+      spriteID: aa311280da37bd046a4a6bf0b6a803d8
+      internalID: 154959178
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_46
+      name: UI_btn_ReduceScreen_hovered
       rect:
         serializedVersion: 2
-        x: 46
-        y: 138
-        width: 46
-        height: 46
+        x: 204
+        y: 496
+        width: 16
+        height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 32a156bb225b1584a983683b9d9641d0
-      internalID: 1038478758
+      spriteID: 521357fa0f255e04a9ea48a14ad56b6b
+      internalID: 2130795967
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_47
+      name: UI_PowerOn
       rect:
         serializedVersion: 2
-        x: 92
-        y: 138
-        width: 46
-        height: 46
+        x: 142
+        y: 462
+        width: 6
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d4b2f2a00d60e74458b52e5fb33cd26e
-      internalID: -249137445
+      spriteID: cc0e4184e986c0a4d95877de189e274f
+      internalID: -573434214
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_48
+      name: UI_Selectionbox_2
       rect:
         serializedVersion: 2
-        x: 138
-        y: 138
-        width: 46
-        height: 46
+        x: 211
+        y: 461
+        width: 72
+        height: 30
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 17, y: 6, z: 17, w: 4}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5d02783a7b6b4c14e9e40f83f759e7c2
-      internalID: -457341681
+      spriteID: a76951f307d3d4b4b8e3a323660f68d8
+      internalID: -675735941
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_49
+      name: UI_0
       rect:
         serializedVersion: 2
-        x: 184
-        y: 138
-        width: 46
-        height: 46
+        x: 291
+        y: 440
+        width: 129
+        height: 71
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 4, z: 4, w: 18}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 90a62581a80e3974da9f847c72034fb9
-      internalID: 2044905441
+      spriteID: 8fdb2a69cf0ad8f47a32623b3ecd22fb
+      internalID: 940146804
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_50
+      name: UI_1
       rect:
         serializedVersion: 2
-        x: 230
-        y: 138
-        width: 46
-        height: 46
+        x: 291
+        y: 363
+        width: 129
+        height: 71
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 4, y: 17, z: 4, w: 18}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: be95a86e7a58bd34ba1180190e6eaa19
-      internalID: -1520452409
+      spriteID: 0a054bd8cb41e084389eb185f406211a
+      internalID: -393629588
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_51
+      name: UI_checkbox_checked_hovered
       rect:
         serializedVersion: 2
-        x: 276
-        y: 138
-        width: 46
-        height: 46
+        x: 240
+        y: 502
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7a4c22a4dd203f44985853ad06843387
-      internalID: -929089829
+      spriteID: 3d1a3f8c073bf67449e6113f1dd92c11
+      internalID: -420838126
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_52
+      name: UI_checkbox_default_hovered
       rect:
         serializedVersion: 2
-        x: 322
-        y: 138
-        width: 46
-        height: 46
+        x: 251
+        y: 502
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4be9fb4c71db3a34eb7f1e7a8f5dba7a
-      internalID: 241200109
+      spriteID: 1c818807cb4fb7040810b1d769d84bb1
+      internalID: 1419871759
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_53
+      name: UI_Locked_hovered
       rect:
         serializedVersion: 2
-        x: 368
-        y: 138
-        width: 46
-        height: 46
+        x: 263
+        y: 502
+        width: 9
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3e8d2317434afd94fa46a158d6b1bf96
-      internalID: -1005909195
+      spriteID: 725bb9841a4c3344486210952f128c56
+      internalID: -1122691988
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_54
+      name: UI_2
       rect:
         serializedVersion: 2
-        x: 0
-        y: 92
-        width: 46
-        height: 46
+        x: 210
+        y: 410
+        width: 80
+        height: 48
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 6, z: 0, w: 6}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a2db26b09ae17324fa2694ce3cbbed50
-      internalID: -1302299293
+      spriteID: 4c572daa9cb207446b806944d1421a37
+      internalID: 1505840638
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_55
+      name: UI_3
       rect:
         serializedVersion: 2
-        x: 46
-        y: 92
-        width: 46
-        height: 46
+        x: 210
+        y: 403
+        width: 80
+        height: 3
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a6e62f75cc363684c8857de3c6ec4bec
-      internalID: 1978500094
+      spriteID: 8ef89b1c5a29e2b4f9f6b2b2db948728
+      internalID: 488781603
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_56
+      name: UI_5
       rect:
         serializedVersion: 2
-        x: 92
-        y: 92
-        width: 46
-        height: 46
+        x: 428
+        y: 480
+        width: 24
+        height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a6cedec8929f0b34286c6695653bbaba
-      internalID: -1673804865
+      spriteID: a91bf08e45eeacf48aa98475d7520dda
+      internalID: 1048413523
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_57
-      rect:
-        serializedVersion: 2
-        x: 138
-        y: 92
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8a157a669097c8c489f9f27fd69813ae
-      internalID: -1283017860
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_58
-      rect:
-        serializedVersion: 2
-        x: 184
-        y: 92
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b6c797daa5ef71542a78b29bd9b5aaf3
-      internalID: 1369445098
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_59
-      rect:
-        serializedVersion: 2
-        x: 230
-        y: 92
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ef033885f28234745b3fa7b9ac411cb8
-      internalID: 572256202
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_60
-      rect:
-        serializedVersion: 2
-        x: 276
-        y: 92
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: baae6b43247cc0b46948cf6a717c564d
-      internalID: -8805244
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_61
-      rect:
-        serializedVersion: 2
-        x: 322
-        y: 92
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6cf2a1c8f792ddc4e9948681ab06c24f
-      internalID: 1265814397
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_62
-      rect:
-        serializedVersion: 2
-        x: 368
-        y: 92
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 094cc455f14043a4eaf0a107f08884c5
-      internalID: 559329222
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Crop_63
+      name: UI_TimeMask
       rect:
         serializedVersion: 2
         x: 0
-        y: 46
-        width: 46
-        height: 46
+        y: 149
+        width: 128
+        height: 114
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 788834ceffd9a204a8593f13e20538ed
-      internalID: -2018696344
+      spriteID: 9eec6ff8e4fc86c4fb5dc31a6c66a801
+      internalID: -1710442970
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_64
+      name: UI_6
       rect:
         serializedVersion: 2
-        x: 46
-        y: 46
-        width: 46
-        height: 46
+        x: 160
+        y: 484
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7f29263e18b4b1140847a71b80928291
-      internalID: 1684272274
+      spriteID: 4cd529d3c47e4e648acdc6cc39933dd8
+      internalID: 956610979
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_65
+      name: UI_7
       rect:
         serializedVersion: 2
-        x: 92
-        y: 46
-        width: 46
-        height: 46
+        x: 159
+        y: 462
+        width: 10
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a1b1bad953f3d454397ad73fdd322008
-      internalID: -248320555
+      spriteID: d455052b332279b40a3e30a39aa02f9b
+      internalID: -1974728413
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_66
+      name: UI_8
       rect:
         serializedVersion: 2
-        x: 138
-        y: 46
-        width: 46
-        height: 46
+        x: 428
+        y: 444
+        width: 54
+        height: 23
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 7, z: 7, w: 7}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2d22800aeb4e1f042b7468f2ab41a87c
-      internalID: 351071108
+      spriteID: 756920f72c77ed8439205f9bbd40a7ae
+      internalID: -1095997035
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_67
+      name: UI_9
       rect:
         serializedVersion: 2
-        x: 184
-        y: 46
-        width: 46
-        height: 46
+        x: 428
+        y: 420
+        width: 54
+        height: 23
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 7, z: 7, w: 7}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 38231ba0a0ae9d14e9d2aeae1c8e67c0
-      internalID: 963297066
+      spriteID: ce2c717a733ae7c4c81cfd4bc439407e
+      internalID: -340444757
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_68
+      name: UI_10
       rect:
         serializedVersion: 2
-        x: 230
-        y: 46
-        width: 46
-        height: 46
+        x: 428
+        y: 396
+        width: 54
+        height: 23
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 6, z: 7, w: 6}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4733ca33f269d32498e55a530d0ee0dd
-      internalID: 686498910
+      spriteID: 2159b8b7b9d6bc34bbd223be75ea8d22
+      internalID: -1300053351
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_69
+      name: UI_study_bg
       rect:
         serializedVersion: 2
-        x: 276
-        y: 46
-        width: 46
-        height: 46
+        x: 346
+        y: 200
+        width: 159
+        height: 159
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 244435a40ac09254896bbff43e3df4cf
-      internalID: -159547455
+      spriteID: 078c38854babec44d946e425f6dc5d63
+      internalID: -1730895238
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_70
+      name: UI_12
       rect:
         serializedVersion: 2
-        x: 322
-        y: 46
-        width: 46
-        height: 46
+        x: 428
+        y: 380
+        width: 6
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7283c84ac15d63a4b9d7e5bec1853ce1
-      internalID: 325605052
+      spriteID: 9e00a29ee6e798a43ab4689236dba56f
+      internalID: 1138885455
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_71
+      name: UI_13
       rect:
         serializedVersion: 2
-        x: 368
-        y: 46
-        width: 46
-        height: 46
+        x: 440
+        y: 369
+        width: 54
+        height: 23
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 7, y: 7, z: 7, w: 7}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 56d9b4ed103e07944a11797654c532b3
-      internalID: 1738136561
+      spriteID: dacb039317210664ba2f35df50969dde
+      internalID: 973356370
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_72
+      name: UI_FullScreenFrame
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 46
-        height: 46
+        x: 378
+        y: 94
+        width: 127
+        height: 101
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 8, y: 44, z: 8, w: 34}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b61324752ba7b58498052aa6c8f0c3c8
-      internalID: 1760429948
+      spriteID: a715514adf9cc65459dc3a35f9ef3940
+      internalID: 1139549953
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_73
+      name: UI_FireOn
       rect:
         serializedVersion: 2
-        x: 46
-        y: 0
-        width: 46
-        height: 46
+        x: 151
+        y: 462
+        width: 6
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb502df6fd57ea242af8357f0d1c0390
-      internalID: 407072011
+      spriteID: 3d62f49b3f9c2284c846f50d2e193cfa
+      internalID: -343286534
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_74
+      name: UI_bg
       rect:
         serializedVersion: 2
-        x: 92
-        y: 0
-        width: 46
-        height: 46
+        x: 213
+        y: 387
+        width: 13
+        height: 10
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 2, y: 2, z: 2, w: 2}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 898374f92adf7af429058d2b1a8820bb
-      internalID: 1443243873
+      spriteID: d661a4609aa95e1428f245d4fc3c3037
+      internalID: -1074642187
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_75
+      name: UI_Midnight
       rect:
         serializedVersion: 2
-        x: 138
-        y: 0
-        width: 46
-        height: 46
+        x: 27
+        y: 328
+        width: 25
+        height: 25
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8c0380bf173e371408990ab60852f0be
-      internalID: -1717264959
+      spriteID: e6a333766da8f9649af5504b545000fd
+      internalID: 1542629904
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_76
+      name: UI_Noon
       rect:
         serializedVersion: 2
-        x: 184
-        y: 0
-        width: 46
-        height: 46
+        x: 27
+        y: 303
+        width: 25
+        height: 25
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ed996696190445d43b678b698b51ecc6
-      internalID: 852028224
+      spriteID: 3070d8248869b7d498627b1777e7cec7
+      internalID: -1794130667
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_77
+      name: UI_NoIndoor
       rect:
         serializedVersion: 2
-        x: 230
-        y: 0
-        width: 46
-        height: 46
+        x: 59
+        y: 342
+        width: 13
+        height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3b5f7c56ecca1b44d8b086b251aedc70
-      internalID: 23308285
+      spriteID: bd802d54a1c299c44a24613ffb3bbf92
+      internalID: -1032138338
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_78
+      name: UI_Indoor
       rect:
         serializedVersion: 2
-        x: 276
-        y: 0
-        width: 46
-        height: 46
+        x: 72
+        y: 342
+        width: 13
+        height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d62a5dbe69231e9439f9ec06e9257712
-      internalID: 963530398
+      spriteID: 91aaa00b80827944c9b55a2ecf749ed7
+      internalID: 1101497485
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_79
+      name: UI_NoWaters
       rect:
         serializedVersion: 2
-        x: 322
-        y: 0
-        width: 46
-        height: 46
+        x: 59
+        y: 329
+        width: 13
+        height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: bf44cc23e87f83d4c9316111693c0730
-      internalID: 1648769147
+      spriteID: 5393cca9924ccb140af8b306f92fcd40
+      internalID: 1618620455
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Crop_80
+      name: UI_Waters
       rect:
         serializedVersion: 2
-        x: 368
-        y: 0
-        width: 46
-        height: 46
+        x: 72
+        y: 329
+        width: 13
+        height: 13
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b0f36116e1de9c04ea2cb3bf68ed7507
-      internalID: 1802461009
+      spriteID: 1a759e6525bffa14cbc20c94eebc219a
+      internalID: -1934655251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Cable
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 316
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 198cea129d86d7d43ba1e3fcc6fb16e0
+      internalID: -1663557065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_NoCable
+      rect:
+        serializedVersion: 2
+        x: 59
+        y: 316
+        width: 13
+        height: 13
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b5ef11f2bcf234444a17d32b7d2f1295
+      internalID: 1781868343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_TemperatureBar
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 309
+        width: 5
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00641f899f04cee48aa0d4b7e63ada96
+      internalID: -969308217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_TemperatureScale
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 350
+        width: 4
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f04df2af88d74a94dbf5dfca1fdb3515
+      internalID: -838597061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_TemperatureArrow
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 350
+        width: 3
+        height: 5
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fe886373281798f4f986988f743f8a93
+      internalID: 1726949806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_Charred
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 345
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46bc9187b2940c44da9241ef579ab423
+      internalID: 336171763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_coord_target
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 333
+        width: 8
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f3316df808ee62447b4bc3579a1727c9
+      internalID: 1433316489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_coord_current
+      rect:
+        serializedVersion: 2
+        x: 136
+        y: 333
+        width: 8
+        height: 20
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ffa2b09f7423f144aa315478f4800713
+      internalID: -889631239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_EventTipFrame
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 336
+        width: 42
+        height: 12
+      alignment: 9
+      pivot: {x: 0, y: 0}
+      border: {x: 5, y: 3, z: 5, w: 5}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 218f96a29fefca047b34d6a60363e6c7
+      internalID: 344038640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UI_EventTipShadow
+      rect:
+        serializedVersion: 2
+        x: 155
+        y: 311
+        width: 42
+        height: 18
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 16, y: 0, z: 16, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef7979a9f1d093243a9864cbab903f8d
+      internalID: 562162804
       vertices: []
       indices: 
       edges: []
@@ -1808,89 +1703,93 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Crop_0: -1850444882
-      Crop_1: -425331757
-      Crop_10: 31870644
-      Crop_11: -34628953
-      Crop_12: 1042656042
-      Crop_13: -421883688
-      Crop_14: 887830112
-      Crop_15: -352969851
-      Crop_16: -126716575
-      Crop_17: 1923854136
-      Crop_18: 1743906410
-      Crop_19: 655781650
-      Crop_2: 185592361
-      Crop_20: -436420772
-      Crop_21: -2093345932
-      Crop_22: 1979821172
-      Crop_23: -321963355
-      Crop_24: 6253706
-      Crop_25: -1441891847
-      Crop_26: 691077252
-      Crop_27: 757324733
-      Crop_28: 727190588
-      Crop_29: -1739477304
-      Crop_3: 1239653752
-      Crop_30: 597386688
-      Crop_31: -1101051866
-      Crop_32: -304910071
-      Crop_33: -1532009283
-      Crop_34: 1426650300
-      Crop_35: -1282996008
-      Crop_36: 1821875788
-      Crop_37: 1743728234
-      Crop_38: 1102340045
-      Crop_39: -1875367357
-      Crop_4: 335732007
-      Crop_40: -2009523411
-      Crop_41: -1822460074
-      Crop_42: -1871185498
-      Crop_43: 1230086759
-      Crop_44: -555375711
-      Crop_45: -882186806
-      Crop_46: 1038478758
-      Crop_47: -249137445
-      Crop_48: -457341681
-      Crop_49: 2044905441
-      Crop_5: 451302297
-      Crop_50: -1520452409
-      Crop_51: -929089829
-      Crop_52: 241200109
-      Crop_53: -1005909195
-      Crop_54: -1302299293
-      Crop_55: 1978500094
-      Crop_56: -1673804865
-      Crop_57: -1283017860
-      Crop_58: 1369445098
-      Crop_59: 572256202
-      Crop_6: 1587619117
-      Crop_60: -8805244
-      Crop_61: 1265814397
-      Crop_62: 559329222
-      Crop_63: -2018696344
-      Crop_64: 1684272274
-      Crop_65: -248320555
-      Crop_66: 351071108
-      Crop_67: 963297066
-      Crop_68: 686498910
-      Crop_69: -159547455
-      Crop_7: 1367144859
-      Crop_70: 325605052
-      Crop_71: 1738136561
-      Crop_72: 1760429948
-      Crop_73: 407072011
-      Crop_74: 1443243873
-      Crop_75: -1717264959
-      Crop_76: 852028224
-      Crop_77: 23308285
-      Crop_78: 963530398
-      Crop_79: 1648769147
-      Crop_8: -86991659
-      Crop_80: 1802461009
-      Crop_9: 1537803515
+      UI_0: 940146804
+      UI_1: -393629588
+      UI_10: -1300053351
+      UI_12: 1138885455
+      UI_13: 973356370
+      UI_2: 1505840638
+      UI_20: 1605050901
+      UI_22: -561198943
+      UI_24: 305704581
+      UI_25: 2067323267
+      UI_26: -79599055
+      UI_27: 1579222815
+      UI_28: -819797999
+      UI_29: -150795827
+      UI_3: 488781603
+      UI_30: -704582210
+      UI_5: 1048413523
+      UI_6: 956610979
+      UI_7: -1974728413
+      UI_8: -1095997035
+      UI_9: -340444757
+      UI_Arrow: -817005766
+      UI_Cable: -1663557065
+      UI_Card: 470443997
+      UI_CardHoveredFrame: -275653607
+      UI_CardSlot: -1859285613
+      UI_Charred: 336171763
+      UI_EventTipFrame: 344038640
+      UI_EventTipShadow: 562162804
+      UI_FireOn: -343286534
+      UI_FullScreenFrame: -710150027
+      UI_HoveredFrame: 1242553631
+      UI_Indoor: 1101497485
+      UI_Locked: -758408193
+      UI_Locked_hovered: -1122691988
+      UI_MaximumNumber: -1474591250
+      UI_Midnight: 1542629904
+      UI_NameTooltip: -1275816256
+      UI_NoCable: 1781868343
+      UI_NoIndoor: -1032138338
+      UI_NoWaters: 1618620455
+      UI_Noon: -1794130667
+      UI_Number: -841556680
+      UI_Panel: -1503842033
+      UI_PowerOn: -573434214
+      UI_ProgressBarFrame_1: -1837554866
+      UI_ProgressBarFrame_2: -1122912679
+      UI_Selectionbox_1: 1154874342
+      UI_Selectionbox_2: -675735941
+      UI_Slidingbar_default: 959292114
+      UI_Slidingbar_hovered: 853517195
+      UI_TemperatureArrow: 1726949806
+      UI_TemperatureBar: -969308217
+      UI_TemperatureScale: -838597061
+      UI_TimeMask: -1710442970
+      UI_Waters: -1934655251
+      UI_arrow_1: -1364170369
+      UI_arrow_2: 688397521
+      UI_arrow_3: -1067156244
+      UI_bg: -1074642187
+      UI_btn_Arrange_defult: -757670956
+      UI_btn_Arrange_hovered: 1569353146
+      UI_btn_Closed_defult: -563433557
+      UI_btn_Closed_hovered: 1634247039
+      UI_btn_Down_defult: 1652564440
+      UI_btn_Down_hovered: -2028475834
+      UI_btn_FullScreen_defult: -836057702
+      UI_btn_FullScreen_hovered: 1210181592
+      UI_btn_Left_defult: 965470697
+      UI_btn_Left_hovered: -587034484
+      UI_btn_Minimized_defult: -1399726919
+      UI_btn_Minimized_hovered: -416697522
+      UI_btn_ReduceScreen_default: 154959178
+      UI_btn_ReduceScreen_hovered: 2130795967
+      UI_btn_Right_defult: 1958250545
+      UI_btn_Right_hovered: -1658534207
+      UI_btn_Up_defult: -1508199800
+      UI_btn_Up_hovered: 2045139253
+      UI_checkbox_checked: -736511663
+      UI_checkbox_checked_hovered: -420838126
+      UI_checkbox_default: 1879455347
+      UI_checkbox_default_hovered: 1419871759
+      UI_coord_current: -889631239
+      UI_coord_target: 1433316489
+      UI_study_bg: -1730895238
   mipmapLimitGroupName: 
-  pSDRemoveMatte: 0
+  pSDRemoveMatte: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 
