@@ -23,7 +23,7 @@ public class Player : IEntity, IManager
         }
     }
 
-    public string UUID => "player";
+    public string Uuid => "player";
 
     public void Init()
     {

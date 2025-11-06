@@ -1093,6 +1093,7 @@ public class WeaponComponent : CardComponent
 
     public void DealDamage(IEntity target)
     {
+        // TODO: 范围伤害武器
         // 消耗武器耐久
         BelongedCard.Use();
         // 造成伤害

@@ -14,16 +14,13 @@ public abstract class EntityCard : Card, IEntity
     protected string deadDrops => entity.deadDrops;
     protected BehavioralTendency behavioralTendency => entity.behavioralTendency;
 
-    [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;
-    [JsonProperty] public string UUID { get; private set; }
-
-    [JsonProperty] private bool firstInit;              // 是否第一次初始化完成
-
-    [JsonProperty] protected Dictionary<string, EntityIntention> intentions = new(); // 所有可能的意图
-
-    [JsonProperty] private string currentIntention;     // 当前意图
-
-    [JsonProperty] private int aiRefreshCooldown;       // ai刷新冷却
+    [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;                 // 坐标
+    [JsonProperty] public string Uuid { get; private set; }                             // 实体唯一标识
+    [JsonProperty] private bool firstInit;                                              // 是否第一次初始化完成
+    [JsonProperty] protected Dictionary<string, EntityIntention> intentions = new();    // 所有可能的意图
+    [JsonProperty] private string currentIntention;                                     // 当前意图
+    [JsonProperty] private int aiRefreshCooldown;                                       // ai刷新冷却
+    [JsonProperty] private EntityAggroCollection aggroCollection = new();               // 仇恨列表
 
     private EntityIntention CurrentIntention
     {
@@ -35,26 +32,7 @@ public abstract class EntityCard : Card, IEntity
         }
     }
 
-    [JsonProperty] protected List<string> aggroList = new();    // 仇恨列表
-
-    public void TakeDamage(float damage, IEntity damageDealer)
-    {
-        // 受到伤害
-        entity.TakeDamage(damage, damageDealer);
-        // 记录仇恨
-        if (damageDealer != null)
-            AddToAggroList(damageDealer);
-    }
-
-    public void AddToAggroList(IEntity entity)
-    {
-        if (aggroList.Contains(entity.UUID))
-        {
-            aggroList.Remove(entity.UUID);
-        }
-
-        aggroList.Insert(0, entity.UUID);
-    }
+    public virtual void TakeDamage(float damage, IEntity damageDealer) => entity.TakeDamage(damage, damageDealer);
 
     public override void LateConstrcutor()
     {
@@ -75,22 +53,27 @@ public abstract class EntityCard : Card, IEntity
     {
         base.Init();
         // 设置uuid
-        if (string.IsNullOrEmpty(UUID))
-            UUID = System.Guid.NewGuid().ToString();
+        if (string.IsNullOrEmpty(Uuid))
+            Uuid = System.Guid.NewGuid().ToString();
         // 记录到全局数据中
         GlobalDataManager.Instance.AddEntity(this);
 
-        // 对于敌对生物，将玩家加入仇恨列表
-        if (behavioralTendency == BehavioralTendency.Hostile)
-            AddToAggroList(Player.Instance);
+        // 初始化仇恨
+        aggroCollection.Init(this);
 
+        // 先更新仇恨
+        EventManager.Instance.AddListener(EventType.AddOneMinute, aggroCollection.Update);
+        // 再更新ai
         EventManager.Instance.AddListener(EventType.AddOneMinute, UpdateAI);
         EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
     protected override void OnDestroy()
     {
-        GlobalDataManager.Instance.RemoveEntity(UUID);
+        intentions.Clear();
+        aggroCollection.Clear();
+        GlobalDataManager.Instance.RemoveEntity(Uuid);
+        EventManager.Instance.RemoveListener(EventType.AddOneMinute, aggroCollection.Update);
         EventManager.Instance.RemoveListener(EventType.AddOneMinute, UpdateAI);
         EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
@@ -215,6 +198,32 @@ public abstract class EntityCard : Card, IEntity
             // 当前意图已执行，刷新意图
             TryGetNewIntention();
         }
+    }
+    #endregion
+
+    #region 仇恨
+    /// <summary>
+    /// 添加仇恨实体
+    /// </summary>=
+    protected void AddAggroEntity(IEntity target, int priority, int remainingMinutes, bool isPermanent = false)
+    {
+        aggroCollection.AddOrUpdate(target, priority, remainingMinutes, isPermanent);
+    }
+
+    /// <summary>
+    /// 获取仇恨目标
+    /// </summary>
+    protected IEntity GetAggroTarget()
+    {
+        return aggroCollection.GetHighestPriority();
+    }
+
+    /// <summary>
+    /// 移除仇恨实体
+    /// </summary>
+    protected void RemoveAggroEntity(IEntity target)
+    {
+        aggroCollection.RemoveByUuid(target.Uuid);
     }
     #endregion
 }

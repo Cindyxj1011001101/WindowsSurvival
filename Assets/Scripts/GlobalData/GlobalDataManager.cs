@@ -50,9 +50,9 @@ public class GlobalDataManager : IManager
 
     public void AddEntity(IEntity entity)
     {
-        if (allEntities.ContainsKey(entity.UUID)) return;
+        if (allEntities.ContainsKey(entity.Uuid)) return;
 
-        allEntities.Add(entity.UUID, entity);
+        allEntities.Add(entity.Uuid, entity);
     }
 
     public void RemoveEntity(string uuid)
@@ -70,9 +70,9 @@ public class GlobalDataManager : IManager
         return null;
     }
 
-    public bool ExistsEntity(string uuid)
+    public bool ExistsEntity(IEntity entity)
     {
-        return allEntities.ContainsKey(uuid);
+        return allEntities.ContainsKey(entity.Uuid);
     }
     #endregion
 

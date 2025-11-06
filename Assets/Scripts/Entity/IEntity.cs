@@ -1,6 +1,6 @@
 ﻿public interface IEntity
 {
-    string UUID { get; }
+    string Uuid { get; }
 
     Coordinate Coordinate { get; }
 
