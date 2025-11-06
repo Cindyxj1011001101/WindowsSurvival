@@ -332,7 +332,7 @@ public static class CardFactory
         }
         if (config.IsFlammable)
         {
-            card.AddComponent(new FlammableComponent(config.FuelValue));
+            card.AddComponent(new FuelComponent(config.FuelValue));
         }
         if (config.IsPassage)
         {

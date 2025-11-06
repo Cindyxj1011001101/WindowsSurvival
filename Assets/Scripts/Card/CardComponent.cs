@@ -452,14 +452,14 @@ public class FoodPropertyComponent : CardComponent
 }
 #endregion
 
-#region 可燃烧组件
-public class FlammableComponent : CardComponent
+#region 可燃物组件
+public class FuelComponent : CardComponent
 {
     public int fuelValue; // 燃料值
 
-    public FlammableComponent() { }
+    public FuelComponent() { }
 
-    public FlammableComponent(int fuelValue)
+    public FuelComponent(int fuelValue)
     {
         this.fuelValue = fuelValue;
     }
@@ -934,7 +934,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
 
     public bool CanQuickInteract(Card card)
     {
-        return card.TryGetComponent<FlammableComponent>(out _) && value < maxValue;
+        return card.TryGetComponent<FuelComponent>(out _) && value < maxValue;
     }
 
     public void QuickIneract(SlotCards slot, int count, out string tip)
@@ -944,7 +944,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         {
             if (value >= maxValue) break;
             var card = slot.PeekCard();
-            card.TryGetComponent<FlammableComponent>(out var burnableComponent);
+            card.TryGetComponent<FuelComponent>(out var burnableComponent);
             card.DestroyThis();
             AddValue(burnableComponent.fuelValue);
         }
