@@ -112,7 +112,6 @@ public abstract class Card : IComparable<Card>
     [JsonIgnore]
     public CardSlot Slot => SlotCards?.CardSlot;
     #endregion
-
     public virtual void OnAdd(Bag bag) { }
     public virtual void OnRemove(Bag bag) { }
 
@@ -127,47 +126,67 @@ public abstract class Card : IComparable<Card>
     }
 
     #region Init
-    /// <summary>
-    /// 用于在卡牌实例化后进行额外的初始化操作，主要用于为卡牌手动添加组件或者对组件的数值进行修改
-    /// </summary>
-    public virtual void LateConstrcutor()
-    {
-        if (TryGetComponent<InnerContentsComponent>(out var i))
-        {
-            i.contentFilter = ReflectionUtility.BindToDelegate<CardFilterDelegate>(this, "ContentFilter", true);
-            ReflectionUtility.SetFieldValue(this, "innerContents", i, true);
-        }
-    }
-
     private bool init = false; // 是否已初始化
 
     /// <summary>
-    /// 在LateConstrcutor之后调用，主要用于处理游戏内事件的监听
+    /// 用于在卡牌实例化后进行额外的初始化操作，主要用于为卡牌手动添加组件或者对组件的数值进行修改
+    /// 仅在CardFactory.CreateCard()的最后执行一次
     /// </summary>
-    public virtual void Init()
+    public void LateConstrcutor()
+    {
+        AssignComponentValues();
+        OnLateConstructor();
+    }
+
+    protected virtual void OnLateConstructor() { }
+
+    /// <summary>
+    /// 注册交互事件
+    /// </summary>
+    protected virtual void RegisterCardEvents() { }
+
+    /// <summary>
+    /// 卡牌创建完成并加入背包后调用，或者背包初始化时调用。
+    /// 主要用于处理组件的事件监听 和 游戏内事件的监听等 无法序列化的部分
+    /// </summary>
+    public void Init()
     {
         if (init) return;
 
         init = true;
 
-        foreach (var c in components.Values)
-        {
-            c.SetBelongedCard(this);
-        }
+        AssignComponentValues();
 
-        LateConstrcutor();
-
-        // 如果有内容物组件，则开始监听内容物的更新
-        if (TryGetComponent<InnerContentsComponent>(out var component))
-        {
-            component.Init();
-        }
-
+        // 记录全局数量
         GlobalDataManager.Instance.AddCardNum(CardId);
 
+        // 监听事件
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
         UpdateManager.Instance.CardUpdate.AddListener(Update);
+
+        // 初始化内容物
+        InitInnerContents();
+
+        // 派生类初始化
+        OnInit();
+
+        // 注册卡牌事件
+        RegisterCardEvents();
     }
+
+    private void InitInnerContents()
+    {
+        // 处理内容物的过滤器
+        if (innerContents != null)
+        {
+            innerContents.contentFilter = ReflectionUtility.BindToDelegate<CardFilterDelegate>(this, "ContentFilter", true);
+        }
+
+        // 内容物初始化
+        innerContents?.Init();
+    }
+
+    protected virtual void OnInit() { }
     #endregion
 
     #region Update
@@ -176,6 +195,12 @@ public abstract class Card : IComparable<Card>
     private void Update()
     {
         if (isUpdatePaused || Destroyed) return;
+
+        // 更新组件
+        foreach (var component in components.Values)
+        {
+            if (component is IUpdate iu) iu.Update();
+        }
 
         OnUpdate();
     }
@@ -193,13 +218,7 @@ public abstract class Card : IComparable<Card>
     /// <summary>
     /// 每回合结算时执行
     /// </summary>
-    protected virtual void OnUpdate()
-    {
-        foreach (var component in components.Values)
-        {
-            if (component is IUpdate iu) iu.Update();
-        }
-    }
+    protected virtual void OnUpdate() { }
 
     public void PauseUpdating()
     {
@@ -224,8 +243,6 @@ public abstract class Card : IComparable<Card>
 
         SlotCards.RemoveCard(this);
 
-        //if (TryGetComponent<InnerContentsComponent>(out var innerContents)) innerContents.Clear();
-
         OnLeaveEnvironment();
 
         GlobalDataManager.Instance.ReduceCardNum(CardId);
@@ -238,6 +255,67 @@ public abstract class Card : IComparable<Card>
     #endregion
 
     #region Component
+    protected FreshnessComponent freshness;
+    protected GrowthComponent growth;
+    protected ProgressComponent progress;
+    protected EquipmentComponent equipment;
+    protected ToolComponent tool;
+    protected DurabilityComponent durability;
+    protected InnerContentsComponent innerContents;
+    protected FoodPropertyComponent foodProperty;
+    protected FuelComponent fuel;
+    protected PassageComponent passage;
+    protected ConstructionComponent construction;
+    protected CookComponent cook;
+    protected StateMachineComponent stateMachine;
+    protected PlantGrowthComponent plantGrowth;
+    protected FreshWaterStorageComponent freshWaterStorage;
+    protected SalineWaterStorageComponent salineWaterStorage;
+    protected OxygenStorageComponent oxygenStorage;
+    protected TemperatureComponent temperature;
+    protected FuelStorageComponent fuelStorage;
+    protected EntityComponent entity;
+    protected CoordinateComponent coordinate;
+    protected WeaponComponent weapon;
+
+    private bool assigned = false;
+
+    private void AssignComponentValues()
+    {
+        if (assigned) return;
+
+        assigned = true;
+
+        TryGetComponent(out freshness);
+        TryGetComponent(out growth);
+        TryGetComponent(out progress);
+        TryGetComponent(out equipment);
+        TryGetComponent(out tool);
+        TryGetComponent(out durability);
+        TryGetComponent(out innerContents);
+        TryGetComponent(out foodProperty);
+        TryGetComponent(out fuel);
+        TryGetComponent(out passage);
+        TryGetComponent(out construction);
+        TryGetComponent(out cook);
+        TryGetComponent(out stateMachine);
+        TryGetComponent(out plantGrowth);
+        TryGetComponent(out freshWaterStorage);
+        TryGetComponent(out salineWaterStorage);
+        TryGetComponent(out oxygenStorage);
+        TryGetComponent(out temperature);
+        TryGetComponent(out fuelStorage);
+        TryGetComponent(out entity);
+        TryGetComponent(out coordinate);
+        TryGetComponent(out weapon);
+        // 这里没有处理TimerComponent，是因为它是临时的
+
+        foreach (var c in components.Values)
+        {
+            c.SetBelongedCard(this);
+        }
+    }
+
     public virtual void Use(float durabilityConsumption = 1)
     {
         if (TryGetComponent<DurabilityComponent>(out var component))
@@ -416,7 +494,7 @@ public abstract class Card : IComparable<Card>
         sb.AppendLine($"事件数量: {Events.Count}");
         foreach (var ev in Events)
         {
-            sb.AppendLine($"  - 事件名称: {ev.name}");
+            sb.AppendLine($"  - 事件名称: {ev.Name}");
         }
         sb.AppendLine($"组件数量: {components.Count}");
         foreach (var kvp in components)
@@ -601,24 +679,60 @@ public abstract class Card : IComparable<Card>
 
     #endregion
 
+    #region OtherUtils
+    protected void AddCardEvent(
+        string name,
+        string description,
+        OutStringAction action,
+        OutStringFunc<bool> condition,
+        Func<int> getTimeChange = null,
+        Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
+        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null)
+    {
+        Events.Add(new(name, description, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges));
+    }
+
+    protected void AddCardEvent(
+        string name,
+        Func<string> getDescription,
+        OutStringAction action,
+        OutStringFunc<bool> condition,
+        Func<int> getTimeChange = null,
+        Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
+        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null)
+    {
+        Events.Add(new(name, getDescription, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges));
+    }
+
     protected void EasyEvent(out string tip, string sound = "", bool destroyThis = true, int eventIndex = 0)
     {
         tip = string.Empty;
-        
-        // 销毁自身
+
+        // 销毁
         if (destroyThis)
             DestroyThis();
-        
+
+        // 播放音效
+        PlaySound(sound);
+
+        ApplyEventEffects(eventIndex);
+    }
+
+    protected void ApplyEventEffects(int eventIndex)
+    {
+        var e = Events[eventIndex];
+        // 应用状态变化
+        GameManager.Instance.CurEnvironmentBag.ApplyEnvStateChanges(e.GetEnvStateChanges());
+        StateManager.Instance.ApplyPlayerStateChanges(e.GetPlayerStateChanges());
+        // 消耗时间
+        TimeManager.Instance.AddTime(e.GetTimeChange());
+    }
+
+    protected void PlaySound(string sound, bool randomVolume = false)
+    {
         // 播放音效
         if (!string.IsNullOrEmpty(sound) && SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound(sound, true);
-
-        var e = Events[eventIndex];
-
-        // 应用状态变化
-        GameManager.Instance.CurEnvironmentBag.ApplyEnvEffects(e.GetEnvEffects());
-        StateManager.Instance.ApplyPlayerStateChange(e.GetPlayerEffects());
-        // 消耗时间
-        TimeManager.Instance.AddTime(e.GetTimeEffect());
+            SoundManager.Instance.PlaySound(sound, randomVolume);
     }
+    #endregion
 }

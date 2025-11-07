@@ -14,8 +14,8 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
     private string textTip;
     private Color textColor;
     private int time;
-    private Dictionary<PlayerStateEnum, float> playerEffects;
-    private Dictionary<EnvironmentStateEnum, float> envEffects;
+    private Dictionary<PlayerStateEnum, float> playerStateChanges;
+    private Dictionary<EnvironmentStateEnum, float> envStateChanges;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -32,23 +32,23 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         string textTip,
         Color textColor,
         int time,
-        Dictionary<PlayerStateEnum, float> playerEffects,
-        Dictionary<EnvironmentStateEnum, float> envEffects)
+        Dictionary<PlayerStateEnum, float> playerStateChanges,
+        Dictionary<EnvironmentStateEnum, float> envStateChanges)
     {
         this.textTip = textTip;
         this.textColor = textColor;
         this.time = time;
-        this.playerEffects = playerEffects;
-        this.envEffects = envEffects;
+        this.playerStateChanges = playerStateChanges;
+        this.envStateChanges = envStateChanges;
     }
 
     public void SetTip(
         string textTip,
         int time,
-        Dictionary<PlayerStateEnum, float> playerEffects,
-        Dictionary<EnvironmentStateEnum, float> envEffects)
+        Dictionary<PlayerStateEnum, float> playerStateChanges,
+        Dictionary<EnvironmentStateEnum, float> envStateChanges)
     {
-        SetTip(textTip, ColorManager.White, time, playerEffects, envEffects);
+        SetTip(textTip, ColorManager.White, time, playerStateChanges, envStateChanges);
     }
 
     public void SetTip(string textTip)
@@ -63,7 +63,7 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void ShowTip()
     {
-        if (string.IsNullOrEmpty(textTip) && time == 0 && playerEffects.IsNullOrEmpty() && envEffects.IsNullOrEmpty())
+        if (string.IsNullOrEmpty(textTip) && time == 0 && playerStateChanges.IsNullOrEmpty() && envStateChanges.IsNullOrEmpty())
         {
             HideTip();
             return;
@@ -71,7 +71,7 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
         hoverTip = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Tips", "HoverTip", WindowsManager.Instance.HoverTipLayer).GetComponent<HoverTip>();
 
-        hoverTip.SetTip(textTip, textColor, time, playerEffects, envEffects);
+        hoverTip.SetTip(textTip, textColor, time, playerStateChanges, envStateChanges);
         hoverTip.transform.position = CalcTipPos();
         hoverTip.Show();
     }

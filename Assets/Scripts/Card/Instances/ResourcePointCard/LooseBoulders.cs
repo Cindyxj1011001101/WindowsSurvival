@@ -1,44 +1,38 @@
-/// <summary>
-/// ËÉ¶¯¾ŞÊ¯
+ï»¿/// <summary>
+/// æ¾åŠ¨å·¨çŸ³
 /// </summary>
 public class LooseBoulders : Card
 {
     private DropList dropList = new(
-       new Drop(3, ("²£Á§É³", 1)),
-       new Drop(2, ("°×±¬¿ó", 1)),
-       new Drop(1, ("º£ÅÀ³æ", 1))
+       new Drop(3, ("ç»ç’ƒæ²™", 1)),
+       new Drop(2, ("ç™½çˆ†çŸ¿", 1)),
+       new Drop(1, ("æµ·çˆ¬è™«", 1))
        );
 
-    private LooseBoulders()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("ÓÃ²ù×ÓÔä", "", Event_DigByTool, Judge_DigByTool, () => 15),
-        };
+        AddCardEvent("ç”¨é“²å­å‡¿", "", Event_DigByTool, Judge_DigByTool, () => 15);
     }
 
-    public override void LateConstrcutor()
+    protected override void OnInit()
     {
-        base.LateConstrcutor();
-
-        TryGetComponent<DurabilityComponent>(out var d);
-        d.onBroken = () =>
+        durability.onBroken = () =>
         {
-            TurnTo("´ÓÖ¯¹âÔåÄ¹Ô°µ½Ç³²ãÑÒÑ¨", Bag);
+            TurnTo("ä»ç»‡å…‰è—»å¢“å›­åˆ°æµ…å±‚å²©ç©´", Bag);
         };
     }
 
     private void Event_DigByTool(out string tip)
     {
-        DigByTool(GameManager.Instance.PlayerBag.FindCardOfName("¸Ö²ù"), out tip);
+        DigByTool(GameManager.Instance.PlayerBag.FindCardOfName("é’¢é“²"), out tip);
     }
 
     private bool Judge_DigByTool(out string hint)
     {
         hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfName("¸Ö²ù") == null)
+        if (GameManager.Instance.PlayerBag.FindCardOfName("é’¢é“²") == null)
         {
-            hint = "ĞèÒª¸Ö²ù";
+            hint = "éœ€è¦é’¢é“²";
             return false;
         }
         return true;
@@ -46,25 +40,24 @@ public class LooseBoulders : Card
 
     private void DigByTool(Card tool, out string tip)
     {
-        //µôÂä¿¨ÅÆ
+        //æ‰è½å¡ç‰Œ
         RandomDrop(dropList, out tip, onDrop: () =>
         {
-            //ÏûºÄ1µãÄÍ¾Ã¶È
+            //æ¶ˆè€—1ç‚¹è€ä¹…åº¦
             Use();
-            // ¹¤¾ßÏûºÄÄÍ¾Ã
+            // å·¥å…·æ¶ˆè€—è€ä¹…
             tool.Use();
 
-            //ÏûºÄ15·ÖÖÓ
-            TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
+            ApplyEventEffects(0);
         });
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
-        if (card.CardId == "¸Ö²ù")
+        if (card.CardId == "é’¢é“²")
         {
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
         return false;

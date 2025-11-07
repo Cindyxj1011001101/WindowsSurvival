@@ -1,19 +1,17 @@
-/// <summary>
-/// ∂Ò≥Ù»‚
+Ôªø/// <summary>
+/// ÊÅ∂Ëá≠ËÇâ
 /// </summary>
 public class FoulSmellingMeat : CookableCard
 {
-    private FoulSmellingMeat()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent(" ≥”√", "", (out string s) => EasyEvent(out s, "≥‘_01"), null, () => 15,
+        AddCardEvent("È£üÁî®", "", (out string s) => EasyEvent(out s, "ÂêÉ_01"), null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 14 },
                 { PlayerStateEnum.Sanity, -20 },
                 { PlayerStateEnum.Health, -15 }
-            }),
-        };
+            });
     }
 }

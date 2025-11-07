@@ -3,18 +3,16 @@
 /// </summary>
 public class BurntFood : CookableCard
 {
-    private BurntFood()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 15,
+        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 10 },
                 { PlayerStateEnum.Hydration, -20 },
                 { PlayerStateEnum.Health, -5 },
                 { PlayerStateEnum.BodyTemperature, 20 }
-            })
-        };
+            });
     }
 }

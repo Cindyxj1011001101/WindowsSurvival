@@ -3,12 +3,9 @@
 /// </summary>
 public class Siphonophyllum : Card
 {
-    private Siphonophyllum()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("切割", "这会杀死虹吸海葵并获得磁性触手", Event_Cut, Judge_Cut, () => 45)
-        };
+        AddCardEvent("切割", "这会杀死虹吸海葵并获得磁性触手", Event_Cut, Judge_Cut, () => 45);
     }
 
     private void Event_Cut(out string tip)
@@ -33,7 +30,7 @@ public class Siphonophyllum : Card
         tool.Use();
 
         tip = string.Empty;
-        TimeManager.Instance.AddTime(45);
+        ApplyEventEffects(0);
         AddCards("磁性触手", 2, true);
     }
 
@@ -43,7 +40,7 @@ public class Siphonophyllum : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
         return false;

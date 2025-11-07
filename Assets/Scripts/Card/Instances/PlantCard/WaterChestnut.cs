@@ -5,34 +5,25 @@
 /// </summary>
 public class WaterChestnut : PlantCard
 {
-    private StateMachineComponent stateMachine;
-
-    private WaterChestnut()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("采集", "采集四角菱结出的菱果", Event_Collect, Judge_Collect, () => 15),
-            new CardEvent("铲起", "将四角菱连根铲起。将会获得一颗菱果", Event_DigUp, Judge_DigUp, () => 15),
-        };
+        AddCardEvent("采集", "采集四角菱结出的菱果", Event_Collect, Judge_Collect, () => 15);
+        AddCardEvent("铲起", "将四角菱连根铲起。将会获得一颗菱果", Event_DigUp, Judge_DigUp, () => 15);
     }
 
-    public override void LateConstrcutor()
+    protected override void OnLateConstructor()
     {
-        base.LateConstrcutor();
-
-        if (!TryGetComponent(out stateMachine))
+        var states = new List<CardState>()
         {
-            var states = new List<CardState>()
-            {
-                new ("幼苗期", "6"),
-                new ("生长期1", "7") { displayName = "生长期"},
-                new ("生长期2", "8") { displayName = "生长期"},
-                new ("成熟期", "9"),
-            };
-            stateMachine = new StateMachineComponent(states);
-            AddComponent(stateMachine);
-            UpdatePlantState();
-        }
+            new ("幼苗期", "6"),
+            new ("生长期1", "7") { displayName = "生长期"},
+            new ("生长期2", "8") { displayName = "生长期"},
+            new ("成熟期", "9"),
+        };
+        stateMachine = new StateMachineComponent(states);
+        AddComponent(stateMachine);
+
+        UpdatePlantState();
     }
 
     protected override void UpdatePlantState()
@@ -62,7 +53,7 @@ public class WaterChestnut : PlantCard
     {
         tip = string.Empty;
         plantGrowth.AddValue(-100); // 生长进度-100
-        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
+        ApplyEventEffects(0);
         AddCard("菱果", Bag);
         UpdatePlantState();
     }
@@ -88,7 +79,7 @@ public class WaterChestnut : PlantCard
         tip = string.Empty;
         DestroyThis();
         tool.Use();
-        TimeManager.Instance.AddTime(Events[1].GetTimeEffect());
+        ApplyEventEffects(1);
         AddCard(plantGrowth.deadCardId, Bag);
     }
 
@@ -114,7 +105,7 @@ public class WaterChestnut : PlantCard
         tip = string.Empty;
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            tip = Events[1].name;
+            tip = Events[1].Name;
             return true;
         }
 

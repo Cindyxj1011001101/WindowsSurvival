@@ -9,7 +9,7 @@ using UnityEngine;
 public class MoveExploreExtraEffects
 {
     // <原因，(最终时间倍率，玩家状态额外变化值)>
-    public Dictionary<string, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)> extraEffects = new();
+    public Dictionary<string, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerStateChanges)> extraEffects = new();
 
     [JsonIgnore]
     public float FinalTimeMultiplier
@@ -25,10 +25,10 @@ public class MoveExploreExtraEffects
         }
     }
 
-    public void AddEffect(string reason, float finalTimeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
+    public void AddEffect(string reason, float finalTimeMultiplier, Dictionary<PlayerStateEnum, float> playerStateChanges)
     {
         if (extraEffects.ContainsKey(reason)) return; // 如果已经存在该原因的效果，则不添加
-        extraEffects.Add(reason, (finalTimeMultiplier, playerEffects));
+        extraEffects.Add(reason, (finalTimeMultiplier, playerStateChanges));
     }
 
     public void RemoveEffect(string reason)
@@ -51,16 +51,16 @@ public class MoveExploreExtraEffects
         var desc = new StringBuilder();
         desc.AppendLine();
         desc.AppendLine();
-        foreach (var (reason, (timeMultiplier, playerEffects)) in extraEffects)
+        foreach (var (reason, (timeMultiplier, playerStateChanges)) in extraEffects)
         {
             var str = $"{(timeMultiplier > 0 ? "+" : "")}{timeMultiplier * 100}%";
             str = ColorManager.Colorize(str, timeMultiplier > 0 ? ColorManager.Red : ColorManager.Green);
             desc.AppendLine($"{ColorManager.Colorize($"{reason}:", ColorManager.Yellow)}");
             desc.AppendLine($"  - 时间消耗 {str}");
 
-            if (playerEffects.IsNullOrEmpty()) continue;
+            if (playerStateChanges.IsNullOrEmpty()) continue;
 
-            foreach (var (state, delta) in playerEffects)
+            foreach (var (state, delta) in playerStateChanges)
             {
                 str = ColorManager.Colorize(delta, delta < 0 ? ColorManager.Red : ColorManager.Green);
                 desc.AppendLine($"  - {StateManager.ParsePlayerState(state)} {str}");
@@ -69,7 +69,7 @@ public class MoveExploreExtraEffects
         return desc.ToString().TrimEnd('\n');
     }
 
-    public Dictionary<PlayerStateEnum, float> GetFinalPlayerEffects(Dictionary<PlayerStateEnum, float> currentEffects)
+    public Dictionary<PlayerStateEnum, float> GetFinalPlayerStateChanges(Dictionary<PlayerStateEnum, float> currentEffects)
     {
         static void AddEffects(Dictionary<PlayerStateEnum, float> final, Dictionary<PlayerStateEnum, float> current)
         {
@@ -81,9 +81,9 @@ public class MoveExploreExtraEffects
             }
         }
         Dictionary<PlayerStateEnum, float> finalEffects = new();
-        foreach (var (_, playerEffects) in extraEffects.Values)
+        foreach (var (_, playerStateChanges) in extraEffects.Values)
         {
-            AddEffects(finalEffects, playerEffects);
+            AddEffects(finalEffects, playerStateChanges);
         }
         AddEffects(finalEffects, currentEffects);
         return finalEffects;

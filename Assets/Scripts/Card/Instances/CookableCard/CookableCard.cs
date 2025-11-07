@@ -1,17 +1,9 @@
 ﻿public abstract class CookableCard : Card
 {
-    private CookComponent cookComponent;
-
-    public override void LateConstrcutor()
-    {
-        base.LateConstrcutor();
-        TryGetComponent(out cookComponent);
-    }
-
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
-        if (cookComponent.leftCookTime > 0 && card.CardId == "自热烹饪袋")
+        if (cook.leftCookTime > 0 && card.CardId == "自热烹饪袋")
         {
             tip = "煮熟食物";
             return true;
@@ -24,9 +16,8 @@
         tip = string.Empty;
         DestroyThis();
         slot.PeekCard().Use();
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("点火_02", true);
+        PlaySound("点火_02", true);
         TimeManager.Instance.AddTime(15);
-        cookComponent.HandleCookComplete();
+        cook.HandleCookComplete();
     }
 }

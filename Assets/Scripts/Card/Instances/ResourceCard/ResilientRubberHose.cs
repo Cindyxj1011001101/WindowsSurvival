@@ -3,8 +3,4 @@
 /// </summary>
 public class ResilientRubberHose : Card
 {
-    private ResilientRubberHose()
-    {
-
-    }
 }

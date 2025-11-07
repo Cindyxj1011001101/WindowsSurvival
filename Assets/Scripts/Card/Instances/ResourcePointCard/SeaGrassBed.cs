@@ -22,13 +22,10 @@ public class SeaGrassBed : Card
         new Drop(3, ("海爬虫", 1))
         );
 
-    private SeaGrassBed()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("用手采集", "获得的东西更少且有可能划伤手", Event_CollectByHand, null, () => 30),
-            new CardEvent("用刀采集", "耗时更少但获得更多产物", Event_CollectByKnife, Judge_CollectByKnife, () => 15),
-        };
+        AddCardEvent("用手采集", "获得的东西更少且有可能划伤手", Event_CollectByHand, null, () => 30);
+        AddCardEvent("用刀采集", "耗时更少但获得更多产物", Event_CollectByKnife, Judge_CollectByKnife, () => 15);
     }
 
     private void Event_CollectByHand(out string tip)
@@ -37,7 +34,7 @@ public class SeaGrassBed : Card
         {
             Use();
 
-            TimeManager.Instance.AddTime(30);
+            ApplyEventEffects(0);
         });
     }
 
@@ -64,7 +61,7 @@ public class SeaGrassBed : Card
             Use();
             tool.Use();
 
-            TimeManager.Instance.AddTime(15);
+            ApplyEventEffects(1);
         });
     }
 
@@ -74,7 +71,7 @@ public class SeaGrassBed : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            tip = Events[1].name;
+            tip = Events[1].Name;
             return true;
         }
         return false;

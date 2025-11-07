@@ -3,8 +3,4 @@
 /// </summary>
 public class Battery : Card
 {
-    private Battery()
-    {
-
-    }
 }

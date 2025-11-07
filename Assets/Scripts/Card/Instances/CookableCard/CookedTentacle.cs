@@ -3,16 +3,14 @@
 /// </summary>
 public class CookedTentacle : CookableCard
 {
-    private CookedTentacle()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 30,
+        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+            () => 30,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 24 },
                 { PlayerStateEnum.Sanity, -1 },
-            })
-        };
+            });
     }
 }

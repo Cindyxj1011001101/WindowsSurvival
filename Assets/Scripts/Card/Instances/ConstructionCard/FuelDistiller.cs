@@ -5,65 +5,49 @@
 /// </summary>
 public class FuelDistiller : ConstructionCard
 {
-    private InnerContentsComponent innerContents; // 内容物组件
-    private FuelStorageComponent fuelStorage; // 燃料存储组件
-    private StateMachineComponent stateMachine;
-    private FreshWaterStorageComponent freshWaterStorage; // 淡水存储 
-    private SalineWaterStorageComponent salineWaterStorage; // 盐水存储
-
-    private FuelDistiller() { }
-
-    public override void LateConstrcutor()
+    protected override void RegisterCardEvents()
     {
-        base.LateConstrcutor();
+        AddCardEvent("点燃", "点燃蒸馏器。将盐水蒸馏成淡水。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite);
+        AddCardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish);
+        AddCardEvent("倒入盐水", "消耗盐水，使蒸馏器的盐水储量+12\n！可能会造成浪费！", Event_AddSalineWater, Judge_AddSalineWater);
+        base.RegisterCardEvents(); // 拆毁
+    }
 
+    protected override void OnLateConstructor()
+    {
         // 手动添加燃料存储组件
-        if (!TryGetComponent(out fuelStorage))
-        {
-            fuelStorage = new FuelStorageComponent(96);
-            AddComponent(fuelStorage);
-        }
+        fuelStorage = new FuelStorageComponent(96);
+        AddComponent(fuelStorage);
 
-        fuelStorage.whileBurning = HandleDistillation;
-
-        // 不允许放入
+        // 内容物不允许放入
         innerContents.allowAdd = false;
         innerContents.notAllowAddReason = "该槽位仅用于放置蒸馏产出的瓶装水";
+
+        var states = new List<CardState>()
+        {
+            new ("未点燃", "22"),
+            new ("已点燃", "22", true),
+        };
+        stateMachine = new StateMachineComponent("未点燃", states);
+        AddComponent(stateMachine);
+
+        // 淡水存储组件
+        freshWaterStorage = new(12);
+        AddComponent(freshWaterStorage);
+
+        // 盐水存储组件
+        salineWaterStorage = new(24);
+        AddComponent(salineWaterStorage);
+    }
+
+    protected override void OnInit()
+    {
+        fuelStorage.whileBurning = HandleDistillation;
 
         // 取出瓶装水时，如果淡水储量达到了上限，则再生成一瓶
         innerContents.onRemoveCard = (c) =>
         {
             TryGetBottledWater();
-        };
-
-        if (!TryGetComponent(out stateMachine))
-        {
-            var states = new List<CardState>()
-            {
-                new ("未点燃", "22"),
-                new ("已点燃", "22", true),
-            };
-            stateMachine = new StateMachineComponent("未点燃", states);
-            AddComponent(stateMachine);
-        }
-
-        if (!TryGetComponent(out freshWaterStorage))
-        {
-            freshWaterStorage = new(12);
-            AddComponent(freshWaterStorage);
-        }
-
-        if (!TryGetComponent(out salineWaterStorage))
-        {
-            salineWaterStorage = new(24);
-            AddComponent(salineWaterStorage);
-        }
-
-        Events = new()
-        {
-            new CardEvent("点燃", "点燃蒸馏器。将盐水蒸馏成淡水。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite),
-            new CardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish),
-            new CardEvent("倒入盐水", "消耗盐水，使蒸馏器的盐水储量+12\n！可能会造成浪费！", Event_AddSalineWater, Judge_AddSalineWater),
         };
     }
 
@@ -76,7 +60,7 @@ public class FuelDistiller : ConstructionCard
 
         stateMachine.ChangeState("已点燃");
 
-        SoundManager.Instance.PlaySound("点火_02");
+        PlaySound("点火_02");
     }
 
     private void Extinguish(out string s)
@@ -165,7 +149,7 @@ public class FuelDistiller : ConstructionCard
         // 放入盐水
         if (card.CardId == "盐水" && salineWaterStorage.value < salineWaterStorage.maxValue)
         {
-            tip = Events[2].name;
+            tip = Events[2].Name;
             return true;
         }
 

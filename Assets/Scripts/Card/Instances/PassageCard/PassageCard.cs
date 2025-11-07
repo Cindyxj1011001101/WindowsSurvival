@@ -1,47 +1,31 @@
 ﻿public abstract class PassageCard : Card
 {
-    private PassageComponent passage;
-    private CoordinateComponent coordinate;
-
     private const float MAX_AVAILABLE_DIST = 3.0f; // 小于等于该距离时可以使用通道
 
-    protected PassageCard()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("通过", "", Event_Enter, Judge_Enter),
-            new CardEvent("移至附近", "", Event_MoveNear, Judge_MoveNear)
-        };
+        AddCardEvent("通过",
+            () => "前往" + ParsePlaceEnum(passage.targetPlace) + MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc,
+            Event_Enter, Judge_Enter,
+            () => MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).time,
+            () => MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerStateChanges);
+        AddCardEvent("移至附近",
+            () => "移动到通道的附近" + MoveExploreManager.Instance.GetMoveEffects(GetNearestAvailablePosition()).desc,
+            Event_MoveNear, Judge_MoveNear,
+            () => MoveExploreManager.Instance.GetMoveEffects(GetNearestAvailablePosition()).time,
+            () => MoveExploreManager.Instance.GetMoveEffects(GetNearestAvailablePosition()).playerStateChanges);
     }
 
-    public override void LateConstrcutor()
+    protected override void OnInit()
     {
-        base.LateConstrcutor();
-        TryGetComponent(out coordinate);
-        TryGetComponent(out passage);
-
-        Events[0].description = "前往" + ParsePlaceEnum(passage.targetPlace) +
-            MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
-        Events[0].getTimeEffect = () => MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).time;
-        Events[0].getPlayerEffects = () => MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerEffects;
-
-        var pos = GetNearestAvailablePosition();
-        Events[1].description = "移动到通道的附近" + MoveExploreManager.Instance.GetMoveEffects(pos).desc;
-        Events[1].getTimeEffect = () => MoveExploreManager.Instance.GetMoveEffects(pos).time;
-        Events[1].getPlayerEffects = () => MoveExploreManager.Instance.GetMoveEffects(pos).playerEffects;
-    }
-
-    public override void Init()
-    {
-        base.Init();
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
-        EventManager.Instance.AddListener(EventType.PlayerMove, OnPlayerMove);
+        EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
     protected override void OnDestroy()
     {
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
-        EventManager.Instance.RemoveListener(EventType.PlayerMove, OnPlayerMove);
+        EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
 
     /// <summary>
@@ -52,8 +36,6 @@
     {
         if (state == PlayerStateEnum.Load)
         {
-            Events[0].description = "前往" + ParsePlaceEnum(passage.targetPlace) +
-                MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc;
             RefreshSlot();
         }
     }
@@ -63,17 +45,10 @@
         return GameManager.Instance.PlaceDataDict[place].placeName;
     }
 
-    private void OnPlayerMove()
-    {
-        Events[1].description = "移动到通道的附近" + MoveExploreManager.Instance.GetMoveEffects(GetNearestAvailablePosition()).desc;
-        RefreshSlot();
-    }
-
     protected virtual void Event_Enter(out string tip)
     {
         tip = string.Empty;
-        if (!string.IsNullOrEmpty(passage.audioClip))
-            SoundManager.Instance.PlaySound(passage.audioClip, true);
+        PlaySound(passage.audioClip, true);
         MoveExploreManager.Instance.Move(passage.targetPlace, passage.time);
     }
 

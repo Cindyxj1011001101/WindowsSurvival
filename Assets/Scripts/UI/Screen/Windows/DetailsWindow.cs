@@ -35,7 +35,7 @@ public class DetailsWindow : BagWindow
     {
         base.Awake();
         EventManager.Instance.AddListener<Card>(EventType.ChangeCardProperty, RefreshCard);
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
@@ -43,7 +43,7 @@ public class DetailsWindow : BagWindow
     {
         Clear();
         EventManager.Instance.RemoveListener<Card>(EventType.ChangeCardProperty, RefreshCard);
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
     }
 
@@ -258,7 +258,7 @@ public class DetailsWindow : BagWindow
             var card = currentDisplayedCard;
             var button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
             var btnText = button.GetComponentInChildren<Text>();
-            btnText.text = e.name;
+            btnText.text = e.Name;
 
             var interactable = e.Judge();
             button.Interactable = interactable;
@@ -276,7 +276,7 @@ public class DetailsWindow : BagWindow
                     button.transform.ShowTip(tip, 1.4f);
 
                     // 显示状态变化
-                    var playerStateChanges = e.GetPlayerEffects();
+                    var playerStateChanges = e.GetPlayerStateChanges();
                     if (!playerStateChanges.IsNullOrEmpty())
                     {
                         foreach (var (state, delta) in playerStateChanges)
@@ -285,7 +285,7 @@ public class DetailsWindow : BagWindow
                         }
                     }
 
-                    var envStateChanges = e.GetEnvEffects();
+                    var envStateChanges = e.GetEnvStateChanges();
                     if (!envStateChanges.IsNullOrEmpty())
                     {
                         foreach (var (state, delta) in envStateChanges)
@@ -306,7 +306,7 @@ public class DetailsWindow : BagWindow
                 });
 
                 // 设置提示
-                button.GetComponent<HoverTipController>().SetTip(e.Description, e.GetTimeEffect(), e.GetPlayerEffects(), e.GetEnvEffects());
+                button.GetComponent<HoverTipController>().SetTip(e.Description, e.GetTimeChange(), e.GetPlayerStateChanges(), e.GetEnvStateChanges());
             }
             else
             {

@@ -3,15 +3,15 @@
 /// </summary>
 public class FishingNetBag : EquipmentCard
 {
-    private InnerContentsComponent innerContents;
-    private FishingNetBag() : base()
+    protected override void RegisterCardEvents()
     {
-        Events.Add(new CardEvent("切割", "切割渔获袋", Event_Cut, Judge_Cut));
+        AddCardEvent("切割", "切割渔获袋", Event_Cut, Judge_Cut, () => 15);
+        base.RegisterCardEvents();
     }
 
-    public override void LateConstrcutor()
+    protected override void OnLateConstructor()
     {
-        base.LateConstrcutor();
+        // 减重率为60%
         innerContents.weightLossRate = 0.6f;
     }
 
@@ -49,7 +49,7 @@ public class FishingNetBag : EquipmentCard
         tip = string.Empty;
         DestroyThis();
         tool.Use();
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(0);
         AddCard("韧性胶管", true);
         AddCards("纤维", 4, true);
     }
@@ -59,7 +59,7 @@ public class FishingNetBag : EquipmentCard
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut) && innerContents.bag.IsEmpty)
         {
             // 如果是切割工具，并且渔获袋是空的，可以快速交互
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
         return innerContents.CanQuickInteract(card, out tip);

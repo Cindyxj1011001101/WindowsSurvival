@@ -1,6 +1,7 @@
-/// <summary>
-/// ´ÓÇ³²ãÑÒÑ¨µ½Ö¯¹âÔåÄ¹Ô°
+ï»¿/// <summary>
+/// ä»Žæµ…å±‚å²©ç©´åˆ°ç»‡å…‰è—»å¢“å›­
 /// </summary>
 public class FromShallowGrottoToPhosphorTomb : PassageCard
 {
+
 }

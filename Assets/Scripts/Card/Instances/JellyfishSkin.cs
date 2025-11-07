@@ -1,35 +1,33 @@
-/// <summary>
-/// Î´´¦ÀíµÄº£òØÆ¤
+ï»¿/// <summary>
+/// æœªå¤„ç†çš„æµ·èœ‡çš®
 /// </summary>
 public class JellyfishSkin : Card
 {
-    private JellyfishSkin()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("Ê³ÓÃ", "", (out string s) => EasyEvent(out s, "³Ô_01"), null, () => 15,
+        AddCardEvent("é£Ÿç”¨", "", (out string s) => EasyEvent(out s, "åƒ_01"), null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 15 },
                 { PlayerStateEnum.Health, -4 },
                 { PlayerStateEnum.Sanity, -5 },
                 { PlayerStateEnum.Itchiness, +45 }
-            }),
-            new CardEvent("ëç×ÕÍÑ¶¾", "", Event_Pickle, Judge_Pickle, () => 5),
-        };
+            });
+        AddCardEvent("è…Œæ¸è„±æ¯’", "", Event_Pickle, Judge_Pickle, () => 5);
     }
 
     private void Event_Pickle(out string tip)
     {
-        Pickle(GameManager.Instance.PlayerBag.FindCardOfName("ÑÎË®"), out tip);
+        Pickle(GameManager.Instance.PlayerBag.FindCardOfName("ç›æ°´"), out tip);
     }
 
     private bool Judge_Pickle(out string hint)
     {
         hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfName("ÑÎË®") == null)
+        if (GameManager.Instance.PlayerBag.FindCardOfName("ç›æ°´") == null)
         {
-            hint = "ĞèÒªÑÎË®";
+            hint = "éœ€è¦ç›æ°´";
             return false;
         }
         return true;
@@ -41,17 +39,17 @@ public class JellyfishSkin : Card
         DestroyThis();
         salineWater.DestroyThis();
 
-        TimeManager.Instance.AddTime(Events[1].GetTimeEffect());
-        TurnTo("ëç×ÕÖĞµÄº£òØÆ¤", Bag);
+        ApplyEventEffects(1);
+        TurnTo("è…Œæ¸ä¸­çš„æµ·èœ‡çš®", Bag);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
-        // ÔÊĞíºÍ´øÓĞÇĞ¸î±êÇ©µÄ¿¨ÅÆ¿ìËÙ½»»¥
-        if (card.CardId == "ÑÎË®")
+        // å…è®¸å’Œå¸¦æœ‰åˆ‡å‰²æ ‡ç­¾çš„å¡ç‰Œå¿«é€Ÿäº¤äº’
+        if (card.CardId == "ç›æ°´")
         {
-            tip = Events[1].name;
+            tip = Events[1].Name;
             return true;
         }
         return false;

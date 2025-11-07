@@ -3,16 +3,14 @@
 /// </summary>
 public class ScaldedClaw : Card
 {
-    private ScaldedClaw()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("食用", "食用白灼触手", (out string s) => EasyEvent(out s, "吃_01"), null, () => 45,
+        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+            () => 45,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 81 },
                 { PlayerStateEnum.Sanity, -3 }
-            })
-        };
+            });
     }
 }

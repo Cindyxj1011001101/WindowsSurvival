@@ -3,8 +3,4 @@
 /// </summary>
 public class ScrapIronKnife : Card
 {
-    private ScrapIronKnife()
-    {
-
-    }
 }

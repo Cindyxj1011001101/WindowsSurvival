@@ -1,49 +1,36 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 
 /// <summary>
-/// È¼ÁÏ·¢µç»ú
+/// ç‡ƒæ–™å‘ç”µæœº
 /// </summary>
 public class FuelGenerator : ConstructionCard
 {
-    private FuelStorageComponent fuelStorage; // È¼ÁÏ´æ´¢×é¼ş
-    private StateMachineComponent stateMachine;
-
     private const float ELECTRICITY_PRODUCTION = 0.8f;
 
-    private FuelGenerator() { }
-
-    public override void LateConstrcutor()
+    protected override void RegisterCardEvents()
     {
-        base.LateConstrcutor();
-
-        // ÊÖ¶¯Ìí¼ÓÈ¼ÁÏ´æ´¢×é¼ş
-        if (!TryGetComponent(out fuelStorage))
-        {
-            fuelStorage = new FuelStorageComponent(144);
-            AddComponent(fuelStorage);
-        }
-        
-        if (!TryGetComponent(out stateMachine))
-        {
-            var states = new List<CardState>()
-            {
-                new ("Î´µãÈ¼", "18"),
-                new ("ÒÑµãÈ¼", "18", true),
-            };
-            stateMachine = new StateMachineComponent("Î´µãÈ¼", states);
-            AddComponent(stateMachine);
-        }
-
-        Events = new()
-        {
-            new CardEvent("µãÈ¼", $"µãÈ¼{CardName}¡£µãÈ»ºóÃ¿15·ÖÖÓ¿ÉÒÔ²úÉú{ELECTRICITY_PRODUCTION}µ¥Î»µçÁ¦¡£\nµãÈ¼×´Ì¬ÏÂ»áµ¼ÖÂÊÒÄÚÑõÆø¼ÓËÙÏûºÄÓëÒ»Ñõ»¯Ì¼Ôö¼Ó", Ignite, CanIgnite),
-            new CardEvent("Ï¨Ãğ", "", Extinguish, fuelStorage.CanExtinguish),
-        };
+        AddCardEvent("ç‚¹ç‡ƒ", $"ç‚¹ç‡ƒ{CardName}ã€‚ç‚¹ç„¶åæ¯15åˆ†é’Ÿå¯ä»¥äº§ç”Ÿ{ELECTRICITY_PRODUCTION}å•ä½ç”µåŠ›ã€‚\nç‚¹ç‡ƒçŠ¶æ€ä¸‹ä¼šå¯¼è‡´å®¤å†…æ°§æ°”åŠ é€Ÿæ¶ˆè€—ä¸ä¸€æ°§åŒ–ç¢³å¢åŠ ", Ignite, CanIgnite);
+        AddCardEvent("ç†„ç­", "", Extinguish, fuelStorage.CanExtinguish);
+        base.RegisterCardEvents(); // æ‹†æ¯
     }
 
-    public override void Init()
+    protected override void OnLateConstructor()
     {
-        base.Init();
+        // æ‰‹åŠ¨æ·»åŠ ç‡ƒæ–™å­˜å‚¨ç»„ä»¶
+        fuelStorage = new FuelStorageComponent(144);
+        AddComponent(fuelStorage);
+
+        var states = new List<CardState>()
+        {
+            new ("æœªç‚¹ç‡ƒ", "18"),
+            new ("å·²ç‚¹ç‡ƒ", "18", true),
+        };
+        stateMachine = new StateMachineComponent("æœªç‚¹ç‡ƒ", states);
+        AddComponent(stateMachine);
+    }
+
+    protected override void OnInit()
+    {
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
     }
@@ -59,7 +46,7 @@ public class FuelGenerator : ConstructionCard
         if (gameEvent.GetType() != typeof(MagneticStorm) || !fuelStorage.CanExtinguish(out _)) return;
 
         Extinguish(out _);
-        ShowTip($"ÊÜĞĞĞÇ´Å±©Ó°Ïì£¬{CardName}ÒÑÏ¨Ãğ²¢Í£Ö¹¹¤×÷");
+        ShowTip($"å—è¡Œæ˜Ÿç£æš´å½±å“ï¼Œ{CardName}å·²ç†„ç­å¹¶åœæ­¢å·¥ä½œ");
     }
 
     private void OnMagneticStormEnd(GameEvent gameEvent)
@@ -73,7 +60,7 @@ public class FuelGenerator : ConstructionCard
     {
         if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            s = $"ÊÜĞĞĞÇ´Å±©Ó°Ïì£¬{CardName}ÎŞ·¨ÎªÆä¹©µç";
+            s = $"å—è¡Œæ˜Ÿç£æš´å½±å“ï¼Œ{CardName}æ— æ³•ä¸ºå…¶ä¾›ç”µ";
             return false;
         }
 
@@ -81,44 +68,44 @@ public class FuelGenerator : ConstructionCard
     }
 
     /// <summary>
-    /// µãÈ¼Ê±´¥·¢
+    /// ç‚¹ç‡ƒæ—¶è§¦å‘
     /// </summary>
     private void Ignite(out string s)
     {
         fuelStorage.Ignite(out s);
 
-        SoundManager.Instance.PlaySound("µã»ğ_02");
+        PlaySound("ç‚¹ç«_02");
 
         StateManager.Instance.ChangeElectricityChangeRate(ELECTRICITY_PRODUCTION);
 
-        stateMachine.ChangeState("ÒÑµãÈ¼");
+        stateMachine.ChangeState("å·²ç‚¹ç‡ƒ");
     }
 
     /// <summary>
-    /// Ï¨ÃğÊ±´¥·¢
+    /// ç†„ç­æ—¶è§¦å‘
     /// </summary>
     private void Extinguish(out string s)
     {
         fuelStorage.Extinguish(out s);
 
-        // Ö»ÓĞÍæ¼ÒÔÚÍ¬Ò»µØµãÊ±²ÅÍ£Ö¹ÒôĞ§
+        // åªæœ‰ç©å®¶åœ¨åŒä¸€åœ°ç‚¹æ—¶æ‰åœæ­¢éŸ³æ•ˆ
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
 
         StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_PRODUCTION);
 
-        stateMachine.ChangeState("Î´µãÈ¼");
+        stateMachine.ChangeState("æœªç‚¹ç‡ƒ");
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
     {
-        // Ìí¼ÓÈ¼ÁÏ
+        // æ·»åŠ ç‡ƒæ–™
         if (fuelStorage.CanQuickInteract(card))
         {
-            tip = "Ìí¼ÓÈ¼ÁÏ";
+            tip = "æ·»åŠ ç‡ƒæ–™";
             return true;
         }
-        // ²ğ»Ù
+        // æ‹†æ¯
         return base.CanQuickInteract(card, out tip);
     }
 
@@ -126,14 +113,14 @@ public class FuelGenerator : ConstructionCard
     {
         var card = slot.PeekCard();
 
-        // Ìí¼ÓÈ¼ÁÏ
+        // æ·»åŠ ç‡ƒæ–™
         if (fuelStorage.CanQuickInteract(card))
         {
             fuelStorage.QuickIneract(slot, count, out tip);
             return;
         }
 
-        // ²ğ»Ù
+        // æ‹†æ¯
         base.QuickIneract(slot, count, out tip);
     }
 }

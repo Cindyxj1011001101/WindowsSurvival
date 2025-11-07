@@ -1,36 +1,30 @@
-/// <summary>
-/// ëç×ÕÖĞµÄº£òØÆ¤
+ï»¿/// <summary>
+/// è…Œæ¸ä¸­çš„æµ·èœ‡çš®
 /// </summary>
 public class PickledJellyfishSkin : Card
 {
     private TimerComponent timer;
 
-    private PickledJellyfishSkin()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("Ê³ÓÃ", "", (out string s) => EasyEvent(out s, "³Ô_01"), null, () => 15,
+        AddCardEvent("é£Ÿç”¨", "", (out string s) => EasyEvent(out s, "åƒ_01"), null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 15 },
                 { PlayerStateEnum.Health, -4 },
                 { PlayerStateEnum.Sanity, -5 },
                 { PlayerStateEnum.Itchiness, +45 }
-            }),
-        };
+            });
     }
 
-    public override void LateConstrcutor()
+    protected override void OnLateConstructor()
     {
-        base.LateConstrcutor();
-        if (!TryGetComponent(out timer))
+        timer = new(720)
         {
-            timer = new(720)
-            {
-                tipText = "ëç×ÕÍê³É"
-            };
-            AddComponent(timer);
-        }
+            tipText = "è…Œæ¸å®Œæˆ"
+        };
+        AddComponent(timer);
     }
 
     protected override void OnUpdate()
@@ -46,8 +40,8 @@ public class PickledJellyfishSkin : Card
 
         if (timer.value <= 0)
         {
-            // ëç×ÕÍê³É£¬±äÎª¡°ÒÑ´¦ÀíµÄº£òØÆ¤¡±
-            TurnTo("ÒÑ´¦ÀíµÄº£òØÆ¤", Bag);
+            // è…Œæ¸å®Œæˆï¼Œå˜ä¸ºâ€œå·²å¤„ç†çš„æµ·èœ‡çš®â€
+            TurnTo("å·²å¤„ç†çš„æµ·èœ‡çš®", Bag);
         }
     }
 }

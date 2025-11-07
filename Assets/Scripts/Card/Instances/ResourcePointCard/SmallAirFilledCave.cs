@@ -1,33 +1,24 @@
-/// <summary>
-/// Ğ¡ĞÍÆøÑ¨
+ï»¿/// <summary>
+/// å°å‹æ°”ç©´
 /// </summary>
 public class SmallAirFilledCave : Card
 {
-    private OxygenStorageComponent oxygenStorage;
-
-    private SmallAirFilledCave() { }
-
-    public override void LateConstrcutor()
+    protected override void RegisterCardEvents()
     {
-        base.LateConstrcutor();
-
-        if (!TryGetComponent(out oxygenStorage))
-        {
-            oxygenStorage = new OxygenStorageComponent(200);
-            AddComponent(oxygenStorage);
-        }
-
-        Events = new()
-        {
-            new CardEvent("»ñÈ¡ÑõÆø", $"ÏûºÄ{CardName}µÄÑõÆø´¢´æ£¬²¹³äÂóÂóµÄÑõÆø", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen)
-        };
+        AddCardEvent("è·å–æ°§æ°”", $"æ¶ˆè€—{CardName}çš„æ°§æ°”å‚¨å­˜ï¼Œè¡¥å……éº¦éº¦çš„æ°§æ°”", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen);
     }
 
+    protected override void OnLateConstructor()
+    {
+        oxygenStorage = new OxygenStorageComponent(200);
+        AddComponent(oxygenStorage);
+    }
+    
     protected override void OnUpdate()
     {
         base.OnUpdate();
 
-        // Ã¿»ØºÏ²¹³ä2µãÑõÆø´¢Á¿
+        // æ¯å›åˆè¡¥å……2ç‚¹æ°§æ°”å‚¨é‡
         oxygenStorage.AddValue(2);
     }
 }

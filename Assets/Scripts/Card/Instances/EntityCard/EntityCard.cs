@@ -4,9 +4,6 @@ using UnityEngine.Events;
 
 public abstract class EntityCard : Card, IEntity
 {
-    private EntityComponent entity;
-    private CoordinateComponent coordinate;
-
     protected float health => entity.value;
     protected float maxHealth => entity.maxValue;
     protected float atk => entity.atk;
@@ -16,7 +13,6 @@ public abstract class EntityCard : Card, IEntity
 
     [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;                 // 坐标
     [JsonProperty] public string Uuid { get; private set; }                             // 实体唯一标识
-    [JsonProperty] private bool firstInit;                                              // 是否第一次初始化完成
     [JsonProperty] protected Dictionary<string, EntityIntention> intentions = new();    // 所有可能的意图
     [JsonProperty] private string currentIntention;                                     // 当前意图
     [JsonProperty] private int aiRefreshCooldown;                                       // ai刷新冷却
@@ -34,27 +30,22 @@ public abstract class EntityCard : Card, IEntity
 
     public virtual void TakeDamage(float damage, IEntity damageDealer) => entity.TakeDamage(damage, damageDealer);
 
-    public override void LateConstrcutor()
+    protected override void OnLateConstructor()
     {
-        base.LateConstrcutor();
+        // 设置uuid
+        if (string.IsNullOrEmpty(Uuid))
+            Uuid = System.Guid.NewGuid().ToString();
 
-        TryGetComponent(out entity);
-        if (!TryGetComponent(out coordinate))
-        {
-            coordinate = new();
-            AddComponent(coordinate);
-        }
+        // 添加坐标组件
+        coordinate = new();
+        AddComponent(coordinate);
 
         // 注册意图
         RegisterIntentions();
     }
 
-    public override void Init()
+    protected override void OnInit()
     {
-        base.Init();
-        // 设置uuid
-        if (string.IsNullOrEmpty(Uuid))
-            Uuid = System.Guid.NewGuid().ToString();
         // 记录到全局数据中
         GlobalDataManager.Instance.AddEntity(this);
 
@@ -82,11 +73,11 @@ public abstract class EntityCard : Card, IEntity
     {
         base.OnAdd(bag);
 
-        if (!firstInit)
+        // 刷新冷却为0，且当前意图为空，说明是第一次生成
+        if (aiRefreshCooldown == 0 && string.IsNullOrEmpty(currentIntention))
         {
-            firstInit = true;
-            // 第一次生成时，判断一下意图
-            TryGetNewIntention();
+            // 第一次生成时获取一下意图
+            TryGetNewIntention(); // 放在这里执行是因为要先将实体加入地点
         }
     }
 
@@ -213,7 +204,7 @@ public abstract class EntityCard : Card, IEntity
     /// <summary>
     /// 获取仇恨目标
     /// </summary>
-    protected IEntity GetAggroTarget()
+    protected EntityAggro GetAggroTarget()
     {
         return aggroCollection.GetHighestPriority();
     }

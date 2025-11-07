@@ -1,3 +1,6 @@
+/// <summary>
+/// 珊瑚礁
+/// </summary>
 public class CoralReef : Card
 {
     private DropList dropList = new(
@@ -7,25 +10,21 @@ public class CoralReef : Card
        new Drop(2, ("有产物的水瓶鱼", 1))
        );
 
-    private CoralReef()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig, () => 45),
-            new CardEvent("欣赏", "一天内多次欣赏获得的数值会衰减", Event_Enjoy, null,() => 15,
+        AddCardEvent("用铲子凿", "用铲子凿珊瑚礁", Event_Dig, Judge_Dig, () => 45);
+        AddCardEvent("欣赏", "一天内多次欣赏获得的数值会衰减", Event_Enjoy, null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Sanity, 6 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId) },
-                { PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId)}
-            })
-        };
+                { PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId) }
+            });
     }
 
-    public override void Init()
+    protected override void OnInit()
     {
-        base.Init();
-        GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2));
-
+        GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2, .5f));
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天刷新
     }
 
@@ -53,12 +52,9 @@ public class CoralReef : Card
     private void Event_Enjoy(out string tip)
     {
         tip = string.Empty;
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, 6 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId));
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, 4 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId));
+        ApplyEventEffects(1);
 
         GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId);
-
-        TimeManager.Instance.AddTime(15);
     }
 
     private void DigByTool(Card tool, out string tip)
@@ -67,11 +63,9 @@ public class CoralReef : Card
         {
             tool.Use();
 
-            TimeManager.Instance.AddTime(45);
+            PlaySound("挖掘废料_01", true);
 
-            if (SoundManager.Instance != null)
-                SoundManager.Instance.PlaySound("挖掘废料_01", true);
-
+            ApplyEventEffects(0);
         });
     }
 
@@ -81,7 +75,7 @@ public class CoralReef : Card
         // 允许和带有挖掘标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
         return false;

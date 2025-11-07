@@ -1,5 +1,5 @@
-/// <summary>
-/// ´Ó×îºó±Ó»¤Ëùµ½ÓöÄÑÕß´óÌü
+ï»¿/// <summary>
+/// ä»æœ€ååº‡æŠ¤æ‰€åˆ°é‡éš¾è€…å¤§å…
 /// </summary>
 public class FromLastSancutuaryToVictimsHall : PassageCard
 {

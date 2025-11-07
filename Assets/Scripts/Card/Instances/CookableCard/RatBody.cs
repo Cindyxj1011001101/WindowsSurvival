@@ -8,39 +8,31 @@ public class RatBody : CookableCard
        new Drop(1, (out string tip) => { tip = "肉被糟蹋了，什么都没得到"; })
        );
 
-    private RatBody()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("食用", "不做任何处理，连同皮毛和内脏一起吃下", (out string s) => EasyEvent(out s, "吃_01"), null, () => 30,
+        AddCardEvent("食用", "不做任何处理，连同皮毛和内脏一起吃下", (out string s) => EasyEvent(out s, "吃_01"), null,
+            () => 30,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 18 },
                 { PlayerStateEnum.Sanity, -20 },
                 { PlayerStateEnum.Health, -8 }
-            }),
-            new CardEvent("用手剥", "用手撕扯老鼠，这会弄得脏兮兮的，而且有小概率什么都拿不到", Event_PeelByHand, null, () => 45,
-            () => new() 
+            });
+        AddCardEvent("用手剥", "用手撕扯老鼠，这会弄得脏兮兮的，而且有小概率什么都拿不到", Event_PeelByHand, null,
+            () => 45,
+            () => new()
             {
                 { PlayerStateEnum.Sanity, -3 },
                 { PlayerStateEnum.Health, -2 }
-            }),
-            new CardEvent("用刀切割", "可以采集到小块生肉", Event_PeelByKnife, Judge_PeelByKnife, () => 15),
-
-        };
+            });
+        AddCardEvent("用刀切割", "可以采集到小块生肉", Event_PeelByKnife, Judge_PeelByKnife, () => 15);
     }
 
     #region 用手剥
     private void Event_PeelByHand(out string tip)
     {
         DestroyThis();
-
-        //-3精神值
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, -3);
-        //-2健康
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -2);
-        //消耗45分钟
-        TimeManager.Instance.AddTime(45);
+        ApplyEventEffects(1);
         //随机掉落卡牌
         RandomDrop(dropList, out tip);
     }
@@ -68,9 +60,7 @@ public class RatBody : CookableCard
         tip = string.Empty;
         DestroyThis();
         knife.Use();
-
-        //消耗15分钟
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(2);
         AddCard("小块生肉", true);
     }
     #endregion
@@ -81,7 +71,7 @@ public class RatBody : CookableCard
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            tip = Events[2].name;
+            tip = Events[2].Name;
             return true;
         }
         return false;

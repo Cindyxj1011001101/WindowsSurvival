@@ -4,23 +4,19 @@ using UnityEngine;
 
 public class Reduce
 {
-    public int maxReduceCount = 2;
-    public int curReduceCount = 0;
-    public float reduceRate = 0.5f;
+    public int maxReduceCount;
+    public int curReduceCount;
+    public float reduceRate;
 
     [JsonIgnore]
     public float ReduceRate => Mathf.Pow(reduceRate, curReduceCount);
 
     public Reduce() { }
 
-    public Reduce(int maxReduceCount)
+    public Reduce(int maxReduceCount, float reduceRate)
     {
-        curReduceCount = 0;
+        this.curReduceCount = 0;
         this.maxReduceCount = maxReduceCount;
-    }
-
-    public Reduce(int maxReduceCount, float reduceRate) : this(maxReduceCount)
-    {
         this.reduceRate = reduceRate;
     }
 

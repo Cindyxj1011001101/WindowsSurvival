@@ -3,16 +3,16 @@
 /// </summary>
 public class PlasticBag : EquipmentCard
 {
-    private InnerContentsComponent innerContents;
-    private PlasticBag() : base()
+    protected override void RegisterCardEvents()
     {
-        Events.Add(new CardEvent("切割", "切割塑料袋", Event_Cut, Judge_Cut));
+        AddCardEvent("切割", "切割塑料袋", Event_Cut, Judge_Cut, () => 15);
+        base.RegisterCardEvents();
     }
 
-    public override void LateConstrcutor()
+    protected override void OnLateConstructor()
     {
-        base.LateConstrcutor();
-        innerContents.weightLossRate = 0.5f; // 塑料袋的减重率
+        // 塑料袋的减重率为50%
+        innerContents.weightLossRate = 0.5f;
     }
 
     public override void OnEquipped()
@@ -50,7 +50,7 @@ public class PlasticBag : EquipmentCard
         tip = string.Empty;
         DestroyThis();
         tool.Use();
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(0);
         AddCard("韧性胶管", true);
     }
 
@@ -59,7 +59,7 @@ public class PlasticBag : EquipmentCard
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut) && innerContents.bag.IsEmpty)
         {
             // 如果是切割工具，并且渔获袋是空的，可以快速交互
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
 

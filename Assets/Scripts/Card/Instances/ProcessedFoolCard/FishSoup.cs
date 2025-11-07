@@ -1,10 +1,12 @@
+/// <summary>
+/// 鱼汤
+/// </summary>
 public class FishSoup : Card
 {
-    private FishSoup()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("食用", "食用鱼汤", (out string s) => EasyEvent(out s, "喝_01"), null, () => 15,
+        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "喝_01"), null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 18 },
@@ -12,7 +14,6 @@ public class FishSoup : Card
                 { PlayerStateEnum.Sanity, 12 },
                 { PlayerStateEnum.Health, 20 },
                 { PlayerStateEnum.PainLevel, -25 }
-            })
-        };
+            });
     }
 }

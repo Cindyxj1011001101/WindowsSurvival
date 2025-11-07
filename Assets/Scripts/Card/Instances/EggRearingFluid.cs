@@ -3,16 +3,14 @@
 /// </summary>
 public class EggRearingFluid : Card
 {
-    private EggRearingFluid()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("饮用", "", (out string s) => EasyEvent(out s, "喝_01"), null, () => 3,
+        AddCardEvent("饮用", "", (out string s) => EasyEvent(out s, "喝_01"), null,
+            () => 3,
             () => new()
             {
                 { PlayerStateEnum.Hydration, 40 },
                 { PlayerStateEnum.Hunger, 10 },
-            })
-        };
+            });
     }
 }

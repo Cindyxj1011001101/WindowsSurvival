@@ -6,27 +6,57 @@ using System.Collections.Generic;
 /// </summary>
 public class CardEvent
 {
-    public string name;
-    public string description;
-    public string hint;
-    public OutStringAction action;
-    public OutStringAction<bool> condition;
-    public Func<int> getTimeEffect;
-    public Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects;
-    public Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects;
+    private string name;
+    private string description;
+    private Func<string> getDescription;
+    private string hint;
+    private OutStringAction action;
+    private OutStringFunc<bool> condition;
+    private Func<int> getTimeChange;
+    private Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges;
+    private Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges;
 
-    public string Description => string.IsNullOrEmpty(hint) ? description : hint;
+    public string Description
+    {
+        get
+        {
+            if (!string.IsNullOrEmpty(hint)) return hint;
 
-    public CardEvent(string name, string description, OutStringAction action, OutStringAction<bool> condition,
-        Func<int> getTimeEffect = null, Func<Dictionary<PlayerStateEnum, float>> getPlayerEffects = null, Func<Dictionary<EnvironmentStateEnum, float>> getEnvEffects = null)
+            if (getDescription != null) return getDescription();
+
+            return description;
+        }
+    }
+    public string Name => name;
+
+    public CardEvent(
+        string name,
+        string description,
+        OutStringAction action,
+        OutStringFunc<bool> condition,
+        Func<int> getTimeChange = null,
+        Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
+        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null)
     {
         this.name = name;
         this.description = description;
         this.action = action;
         this.condition = condition;
-        this.getTimeEffect = getTimeEffect;
-        this.getPlayerEffects = getPlayerEffects;
-        this.getEnvEffects = getEnvEffects;
+        this.getTimeChange = getTimeChange;
+        this.getPlayerStateChanges = getPlayerStateChanges;
+        this.getEnvStateChanges = getEnvStateChanges;
+    }
+
+    public CardEvent(
+        string name,
+        Func<string> getDescription,
+        OutStringAction action,
+        OutStringFunc<bool> condition,
+        Func<int> getTimeChange = null,
+        Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
+        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null) : this(name, string.Empty, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges)
+    {
+        this.getDescription = getDescription;
     }
 
     public void Inovke(out string tip)
@@ -46,25 +76,25 @@ public class CardEvent
         return false;
     }
 
-    public int GetTimeEffect()
+    public int GetTimeChange()
     {
-        if (getTimeEffect == null) return 0;
-        return getTimeEffect.Invoke();
+        if (getTimeChange == null) return 0;
+        return getTimeChange.Invoke();
     }
 
-    public Dictionary<PlayerStateEnum, float> GetPlayerEffects()
+    public Dictionary<PlayerStateEnum, float> GetPlayerStateChanges()
     {
-        if (getPlayerEffects == null) return new();
-        return getPlayerEffects.Invoke();
+        if (getPlayerStateChanges == null) return new();
+        return getPlayerStateChanges.Invoke();
     }
 
-    public Dictionary<EnvironmentStateEnum, float> GetEnvEffects()
+    public Dictionary<EnvironmentStateEnum, float> GetEnvStateChanges()
     {
-        if (getEnvEffects == null) return new();
-        return getEnvEffects.Invoke();
+        if (getEnvStateChanges == null) return new();
+        return getEnvStateChanges.Invoke();
     }
 }
 
-public delegate T OutStringAction<T>(out string s);
+public delegate T OutStringFunc<T>(out string s);
 public delegate void OutStringAction(out string s);
-public delegate void OutStringFunc<T>(out string s, T arg);
+public delegate void OutStringAction<T>(out string s, T arg);

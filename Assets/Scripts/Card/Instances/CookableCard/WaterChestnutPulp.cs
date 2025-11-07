@@ -1,17 +1,15 @@
-/// <summary>
-/// ËÄ½ÇÁâ¹ûÈâ
+ï»¿/// <summary>
+/// å››è§’è±æœè‚‰
 /// </summary>
 public class WaterChestnutPulp : CookableCard
 {
-    private WaterChestnutPulp()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("Ê³ÓÃ", "", (out string s) => EasyEvent(out s, "³Ô_01"), null, () => 15,
+        AddCardEvent("é£Ÿç”¨", "", (out string s) => EasyEvent(out s, "åƒ_01"), null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, +10 }
-            })
-        };
+            });
     }
 }

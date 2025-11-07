@@ -55,7 +55,7 @@ public class StateManager : IManager
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
 
         // 当环境改变时尝试获取氧气
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
         
         // 玩家生命值不高于0时死亡
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
@@ -76,7 +76,7 @@ public class StateManager : IManager
         PlayerStateDict = new();
         UpdateManager.Instance.PlayerUpdate.RemoveListener(PlayerUpdate);
         UpdateManager.Instance.EnvironmentUpdate.RemoveListener(EnvironmentUpdate);
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, OnChangeEnv);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, CheckPlayerState);
         EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, CheckEnvState);
@@ -422,11 +422,11 @@ public class StateManager : IManager
         EventManager.Instance.TriggerEvent(EventType.RefreshPlayerState, stateEnum);
     }
 
-    public void ApplyPlayerStateChange(Dictionary<PlayerStateEnum, float> playerEffects)
+    public void ApplyPlayerStateChanges(Dictionary<PlayerStateEnum, float> playerStateChanges)
     {
-        if (playerEffects.IsNullOrEmpty()) return;
+        if (playerStateChanges.IsNullOrEmpty()) return;
 
-        foreach (var (state, delta) in playerEffects)
+        foreach (var (state, delta) in playerStateChanges)
         {
             ChangePlayerState(state, delta);
         }
@@ -677,7 +677,7 @@ public class StateManager : IManager
     /// </summary>
     private void PlayerUpdate()
     {
-        ApplyPlayerStateChange(playerStateChangeRatesSnapshot);
+        ApplyPlayerStateChanges(playerStateChangeRatesSnapshot);
     }
 
     /// <summary>

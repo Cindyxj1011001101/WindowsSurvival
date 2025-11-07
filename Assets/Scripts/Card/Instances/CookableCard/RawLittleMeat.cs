@@ -1,7 +1,7 @@
-﻿/// <summary>
-/// 水壶兰种子
+/// <summary>
+/// 小块生肉
 /// </summary>
-public class KettleFlowerSeed : CookableCard
+public class RawLittleMeat : CookableCard
 {
     protected override void RegisterCardEvents()
     {
@@ -9,8 +9,9 @@ public class KettleFlowerSeed : CookableCard
             () => 15,
             () => new()
             {
-                { PlayerStateEnum.Hunger, 25 },
-                { PlayerStateEnum.Hydration, 14 },
+                { PlayerStateEnum.Hunger, 12 },
+                { PlayerStateEnum.Sanity, -2 },
+                { PlayerStateEnum.Health, -3 }
             });
     }
 }

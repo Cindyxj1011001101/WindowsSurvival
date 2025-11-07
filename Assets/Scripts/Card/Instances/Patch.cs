@@ -3,8 +3,4 @@
 /// </summary>
 public class Patch : Card
 {
-    private Patch()
-    {
-
-    }
 }

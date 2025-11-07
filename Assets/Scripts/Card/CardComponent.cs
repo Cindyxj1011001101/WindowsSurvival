@@ -494,7 +494,7 @@ public class ConstructionComponent : CardComponent
     public bool needCable;
 
     public bool canBeDemolished; // 能否被拆毁
-    public string demolitionDebris; // 拆毁后产物ID
+    public string demolitionDrops; // 拆毁后产物ID
 
     public ConstructionComponent() { }
 
@@ -506,7 +506,7 @@ public class ConstructionComponent : CardComponent
         this.onlyOutDoor = onlyOutDoor;
         this.needCable = needCable;
         this.canBeDemolished = canBeDemolished;
-        this.demolitionDebris = demolitionDebris;
+        this.demolitionDrops = demolitionDebris;
     }
 }
 #endregion
@@ -571,7 +571,7 @@ public class CardState
 
     public CardState(string name, string imagePath, bool isAnim = false, bool needElectricity = false, bool isConsumingElectricity = false)
     {
-        this.name = name;
+        this.name = this.displayName = name;
         this.imagePath = imagePath;
         this.isAnim = isAnim;
         this.needElectricity = needElectricity;

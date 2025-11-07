@@ -3,21 +3,19 @@
 /// </summary>
 public class CaughtAquariusFishWithProduct : Card
 {
-    private CaughtAquariusFishWithProduct()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("饮用", "饮用水瓶鱼的育卵液", (out string s) => EasyEvent(out s, "喝_01"), null, () => 15,
+        AddCardEvent("饮用", "饮用水瓶鱼的育卵液", (out string s) => EasyEvent(out s, "喝_01"), null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hydration, 40 },
                 { PlayerStateEnum.Hunger, 10 }
-            }),
+            });
 
-            new CardEvent("液体装瓶", "利用凝胶装瓶器从水瓶鱼中提取育卵液，这种提取方式相对温和，不会杀死水瓶鱼。", Event_Bottling, Judge_Bottling, () => 15)
-            
-            //new Event("放生", "放生水瓶鱼", Event_Release, Judge_Release)
-        };
+        AddCardEvent("液体装瓶", "利用凝胶装瓶器从水瓶鱼中提取育卵液，这种提取方式相对温和，不会杀死水瓶鱼。", Event_Bottling, Judge_Bottling, () => 15);
+
+        // AddEvent("放生", "放生水瓶鱼", Event_Release, Judge_Release);
     }
 
     private void Event_Release(out string tip)
@@ -71,7 +69,7 @@ public class CaughtAquariusFishWithProduct : Card
         DestroyThis();
         tool.Use();
 
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(1);
 
         TurnTo("被捉住的水瓶鱼", Bag);
         AddCard("育卵液", true);
@@ -82,7 +80,7 @@ public class CaughtAquariusFishWithProduct : Card
         tip = string.Empty;
         if (card.CardId == "凝胶装瓶器")
         {
-            tip = Events[1].name;
+            tip = Events[1].Name;
             return true;
         }
         return false;

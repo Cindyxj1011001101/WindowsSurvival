@@ -3,14 +3,11 @@
 /// </summary>
 public abstract class ConstructionCard : Card
 {
-    private ConstructionComponent construction;
-    public override void LateConstrcutor()
+    protected override void RegisterCardEvents()
     {
-        base.LateConstrcutor();
-        TryGetComponent(out construction);
         if (construction.canBeDemolished)
         {
-            Events.Add(new("暴力拆毁", $"拆毁后获得{construction.demolitionDebris}", Event_DemolishThis, Judge_DemolishThis, () => 15));
+            AddCardEvent("暴力拆毁", $"拆毁后获得{construction.demolitionDrops}", Event_DemolishThis, Judge_DemolishThis, () => 15);
         }
     }
 
@@ -19,12 +16,11 @@ public abstract class ConstructionCard : Card
     /// </summary>
     public void DemolishThis(Card tool)
     {
-        if (construction == null || !construction.canBeDemolished || string.IsNullOrEmpty(construction.demolitionDebris)) return;
+        // 拆毁音效
+        PlaySound("摧毁_01", true);
 
         // 拆毁建筑物
         DestroyThis();
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("摧毁_01", true);
         // 消耗钢锤耐久
         tool?.Use();
 
@@ -32,7 +28,7 @@ public abstract class ConstructionCard : Card
         TimeManager.Instance.AddTime(15);
 
         // 掉落拆毁产物
-        ParseAndDrop(construction.demolitionDebris);
+        ParseAndDrop(construction.demolitionDrops);
     }
 
     private void Event_DemolishThis(out string tip)
@@ -62,10 +58,11 @@ public abstract class ConstructionCard : Card
     {
         tip = string.Empty;
         // 能被拆毁并且内容物清空，可以暴力拆毁
-        if (construction.canBeDemolished && card.CardId == "钢锤" &&
+        if (construction.canBeDemolished &&
+            card.CardId == "钢锤" &&
             (!TryGetComponent<InnerContentsComponent>(out var innerContents) || innerContents.bag.IsEmpty))
         {
-            tip = "暴力拆毁";
+            tip = Events[0].Name;
             return true;
         }
         return false;

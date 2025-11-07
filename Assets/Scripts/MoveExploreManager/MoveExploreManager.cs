@@ -20,7 +20,7 @@ public class MoveExploreManager : IManager
     // 上次负重
     private int lastLoadLevel;
 
-    private List<(string reason, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects) effect)> extraEffectsCausedByLoad = new()
+    private List<(string reason, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerStateChanges) effect)> extraEffectsCausedByLoad = new()
     {
         { ("", (0f, new() { })) }, // 占位用
         { ("身上有点重", (0.25f, new() { })) },
@@ -61,7 +61,7 @@ public class MoveExploreManager : IManager
         {
             ExploreInWaterExtraEffects = new()
             {
-                extraEffects = new Dictionary<string, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)>
+                extraEffects = new Dictionary<string, (float timeMultiplier, Dictionary<PlayerStateEnum, float> playerStateChanges)>
                 {
                     { "未装备氧气面罩", (+0.4f, new() { { PlayerStateEnum.Health, -4 } }) }
                 }
@@ -70,26 +70,26 @@ public class MoveExploreManager : IManager
     }
 
     #region 探索
-    public void AddExploreExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
-        => ExploreExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
+    public void AddExploreExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerStateChanges)
+        => ExploreExtraEffects.AddEffect(reason, timeMultiplier, playerStateChanges);
 
     public void RemoveExploreExtraEffect(string reason)
         => ExploreExtraEffects.RemoveEffect(reason);
 
-    public void AddMoveExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
-        => MoveExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
+    public void AddMoveExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerStateChanges)
+        => MoveExtraEffects.AddEffect(reason, timeMultiplier, playerStateChanges);
 
     public void RemoveMoveExtraEffect(string reason)
         => MoveExtraEffects.RemoveEffect(reason);
 
-    public void AddExploreInWaterExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
-        => ExploreInWaterExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
+    public void AddExploreInWaterExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerStateChanges)
+        => ExploreInWaterExtraEffects.AddEffect(reason, timeMultiplier, playerStateChanges);
 
     public void RemoveExploreInWaterExtraEffect(string reason)
         => ExploreInWaterExtraEffects.RemoveEffect(reason);
 
-    public void AddMoveToWaterExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerEffects)
-        => MoveToWaterExtraEffects.AddEffect(reason, timeMultiplier, playerEffects);
+    public void AddMoveToWaterExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerStateChanges)
+        => MoveToWaterExtraEffects.AddEffect(reason, timeMultiplier, playerStateChanges);
 
     public void RemoveMoveToWaterExtraEffect(string reason)
         => MoveToWaterExtraEffects.RemoveEffect(reason);
@@ -98,22 +98,22 @@ public class MoveExploreManager : IManager
     /// 得到探索当前地点的消耗
     /// </summary>
     /// <returns></returns>
-    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects) GetExploreEffects()
+    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerStateChanges) GetExploreEffects()
     {
         var env = GameManager.Instance.CurEnvironmentBag;
         string desc = ExploreExtraEffects.GetDescription();
         int time = ExploreExtraEffects.GetFinalTime(env.PlaceData.exploreTime);
-        Dictionary<PlayerStateEnum, float> playerEffects = ExploreExtraEffects.GetFinalPlayerEffects(new());
+        Dictionary<PlayerStateEnum, float> playerStateChanges = ExploreExtraEffects.GetFinalPlayerStateChanges(new());
 
         // 对水域的探索额外消耗
         if (env.PlaceData.isInWater)
         {
             desc += ExploreInWaterExtraEffects.GetDescription();
             time = ExploreInWaterExtraEffects.GetFinalTime(time);
-            playerEffects = ExploreInWaterExtraEffects.GetFinalPlayerEffects(playerEffects);
+            playerStateChanges = ExploreInWaterExtraEffects.GetFinalPlayerStateChanges(playerStateChanges);
         }
 
-        return (desc, time, playerEffects);
+        return (desc, time, playerStateChanges);
     }
 
     /// <summary>
@@ -122,24 +122,24 @@ public class MoveExploreManager : IManager
     /// <param name="basicMoveTime"></param>
     /// <param name="targetPlace"></param>
     /// <returns></returns>
-    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects)
+    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerStateChanges)
         GetMoveEffects(int basicMoveTime, PlaceEnum targetPlace)
     {
         var targetEnv = GameManager.Instance.EnvironmentBags[targetPlace];
 
         string desc = MoveExtraEffects.GetDescription();
         int time = MoveExtraEffects.GetFinalTime(basicMoveTime);
-        Dictionary<PlayerStateEnum, float> playerEffects = MoveExtraEffects.GetFinalPlayerEffects(new());
+        Dictionary<PlayerStateEnum, float> playerStateChanges = MoveExtraEffects.GetFinalPlayerStateChanges(new());
 
         // 前往水域的额外消耗
         if (targetEnv.PlaceData.isInWater)
         {
             desc += MoveToWaterExtraEffects.GetDescription();
             time = MoveToWaterExtraEffects.GetFinalTime(time);
-            playerEffects = MoveToWaterExtraEffects.GetFinalPlayerEffects(playerEffects);
+            playerStateChanges = MoveToWaterExtraEffects.GetFinalPlayerStateChanges(playerStateChanges);
         }
 
-        return (desc, time, playerEffects);
+        return (desc, time, playerStateChanges);
     }
 
     /// <summary>
@@ -147,7 +147,7 @@ public class MoveExploreManager : IManager
     /// </summary>
     /// <param name="targetPosition"></param>
     /// <returns></returns>
-    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerEffects)
+    public (string desc, int time, Dictionary<PlayerStateEnum, float> playerStateChanges)
         GetMoveEffects(float targetPosition)
     {
         var dist = Mathf.Abs(Player.Instance.Coordinate.Position - targetPosition);
@@ -179,8 +179,8 @@ public class MoveExploreManager : IManager
         if (currentLoadLevel != 0)
         {
             // 添加当前载重等级的额外消耗
-            AddExploreExtraEffect(extraEffectsCausedByLoad[currentLoadLevel].reason, extraEffectsCausedByLoad[currentLoadLevel].effect.timeMultiplier, extraEffectsCausedByLoad[currentLoadLevel].effect.playerEffects);
-            AddMoveExtraEffect(extraEffectsCausedByLoad[currentLoadLevel].reason, extraEffectsCausedByLoad[currentLoadLevel].effect.timeMultiplier, extraEffectsCausedByLoad[currentLoadLevel].effect.playerEffects);
+            AddExploreExtraEffect(extraEffectsCausedByLoad[currentLoadLevel].reason, extraEffectsCausedByLoad[currentLoadLevel].effect.timeMultiplier, extraEffectsCausedByLoad[currentLoadLevel].effect.playerStateChanges);
+            AddMoveExtraEffect(extraEffectsCausedByLoad[currentLoadLevel].reason, extraEffectsCausedByLoad[currentLoadLevel].effect.timeMultiplier, extraEffectsCausedByLoad[currentLoadLevel].effect.playerStateChanges);
         }
 
         lastLoadLevel = currentLoadLevel;
@@ -217,10 +217,10 @@ public class MoveExploreManager : IManager
         if (SoundManager.Instance != null)
             SoundManager.Instance.PlaySound("抽卡", true);
 
-        (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) = GetExploreEffects();
+        (_, int time, Dictionary<PlayerStateEnum, float> playerStateChanges) = GetExploreEffects();
 
         // 玩家状态变化
-        StateManager.Instance.ApplyPlayerStateChange(playerEffects);
+        StateManager.Instance.ApplyPlayerStateChanges(playerStateChanges);
 
         // 消耗时间
         TimeManager.Instance.AddTime(time);
@@ -277,7 +277,7 @@ public class MoveExploreManager : IManager
         var lastEnv = GameManager.Instance.CurEnvironmentBag;
 
         // 改变地点
-        ChangeEnv(targetPlace);
+        GameManager.Instance.ChangeEnv(targetPlace);
 
         var env = GameManager.Instance.CurEnvironmentBag;
 
@@ -301,8 +301,8 @@ public class MoveExploreManager : IManager
         }
 
         // 移动消耗
-        (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) = GetMoveEffects(basicMoveTime, targetPlace);
-        StateManager.Instance.ApplyPlayerStateChange(playerEffects);
+        (_, int time, Dictionary<PlayerStateEnum, float> playerStateChanges) = GetMoveEffects(basicMoveTime, targetPlace);
+        StateManager.Instance.ApplyPlayerStateChanges(playerStateChanges);
         TimeManager.Instance.AddTime(time);
 
         // 触发事件
@@ -318,56 +318,13 @@ public class MoveExploreManager : IManager
         if (!CanMoveExplore()) return;
 
         // 移动消耗
-        (_, int time, Dictionary<PlayerStateEnum, float> playerEffects) =
+        (_, int time, Dictionary<PlayerStateEnum, float> playerStateChanges) =
             GetMoveEffects(targetPosition);
 
         // 执行移动
         SetPlayerPosition(targetPosition);
-        StateManager.Instance.ApplyPlayerStateChange(playerEffects);
+        StateManager.Instance.ApplyPlayerStateChanges(playerStateChanges);
         TimeManager.Instance.AddTime(time);
-    }
-
-    /// <summary>
-    /// 切换地点
-    /// </summary>
-    /// <param name="targetEnv">目标地点</param>
-    private void ChangeEnv(PlaceEnum targetEnv)
-    {
-        var env = GameManager.Instance.CurEnvironmentBag;
-        // 玩家实体从原地点移除
-        env.RemoveEntity(Player.Instance);
-
-        // 离开旧地点：关闭有循环音的卡牌的循环音
-        foreach (var slot in env.Slots)
-        {
-            if (!slot.IsEmpty)
-            {
-                var card = slot.PeekCard();
-                if (card.HasLoopSound)
-                    card.OnLeaveEnvironment();
-            }
-        }
-
-        env = GameManager.Instance.EnvironmentBags[targetEnv];
-        // 玩家实体添加到新地点
-        env.AddEntity(Player.Instance);
-
-        // 进入新地点：播放新地点离有循环音的卡牌
-        foreach (var slot in env.Slots)
-        {
-            if (!slot.IsEmpty)
-            {
-                var card = slot.PeekCard();
-                if (card.HasLoopSound)
-                    card.OnEnterEnvironment();
-            }
-        }
-
-        // 播放新地点环境音
-        SoundManager.Instance.PlayPlaceMusic(env);
-
-        // 触发事件
-        EventManager.Instance.TriggerEvent(EventType.ChangeEnv, env);
     }
     #endregion
 }

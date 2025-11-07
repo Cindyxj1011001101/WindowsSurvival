@@ -3,11 +3,10 @@
 /// </summary>
 public class HumanPoweredGenerator : ConstructionCard
 {
-    private HumanPoweredGenerator()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("人力发电", "踩轮子发电", (out string s) => EasyEvent(out s, destroyThis: false), Judge_Generate, () => 60,
+        AddCardEvent("人力发电", "踩轮子发电", (out string s) => EasyEvent(out s, destroyThis: false), Judge_Generate,
+            () => 60,
             () => new()
             {
                 { PlayerStateEnum.Hydration, -5 },
@@ -16,8 +15,8 @@ public class HumanPoweredGenerator : ConstructionCard
             () => new()
             {
                 { EnvironmentStateEnum.Electricity, 10 }
-            })
-        };
+            });
+        base.RegisterCardEvents(); // 拆毁
     }
 
     private bool Judge_Generate(out string hint)

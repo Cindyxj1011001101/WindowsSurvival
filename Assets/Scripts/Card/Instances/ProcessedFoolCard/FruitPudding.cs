@@ -1,16 +1,17 @@
+/// <summary>
+/// 铁齿铜牙餐
+/// </summary>
 public class FruitPudding: Card
 {
-    private FruitPudding()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("食用", "食用铁齿铜牙餐", (out string s) => EasyEvent(out s, "吃_01"), null, () => 15,
+        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 25 },
                 { PlayerStateEnum.Hydration, 25 },
                 { PlayerStateEnum.Sanity, 12 },
-            })
-        };
+            });
     }
 }   

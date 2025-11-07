@@ -3,11 +3,6 @@
 /// </summary>
 public class LightenedOxygenCandle : Card
 {
-    private LightenedOxygenCandle()
-    {
-
-    }
-
     public override void OnAdd(Bag bag)
     {
         // 在玩家背包时，玩家每回合氧气的变化率+10
@@ -40,7 +35,6 @@ public class LightenedOxygenCandle : Card
         // 每回合消耗耐久
         Use();
 
-        TryGetComponent<DurabilityComponent>(out var d);
-        if (d.value == 0) ShowTip("氧烛燃烧殆尽了");
+        if (durability.value == 0) ShowTip("氧烛燃烧殆尽了");
     }
 }

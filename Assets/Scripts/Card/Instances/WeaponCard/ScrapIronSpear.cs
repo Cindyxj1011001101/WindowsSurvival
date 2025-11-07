@@ -1,9 +1,6 @@
-/// <summary>
-/// ·ÏÌúÃ¬
+ï»¿/// <summary>
+/// åºŸé“çŸ›
 /// </summary>
 public class ScrapIronSpear : Card
 {
-    private ScrapIronSpear()
-    {
-    }
 }

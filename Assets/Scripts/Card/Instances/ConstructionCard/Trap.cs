@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
@@ -15,41 +16,34 @@ public class Trap : ConstructionCard
         }
     }
 
-    private InnerContentsComponent innerContents;
-    private StateMachineComponent stateMachine;
+    [JsonProperty] private bool caught; // 是否捕捉到生物
 
-    public bool caught; // 是否捕捉到生物
-
-    private Trap()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("布置", "布置诱捕陷阱，对当前地点内的生物进行诱捕", Event_Arrange, Judge_Arrange, () => 15),
-        };
+        AddCardEvent("布置", "布置诱捕陷阱，对当前地点内的生物进行诱捕", Event_Arrange, Judge_Arrange, () => 15);
+        base.RegisterCardEvents(); // 拆毁
     }
 
-    public override void LateConstrcutor()
+    protected override void OnLateConstructor()
     {
-        base.LateConstrcutor();
+        // 未布置和已布置两种状态
+        var states = new List<CardState>()
+        {
+            new ("未布置", "3"),
+            new ("已布置", "4"),
+        };
+        stateMachine = new StateMachineComponent("未布置", states);
+        AddComponent(stateMachine);
 
-        // 每个卡牌槽的最大堆叠数都为1
+        // 每个内容物槽的最大堆叠数为1
         foreach (var slot in innerContents.bag.Slots)
         {
             slot.SetMaxStackNum(1);
         }
+    }
 
-        // 未布置和已布置两种状态
-        if (!TryGetComponent(out stateMachine))
-        {
-            var states = new List<CardState>()
-            {
-                new ("未布置", "3"),
-                new ("已布置", "4"),
-            };
-            stateMachine = new StateMachineComponent("未布置", states);
-            AddComponent(stateMachine);
-        }
-
+    protected override void OnInit()
+    {
         innerContents.onRemoveCard = (c) =>
         {
             if (caught && innerContents.bag.IsEmpty)
@@ -61,12 +55,6 @@ public class Trap : ConstructionCard
                 Use();
             }
         };
-
-        // 每个卡牌槽的最大堆叠数都为1
-        foreach (var slot in innerContents.bag.Slots)
-        {
-            slot.SetMaxStackNum(1);
-        }
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -96,7 +84,7 @@ public class Trap : ConstructionCard
         innerContents.notAllowRemoveReason = "陷阱已布置，不能移除诱饵";
         innerContents.notAllowAddReason = "陷阱已布置，不能添加诱饵";
 
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(0);
         stateMachine.ChangeState("已布置");
     }
 

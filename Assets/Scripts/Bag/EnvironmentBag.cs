@@ -120,7 +120,7 @@ public class EnvironmentBag : Bag
 
     private void EnvUpdate()
     {
-        ApplyEnvEffects(envStateChangeRatesSnapshot);
+        ApplyEnvStateChanges(envStateChangeRatesSnapshot);
     }
     #endregion
 
@@ -189,11 +189,11 @@ public class EnvironmentBag : Bag
         }
     }
 
-    public void ApplyEnvEffects(Dictionary<EnvironmentStateEnum, float> envEffects)
+    public void ApplyEnvStateChanges(Dictionary<EnvironmentStateEnum, float> envStateChanges)
     {
-        if (envEffects.IsNullOrEmpty()) return;
+        if (envStateChanges.IsNullOrEmpty()) return;
 
-        foreach (var (state, delta) in envEffects)
+        foreach (var (state, delta) in envStateChanges)
         {
             ChangeEnvironmentState(state, delta);
         }

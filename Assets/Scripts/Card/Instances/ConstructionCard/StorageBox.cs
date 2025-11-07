@@ -1,15 +1,13 @@
+﻿/// <summary>
+/// 储物箱
+/// </summary>
 public class StorageBox : ConstructionCard
 {
-    private InnerContentsComponent innerContents;
-
-    private StorageBox()
-    {
-    }
-
     public override bool CanQuickInteract(Card card, out string tip)
     {
+        // 拆毁
         if (base.CanQuickInteract(card, out tip)) return true;
-
+        // 放入
         return innerContents.CanQuickInteract(card, out tip);
     }
 

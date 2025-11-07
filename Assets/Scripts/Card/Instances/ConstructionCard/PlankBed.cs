@@ -1,35 +1,33 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 
 /// <summary>
-/// °å´²
+/// æ¿åºŠ
 /// </summary>
 public class PlankBed : ConstructionCard
 {
     private const float SOBRIETY_CHANGE_RATE = +3.5f;
     private const float SANITY_CHANGE_RATE = +0.4f;
 
-    private PlankBed()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent(
-                "Ë¯¾õ",
-                $"ÔÚ°å´²ÉÏË¯¾õ¡£\n" +
-                $"{ColorManager.Colorize(SOBRIETY_CHANGE_RATE, ColorManager.Green)}ÇåĞÑ¶È/15min\n" +
-                $"{ColorManager.Colorize(SANITY_CHANGE_RATE, ColorManager.Green)}¾«Éñ/15min\n",
-                Event_Rest,
-                Judge_Rest
-            ),
-        };
+        AddCardEvent(
+            "ç¡è§‰",
+            $"åœ¨æ¿åºŠä¸Šç¡è§‰ã€‚\n" +
+            $"{ColorManager.Colorize(SOBRIETY_CHANGE_RATE, ColorManager.Green)}æ¸…é†’åº¦/15min\n" +
+            $"{ColorManager.Colorize(SANITY_CHANGE_RATE, ColorManager.Green)}ç²¾ç¥/15min\n",
+            Event_Rest,
+            Judge_Rest
+            );
+        base.RegisterCardEvents(); // æ‹†æ¯
     }
 
     private void Event_Rest(out string tip)
     {
         tip = string.Empty;
 
-        // »½ÆğÊ±¼ä´°¿Ú£¬ÉèÖÃĞİÏ¢Ê±³¤Îª0-60·ÖÖÓ
+        // å”¤èµ·æ—¶é—´çª—å£ï¼Œè®¾ç½®ä¼‘æ¯æ—¶é•¿ä¸º0-60åˆ†é’Ÿ
         var window = (WindowsManager.Instance.OpenWindow("TimeSelect", true) as TimeSelectWindow);
-        window.SetTimeRange(60, 60 * 8); // ¿ÉĞİÏ¢1-8Ğ¡Ê±
+        window.SetTimeRange(60, 60 * 8); // å¯ä¼‘æ¯1-8å°æ—¶
         window.onConfirm += (time) =>
         {
             StateManager.Instance.Rest(time, new() { { PlayerStateEnum.Sobriety, SOBRIETY_CHANGE_RATE }, { PlayerStateEnum.Sanity, SANITY_CHANGE_RATE } });
@@ -47,7 +45,7 @@ public class PlankBed : ConstructionCard
                         { PlayerStateEnum.Sanity, sanChange }
                     };
             }
-            return ($"ÔÚ°å´²ÉÏË¯¾õ {t} ·ÖÖÓ", t, p, null);
+            return ($"åœ¨æ¿åºŠä¸Šç¡è§‰ {t} åˆ†é’Ÿ", t, p, null);
         };
     }
 
@@ -56,7 +54,7 @@ public class PlankBed : ConstructionCard
         hint = string.Empty;
         if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
         {
-            hint = "ÎŞ·¨ÔÚË®ÓòµØµãĞİÏ¢";
+            hint = "æ— æ³•åœ¨æ°´åŸŸåœ°ç‚¹ä¼‘æ¯";
             return false;
         }
         return true;

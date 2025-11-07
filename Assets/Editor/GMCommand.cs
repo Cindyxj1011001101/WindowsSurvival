@@ -7,11 +7,13 @@ public class GMCommand
     private static Card AddCard(string cardName)
     {
         var card = CardFactory.CreateCard(cardName);
-        card.Init();
         var window = GetFocusedBagWindow();
         if (window != null && window.Bag != null && window.Bag.CanAddCard(card, out _))
+        {
             window.Bag.AddCard(card);
-        card.RefreshSlot();
+            card.Init();
+            card.RefreshSlot();
+        }
 
         return card;
     }

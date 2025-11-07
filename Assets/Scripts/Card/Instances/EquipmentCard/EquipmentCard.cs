@@ -1,32 +1,22 @@
 ﻿public abstract class EquipmentCard : Card
 {
-    protected EquipmentComponent equipment;
-    protected EquipmentCard()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("装备", "", Event_Equip, Judge_Equip),
-            new CardEvent("卸下", "", Event_UnEquip, Judge_UnEquip)
-        };
+        AddCardEvent("装备", "", Event_Equip, Judge_Equip);
+        AddCardEvent("卸下", "", Event_UnEquip, Judge_UnEquip);
     }
 
-    public override void LateConstrcutor()
+    protected override void OnInit()
     {
-        base.LateConstrcutor();
-        TryGetComponent(out equipment);
-
-        if (TryGetComponent<DurabilityComponent>(out var d))
+        // 装备损坏后尝试从背包中重新找到一件相同的装备并且穿上
+        durability.onBroken = () =>
         {
-            // 装备损坏后尝试从背包中重新找到一件相同的装备并且穿上
-            d.onBroken = () =>
+            var sameEquipment = GameManager.Instance.PlayerBag.FindCardOfName(CardName);
+            if (sameEquipment != null && GameManager.Instance.CanEquip(sameEquipment, out _))
             {
-                var sameEquipment = GameManager.Instance.PlayerBag.FindCardOfName(CardName);
-                if (sameEquipment != null && GameManager.Instance.CanEquip(sameEquipment, out _))
-                {
-                    GameManager.Instance.Equip(sameEquipment, sameEquipment.Slot.transform.position);
-                }
-            };
-        }
+                GameManager.Instance.Equip(sameEquipment, sameEquipment.Slot.transform.position);
+            }
+        };
     }
 
     public abstract void OnEquipped();

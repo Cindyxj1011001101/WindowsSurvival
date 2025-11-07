@@ -1,38 +1,38 @@
-/// <summary>
-/// ËÄ½ÇÁâ¹ûÊµ
+ï»¿/// <summary>
+/// å››è§’è±æœå®
 /// </summary>
 public class WaterChestnutFruit : Card
 {
-    private WaterChestnutFruit()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("ÓÃÊÖÇÃ", "ÓÃÊÖ½«¹ûÊµÇÃ¿ª¡£½«»á»ñµÃËÄ½ÇÁâ¹ûÈâ", Event_BreakByHand, null, () => 15,
-                () => new() { { PlayerStateEnum.PainLevel, +20 } }),
-            new CardEvent("ÓÃ´¸×ÓÇÃ", "ÓÃ´¸×Ó½«¹ûÊµÇÃ¿ª¡£½«»á»ñµÃËÄ½ÇÁâ¹ûÈâ", Event_BreakByTool, Judge_BreakByTool, () => 3),
-        };
+        AddCardEvent("ç”¨æ‰‹æ•²", "ç”¨æ‰‹å°†æœå®æ•²å¼€ã€‚å°†ä¼šè·å¾—å››è§’è±æœè‚‰", Event_BreakByHand, null,
+            () => 15,
+            () => new()
+            {
+                { PlayerStateEnum.PainLevel, +20 }
+            });
+        AddCardEvent("ç”¨é”¤å­æ•²", "ç”¨é”¤å­å°†æœå®æ•²å¼€ã€‚å°†ä¼šè·å¾—å››è§’è±æœè‚‰", Event_BreakByTool, Judge_BreakByTool, () => 3);
     }
 
     private void Event_BreakByHand(out string tip)
     {
         tip = string.Empty;
         DestroyThis();
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, +20);
-        TimeManager.Instance.AddTime(15);
-        TurnTo("Áâ¹ûÈâ", Bag);
+        ApplyEventEffects(0);
+        TurnTo("è±æœè‚‰", Bag);
     }
 
     private void Event_BreakByTool(out string tip)
     {
-        BreakByTool(GameManager.Instance.PlayerBag.FindCardOfName("¸Ö´¸"), out tip);
+        BreakByTool(GameManager.Instance.PlayerBag.FindCardOfName("é’¢é”¤"), out tip);
     }
 
     private bool Judge_BreakByTool(out string hint)
     {
         hint = string.Empty;
-        if (GameManager.Instance.PlayerBag.FindCardOfName("¸Ö´¸") == null)
+        if (GameManager.Instance.PlayerBag.FindCardOfName("é’¢é”¤") == null)
         {
-            hint = "ĞèÒª¸Ö´¸";
+            hint = "éœ€è¦é’¢é”¤";
             return false;
         }
 
@@ -44,15 +44,15 @@ public class WaterChestnutFruit : Card
         tip = string.Empty;
         DestroyThis();
         tool.Use();
-        TimeManager.Instance.AddTime(3);
-        TurnTo("Áâ¹ûÈâ", Bag);
+        ApplyEventEffects(1);
+        TurnTo("è±æœè‚‰", Bag);
     }
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
-        if (card.CardId == "¸Ö´¸")
+        if (card.CardId == "é’¢é”¤")
         {
-            tip = Events[1].name;
+            tip = Events[1].Name;
             return true;
         }
         return false;

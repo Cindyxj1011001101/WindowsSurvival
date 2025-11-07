@@ -16,66 +16,70 @@ public class FuelFurnace : ConstructionCard
         }
     }
 
-    private InnerContentsComponent innerContents;
-    private FuelStorageComponent fuelStorage;
-    private TemperatureComponent temperatureComponent;
-    private StateMachineComponent stateMachine;
-
     private const int MAX_PROCESS_ROUNDS = 16; // 总加工轮数
 
-    [JsonProperty] private int leftProcessRounds = MAX_PROCESS_ROUNDS; // 剩余加工轮数
-    [JsonProperty] private bool isProcessing = false;                  // 是否正在加工
-    [JsonProperty] private bool processComplished = false;             // 加工是否完成
-    [JsonProperty] private Dictionary<TemperatureType, int> temperatureRecord = new(); // 温度数据，用来处理产物获取
+    [JsonProperty] private int leftProcessRounds = MAX_PROCESS_ROUNDS;                  // 剩余加工轮数
+    [JsonProperty] private bool isProcessing = false;                                   // 是否正在加工
+    [JsonProperty] private bool processComplished = false;                              // 加工是否完成
+    [JsonProperty] private Dictionary<TemperatureType, int> temperatureRecord = new();  // 温度数据，用来处理产物获取
 
     public override bool HasLoopSound => true;
 
-    private FuelFurnace() { }
-
-    public override void LateConstrcutor()
+    protected override void RegisterCardEvents()
     {
-        base.LateConstrcutor();
+        AddCardEvent("点燃", "点燃燃料炉。点燃后可以使燃料炉快速升温。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite);
+        AddCardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish);
+        AddCardEvent("开始加工", "", Event_Process, Judge_Process);
+        base.RegisterCardEvents(); // 拆毁
+    }
 
+    protected override void OnLateConstructor()
+    {
         // 添加燃料存储组件
-        if (!TryGetComponent(out fuelStorage))
-        {
-            fuelStorage = new FuelStorageComponent(96);
-            AddComponent(fuelStorage);
-        }
-
-        fuelStorage.whileBurning = () =>
-        {
-            // 点燃时，每回合温度增加
-            temperatureComponent.AddValue(17); // 温度+17
-        };
-
-        fuelStorage.whileNotBurning = () =>
-        {
-            // 熄灭时，每回合温度减少
-            var waterLevel = StateManager.Instance.WaterLevel.CurValue;
-            temperatureComponent.AddValue(-4); // 温度-4
-            if (waterLevel >= 30) // 水平面>=30时，温度额外-8
-            {
-                temperatureComponent.AddValue(-8);
-            }
-            else if (waterLevel > 0) // 水平面>=0时，温度额外-4
-            {
-                temperatureComponent.AddValue(-4);
-            }
-        };
+        fuelStorage = new FuelStorageComponent(96);
+        AddComponent(fuelStorage);
 
         // 添加温度组件
-        if (!TryGetComponent(out temperatureComponent))
-        {
-            temperatureComponent = new TemperatureComponent(0, 300);
-            AddComponent(temperatureComponent);
-        }
+        temperature = new TemperatureComponent(0, 300);
+        AddComponent(temperature);
 
         // 每个卡牌槽的最大堆叠数都为1
         foreach (var slot in innerContents.bag.Slots)
         {
             slot.SetMaxStackNum(1);
         }
+
+        var states = new List<CardState>()
+        {
+            new ("未加工", "5"),
+            new ("加工中", "6"),
+        };
+        stateMachine = new StateMachineComponent("未加工", states);
+        AddComponent(stateMachine);
+    }
+
+    protected override void OnInit()
+    {
+        fuelStorage.whileBurning = () =>
+        {
+            // 点燃时，每回合温度增加
+            temperature.AddValue(17); // 温度+17
+        };
+
+        fuelStorage.whileNotBurning = () =>
+        {
+            // 熄灭时，每回合温度减少
+            var waterLevel = StateManager.Instance.WaterLevel.CurValue;
+            temperature.AddValue(-4); // 温度-4
+            if (waterLevel >= 30) // 水平面>=30时，温度额外-8
+            {
+                temperature.AddValue(-8);
+            }
+            else if (waterLevel > 0) // 水平面>=0时，温度额外-4
+            {
+                temperature.AddValue(-4);
+            }
+        };
 
         innerContents.onRemoveCard = (c) =>
         {
@@ -87,33 +91,13 @@ public class FuelFurnace : ConstructionCard
                 RefreshSlot();
             }
         };
-
-        // 状态机
-        if (!TryGetComponent(out stateMachine))
-        {
-            var states = new List<CardState>()
-            {
-                new ("未加工", "5"),
-                new ("加工中", "6"),
-            };
-            stateMachine = new StateMachineComponent("未加工", states);
-            AddComponent(stateMachine);
-        }
-
-        Events = new()
-        {
-            new CardEvent("点燃", "点燃燃料炉。点燃后可以使燃料炉快速升温。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite),
-            new CardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish),
-            new CardEvent("开始加工" , "", Event_Process, Judge_Process),
-
-        };
     }
 
     private void Ignite(out string s)
     {
         fuelStorage.Ignite(out s);
 
-        SoundManager.Instance.PlaySound("点火_02");
+        PlaySound("点火_02");
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "燃料炉音效", 1f);
     }
@@ -212,10 +196,14 @@ public class FuelFurnace : ConstructionCard
         if (!isProcessing || leftProcessRounds <= 0) return;
 
         // 记录温度数据
-        if (temperatureComponent.value <= 50) temperatureRecord[TemperatureType.Normal]++;
-        else if (temperatureComponent.value <= 100) temperatureRecord[TemperatureType.Low]++;
-        else if (temperatureComponent.value <= 200) temperatureRecord[TemperatureType.Medium]++;
-        else temperatureRecord[TemperatureType.High]++;
+        if (temperature.value <= 50)
+            temperatureRecord[TemperatureType.Normal]++;    // 正常
+        else if (temperature.value <= 100)
+            temperatureRecord[TemperatureType.Low]++;       // 低温
+        else if (temperature.value <= 200)
+            temperatureRecord[TemperatureType.Medium]++;    // 中温
+        else
+            temperatureRecord[TemperatureType.High]++;      // 高温
 
         // 剩余回合数-1
         leftProcessRounds--;

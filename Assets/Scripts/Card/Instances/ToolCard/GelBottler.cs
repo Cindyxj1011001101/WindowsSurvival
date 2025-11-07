@@ -3,24 +3,23 @@
 /// </summary>
 public class GelBottler : Card
 {
-    private GelBottler()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("液体装瓶", "消耗当前地点中的水，获得一瓶盐水", Event_Bottling, Judge_Bottling, () => 15, null, () =>
+        AddCardEvent("液体装瓶", "消耗当前地点中的水，获得一瓶盐水", Event_Bottling, Judge_Bottling,
+            () => 15,
+            null,
+            () =>
             {
                 if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
                 {
-                    return new () { { EnvironmentStateEnum.WaterLevel, -2 } };
+                    return new() { { EnvironmentStateEnum.WaterLevel, -2 } };
                 }
                 return null;
-            })
-        };
+            });
     }
 
-    public override void Init()
+    protected override void OnInit()
     {
-        base.Init();
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnWaterLevelChanged);
     }
 
@@ -40,9 +39,8 @@ public class GelBottler : Card
     {
         tip = string.Empty;
         Use();
+        ApplyEventEffects(0);
         AddCard("盐水", true);
-        GameManager.Instance.CurEnvironmentBag.ApplyEnvEffects(Events[0].GetEnvEffects());
-        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
     }
 
     private bool Judge_Bottling(out string hint)

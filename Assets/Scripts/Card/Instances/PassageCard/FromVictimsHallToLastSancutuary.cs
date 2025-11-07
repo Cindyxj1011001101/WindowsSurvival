@@ -1,6 +1,7 @@
-/// <summary>
-/// ´ÓÓöÄÑÕß´óÌüµ½×îºó±Ó»¤Ëù
+ï»¿/// <summary>
+/// ä»é‡éš¾è€…å¤§å…åˆ°æœ€ååº‡æŠ¤æ‰€
 /// </summary>
 public class FromVictimsHallToLastSancutuary : PassageCard
 {
+
 }

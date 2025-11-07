@@ -9,13 +9,10 @@ public class SiphonophyllumWithProduct : Card
        new Drop(3, ("磁性触手", 1))
        );
 
-    private SiphonophyllumWithProduct()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("切割", "这会杀死虹吸海葵并获得磁性触手", Event_Cut, Judge_Cut, () =>45),
-            new CardEvent("采集", "虹吸海葵上似乎富集了很多金属", Event_Collect, null, () => 15)
-        };
+        AddCardEvent("切割", "这会杀死虹吸海葵并获得磁性触手", Event_Cut, Judge_Cut, () => 45);
+        AddCardEvent("采集", "虹吸海葵上似乎富集了很多金属", Event_Collect, null, () => 15);
     }
 
     private void Event_Cut(out string tip)
@@ -38,7 +35,7 @@ public class SiphonophyllumWithProduct : Card
     {
         DestroyThis();
 
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(1);
 
         // 变回虹吸海葵
         TurnTo("虹吸海葵", Bag);
@@ -52,7 +49,7 @@ public class SiphonophyllumWithProduct : Card
         tool.Use();
 
         tip = string.Empty;
-        TimeManager.Instance.AddTime(45);
+        ApplyEventEffects(0);
         AddCards("磁性触手", 3, true);
     }
 
@@ -62,7 +59,7 @@ public class SiphonophyllumWithProduct : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
         return false;

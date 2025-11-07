@@ -3,26 +3,25 @@
 /// </summary>
 public class SeaGrass : Card
 {
-    private SeaGrass()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("用手提取", "用手提取纤维", Event_CollectByHand, null, () => 30),
-            new CardEvent("用刀提取", "用刀提取纤维", Event_CollectByKnife, Judge_CollectByKnife, () => 15),
-        };
+        AddCardEvent("用手提取", "用手提取纤维", Event_CollectByHand, null, () => 30);
+        AddCardEvent("用刀提取", "用刀提取纤维", Event_CollectByKnife, Judge_CollectByKnife, () => 15);
     }
+
     private void Event_CollectByHand(out string tip)
     {
-        DestroyThis();
-
         tip = string.Empty;
-        TimeManager.Instance.AddTime(30);
+        DestroyThis();
+        ApplyEventEffects(0);
         AddCard("纤维", true);
     }
+    
     private void Event_CollectByKnife(out string tip)
     {
         CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
     }
+    
     private bool Judge_CollectByKnife(out string hint)
     {
         hint = string.Empty;
@@ -36,11 +35,10 @@ public class SeaGrass : Card
 
     private void CollectByKnife(Card tool, out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         tool.Use();
-
-        tip = string.Empty;
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(1);
         AddCard("纤维", true);
     }
 
@@ -50,7 +48,7 @@ public class SeaGrass : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            tip = Events[1].name;
+            tip = Events[1].Name;
             return true;
         }
         return false;

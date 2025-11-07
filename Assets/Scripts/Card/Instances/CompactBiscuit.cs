@@ -3,15 +3,13 @@
 /// </summary>
 public class CompactBiscuit : Card
 {
-    private CompactBiscuit()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 3,
+        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+            () => 3,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 14 }
-            })
-        };
+            });
     }
 }

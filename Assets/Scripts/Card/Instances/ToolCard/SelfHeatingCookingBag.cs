@@ -1,19 +1,14 @@
-/// <summary>
-/// ×ÔÈÈÅëâ¿´ü
+ï»¿/// <summary>
+/// è‡ªçƒ­çƒ¹é¥ªè¢‹
 /// </summary>
 public class SelfHeatingCookingBag : Card
 {
-    private SelfHeatingCookingBag()
-    {
-
-    }
-
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
         if (card.TryGetComponent<CookComponent>(out var cook) && cook.leftCookTime > 0)
         {
-            tip = "ÖóÊìÊ³Îï";
+            tip = "ç…®ç†Ÿé£Ÿç‰©";
             return true;
         }
         return false;
@@ -27,8 +22,7 @@ public class SelfHeatingCookingBag : Card
         Use();
         card.DestroyThis();
 
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("µã»ğ_02", true);
+        PlaySound("ç‚¹ç«_02", true);
 
         TimeManager.Instance.AddTime(15);
 

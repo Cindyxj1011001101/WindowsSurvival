@@ -13,13 +13,10 @@ public class WasteHeap : Card
        new Drop(2, ("氧烛", 1))
        );
 
-    private WasteHeap()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("用手挖掘", "这会费时费力", Event_Dig, null, () => 45),
-            new CardEvent("用铲子挖", "比用手轻松一些", Event_DigByTool, Judge_DigByTool, () => 15),
-        };
+        AddCardEvent("用手挖掘", "这会费时费力", Event_Dig, null, () => 45);
+        AddCardEvent("用铲子挖", "比用手轻松一些", Event_DigByTool, Judge_DigByTool, () => 15);
     }
 
     private void Event_Dig(out string tip)
@@ -31,10 +28,9 @@ public class WasteHeap : Card
             Use();
 
             //消耗45分钟
-            TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
+            ApplyEventEffects(0);
 
-            if (SoundManager.Instance != null)
-                SoundManager.Instance.PlaySound("挖掘废料_01", true);
+            PlaySound("挖掘废料_01", true);
         });
     }
 
@@ -64,11 +60,9 @@ public class WasteHeap : Card
             // 工具消耗耐久
             tool.Use();
 
-            //消耗15分钟
-            TimeManager.Instance.AddTime(Events[1].GetTimeEffect());
+            ApplyEventEffects(1);
 
-            if (SoundManager.Instance != null)
-                SoundManager.Instance.PlaySound("挖掘废料_01", true);
+            PlaySound("挖掘废料_01", true);
         });
     }
 
@@ -77,7 +71,7 @@ public class WasteHeap : Card
         tip = string.Empty;
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            tip = Events[1].name;
+            tip = Events[1].Name;
             return true;
         }
         return false;

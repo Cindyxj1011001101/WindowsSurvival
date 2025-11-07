@@ -58,9 +58,9 @@ public class EnvironmentBagWindow : BagWindow
         {
             if (MoveExploreManager.Instance.CanMoveExplore())
             {
-                var (desc, time, playerEffects) = MoveExploreManager.Instance.GetExploreEffects();
+                var (desc, time, playerStateChanges) = MoveExploreManager.Instance.GetExploreEffects();
                 desc = "探索该地点" + desc;
-                exploreTipController.SetTip(desc, time, playerEffects, null);
+                exploreTipController.SetTip(desc, time, playerStateChanges, null);
             }
             else
                 exploreTipController.SetTip("身上太重了，无法探索");
@@ -72,9 +72,9 @@ public class EnvironmentBagWindow : BagWindow
         {
             if (MoveExploreManager.Instance.CanMoveExplore())
             {
-                var (desc, time, playerEffects) = MoveExploreManager.Instance.GetMoveEffects(TargetPosition);
+                var (desc, time, playerStateChanges) = MoveExploreManager.Instance.GetMoveEffects(TargetPosition);
                 desc = $"前往坐标 {TargetPosition:0.0} 处" + desc;
-                moveTipController.SetTip(desc, time, playerEffects, null);
+                moveTipController.SetTip(desc, time, playerStateChanges, null);
             }
             else
                 moveTipController.SetTip("身上太重了，无法移动");
@@ -114,7 +114,7 @@ public class EnvironmentBagWindow : BagWindow
         }
 
         // 注册地点改变事件
-        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, DisplayBag);
         // 注册环境状态变化事件
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         // 注册负重变化事件
@@ -125,7 +125,7 @@ public class EnvironmentBagWindow : BagWindow
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeEnv, DisplayBag);
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, DisplayBag);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
         EventManager.Instance.RemoveListener(EventType.PlayerMove, DisplayPlayerPosition);

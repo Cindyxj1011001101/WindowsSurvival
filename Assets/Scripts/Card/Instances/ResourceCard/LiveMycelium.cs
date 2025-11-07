@@ -1,9 +1,6 @@
-/// <summary>
-/// »î¾úË¿
+ï»¿/// <summary>
+/// æ´»èŒä¸
 /// </summary>
 public class LiveMycelium : Card
 {
-    private LiveMycelium()
-    {
-    }
 }

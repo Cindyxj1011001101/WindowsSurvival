@@ -1,18 +1,16 @@
-/// <summary>
-/// ÒÑ´¦ÀíµÄº£òØÆ¤
+ï»¿/// <summary>
+/// å·²å¤„ç†çš„æµ·èœ‡çš®
 /// </summary>
 public class ProcessedJellyfishSkin : Card
 {
-    private ProcessedJellyfishSkin()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("Ê³ÓÃ", "", (out string s) => EasyEvent(out s, "³Ô_01"), null, () => 15,
+        AddCardEvent("é£Ÿç”¨", "", (out string s) => EasyEvent(out s, "åƒ_01"), null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 25 },
                 { PlayerStateEnum.Itchiness, +5 }
-            }),
-        };
+            });
     }
 }

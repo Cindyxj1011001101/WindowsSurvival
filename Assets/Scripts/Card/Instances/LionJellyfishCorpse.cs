@@ -9,20 +9,18 @@ public class LionJellyfishCorpse : Card
        new Drop(1, ("未处理的海蜇皮", 1))
        );
 
-    private LionJellyfishCorpse()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("用刀切割", "", Event_PeelByKnife, Judge_PeelByKnife, () => 15),
-            new CardEvent("咬一口", "", Event_Bite, null, () => 15,
+        AddCardEvent("用刀切割", "", Event_PeelByKnife, Judge_PeelByKnife, () => 15);
+        AddCardEvent("咬一口", "", Event_Bite, null,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, +8 },
                 { PlayerStateEnum.Health, -4 },
                 { PlayerStateEnum.Sanity, -5 },
                 { PlayerStateEnum.Itchiness, +45 },
-            }),
-        };
+            });
     }
 
     #region 用刀切割
@@ -48,7 +46,7 @@ public class LionJellyfishCorpse : Card
         knife.Use();
 
         //消耗15分钟
-        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
+        ApplyEventEffects(0);
         RandomDrop(dropList, out tip);
     }
     #endregion
@@ -61,9 +59,7 @@ public class LionJellyfishCorpse : Card
     {
         tip = string.Empty;
         Use();
-
-        StateManager.Instance.ApplyPlayerStateChange(Events[1].GetPlayerEffects());
-        TimeManager.Instance.AddTime(Events[1].GetTimeEffect());
+        ApplyEventEffects(1);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -72,7 +68,7 @@ public class LionJellyfishCorpse : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut))
         {
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
         return false;

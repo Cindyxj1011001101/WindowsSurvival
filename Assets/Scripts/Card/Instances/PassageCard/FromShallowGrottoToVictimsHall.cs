@@ -1,6 +1,7 @@
-/// <summary>
-/// ´ÓÇ³²ãÑÒÑ¨µ½ÓöÄÑÕß´óÌü
+ï»¿/// <summary>
+/// ä»æµ…å±‚å²©ç©´åˆ°é‡éš¾è€…å¤§å…
 /// </summary>
 public class FromShallowGrottoToVictimsHall : PassageCard
 {
+
 }

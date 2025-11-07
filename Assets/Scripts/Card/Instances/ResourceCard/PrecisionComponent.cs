@@ -1,10 +1,6 @@
-/// <summary>
-/// ¾«ÃÜÔª¼þ
+ï»¿/// <summary>
+/// ç²¾å¯†å…ƒä»¶
 /// </summary>
 public class PrecisionComponent : Card
 {
-    private PrecisionComponent()
-    {
-
-    }
 }

@@ -22,7 +22,7 @@ public class TimeSelectWindow : WindowBase
     private int minute = 0;
 
     public UnityAction<int> onConfirm;
-    public OutStringAction<bool> canConfirm;
+    public OutStringFunc<bool> canConfirm;
 
     public Func<int, (string, int, Dictionary<PlayerStateEnum, float>, Dictionary<EnvironmentStateEnum, float>)> getConfirmEffects;
 

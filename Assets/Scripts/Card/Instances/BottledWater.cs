@@ -3,15 +3,13 @@
 /// </summary>
 public class BottledWater : Card
 {
-    private BottledWater()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("饮用", "连瓶子也喝掉", (out string s) => EasyEvent(out s, "喝_01"), null, () => 3,
+        AddCardEvent("饮用", "连瓶子也喝掉", (out string s) => EasyEvent(out s, "喝_01"), null,
+            () => 3,
             () => new()
             {
                 { PlayerStateEnum.Hydration, 20 }
-            })
-        };
+            });
     }
 }

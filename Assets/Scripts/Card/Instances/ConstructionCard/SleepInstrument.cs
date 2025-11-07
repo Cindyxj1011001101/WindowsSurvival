@@ -6,42 +6,33 @@ using System.Collections.Generic;
 /// </summary>
 public class SleepInstrument : ConstructionCard
 {
-    private StateMachineComponent stateMachine;
-
     private const float ELECTRICITY_CONSUMPTION = 0.6f; // 每回合耗电量
     private const float EXTRA_SOBRIETY_INCREASE = 1.2f; // 额外清醒度增加
     private const float EXTRA_HEALTH_INCREASE = 1.2f;   // 额外清醒度增加
 
     [JsonProperty] private bool isWorking = false;
 
-    private SleepInstrument() { }
-
-    public override void LateConstrcutor()
+    protected override void RegisterCardEvents()
     {
-        base.LateConstrcutor();
+        AddCardEvent("接电", $"将其接入电网。接电后当麦麦在安装了{CardName}的地点休息时，每15分钟额外+{EXTRA_SOBRIETY_INCREASE}清醒度和{EXTRA_HEALTH_INCREASE}健康，" +
+                            $"并消耗{ELECTRICITY_CONSUMPTION}单位电力", Event_TurnOn, Judge_TurnOn);
+		AddCardEvent("断电", "", Event_TurnOff, Judge_TurnOff);
+        base.RegisterCardEvents(); // 拆毁
+    }
 
-        if (!TryGetComponent(out stateMachine))
+    protected override void OnLateConstructor()
+    {
+        var states = new List<CardState>()
         {
-            var states = new List<CardState>()
-            {
-                new ("已接电", "11", true, true, true),
-                new ("未接电", "12", false, true, false),
-            };
-            stateMachine = new StateMachineComponent("未接电", states);
-            AddComponent(stateMachine);
-		}
+            new ("已接电", "11", true, true, true),
+            new ("未接电", "12", false, true, false),
+        };
+        stateMachine = new StateMachineComponent("未接电", states);
+        AddComponent(stateMachine);
+    }
 
-		Events = new()
-		{
-			new CardEvent("接电", $"将其接入电网。接电后当麦麦在安装了{CardName}的地点休息时，每15分钟额外+{EXTRA_SOBRIETY_INCREASE}清醒度和{EXTRA_HEALTH_INCREASE}健康，" +
-							$"并消耗{ELECTRICITY_CONSUMPTION}单位电力",Event_TurnOn, Judge_TurnOn),
-			new CardEvent("断电", "", Event_TurnOff, Judge_TurnOff),
-		};
-	}
-
-    public override void Init()
+    protected override void OnInit()
     {
-        base.Init();
         EventManager.Instance.AddListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.AddListener(EventType.StopSleeping, OnStopSleeping);
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
@@ -83,7 +74,6 @@ public class SleepInstrument : ConstructionCard
             ShowTip($"电力供应不足，{CardName}已断电并停止工作");
         }
     }
-
 
     private void OnStartSleeping()
     {

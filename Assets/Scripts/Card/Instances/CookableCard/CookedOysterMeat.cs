@@ -1,16 +1,17 @@
-﻿public class CookedOysterMeat : CookableCard
+﻿/// <summary>
+/// 熟贝肉
+/// </summary>
+public class CookedOysterMeat : CookableCard
 {
-    private CookedOysterMeat()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 3,
+        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+            () => 3,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 8 },
                 { PlayerStateEnum.Health, 1 },
                 { PlayerStateEnum.Sanity, 1 },
-            })
-        };
+            });
     }
 }

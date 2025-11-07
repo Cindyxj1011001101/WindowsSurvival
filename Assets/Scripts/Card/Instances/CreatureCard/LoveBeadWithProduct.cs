@@ -30,12 +30,9 @@ public class LoveBeadWithProduct : Card
         new Drop(2, ("菱果", 1))
         );
 
-    private LoveBeadWithProduct()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("撬开", "像开宝箱一样获得随机产物", Event_OpenByTool, Judge_OpenByTool, () => 15),
-        };
+        AddCardEvent("撬开", "像开宝箱一样获得随机产物", Event_OpenByTool, Judge_OpenByTool, () => 15);
     }
 
     #region 事件
@@ -60,7 +57,7 @@ public class LoveBeadWithProduct : Card
         DestroyThis();
         tool.Use();
 
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(0);
 
         // 变回爱情贝
         TurnTo("爱情贝", Bag);
@@ -75,7 +72,7 @@ public class LoveBeadWithProduct : Card
         tip = string.Empty;
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Intersect(new List<ToolType> { ToolType.Cut, ToolType.Dig }).Any())
         {
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
         return false;

@@ -9,34 +9,30 @@ public class SpaceshipSeat : ConstructionCard
     private const float SANITY_CHANGE_RATE_REST = +2f;
     private const float SOBRIETY_CHANGE_RATE_SLEEP = +3f;
 
-    private SpaceshipSeat()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent(
-                "靠着休息",
-                $"靠在驾驶座上休息。\n" +
-                $"{ColorManager.Colorize(SOBRIETY_CHANGE_RATE_REST, ColorManager.Green)}清醒度/15min\n" +
-                $"{ColorManager.Colorize(SANITY_CHANGE_RATE_REST, ColorManager.Green)}精神/15min\n" +
-                $"（休息行为1天内多次进行数值恢复减半，最多叠加2次）",
-                Event_Rest,
-                Judge_Rest
-            ),
-            new CardEvent(
-                "靠着睡觉",
-                $"靠在驾驶座上睡觉。\n" +
-                $"{ColorManager.Colorize(SOBRIETY_CHANGE_RATE_SLEEP, ColorManager.Green)}清醒度/15min",
-                Event_Sleep,
-                Judge_Rest
-            ),
-        };
+        AddCardEvent(
+            "靠着休息",
+            $"靠在驾驶座上休息。\n" +
+            $"{ColorManager.Colorize(SOBRIETY_CHANGE_RATE_REST, ColorManager.Green)}清醒度/15min\n" +
+            $"{ColorManager.Colorize(SANITY_CHANGE_RATE_REST, ColorManager.Green)}精神/15min\n" +
+            $"（休息行为1天内多次进行数值恢复减半，最多叠加2次）",
+            Event_Rest,
+            Judge_Rest
+        );
+        AddCardEvent(
+            "靠着睡觉",
+            $"靠在驾驶座上睡觉。\n" +
+            $"{ColorManager.Colorize(SOBRIETY_CHANGE_RATE_SLEEP, ColorManager.Green)}清醒度/15min",
+            Event_Sleep,
+            Judge_Rest
+        );
+        base.RegisterCardEvents(); // 拆毁
     }
 
-    public override void Init()
+    protected override void OnInit()
     {
-        base.Init();
         GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2, .5f));
-
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天刷新
     }
 

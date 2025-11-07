@@ -1,33 +1,14 @@
+using UnityEngine;
+
 /// <summary>
 /// 水瓶鱼
 /// </summary>
 public class AquariusFishWithProduct : Card
 {
-    private DropList dropList;
-    private AquariusFishWithProduct()
+    protected override void RegisterCardEvents()
     {
-        dropList = new(
-            new Drop(3, (out string tip) =>
-            {
-                tip = "水瓶鱼逃跑了";
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, -2);
-
-            }),
-            new Drop(1, (out string tip) =>
-            {
-                tip = string.Empty;
-                // 获得一张“有产物的被捉住的水瓶鱼”
-                // 继承产物进度
-                // 添加到玩家背包
-                AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag, out var card);
-                card.InheritComponent<ProgressComponent>(this, out _);
-            })
-        );
-        Events = new()
-        {
-            new CardEvent("用捕网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, () => 15),
-            new CardEvent("用手捉", "可能捉不到", Event_CatchByHand, null, () => 30),
-        };
+        AddCardEvent("用捕网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, () => 15);
+        AddCardEvent("用手捉", "可能捉不到", Event_CatchByHand, null, () => 30);
     }
 
     #region 用捕网捉
@@ -51,11 +32,25 @@ public class AquariusFishWithProduct : Card
     #region 用手捉
     private void Event_CatchByHand(out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
 
-        TimeManager.Instance.AddTime(30);
+        ApplyEventEffects(1);
 
-        RandomDrop(dropList, out tip);
+        // 3/4概率逃跑
+        var value = Random.value;
+        if (value < 3 / 4f)
+        {
+            tip = "水瓶鱼逃跑了";
+            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, -2);
+            return;
+        }
+
+        // 获得一张“被捉住的水瓶鱼”
+        // 继承产物进度
+        // 添加到玩家背包
+        AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag, out var card);
+        card.InheritComponent<ProgressComponent>(this, out _);
     }
     #endregion
 
@@ -68,8 +63,7 @@ public class AquariusFishWithProduct : Card
         // 1. 消耗耐久
         tool.Use();
 
-        // 2. 时间变化
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(0);
 
         // 3. 掉落卡牌
         // 获得一张“有产物的被捉住的水瓶鱼”
@@ -81,7 +75,7 @@ public class AquariusFishWithProduct : Card
         tip = string.Empty;
         if (card.CardId == "捞网")
         {
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
         return false;

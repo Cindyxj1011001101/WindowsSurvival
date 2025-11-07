@@ -5,39 +5,29 @@ using System.Collections.Generic;
 /// </summary>
 public class ElectricDrainageMachine : ConstructionCard
 {
-    private StateMachineComponent stateMachine;
-
     private const float WATER_LEVEL_REDUCTION = 2f;     // 每回合水平面降低量
     private const float ELECTRICITY_CONSUMPTION = 0.5f; // 每回合电力消耗
 
-    private ElectricDrainageMachine()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
+        AddCardEvent("接电", $"将其接入电网。接电后每15分钟消耗{ELECTRICITY_CONSUMPTION}单位电力，降低{WATER_LEVEL_REDUCTION}单位水平面高度", Event_TurnOn, Judge_TurnOn);
+        AddCardEvent("断电", "", Event_TurnOff, Judge_TurnOff);
+        base.RegisterCardEvents(); // 拆毁
+    }
+
+    protected override void OnLateConstructor()
+    {
+        var states = new List<CardState>()
         {
-            new CardEvent("接电", $"将其接入电网。接电后每15分钟消耗{ELECTRICITY_CONSUMPTION}单位电力，降低{WATER_LEVEL_REDUCTION}单位水平面高度", Event_TurnOn, Judge_TurnOn),
-            new CardEvent("断电", "", Event_TurnOff, Judge_TurnOff)
+            new ("已开启", "7", true, true, true),
+            new ("已关闭", "8", false, true, false),
         };
+        stateMachine = new StateMachineComponent("已关闭", states);
+        AddComponent(stateMachine);
     }
 
-    public override void LateConstrcutor()
+    protected override void OnInit()
     {
-        base.LateConstrcutor();
-
-        if (!TryGetComponent(out stateMachine))
-        {
-            var states = new List<CardState>()
-            {
-                new ("已开启", "7", true, true, true),
-                new ("已关闭", "8", false, true, false),
-            };
-            stateMachine = new StateMachineComponent("已关闭", states);
-            AddComponent(stateMachine);
-        }
-    }
-
-    public override void Init()
-    {
-        base.Init();
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);

@@ -4,12 +4,10 @@
 public class WaterCrack : Card
 {
     public override bool HasLoopSound => true;
-    private WaterCrack()
+
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("堵住", "消耗裂缝填充物修补裂缝", Event_Fix, Jugde_Fix, () => 15),
-        };
+        AddCardEvent("堵住", "消耗裂缝填充物修补裂缝", Event_Fix, Jugde_Fix, () => 15);
     }
 
     private void Event_Fix(out string tip)
@@ -30,13 +28,12 @@ public class WaterCrack : Card
 
     private void Fix(Card patch, out string tip)
     {
+        tip = string.Empty;
         DestroyThis();
         patch.DestroyThis();
-
-        tip = string.Empty;
-        SoundManager.Instance.PlaySound("堵住裂缝");
+        PlaySound("堵住裂缝");
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("渗水裂缝", "堵住"));
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(0);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -44,7 +41,7 @@ public class WaterCrack : Card
         tip = string.Empty;
         if (card.CardId == "裂缝填充物")
         {
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
         return false;

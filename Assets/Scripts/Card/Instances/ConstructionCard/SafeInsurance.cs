@@ -1,33 +1,36 @@
-//变形的保险柜
+/// <summary>
+/// 变形的保险柜
+/// </summary>
 public class SafeInsurance : ConstructionCard
 {
-    private InnerContentsComponent innerContents;
-    private SafeInsurance()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("用手砸", "如果是方块手的话或许能做到", Event_UseHand, Judge_UseHand, () => 15,
+        AddCardEvent("用手砸", "如果是方块手的话或许能做到", Event_UseHand, Judge_UseHand,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Sobriety, -5 },
                 { PlayerStateEnum.PainLevel, 15 }
-            }),
-            new CardEvent("用铲子凿", "还是有些费力，但是比用手好得多", Event_UseShovel, Judge_UseShovel, () => 15,
+            });
+        AddCardEvent("用铲子凿", "还是有些费力，但是比用手好得多", Event_UseShovel, Judge_UseShovel,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Sobriety, -4 }
-            }),
-            new CardEvent("用锤子砸", "最有效的打开保险箱的方式", Event_UseHammer, Judge_UseHammer, () => 15)
-        };
+            });
+        AddCardEvent("用锤子砸", "最有效的打开保险箱的方式", Event_UseHammer, Judge_UseHammer, () => 15);
+        base.RegisterCardEvents(); // 拆毁
     }
-    public override void LateConstrcutor()
+
+    protected override void OnLateConstructor()
     {
-        base.LateConstrcutor();
         innerContents.display = false; // 不显示内容物
         innerContents.allowAdd = innerContents.allowRemove = false; // 不允许添加或移除内容物
+    }
 
-        TryGetComponent<DurabilityComponent>(out var d);
-        d.onBroken = OnBroken;
+    protected override void OnInit()
+    {
+        durability.onBroken = OnBroken;
     }
 
     /// <summary>
@@ -38,12 +41,9 @@ public class SafeInsurance : ConstructionCard
     {
         tip = string.Empty;
         // 播放音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("金属受击_01", true);
+        PlaySound("金属受击_01", true);
         Use(3);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -5);
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 15);
-        TimeManager.Instance.AddTime(15);
+        ApplyEventEffects(0);
     }
 
     private bool Judge_UseHand(out string hint)
@@ -56,6 +56,16 @@ public class SafeInsurance : ConstructionCard
     /// 用铲子凿
     /// </summary>
     /// <param name="tip"></param>
+    private void UseShovel(Card tool, out string tip)
+    {
+        tip = string.Empty;
+        // 播放音效
+        PlaySound("凿_01", true);
+        Use(8);
+        tool.Use();
+        ApplyEventEffects(1);
+    }
+
     private void Event_UseShovel(out string tip)
     {
         UseShovel(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
@@ -76,6 +86,16 @@ public class SafeInsurance : ConstructionCard
     /// 用锤子砸
     /// </summary>
     /// <param name="tip"></param>
+    private void UseHammer(Card tool, out string tip)
+    {
+        tip = string.Empty;
+        // 播放音效
+        PlaySound("暴力拆毁_01", true);
+        Use(20);
+        tool.Use();
+        ApplyEventEffects(2);
+    }
+
     private void Event_UseHammer(out string tip)
     {
         UseHammer(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), out tip);
@@ -95,36 +115,12 @@ public class SafeInsurance : ConstructionCard
     private void OnBroken()
     {
         // 播放音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("摧毁_01", true);
-        //AddCard("被撬开的保险柜", false, out var card);
+        PlaySound("摧毁_01", true);
         TurnTo("被撬开的保险柜", Bag, out var card);
         // 继承内容物
+        // TODO: 这里似乎有问题，因为继承过来的内容物组件没有init
         card.InheritComponent<InnerContentsComponent>(this, out var newComponent);
         newComponent.allowAdd = newComponent.allowRemove = newComponent.display = true;
-    }
-
-    private void UseHammer(Card tool, out string tip)
-    {
-        tip = string.Empty;
-        // 播放音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("暴力拆毁_01", true);
-        Use(20);
-        tool.Use();
-        TimeManager.Instance.AddTime(15);
-    }
-
-    private void UseShovel(Card tool, out string tip)
-    {
-        tip = string.Empty;
-        // 播放音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("凿_01", true);
-        Use(8);
-        tool.Use();
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, -4);
-        TimeManager.Instance.AddTime(15);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -134,13 +130,13 @@ public class SafeInsurance : ConstructionCard
         // 用铲子凿
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            tip = Events[1].name;
+            tip = Events[1].Name;
             return true;
         }
 
         if (card.CardId == "钢锤")
         {
-            tip = Events[2].name;
+            tip = Events[2].Name;
             return true;
         }
 
@@ -152,16 +148,16 @@ public class SafeInsurance : ConstructionCard
         tip = string.Empty;
 
         var card = slot.PeekCard();
-        
-        if (slot.PeekCard().CardId == "钢锤")
-        {
-            UseHammer(card, out tip);
-            return;
-        }
-        
+
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
             UseShovel(card, out tip);
+            return;
+        }
+
+        if (slot.PeekCard().CardId == "钢锤")
+        {
+            UseHammer(card, out tip);
             return;
         }
     }

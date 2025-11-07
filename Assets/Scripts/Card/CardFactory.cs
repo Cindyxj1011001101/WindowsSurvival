@@ -37,7 +37,7 @@ public static class CardFactory
             { "韧性胶管", typeof(ResilientRubberHose) },
             { "人力发电机", typeof(HumanPoweredGenerator) },
             { "点燃的氧烛", typeof(LightenedOxygenCandle) },
-            { "小块生肉", typeof(LittleRawMeat) },
+            { "小块生肉", typeof(RawLittleMeat) },
             { "爱情贝", typeof(LoveBead) },
             { "有产物的爱情贝", typeof(LoveBeadWithProduct) },
             { "磁性触手", typeof(MagneticTentacle) },
@@ -48,20 +48,20 @@ public static class CardFactory
             { "裂缝填充物", typeof(Patch) },
             { "老鼠尸体", typeof(RatBody) },
             { "生贝肉", typeof(RawOysterMeat) },
-            { "腐烂物", typeof(RotMaterial) },
+            { "腐烂物", typeof(SpoiledFood) },
             { "废铁刀", typeof(ScrapIronKnife) },
             { "废金属", typeof(ScrapMetal) },
             { "虹吸海葵", typeof(Siphonophyllum) },
             { "有产物的虹吸海葵", typeof(SiphonophyllumWithProduct) },
             { "废料堆", typeof(WasteHeap) },
             { "渗水裂缝", typeof(WaterCrack) },
-            { "白爆矿", typeof(WhiteBlastMine) },
+            { "白爆矿", typeof(WhiteBlastOre) },
             { "海麻线", typeof(SeaGrass) },
             { "海爬虫", typeof(SeaLizard) },
             { "熟海爬虫", typeof(CookedSeaLizard) },
             { "石砖", typeof(StoneBrick) },
             { "电动排水机", typeof(ElectricDrainageMachine) },
-            { "废铁铲", typeof(WasteShovel) },
+            { "废铁铲", typeof(ScrapShovel) },
             { "储物箱", typeof(StorageBox) },
             { "食物残渣", typeof(FoodScrap) },
             { "海麻线丛", typeof(SeaGrassBed) },
@@ -77,7 +77,7 @@ public static class CardFactory
             { "厨房恶物", typeof(KitchenFoes) },
             { "鱼汤", typeof(FishSoup) },
             { "贝类刺身", typeof(ShellSashimi) },
-            { "白爆矿堆", typeof(WhiteBlastMineStack) },
+            { "白爆矿堆", typeof(WhiteBlastOreStack) },
             { "燃料炉", typeof(FuelFurnace) },
             { "诱捕陷阱", typeof(Trap) },
             { "手压排水泵", typeof(HandDrainPump) },
@@ -102,7 +102,7 @@ public static class CardFactory
             { "钢材", typeof(Steel) },
             { "烧焦的食物", typeof(BurntFood) },
             { "燃料蒸馏器", typeof(FuelDistiller) },
-            { "小块熟肉", typeof(LittleCookedMeat) },
+            { "小块熟肉", typeof(CookedLittleMeat) },
             { "熟贝肉", typeof(CookedOysterMeat) },
             { "熟触手", typeof(CookedTentacle) },
             { "盐水", typeof(SalineWater) },
@@ -367,6 +367,8 @@ public static class CardFactory
             card.AddComponent(new EntityComponent(config.MaxHealth, config.EntityAtk, config.MoveDistPerMin, config.AIRefreshInterval, config.BehavioralTendency, config.DeadDrops));
         }
 
+        card.LateConstrcutor();
+
         return card;
     }
 
@@ -386,7 +388,6 @@ public static class CardFactory
         else
         {
             var card = CreateCard(cardId);
-            card.LateConstrcutor();
             cardInstances.Add(cardId, card);
             return card;
         }

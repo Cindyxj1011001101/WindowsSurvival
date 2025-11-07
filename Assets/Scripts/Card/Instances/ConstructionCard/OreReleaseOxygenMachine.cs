@@ -7,10 +7,6 @@ using UnityEngine;
 /// </summary>
 public class OreReleaseOxygenMachine : ConstructionCard
 {
-    private StateMachineComponent stateMachine;
-    private InnerContentsComponent innerContents;
-    private OxygenStorageComponent oxygenStorage;
-
     private const int MAX_PRODUCTION_PROCESS = 120;  // 最大氧气产生进度
     private const int OXYGEN_PRODUCTION = 180;       // 氧气产出
     private const int ORE_CONSUMPTION = 1;           // 白爆矿消耗量
@@ -18,42 +14,30 @@ public class OreReleaseOxygenMachine : ConstructionCard
 
     [JsonProperty] private int leftProductionProgress = MAX_PRODUCTION_PROCESS;
 
-    private OreReleaseOxygenMachine() { }
-
-    public override void LateConstrcutor()
+    protected override void RegisterCardEvents()
     {
-        base.LateConstrcutor();
-
-        // 未布置和已布置两种状态
-        if (!TryGetComponent(out stateMachine))
-        {
-            var states = new List<CardState>()
-            {
-                new ("已关闭", "0", false, true, false),
-                new ("已开启", "1", true, true, true),
-            };
-            stateMachine = new StateMachineComponent("已关闭", states);
-            AddComponent(stateMachine);
-        }
-
-        // 添加氧气存储组件
-        if (!TryGetComponent(out oxygenStorage))
-        {
-            oxygenStorage = new OxygenStorageComponent(360);
-            AddComponent(oxygenStorage);
-        }
-
-        Events = new()
-        {
-            new CardEvent("开启", $"开启后{CardName}每{MAX_PRODUCTION_PROCESS}分钟消耗{ORE_CONSUMPTION}块白爆矿和{ELECTRICITY_CONSUMPTION}单位电力，产生{OXYGEN_PRODUCTION}单位氧气", Event_TurnOn, Judge_TurnOn),
-            new CardEvent("关闭", "", Event_TurnOff, Judge_TurnOff),
-            new CardEvent("获取氧气", $"消耗{CardName}的氧气储存，补充麦麦的氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen)
-        };
+        AddCardEvent("开启", $"开启后{CardName}每{MAX_PRODUCTION_PROCESS}分钟消耗{ORE_CONSUMPTION}块白爆矿和{ELECTRICITY_CONSUMPTION}单位电力，产生{OXYGEN_PRODUCTION}单位氧气", Event_TurnOn, Judge_TurnOn);
+        AddCardEvent("关闭", "", Event_TurnOff, Judge_TurnOff);
+        AddCardEvent("获取氧气", $"消耗{CardName}的氧气储存，补充麦麦的氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen);
+        base.RegisterCardEvents(); // 拆毁
     }
 
-    public override void Init()
+    protected override void OnLateConstructor()
     {
-        base.Init();
+        oxygenStorage = new OxygenStorageComponent(360);
+        AddComponent(oxygenStorage);
+
+        var states = new List<CardState>()
+        {
+            new ("已关闭", "0", false, true, false),
+            new ("已开启", "1", true, true, true),
+        };
+        stateMachine = new StateMachineComponent("已关闭", states);
+        AddComponent(stateMachine);
+    }
+
+    protected override void OnInit()
+    {
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
     }

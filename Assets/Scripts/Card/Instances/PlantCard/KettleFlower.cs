@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -6,46 +7,38 @@ using UnityEngine;
 /// </summary>
 public class KettleFlower : PlantCard
 {
-    private StateMachineComponent stateMachine;
+    [JsonProperty] private bool hasWound = false;
+    [JsonProperty] private int recovery = 0; // 伤口恢复进度
+    private const int MAX_RECOVERY = 10;
 
-    public bool hasWound = false;
-    public int recoverProgress = 0; // 伤口恢复进度
-    public int maxRecoverProgress = 10;
-
-    private KettleFlower()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("划一个口", "在水壶兰的茎部划一个口，从而可以饮用其中的汁液，并且有概率获得一颗种子。\n伤口需要一段时间愈合，愈合前水壶兰不会生长", Event_Hurt, Judge_Hurt, () => 15),
-            new CardEvent("铲起", "将水壶兰连根铲起。将会获得一颗种子", Event_DigUp, Judge_DigUp, () => 15),
-            new CardEvent("饮用汁液", "", Event_Drink, Judge_Drink, () => 15,
+        AddCardEvent("划一个口", "在水壶兰的茎部划一个口，从而可以饮用其中的汁液，并且有概率获得一颗种子。\n伤口需要一段时间愈合，愈合前水壶兰不会生长", Event_Hurt, Judge_Hurt, () => 15);
+        AddCardEvent("铲起", "将水壶兰连根铲起。将会获得一颗种子", Event_DigUp, Judge_DigUp, () => 15);
+        AddCardEvent("饮用汁液", "", Event_Drink, Judge_Drink,
+            () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hydration, +14 },
                 { PlayerStateEnum.Sanity, -3 }
-            }),
-        };
+            });
     }
 
-    public override void LateConstrcutor()
+    protected override void OnLateConstructor()
     {
-        base.LateConstrcutor();
-
-        if (!TryGetComponent(out stateMachine))
+        var states = new List<CardState>()
         {
-            var states = new List<CardState>()
-            {
-                new ("幼苗期", "0"),
-                new ("生长期1", "1") { displayName = "生长期"},
-                new ("生长期2", "2") { displayName = "生长期"},
-                new ("成熟期", "3"),
-                new ("有伤口1", "4") { displayName = "有伤口"},
-                new ("有伤口2", "5") { displayName = "有伤口" },
-            };
-            stateMachine = new StateMachineComponent(states);
-            AddComponent(stateMachine);
-            UpdatePlantState();
-        }
+            new ("幼苗期", "0"),
+            new ("生长期1", "1") { displayName = "生长期"},
+            new ("生长期2", "2") { displayName = "生长期"},
+            new ("成熟期", "3"),
+            new ("有伤口1", "4") { displayName = "有伤口"},
+            new ("有伤口2", "5") { displayName = "有伤口" },
+        };
+        stateMachine = new StateMachineComponent(states);
+        AddComponent(stateMachine);
+
+        UpdatePlantState();
     }
 
     protected override void UpdatePlantState()
@@ -88,7 +81,7 @@ public class KettleFlower : PlantCard
 
         plantGrowth.growStopped = true; // 停止生长
 
-        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
+        ApplyEventEffects(0);
 
         if (Random.Range(0, 100) <= 5) // 5%概率获得水壶兰种子
         {
@@ -129,7 +122,7 @@ public class KettleFlower : PlantCard
         tip = string.Empty;
         DestroyThis();
         tool.Use();
-        TimeManager.Instance.AddTime(Events[1].GetTimeEffect());
+        ApplyEventEffects(1);
         AddCard(plantGrowth.deadCardId, Bag);
     }
 
@@ -147,15 +140,13 @@ public class KettleFlower : PlantCard
     private void Event_Drink(out string tip)
     {
         tip = string.Empty;
-        // 播放喝水的音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("喝_01", true);
 
         plantGrowth.AddValue(-20); // 生长进度-20
 
-        StateManager.Instance.ApplyPlayerStateChange(Events[2].GetPlayerEffects());
+        ApplyEventEffects(2);
 
-        TimeManager.Instance.AddTime(Events[2].GetTimeEffect());
+        // 播放喝水的音效
+        PlaySound("喝_01", true);
     }
 
     private bool Judge_Drink(out string hint)
@@ -180,11 +171,11 @@ public class KettleFlower : PlantCard
 
         if (hasWound)
         {
-            recoverProgress++;
-            if (recoverProgress == maxRecoverProgress)
+            recovery++;
+            if (recovery == MAX_RECOVERY)
             {
                 hasWound = false;
-                recoverProgress = 0;
+                recovery = 0;
                 plantGrowth.growStopped = false;
             }
         }
@@ -199,12 +190,12 @@ public class KettleFlower : PlantCard
         {
             if (component.toolTypes.Contains(ToolType.Cut))
             {
-                tip = Events[0].name;
+                tip = Events[0].Name;
                 return true;
             }
             if (component.toolTypes.Contains(ToolType.Dig))
             {
-                tip = Events[1].name;
+                tip = Events[1].Name;
                 return true;
             }
         }

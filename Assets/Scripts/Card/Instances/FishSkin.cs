@@ -3,16 +3,14 @@
 /// </summary>
 public class FishSkin : Card
 {
-    private FishSkin()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 30,
+        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+            () => 30,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 3 },
                 { PlayerStateEnum.Health, 10 }
-            })
-        };
+            });
     }
 }

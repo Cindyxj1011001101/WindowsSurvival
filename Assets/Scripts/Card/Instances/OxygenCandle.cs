@@ -3,18 +3,15 @@
 /// </summary>
 public class OxygenCandle : Card
 {
-    private OxygenCandle()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("点燃", "点燃氧烛", Event_Light, null),
-        };
+        AddCardEvent("点燃", "", Event_Light, null);
     }
 
     private void Event_Light(out string tip)
     {
         tip = string.Empty;
+        PlaySound("点火_01");
         TurnTo("点燃的氧烛", Bag);
-        SoundManager.Instance.PlaySound("点火_01");
     }
 }

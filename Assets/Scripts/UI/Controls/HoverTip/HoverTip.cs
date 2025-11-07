@@ -34,8 +34,8 @@ public class HoverTip : MonoBehaviour
         string textTip,
         Color textColor,
         int time,
-        Dictionary<PlayerStateEnum, float> playerEffects,
-        Dictionary<EnvironmentStateEnum, float> envEffects)
+        Dictionary<PlayerStateEnum, float> playerStateChanges,
+        Dictionary<EnvironmentStateEnum, float> envStateChanges)
     {
         descText.color = textColor;
 
@@ -73,7 +73,7 @@ public class HoverTip : MonoBehaviour
         }
 
         // 玩家状态变化
-        if (playerEffects.IsNullOrEmpty())
+        if (playerStateChanges.IsNullOrEmpty())
         {
             forPlayer.SetActive(false);
         }
@@ -83,7 +83,7 @@ public class HoverTip : MonoBehaviour
 
             forPlayer.SetActive(true);
 
-            foreach (var (type, delta) in playerEffects)
+            foreach (var (type, delta) in playerStateChanges)
             {
                 if (StateManager.Instance.PlayerStateDict.TryGetValue(type, out var state))
                 {
@@ -95,7 +95,7 @@ public class HoverTip : MonoBehaviour
         }
 
         // 环境状态变化
-        if (envEffects.IsNullOrEmpty())
+        if (envStateChanges.IsNullOrEmpty())
         {
             forEnvironment.SetActive(false);
         }
@@ -103,9 +103,9 @@ public class HoverTip : MonoBehaviour
         {
             textTipOnly = false;
 
-            forEnvironment.SetActive(envEffects.Count > 0);
+            forEnvironment.SetActive(envStateChanges.Count > 0);
 
-            foreach (var (type, delta) in envEffects)
+            foreach (var (type, delta) in envStateChanges)
             {
                 if (type == EnvironmentStateEnum.Electricity)
                 {

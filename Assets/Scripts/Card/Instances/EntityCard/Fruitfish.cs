@@ -5,12 +5,9 @@
 /// </summary>
 public class Fruitfish : EntityCard
 {
-    private Fruitfish()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("用捞网捉", "", Event_CatchByNet, Judge_CatchByNet, () => 15),
-        };
+        AddCardEvent("用捞网捉", "", Event_CatchByNet, Judge_CatchByNet, () => 15);
     }
 
     protected override string GetHighestPriorityIntention()
@@ -169,7 +166,7 @@ public class Fruitfish : EntityCard
         tool.Use();
 
         // 2. 时间变化
-        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
+        ApplyEventEffects(0);
 
         // 掉落产物
         ParseAndDrop(deadDrops);
@@ -180,7 +177,7 @@ public class Fruitfish : EntityCard
         // 用捞网捉
         if (card.CardId == "捞网")
         {
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
 

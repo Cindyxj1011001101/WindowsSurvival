@@ -3,26 +3,20 @@
 /// </summary>
 public class GarbageDestroyer : ConstructionCard
 {
-    private InnerContentsComponent innerContents;
-    private GarbageDestroyer()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("销毁", "销毁所有内容物", Event_Destroy, Judge_Destroy),
-        };
+        AddCardEvent("销毁", "销毁所有内容物", Event_Destroy, Judge_Destroy);
+        base.RegisterCardEvents(); // 拆毁
     }
 
     private void Event_Destroy(out string tip)
     {
         tip = string.Empty;
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("简单点击_01", true);
         var window = WindowsManager.Instance.OpenWindow("Confirm", true) as ConfirmWindow;
         window.SetContent("确认要销毁所有内容物吗？");
         window.onConfirm = () =>
         {
-            if (SoundManager.Instance != null)
-                SoundManager.Instance.PlaySound("挖掘废料_01", true);
+            PlaySound("挖掘废料_01", true);
             innerContents.Clear();
         };
     }

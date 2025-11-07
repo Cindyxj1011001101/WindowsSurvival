@@ -5,24 +5,39 @@ using System.Collections.Generic;
 /// </summary>
 public class Campfire : ConstructionCard
 {
-    private InnerContentsComponent innerContents; // 内容物组件
-    private FuelStorageComponent fuelStorage; // 燃料存储组件
-    private StateMachineComponent stateMachine;
-
     public override bool HasLoopSound => true;
 
-    private Campfire() { }
-
-    public override void LateConstrcutor()
+    protected override void RegisterCardEvents()
     {
-        base.LateConstrcutor();
+        AddCardEvent("点燃", "点燃营火。可以对部分食物进行简单的烧烤。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite);
+        AddCardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish);
+        base.RegisterCardEvents(); // 拆毁
+    }
+
+    protected override void OnLateConstructor()
+    {
         // 手动添加燃料存储组件
-        if (!TryGetComponent(out fuelStorage))
+        fuelStorage = new FuelStorageComponent(96);
+        AddComponent(fuelStorage);
+
+        // 每个卡牌槽的最大堆叠数都为1
+        foreach (var slot in innerContents.bag.Slots)
         {
-            fuelStorage = new FuelStorageComponent(96);
-            AddComponent(fuelStorage);
+            slot.SetMaxStackNum(1);
         }
 
+        // 添加状态机组件
+        var states = new List<CardState>()
+        {
+            new ("未点燃", "18"),
+            new ("已点燃", "18", true),
+        };
+        stateMachine = new StateMachineComponent("未点燃", states);
+        AddComponent(stateMachine);
+    }
+
+    protected override void OnInit()
+    {
         fuelStorage.whileBurning = WhileBurning;
 
         // 放入内容物时，暂停卡牌每回合更新
@@ -49,29 +64,6 @@ public class Campfire : ConstructionCard
         {
             c.ContinueUpdating();
             c.RemoveComponent<TimerComponent>();
-        };
-
-        // 每个卡牌槽的最大堆叠数都为1
-        foreach (var slot in innerContents.bag.Slots)
-        {
-            slot.SetMaxStackNum(1);
-        }
-        
-        if (!TryGetComponent(out stateMachine))
-        {
-            var states = new List<CardState>()
-            {
-                new ("未点燃", "18"),
-                new ("已点燃", "18", true),
-            };
-            stateMachine = new StateMachineComponent("未点燃", states);
-            AddComponent(stateMachine);
-        }
-
-        Events = new()
-        {
-            new CardEvent("点燃", "点燃营火。可以对部分食物进行简单的烧烤。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite),
-            new CardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish)
         };
     }
 
@@ -102,7 +94,7 @@ public class Campfire : ConstructionCard
 
         stateMachine.ChangeState("已点燃");
 
-        SoundManager.Instance.PlaySound("点火_02");
+        PlaySound("点火_02");
 
         // 只有玩家在同一地点且点燃时才播放循环音效
         if (GameManager.Instance.IsCurrentEnvironment(Bag))

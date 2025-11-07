@@ -16,6 +16,7 @@ public class EntityAggro : IComparable<EntityAggro>
     [JsonProperty] private long updateOrder;        // 加入顺序
 
     [JsonIgnore] public string TargetUuid => targetUuid;
+    [JsonIgnore] public int Priority => priority;
     [JsonIgnore] public bool IsRemaining => isPermanent || remainingMinutes > 0;
     [JsonIgnore] public IEntity Target => GlobalDataManager.Instance.GetEntity(targetUuid);
 
@@ -152,7 +153,7 @@ public class EntityAggroCollection
         return false;
     }
 
-    public IEntity GetHighestPriority()
+    public EntityAggro GetHighestPriority()
     {
         while (sortedSet.Count > 0)
         {
@@ -162,7 +163,7 @@ public class EntityAggroCollection
             // 为true表示aggro不可用且已被移除
             if (RemoveUnavailableItem(result)) continue;
 
-            return result.Target;
+            return result;
         }
 
         return null;

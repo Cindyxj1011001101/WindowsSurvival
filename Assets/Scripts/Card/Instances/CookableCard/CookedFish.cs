@@ -3,17 +3,15 @@
 /// </summary>
 public class CookedFish : CookableCard
 {
-    private CookedFish()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null, () => 30,
+        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+            () => 30,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 38 },
                 { PlayerStateEnum.Sanity, 3 },
                 { PlayerStateEnum.Health, 10 },
-            })
-        };
+            });
     }
 }

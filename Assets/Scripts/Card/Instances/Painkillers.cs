@@ -3,23 +3,19 @@
 /// </summary>
 public class Painkillers : Card
 {
-    private Painkillers()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("使用", "使用止痛药。这可以缓解疼痛，但是一天内使用多次效果会变差", Event_Use, null, () => 5,
-            () => new ()
+        AddCardEvent("使用", "使用止痛药。这可以缓解疼痛，但是一天内使用多次效果会变差", Event_Use, null,
+            () => 5,
+            () => new()
             {
                 { PlayerStateEnum.PainLevel, -50 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId) }
-            })
-        };
+            });
     }
 
-    public override void Init()
+    protected override void OnInit()
     {
-        base.Init();
-        GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2));
-
+        GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2, .5f));
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot);
     }
 
@@ -33,13 +29,10 @@ public class Painkillers : Card
         tip = string.Empty;
         DestroyThis();
         // 播放吃的音效
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("吃_01", true);
+        PlaySound("吃_01", true);
 
-        StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, -50 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId));
+        ApplyEventEffects(0);
 
         GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId);
-
-        TimeManager.Instance.AddTime(5);
     }
 }

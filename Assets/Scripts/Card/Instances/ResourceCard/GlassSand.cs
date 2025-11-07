@@ -3,8 +3,4 @@
 /// </summary>
 public class GlassSand : Card
 {
-    private GlassSand()
-    {
-
-    }
 }

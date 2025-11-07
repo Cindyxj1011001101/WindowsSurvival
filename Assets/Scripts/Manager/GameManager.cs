@@ -56,6 +56,49 @@ public class GameManager : IManager
     }
     #endregion
 
+    /// <summary>
+    /// 切换地点
+    /// </summary>
+    /// <param name="targetEnv">目标地点</param>
+    public void ChangeEnv(PlaceEnum targetEnv)
+    {
+        // 玩家实体从原地点移除
+        CurEnvironmentBag.RemoveEntity(Player.Instance);
+
+        // 离开旧地点：关闭有循环音的卡牌的循环音
+        foreach (var slot in CurEnvironmentBag.Slots)
+        {
+            if (!slot.IsEmpty)
+            {
+                var card = slot.PeekCard();
+                if (card.HasLoopSound)
+                    card.OnLeaveEnvironment();
+            }
+        }
+
+        // 切换地点
+        CurEnvironmentBag = EnvironmentBags[targetEnv];
+        // 玩家实体添加到新地点
+        CurEnvironmentBag.AddEntity(Player.Instance);
+
+        // 进入新地点：播放新地点离有循环音的卡牌
+        foreach (var slot in CurEnvironmentBag.Slots)
+        {
+            if (!slot.IsEmpty)
+            {
+                var card = slot.PeekCard();
+                if (card.HasLoopSound)
+                    card.OnEnterEnvironment();
+            }
+        }
+
+        // 播放新地点环境音
+        SoundManager.Instance.PlayPlaceMusic(CurEnvironmentBag);
+
+        // 触发事件
+        EventManager.Instance.TriggerEvent(EventType.ChangeCurrentEnvironment, CurEnvironmentBag);
+    }
+
     #region AddCard
     /// <summary>
     /// 添加卡牌到指定背包
@@ -64,8 +107,8 @@ public class GameManager : IManager
     /// <param name="targetBag"></param>
     public void AddCard(Card card, Bag targetBag)
     {
-        card.Init();
         targetBag.AddCard(card);
+        card.Init();
     }
 
     public void AddCard(Card card, bool toPlayerBag)

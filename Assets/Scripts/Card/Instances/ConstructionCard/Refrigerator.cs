@@ -5,36 +5,28 @@
 /// </summary>
 public class Refrigerator : ConstructionCard
 {
-    private InnerContentsComponent innerContents;
-    private StateMachineComponent stateMachine;
-
     private const float ELECTRICITY_CONSUMPTION = 0.3f; // 每回合电力消耗
 
-    private Refrigerator()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("接电", $"将其接入电网。接电后每15分钟消耗{ELECTRICITY_CONSUMPTION}电力，内容物腐烂速度减半", Event_TurnOn, Judge_TurnOn),
-            new CardEvent("断电", "", Event_TurnOff, Judge_TurnOff),
-        };
+        AddCardEvent("接电", $"将其接入电网。接电后每15分钟消耗{ELECTRICITY_CONSUMPTION}电力，内容物腐烂速度减半", Event_TurnOn, Judge_TurnOn);
+        AddCardEvent("断电", "", Event_TurnOff, Judge_TurnOff);
+        base.RegisterCardEvents(); // 拆毁
     }
 
-    public override void LateConstrcutor()
+    protected override void OnLateConstructor()
     {
-        base.LateConstrcutor();
-
-        // 未布置和已布置两种状态
-        if (!TryGetComponent(out stateMachine))
+        var states = new List<CardState>()
         {
-            var states = new List<CardState>()
-            {
-                new ("未接电", "16", false, true, false),
-                new ("已接电", "17", false, true, true),
-            };
-            stateMachine = new StateMachineComponent("未接电", states);
-            AddComponent(stateMachine);
-        }
+            new ("未接电", "16", false, true, false),
+            new ("已接电", "17", false, true, true),
+        };
+        stateMachine = new StateMachineComponent("未接电", states);
+        AddComponent(stateMachine);
+    }
 
+    protected override void OnInit()
+    {
         innerContents.onAddCard = (c) =>
         {
             if (c.TryGetComponent(out FreshnessComponent f) && stateMachine.currentStateName == "已接电")
@@ -49,10 +41,6 @@ public class Refrigerator : ConstructionCard
                 f.updateRate /= .5f;
             }
         };
-    }
-    public override void Init()
-    {
-        base.Init();
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);

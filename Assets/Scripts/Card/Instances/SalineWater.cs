@@ -3,15 +3,13 @@
 /// </summary>
 public class SalineWater : Card
 {
-    private SalineWater()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("饮用", "会导致脱水", (out string s) => EasyEvent(out s, "喝_01"), null, () => 3,
+        AddCardEvent("饮用", "会导致脱水", (out string s) => EasyEvent(out s, "喝_01"), null,
+            () => 3,
             () => new()
             {
                 { PlayerStateEnum.Hydration, -25 },
-            })
-        };
+            });
     }
 }

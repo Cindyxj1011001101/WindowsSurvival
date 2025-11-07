@@ -5,12 +5,10 @@ using System.Collections.Generic;
 /// </summary>
 public class DataTransmissionStation : ConstructionCard
 {
-    private StateMachineComponent stateMachine;
-    private DataTransmissionStation()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("数据传输", "使当前研究科技的研究进度+28\n（数据传输1天内最多可以进行2次）", Event_Transmit, Judge_Transmit, () => 60,
+        AddCardEvent("数据传输", "使当前研究科技的研究进度+28\n（数据传输1天内最多可以进行2次）", Event_Transmit, Judge_Transmit,
+            () => 60,
             () => new()
             {
                 { PlayerStateEnum.Sobriety, -10 }
@@ -18,32 +16,25 @@ public class DataTransmissionStation : ConstructionCard
             () => new()
             {
                 { EnvironmentStateEnum.Electricity, -5f }
-            }),
-        };
+            });
+        base.RegisterCardEvents(); // 拆毁
     }
 
-    public override void LateConstrcutor()
+    protected override void OnLateConstructor()
     {
-        base.LateConstrcutor();
-
-        // 未布置和已布置两种状态
-        if (!TryGetComponent(out stateMachine))
+        var states = new List<CardState>()
         {
-            var states = new List<CardState>()
-            {
-                new ("待机中", "20", false, true, false),
-                new ("运行中", "20", true, true, true),
-            };
-            stateMachine = new StateMachineComponent("待机中", states);
-            AddComponent(stateMachine);
-        }
+            new ("待机中", "20", false, true, false),
+            new ("运行中", "20", true, true, true),
+        };
+        stateMachine = new StateMachineComponent("待机中", states);
+        AddComponent(stateMachine);
     }
 
-    public override void Init()
+    protected override void OnInit()
     {
-        base.Init();
         // 添加数据传输台使用次数的记录
-        GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2));
+        GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2, .5f));
 
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天时刷新
         EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, StartWorking);
@@ -88,13 +79,12 @@ public class DataTransmissionStation : ConstructionCard
     private void Event_Transmit(out string tip)
     {
         tip = string.Empty;
+
         TechnologyManager.Instance.AddStudyProcess(28); // 研究进度增加
 
         GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId); // 使用次数增加
 
-		GameManager.Instance.CurEnvironmentBag.ApplyEnvEffects(Events[0].GetEnvEffects());
-		StateManager.Instance.ApplyPlayerStateChange(Events[0].GetPlayerEffects());
-        TimeManager.Instance.AddTime(Events[0].GetTimeEffect());
+        ApplyEventEffects(0);
     }
 
     private bool Judge_Transmit(out string hint)

@@ -1,7 +1,7 @@
 /// <summary>
 /// 白爆矿堆
 /// </summary>
-public class WhiteBlastMineStack : Card
+public class WhiteBlastOreStack : Card
 {
     private DropList dropList = new(
        new Drop(4, ("白爆矿", 2)),
@@ -9,12 +9,9 @@ public class WhiteBlastMineStack : Card
        new Drop(4, ("玻璃沙", 1))
        );
 
-    private WhiteBlastMineStack()
+    protected override void RegisterCardEvents()
     {
-        Events = new()
-        {
-            new CardEvent("用铲子凿", "用铲子凿白爆矿堆",Event_Dig, Judge_Dig, () => 30)
-        };
+        AddCardEvent("用铲子凿", "用铲子凿白爆矿堆", Event_Dig, Judge_Dig, () => 30);
     }
 
     private void Event_Dig(out string tip)
@@ -41,7 +38,7 @@ public class WhiteBlastMineStack : Card
             Use();
             tool.Use();
 
-            TimeManager.Instance.AddTime(30);
+            ApplyEventEffects(0);
         });
     }
 
@@ -51,7 +48,7 @@ public class WhiteBlastMineStack : Card
         // 允许和带有切割标签的卡牌快速交互
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            tip = Events[0].name;
+            tip = Events[0].Name;
             return true;
         }
         return false;
