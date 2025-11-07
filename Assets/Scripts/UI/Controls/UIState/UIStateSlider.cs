@@ -31,6 +31,7 @@ public class UIStateSlider : MonoBehaviour
     private void OnDisable()
     {
         init = false;
+        curChangeLavel = 0;
         if (button != null) button.transform.DOKill();
         if (arrow != null) arrow.transform.DOKill();
         if (icon != null) icon.transform.DOKill();
