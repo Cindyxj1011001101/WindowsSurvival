@@ -888,6 +888,10 @@ public class StateManager : IManager
     #region 死亡逻辑
     private void Die()
     {
+        // 停止休息
+        StopResting();
+        // 停止时间流逝
+        TimeManager.Instance.StopTimePass();
         WindowsManager.Instance.OpenWindow("Chat", true);
     }
     #endregion
