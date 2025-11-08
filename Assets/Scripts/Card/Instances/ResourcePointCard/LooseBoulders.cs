@@ -3,7 +3,7 @@
 /// </summary>
 public class LooseBoulders : Card
 {
-    private DropList dropList = new(
+    private static DropList dropList = new(
        new Drop(3, ("玻璃沙", 1)),
        new Drop(2, ("白爆矿", 1)),
        new Drop(1, ("海爬虫", 1))

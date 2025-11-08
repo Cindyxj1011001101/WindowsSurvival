@@ -3,7 +3,7 @@
 /// </summary>
 public class WasteHeap : Card
 {
-    private DropList dropList = new(
+    private static DropList dropList = new(
        new Drop(5, ("废金属", 2)),
        new Drop(4, ("废金属", 1)),
        new Drop(4, ("韧性胶管", 1)),

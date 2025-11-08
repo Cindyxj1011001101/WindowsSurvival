@@ -3,7 +3,7 @@
 /// </summary>
 public class WhiteBlastOreStack : Card
 {
-    private DropList dropList = new(
+    private static DropList dropList = new(
        new Drop(4, ("白爆矿", 2)),
        new Drop(8, ("白爆矿", 1)),
        new Drop(4, ("玻璃沙", 1))

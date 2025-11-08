@@ -6,15 +6,7 @@ using UnityEngine;
 /// </summary>
 public class SpaceJunk : GameEvent
 {
-    private List<PlaceEnum> candidatePlaces = new()
-    {
-        PlaceEnum.CoralCoast,
-        PlaceEnum.PhosphorTomb,
-    };
-
-    private string landedPlaceStr;
-
-    private DropList dropList = new(
+    private static DropList dropList = new(
         new Drop(35, "∑œΩ Ù", 5, 10),
         new Drop(35, "»Õ–‘Ω∫π‹", 3, 8),
         new Drop(4, "—ı÷Ú", 1, 3),
@@ -25,7 +17,16 @@ public class SpaceJunk : GameEvent
         new Drop(3, "∑œÃ˙µ∂", 1),
         new Drop(1, "Ã˙≥›Õ≠—¿≤Õ", 1),
         new Drop(1, "’®≥Ê¥Æ", 1)
-        ) { disposable = true };
+        )
+    { disposable = true };
+
+    private static List<PlaceEnum> candidatePlaces = new()
+    {
+        PlaceEnum.CoralCoast,
+        PlaceEnum.PhosphorTomb,
+    };
+
+    private string landedPlaceStr;
 
     public override string GetDetails()
     {

@@ -3,7 +3,7 @@
 /// </summary>
 public class RatBody : CookableCard
 {
-    private DropList dropList = new(
+    private static DropList dropList = new(
        new Drop(3, ("小块生肉", 1)),
        new Drop(1, (out string tip) => { tip = "肉被糟蹋了，什么都没得到"; })
        );
