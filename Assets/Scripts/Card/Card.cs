@@ -190,7 +190,7 @@ public abstract class Card : IComparable<Card>
     #endregion
 
     #region Update
-    [JsonProperty] private bool isUpdatePaused = false; // 是否暂停每回合更新
+    [JsonProperty] protected bool isUpdatePaused = false; // 是否暂停每回合更新
 
     private void Update()
     {
@@ -558,9 +558,9 @@ public abstract class Card : IComparable<Card>
     /// <returns></returns>
     public void DropCards(List<Card> cards, UnityAction onDrop)
     {
-        if (Transform == null || cards.IsNullOrEmpty()) return;
+        if (cards.IsNullOrEmpty()) return;
 
-        if (CardType != CardType.ResourcePoint)
+        if (CardType != CardType.ResourcePoint || Transform == null)
         {
             AddCards(cards, true);
         }

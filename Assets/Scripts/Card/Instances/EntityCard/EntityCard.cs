@@ -125,7 +125,7 @@ public abstract class EntityCard : Card, IEntity
     /// </summary>
     private void UpdateAI()
     {
-        if (Destroyed) return;
+        if (isUpdatePaused || Destroyed) return;
 
         // AI冷却中
         if (aiRefreshCooldown > 0)

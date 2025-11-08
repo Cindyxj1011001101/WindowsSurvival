@@ -19,7 +19,7 @@ public abstract class CardComponent
 {
     public Card BelongedCard { get; private set; }
 
-    public void SetBelongedCard(Card card)
+    public virtual void SetBelongedCard(Card card)
     {
         BelongedCard = card;
     }
@@ -338,14 +338,15 @@ public class InnerContentsComponent : CardComponent
     public InnerContentsComponent(int slotCount)
     {
         bag.AddSlot(slotCount);
+    }
+
+    public override void SetBelongedCard(Card card)
+    {
+        base.SetBelongedCard(card);
         bag.SetComponent(this);
     }
 
-    public void Init()
-    {
-        bag.SetComponent(this);
-        bag.Init();
-    }
+    public void Init() => bag.Init();
 
     public void Clear() => bag.Clear();
 
