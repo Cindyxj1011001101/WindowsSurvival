@@ -328,7 +328,7 @@ public class CardSlot : MonoBehaviour
                 if (minute > 0)
                     leftTime += $"{minute}min";
 
-                slider.tipController.SetTip($"距 {timerComponent.tipText} 剩余:  {leftTime}", slider.fillColor);
+                slider.tipController.SetTip($"{ColorManager.Colorize(timerComponent.tipText, ColorManager.Yellow)}剩余:  {leftTime}", slider.fillColor);
                 break;
             case CoordinateComponent coordinateComponent:
                 slider.SetValue(coordinateComponent.coordinate.Position, GameManager.Instance.CurEnvironmentBag.PlaceData.maxCoord);
