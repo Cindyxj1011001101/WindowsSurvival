@@ -95,6 +95,7 @@ public class TimeManager : IManager
     private void UpdateCurInterval()
     {
         CurInterval--;
+        CurTime = CurTime.AddMinutes(1);
         EventManager.Instance.TriggerEvent(EventType.AddOneMinute);
         if (CurInterval <= 0)
         {
@@ -102,7 +103,6 @@ public class TimeManager : IManager
             CurInterval = SETTLEMENT_INTERVAL;
             EventManager.Instance.TriggerEvent(EventType.Update);
         }
-        CurTime = CurTime.AddMinutes(1);
         HandleAnotherDay();
     }
 
