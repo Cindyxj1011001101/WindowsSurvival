@@ -5,7 +5,7 @@ public class HumanPoweredGenerator : ConstructionCard
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("人力发电", "踩轮子发电", (out string s) => EasyEvent(out s, destroyThis: false), Judge_Generate,
+        AddCardEvent("人力发电", "踩轮子发电", EasyEvent_DontDestroy, Judge_Generate,
             () => 60,
             () => new()
             {

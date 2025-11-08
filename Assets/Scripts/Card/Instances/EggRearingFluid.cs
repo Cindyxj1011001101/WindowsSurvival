@@ -5,12 +5,13 @@ public class EggRearingFluid : Card
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("饮用", "", (out string s) => EasyEvent(out s, "喝_01"), null,
+        AddCardEvent("饮用", "", EasyEvent_Destroy, null,
             () => 3,
             () => new()
             {
                 { PlayerStateEnum.Hydration, 40 },
                 { PlayerStateEnum.Hunger, 10 },
-            });
+            },
+            sound: "喝_01");
     }
 }

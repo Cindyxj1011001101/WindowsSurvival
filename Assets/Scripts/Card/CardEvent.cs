@@ -10,7 +10,8 @@ public class CardEvent
     private string description;
     private Func<string> getDescription;
     private string hint;
-    private OutStringAction action;
+    private string sound;
+    private OutStringAction<CardEvent> action;
     private OutStringFunc<bool> condition;
     private Func<int> getTimeChange;
     private Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges;
@@ -32,11 +33,12 @@ public class CardEvent
     public CardEvent(
         string name,
         string description,
-        OutStringAction action,
+        OutStringAction<CardEvent> action,
         OutStringFunc<bool> condition,
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
-        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null)
+        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null,
+        string sound = null)
     {
         this.name = name;
         this.description = description;
@@ -45,16 +47,18 @@ public class CardEvent
         this.getTimeChange = getTimeChange;
         this.getPlayerStateChanges = getPlayerStateChanges;
         this.getEnvStateChanges = getEnvStateChanges;
+        this.sound = sound;
     }
 
     public CardEvent(
         string name,
         Func<string> getDescription,
-        OutStringAction action,
+        OutStringAction<CardEvent> action,
         OutStringFunc<bool> condition,
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
-        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null) : this(name, string.Empty, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges)
+        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null,
+        string sound = null) : this(name, string.Empty, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges, sound)
     {
         this.getDescription = getDescription;
     }
@@ -62,18 +66,15 @@ public class CardEvent
     public void Inovke(out string tip)
     {
         tip = string.Empty;
-        action?.Invoke(out tip);
+        if (!string.IsNullOrEmpty(sound) && SoundManager.Instance != null)
+            SoundManager.Instance.PlaySound(sound);
+        action?.Invoke(out tip, this);
     }
 
     public bool Judge()
     {
         hint = string.Empty;
-        if (condition == null || condition.Invoke(out hint))
-        {
-            return true;
-        }
-
-        return false;
+        return condition == null || condition(out hint);
     }
 
     public int GetTimeChange()
@@ -95,6 +96,6 @@ public class CardEvent
     }
 }
 
-public delegate T OutStringFunc<T>(out string s);
+public delegate TResult OutStringFunc<out TResult>(out string s);
 public delegate void OutStringAction(out string s);
-public delegate void OutStringAction<T>(out string s, T arg);
+public delegate void OutStringAction<in T>(out string s, T arg);

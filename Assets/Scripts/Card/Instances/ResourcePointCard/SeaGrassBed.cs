@@ -28,14 +28,29 @@ public class SeaGrassBed : Card
         AddCardEvent("用刀采集", "耗时更少但获得更多产物", Event_CollectByKnife, Judge_CollectByKnife, () => 15);
     }
 
-    private void Event_CollectByHand(out string tip)
+    private void Event_CollectByHand(out string tip, CardEvent e)
     {
         RandomDrop(dropListHand, out tip, 2, () =>
         {
             Use();
-
-            ApplyEventEffects(0);
+            ApplyEventEffects(e);
         });
+    }
+
+    private void CollectByKnife(Card tool, out string tip, CardEvent e)
+    {
+        RandomDrop(dropListKnife, out tip, 3, () =>
+        {
+            Use();
+            tool.Use();
+
+            ApplyEventEffects(e);
+        });
+    }
+
+    private void Event_CollectByKnife(out string tip, CardEvent e)
+    {
+        CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip, e);
     }
 
     private bool Judge_CollectByKnife(out string hint)
@@ -47,22 +62,6 @@ public class SeaGrassBed : Card
             return false;
         }
         return true;
-    }
-
-    private void Event_CollectByKnife(out string tip)
-    {
-        CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
-    }
-
-    private void CollectByKnife(Card tool, out string tip)
-    {
-        RandomDrop(dropListKnife, out tip, 3, () =>
-        {
-            Use();
-            tool.Use();
-
-            ApplyEventEffects(1);
-        });
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -79,6 +78,6 @@ public class SeaGrassBed : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        CollectByKnife(slot.PeekCard(), out tip);
+        CollectByKnife(slot.PeekCard(), out tip, Events[1]);
     }
 }

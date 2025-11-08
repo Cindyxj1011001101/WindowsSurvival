@@ -66,14 +66,8 @@ public class KettleFlower : PlantCard
         }
     }
 
-    private void Event_Hurt(out string tip)
+    private void Hurt(Card tool, CardEvent e)
     {
-        Hurt(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
-    }
-
-    private void Hurt(Card tool, out string tip)
-    {
-        tip = string.Empty;
         tool.Use(); // 工具耐久减少
 
         hasWound = true; // 产生伤口
@@ -81,7 +75,7 @@ public class KettleFlower : PlantCard
 
         plantGrowth.growStopped = true; // 停止生长
 
-        ApplyEventEffects(0);
+        ApplyEventEffects(e);
 
         if (Random.Range(0, 100) <= 5) // 5%概率获得水壶兰种子
         {
@@ -89,6 +83,12 @@ public class KettleFlower : PlantCard
         }
 
         UpdatePlantState();
+    }
+
+    private void Event_Hurt(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        Hurt(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
     private bool Judge_Hurt(out string hint)
@@ -112,18 +112,18 @@ public class KettleFlower : PlantCard
         return true;
     }
 
-    private void Event_DigUp(out string tip)
+    private void DigUp(Card tool, CardEvent e)
     {
-        DigUp(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
-    }
-
-    private void DigUp(Card tool, out string tip)
-    {
-        tip = string.Empty;
         DestroyThis();
         tool.Use();
-        ApplyEventEffects(1);
+        ApplyEventEffects(e);
         AddCard(plantGrowth.deadCardId, Bag);
+    }
+
+    private void Event_DigUp(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        DigUp(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), e);
     }
 
     private bool Judge_DigUp(out string hint)
@@ -137,16 +137,12 @@ public class KettleFlower : PlantCard
         return true;
     }
 
-    private void Event_Drink(out string tip)
+    private void Event_Drink(out string tip, CardEvent e)
     {
-        tip = string.Empty;
-
-        plantGrowth.AddValue(-20); // 生长进度-20
-
-        ApplyEventEffects(2);
-
-        // 播放喝水的音效
         PlaySound("喝_01", true);
+        tip = string.Empty;
+        plantGrowth.AddValue(-20); // 生长进度-20
+        ApplyEventEffects(e);
     }
 
     private bool Judge_Drink(out string hint)
@@ -212,12 +208,12 @@ public class KettleFlower : PlantCard
         {
             if (component.toolTypes.Contains(ToolType.Cut))
             {
-                Hurt(card, out tip);
+                Hurt(card, Events[0]);
                 return;
             }
             if (component.toolTypes.Contains(ToolType.Dig))
             {
-                DigUp(card, out tip);
+                DigUp(card, Events[1]);
                 return;
             }
         }

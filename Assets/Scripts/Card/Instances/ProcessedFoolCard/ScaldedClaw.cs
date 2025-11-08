@@ -5,12 +5,13 @@ public class ScaldedClaw : Card
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+        AddCardEvent("食用", "", EasyEvent_Destroy, null,
             () => 45,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 81 },
                 { PlayerStateEnum.Sanity, -3 }
-            });
+            },
+            sound: "吃_01");
     }
 }

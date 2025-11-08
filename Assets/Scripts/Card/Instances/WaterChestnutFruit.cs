@@ -14,17 +14,26 @@ public class WaterChestnutFruit : Card
         AddCardEvent("用锤子敲", "用锤子将果实敲开。将会获得四角菱果肉", Event_BreakByTool, Judge_BreakByTool, () => 3);
     }
 
-    private void Event_BreakByHand(out string tip)
+    private void Event_BreakByHand(out string tip, CardEvent e)
     {
         tip = string.Empty;
         DestroyThis();
-        ApplyEventEffects(0);
+        ApplyEventEffects(e);
         TurnTo("菱果肉", Bag);
     }
 
-    private void Event_BreakByTool(out string tip)
+    private void BreakByTool(Card tool, CardEvent e)
     {
-        BreakByTool(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), out tip);
+        DestroyThis();
+        tool.Use();
+        ApplyEventEffects(e);
+        TurnTo("菱果肉", Bag);
+    }
+
+    private void Event_BreakByTool(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        BreakByTool(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), e);
     }
 
     private bool Judge_BreakByTool(out string hint)
@@ -37,15 +46,6 @@ public class WaterChestnutFruit : Card
         }
 
         return true;
-    }
-
-    private void BreakByTool(Card tool, out string tip)
-    {
-        tip = string.Empty;
-        DestroyThis();
-        tool.Use();
-        ApplyEventEffects(1);
-        TurnTo("菱果肉", Bag);
     }
     public override bool CanQuickInteract(Card card, out string tip)
     {
@@ -60,6 +60,7 @@ public class WaterChestnutFruit : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        BreakByTool(slot.PeekCard(), out tip);
+        tip = string.Empty;
+        BreakByTool(slot.PeekCard(), Events[1]);
     }
 }

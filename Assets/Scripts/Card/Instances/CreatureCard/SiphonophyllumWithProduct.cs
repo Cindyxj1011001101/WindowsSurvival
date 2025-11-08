@@ -15,9 +15,18 @@ public class SiphonophyllumWithProduct : Card
         AddCardEvent("采集", "虹吸海葵上似乎富集了很多金属", Event_Collect, null, () => 15);
     }
 
-    private void Event_Cut(out string tip)
+    private void Cut(Card tool, CardEvent e)
     {
-        Cut(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
+        DestroyThis();
+        tool.Use();
+        ApplyEventEffects(e);
+        AddCards("磁性触手", 3, true);
+    }
+
+    private void Event_Cut(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        Cut(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
     private bool Judge_Cut(out string hint)
@@ -31,26 +40,16 @@ public class SiphonophyllumWithProduct : Card
         return true;
     }
 
-    private void Event_Collect(out string tip)
+    private void Event_Collect(out string tip, CardEvent e)
     {
         DestroyThis();
 
-        ApplyEventEffects(1);
+        ApplyEventEffects(e);
 
         // 变回虹吸海葵
         TurnTo("虹吸海葵", Bag);
 
         RandomDrop(dropList, out tip);
-    }
-
-    private void Cut(Card tool, out string tip)
-    {
-        DestroyThis();
-        tool.Use();
-
-        tip = string.Empty;
-        ApplyEventEffects(0);
-        AddCards("磁性触手", 3, true);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -67,6 +66,7 @@ public class SiphonophyllumWithProduct : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        Cut(slot.PeekCard(), out tip);
+        tip = string.Empty;
+        Cut(slot.PeekCard(), Events[0]);
     }
 }

@@ -23,9 +23,19 @@ public class FishingNetBag : EquipmentCard
     {
     }
 
-    private void Event_Cut(out string tip)
+    private void CutThis(Card tool, CardEvent e)
     {
-        CutThis(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
+        DestroyThis();
+        tool.Use();
+        ApplyEventEffects(e);
+        AddCard("韧性胶管", true);
+        AddCards("纤维", 4, true);
+    }
+
+    private void Event_Cut(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        CutThis(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
     private bool Judge_Cut(out string hint)
@@ -44,16 +54,6 @@ public class FishingNetBag : EquipmentCard
         return false;
     }
 
-    private void CutThis(Card tool, out string tip)
-    {
-        tip = string.Empty;
-        DestroyThis();
-        tool.Use();
-        ApplyEventEffects(0);
-        AddCard("韧性胶管", true);
-        AddCards("纤维", 4, true);
-    }
-
     public override bool CanQuickInteract(Card card, out string tip)
     {
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut) && innerContents.bag.IsEmpty)
@@ -67,13 +67,14 @@ public class FishingNetBag : EquipmentCard
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
+        tip = string.Empty;
         var card = slot.PeekCard();
 
         // 优先切割渔获袋
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Cut) && innerContents.bag.IsEmpty)
         {
             // 切割渔获袋
-            CutThis(card, out tip);
+            CutThis(card, Events[0]);
             return;
         }
 

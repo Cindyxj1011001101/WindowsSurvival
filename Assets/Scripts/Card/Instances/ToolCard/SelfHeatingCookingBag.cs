@@ -5,6 +5,17 @@ public class SelfHeatingCookingBag : Card
 {
     public override bool CanQuickInteract(Card card, out string tip)
     {
+        return CanCook(card, out tip);
+    }
+
+    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    {
+        tip = string.Empty;
+        Cook(slot.PeekCard());
+    }
+
+    public bool CanCook(Card card, out string tip)
+    {
         tip = string.Empty;
         if (card.TryGetComponent<CookComponent>(out var cook) && cook.leftCookTime > 0)
         {
@@ -14,19 +25,13 @@ public class SelfHeatingCookingBag : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public void Cook(Card food)
     {
-        tip = string.Empty;
-        var card = slot.PeekCard();
-
-        Use();
-        card.DestroyThis();
-
         PlaySound("点火_02", true);
-
+        Use();
+        food.DestroyThis();
         TimeManager.Instance.AddTime(15);
-
-        card.TryGetComponent<CookComponent>(out var cook);
+        food.TryGetComponent<CookComponent>(out var cook);
         cook.HandleCookComplete();
     }
 }

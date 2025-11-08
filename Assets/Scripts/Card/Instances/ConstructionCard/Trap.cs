@@ -72,7 +72,7 @@ public class Trap : ConstructionCard
     /// 布置
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_Arrange(out string tip)
+    private void Event_Arrange(out string tip, CardEvent e)
     {
         tip = string.Empty;
 
@@ -84,7 +84,9 @@ public class Trap : ConstructionCard
         innerContents.notAllowRemoveReason = "陷阱已布置，不能移除诱饵";
         innerContents.notAllowAddReason = "陷阱已布置，不能添加诱饵";
 
-        ApplyEventEffects(0);
+        // 先走时间
+        ApplyEventEffects(e);
+        // 再变成已布置
         stateMachine.ChangeState("已布置");
     }
 

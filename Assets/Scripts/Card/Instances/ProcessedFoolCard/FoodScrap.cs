@@ -9,13 +9,14 @@ public class FoodScrap : Card
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "和鱼抢吃的", (out string s) => EasyEvent(out s, "吃_01"), null,
+        AddCardEvent("食用", "和鱼抢吃的", EasyEvent_Destroy, null,
             () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 12 },
                 { PlayerStateEnum.Sanity, -3 }
-            });
+            },
+            sound: "吃_01");
     }
 
     protected override void OnUpdate()

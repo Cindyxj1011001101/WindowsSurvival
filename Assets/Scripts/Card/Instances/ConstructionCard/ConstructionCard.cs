@@ -3,11 +3,13 @@
 /// </summary>
 public abstract class ConstructionCard : Card
 {
+    private const int DEMOLITION_TIME = 15;
+
     protected override void RegisterCardEvents()
     {
         if (construction.canBeDemolished)
         {
-            AddCardEvent("暴力拆毁", $"拆毁后获得{construction.demolitionDrops}", Event_DemolishThis, Judge_DemolishThis, () => 15);
+            AddCardEvent("暴力拆毁", $"拆毁后获得{construction.demolitionDrops}", Event_DemolishThis, Judge_DemolishThis, () => DEMOLITION_TIME);
         }
     }
 
@@ -25,13 +27,13 @@ public abstract class ConstructionCard : Card
         tool?.Use();
 
         // 消耗15分钟
-        TimeManager.Instance.AddTime(15);
+        TimeManager.Instance.AddTime(DEMOLITION_TIME);
 
         // 掉落拆毁产物
         ParseAndDrop(construction.demolitionDrops);
     }
 
-    private void Event_DemolishThis(out string tip)
+    private void Event_DemolishThis(out string tip, CardEvent e)
     {
         tip = string.Empty;
         DemolishThis(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"));
@@ -62,7 +64,8 @@ public abstract class ConstructionCard : Card
             card.CardId == "钢锤" &&
             (!TryGetComponent<InnerContentsComponent>(out var innerContents) || innerContents.bag.IsEmpty))
         {
-            tip = Events[0].Name;
+            // 暴力拆毁是最后的交互事件
+            tip = "暴力拆毁";
             return true;
         }
         return false;

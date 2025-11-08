@@ -8,7 +8,8 @@
             () => "前往" + ParsePlaceEnum(passage.targetPlace) + MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).desc,
             Event_Enter, Judge_Enter,
             () => MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).time,
-            () => MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerStateChanges);
+            () => MoveExploreManager.Instance.GetMoveEffects(passage.time, passage.targetPlace).playerStateChanges,
+            sound: passage.audioClip);
         AddCardEvent("移至附近",
             () => "移动到通道的附近" + MoveExploreManager.Instance.GetMoveEffects(GetNearestAvailablePosition()).desc,
             Event_MoveNear, Judge_MoveNear,
@@ -45,10 +46,9 @@
         return GameManager.Instance.PlaceDataDict[place].placeName;
     }
 
-    protected virtual void Event_Enter(out string tip)
+    protected virtual void Event_Enter(out string tip, CardEvent e)
     {
         tip = string.Empty;
-        PlaySound(passage.audioClip, true);
         MoveExploreManager.Instance.Move(passage.targetPlace, passage.time);
     }
 
@@ -69,7 +69,7 @@
         return true;
     }
 
-    protected virtual void Event_MoveNear(out string tip)
+    protected virtual void Event_MoveNear(out string tip, CardEvent e)
     {
         tip = string.Empty;
         // 移动到最近的可用使用通道的坐标

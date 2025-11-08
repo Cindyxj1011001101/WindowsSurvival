@@ -5,13 +5,14 @@ public class CaughtAquariusFishWithProduct : Card
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("饮用", "饮用水瓶鱼的育卵液", (out string s) => EasyEvent(out s, "喝_01"), null,
+        AddCardEvent("饮用", "饮用水瓶鱼的育卵液", EasyEvent_Destroy, null,
             () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hydration, 40 },
                 { PlayerStateEnum.Hunger, 10 }
-            });
+            },
+            sound: "喝_01");
 
         AddCardEvent("液体装瓶", "利用凝胶装瓶器从水瓶鱼中提取育卵液，这种提取方式相对温和，不会杀死水瓶鱼。", Event_Bottling, Judge_Bottling, () => 15);
 
@@ -41,10 +42,23 @@ public class CaughtAquariusFishWithProduct : Card
     /// <summary>
     /// 液体装瓶
     /// </summary>
+    /// <param name="tool"></param>
     /// <param name="tip"></param>
-    private void Event_Bottling(out string tip)
+    private void Bottling(Card tool, CardEvent e)
     {
-        Bottling(GameManager.Instance.PlayerBag.FindCardOfName("凝胶装瓶器"), out tip);
+        DestroyThis();
+        tool.Use();
+
+        ApplyEventEffects(e);
+
+        TurnTo("被捉住的水瓶鱼", Bag);
+        AddCard("育卵液", true);
+    }
+
+    private void Event_Bottling(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        Bottling(GameManager.Instance.PlayerBag.FindCardOfName("凝胶装瓶器"), e);
     }
 
     private bool Judge_Bottling(out string hint)
@@ -56,23 +70,6 @@ public class CaughtAquariusFishWithProduct : Card
             return false;
         }
         return true;
-    }
-
-    /// <summary>
-    /// 液体装瓶
-    /// </summary>
-    /// <param name="tool"></param>
-    /// <param name="tip"></param>
-    private void Bottling(Card tool, out string tip)
-    {
-        tip = string.Empty;
-        DestroyThis();
-        tool.Use();
-
-        ApplyEventEffects(1);
-
-        TurnTo("被捉住的水瓶鱼", Bag);
-        AddCard("育卵液", true);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -88,6 +85,7 @@ public class CaughtAquariusFishWithProduct : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        Bottling(slot.PeekCard(), out tip);
+        tip = string.Empty;
+        Bottling(slot.PeekCard(), Events[1]);
     }
 }

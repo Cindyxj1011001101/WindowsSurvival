@@ -41,7 +41,7 @@ public class SpaceshipSeat : ConstructionCard
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
     }
 
-    private void Event_Rest(out string tip)
+    private void Event_Rest(out string tip, CardEvent e)
     {
         tip = string.Empty;
 
@@ -87,7 +87,7 @@ public class SpaceshipSeat : ConstructionCard
         return true;
     }
 
-    private void Event_Sleep(out string tip)
+    private void Event_Sleep(out string tip, CardEvent e)
     {
         tip = string.Empty;
 

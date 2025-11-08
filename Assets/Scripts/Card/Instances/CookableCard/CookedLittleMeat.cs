@@ -5,12 +5,13 @@ public class CookedLittleMeat : CookableCard
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+        AddCardEvent("食用", "", EasyEvent_Destroy, null,
             () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 18 },
                 { PlayerStateEnum.Health, 1 },
-            });
+            },
+            sound: "吃_01");
     }
 }

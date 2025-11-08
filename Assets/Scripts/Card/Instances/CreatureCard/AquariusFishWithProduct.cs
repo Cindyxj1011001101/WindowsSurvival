@@ -12,9 +12,24 @@ public class AquariusFishWithProduct : Card
     }
 
     #region 用捕网捉
-    private void Event_CatchByNet(out string tip)
+    private void Catch(Card tool, CardEvent e)
     {
-        Catch(GameManager.Instance.PlayerBag.FindCardOfName("捞网"), out tip);
+        // 销毁卡牌
+        DestroyThis();
+        // 1. 消耗耐久
+        tool.Use();
+
+        ApplyEventEffects(e);
+
+        // 3. 掉落卡牌
+        // 获得一张“有产物的被捉住的水瓶鱼”
+        AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
+    }
+
+    private void Event_CatchByNet(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        Catch(GameManager.Instance.PlayerBag.FindCardOfName("捞网"), e);
     }
 
     private bool Judge_CatchByNet(out string hint)
@@ -30,12 +45,12 @@ public class AquariusFishWithProduct : Card
     #endregion
 
     #region 用手捉
-    private void Event_CatchByHand(out string tip)
+    private void Event_CatchByHand(out string tip, CardEvent e)
     {
         tip = string.Empty;
         DestroyThis();
 
-        ApplyEventEffects(1);
+        ApplyEventEffects(e);
 
         // 3/4概率逃跑
         var value = Random.value;
@@ -54,22 +69,6 @@ public class AquariusFishWithProduct : Card
     }
     #endregion
 
-    private void Catch(Card tool, out string tip)
-    {
-        tip = string.Empty;
-
-        // 销毁卡牌
-        DestroyThis();
-        // 1. 消耗耐久
-        tool.Use();
-
-        ApplyEventEffects(0);
-
-        // 3. 掉落卡牌
-        // 获得一张“有产物的被捉住的水瓶鱼”
-        AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
-    }
-
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
@@ -83,6 +82,7 @@ public class AquariusFishWithProduct : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        Catch(slot.PeekCard(), out tip);
+        tip = string.Empty;
+        Catch(slot.PeekCard(), Events[0]);
     }
 }

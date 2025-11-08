@@ -140,9 +140,22 @@ public class Fruitfish : EntityCard
         return env.FindCards(c => c.Tags.Contains(CardTag.FruitCrop) && c is PlantCard p && p.IsRipe);
     }
 
-    private void Event_CatchByNet(out string tip)
+    private void Catch(Card tool, CardEvent e)
     {
-        Catch(GameManager.Instance.PlayerBag.FindCardOfName("捞网"), out tip);
+        // 销毁卡牌
+        DestroyThis();
+        tool.Use();
+
+        ApplyEventEffects(e);
+
+        // 掉落产物
+        ParseAndDrop(deadDrops);
+    }
+
+    private void Event_CatchByNet(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        Catch(GameManager.Instance.PlayerBag.FindCardOfName("捞网"), e);
     }
 
     private bool Judge_CatchByNet(out string hint)
@@ -154,22 +167,6 @@ public class Fruitfish : EntityCard
             return false;
         }
         return true;
-    }
-
-    private void Catch(Card tool, out string tip)
-    {
-        tip = string.Empty;
-
-        // 销毁卡牌
-        DestroyThis();
-        // 1. 消耗耐久
-        tool.Use();
-
-        // 2. 时间变化
-        ApplyEventEffects(0);
-
-        // 掉落产物
-        ParseAndDrop(deadDrops);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -187,12 +184,13 @@ public class Fruitfish : EntityCard
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
+        tip = string.Empty;
         var card = slot.PeekCard();
 
         if (card.CardId == "捞网")
         {
             // 用捞网捞
-            Catch(card, out tip);
+            Catch(card, Events[0]);
             return;
         }
 

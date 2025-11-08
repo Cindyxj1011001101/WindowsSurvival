@@ -35,11 +35,11 @@ public class GelBottler : Card
         RefreshSlot();
     }
 
-    private void Event_Bottling(out string tip)
+    private void Event_Bottling(out string tip, CardEvent e)
     {
         tip = string.Empty;
         Use();
-        ApplyEventEffects(0);
+        ApplyEventEffects(e);
         AddCard("盐水", true);
     }
 
@@ -51,7 +51,7 @@ public class GelBottler : Card
 
         if (env.PlaceData.isInWater) return true;
 
-        if (env.PlaceData.isInSpacecraft && StateManager.Instance.WaterLevel.CurValue <= 0)
+        if (!env.PlaceData.isInSpacecraft || StateManager.Instance.WaterLevel.CurValue <= 0)
         {
             hint = "水位不足，无法装瓶";
             return false;

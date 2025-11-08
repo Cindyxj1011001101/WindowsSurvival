@@ -22,9 +22,22 @@ public class LooseBoulders : Card
         };
     }
 
-    private void Event_DigByTool(out string tip)
+    private void DigByTool(Card tool, out string tip, CardEvent e)
     {
-        DigByTool(GameManager.Instance.PlayerBag.FindCardOfName("钢铲"), out tip);
+        //掉落卡牌
+        RandomDrop(dropList, out tip, onDrop: () =>
+        {
+            //消耗1点耐久度
+            Use();
+            // 工具消耗耐久
+            tool.Use();
+            ApplyEventEffects(e);
+        });
+    }
+
+    private void Event_DigByTool(out string tip, CardEvent e)
+    {
+        DigByTool(GameManager.Instance.PlayerBag.FindCardOfName("钢铲"), out tip, e);
     }
 
     private bool Judge_DigByTool(out string hint)
@@ -36,20 +49,6 @@ public class LooseBoulders : Card
             return false;
         }
         return true;
-    }
-
-    private void DigByTool(Card tool, out string tip)
-    {
-        //掉落卡牌
-        RandomDrop(dropList, out tip, onDrop: () =>
-        {
-            //消耗1点耐久度
-            Use();
-            // 工具消耗耐久
-            tool.Use();
-
-            ApplyEventEffects(0);
-        });
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -65,6 +64,6 @@ public class LooseBoulders : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        DigByTool(slot.PeekCard(), out tip);
+        DigByTool(slot.PeekCard(), out tip, Events[0]);
     }
 }

@@ -52,7 +52,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
     {
         if (gameEvent.GetType() != typeof(MagneticStorm)) return;
 
-        Event_TurnOff(out _);
+        Event_TurnOff(out _, null);
         ShowTip($"受行星磁暴影响，{CardName}已关闭并停止工作");
     }
 
@@ -93,7 +93,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
     }
 
     #region 开关
-    private void Event_TurnOn(out string tip)
+    private void Event_TurnOn(out string tip, CardEvent e)
     {
         tip = string.Empty;
 
@@ -118,7 +118,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         return stateMachine.currentStateName == "已关闭";
     }
 
-    private void Event_TurnOff(out string tip)
+    private void Event_TurnOff(out string tip, CardEvent e)
     {
         tip = string.Empty;
         RemoveComponent<TimerComponent>();

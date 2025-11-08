@@ -51,19 +51,19 @@ public class FuelDistiller : ConstructionCard
         };
     }
 
-    private void Ignite(out string s)
+    private void Ignite(out string s, CardEvent e)
     {
+        PlaySound("点火_02");
+
         fuelStorage.Ignite(out s);
 
         // 点燃后暂停所有卡牌每回合更新
         innerContents.PauseUpdating();
 
         stateMachine.ChangeState("已点燃");
-
-        PlaySound("点火_02");
     }
 
-    private void Extinguish(out string s)
+    private void Extinguish(out string s, CardEvent e)
     {
         fuelStorage.Extinguish(out s);
 
@@ -77,7 +77,7 @@ public class FuelDistiller : ConstructionCard
     /// 倒入盐水
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_AddSalineWater(out string tip)
+    private void Event_AddSalineWater(out string tip, CardEvent e)
     {
         tip = string.Empty;
         AddSalineWater(GameManager.Instance.PlayerBag.FindCardOfName("盐水"));

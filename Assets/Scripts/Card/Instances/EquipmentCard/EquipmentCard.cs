@@ -22,7 +22,7 @@
     public abstract void OnEquipped();
     public abstract void OnUnEquipped();
 
-    protected void Event_Equip(out string tip)
+    protected void Event_Equip(out string tip, CardEvent e)
     {
         tip = string.Empty;
         GameManager.Instance.Equip(this, Slot.transform.position);
@@ -33,7 +33,7 @@
         return GameManager.Instance.CanEquip(this, out hint);
     }
 
-    protected void Event_UnEquip(out string tip)
+    protected void Event_UnEquip(out string tip, CardEvent e)
     {
         tip = string.Empty;
         GameManager.Instance.Unequip(this);

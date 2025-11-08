@@ -797,7 +797,7 @@ public class OxygenStorageComponent : ContinuousValueComponent
         return true;
     }
 
-    public void Event_GetOxygen(out string tip)
+    public void Event_GetOxygen(out string tip, CardEvent e)
     {
         tip = string.Empty;
         // 玩家氧气剩余容量

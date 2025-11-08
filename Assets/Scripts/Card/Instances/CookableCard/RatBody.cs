@@ -10,14 +10,15 @@ public class RatBody : CookableCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "不做任何处理，连同皮毛和内脏一起吃下", (out string s) => EasyEvent(out s, "吃_01"), null,
+        AddCardEvent("食用", "不做任何处理，连同皮毛和内脏一起吃下", EasyEvent_Destroy, null,
             () => 30,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 18 },
                 { PlayerStateEnum.Sanity, -20 },
                 { PlayerStateEnum.Health, -8 }
-            });
+            },
+            sound: "吃_01");
         AddCardEvent("用手剥", "用手撕扯老鼠，这会弄得脏兮兮的，而且有小概率什么都拿不到", Event_PeelByHand, null,
             () => 45,
             () => new()
@@ -29,19 +30,20 @@ public class RatBody : CookableCard
     }
 
     #region 用手剥
-    private void Event_PeelByHand(out string tip)
+    private void Event_PeelByHand(out string tip, CardEvent e)
     {
         DestroyThis();
-        ApplyEventEffects(1);
+        ApplyEventEffects(e);
         //随机掉落卡牌
         RandomDrop(dropList, out tip);
     }
     #endregion
 
     #region 用刀切割
-    private void Event_PeelByKnife(out string tip)
+    private void Event_PeelByKnife(out string tip, CardEvent e)
     {
-        PeelByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
+        tip = string.Empty;
+        PeelByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
     private bool Judge_PeelByKnife(out string hint)
@@ -55,12 +57,11 @@ public class RatBody : CookableCard
         return true;
     }
 
-    private void PeelByKnife(Card knife, out string tip)
+    private void PeelByKnife(Card knife, CardEvent e)
     {
-        tip = string.Empty;
         DestroyThis();
         knife.Use();
-        ApplyEventEffects(2);
+        ApplyEventEffects(e);
         AddCard("小块生肉", true);
     }
     #endregion
@@ -79,6 +80,7 @@ public class RatBody : CookableCard
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        PeelByKnife(slot.PeekCard(), out tip);
+        tip = string.Empty;
+        PeelByKnife(slot.PeekCard(), Events[2]);
     }
 }

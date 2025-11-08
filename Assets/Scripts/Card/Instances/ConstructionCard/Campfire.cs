@@ -70,8 +70,15 @@ public class Campfire : ConstructionCard
     /// <summary>
     /// 点燃时触发
     /// </summary>
-    private void Ignite(out string s)
+    private void Ignite(out string s, CardEvent e)
     {
+        // 音效
+        PlaySound("点火_02");
+
+        // 只有玩家在同一地点且点燃时才播放循环音效
+        if (GameManager.Instance.IsCurrentEnvironment(Bag))
+            SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 0.3f);
+
         fuelStorage.Ignite(out s);
 
         // 点燃后暂停所有卡牌每回合更新
@@ -93,19 +100,17 @@ public class Campfire : ConstructionCard
         });
 
         stateMachine.ChangeState("已点燃");
-
-        PlaySound("点火_02");
-
-        // 只有玩家在同一地点且点燃时才播放循环音效
-        if (GameManager.Instance.IsCurrentEnvironment(Bag))
-            SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 0.3f);
     }
 
     /// <summary>
     /// 熄灭时触发
     /// </summary>
-    private void Extinguish(out string s)
+    private void Extinguish(out string s, CardEvent e)
     {
+        // 只有玩家在同一地点时才停止音效
+        if (GameManager.Instance.IsCurrentEnvironment(Bag))
+            SoundManager.Instance.StopCardLoopSound(CardId);
+
         fuelStorage.Extinguish(out s);
 
         // 熄灭后恢复所有卡牌每回合更新
@@ -119,10 +124,6 @@ public class Campfire : ConstructionCard
         });
 
         stateMachine.ChangeState("未点燃");
-
-        // 只有玩家在同一地点时才停止音效
-        if (GameManager.Instance.IsCurrentEnvironment(Bag))
-            SoundManager.Instance.StopCardLoopSound(CardId);
     }
 
     private List<Card> temp = new();
@@ -132,20 +133,18 @@ public class Campfire : ConstructionCard
     /// </summary>
     private void WhileBurning()
     {
+        temp.Clear();
+
         // 记录所有内容物
         foreach (var slot in innerContents.bag.Slots)
         {
-            for (int i = slot.Cards.Count - 1; i >= 0; i--)
-            {
-                temp.Add(slot.Cards[i]);
-            }
+            temp.AddRange(slot.Cards);
         }
 
         // 内容物增加烹饪进度
         foreach (var card in temp)
         {
-            if (card == null || card.Destroyed || !card.TryGetComponent(out CookComponent cook)) continue;
-
+            card.TryGetComponent(out CookComponent cook);
             cook.Cook();
 
             if (card.TryGetComponent<TimerComponent>(out var timer) && cook.leftCookTime >= 0)

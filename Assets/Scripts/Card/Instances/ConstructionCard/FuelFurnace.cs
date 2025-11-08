@@ -93,21 +93,21 @@ public class FuelFurnace : ConstructionCard
         };
     }
 
-    private void Ignite(out string s)
+    private void Ignite(out string s, CardEvent e)
     {
-        fuelStorage.Ignite(out s);
-
         PlaySound("点火_02");
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "燃料炉音效", 1f);
+
+        fuelStorage.Ignite(out s);
     }
 
-    private void Extinguish(out string s)
+    private void Extinguish(out string s, CardEvent e)
     {
-        fuelStorage.Extinguish(out s);
-
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
+
+        fuelStorage.Extinguish(out s);
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -126,7 +126,7 @@ public class FuelFurnace : ConstructionCard
     /// 开始加工
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_Process(out string tip)
+    private void Event_Process(out string tip, CardEvent e)
     {
         tip = string.Empty;
 

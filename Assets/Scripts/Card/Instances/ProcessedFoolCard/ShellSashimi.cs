@@ -5,7 +5,7 @@ public class ShellSashimi : Card
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+        AddCardEvent("食用", "", EasyEvent_Destroy, null,
             () => 5,
             () => new()
             {
@@ -13,6 +13,7 @@ public class ShellSashimi : Card
                 { PlayerStateEnum.Hydration, 14 },
                 { PlayerStateEnum.Sanity, 13 },
                 { PlayerStateEnum.Health, -3 }
-            });
+            },
+            sound: "吃_01");
     }
 }

@@ -5,7 +5,7 @@ public class BurntFood : CookableCard
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+        AddCardEvent("食用", "", EasyEvent_Destroy, null,
             () => 15,
             () => new()
             {
@@ -13,6 +13,7 @@ public class BurntFood : CookableCard
                 { PlayerStateEnum.Hydration, -20 },
                 { PlayerStateEnum.Health, -5 },
                 { PlayerStateEnum.BodyTemperature, 20 }
-            });
+            },
+            sound: "吃_01");
     }
 }

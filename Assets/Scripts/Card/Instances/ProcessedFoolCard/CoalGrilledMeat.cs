@@ -5,7 +5,7 @@ public class CoalGrilledMeat : Card
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "有着一层酥脆的皮", (out string s) => EasyEvent(out s, "吃_01"), null,
+        AddCardEvent("食用", "有着一层酥脆的皮", EasyEvent_Destroy, null,
             () => 15,
             () => new()
             {
@@ -13,6 +13,7 @@ public class CoalGrilledMeat : Card
                 { PlayerStateEnum.Hydration, -10 },
                 { PlayerStateEnum.Sanity, 8 },
                 { PlayerStateEnum.Health, 5 }
-            });
+            },
+            sound: "吃_01");
     }
 }

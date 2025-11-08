@@ -5,7 +5,7 @@ public class JellyfishSkin : Card
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+        AddCardEvent("食用", "", EasyEvent_Destroy, null,
             () => 15,
             () => new()
             {
@@ -13,13 +13,23 @@ public class JellyfishSkin : Card
                 { PlayerStateEnum.Health, -4 },
                 { PlayerStateEnum.Sanity, -5 },
                 { PlayerStateEnum.Itchiness, +45 }
-            });
+            },
+            sound: "吃_01");
         AddCardEvent("腌渍脱毒", "", Event_Pickle, Judge_Pickle, () => 5);
     }
 
-    private void Event_Pickle(out string tip)
+    private void Pickle(Card salineWater, CardEvent e)
     {
-        Pickle(GameManager.Instance.PlayerBag.FindCardOfName("盐水"), out tip);
+        DestroyThis();
+        salineWater.DestroyThis();
+        ApplyEventEffects(e);
+        TurnTo("腌渍中的海蜇皮", Bag);
+    }
+
+    private void Event_Pickle(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        Pickle(GameManager.Instance.PlayerBag.FindCardOfName("盐水"), e);
     }
 
     private bool Judge_Pickle(out string hint)
@@ -31,16 +41,6 @@ public class JellyfishSkin : Card
             return false;
         }
         return true;
-    }
-
-    private void Pickle(Card salineWater, out string tip)
-    {
-        tip = string.Empty;
-        DestroyThis();
-        salineWater.DestroyThis();
-
-        ApplyEventEffects(1);
-        TurnTo("腌渍中的海蜇皮", Bag);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -57,6 +57,7 @@ public class JellyfishSkin : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        Pickle(slot.PeekCard(), out tip);
+        tip = string.Empty;
+        Pickle(slot.PeekCard(), Events[1]);
     }
 }

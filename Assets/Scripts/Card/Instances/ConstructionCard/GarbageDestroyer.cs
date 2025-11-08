@@ -9,7 +9,7 @@ public class GarbageDestroyer : ConstructionCard
         base.RegisterCardEvents(); // 拆毁
     }
 
-    private void Event_Destroy(out string tip)
+    private void Event_Destroy(out string tip, CardEvent e)
     {
         tip = string.Empty;
         var window = WindowsManager.Instance.OpenWindow("Confirm", true) as ConfirmWindow;

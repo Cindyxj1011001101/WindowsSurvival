@@ -21,7 +21,7 @@ public class PlankBed : ConstructionCard
         base.RegisterCardEvents(); // 拆毁
     }
 
-    private void Event_Rest(out string tip)
+    private void Event_Rest(out string tip, CardEvent e)
     {
         tip = string.Empty;
 

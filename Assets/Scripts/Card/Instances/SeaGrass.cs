@@ -9,17 +9,26 @@ public class SeaGrass : Card
         AddCardEvent("用刀提取", "用刀提取纤维", Event_CollectByKnife, Judge_CollectByKnife, () => 15);
     }
 
-    private void Event_CollectByHand(out string tip)
+    private void Event_CollectByHand(out string tip, CardEvent e)
     {
         tip = string.Empty;
         DestroyThis();
-        ApplyEventEffects(0);
+        ApplyEventEffects(e);
         AddCard("纤维", true);
     }
-    
-    private void Event_CollectByKnife(out string tip)
+
+    private void CollectByKnife(Card tool, CardEvent e)
     {
-        CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
+        DestroyThis();
+        tool.Use();
+        ApplyEventEffects(e);
+        AddCard("纤维", true);
+    }
+
+    private void Event_CollectByKnife(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
     
     private bool Judge_CollectByKnife(out string hint)
@@ -31,15 +40,6 @@ public class SeaGrass : Card
             return false;
         }
         return true;
-    }
-
-    private void CollectByKnife(Card tool, out string tip)
-    {
-        tip = string.Empty;
-        DestroyThis();
-        tool.Use();
-        ApplyEventEffects(1);
-        AddCard("纤维", true);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -56,6 +56,7 @@ public class SeaGrass : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        CollectByKnife(slot.PeekCard(), out tip);
+        tip = string.Empty;
+        CollectByKnife(slot.PeekCard(), Events[1]);
     }
 }

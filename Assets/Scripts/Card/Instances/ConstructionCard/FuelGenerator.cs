@@ -45,7 +45,7 @@ public class FuelGenerator : ConstructionCard
     {
         if (gameEvent.GetType() != typeof(MagneticStorm) || !fuelStorage.CanExtinguish(out _)) return;
 
-        Extinguish(out _);
+        Extinguish(out _, null);
         ShowTip($"受行星磁暴影响，{CardName}已熄灭并停止工作");
     }
 
@@ -70,11 +70,11 @@ public class FuelGenerator : ConstructionCard
     /// <summary>
     /// 点燃时触发
     /// </summary>
-    private void Ignite(out string s)
+    private void Ignite(out string s, CardEvent e)
     {
-        fuelStorage.Ignite(out s);
-
         PlaySound("点火_02");
+
+        fuelStorage.Ignite(out s);
 
         StateManager.Instance.ChangeElectricityChangeRate(ELECTRICITY_PRODUCTION);
 
@@ -84,17 +84,17 @@ public class FuelGenerator : ConstructionCard
     /// <summary>
     /// 熄灭时触发
     /// </summary>
-    private void Extinguish(out string s)
+    private void Extinguish(out string s, CardEvent e)
     {
         fuelStorage.Extinguish(out s);
-
-        // 只有玩家在同一地点时才停止音效
-        if (GameManager.Instance.IsCurrentEnvironment(Bag))
-            SoundManager.Instance.StopCardLoopSound(CardId);
 
         StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_PRODUCTION);
 
         stateMachine.ChangeState("未点燃");
+
+        // 只有玩家在同一地点时才停止音效
+        if (GameManager.Instance.IsCurrentEnvironment(Bag))
+            SoundManager.Instance.StopCardLoopSound(CardId);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)

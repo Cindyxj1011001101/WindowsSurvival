@@ -683,44 +683,51 @@ public abstract class Card : IComparable<Card>
     protected void AddCardEvent(
         string name,
         string description,
-        OutStringAction action,
+        OutStringAction<CardEvent> action,
         OutStringFunc<bool> condition,
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
-        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null)
+        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null,
+        string sound = null)
     {
-        Events.Add(new(name, description, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges));
+        Events.Add(new(name, description, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges, sound));
     }
 
     protected void AddCardEvent(
         string name,
         Func<string> getDescription,
-        OutStringAction action,
+        OutStringAction<CardEvent> action,
         OutStringFunc<bool> condition,
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
-        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null)
+        Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null,
+        string sound = null)
     {
-        Events.Add(new(name, getDescription, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges));
+        Events.Add(new(name, getDescription, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges, sound));
     }
 
-    protected void EasyEvent(out string tip, string sound = "", bool destroyThis = true, int eventIndex = 0)
+    protected void EasyEvent_Destroy(out string tip, CardEvent e)
     {
         tip = string.Empty;
-
-        // 销毁
-        if (destroyThis)
-            DestroyThis();
-
-        // 播放音效
-        PlaySound(sound);
-
-        ApplyEventEffects(eventIndex);
+        DestroyThis();
+        ApplyEventEffects(e);
     }
 
-    protected void ApplyEventEffects(int eventIndex)
+    protected void EasyEvent_DontDestroy(out string tip, CardEvent e)
     {
-        var e = Events[eventIndex];
+        tip = string.Empty;
+        ApplyEventEffects(e);
+    }
+
+    protected void EasyEvent_Use(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        Use();
+        ApplyEventEffects(e);
+    }
+
+    protected void ApplyEventEffects(CardEvent e)
+    {
         // 应用状态变化
         GameManager.Instance.CurEnvironmentBag.ApplyEnvStateChanges(e.GetEnvStateChanges());
         StateManager.Instance.ApplyPlayerStateChanges(e.GetPlayerStateChanges());

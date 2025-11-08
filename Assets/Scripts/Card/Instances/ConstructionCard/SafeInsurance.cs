@@ -37,13 +37,12 @@ public class SafeInsurance : ConstructionCard
     /// 用手砸
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_UseHand(out string tip)
+    private void Event_UseHand(out string tip, CardEvent e)
     {
-        tip = string.Empty;
-        // 播放音效
         PlaySound("金属受击_01", true);
+        tip = string.Empty;
         Use(3);
-        ApplyEventEffects(0);
+        ApplyEventEffects(e);
     }
 
     private bool Judge_UseHand(out string hint)
@@ -56,19 +55,19 @@ public class SafeInsurance : ConstructionCard
     /// 用铲子凿
     /// </summary>
     /// <param name="tip"></param>
-    private void UseShovel(Card tool, out string tip)
+    private void UseShovel(Card tool, CardEvent e)
     {
-        tip = string.Empty;
         // 播放音效
         PlaySound("凿_01", true);
         Use(8);
         tool.Use();
-        ApplyEventEffects(1);
+        ApplyEventEffects(e);
     }
 
-    private void Event_UseShovel(out string tip)
+    private void Event_UseShovel(out string tip, CardEvent e)
     {
-        UseShovel(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
+        tip = string.Empty;
+        UseShovel(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), e);
     }
 
     private bool Judge_UseShovel(out string hint)
@@ -86,19 +85,19 @@ public class SafeInsurance : ConstructionCard
     /// 用锤子砸
     /// </summary>
     /// <param name="tip"></param>
-    private void UseHammer(Card tool, out string tip)
+    private void UseHammer(Card tool, CardEvent e)
     {
-        tip = string.Empty;
         // 播放音效
         PlaySound("暴力拆毁_01", true);
         Use(20);
         tool.Use();
-        ApplyEventEffects(2);
+        ApplyEventEffects(e);
     }
 
-    private void Event_UseHammer(out string tip)
+    private void Event_UseHammer(out string tip, CardEvent e)
     {
-        UseHammer(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), out tip);
+        tip = string.Empty;
+        UseHammer(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), e);
     }
 
     private bool Judge_UseHammer(out string hint)
@@ -151,13 +150,13 @@ public class SafeInsurance : ConstructionCard
 
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))
         {
-            UseShovel(card, out tip);
+            UseShovel(card, Events[1]);
             return;
         }
 
         if (slot.PeekCard().CardId == "钢锤")
         {
-            UseHammer(card, out tip);
+            UseHammer(card, Events[2]);
             return;
         }
     }

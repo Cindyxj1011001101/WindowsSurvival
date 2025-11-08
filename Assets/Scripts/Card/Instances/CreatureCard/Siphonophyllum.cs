@@ -8,9 +8,18 @@ public class Siphonophyllum : Card
         AddCardEvent("切割", "这会杀死虹吸海葵并获得磁性触手", Event_Cut, Judge_Cut, () => 45);
     }
 
-    private void Event_Cut(out string tip)
+    private void Cut(Card tool, CardEvent e)
     {
-        Cut(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip);
+        DestroyThis();
+        tool.Use();
+        ApplyEventEffects(e);
+        AddCards("磁性触手", 2, true);
+    }
+
+    private void Event_Cut(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        Cut(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
     private bool Judge_Cut(out string hint)
@@ -22,16 +31,6 @@ public class Siphonophyllum : Card
             return false;
         }
         return true;
-    }
-
-    private void Cut(Card tool, out string tip)
-    {
-        DestroyThis();
-        tool.Use();
-
-        tip = string.Empty;
-        ApplyEventEffects(0);
-        AddCards("磁性触手", 2, true);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -48,6 +47,7 @@ public class Siphonophyllum : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        Cut(slot.PeekCard(), out tip);
+        tip = string.Empty;
+        Cut(slot.PeekCard(), Events[0]);
     }
 }

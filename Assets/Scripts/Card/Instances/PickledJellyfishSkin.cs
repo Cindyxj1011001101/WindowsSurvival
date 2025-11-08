@@ -7,7 +7,7 @@ public class PickledJellyfishSkin : Card
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "", (out string s) => EasyEvent(out s, "吃_01"), null,
+        AddCardEvent("食用", "", EasyEvent_Destroy, null,
             () => 15,
             () => new()
             {
@@ -15,7 +15,8 @@ public class PickledJellyfishSkin : Card
                 { PlayerStateEnum.Health, -4 },
                 { PlayerStateEnum.Sanity, -5 },
                 { PlayerStateEnum.Itchiness, +45 }
-            });
+            },
+            sound: "吃_01");
     }
 
     protected override void OnLateConstructor()

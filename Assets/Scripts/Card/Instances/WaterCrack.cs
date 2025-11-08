@@ -10,9 +10,19 @@ public class WaterCrack : Card
         AddCardEvent("堵住", "消耗裂缝填充物修补裂缝", Event_Fix, Jugde_Fix, () => 15);
     }
 
-    private void Event_Fix(out string tip)
+    private void Fix(Card patch, CardEvent e)
     {
-        Fix(GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物"), out tip);
+        PlaySound("堵住裂缝");
+        DestroyThis();
+        patch.DestroyThis();
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("渗水裂缝", "堵住"));
+        ApplyEventEffects(e);
+    }
+
+    private void Event_Fix(out string tip, CardEvent e)
+    {
+        tip = string.Empty;
+        Fix(GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物"), e);
     }
 
     private bool Jugde_Fix(out string hint)
@@ -24,16 +34,6 @@ public class WaterCrack : Card
             return false;
         }
         return true;
-    }
-
-    private void Fix(Card patch, out string tip)
-    {
-        tip = string.Empty;
-        DestroyThis();
-        patch.DestroyThis();
-        PlaySound("堵住裂缝");
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("渗水裂缝", "堵住"));
-        ApplyEventEffects(0);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -49,7 +49,8 @@ public class WaterCrack : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        Fix(slot.PeekCard(), out tip);
+        tip = string.Empty;
+        Fix(slot.PeekCard(), Events[0]);
     }
 
     public override void OnAdd(Bag bag)

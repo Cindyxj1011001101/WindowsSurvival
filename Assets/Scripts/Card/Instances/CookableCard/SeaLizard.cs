@@ -5,13 +5,14 @@ public class SeaLizard : CookableCard
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "希望不会有毒吧", (out string s) => EasyEvent(out s, "吃_01"), null,
+        AddCardEvent("食用", "希望不会有毒吧", EasyEvent_Destroy, null,
             () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 10 },
                 { PlayerStateEnum.Sanity, -3 },
                 { PlayerStateEnum.Itchiness, 25 }
-            });
+            },
+            sound: "吃_01");
     }
 }

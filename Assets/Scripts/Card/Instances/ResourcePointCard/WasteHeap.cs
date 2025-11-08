@@ -19,24 +19,32 @@ public class WasteHeap : Card
         AddCardEvent("用铲子挖", "比用手轻松一些", Event_DigByTool, Judge_DigByTool, () => 15);
     }
 
-    private void Event_Dig(out string tip)
+    private void Event_Dig(out string tip, CardEvent e)
     {
+        PlaySound("挖掘废料_01", true);
         //掉落卡牌
         RandomDrop(dropList, out tip, onDrop: () =>
         {
-            //消耗1点耐久度
             Use();
-
-            //消耗45分钟
-            ApplyEventEffects(0);
-
-            PlaySound("挖掘废料_01", true);
+            ApplyEventEffects(e);
         });
     }
 
-    private void Event_DigByTool(out string tip)
+    private void DigByTool(Card tool, out string tip, CardEvent e)
     {
-        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
+        PlaySound("挖掘废料_01", true);
+        //掉落卡牌
+        RandomDrop(dropList, out tip, onDrop: () =>
+        {
+            Use();
+            tool.Use();
+            ApplyEventEffects(e);
+        });
+    }
+
+    private void Event_DigByTool(out string tip, CardEvent e)
+    {
+        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip, e);
     }
 
     private bool Judge_DigByTool(out string hint)
@@ -48,22 +56,6 @@ public class WasteHeap : Card
             return false;
         }
         return true;
-    }
-
-    private void DigByTool(Card tool, out string tip)
-    {
-        //掉落卡牌
-        RandomDrop(dropList, out tip, onDrop: () =>
-        {
-            //消耗1点耐久度
-            Use();
-            // 工具消耗耐久
-            tool.Use();
-
-            ApplyEventEffects(1);
-
-            PlaySound("挖掘废料_01", true);
-        });
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -79,6 +71,6 @@ public class WasteHeap : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        DigByTool(slot.PeekCard(), out tip);
+        DigByTool(slot.PeekCard(), out tip, Events[1]);
     }
 }

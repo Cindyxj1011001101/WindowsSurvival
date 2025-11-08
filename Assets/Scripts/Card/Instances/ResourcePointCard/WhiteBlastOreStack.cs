@@ -14,9 +14,20 @@ public class WhiteBlastOreStack : Card
         AddCardEvent("用铲子凿", "用铲子凿白爆矿堆", Event_Dig, Judge_Dig, () => 30);
     }
 
-    private void Event_Dig(out string tip)
+    private void DigByTool(Card tool, out string tip, CardEvent e)
     {
-        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip);
+        // 掉落卡牌(2次)
+        RandomDrop(dropList, out tip, 2, () =>
+        {
+            Use();
+            tool.Use();
+            ApplyEventEffects(e);
+        });
+    }
+
+    private void Event_Dig(out string tip, CardEvent e)
+    {
+        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip, e);
     }
 
     private bool Judge_Dig(out string hint)
@@ -28,18 +39,6 @@ public class WhiteBlastOreStack : Card
             return false;
         }
         return true;
-    }
-
-    private void DigByTool(Card tool, out string tip)
-    {
-        // 掉落卡牌(2次)
-        RandomDrop(dropList, out tip, 2, () =>
-        {
-            Use();
-            tool.Use();
-
-            ApplyEventEffects(0);
-        });
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -56,6 +55,6 @@ public class WhiteBlastOreStack : Card
 
     public override void QuickIneract(SlotCards slot, int count, out string tip)
     {
-        DigByTool(slot.PeekCard(), out tip);
+        DigByTool(slot.PeekCard(), out tip, Events[0]);
     }
 }

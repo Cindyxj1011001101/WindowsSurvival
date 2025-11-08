@@ -24,15 +24,12 @@ public class Painkillers : Card
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
     }
 
-    private void Event_Use(out string tip)
+    private void Event_Use(out string tip, CardEvent e)
     {
+        PlaySound("吃_01", true);
         tip = string.Empty;
         DestroyThis();
-        // 播放吃的音效
-        PlaySound("吃_01", true);
-
-        ApplyEventEffects(0);
-
+        ApplyEventEffects(e);
         GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId);
     }
 }

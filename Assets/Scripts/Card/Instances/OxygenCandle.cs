@@ -8,10 +8,10 @@ public class OxygenCandle : Card
         AddCardEvent("点燃", "", Event_Light, null);
     }
 
-    private void Event_Light(out string tip)
+    private void Event_Light(out string tip, CardEvent e)
     {
-        tip = string.Empty;
         PlaySound("点火_01");
+        tip = string.Empty;
         TurnTo("点燃的氧烛", Bag);
     }
 }

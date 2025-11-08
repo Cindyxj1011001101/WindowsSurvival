@@ -5,13 +5,14 @@ public class ClamSoup : Card
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("食用", "食用蛤蜊浓汤", (out string s) => EasyEvent(out s, "喝_01"), null,
+        AddCardEvent("食用", "", EasyEvent_Destroy, null,
             () => 15,
             () => new()
             {
                 { PlayerStateEnum.Hunger, 36 },
                 { PlayerStateEnum.Hydration, 66 },
                 { PlayerStateEnum.Sanity, 15 }
-            });
+            },
+            sound: "喝_01");
     }
 }
