@@ -86,13 +86,11 @@ public class EntityAggroCollection
         }
     }
 
-    public void Update()
+    public void UpdateRemainingMinutes()
     {
-        var temp = sortedSet.ToList();
-        foreach (var e in temp)
+        foreach (var item in sortedSet)
         {
-            e.UpdateRemainingMinutes();
-            RemoveUnavailableItem(e);
+            item.UpdateRemainingMinutes();
         }
     }
 
@@ -124,49 +122,42 @@ public class EntityAggroCollection
         sortedSet.Remove(item);
     }
 
-    public bool RemoveUnavailableItem(EntityAggro item)
+    public void RemoveUnavailableItems()
     {
-        // 如果仇恨目标已不存在
-        if (!GlobalDataManager.Instance.ExistsEntity(item.Target))
+        var temp = sortedSet.ToList();
+        foreach (var item in temp)
         {
-            // 将目标移出集合，继续寻找
-            RemoveByUuid(item.TargetUuid);
-            return true;
-        }
+            // 如果仇恨目标已不存在
+            if (!GlobalDataManager.Instance.ExistsEntity(item.Target))
+            {
+                // 将目标移出集合，继续寻找
+                RemoveByUuid(item.TargetUuid);
+                continue;
+            }
 
-        // 如果仇恨持续时间结束
-        if (!item.IsRemaining)
-        {
-            // 将目标移出集合，继续寻找
-            RemoveByUuid(item.TargetUuid);
-            return true;
-        }
+            // 如果仇恨持续时间结束
+            if (!item.IsRemaining)
+            {
+                // 将目标移出集合，继续寻找
+                RemoveByUuid(item.TargetUuid);
+                continue;
+            }
 
-        // 仇恨目标不是玩家 且 与目标不处于同一地点
-        if (item.Target is not Player && item.Target.Coordinate.Location != belongedEntity.Coordinate.Location)
-        {
-            // 将目标移出集合，继续寻找
-            RemoveByUuid(item.TargetUuid);
-            return true;
+            // 仇恨目标不是玩家 且 与目标不处于同一地点
+            if (item.Target is not Player && !belongedEntity.IsInSameLocation(item.Target))
+            {
+                // 将目标移出集合，继续寻找
+                RemoveByUuid(item.TargetUuid);
+                continue;
+            }
         }
-
-        return false;
     }
 
     public EntityAggro GetHighestPriority()
     {
-        while (sortedSet.Count > 0)
-        {
-            // 获取最高优先级的仇恨目标
-            EntityAggro result = sortedSet.Max;
+        if (sortedSet.IsNullOrEmpty()) return null;
 
-            // 为true表示aggro不可用且已被移除
-            if (RemoveUnavailableItem(result)) continue;
-
-            return result;
-        }
-
-        return null;
+        return sortedSet.Max;
     }
 
     public void Clear()

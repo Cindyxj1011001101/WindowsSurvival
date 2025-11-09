@@ -13,3 +13,12 @@ public enum EnvironmentStateEnum
     Dirtiness,          // 污染度
     Brightness,         // 亮度
 }
+
+public enum PressureLevel
+{
+    VeryLow = 1,
+    Low = 2,
+    Standard = 3,
+    High = 4,
+    VeryHigh = 5
+}

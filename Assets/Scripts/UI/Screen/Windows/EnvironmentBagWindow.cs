@@ -4,15 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum PressureLevel
-{
-    VeryLow = 1,
-    Low = 2,
-    Standard = 3,
-    High = 4,
-    VeryHigh = 5
-}
-
 public class EnvironmentBagWindow : BagWindow
 {
     [SerializeField] private UIStateSlider discoveryDegreeSlider; // 探索度显示

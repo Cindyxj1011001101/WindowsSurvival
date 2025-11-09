@@ -15,7 +15,7 @@ public abstract class EntityCard : Card, IEntity
     [JsonProperty] public string Uuid { get; private set; }                             // 实体唯一标识
     [JsonProperty] protected Dictionary<string, EntityIntention> intentions = new();    // 所有可能的意图
     [JsonProperty] private string currentIntention;                                     // 当前意图
-    [JsonProperty] private int aiRefreshCooldown;                                       // ai刷新冷却
+    [JsonProperty] private int aiRefreshCooldown = 0;                                   // ai刷新冷却
     [JsonProperty] private EntityAggroCollection aggroCollection = new();               // 仇恨列表
 
     private EntityIntention CurrentIntention
@@ -52,10 +52,14 @@ public abstract class EntityCard : Card, IEntity
         // 初始化仇恨
         aggroCollection.Init(this);
 
-        // 先更新仇恨
-        EventManager.Instance.AddListener(EventType.AddOneMinute, aggroCollection.Update);
-        // 再更新ai
-        EventManager.Instance.AddListener(EventType.AddOneMinute, UpdateAI);
+        // 刷新冷却为0，且当前意图为空，说明是第一次生成
+        if (aiRefreshCooldown == 0 && string.IsNullOrEmpty(currentIntention))
+        {
+            // 第一次生成时获取一下意图
+            TryGetNewIntention();
+        }
+
+        EventManager.Instance.AddListener(EventType.AddOneMinute, EntityUpdate);
         EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
@@ -64,21 +68,18 @@ public abstract class EntityCard : Card, IEntity
         intentions.Clear();
         aggroCollection.Clear();
         GlobalDataManager.Instance.RemoveEntity(Uuid);
-        EventManager.Instance.RemoveListener(EventType.AddOneMinute, aggroCollection.Update);
-        EventManager.Instance.RemoveListener(EventType.AddOneMinute, UpdateAI);
+        EventManager.Instance.RemoveListener(EventType.AddOneMinute, EntityUpdate);
         EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
 
-    public override void OnAdd(Bag bag)
+    private void EntityUpdate()
     {
-        base.OnAdd(bag);
+        if (isUpdatePaused || Destroyed) return;
 
-        // 刷新冷却为0，且当前意图为空，说明是第一次生成
-        if (aiRefreshCooldown == 0 && string.IsNullOrEmpty(currentIntention))
-        {
-            // 第一次生成时获取一下意图
-            TryGetNewIntention(); // 放在这里执行是因为要先将实体加入地点
-        }
+        // 先更新仇恨
+        UpdateAggro();
+        // 再更新AI
+        UpdateAI();
     }
 
     public override bool CanQuickInteract(Card card, out string tip)
@@ -125,8 +126,6 @@ public abstract class EntityCard : Card, IEntity
     /// </summary>
     private void UpdateAI()
     {
-        if (isUpdatePaused || Destroyed) return;
-
         // AI冷却中
         if (aiRefreshCooldown > 0)
         {
@@ -183,10 +182,13 @@ public abstract class EntityCard : Card, IEntity
     /// </summary>
     private void UpdateCurrentIntention()
     {
-        // 为true时表示意图准备完毕，并且已经执行
-        if (CurrentIntention.UpdatePreparationCountdown())
+        // 更新意图执行倒计时
+        CurrentIntention.UpdateExecutionCountdown();
+        if (CurrentIntention.IsReady)
         {
-            // 当前意图已执行，刷新意图
+            // 倒计时完成，执行意图
+            CurrentIntention.Execute();
+            // 刷新意图
             TryGetNewIntention();
         }
     }
@@ -194,11 +196,23 @@ public abstract class EntityCard : Card, IEntity
 
     #region 仇恨
     /// <summary>
-    /// 添加仇恨实体
+    /// 添加仇恨
     /// </summary>=
-    protected void AddAggroEntity(IEntity target, int priority, int remainingMinutes, bool isPermanent = false)
+    protected void AddAggro(IEntity entity, int priority, int remainingMinutes)
     {
-        aggroCollection.AddOrUpdate(target, priority, remainingMinutes, isPermanent);
+        if (entity == null) return;
+        aggroCollection.AddOrUpdate(entity, priority, remainingMinutes, false);
+    }
+
+    /// <summary>
+    /// 添加永久仇恨
+    /// </summary>
+    /// <param name="entity"></param>
+    /// <param name="priority"></param>
+    protected void AddPermanentAggro(IEntity entity, int priority)
+    {
+        if (entity == null) return;
+        aggroCollection.AddOrUpdate(entity, priority, default, true);
     }
 
     /// <summary>
@@ -206,15 +220,40 @@ public abstract class EntityCard : Card, IEntity
     /// </summary>
     protected EntityAggro GetAggroTarget()
     {
+        // 先清除无效的仇恨目标
+        aggroCollection.RemoveUnavailableItems();
+        // 再取最高优先级
         return aggroCollection.GetHighestPriority();
     }
 
+    ///// <summary>
+    ///// 移除仇恨实体
+    ///// </summary>
+    //protected void RemoveAggroEntity(IEntity entity) => aggroCollection.RemoveByUuid(entity.Uuid);
+
+    ///// <summary>
+    ///// 清除无效的仇恨目标
+    ///// </summary>
+    //protected void RemoveUnavailableAggroEntities() => aggroCollection.RemoveUnavailableItems();
+
     /// <summary>
-    /// 移除仇恨实体
+    /// 更新仇恨
     /// </summary>
-    protected void RemoveAggroEntity(IEntity target)
+    private void UpdateAggro()
     {
-        aggroCollection.RemoveByUuid(target.Uuid);
+        // 更新仇恨持续时间
+        aggroCollection.UpdateRemainingMinutes();
+        // 遍历当前地点的实体并判断其是否是仇恨目标
+        foreach (var entity in (Bag as EnvironmentBag).AllEntities)
+        {
+            // 如果是仇恨目标，则添加到集合
+            TryAddAggro(entity);
+        }
     }
+
+    /// <summary>
+    /// 派生类重写的仇恨逻辑
+    /// </summary>
+    protected virtual void TryAddAggro(IEntity entity) { }
     #endregion
 }

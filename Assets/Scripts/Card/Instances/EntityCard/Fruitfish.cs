@@ -105,7 +105,7 @@ public class Fruitfish : EntityCard
             closetPredator = entity;
         }
         // 如果玩家和食果鲀在同一地点
-        if (Player.Instance.Coordinate.Location == env)
+        if (this.IsInSameLocation(Player.Instance))
         {
             // 将玩家也加入判断
             var dist = this.DistanceTo(Player.Instance);

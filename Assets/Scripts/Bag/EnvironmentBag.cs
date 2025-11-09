@@ -20,7 +20,7 @@ public class EnvironmentBag : Bag
     [JsonIgnore] public PlaceData PlaceData => GameManager.Instance.PlaceDataDict[placeType];
     [JsonIgnore] public float DiscoveryDegree => 1 - DisposableDropList.RemainingDropsRate;
     [JsonIgnore] public bool ExploreCompleted => DisposableDropList.IsEmpty && DeepExploreDropList.IsEmpty;
-    [JsonIgnore] public List<IEntity> Entities { get; private set; } = new();
+    [JsonIgnore] public List<IEntity> AllEntities { get; private set; } = new();
 
     public void SetPlaceType(PlaceEnum placeType)
     {
@@ -253,20 +253,20 @@ public class EnvironmentBag : Bag
 
     public void AddEntity(IEntity entity)
     {
-        if (Entities.Contains(entity)) return;
+        if (AllEntities.Contains(entity)) return;
 
         // 设置当前所在地点
         entity.Coordinate.SetLocation(this);
         // 将实体加入实体列表
-        Entities.Add(entity);
+        AllEntities.Add(entity);
     }
 
     public void RemoveEntity(IEntity entity)
     {
-        if (!Entities.Contains(entity)) return;
+        if (!AllEntities.Contains(entity)) return;
 
         entity.Coordinate.SetLocation(null);
-        Entities.Remove(entity);
+        AllEntities.Remove(entity);
     }
 
     public override void OnAddCard(Card card)

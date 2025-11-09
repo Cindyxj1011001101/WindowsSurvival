@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
@@ -12,6 +12,7 @@ public class EntityIntention
     [JsonIgnore] public UnityAction action;         // 意图执行逻辑
 
     [JsonIgnore] public int PreparationMinutes => preparationMinutes;
+    [JsonIgnore] public bool IsReady => executionCountdown <= 0;
 
     public EntityIntention(int preparationMinutes)
     {
@@ -20,23 +21,15 @@ public class EntityIntention
 
     public void Prepare() => executionCountdown = preparationMinutes;
 
+
     /// <summary>
     /// 更新意图执行倒计时，返回true时代表准备结束
     /// </summary>
     /// <returns></returns>
-    public bool UpdatePreparationCountdown()
+    public void UpdateExecutionCountdown()
     {
-        executionCountdown--;
-        if (executionCountdown <= 0)
-        {
-            executionCountdown = 0;
-            Execute();
-
-            return true;
-        }
-
-        return false;
+        executionCountdown = Mathf.Max(executionCountdown - 1, 0);
     }
 
-    private void Execute() => action?.Invoke();
+    public void Execute() => action?.Invoke();
 }

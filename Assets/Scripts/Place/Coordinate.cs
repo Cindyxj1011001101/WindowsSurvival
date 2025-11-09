@@ -20,16 +20,18 @@ public class Coordinate
         Position = Mathf.Clamp(Position, Location.PlaceData.minCoord, Location.PlaceData.maxCoord);
     }
 
+    public bool IsInSameLocation(Coordinate other) => Location == other.Location;
+
     public float DistanceTo(Coordinate other)
     {
-        if (Location != other.Location) return float.MaxValue;
+        if (!IsInSameLocation(other)) return float.MaxValue;
 
         return Mathf.Abs(Position - other.Position);
     }
 
     public int DirectionTo(Coordinate other)
     {
-        if (Location != other.Location) return 0;
+        if (!IsInSameLocation(other)) return 0;
 
         if (other.Position > Position) return 1;
 

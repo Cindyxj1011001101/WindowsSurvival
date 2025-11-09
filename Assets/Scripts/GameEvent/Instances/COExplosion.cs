@@ -39,7 +39,7 @@ public class COExplosion : GameEvent
         // 增加250疼痛
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 250f);
         // 所有实体减少60生命
-        var entites = new List<IEntity>(GameManager.Instance.CurEnvironmentBag.Entities);
+        var entites = new List<IEntity>(GameManager.Instance.CurEnvironmentBag.AllEntities);
         foreach (var entity in entites)
         {
             // 玩家单独处理
