@@ -193,7 +193,7 @@ public abstract class EntityCard : Card, IEntity
     /// <summary>
     /// 添加仇恨
     /// </summary>=
-    protected void AddAggro(IEntity entity, int priority, int remainingMinutes)
+    public void AddAggro(IEntity entity, int priority, int remainingMinutes)
     {
         if (entity == null) return;
         aggroCollection.AddOrUpdate(entity, priority, remainingMinutes, false);
@@ -204,7 +204,7 @@ public abstract class EntityCard : Card, IEntity
     /// </summary>
     /// <param name="entity"></param>
     /// <param name="priority"></param>
-    protected void AddPermanentAggro(IEntity entity, int priority)
+    public void AddPermanentAggro(IEntity entity, int priority)
     {
         if (entity == null) return;
         aggroCollection.AddOrUpdate(entity, priority, default, true);
