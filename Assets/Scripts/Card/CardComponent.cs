@@ -24,7 +24,7 @@ public abstract class CardComponent
         BelongedCard = card;
     }
 
-    protected void RefreshSlot() => BelongedCard?.RefreshSlot();
+    public void RefreshSlot() => BelongedCard?.RefreshSlot();
 }
 
 #region 连续值组件
