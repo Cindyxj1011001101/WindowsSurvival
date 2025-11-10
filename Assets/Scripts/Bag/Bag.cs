@@ -258,6 +258,20 @@ public abstract class Bag
         return result;
     }
 
+    public List<Card> GetAllCards()
+    {
+        var result = new List<Card>();
+
+        foreach (var slot in Slots)
+        {
+            if (slot.IsEmpty) continue;
+
+            result.AddRange(slot.Cards);
+        }
+
+        return result;
+    }
+
     /// <summary>
     /// 根据tag查找卡牌
     /// </summary>

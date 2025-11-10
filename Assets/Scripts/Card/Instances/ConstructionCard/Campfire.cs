@@ -126,23 +126,13 @@ public class Campfire : ConstructionCard
         stateMachine.ChangeState("未点燃");
     }
 
-    private List<Card> temp = new();
-
     /// <summary>
     /// 点燃时每回合触发
     /// </summary>
     private void WhileBurning()
     {
-        temp.Clear();
-
-        // 记录所有内容物
-        foreach (var slot in innerContents.bag.Slots)
-        {
-            temp.AddRange(slot.Cards);
-        }
-
         // 内容物增加烹饪进度
-        foreach (var card in temp)
+        foreach (var card in innerContents.GetAllCards())
         {
             card.TryGetComponent(out CookComponent cook);
             cook.Cook();
@@ -152,8 +142,6 @@ public class Campfire : ConstructionCard
                 timer.SetValue(cook.leftCookTime);
             }
         }
-
-        temp.Clear();
     }
 
     private bool ContentFilter(Card c, out string s)

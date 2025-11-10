@@ -124,8 +124,7 @@ public class EntityAggroCollection
 
     public void RemoveUnavailableItems()
     {
-        var temp = sortedSet.ToList();
-        foreach (var item in temp)
+        foreach (var item in sortedSet.ToList())
         {
             // 如果仇恨目标已不存在
             if (!GlobalDataManager.Instance.ExistsEntity(item.Target))
