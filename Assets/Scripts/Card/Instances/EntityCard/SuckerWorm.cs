@@ -32,7 +32,7 @@ public class SuckerWorm : EntityCard
     {
         // 吸盘蠕虫会将距离其[0,5]的部分实体单位加入仇恨列表，优先级8，持续时间15分钟。
         // 包括以下单位：麦麦、食果鲀、裙水母、狮子水母、老鼠
-        if (potentialAggroEntityTypes.Contains(entity.GetType()) && DistanceTo(entity) > 5)
+        if (potentialAggroEntityTypes.Contains(entity.GetType()) && DistanceTo(entity) <= 5)
         {
             AddAggro(entity, 8, 15);
         }
