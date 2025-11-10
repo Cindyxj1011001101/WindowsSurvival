@@ -68,25 +68,13 @@ public abstract class Bag
     }
 
     /// <summary>
-    /// 获取放有同类卡牌的slot
-    /// </summary>
-    /// <param name="ascending">true: 按照堆叠数量升序，false: 按照堆叠数量降序</param>
-    /// <returns></returns>
-    public List<SlotCards> GetSlotsByCardName(string cardName, bool ascending = true)
-    {
-        var result = Slots.Where(s => s.ContainsByCardName(cardName)).ToList();
-        result.Sort((a, b) => ascending ? a.StackNum - b.StackNum : b.StackNum - a.StackNum);
-        return result;
-    }
-
-    /// <summary>
     /// 获取放有相同卡牌的slot
     /// </summary>
     /// <param name="ascending">true: 按照堆叠数量升序，false: 按照堆叠数量降序</param>
     /// <returns></returns>
     public List<SlotCards> GetSlotsByCardId(string cardId, bool ascending = true)
     {
-        var result = Slots.Where(s => s.ContainsByCardName(cardId)).ToList();
+        var result = Slots.Where(s => s.ContainsByCardId(cardId)).ToList();
         result.Sort((a, b) => ascending ? a.StackNum - b.StackNum : b.StackNum - a.StackNum);
         return result;
     }
