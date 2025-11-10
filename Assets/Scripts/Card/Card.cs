@@ -114,10 +114,31 @@ public abstract class Card : IComparable<Card>
 
     [JsonIgnore]
     public CardSlot Slot => SlotCards?.CardSlot;
-    #endregion
-    public virtual void OnAdd(Bag bag) { }
-    public virtual void OnRemove(Bag bag) { }
 
+    // 卡牌的临时位置，用来处理从临时位置处发出一张卡牌的动效，例如从详情窗口的slot处
+    private Transform transform;
+
+    [JsonIgnore]
+    public Transform Transform
+    {
+        get
+        {
+            if (transform != null) return transform;
+
+            if (Slot != null) return Slot.transform;
+
+            if (Bag is InnerBag innerBag && innerBag.BelongedCard.Slot != null) return innerBag.BelongedCard.Slot.transform;
+
+            return null;
+        }
+        set
+        {
+            transform = value;
+        }
+    }
+    #endregion
+
+    #region BasicMethod
     public void SetCardId(string cardId)
     {
         CardId = cardId;
@@ -127,6 +148,92 @@ public abstract class Card : IComparable<Card>
     {
         SlotCards = slotCards;
     }
+
+    public virtual void OnAdd(Bag bag) { }
+    public virtual void OnRemove(Bag bag) { }
+
+    /// <summary>
+    /// 进入当前环境时（如玩家进入该卡牌所在地点）（通常用于播放卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnEnterEnvironment() { }
+
+    /// <summary>
+    /// 离开当前环境时（如玩家离开该卡牌所在地点）
+    /// </summary>
+    public virtual void OnLeaveEnvironment() { }
+
+    /// <summary>
+    /// 打开卡牌详情时（通常用于调大卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnDetailOpen() { }
+
+    /// <summary>
+    /// 关闭卡牌详情时（通常用于调小卡牌对应的循环音）
+    /// </summary>
+    public virtual void OnDetailClose() { }
+
+    public int CompareTo(Card other)
+    {
+        if (other.GetType() != GetType()) return 0;
+        if (TryGetComponent<FreshnessComponent>(out var a))
+        {
+            // 新鲜度低的优先
+            other.TryGetComponent<FreshnessComponent>(out var o);
+            return Mathf.CeilToInt(a.value - o.value);
+        }
+        else if (TryGetComponent<ProgressComponent>(out var b))
+        {
+            // 产物进度高的优先
+            other.TryGetComponent<ProgressComponent>(out var o);
+            return Mathf.CeilToInt(o.value - b.value);
+        }
+        else if (TryGetComponent<DurabilityComponent>(out var c))
+        {
+            // 耐久度低的优先
+            other.TryGetComponent<DurabilityComponent>(out var o);
+            return Mathf.CeilToInt(c.value - o.value);
+        }
+        else if (other.TryGetComponent<PlantGrowthComponent>(out var p))
+        {
+            // 生长度高的优先
+            other.TryGetComponent<PlantGrowthComponent>(out var o);
+            return Mathf.CeilToInt(o.value - p.value);
+        }
+        else if (other.TryGetComponent<GrowthComponent>(out var g))
+        {
+            // 生长度高的优先
+            other.TryGetComponent<GrowthComponent>(out var o);
+            return Mathf.CeilToInt(o.value - g.value);
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine($"卡牌名称: {CardName}");
+        sb.AppendLine($"卡牌描述: {CardDesc}");
+        sb.AppendLine($"卡牌类型: {CardType}");
+        sb.AppendLine($"最大堆叠数: {MaxStackNum}");
+        sb.AppendLine($"可移动: {Moveable}");
+        sb.AppendLine($"重量: {Weight}");
+        sb.AppendLine($"标签: {string.Join(", ", Tags)}");
+        sb.AppendLine($"事件数量: {Events.Count}");
+        foreach (var ev in Events)
+        {
+            sb.AppendLine($"  - 事件名称: {ev.Name}");
+        }
+        sb.AppendLine($"组件数量: {components.Count}");
+        foreach (var kvp in components)
+        {
+            sb.AppendLine($"  - 组件类型: {kvp.Key.Name}, 实例: {kvp.Value}");
+        }
+        return sb.ToString();
+    }
+    #endregion
 
     #region Init
     private bool init = false; // 是否已初始化
@@ -409,7 +516,7 @@ public abstract class Card : IComparable<Card>
 
     #endregion
 
-    #region 拖动交互
+    #region QuickInteract
     /// <summary>
     /// 能否拖动交互
     /// </summary>
@@ -428,110 +535,6 @@ public abstract class Card : IComparable<Card>
     /// <param name="count">需要快捷交互的卡牌数量</param>
     public virtual void QuickIneract(SlotCards slot, int count, out string tip) { tip = string.Empty; }
     #endregion
-
-    /// <summary>
-    /// 进入当前环境时（如玩家进入该卡牌所在地点）（通常用于播放卡牌对应的循环音）
-    /// </summary>
-    public virtual void OnEnterEnvironment() { }
-
-    /// <summary>
-    /// 离开当前环境时（如玩家离开该卡牌所在地点）
-    /// </summary>
-    public virtual void OnLeaveEnvironment() { }
-
-    /// <summary>
-    /// 打开卡牌详情时（通常用于调大卡牌对应的循环音）
-    /// </summary>
-    public virtual void OnDetailOpen() { }
-
-    /// <summary>
-    /// 关闭卡牌详情时（通常用于调小卡牌对应的循环音）
-    /// </summary>
-    public virtual void OnDetailClose() { }
-
-    public int CompareTo(Card other)
-    {
-        if (other.GetType() != GetType()) return 0;
-        if (TryGetComponent<FreshnessComponent>(out var a))
-        {
-            // 新鲜度低的优先
-            other.TryGetComponent<FreshnessComponent>(out var o);
-            return Mathf.CeilToInt(a.value - o.value);
-        }
-        else if (TryGetComponent<ProgressComponent>(out var b))
-        {
-            // 产物进度高的优先
-            other.TryGetComponent<ProgressComponent>(out var o);
-            return Mathf.CeilToInt(o.value - b.value);
-        }
-        else if (TryGetComponent<DurabilityComponent>(out var c))
-        {
-            // 耐久度低的优先
-            other.TryGetComponent<DurabilityComponent>(out var o);
-            return Mathf.CeilToInt(c.value - o.value);
-        }
-        else if (other.TryGetComponent<PlantGrowthComponent>(out var p))
-        {
-            // 生长度高的优先
-            other.TryGetComponent<PlantGrowthComponent>(out var o);
-            return Mathf.CeilToInt(o.value - p.value);
-        }
-        else if (other.TryGetComponent<GrowthComponent>(out var g))
-        {
-            // 生长度高的优先
-            other.TryGetComponent<GrowthComponent>(out var o);
-            return Mathf.CeilToInt(o.value - g.value);
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    public override string ToString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.AppendLine($"卡牌名称: {CardName}");
-        sb.AppendLine($"卡牌描述: {CardDesc}");
-        sb.AppendLine($"卡牌类型: {CardType}");
-        sb.AppendLine($"最大堆叠数: {MaxStackNum}");
-        sb.AppendLine($"可移动: {Moveable}");
-        sb.AppendLine($"重量: {Weight}");
-        sb.AppendLine($"标签: {string.Join(", ", Tags)}");
-        sb.AppendLine($"事件数量: {Events.Count}");
-        foreach (var ev in Events)
-        {
-            sb.AppendLine($"  - 事件名称: {ev.Name}");
-        }
-        sb.AppendLine($"组件数量: {components.Count}");
-        foreach (var kvp in components)
-        {
-            sb.AppendLine($"  - 组件类型: {kvp.Key.Name}, 实例: {kvp.Value}");
-        }
-        return sb.ToString();
-    }
-
-    // 卡牌的临时位置，用来处理从临时位置处发出一张卡牌的动效，例如从详情窗口的slot处
-    private Transform transform;
-
-    [JsonIgnore]
-    public Transform Transform
-    {
-        get
-        {
-            if (transform != null) return transform;
-
-            if (Slot != null) return Slot.transform;
-
-            if (Bag is InnerBag innerBag && innerBag.BelongedCard.Slot != null) return innerBag.BelongedCard.Slot.transform;
-
-            return null;
-        }
-        set
-        {
-            transform = value;
-        }
-    }
 
     #region AddCard
     public Tween AddCard(string cardId, bool toPlayerBag, out Card card)
