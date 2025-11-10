@@ -1,5 +1,6 @@
 ﻿using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -57,4 +58,13 @@ public static class ExtensionClass
     public static void MoveTowards(this IEntity target, IEntity other, float dist, bool stopAfterReach = true) => target.Coordinate.MoveTowards(other.Coordinate, dist, stopAfterReach);
     public static void MoveAwayFrom(this IEntity target, IEntity other, float dist) => target.Coordinate.MoveAwayFrom(other.Coordinate, dist);
     public static bool IsInSameLocation(this IEntity target, IEntity other) => target.Coordinate.IsInSameLocation(other.Coordinate);
+    
+    public static T GetRandomly<T>(this List<T> target, bool repeatable = true)
+    {
+        var idx = Random.Range(0, target.Count);
+        var result = target[idx];
+        if (!repeatable)
+            target.RemoveAt(idx);
+        return result;
+    }
 }

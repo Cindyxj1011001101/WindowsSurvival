@@ -33,9 +33,7 @@ public class RatInfestation : GameEvent
         for (int i = 0; i < destroyCount; i++)
         {
             // 随机选择一张食物卡牌进行破坏
-            var index = Random.Range(0, foodCards.Count);
-            var cardToDestroy = foodCards[index];
-            foodCards.RemoveAt(index);
+            var cardToDestroy = foodCards.GetRandomly(false);
             cardToDestroy.DestroyThis();
 
             // 记录被破坏的卡牌数量
