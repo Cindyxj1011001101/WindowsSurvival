@@ -751,5 +751,7 @@ public abstract class Card : IComparable<Card>
         if (!string.IsNullOrEmpty(sound) && SoundManager.Instance != null)
             SoundManager.Instance.PlaySound(sound, randomVolume);
     }
+
+    protected bool IsInSameBag(Card other) => Bag != null && Bag == other.Bag;
     #endregion
 }

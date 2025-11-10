@@ -54,9 +54,6 @@ public static class ExtensionClass
     }
 
     public static float DistanceTo(this IEntity target, IEntity other) => target.Coordinate.DistanceTo(other.Coordinate);
-    public static void Move(this IEntity target, float dist) => target.Coordinate.Move(dist);
-    public static void MoveTowards(this IEntity target, IEntity other, float dist, bool stopAfterReach = true) => target.Coordinate.MoveTowards(other.Coordinate, dist, stopAfterReach);
-    public static void MoveAwayFrom(this IEntity target, IEntity other, float dist) => target.Coordinate.MoveAwayFrom(other.Coordinate, dist);
     public static bool IsInSameLocation(this IEntity target, IEntity other) => target.Coordinate.IsInSameLocation(other.Coordinate);
     
     public static T GetRandomly<T>(this List<T> target, bool repeatable = true)

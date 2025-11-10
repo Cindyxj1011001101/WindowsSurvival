@@ -23,6 +23,8 @@ public abstract class CardComponent
     {
         BelongedCard = card;
     }
+
+    protected void RefreshSlot() => BelongedCard?.RefreshSlot();
 }
 
 #region 连续值组件
@@ -43,20 +45,20 @@ public abstract class ContinuousValueComponent : CardComponent
     {
         value += delta;
         value = Mathf.Clamp(value, 0, maxValue);
-        BelongedCard.RefreshSlot();
+        RefreshSlot();
     }
 
     public void SetValue(float value)
     {
         this.value = value;
-        BelongedCard.RefreshSlot();
+        RefreshSlot();
     }
 
     public void SetMaxValue(float maxValue)
     {
         this.maxValue = maxValue;
         value = Mathf.Clamp(value, 0, maxValue);
-        BelongedCard.RefreshSlot();
+        RefreshSlot();
     }
 
     public void ResetValue()
@@ -608,7 +610,7 @@ public class StateMachineComponent : CardComponent
         if (currentStateName == newStateName) return;
         
         currentStateName = newStateName;
-        BelongedCard.RefreshSlot();
+        RefreshSlot();
     }
 }
 #endregion
@@ -914,7 +916,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -oxygenConsumptionWhileBurning);
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, coProductionWhileBurning);
 
-        BelongedCard.RefreshSlot();
+        RefreshSlot();
     }
 
     /// <summary>
@@ -930,7 +932,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, oxygenConsumptionWhileBurning);
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, -coProductionWhileBurning);
 
-        BelongedCard.RefreshSlot();
+        RefreshSlot();
     }
 
     public bool CanQuickInteract(Card card)
@@ -1050,12 +1052,33 @@ public class CoordinateComponent : CardComponent
     public Coordinate coordinate = new();
 
     public float initialPosition;
+    
+    [JsonIgnore] public float Position => coordinate.Position;
+    [JsonIgnore] public EnvironmentBag Location => coordinate.Location;
 
     public CoordinateComponent() { }
 
     public CoordinateComponent(float initialPosition)
     {
         this.initialPosition = initialPosition;
+    }
+
+    public float DistanceTo(IEntity other) => coordinate.DistanceTo(other.Coordinate);
+    public bool IsInSameLocation(IEntity other) => coordinate.IsInSameLocation(other.Coordinate);
+    public void Move(float dist)
+    {
+        coordinate.Move(dist);
+        RefreshSlot();
+    }
+    public void MoveTowards(IEntity other, float dist, bool stopAfterReach = true)
+    {
+        coordinate.MoveTowards(other.Coordinate, dist, stopAfterReach);
+        RefreshSlot();
+    }
+    public void MoveAwayFrom(IEntity other, float dist)
+    {
+        coordinate.MoveAwayFrom(other.Coordinate, dist);
+        RefreshSlot();
     }
 }
 #endregion
@@ -1105,7 +1128,7 @@ public class WeaponComponent : CardComponent
 
     public bool WithinAttackRange(IEntity target)
     {
-        var dist = target.Coordinate.DistanceTo(Player.Instance.Coordinate);
+        var dist = target.DistanceTo(Player.Instance);
         return dist <= maxAtkDist && dist >= minAtkDist;
     }
 }

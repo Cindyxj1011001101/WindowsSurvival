@@ -68,7 +68,7 @@ public class InnerBag : Bag
 
         component.onAddCard?.Invoke(card);
 
-        component.BelongedCard.RefreshSlot();
+        component.RefreshSlot();
     }
 
     public override void OnRemoveCard(Card card)
@@ -80,6 +80,6 @@ public class InnerBag : Bag
 
         component.onRemoveCard?.Invoke(card);
 
-        component.BelongedCard.RefreshSlot();
+        component.RefreshSlot();
     }
 }

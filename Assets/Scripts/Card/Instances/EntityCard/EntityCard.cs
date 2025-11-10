@@ -251,4 +251,24 @@ public abstract class EntityCard : Card, IEntity
     /// </summary>
     protected virtual void TryAddAggro(IEntity entity) { }
     #endregion
+
+    #region 辅助方法
+    public float DistanceTo(IEntity other) => coordinate.DistanceTo(other);
+    public bool IsInSameLocation(IEntity other) => coordinate.IsInSameLocation(other);
+    public void Move(float dist) => coordinate.Move(dist);
+    public void MoveTowards(IEntity other, float dist, bool stopAfterReach = true) => coordinate.MoveTowards(other, dist, stopAfterReach);
+    public void MoveAwayFrom(IEntity other, float dist) => coordinate.MoveAwayFrom(other, dist);
+    #endregion
+
+    #region 行为
+    /// <summary>
+    /// 普通攻击
+    /// </summary>
+    /// <param name="target">目标</param>
+    /// <param name="atkMultiplier">攻击倍率</param>
+    protected void NormalAttack(IEntity target, float atkMultiplier = 1.0f)
+    {
+        target.TakeDamage(atk * atkMultiplier, this);
+    }
+    #endregion
 }

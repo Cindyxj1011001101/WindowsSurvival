@@ -97,13 +97,13 @@
 
     private bool IsPlayerNear()
     {
-        return Player.Instance.Coordinate.DistanceTo(coordinate.coordinate) <= MAX_AVAILABLE_DIST;
+        return coordinate.DistanceTo(Player.Instance) <= MAX_AVAILABLE_DIST;
     }
 
     private float GetNearestAvailablePosition()
     {
         var playerPos = Player.Instance.Coordinate.Position;
-        var passagePos = coordinate.coordinate.Position;
+        var passagePos = coordinate.Position;
         return playerPos > passagePos ? passagePos + MAX_AVAILABLE_DIST : passagePos - MAX_AVAILABLE_DIST;
     }
 }
