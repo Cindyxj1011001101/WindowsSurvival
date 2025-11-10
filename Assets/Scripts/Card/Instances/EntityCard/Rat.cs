@@ -20,7 +20,7 @@ public class Rat : EntityCard
     {
         cache = null;
         var target = GetAggroTarget();
-        var isInSameLocation = IsInSameLocation(target.Target);
+        var isInSameLocation = target != null && IsInSameLocation(target.Target);
 
         // 与仇恨优目标处于同一地点
         if (target != null && isInSameLocation)

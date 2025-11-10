@@ -49,7 +49,7 @@ public class SuckerWorm : EntityCard
     {
         cache = null;
         var target = GetAggroTarget();
-        var isInSameLocation = IsInSameLocation(target.Target);
+        var isInSameLocation = target != null && IsInSameLocation(target.Target);
 
         // 与仇恨优先级 > 7 的目标处于同一地点
         if (target != null && isInSameLocation && target.Priority > 7)
