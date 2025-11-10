@@ -1,4 +1,7 @@
-﻿using UnityEngine.Events;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.Events;
 
 public class UpdateManager : IManager
 {
@@ -7,10 +10,13 @@ public class UpdateManager : IManager
     public UnityEvent GameEventUpdate { get; private set; } = new();
     public UnityEvent PlayerUpdate { get; private set; } = new();
     public UnityEvent EnvironmentUpdate { get; private set; } = new();
-    public UnityEvent CardUpdate { get; private set; } = new();
     public UnityEvent PopulationUpdate { get; private set; } = new();
     public UnityEvent TechnologyUpdate { get; private set; } = new();
     public UnityEvent SunlightUpdate { get; private set; } = new();
+
+    private SortedList<int, UnityAction> sortedCardUpdateList = new();
+    private int currentOrder = 0;
+
 
     public void Init()
     {
@@ -23,12 +29,35 @@ public class UpdateManager : IManager
         EventManager.Instance.RemoveListener(EventType.Update, OnUpdate);
     }
 
+    public void AddCardUpdateListener(ref int order, UnityAction update)
+    {
+        if (order <= 0)
+            order = currentOrder + 1;
+        
+        sortedCardUpdateList.Add(order, update);
+        currentOrder = Mathf.Max(currentOrder, order);
+    }
+
+    public void RemoveCardUpdateListener(int order)
+    {
+        sortedCardUpdateList.Remove(order);
+    }
+
+    private void CardUpdate()
+    {
+        foreach (var update in sortedCardUpdateList.Values.ToList())
+        {
+            update();
+        }
+    }
+
     private void OnUpdate()
     {
         EventManager.Instance.TriggerEvent(EventType.UpdateBegin);
         // 顺序很重要
         TechnologyUpdate.Invoke();
-        CardUpdate.Invoke();
+        //CardUpdate.Invoke();
+        CardUpdate();
         EnvironmentUpdate.Invoke();
         PlayerUpdate.Invoke();
         PopulationUpdate.Invoke();
@@ -38,10 +67,11 @@ public class UpdateManager : IManager
 
     private void Clear()
     {
+        sortedCardUpdateList.Clear();
         GameEventUpdate.RemoveAllListeners();
         PlayerUpdate.RemoveAllListeners();
         EnvironmentUpdate.RemoveAllListeners();
-        CardUpdate.RemoveAllListeners();
+        //CardUpdate.RemoveAllListeners();
         PopulationUpdate.RemoveAllListeners();
         TechnologyUpdate.RemoveAllListeners();
         SunlightUpdate.RemoveAllListeners();

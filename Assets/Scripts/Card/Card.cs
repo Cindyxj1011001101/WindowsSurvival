@@ -276,7 +276,8 @@ public abstract class Card : IComparable<Card>
 
         // 监听事件
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
-        UpdateManager.Instance.CardUpdate.AddListener(Update);
+        //UpdateManager.Instance.CardUpdate.AddListener(Update);
+        UpdateManager.Instance.AddCardUpdateListener(ref updateOrder, Update);
 
         // 初始化内容物
         InitInnerContents();
@@ -304,6 +305,8 @@ public abstract class Card : IComparable<Card>
     #endregion
 
     #region Update
+    [JsonProperty] protected int updateOrder = -1;
+
     [JsonProperty] protected bool isUpdatePaused = false; // 是否暂停每回合更新
 
     private void Update()
@@ -362,7 +365,8 @@ public abstract class Card : IComparable<Card>
         OnLeaveEnvironment();
 
         EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
-        UpdateManager.Instance.CardUpdate.RemoveListener(Update);
+        //UpdateManager.Instance.CardUpdate.RemoveListener(Update);
+        UpdateManager.Instance.RemoveCardUpdateListener(updateOrder);
     }
 
     protected virtual void OnDestroy() { }
