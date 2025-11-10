@@ -11,36 +11,29 @@ public class GlobalDataManager : IManager
     // 不需要持久化，这个是运行时数据
     private Dictionary<string, int> cardNumDict = new(); // 卡牌数量
 
-    public void AddCardNum(string cardId, int num = 1)
+    private void IncreaseCardNum(string cardId)
     {
         if (cardNumDict.ContainsKey(cardId))
-        {
-            cardNumDict[cardId] += num;
-        }
+            cardNumDict[cardId]++;
         else
-        {
-            cardNumDict.Add(cardId, num);
-        }
+            cardNumDict.Add(cardId, 1);
 
         EventManager.Instance.TriggerEvent(EventType.CardNumChange, (cardId, cardNumDict[cardId]));
     }
 
-    public void ReduceCardNum(string cardId, int num = 1)
+    private void DecreaseCardNum(string cardId)
     {
-        if (cardNumDict.ContainsKey(cardId))
-        {
-            cardNumDict[cardId] -= num;
+        if (!cardNumDict.ContainsKey(cardId)) return;
 
-            EventManager.Instance.TriggerEvent(EventType.CardNumChange, (cardId, cardNumDict[cardId]));
-        }
+        cardNumDict[cardId]--;
+        EventManager.Instance.TriggerEvent(EventType.CardNumChange, (cardId, cardNumDict[cardId]));
     }
 
     public int GetCardNum(string cardId)
     {
         if (cardNumDict.TryGetValue(cardId, out var num))
-        {
             return num;
-        }
+
         return 0;
     }
     #endregion
@@ -48,18 +41,18 @@ public class GlobalDataManager : IManager
     #region 实体记录
     private Dictionary<string, IEntity> allEntities = new();
 
-    public void AddEntity(IEntity entity)
+    public void CreateEntity(IEntity entity)
     {
         if (allEntities.ContainsKey(entity.Uuid)) return;
 
         allEntities.Add(entity.Uuid, entity);
     }
 
-    public void RemoveEntity(string uuid)
+    public void DestroyEntity(IEntity entity)
     {
-        if (!allEntities.ContainsKey(uuid)) return;
+        if (!allEntities.ContainsKey(entity.Uuid)) return;
 
-        allEntities.Remove(uuid);
+        allEntities.Remove(entity.Uuid);
     }
 
     public IEntity GetEntity(string uuid)
@@ -76,6 +69,39 @@ public class GlobalDataManager : IManager
     }
     #endregion
 
+    #region 卡牌记录
+    private Dictionary<string, Card> allCards = new();
+
+    public void CreateCard(Card card)
+    {
+        if (allCards.ContainsKey(card.Uuid)) return;
+
+        allCards.Add(card.Uuid, card);
+        IncreaseCardNum(card.CardId);
+    }
+
+    public void DestroyCard(Card card)
+    {
+        if (!allCards.ContainsKey(card.Uuid)) return;
+
+        allCards.Remove(card.Uuid);
+        DecreaseCardNum(card.CardId);
+    }
+
+    public Card GetCard(string uuid)
+    {
+        if (allCards.ContainsKey(uuid))
+            return allCards[uuid];
+
+        return null;
+    }
+
+    public bool ExistsCard(string uuid)
+    {
+        return allCards.ContainsKey(uuid);
+    }
+    #endregion
+
     public void Init()
     {
         GlobalData = GameDataManager.Instance.GlobalData;
@@ -86,6 +112,7 @@ public class GlobalDataManager : IManager
     {
         cardNumDict.Clear();
         allEntities.Clear();
+        allCards.Clear();
         GlobalData = null;
         EventManager.Instance.RemoveListener(EventType.AnotherDay, OnAnotherDay);
     }

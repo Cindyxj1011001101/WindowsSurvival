@@ -16,6 +16,9 @@ public abstract class Card : IComparable<Card>
     public string CardId { get; private set; } // 卡牌ID
 
     [JsonProperty]
+    public string Uuid { get; private set; } // Uuid
+
+    [JsonProperty]
     protected Dictionary<Type, CardComponent> components = new();
 
     [JsonIgnore]
@@ -134,7 +137,11 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     public void LateConstrcutor()
     {
+        // 设置uuid
+        Uuid = Guid.NewGuid().ToString();
+        // 分配组件值
         AssignComponentValues();
+        // 派生类的构造逻辑
         OnLateConstructor();
     }
 
@@ -158,7 +165,7 @@ public abstract class Card : IComparable<Card>
         AssignComponentValues();
 
         // 记录全局数量
-        GlobalDataManager.Instance.AddCardNum(CardId);
+        GlobalDataManager.Instance.CreateCard(this);
 
         // 监听事件
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
@@ -239,13 +246,13 @@ public abstract class Card : IComparable<Card>
 
         Destroyed = true;
 
-        OnDestroy();
+        GlobalDataManager.Instance.DestroyCard(this);
 
         SlotCards.RemoveCard(this);
 
-        OnLeaveEnvironment();
+        OnDestroy();
 
-        GlobalDataManager.Instance.ReduceCardNum(CardId);
+        OnLeaveEnvironment();
 
         EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
         UpdateManager.Instance.CardUpdate.RemoveListener(Update);

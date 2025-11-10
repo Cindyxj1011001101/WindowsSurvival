@@ -32,7 +32,7 @@ public class Player : IEntity, IManager
         Coordinate = data.coordinate;
 
         // 加入到实体的全局记录
-        GlobalDataManager.Instance.AddEntity(this);
+        GlobalDataManager.Instance.CreateEntity(this);
     }
 
     public void Reset()
