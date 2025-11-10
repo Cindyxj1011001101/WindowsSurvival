@@ -18,7 +18,7 @@ public class EntityAggro : IComparable<EntityAggro>
     [JsonIgnore] public string TargetUuid => targetUuid;
     [JsonIgnore] public int Priority => priority;
     [JsonIgnore] public bool IsRemaining => isPermanent || remainingMinutes > 0;
-    [JsonIgnore] public IEntity Target => GlobalDataManager.Instance.GetEntity(targetUuid);
+    [JsonIgnore] public IEntity Target => GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
 
     public EntityAggro() { }
 

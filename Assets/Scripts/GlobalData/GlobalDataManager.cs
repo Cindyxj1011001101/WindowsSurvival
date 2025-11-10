@@ -55,7 +55,7 @@ public class GlobalDataManager : IManager
         allEntities.Remove(entity.Uuid);
     }
 
-    public IEntity GetEntity(string uuid)
+    public IEntity GetEntityByUuid(string uuid)
     {
         if (allEntities.ContainsKey(uuid))
             return allEntities[uuid];
@@ -88,7 +88,7 @@ public class GlobalDataManager : IManager
         DecreaseCardNum(card.CardId);
     }
 
-    public Card GetCard(string uuid)
+    public Card GetCardByUuid(string uuid)
     {
         if (allCards.ContainsKey(uuid))
             return allCards[uuid];

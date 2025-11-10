@@ -12,13 +12,12 @@ public abstract class EntityCard : Card, IEntity
     protected BehavioralTendency behavioralTendency => entity.behavioralTendency;
 
     [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;                 // 坐标
-    [JsonProperty] public string Uuid { get; private set; }                             // 实体唯一标识
     [JsonProperty] protected Dictionary<string, EntityIntention> intentions = new();    // 所有可能的意图
     [JsonProperty] private string currentIntention;                                     // 当前意图
     [JsonProperty] private int aiRefreshCooldown = 0;                                   // ai刷新冷却
     [JsonProperty] private EntityAggroCollection aggroCollection = new();               // 仇恨列表
 
-    private EntityIntention CurrentIntention
+    protected EntityIntention CurrentIntention
     {
         get
         {
@@ -32,10 +31,6 @@ public abstract class EntityCard : Card, IEntity
 
     protected override void OnLateConstructor()
     {
-        // 设置uuid
-        if (string.IsNullOrEmpty(Uuid))
-            Uuid = System.Guid.NewGuid().ToString();
-
         // 添加坐标组件
         coordinate = new();
         AddComponent(coordinate);
@@ -47,7 +42,7 @@ public abstract class EntityCard : Card, IEntity
     protected override void OnInit()
     {
         // 记录到全局数据中
-        GlobalDataManager.Instance.AddEntity(this);
+        GlobalDataManager.Instance.CreateEntity(this);
 
         // 初始化仇恨
         aggroCollection.Init(this);
@@ -67,7 +62,7 @@ public abstract class EntityCard : Card, IEntity
     {
         intentions.Clear();
         aggroCollection.Clear();
-        GlobalDataManager.Instance.RemoveEntity(Uuid);
+        GlobalDataManager.Instance.DestroyEntity(this);
         EventManager.Instance.RemoveListener(EventType.AddOneMinute, EntityUpdate);
         EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
@@ -105,14 +100,14 @@ public abstract class EntityCard : Card, IEntity
     /// <summary>
     /// 得到优先级最高的意图
     /// </summary>
-    protected abstract string GetHighestPriorityIntention();
+    protected abstract string GetHighestPriorityIntention(out object[] cache);
 
     /// <summary>
     /// 注册该实体的所有可能意图
     /// </summary>
     protected abstract void RegisterIntentions();
 
-    protected void AddIntention(string name, int preparationMinutes, UnityAction action)
+    protected void AddIntention(string name, int preparationMinutes, UnityAction<object[]> action)
     {
         if (!intentions.ContainsKey(name))
         {
@@ -161,7 +156,7 @@ public abstract class EntityCard : Card, IEntity
     private void TryGetNewIntention()
     {
         // 获取最高优先级意图
-        currentIntention = GetHighestPriorityIntention();
+        currentIntention = GetHighestPriorityIntention(out var cache);
 
         // 没有可执行的意图
         if (CurrentIntention == null)
@@ -173,7 +168,7 @@ public abstract class EntityCard : Card, IEntity
         else
         {
             // 开始准备意图
-            CurrentIntention.Prepare();
+            CurrentIntention.Prepare(cache);
         }
     }
 
