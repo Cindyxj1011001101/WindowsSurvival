@@ -100,9 +100,6 @@ public abstract class Card : IComparable<Card>
     public bool IsBigIcon => CardFactory.GetIsBigIcon(CardId);
 
     [JsonIgnore]
-    public bool Destroyed { get; private set; } = false;
-
-    [JsonIgnore]
     /// 是否有循环音效，默认无
     public virtual bool HasLoopSound => false;
 
@@ -311,7 +308,7 @@ public abstract class Card : IComparable<Card>
 
     private void Update()
     {
-        if (isUpdateFreezed || Destroyed) return;
+        if (isUpdateFreezed || Locked || Destroyed) return;
 
         // 更新组件
         foreach (var component in components.Values)
@@ -324,7 +321,7 @@ public abstract class Card : IComparable<Card>
 
     private void OnUpdateBegin()
     {
-        if (isUpdateFreezed || Destroyed) return;
+        if (isUpdateFreezed || Locked || Destroyed) return;
 
         foreach (var component in components.Values)
         {
@@ -337,19 +334,33 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     protected virtual void OnUpdate() { }
 
-    public void FreezeUpdate()
+    /// <summary>
+    /// 暂停更新
+    /// </summary>
+    public void FreezeUpdate(bool includeInnerContents = true)
     {
         isUpdateFreezed = true;
+        if (includeInnerContents)
+            // 内容物也暂停更新
+            innerContents?.FreezeUpdate();
     }
 
-    public void UnfreezeUpdate()
+    /// <summary>
+    /// 恢复更新
+    /// </summary>
+    public void UnfreezeUpdate(bool includeInnerContents = true)
     {
         isUpdateFreezed = false;
+        if (includeInnerContents)
+            innerContents?.UnfreezeUpdate();
     }
-
     #endregion
 
     #region Destroy
+    [JsonIgnore] public bool Destroyed { get; private set; } = false;
+
+    [JsonIgnore] public bool Locked { get; private set; } = false;
+
     public void DestroyThis()
     {
         if (Destroyed) return;
@@ -370,6 +381,25 @@ public abstract class Card : IComparable<Card>
     }
 
     protected virtual void OnDestroy() { }
+
+    /// <summary>
+    /// 锁定这张卡牌，使其暂停更新，并且不可以作为其他卡牌的选择对象
+    /// 一般是配合DestroyThis使用。某些卡牌事件需要在时间流逝结束后对当前卡牌进行一些操作
+    /// 为了避免在时间流逝过程中，这张卡牌受到其他卡牌的影响，需要在时间流逝开始前锁定它
+    /// </summary>
+    public void LockThis(bool includeInnerContents = true)
+    {
+        Locked = true;
+        if (includeInnerContents)
+            innerContents?.LockThis();
+    }
+
+    public void UnlockThis(bool includeInnerContents = true)
+    {
+        Locked = false;
+        if (includeInnerContents)
+            innerContents?.UnlockThis();
+    }
     #endregion
 
     #region Component
@@ -724,29 +754,34 @@ public abstract class Card : IComparable<Card>
     {
         tip = string.Empty;
         DestroyThis();
-        ApplyEventEffects(e);
+        ApplyEventEffects(e, null);
     }
 
     protected void EasyEvent_DontDestroy(out string tip, CardEvent e)
     {
         tip = string.Empty;
-        ApplyEventEffects(e);
+        ApplyEventEffects(e, null);
     }
 
     protected void EasyEvent_Use(out string tip, CardEvent e)
     {
         tip = string.Empty;
         Use();
-        ApplyEventEffects(e);
+        ApplyEventEffects(e, null);
     }
 
-    protected void ApplyEventEffects(CardEvent e)
+    protected void ApplyEventEffects(CardEvent e, UnityAction onEnd = null)
     {
+        LockThis();
         // 应用状态变化
         GameManager.Instance.CurEnvironmentBag.ApplyEnvStateChanges(e.GetEnvStateChanges());
         StateManager.Instance.ApplyPlayerStateChanges(e.GetPlayerStateChanges());
         // 消耗时间
-        TimeManager.Instance.AddTime(e.GetTimeChange());
+        TimeManager.Instance.AddTime(e.GetTimeChange(), () =>
+        {
+            UnlockThis();
+            onEnd?.Invoke();
+        });
     }
 
     protected void PlaySound(string sound, bool randomVolume = false)

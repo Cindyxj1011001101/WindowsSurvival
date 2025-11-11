@@ -393,6 +393,16 @@ public class InnerContentsComponent : CardComponent
         ForEachCard(c => c.UnfreezeUpdate());
     }
 
+    public void LockThis()
+    {
+        ForEachCard(c => c.LockThis());
+    }
+
+    public void UnlockThis()
+    {
+        ForEachCard(c => c.UnlockThis());
+    }
+
     public void ForEachCard(UnityAction<Card> action)
     {
         foreach (var slot in bag.Slots)
