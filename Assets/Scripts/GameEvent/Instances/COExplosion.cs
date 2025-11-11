@@ -21,11 +21,13 @@ public class COExplosion : GameEvent
 
     protected override bool CanTriggerThisEvent()
     {
-        var coLevel = GameManager.Instance.CurEnvironmentBag.StateDict[EnvironmentStateEnum.COLevel].CurValue;
-        fireSources = GameManager.Instance.CurEnvironmentBag.FindCards(c =>
-        {
-            return c.TryGetComponent<FuelStorageComponent>(out var fuelStorage) && fuelStorage.isBurning;
-        });
+        var env = GameManager.Instance.CurEnvironmentBag;
+
+        if (!env.StateDict.TryGetValue(EnvironmentStateEnum.COLevel, out var value)) return false;
+
+        var coLevel = value.CurValue;
+        fireSources = env.FindCards(c => c.TryGetComponent<FuelStorageComponent>(out var fuelStorage) && fuelStorage.isBurning);
+
         return coLevel >= CO_LEVEL_THRESHOLD && !fireSources.IsNullOrEmpty(); // 当一氧化碳浓度高且有燃烧源时，事件可以触发
     }
 
