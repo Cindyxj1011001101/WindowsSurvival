@@ -192,12 +192,12 @@ public class MFXUtility
         mainSeq.Join(moveSeq);
 
         var rotateSeq = DOTween.Sequence();
-        rotateSeq.Append(transform.DOLocalRotate(Vector3.up * 90, .25f).OnComplete(() =>
+        rotateSeq.Append(transform.DOScaleX(0, .25f).OnComplete(() =>
         {
             slot.Clear();
             slot.DisplayCard(targetCard, 1, false);
         }));
-        rotateSeq.Append(transform.DOLocalRotate(Vector3.zero, .25f));
+        rotateSeq.Append(transform.DOScaleX(1.15f, .25f));
 
         mainSeq.Join(rotateSeq); // 总时长0.9s
 
