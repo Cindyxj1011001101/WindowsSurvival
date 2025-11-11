@@ -18,6 +18,7 @@ public class SuckerWorm : EntityCard
 
     protected override void OnLateConstructor()
     {
+        base.OnLateConstructor();
         // 自带对玩家的永久仇恨，优先级为7
         AddPermanentAggro(Player.Instance, 7);
     }

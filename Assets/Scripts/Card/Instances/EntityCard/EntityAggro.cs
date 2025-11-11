@@ -82,6 +82,7 @@ public class EntityAggroCollection
         this.belongedEntity = belongedEntity;
         foreach (var e in sortedSet)
         {
+            if (uuidLookup.ContainsKey(e.TargetUuid)) continue;
             uuidLookup.Add(e.TargetUuid, e);
         }
     }
