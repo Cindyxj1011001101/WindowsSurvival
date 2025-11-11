@@ -28,9 +28,8 @@ public class JellyfishSkin : Card
         });
     }
 
-    private void Event_Pickle(out string tip, CardEvent e)
+    private void Event_Pickle(CardEvent e)
     {
-        tip = string.Empty;
         Pickle(GameManager.Instance.PlayerBag.FindCardOfName("盐水"), e);
     }
 
@@ -57,9 +56,8 @@ public class JellyfishSkin : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         Pickle(slot.PeekCard(), Events[1]);
     }
 }

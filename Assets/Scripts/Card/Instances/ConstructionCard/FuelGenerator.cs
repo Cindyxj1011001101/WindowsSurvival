@@ -45,7 +45,7 @@ public class FuelGenerator : ConstructionCard
     {
         if (gameEvent.GetType() != typeof(MagneticStorm) || !fuelStorage.CanExtinguish(out _)) return;
 
-        Extinguish(out _, null);
+        Extinguish(null);
         ShowTip($"受行星磁暴影响，{CardName}已熄灭并停止工作");
     }
 
@@ -70,11 +70,11 @@ public class FuelGenerator : ConstructionCard
     /// <summary>
     /// 点燃时触发
     /// </summary>
-    private void Ignite(out string s, CardEvent e)
+    private void Ignite(CardEvent e)
     {
         PlaySound("点火_02");
 
-        fuelStorage.Ignite(out s);
+        fuelStorage.Ignite();
 
         StateManager.Instance.ChangeElectricityChangeRate(ELECTRICITY_PRODUCTION);
 
@@ -84,9 +84,9 @@ public class FuelGenerator : ConstructionCard
     /// <summary>
     /// 熄灭时触发
     /// </summary>
-    private void Extinguish(out string s, CardEvent e)
+    private void Extinguish(CardEvent e)
     {
-        fuelStorage.Extinguish(out s);
+        fuelStorage.Extinguish();
 
         StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_PRODUCTION);
 
@@ -109,18 +109,18 @@ public class FuelGenerator : ConstructionCard
         return base.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
         var card = slot.PeekCard();
 
         // 添加燃料
         if (fuelStorage.CanQuickInteract(card))
         {
-            fuelStorage.QuickIneract(slot, count, out tip);
+            fuelStorage.QuickIneract(slot, count);
             return;
         }
 
         // 拆毁
-        base.QuickIneract(slot, count, out tip);
+        base.QuickIneract(slot, count);
     }
 }

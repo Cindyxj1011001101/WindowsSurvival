@@ -76,9 +76,8 @@ public class DataTransmissionStation : ConstructionCard
     /// 数据传输
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_Transmit(out string tip, CardEvent e)
+    private void Event_Transmit(CardEvent e)
     {
-        tip = string.Empty;
         TechnologyManager.Instance.AddStudyProcess(28); // 研究进度增加
         GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId); // 使用次数增加
         ApplyEventEffects(e);

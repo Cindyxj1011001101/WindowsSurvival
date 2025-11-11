@@ -22,9 +22,8 @@ public class AquariusFish : Card
         });
     }
 
-    private void Event_CatchByNet(out string tip, CardEvent e)
+    private void Event_CatchByNet(CardEvent e)
     {
-        tip = string.Empty;
         Catch(GameManager.Instance.PlayerBag.FindCardOfName("捞网"), e);
     }
 
@@ -41,9 +40,8 @@ public class AquariusFish : Card
     #endregion
 
     #region 用手捉
-    private void Event_CatchByHand(out string tip, CardEvent e)
+    private void Event_CatchByHand(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e, () =>
         {
             DestroyThis();// 3/4 概率逃跑
@@ -75,9 +73,8 @@ public class AquariusFish : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         Catch(slot.PeekCard(), Events[0]);
     }
 }

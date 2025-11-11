@@ -6,9 +6,8 @@
         return card is SelfHeatingCookingBag s && s.CanCook(this, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         (slot.PeekCard() as SelfHeatingCookingBag).Cook(this);
     }
 }

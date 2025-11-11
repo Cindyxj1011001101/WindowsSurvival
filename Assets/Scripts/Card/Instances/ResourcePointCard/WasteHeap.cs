@@ -19,12 +19,11 @@ public class WasteHeap : Card
         AddCardEvent("用铲子挖", "比用手轻松一些", Event_DigByTool, Judge_DigByTool, () => 15);
     }
 
-    private void Event_Dig(out string tip, CardEvent e)
+    private void Event_Dig(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e, () =>
         {
-            RandomDrop(dropList, out _, 1, () =>
+            RandomDrop(dropList, 1, () =>
             {
                 PlaySound("挖掘废料_01", true);
                 Use();
@@ -32,13 +31,12 @@ public class WasteHeap : Card
         });
     }
 
-    private void DigByTool(Card tool, out string tip, CardEvent e)
+    private void DigByTool(Card tool, CardEvent e)
     {
-        tip = string.Empty;
         tool.Use();
         ApplyEventEffects(e, () =>
         {
-            RandomDrop(dropList, out _, 1, () =>
+            RandomDrop(dropList, 1, () =>
             {
                 PlaySound("挖掘废料_01", true);
                 Use();
@@ -46,9 +44,9 @@ public class WasteHeap : Card
         });
     }
 
-    private void Event_DigByTool(out string tip, CardEvent e)
+    private void Event_DigByTool(CardEvent e)
     {
-        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip, e);
+        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), e);
     }
 
     private bool Judge_DigByTool(out string hint)
@@ -73,8 +71,8 @@ public class WasteHeap : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        DigByTool(slot.PeekCard(), out tip, Events[1]);
+        DigByTool(slot.PeekCard(), Events[1]);
     }
 }

@@ -49,9 +49,8 @@ public class WaterChestnut : PlantCard
         }
     }
 
-    private void Event_Collect(out string tip, CardEvent e)
+    private void Event_Collect(CardEvent e)
     {
-        tip = string.Empty;
         AddPlantGrowth(-100); // 生长进度-100
         ApplyEventEffects(e, () =>
         {
@@ -80,9 +79,8 @@ public class WaterChestnut : PlantCard
         });
     }
 
-    private void Event_DigUp(out string tip, CardEvent e)
+    private void Event_DigUp(CardEvent e)
     {
-        tip = string.Empty;
         DigUp(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), e);
     }
 
@@ -115,9 +113,8 @@ public class WaterChestnut : PlantCard
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         DigUp(slot.PeekCard(), Events[1]);
     }
 }

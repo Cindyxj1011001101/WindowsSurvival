@@ -25,9 +25,8 @@ public class Painkillers : Card
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
     }
 
-    private void Event_Use(out string tip, CardEvent e)
+    private void Event_Use(CardEvent e)
     {
-        tip = string.Empty;
         DestroyThis();
         ApplyEventEffects(e);
         GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId);

@@ -35,9 +35,8 @@ public class GelBottler : Card
         RefreshSlot();
     }
 
-    private void Event_Bottling(out string tip, CardEvent e)
+    private void Event_Bottling(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e, () =>
         {
             Use();

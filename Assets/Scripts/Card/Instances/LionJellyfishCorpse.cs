@@ -25,20 +25,19 @@ public class LionJellyfishCorpse : Card
     }
 
     #region 用刀切割
-    private void PeelByKnife(Card knife, out string tip, CardEvent e)
+    private void PeelByKnife(Card knife, CardEvent e)
     {
-        tip = string.Empty;
         knife.Use();
         ApplyEventEffects(e, () =>
         {
             Use();
-            RandomDrop(dropList, out _);
+            RandomDrop(dropList);
         });
     }
 
-    private void Event_PeelByKnife(out string tip, CardEvent e)
+    private void Event_PeelByKnife(CardEvent e)
     {
-        PeelByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip, e);
+        PeelByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
     private bool Judge_PeelByKnife(out string hint)
@@ -65,8 +64,8 @@ public class LionJellyfishCorpse : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        PeelByKnife(slot.PeekCard(), out tip, Events[0]);
+        PeelByKnife(slot.PeekCard(), Events[0]);
     }
 }

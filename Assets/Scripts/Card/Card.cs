@@ -567,7 +567,7 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     /// <param name="slot">被拿起的卡牌对应的SlotCards</param>
     /// <param name="count">需要快捷交互的卡牌数量</param>
-    public virtual void QuickIneract(SlotCards slot, int count, out string tip) { tip = string.Empty; }
+    public virtual void QuickIneract(SlotCards slot, int count) { }
     #endregion
 
     #region AddCard
@@ -620,15 +620,16 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    public void RandomDrop(DropList dropList, out string tip, int times = 1, UnityAction onDrop = null)
+    public void RandomDrop(DropList dropList, int times = 1, UnityAction onDrop = null)
     {
-        tip = string.Empty;
+        string tip = string.Empty;
         var droppedCards = new List<Card>();
         for (int i = 0; i < times; i++)
         {
             droppedCards.AddRange(dropList.RandomDrop(out tip));
         }
         DropCards(droppedCards, onDrop);
+        ShowTip(tip);
     }
 
     /// <summary>
@@ -727,7 +728,7 @@ public abstract class Card : IComparable<Card>
     protected void AddCardEvent(
         string name,
         string description,
-        OutStringAction<CardEvent> action,
+        UnityAction<CardEvent> action,
         OutStringFunc<bool> condition,
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
@@ -740,7 +741,7 @@ public abstract class Card : IComparable<Card>
     protected void AddCardEvent(
         string name,
         Func<string> getDescription,
-        OutStringAction<CardEvent> action,
+        UnityAction<CardEvent> action,
         OutStringFunc<bool> condition,
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
@@ -750,24 +751,22 @@ public abstract class Card : IComparable<Card>
         Events.Add(new(name, getDescription, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges, sound));
     }
 
-    protected void EasyEvent_Destroy(out string tip, CardEvent e)
+    protected void EasyEvent_Destroy(CardEvent e)
     {
-        tip = string.Empty;
         DestroyThis();
-        ApplyEventEffects(e, null);
+        ApplyEventEffects(e);
     }
 
-    protected void EasyEvent_DontDestroy(out string tip, CardEvent e)
+    protected void EasyEvent_DontDestroy(CardEvent e)
     {
-        tip = string.Empty;
-        ApplyEventEffects(e, null);
+        ApplyEventEffects(e);
     }
 
-    protected void EasyEvent_Use(out string tip, CardEvent e)
+    protected void EasyEvent_Use(CardEvent e)
     {
-        tip = string.Empty;
+        // TODO: 这里的Use还有上面的Destroy需不需要放到onEnd里
         Use();
-        ApplyEventEffects(e, null);
+        ApplyEventEffects(e);
     }
 
     protected void ApplyEventEffects(CardEvent e, UnityAction onEnd = null)

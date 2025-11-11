@@ -9,9 +9,8 @@ public class GarbageDestroyer : ConstructionCard
         base.RegisterCardEvents(); // 拆毁
     }
 
-    private void Event_Destroy(out string tip, CardEvent e)
+    private void Event_Destroy(CardEvent e)
     {
-        tip = string.Empty;
         var window = WindowsManager.Instance.OpenWindow("Confirm", true) as ConfirmWindow;
         window.SetContent("确认要销毁所有内容物吗？");
         window.onConfirm = () =>
@@ -32,8 +31,8 @@ public class GarbageDestroyer : ConstructionCard
         return innerContents.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        innerContents.QuickIneract(slot, count, out tip);
+        innerContents.QuickIneract(slot, count);
     }
 }

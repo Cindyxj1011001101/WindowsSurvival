@@ -29,9 +29,8 @@ public class PlasticBag : EquipmentCard
         });
     }
 
-    private void Event_Cut(out string tip, CardEvent e)
+    private void Event_Cut(CardEvent e)
     {
-        tip = string.Empty;
         CutThis(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
@@ -63,9 +62,8 @@ public class PlasticBag : EquipmentCard
         return innerContents.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         var card = slot.PeekCard();
 
         // 优先切割
@@ -76,6 +74,6 @@ public class PlasticBag : EquipmentCard
         }
 
         // 其次放入
-        innerContents.QuickIneract(slot, count, out tip);
+        innerContents.QuickIneract(slot, count);
     }
 }

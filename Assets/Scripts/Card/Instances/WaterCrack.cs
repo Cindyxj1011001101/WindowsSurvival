@@ -19,9 +19,8 @@ public class WaterCrack : Card
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("渗水裂缝", "堵住"));
     }
 
-    private void Event_Fix(out string tip, CardEvent e)
+    private void Event_Fix(CardEvent e)
     {
-        tip = string.Empty;
         Fix(GameManager.Instance.PlayerBag.FindCardOfName("裂缝填充物"), e);
     }
 
@@ -47,9 +46,8 @@ public class WaterCrack : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         Fix(slot.PeekCard(), Events[0]);
     }
 

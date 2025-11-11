@@ -46,9 +46,8 @@
         return GameManager.Instance.PlaceDataDict[place].placeName;
     }
 
-    protected virtual void Event_Enter(out string tip, CardEvent e)
+    protected virtual void Event_Enter(CardEvent e)
     {
-        tip = string.Empty;
         MoveExploreManager.Instance.Move(passage.targetPlace, passage.time);
     }
 
@@ -69,9 +68,8 @@
         return true;
     }
 
-    protected virtual void Event_MoveNear(out string tip, CardEvent e)
+    protected virtual void Event_MoveNear(CardEvent e)
     {
-        tip = string.Empty;
         // 移动到最近的可用使用通道的坐标
         MoveExploreManager.Instance.Move(GetNearestAvailablePosition());
     }

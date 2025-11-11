@@ -30,21 +30,19 @@ public class RatBody : CookableCard
     }
 
     #region 用手剥
-    private void Event_PeelByHand(out string tip, CardEvent e)
+    private void Event_PeelByHand(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e, () =>
         {
             DestroyThis();
-            RandomDrop(dropList, out _);
+            RandomDrop(dropList);
         });
     }
     #endregion
 
     #region 用刀切割
-    private void Event_PeelByKnife(out string tip, CardEvent e)
+    private void Event_PeelByKnife(CardEvent e)
     {
-        tip = string.Empty;
         PeelByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
@@ -82,9 +80,8 @@ public class RatBody : CookableCard
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         PeelByKnife(slot.PeekCard(), Events[2]);
     }
 }

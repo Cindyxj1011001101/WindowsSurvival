@@ -53,7 +53,7 @@ public class SleepInstrument : ConstructionCard
     {
         if (gameEvent.GetType() != typeof(MagneticStorm) || stateMachine.currentStateName == "未接电") return;
 
-        TurnOff();
+        Event_TurnOff(null);
         ShowTip($"受行星磁暴影响，{CardName}已断电并停止工作");
     }
 
@@ -70,7 +70,7 @@ public class SleepInstrument : ConstructionCard
 
         if (args.stateValue.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
         {
-            TurnOff();
+            Event_TurnOff(null);
             ShowTip($"电力供应不足，{CardName}已断电并停止工作");
         }
     }
@@ -82,7 +82,7 @@ public class SleepInstrument : ConstructionCard
         // 开始睡觉时判断电力是否充足
         if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION)
         {
-            TurnOff();
+            Event_TurnOff(null);
             ShowTip($"电力供应不足，{CardName}已断电并停止工作");
             return;
         }
@@ -117,9 +117,8 @@ public class SleepInstrument : ConstructionCard
     /// 接电
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_TurnOn(out string tip, CardEvent e)
+    private void Event_TurnOn(CardEvent e)
     {
-        tip = string.Empty;
         stateMachine.ChangeState("已接电");
     }
 
@@ -133,13 +132,7 @@ public class SleepInstrument : ConstructionCard
     /// 断电
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_TurnOff(out string tip, CardEvent e)
-    {
-        tip = string.Empty;
-        TurnOff();
-    }
-
-    private void TurnOff()
+    private void Event_TurnOff(CardEvent e)
     {
         if (isWorking)
             StopWorking();

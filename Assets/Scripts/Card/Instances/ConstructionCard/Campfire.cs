@@ -70,7 +70,7 @@ public class Campfire : ConstructionCard
     /// <summary>
     /// 点燃时触发
     /// </summary>
-    private void Ignite(out string s, CardEvent e)
+    private void Ignite(CardEvent e)
     {
         // 音效
         PlaySound("点火_02");
@@ -79,7 +79,7 @@ public class Campfire : ConstructionCard
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 0.3f);
 
-        fuelStorage.Ignite(out s);
+        fuelStorage.Ignite();
 
         // 点燃后暂停所有卡牌每回合更新
         innerContents.FreezeUpdate();
@@ -105,13 +105,13 @@ public class Campfire : ConstructionCard
     /// <summary>
     /// 熄灭时触发
     /// </summary>
-    private void Extinguish(out string s, CardEvent e)
+    private void Extinguish(CardEvent e)
     {
         // 只有玩家在同一地点时才停止音效
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
 
-        fuelStorage.Extinguish(out s);
+        fuelStorage.Extinguish();
 
         // 熄灭后恢复所有卡牌每回合更新
         innerContents.UnfreezeUpdate();
@@ -169,26 +169,26 @@ public class Campfire : ConstructionCard
         return base.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
         var card = slot.PeekCard();
 
         // 添加燃料
         if (fuelStorage.CanQuickInteract(card))
         {
-            fuelStorage.QuickIneract(slot, count, out tip);
+            fuelStorage.QuickIneract(slot, count);
             return;
         }
 
         // 放入内容物
         if (innerContents.CanQuickInteract(card, out _))
         {
-            innerContents.QuickIneract(slot, count, out tip);
+            innerContents.QuickIneract(slot, count);
             return;
         }
 
         // 拆毁
-        base.QuickIneract(slot, count, out tip);
+        base.QuickIneract(slot, count);
     }
     public override void OnEnterEnvironment()
     {

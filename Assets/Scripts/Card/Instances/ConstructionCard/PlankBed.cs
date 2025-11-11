@@ -21,10 +21,8 @@ public class PlankBed : ConstructionCard
         base.RegisterCardEvents(); // 拆毁
     }
 
-    private void Event_Rest(out string tip, CardEvent e)
+    private void Event_Rest(CardEvent e)
     {
-        tip = string.Empty;
-
         // 唤起时间窗口，设置休息时长为0-60分钟
         var window = (WindowsManager.Instance.OpenWindow("TimeSelect", true) as TimeSelectWindow);
         window.SetTimeRange(60, 60 * 8); // 可休息1-8小时

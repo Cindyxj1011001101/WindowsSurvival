@@ -28,34 +28,32 @@ public class SeaGrassBed : Card
         AddCardEvent("用刀采集", "耗时更少但获得更多产物", Event_CollectByKnife, Judge_CollectByKnife, () => 15);
     }
 
-    private void Event_CollectByHand(out string tip, CardEvent e)
+    private void Event_CollectByHand(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e, () =>
         {
-            RandomDrop(dropListHand, out _, 2, () =>
+            RandomDrop(dropListHand, 2, () =>
             {
                 Use();
             });
         });
     }
 
-    private void CollectByKnife(Card tool, out string tip, CardEvent e)
+    private void CollectByKnife(Card tool, CardEvent e)
     {
-        tip = string.Empty;
         tool.Use();
         ApplyEventEffects(e, () =>
         {
-            RandomDrop(dropListKnife, out _, 3, () =>
+            RandomDrop(dropListKnife, 3, () =>
             {
                 Use();
             });
         });
     }
 
-    private void Event_CollectByKnife(out string tip, CardEvent e)
+    private void Event_CollectByKnife(CardEvent e)
     {
-        CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), out tip, e);
+        CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
     private bool Judge_CollectByKnife(out string hint)
@@ -81,8 +79,8 @@ public class SeaGrassBed : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        CollectByKnife(slot.PeekCard(), out tip, Events[1]);
+        CollectByKnife(slot.PeekCard(), Events[1]);
     }
 }

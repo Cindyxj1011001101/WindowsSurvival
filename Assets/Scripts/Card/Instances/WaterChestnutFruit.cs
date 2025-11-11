@@ -14,9 +14,8 @@ public class WaterChestnutFruit : Card
         AddCardEvent("用锤子敲", "用锤子将果实敲开。将会获得四角菱果肉", Event_BreakByTool, Judge_BreakByTool, () => 3);
     }
 
-    private void Event_BreakByHand(out string tip, CardEvent e)
+    private void Event_BreakByHand(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e, () =>
         {
             DestroyThis();
@@ -34,9 +33,8 @@ public class WaterChestnutFruit : Card
         });
     }
 
-    private void Event_BreakByTool(out string tip, CardEvent e)
+    private void Event_BreakByTool(CardEvent e)
     {
-        tip = string.Empty;
         BreakByTool(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), e);
     }
 
@@ -62,9 +60,8 @@ public class WaterChestnutFruit : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         BreakByTool(slot.PeekCard(), Events[1]);
     }
 }

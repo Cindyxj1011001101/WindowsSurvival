@@ -41,10 +41,8 @@ public class SpaceshipSeat : ConstructionCard
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
     }
 
-    private void Event_Rest(out string tip, CardEvent e)
+    private void Event_Rest(CardEvent e)
     {
-        tip = string.Empty;
-
         // 获取实际的状态变化率
         // 实际状态变化率 = 基础变化率 * 衰减率
         var sobrietyChangeRate = SOBRIETY_CHANGE_RATE_REST * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId);
@@ -87,10 +85,8 @@ public class SpaceshipSeat : ConstructionCard
         return true;
     }
 
-    private void Event_Sleep(out string tip, CardEvent e)
+    private void Event_Sleep(CardEvent e)
     {
-        tip = string.Empty;
-
         // 唤起时间窗口，设置休息时长为1~8小时
         var window = (WindowsManager.Instance.OpenWindow("TimeSelect", true) as TimeSelectWindow);
         window.SetTimeRange(60, 60 * 8);

@@ -57,7 +57,7 @@ public class Refrigerator : ConstructionCard
     {
         if (gameEvent.GetType() != typeof(MagneticStorm) || stateMachine.currentStateName == "未接电") return;
 
-        Event_TurnOff(out _, null);
+        Event_TurnOff(null);
         ShowTip($"受行星磁暴影响，{CardName}已断电并停止工作");
     }
 
@@ -74,7 +74,7 @@ public class Refrigerator : ConstructionCard
 
         if (args.stateValue.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
         {
-            Event_TurnOff(out _, null);
+            Event_TurnOff(null);
             ShowTip($"电力供应不足，{CardName}已断电并停止工作");
         }
     }
@@ -94,9 +94,8 @@ public class Refrigerator : ConstructionCard
     /// 接电
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_TurnOn(out string tip, CardEvent e)
+    private void Event_TurnOn(CardEvent e)
     {
-        tip = string.Empty;
         innerContents.ForEachCard(c =>
         {
             if (c.TryGetComponent<FreshnessComponent>(out var f))
@@ -130,9 +129,8 @@ public class Refrigerator : ConstructionCard
     /// 断电
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_TurnOff(out string tip, CardEvent e)
+    private void Event_TurnOff(CardEvent e)
     {
-        tip = string.Empty;
         innerContents.ForEachCard(c =>
         {
             if (c.TryGetComponent<FreshnessComponent>(out var f))
@@ -157,14 +155,14 @@ public class Refrigerator : ConstructionCard
         return innerContents.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
         if (base.CanQuickInteract(slot.PeekCard(), out _))
         {
-            base.QuickIneract(slot, count, out tip);
+            base.QuickIneract(slot, count);
             return;
         }
 
-        innerContents.QuickIneract(slot, count, out tip);
+        innerContents.QuickIneract(slot, count);
     }
 }

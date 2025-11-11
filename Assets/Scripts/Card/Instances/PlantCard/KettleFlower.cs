@@ -83,9 +83,8 @@ public class KettleFlower : PlantCard
         });
     }
 
-    private void Event_Hurt(out string tip, CardEvent e)
+    private void Event_Hurt(CardEvent e)
     {
-        tip = string.Empty;
         Hurt(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
@@ -120,9 +119,8 @@ public class KettleFlower : PlantCard
         });
     }
 
-    private void Event_DigUp(out string tip, CardEvent e)
+    private void Event_DigUp(CardEvent e)
     {
-        tip = string.Empty;
         DigUp(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), e);
     }
 
@@ -137,9 +135,8 @@ public class KettleFlower : PlantCard
         return true;
     }
 
-    private void Event_Drink(out string tip, CardEvent e)
+    private void Event_Drink(CardEvent e)
     {
-        tip = string.Empty;
         AddPlantGrowth(-20); // 生长进度-20
         ApplyEventEffects(e);
     }
@@ -198,9 +195,8 @@ public class KettleFlower : PlantCard
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         var card = slot.PeekCard();
 
         if (card.TryGetComponent<ToolComponent>(out var component))

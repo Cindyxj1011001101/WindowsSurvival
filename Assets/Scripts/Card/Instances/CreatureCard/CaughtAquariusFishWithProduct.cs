@@ -55,9 +55,8 @@ public class CaughtAquariusFishWithProduct : Card
         });
     }
 
-    private void Event_Bottling(out string tip, CardEvent e)
+    private void Event_Bottling(CardEvent e)
     {
-        tip = string.Empty;
         Bottling(GameManager.Instance.PlayerBag.FindCardOfName("凝胶装瓶器"), e);
     }
 
@@ -83,9 +82,8 @@ public class CaughtAquariusFishWithProduct : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         Bottling(slot.PeekCard(), Events[1]);
     }
 }

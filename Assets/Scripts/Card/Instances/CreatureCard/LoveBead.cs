@@ -8,9 +8,8 @@ public class LoveBead : Card
         AddCardEvent("取贝肉", "这将会杀死爱情贝", Event_GetMeat, null, () => 30);
     }
 
-    private void Event_GetMeat(out string tip, CardEvent e)
+    private void Event_GetMeat(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e, () =>
         {
             DestroyThis();

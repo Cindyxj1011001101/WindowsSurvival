@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 /// <summary>
 /// 卡牌事件
@@ -11,7 +12,7 @@ public class CardEvent
     private Func<string> getDescription;
     private string hint;
     private string sound;
-    private OutStringAction<CardEvent> action;
+    private UnityAction<CardEvent> action;
     private OutStringFunc<bool> condition;
     private Func<int> getTimeChange;
     private Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges;
@@ -33,7 +34,7 @@ public class CardEvent
     public CardEvent(
         string name,
         string description,
-        OutStringAction<CardEvent> action,
+        UnityAction<CardEvent> action,
         OutStringFunc<bool> condition,
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
@@ -53,7 +54,7 @@ public class CardEvent
     public CardEvent(
         string name,
         Func<string> getDescription,
-        OutStringAction<CardEvent> action,
+        UnityAction<CardEvent> action,
         OutStringFunc<bool> condition,
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
@@ -63,12 +64,11 @@ public class CardEvent
         this.getDescription = getDescription;
     }
 
-    public void Inovke(out string tip)
+    public void Inovke()
     {
-        tip = string.Empty;
         if (!string.IsNullOrEmpty(sound) && SoundManager.Instance != null)
             SoundManager.Instance.PlaySound(sound);
-        action?.Invoke(out tip, this);
+        action?.Invoke(this);
     }
 
     public bool Judge()

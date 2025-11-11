@@ -33,13 +33,12 @@ public class CoralReef : Card
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
     }
 
-    private void DigByTool(Card tool, out string tip, CardEvent e)
+    private void DigByTool(Card tool, CardEvent e)
     {
-        tip = string.Empty;
         tool.Use();
         ApplyEventEffects(e, () =>
         {
-            RandomDrop(dropList, out _, 2, () =>
+            RandomDrop(dropList, 2, () =>
             {
                 PlaySound("挖掘废料_01", true);
                 Use();
@@ -47,9 +46,9 @@ public class CoralReef : Card
         });
     }
 
-    private void Event_Dig(out string tip, CardEvent e)
+    private void Event_Dig(CardEvent e)
     {
-        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip, e);
+        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), e);
     }
 
     private bool Judge_Dig(out string hint)
@@ -63,9 +62,8 @@ public class CoralReef : Card
         return true;
     }
 
-    private void Event_Enjoy(out string tip, CardEvent e)
+    private void Event_Enjoy(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e);
         GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId);
     }
@@ -82,8 +80,8 @@ public class CoralReef : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        DigByTool(slot.PeekCard(), out tip, Events[0]);
+        DigByTool(slot.PeekCard(), Events[0]);
     }
 }

@@ -11,14 +11,14 @@ public class StorageBox : ConstructionCard
         return innerContents.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
         if (base.CanQuickInteract(slot.PeekCard(), out _))
         {
-            base.QuickIneract(slot, count, out tip);
+            base.QuickIneract(slot, count);
             return;
         }
 
-        innerContents.QuickIneract(slot, count, out tip);
+        innerContents.QuickIneract(slot, count);
     }
 }

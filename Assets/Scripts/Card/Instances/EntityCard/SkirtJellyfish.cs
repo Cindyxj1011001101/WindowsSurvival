@@ -146,9 +146,8 @@ public class SkirtJellyfish : EntityCard
         });
     }
 
-    private void Event_CatchByNet(out string tip, CardEvent e)
+    private void Event_CatchByNet(CardEvent e)
     {
-        tip = string.Empty;
         Catch(GameManager.Instance.PlayerBag.FindCardOfName("捞网"), e);
     }
 
@@ -176,9 +175,8 @@ public class SkirtJellyfish : EntityCard
         return base.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         var card = slot.PeekCard();
 
         if (card.CardId == "捞网")
@@ -188,6 +186,6 @@ public class SkirtJellyfish : EntityCard
             return;
         }
 
-        base.QuickIneract(slot, count, out tip);
+        base.QuickIneract(slot, count);
     }
 }

@@ -72,10 +72,8 @@ public class Trap : ConstructionCard
     /// 布置
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_Arrange(out string tip, CardEvent e)
+    private void Event_Arrange(CardEvent e)
     {
-        tip = string.Empty;
-
         // 内容物停止更新
         innerContents.FreezeUpdate();
 
@@ -146,8 +144,8 @@ public class Trap : ConstructionCard
         return innerContents.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        innerContents.QuickIneract(slot, count, out tip);
+        innerContents.QuickIneract(slot, count);
     }
 }

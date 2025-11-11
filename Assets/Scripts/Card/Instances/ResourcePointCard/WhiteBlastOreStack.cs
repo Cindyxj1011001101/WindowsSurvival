@@ -14,14 +14,13 @@ public class WhiteBlastOreStack : Card
         AddCardEvent("用铲子凿", "用铲子凿白爆矿堆", Event_Dig, Judge_Dig, () => 30);
     }
 
-    private void DigByTool(Card tool, out string tip, CardEvent e)
+    private void DigByTool(Card tool, CardEvent e)
     {
-        tip = string.Empty;
         tool.Use();
         ApplyEventEffects(e, () =>
         {
             // 掉落卡牌(2次)
-            RandomDrop(dropList, out _, 2, () =>
+            RandomDrop(dropList, 2, () =>
             {
                 PlaySound("凿_01", true);
                 Use();
@@ -29,9 +28,9 @@ public class WhiteBlastOreStack : Card
         });
     }
 
-    private void Event_Dig(out string tip, CardEvent e)
+    private void Event_Dig(CardEvent e)
     {
-        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), out tip, e);
+        DigByTool(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), e);
     }
 
     private bool Judge_Dig(out string hint)
@@ -57,8 +56,8 @@ public class WhiteBlastOreStack : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        DigByTool(slot.PeekCard(), out tip, Events[0]);
+        DigByTool(slot.PeekCard(), Events[0]);
     }
 }

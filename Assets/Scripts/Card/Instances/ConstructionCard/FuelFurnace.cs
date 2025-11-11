@@ -93,21 +93,21 @@ public class FuelFurnace : ConstructionCard
         };
     }
 
-    private void Ignite(out string s, CardEvent e)
+    private void Ignite(CardEvent e)
     {
         PlaySound("点火_02");
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "燃料炉音效", 1f);
 
-        fuelStorage.Ignite(out s);
+        fuelStorage.Ignite();
     }
 
-    private void Extinguish(out string s, CardEvent e)
+    private void Extinguish(CardEvent e)
     {
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
 
-        fuelStorage.Extinguish(out s);
+        fuelStorage.Extinguish();
     }
 
     private bool ContentFilter(Card c, out string s)
@@ -126,10 +126,8 @@ public class FuelFurnace : ConstructionCard
     /// 开始加工
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_Process(out string tip, CardEvent e)
+    private void Event_Process(CardEvent e)
     {
-        tip = string.Empty;
-
         isProcessing = true;
         leftProcessRounds = MAX_PROCESS_ROUNDS;
 
@@ -265,26 +263,26 @@ public class FuelFurnace : ConstructionCard
         return base.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
         var card = slot.PeekCard();
 
         // 添加燃料
         if (fuelStorage.CanQuickInteract(card))
         {
-            fuelStorage.QuickIneract(slot, count, out tip);
+            fuelStorage.QuickIneract(slot, count);
             return;
         }
 
         // 放入内容物
         if (innerContents.CanQuickInteract(card, out _))
         {
-            innerContents.QuickIneract(slot, count, out tip);
+            innerContents.QuickIneract(slot, count);
             return;
         }
 
         // 拆毁
-        base.QuickIneract(slot, count, out tip);
+        base.QuickIneract(slot, count);
     }
     public override void OnEnterEnvironment()
     {

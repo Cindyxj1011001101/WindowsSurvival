@@ -37,9 +37,8 @@ public class SafeInsurance : ConstructionCard
     /// 用手砸
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_UseHand(out string tip, CardEvent e)
+    private void Event_UseHand(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e, () =>
         {
             PlaySound("金属受击_01", true);
@@ -67,9 +66,8 @@ public class SafeInsurance : ConstructionCard
         });
     }
 
-    private void Event_UseShovel(out string tip, CardEvent e)
+    private void Event_UseShovel(CardEvent e)
     {
-        tip = string.Empty;
         UseShovel(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Dig), e);
     }
 
@@ -98,9 +96,8 @@ public class SafeInsurance : ConstructionCard
         });
     }
 
-    private void Event_UseHammer(out string tip, CardEvent e)
+    private void Event_UseHammer(CardEvent e)
     {
-        tip = string.Empty;
         UseHammer(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"), e);
     }
 
@@ -145,10 +142,8 @@ public class SafeInsurance : ConstructionCard
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
-
         var card = slot.PeekCard();
 
         if (card.TryGetComponent<ToolComponent>(out var component) && component.toolTypes.Contains(ToolType.Dig))

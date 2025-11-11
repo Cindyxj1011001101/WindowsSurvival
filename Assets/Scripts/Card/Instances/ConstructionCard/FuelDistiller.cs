@@ -51,11 +51,11 @@ public class FuelDistiller : ConstructionCard
         };
     }
 
-    private void Ignite(out string s, CardEvent e)
+    private void Ignite(CardEvent e)
     {
         PlaySound("点火_02");
 
-        fuelStorage.Ignite(out s);
+        fuelStorage.Ignite();
 
         // 点燃后暂停所有卡牌每回合更新
         innerContents.FreezeUpdate();
@@ -63,9 +63,9 @@ public class FuelDistiller : ConstructionCard
         stateMachine.ChangeState("已点燃");
     }
 
-    private void Extinguish(out string s, CardEvent e)
+    private void Extinguish(CardEvent e)
     {
-        fuelStorage.Extinguish(out s);
+        fuelStorage.Extinguish();
 
         // 熄灭后恢复所有卡牌每回合更新
         innerContents.UnfreezeUpdate();
@@ -77,9 +77,8 @@ public class FuelDistiller : ConstructionCard
     /// 倒入盐水
     /// </summary>
     /// <param name="tip"></param>
-    private void Event_AddSalineWater(out string tip, CardEvent e)
+    private void Event_AddSalineWater(CardEvent e)
     {
-        tip = string.Empty;
         AddSalineWater(GameManager.Instance.PlayerBag.FindCardOfName("盐水"));
     }
 
@@ -157,15 +156,14 @@ public class FuelDistiller : ConstructionCard
         return base.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         var card = slot.PeekCard();
 
         // 添加燃料
         if (fuelStorage.CanQuickInteract(card))
         {
-            fuelStorage.QuickIneract(slot, count, out tip);
+            fuelStorage.QuickIneract(slot, count);
             return;
         }
 
@@ -177,6 +175,6 @@ public class FuelDistiller : ConstructionCard
         }
 
         // 拆毁
-        base.QuickIneract(slot, count, out tip);
+        base.QuickIneract(slot, count);
     }
 }

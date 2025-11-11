@@ -8,9 +8,8 @@ public class SelfHeatingCookingBag : Card
         return CanCook(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         Cook(slot.PeekCard());
     }
 

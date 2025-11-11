@@ -88,9 +88,8 @@ public abstract class EntityCard : Card, IEntity
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         var card = slot.PeekCard();
         card.TryGetComponent<WeaponComponent>(out var weapon);
         weapon.DealDamage(this); // 消耗时间在dealdamage方法里面处理了

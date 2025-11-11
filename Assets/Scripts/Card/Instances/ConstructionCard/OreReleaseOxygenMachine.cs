@@ -52,7 +52,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
     {
         if (gameEvent.GetType() != typeof(MagneticStorm)) return;
 
-        Event_TurnOff(out _, null);
+        Event_TurnOff(null);
         ShowTip($"受行星磁暴影响，{CardName}已关闭并停止工作");
     }
 
@@ -81,22 +81,20 @@ public class OreReleaseOxygenMachine : ConstructionCard
         return innerContents.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
         if (base.CanQuickInteract(slot.PeekCard(), out _))
         {
-            base.QuickIneract(slot, count, out tip);
+            base.QuickIneract(slot, count);
             return;
         }
 
-        innerContents.QuickIneract(slot, count, out tip);
+        innerContents.QuickIneract(slot, count);
     }
 
     #region 开关
-    private void Event_TurnOn(out string tip, CardEvent e)
+    private void Event_TurnOn(CardEvent e)
     {
-        tip = string.Empty;
-
         // 添加计时器组件
         var timer = new TimerComponent(leftProductionProgress, MAX_PRODUCTION_PROCESS)
         {
@@ -118,9 +116,8 @@ public class OreReleaseOxygenMachine : ConstructionCard
         return stateMachine.currentStateName == "已关闭";
     }
 
-    private void Event_TurnOff(out string tip, CardEvent e)
+    private void Event_TurnOff(CardEvent e)
     {
-        tip = string.Empty;
         RemoveComponent<TimerComponent>();
         stateMachine.ChangeState("已关闭");
     }

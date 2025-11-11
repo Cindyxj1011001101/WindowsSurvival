@@ -31,9 +31,8 @@ public abstract class ConstructionCard : Card
         });
     }
 
-    private void Event_DemolishThis(out string tip, CardEvent e)
+    private void Event_DemolishThis(CardEvent e)
     {
-        tip = string.Empty;
         DemolishThis(GameManager.Instance.PlayerBag.FindCardOfName("钢锤"));
     }
 
@@ -69,9 +68,8 @@ public abstract class ConstructionCard : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         DemolishThis(slot.PeekCard());
     }
 }

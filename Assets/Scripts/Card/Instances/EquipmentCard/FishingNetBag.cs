@@ -34,9 +34,8 @@ public class FishingNetBag : EquipmentCard
         });
     }
 
-    private void Event_Cut(out string tip, CardEvent e)
+    private void Event_Cut(CardEvent e)
     {
-        tip = string.Empty;
         CutThis(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
@@ -67,9 +66,8 @@ public class FishingNetBag : EquipmentCard
         return innerContents.CanQuickInteract(card, out tip);
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         var card = slot.PeekCard();
 
         // 优先切割渔获袋
@@ -81,6 +79,6 @@ public class FishingNetBag : EquipmentCard
         }
 
         // 其次放入渔获袋
-        innerContents.QuickIneract(slot, count, out tip);
+        innerContents.QuickIneract(slot, count);
     }
 }

@@ -18,9 +18,8 @@ public class Siphonophyllum : Card
         });
     }
 
-    private void Event_Cut(out string tip, CardEvent e)
+    private void Event_Cut(CardEvent e)
     {
-        tip = string.Empty;
         Cut(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
@@ -47,9 +46,8 @@ public class Siphonophyllum : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         Cut(slot.PeekCard(), Events[0]);
     }
 }

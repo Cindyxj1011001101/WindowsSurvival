@@ -270,10 +270,7 @@ public class DetailsWindow : BagWindow
                 button.onClick.AddListener(() =>
                 {
                     // 先执行事件
-                    e.Inovke(out string tip);
-
-                    // 显示提示
-                    button.transform.ShowTip(tip, 1.4f);
+                    e.Inovke();
 
                     // 显示状态变化
                     var playerStateChanges = e.GetPlayerStateChanges();

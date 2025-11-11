@@ -46,7 +46,7 @@ public class ElectricDrainageMachine : ConstructionCard
     {
         if (gameEvent.GetType() != typeof(MagneticStorm) || stateMachine.currentStateName == "已关闭") return;
 
-        TurnOff();
+        Event_TurnOff(null);
         ShowTip($"受行星磁暴影响，{CardName}已断电并停止工作");
     }
 
@@ -63,7 +63,7 @@ public class ElectricDrainageMachine : ConstructionCard
 
         if (args.stateValue.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
         {
-            TurnOff();
+            Event_TurnOff(null);
             ShowTip($"电力供应不足，{CardName}已断电并停止工作");
         }
     }
@@ -74,19 +74,13 @@ public class ElectricDrainageMachine : ConstructionCard
 
         if (args.stateValue.CurValue <= 0)
         {
-            TurnOff();
+            Event_TurnOff(null);
             ShowTip($"水平面已降至0，{CardName}自动停止工作");
         }
     }
 
     #region 开关
-    private void Event_TurnOn(out string tip, CardEvent e)
-    {
-        tip = string.Empty;
-        TurnOn();
-    }
-
-    private void TurnOn()
+    private void Event_TurnOn(CardEvent e)
     {
         StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_CONSUMPTION);
         StateManager.Instance.ChangeWaterLevelChangeRate(-WATER_LEVEL_REDUCTION);
@@ -111,13 +105,7 @@ public class ElectricDrainageMachine : ConstructionCard
         return stateMachine.currentStateName == "已关闭";
     }
 
-    private void Event_TurnOff(out string tip, CardEvent e)
-    {
-        tip = string.Empty;
-        TurnOff();
-    }
-
-    private void TurnOff()
+    private void Event_TurnOff(CardEvent e)
     {
         // 停止工作时，恢复电力和水平面变化率
         StateManager.Instance.ChangeElectricityChangeRate(ELECTRICITY_CONSUMPTION);

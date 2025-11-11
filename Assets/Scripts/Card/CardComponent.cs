@@ -25,6 +25,8 @@ public abstract class CardComponent
     }
 
     public void RefreshSlot() => BelongedCard?.RefreshSlot();
+
+    public void ShowTip(string tip) => BelongedCard?.ShowTip(tip);
 }
 
 #region 连续值组件
@@ -98,9 +100,9 @@ public class FreshnessComponent : ContinuousValueComponent, IUpdate
         if (value <= 0)
         {
             if (BelongedCard.CardType == CardType.Food)
-                BelongedCard.ShowTip($"{BelongedCard.CardName}腐烂了");
+                ShowTip($"{BelongedCard.CardName}腐烂了");
             else if (BelongedCard.CardType == CardType.Medicine)
-                BelongedCard.ShowTip($"{BelongedCard.CardName}过期了");
+                ShowTip($"{BelongedCard.CardName}过期了");
 
             if (BelongedCard.CardId == "磁性触手" || BelongedCard.CardId == "熟触手")
                 BelongedCard.TurnTo("废金属", BelongedCard.Bag);
@@ -299,7 +301,7 @@ public class DurabilityComponent : ContinuousValueComponent
         if (value <= 0)
         {
             if (BelongedCard.CardType == CardType.Tool || BelongedCard.CardType == CardType.Equipment)
-                BelongedCard.ShowTip($"{BelongedCard.CardName}损坏了");
+                ShowTip($"{BelongedCard.CardName}损坏了");
 
             BelongedCard.DestroyThis();
             onBroken?.Invoke();
@@ -369,9 +371,9 @@ public class InnerContentsComponent : CardComponent
         return false;
     }
 
-    public void QuickIneract(SlotCards slot, int count, out string tip)
+    public void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
+        string tip = string.Empty;
         for (int i = 0; i < count; i++)
         {
             if (!bag.CanAddCard(slot.PeekCard(), out tip)) break;
@@ -379,6 +381,7 @@ public class InnerContentsComponent : CardComponent
             bag.AddCard(toAdd);
             toAdd.RefreshSlot();
         }
+        ShowTip(tip);
     }
 
     public void AddCard(Card card) => bag.AddCard(card);
@@ -562,9 +565,9 @@ public class CookComponent : CardComponent
         leftCookTime = 0;
 
         if (outcomeCardId == "烧焦的食物")
-            BelongedCard.ShowTip($"{BelongedCard.CardName}烧焦了");
+            ShowTip($"{BelongedCard.CardName}烧焦了");
         else
-            BelongedCard.ShowTip($"{BelongedCard.CardName}熟了");
+            ShowTip($"{BelongedCard.CardName}熟了");
 
         BelongedCard.TurnTo(outcomeCardId, BelongedCard.Bag);
         onCooked?.Invoke();
@@ -743,7 +746,7 @@ public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
     {
         if (deadProgress <= 0)
         {
-            BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
+            ShowTip($"{BelongedCard.CardName}死亡了");
             deadProgress = 0;
             BelongedCard.DestroyThis();
             // 掉落死亡掉落物
@@ -812,9 +815,8 @@ public class OxygenStorageComponent : ContinuousValueComponent
         return true;
     }
 
-    public void Event_GetOxygen(out string tip, CardEvent e)
+    public void Event_GetOxygen(CardEvent e)
     {
-        tip = string.Empty;
         // 玩家氧气剩余容量
         var remainingCapacity = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Oxygen].RemainingCapacity;
         // 计算释放量
@@ -918,10 +920,8 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     /// <summary>
     /// 点燃
     /// </summary>
-    public void Ignite(out string s)
+    public void Ignite()
     {
-        s = string.Empty;
-
         isBurning = true;
 
         var env = BelongedCard.Bag as EnvironmentBag;
@@ -934,10 +934,8 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     /// <summary>
     /// 熄灭
     /// </summary>
-    public void Extinguish(out string s)
+    public void Extinguish()
     {
-        s = string.Empty;
-
         isBurning = false;
 
         var env = BelongedCard.Bag as EnvironmentBag;
@@ -952,9 +950,8 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         return card.TryGetComponent<FuelComponent>(out _) && value < maxValue;
     }
 
-    public void QuickIneract(SlotCards slot, int count, out string tip)
+    public void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         for (int i = 0; i < count; i++)
         {
             if (value >= maxValue) break;
@@ -990,8 +987,8 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         // 自动熄灭
         if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip)) // tip不为空说明不是因为正在燃烧中而导致无法点燃
         {
-            Extinguish(out _);
-            BelongedCard.ShowTip($"{tip}，{BelongedCard.CardName}已熄灭");
+            Extinguish();
+            ShowTip($"{tip}，{BelongedCard.CardName}已熄灭");
         }
     }
 }
@@ -1048,7 +1045,7 @@ public class EntityComponent : ContinuousValueComponent
         AddValue(-damage);
         if (value <= 0)
         {
-            BelongedCard.ShowTip($"{BelongedCard.CardName}死亡了");
+            ShowTip($"{BelongedCard.CardName}死亡了");
             BelongedCard.DestroyThis();
             // 掉落死亡掉落物
             BelongedCard.ParseAndDrop(deadDrops);

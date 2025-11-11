@@ -178,8 +178,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     private void HandleQuickInteract(CardSlot targetSlot)
     {
         var left = sourceSlot.StackNum - pickedCount;
-        targetSlot.PeekCard().QuickIneract(sourceSlot.Cards, pickedCount, out var tip);
-        targetSlot.transform.ShowTip(tip);
+        targetSlot.PeekCard().QuickIneract(sourceSlot.Cards, pickedCount);
         var toReturn = sourceSlot.StackNum - left; // toReturn一定>=0
         if (toReturn > 0)
             AnimateCardReturn(toReturn);

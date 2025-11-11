@@ -25,9 +25,8 @@ public class SiphonophyllumWithProduct : Card
         });
     }
 
-    private void Event_Cut(out string tip, CardEvent e)
+    private void Event_Cut(CardEvent e)
     {
-        tip = string.Empty;
         Cut(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
 
@@ -42,15 +41,14 @@ public class SiphonophyllumWithProduct : Card
         return true;
     }
 
-    private void Event_Collect(out string tip, CardEvent e)
+    private void Event_Collect(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e, () =>
         {
             DestroyThis();
             // 变回虹吸海葵
             TurnTo("虹吸海葵", Bag);
-            RandomDrop(dropList, out _);
+            RandomDrop(dropList);
         });
     }
 
@@ -66,9 +64,8 @@ public class SiphonophyllumWithProduct : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         Cut(slot.PeekCard(), Events[0]);
     }
 }

@@ -35,9 +35,8 @@ public class LoveBeadWithProduct : Card
         AddCardEvent("撬开", "像开宝箱一样获得随机产物", Event_OpenByTool, Judge_OpenByTool, () => 15);
     }
 
-    private void OpenByTool(Card tool, out string tip, CardEvent e)
+    private void OpenByTool(Card tool, CardEvent e)
     {
-        tip = string.Empty;
         tool.Use();
         ApplyEventEffects(e, () =>
         {
@@ -45,13 +44,13 @@ public class LoveBeadWithProduct : Card
             // 变回爱情贝
             TurnTo("爱情贝", Bag);
             // 随机掉落
-            RandomDrop(dropList, out _);
+            RandomDrop(dropList);
         });
     }
 
-    private void Event_OpenByTool(out string tip, CardEvent e)
+    private void Event_OpenByTool(CardEvent e)
     {
-        OpenByTool(GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }), out tip, e);
+        OpenByTool(GameManager.Instance.PlayerBag.FindCardOfToolTypes(new List<ToolType> { ToolType.Cut, ToolType.Dig }), e);
     }
 
     private bool Judge_OpenByTool(out string hint)
@@ -76,8 +75,8 @@ public class LoveBeadWithProduct : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        OpenByTool(slot.PeekCard(), out tip, Events[0]);
+        OpenByTool(slot.PeekCard(), Events[0]);
     }
 }

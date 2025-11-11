@@ -9,9 +9,8 @@ public class SeaGrass : Card
         AddCardEvent("用刀提取", "用刀提取纤维", Event_CollectByKnife, Judge_CollectByKnife, () => 15);
     }
 
-    private void Event_CollectByHand(out string tip, CardEvent e)
+    private void Event_CollectByHand(CardEvent e)
     {
-        tip = string.Empty;
         ApplyEventEffects(e, () =>
         {
             DestroyThis();
@@ -29,9 +28,8 @@ public class SeaGrass : Card
         });
     }
 
-    private void Event_CollectByKnife(out string tip, CardEvent e)
+    private void Event_CollectByKnife(CardEvent e)
     {
-        tip = string.Empty;
         CollectByKnife(GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut), e);
     }
     
@@ -58,9 +56,8 @@ public class SeaGrass : Card
         return false;
     }
 
-    public override void QuickIneract(SlotCards slot, int count, out string tip)
+    public override void QuickIneract(SlotCards slot, int count)
     {
-        tip = string.Empty;
         CollectByKnife(slot.PeekCard(), Events[1]);
     }
 }
