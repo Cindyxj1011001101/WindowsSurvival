@@ -6,9 +6,9 @@ public class PlantCard : Card
 
     protected virtual void UpdatePlantState() { }
 
-    public void SetPlantGrowth(float value)
+    public void AddPlantGrowth(float delta)
     {
-        plantGrowth.SetValue(value);
+        plantGrowth.AddValue(delta);
         UpdatePlantState();
     }
 }

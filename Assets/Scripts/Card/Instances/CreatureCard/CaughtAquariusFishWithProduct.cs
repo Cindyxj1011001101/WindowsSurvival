@@ -46,13 +46,13 @@ public class CaughtAquariusFishWithProduct : Card
     /// <param name="tip"></param>
     private void Bottling(Card tool, CardEvent e)
     {
-        DestroyThis();
         tool.Use();
-
-        ApplyEventEffects(e);
-
-        TurnTo("被捉住的水瓶鱼", Bag);
-        AddCard("育卵液", true);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            TurnTo("被捉住的水瓶鱼", Bag);
+            AddCard("育卵液", true);
+        });
     }
 
     private void Event_Bottling(out string tip, CardEvent e)

@@ -52,10 +52,11 @@ public class WaterChestnut : PlantCard
     private void Event_Collect(out string tip, CardEvent e)
     {
         tip = string.Empty;
-        plantGrowth.AddValue(-100); // 生长进度-100
-        ApplyEventEffects(e);
-        AddCard("菱果", Bag);
-        UpdatePlantState();
+        AddPlantGrowth(-100); // 生长进度-100
+        ApplyEventEffects(e, () =>
+        {
+            AddCard("菱果", Bag);
+        });
     }
 
     private bool Judge_Collect(out string hint)
@@ -71,10 +72,12 @@ public class WaterChestnut : PlantCard
 
     private void DigUp(Card tool, CardEvent e)
     {
-        DestroyThis();
         tool.Use();
-        ApplyEventEffects(e);
-        AddCard(plantGrowth.deadCardId, Bag);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            AddCard(plantGrowth.deadCardId, Bag);
+        });
     }
 
     private void Event_DigUp(out string tip, CardEvent e)

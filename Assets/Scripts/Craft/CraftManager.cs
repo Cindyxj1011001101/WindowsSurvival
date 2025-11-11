@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CraftManager : IManager
 {
@@ -171,7 +172,7 @@ public class CraftManager : IManager
     /// 合成卡牌 (调用前请务必先判断能否合成)
     /// </summary>
     /// <param name="recipe"></param>
-    public Card Craft(ScriptableRecipe recipe)
+    public void Craft(ScriptableRecipe recipe, UnityAction<Card> dropCraftedCard)
     {
         // 消耗合成材料
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
@@ -180,16 +181,16 @@ public class CraftManager : IManager
             playerBag.DestroyCardsByCardId(material.cardId, material.requiredNum);
         }
 
-        // 消耗时间
-        TimeManager.Instance.AddTime(GetCraftTime(recipe));
-
         // 创建一个新的卡牌
-        var card = CardFactory.CreateCard(recipe.cardId);
+        var craftedCard = CardFactory.CreateCard(recipe.cardId);
+        
+        // 消耗时间
+        TimeManager.Instance.AddTime(GetCraftTime(recipe), () =>
+        {
+            dropCraftedCard?.Invoke(craftedCard);
+        });
 
-        SoundManager.Instance.PlaySound("制作_03", true);
-
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", card.CardName));
-
-        return card;
+        // 触发制作事件
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", craftedCard.CardName));
     }
 }

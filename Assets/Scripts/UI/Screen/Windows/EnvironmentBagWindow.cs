@@ -143,15 +143,24 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void Explore()
     {
-        var tween = envCardTransform.PunchAndBounce(() =>
+        MoveExploreManager.Instance.HandleExplore((droppedCards, tip) =>
         {
-            MoveExploreManager.Instance.HandleExplore(out var tip, out var droppedCards);
-            DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
-            GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
-            exploreButton.transform.ShowTip(tip, 1.4f);
-        });
+            var tween = envCardTransform.PunchAndBounce(() =>
+            {
+                if (droppedCards.IsNullOrEmpty())
+                {
+                    exploreButton.transform.ShowTip("地点资源缺乏，什么都没找到", 1.4f);
+                    SoundManager.Instance.PlaySound("错误提示");
+                    return;
+                }
 
-        MouseManager.Instance.Wait(tween.Duration());
+                SoundManager.Instance.PlaySound("抽卡", true);
+                exploreButton.transform.ShowTip(tip, 1.4f);
+                DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
+                GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
+            });
+            MouseManager.Instance.Wait(tween.Duration());
+        });
     }
 
     public override void DisplayBag(Bag bag)

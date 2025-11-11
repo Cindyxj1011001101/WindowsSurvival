@@ -18,19 +18,17 @@ public abstract class ConstructionCard : Card
     /// </summary>
     public void DemolishThis(Card tool)
     {
-        // 拆毁音效
-        PlaySound("摧毁_01", true);
-
-        // 拆毁建筑物
-        DestroyThis();
-        // 消耗钢锤耐久
+        LockThis();
         tool?.Use();
-
         // 消耗15分钟
-        TimeManager.Instance.AddTime(DEMOLITION_TIME);
-
-        // 掉落拆毁产物
-        ParseAndDrop(construction.demolitionDrops);
+        TimeManager.Instance.AddTime(DEMOLITION_TIME, () =>
+        {
+            // 拆毁音效
+            PlaySound("摧毁_01", true);
+            DestroyThis();
+            // 掉落拆毁产物
+            ParseAndDrop(construction.demolitionDrops);
+        });
     }
 
     private void Event_DemolishThis(out string tip, CardEvent e)

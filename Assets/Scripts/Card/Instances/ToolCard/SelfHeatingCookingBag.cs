@@ -29,9 +29,11 @@ public class SelfHeatingCookingBag : Card
     {
         PlaySound("点火_02", true);
         Use();
-        food.DestroyThis();
-        TimeManager.Instance.AddTime(15);
-        food.TryGetComponent<CookComponent>(out var cook);
-        cook.HandleCookComplete();
+        food.LockThis();
+        TimeManager.Instance.AddTime(15, () =>
+        {
+            food.TryGetComponent<CookComponent>(out var cook);
+            cook.HandleCookComplete();
+        });
     }
 }

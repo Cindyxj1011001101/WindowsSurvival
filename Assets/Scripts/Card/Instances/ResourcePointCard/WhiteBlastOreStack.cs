@@ -16,12 +16,16 @@ public class WhiteBlastOreStack : Card
 
     private void DigByTool(Card tool, out string tip, CardEvent e)
     {
-        // 掉落卡牌(2次)
-        RandomDrop(dropList, out tip, 2, () =>
+        tip = string.Empty;
+        tool.Use();
+        ApplyEventEffects(e, () =>
         {
-            Use();
-            tool.Use();
-            ApplyEventEffects(e);
+            // 掉落卡牌(2次)
+            RandomDrop(dropList, out _, 2, () =>
+            {
+                PlaySound("凿_01", true);
+                Use();
+            });
         });
     }
 

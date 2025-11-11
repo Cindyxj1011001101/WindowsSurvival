@@ -21,7 +21,8 @@ public class KettleFlower : PlantCard
             {
                 { PlayerStateEnum.Hydration, +14 },
                 { PlayerStateEnum.Sanity, -3 }
-            });
+            },
+            sound: "喝_01");
     }
 
     protected override void OnLateConstructor()
@@ -69,20 +70,17 @@ public class KettleFlower : PlantCard
     private void Hurt(Card tool, CardEvent e)
     {
         tool.Use(); // 工具耐久减少
-
         hasWound = true; // 产生伤口
-        plantGrowth.AddValue(-10); // 生长进度-10
-
+        AddPlantGrowth(-10); // 生长进度-10
         plantGrowth.growStopped = true; // 停止生长
 
-        ApplyEventEffects(e);
-
-        if (Random.Range(0, 100) <= 5) // 5%概率获得水壶兰种子
+        ApplyEventEffects(e, () =>
         {
-            AddCard("水壶兰种子", Bag);
-        }
-
-        UpdatePlantState();
+            if (Random.value <= 0.05) // 5%概率获得水壶兰种子
+            {
+                AddCard("水壶兰种子", Bag);
+            }
+        });
     }
 
     private void Event_Hurt(out string tip, CardEvent e)
@@ -114,10 +112,12 @@ public class KettleFlower : PlantCard
 
     private void DigUp(Card tool, CardEvent e)
     {
-        DestroyThis();
         tool.Use();
-        ApplyEventEffects(e);
-        AddCard(plantGrowth.deadCardId, Bag);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            AddCard(plantGrowth.deadCardId, Bag);
+        });
     }
 
     private void Event_DigUp(out string tip, CardEvent e)
@@ -139,9 +139,8 @@ public class KettleFlower : PlantCard
 
     private void Event_Drink(out string tip, CardEvent e)
     {
-        PlaySound("喝_01", true);
         tip = string.Empty;
-        plantGrowth.AddValue(-20); // 生长进度-20
+        AddPlantGrowth(-20); // 生长进度-20
         ApplyEventEffects(e);
     }
 

@@ -32,10 +32,12 @@ public class RatBody : CookableCard
     #region 用手剥
     private void Event_PeelByHand(out string tip, CardEvent e)
     {
-        DestroyThis();
-        ApplyEventEffects(e);
-        //随机掉落卡牌
-        RandomDrop(dropList, out tip);
+        tip = string.Empty;
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            RandomDrop(dropList, out _);
+        });
     }
     #endregion
 
@@ -59,10 +61,12 @@ public class RatBody : CookableCard
 
     private void PeelByKnife(Card knife, CardEvent e)
     {
-        DestroyThis();
         knife.Use();
-        ApplyEventEffects(e);
-        AddCard("小块生肉", true);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            AddCard("小块生肉", true);
+        });
     }
     #endregion
 

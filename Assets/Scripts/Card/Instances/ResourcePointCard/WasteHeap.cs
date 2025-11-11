@@ -21,24 +21,28 @@ public class WasteHeap : Card
 
     private void Event_Dig(out string tip, CardEvent e)
     {
-        PlaySound("挖掘废料_01", true);
-        //掉落卡牌
-        RandomDrop(dropList, out tip, onDrop: () =>
+        tip = string.Empty;
+        ApplyEventEffects(e, () =>
         {
-            Use();
-            ApplyEventEffects(e);
+            RandomDrop(dropList, out _, 1, () =>
+            {
+                PlaySound("挖掘废料_01", true);
+                Use();
+            });
         });
     }
 
     private void DigByTool(Card tool, out string tip, CardEvent e)
     {
-        PlaySound("挖掘废料_01", true);
-        //掉落卡牌
-        RandomDrop(dropList, out tip, onDrop: () =>
+        tip = string.Empty;
+        tool.Use();
+        ApplyEventEffects(e, () =>
         {
-            Use();
-            tool.Use();
-            ApplyEventEffects(e);
+            RandomDrop(dropList, out _, 1, () =>
+            {
+                PlaySound("挖掘废料_01", true);
+                Use();
+            });
         });
     }
 

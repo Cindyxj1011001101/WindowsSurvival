@@ -1,29 +1,25 @@
 using UnityEngine;
 
 /// <summary>
-/// 水瓶鱼
+/// 有产物的水瓶鱼
 /// </summary>
 public class AquariusFishWithProduct : Card
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("用捕网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, () => 15);
+        AddCardEvent("用捞网捉", "肯定能捉到", Event_CatchByNet, Judge_CatchByNet, () => 15);
         AddCardEvent("用手捉", "可能捉不到", Event_CatchByHand, null, () => 30);
     }
 
-    #region 用捕网捉
+    #region 用捞网捉
     private void Catch(Card tool, CardEvent e)
     {
-        // 销毁卡牌
-        DestroyThis();
-        // 1. 消耗耐久
         tool.Use();
-
-        ApplyEventEffects(e);
-
-        // 3. 掉落卡牌
-        // 获得一张“有产物的被捉住的水瓶鱼”
-        AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
+        });
     }
 
     private void Event_CatchByNet(out string tip, CardEvent e)
@@ -48,24 +44,23 @@ public class AquariusFishWithProduct : Card
     private void Event_CatchByHand(out string tip, CardEvent e)
     {
         tip = string.Empty;
-        DestroyThis();
-
-        ApplyEventEffects(e);
-
-        // 3/4概率逃跑
-        var value = Random.value;
-        if (value < 3 / 4f)
+        ApplyEventEffects(e, () =>
         {
-            tip = "水瓶鱼逃跑了";
-            StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, -2);
-            return;
-        }
+            DestroyThis();// 3/4 概率逃跑
+            var value = Random.value;
+            if (value < 3 / 4f)
+            {
+                ShowTip($"{CardName}逃走了");
+                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, -2);
+                return;
+            }
 
-        // 获得一张“被捉住的水瓶鱼”
-        // 继承产物进度
-        // 添加到玩家背包
-        AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag, out var card);
-        card.InheritComponent<ProgressComponent>(this, out _);
+            // 获得一张“被捉住的水瓶鱼”
+            // 继承产物进度
+            // 添加到玩家背包
+            AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag, out var card);
+            card.InheritComponent<ProgressComponent>(this, out _);
+        });
     }
     #endregion
 

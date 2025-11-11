@@ -12,17 +12,21 @@ public class SeaGrass : Card
     private void Event_CollectByHand(out string tip, CardEvent e)
     {
         tip = string.Empty;
-        DestroyThis();
-        ApplyEventEffects(e);
-        AddCard("纤维", true);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            AddCard("纤维", true);
+        });
     }
 
     private void CollectByKnife(Card tool, CardEvent e)
     {
-        DestroyThis();
         tool.Use();
-        ApplyEventEffects(e);
-        AddCard("纤维", true);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            AddCard("纤维", true);
+        });
     }
 
     private void Event_CollectByKnife(out string tip, CardEvent e)

@@ -10,7 +10,8 @@ public class Painkillers : Card
             () => new()
             {
                 { PlayerStateEnum.PainLevel, -50 * GlobalDataManager.Instance.GlobalData.GetReduceRate(CardId) }
-            });
+            },
+            sound: "吃_01");
     }
 
     protected override void OnInit()
@@ -26,7 +27,6 @@ public class Painkillers : Card
 
     private void Event_Use(out string tip, CardEvent e)
     {
-        PlaySound("吃_01", true);
         tip = string.Empty;
         DestroyThis();
         ApplyEventEffects(e);

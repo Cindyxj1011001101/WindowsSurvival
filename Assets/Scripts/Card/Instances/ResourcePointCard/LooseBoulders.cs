@@ -24,14 +24,15 @@ public class LooseBoulders : Card
 
     private void DigByTool(Card tool, out string tip, CardEvent e)
     {
-        //掉落卡牌
-        RandomDrop(dropList, out tip, onDrop: () =>
+        tip = string.Empty;
+        tool.Use();
+        ApplyEventEffects(e, () =>
         {
-            //消耗1点耐久度
-            Use();
-            // 工具消耗耐久
-            tool.Use();
-            ApplyEventEffects(e);
+            RandomDrop(dropList, out _, 1, () =>
+            {
+                PlaySound("凿_01", true);
+                Use();
+            });
         });
     }
 

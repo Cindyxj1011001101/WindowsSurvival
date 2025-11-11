@@ -25,11 +25,13 @@ public class FishingNetBag : EquipmentCard
 
     private void CutThis(Card tool, CardEvent e)
     {
-        DestroyThis();
         tool.Use();
-        ApplyEventEffects(e);
-        AddCard("韧性胶管", true);
-        AddCards("纤维", 4, true);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            AddCard("韧性胶管", true);
+            AddCards("纤维", 4, true);
+        });
     }
 
     private void Event_Cut(out string tip, CardEvent e)

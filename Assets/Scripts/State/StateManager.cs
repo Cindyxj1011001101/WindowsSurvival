@@ -824,9 +824,7 @@ public class StateManager : IManager
         EventManager.Instance.TriggerEvent(EventType.StartSleeping);
 
         // 时间增加
-        TimeManager.Instance.AddTime(time);
-
-        StopResting();
+        TimeManager.Instance.AddTime(time, StopResting);
     }
 
     public void StopResting()
@@ -838,7 +836,7 @@ public class StateManager : IManager
         if (isRestingOnTheGround) isRestingOnTheGround = false;
 
         // 停止时间增加
-        TimeManager.Instance.StopTimePass();
+        TimeManager.Instance.ShutTimePass();
 
         // 触发结束睡觉事件
         EventManager.Instance.TriggerEvent(EventType.StopSleeping);
@@ -891,7 +889,7 @@ public class StateManager : IManager
         // 停止休息
         StopResting();
         // 停止时间流逝
-        TimeManager.Instance.StopTimePass();
+        TimeManager.Instance.ShutTimePass();
         WindowsManager.Instance.OpenWindow("Chat", true);
     }
     #endregion

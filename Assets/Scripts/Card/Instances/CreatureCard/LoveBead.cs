@@ -11,8 +11,10 @@ public class LoveBead : Card
     private void Event_GetMeat(out string tip, CardEvent e)
     {
         tip = string.Empty;
-        DestroyThis();
-        ApplyEventEffects(e);
-        AddCards("生贝肉", 2, true);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            AddCards("生贝肉", 2, true);
+        });
     }
 }

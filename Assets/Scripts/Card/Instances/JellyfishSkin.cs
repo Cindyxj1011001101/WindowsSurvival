@@ -20,10 +20,12 @@ public class JellyfishSkin : Card
 
     private void Pickle(Card salineWater, CardEvent e)
     {
-        DestroyThis();
         salineWater.DestroyThis();
-        ApplyEventEffects(e);
-        TurnTo("腌渍中的海蜇皮", Bag);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            TurnTo("腌渍中的海蜇皮", Bag);
+        });
     }
 
     private void Event_Pickle(out string tip, CardEvent e)

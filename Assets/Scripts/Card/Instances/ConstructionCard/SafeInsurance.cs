@@ -39,10 +39,12 @@ public class SafeInsurance : ConstructionCard
     /// <param name="tip"></param>
     private void Event_UseHand(out string tip, CardEvent e)
     {
-        PlaySound("金属受击_01", true);
         tip = string.Empty;
-        Use(3);
-        ApplyEventEffects(e);
+        ApplyEventEffects(e, () =>
+        {
+            PlaySound("金属受击_01", true);
+            Use(3);
+        });
     }
 
     private bool Judge_UseHand(out string hint)
@@ -57,11 +59,12 @@ public class SafeInsurance : ConstructionCard
     /// <param name="tip"></param>
     private void UseShovel(Card tool, CardEvent e)
     {
-        // 播放音效
-        PlaySound("凿_01", true);
-        Use(8);
         tool.Use();
-        ApplyEventEffects(e);
+        ApplyEventEffects(e, () =>
+        {
+            PlaySound("凿_01", true);
+            Use(8);
+        });
     }
 
     private void Event_UseShovel(out string tip, CardEvent e)
@@ -87,11 +90,12 @@ public class SafeInsurance : ConstructionCard
     /// <param name="tip"></param>
     private void UseHammer(Card tool, CardEvent e)
     {
-        // 播放音效
-        PlaySound("暴力拆毁_01", true);
-        Use(20);
         tool.Use();
-        ApplyEventEffects(e);
+        ApplyEventEffects(e, () =>
+        {
+            PlaySound("暴力拆毁_01", true);
+            Use(20);
+        });
     }
 
     private void Event_UseHammer(out string tip, CardEvent e)

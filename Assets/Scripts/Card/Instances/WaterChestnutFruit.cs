@@ -17,17 +17,21 @@ public class WaterChestnutFruit : Card
     private void Event_BreakByHand(out string tip, CardEvent e)
     {
         tip = string.Empty;
-        DestroyThis();
-        ApplyEventEffects(e);
-        TurnTo("菱果肉", Bag);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            TurnTo("菱果肉", Bag);
+        });
     }
 
     private void BreakByTool(Card tool, CardEvent e)
     {
-        DestroyThis();
         tool.Use();
-        ApplyEventEffects(e);
-        TurnTo("菱果肉", Bag);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            TurnTo("菱果肉", Bag);
+        });
     }
 
     private void Event_BreakByTool(out string tip, CardEvent e)

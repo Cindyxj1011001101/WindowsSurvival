@@ -10,10 +10,12 @@ public class Siphonophyllum : Card
 
     private void Cut(Card tool, CardEvent e)
     {
-        DestroyThis();
         tool.Use();
-        ApplyEventEffects(e);
-        AddCards("磁性触手", 2, true);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            AddCards("磁性触手", 2, true);
+        });
     }
 
     private void Event_Cut(out string tip, CardEvent e)

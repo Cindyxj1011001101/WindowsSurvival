@@ -289,28 +289,31 @@ public class CraftWindow : WindowBase
     {
         if (currentSelectedRecipe == null) return;
 
-        var tween = slot.transform.PunchAndBounce(() =>
+        // 合成卡牌
+        CraftManager.Instance.Craft(currentSelectedRecipe, (outcomeCard) =>
         {
-            // 合成卡牌
-            var outcomeCard = CraftManager.Instance.Craft(currentSelectedRecipe);
-
-            // 掉落制作出的卡牌
-            // 如果是装备卡牌，则尝试直接穿上
-            if (GameManager.Instance.CanEquip(outcomeCard, out _))
+            var tween = slot.transform.PunchAndBounce(() =>
             {
-                GameManager.Instance.Equip(outcomeCard, slot.transform.position);
-            }
-            // 如果是建筑卡牌或者是有内容物的卡牌，则优先掉落到环境里
-            else
-            {
-                var toPlayerBag = outcomeCard.CardType != CardType.Construction && !outcomeCard.TryGetComponent<InnerContentsComponent>(out _);
-                GameManager.Instance.AddCardWithTween(outcomeCard, toPlayerBag, slot.transform.position);
-            }
+                SoundManager.Instance.PlaySound("制作_03", true);
 
-            // 刷新显示
-            RefreshDisplay();
+                // 掉落制作出的卡牌
+                // 如果是装备卡牌，则尝试直接穿上
+                if (GameManager.Instance.CanEquip(outcomeCard, out _))
+                {
+                    GameManager.Instance.Equip(outcomeCard, slot.transform.position);
+                }
+                // 如果是建筑卡牌或者是有内容物的卡牌，则优先掉落到环境里
+                else
+                {
+                    var toPlayerBag = outcomeCard.CardType != CardType.Construction && !outcomeCard.TryGetComponent<InnerContentsComponent>(out _);
+                    GameManager.Instance.AddCardWithTween(outcomeCard, toPlayerBag, slot.transform.position);
+                }
+
+                // 刷新显示
+                RefreshDisplay();
+            });
+            MouseManager.Instance.Wait(tween.Duration());
         });
-        MouseManager.Instance.Wait(tween.Duration());
     }
 
     public void DisplayRecipe(string cardId)

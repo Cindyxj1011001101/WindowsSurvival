@@ -136,7 +136,7 @@ public abstract class InvasionComposition
                 // 添加对玩家的永久仇恨
                 (entity as EntityCard).AddPermanentAggro(Player.Instance, 7);
                 // 添加生物到结果中
-                result.Add(CardFactory.CreateCard(selectedEntity));
+                result.Add(entity);
                 remainingThreatPoints -= cost;
             }
             else

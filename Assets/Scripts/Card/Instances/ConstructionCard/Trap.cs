@@ -84,10 +84,8 @@ public class Trap : ConstructionCard
         innerContents.notAllowRemoveReason = "陷阱已布置，不能移除诱饵";
         innerContents.notAllowAddReason = "陷阱已布置，不能添加诱饵";
 
-        // 先走时间
-        ApplyEventEffects(e);
-        // 再变成已布置
-        stateMachine.ChangeState("已布置");
+        // 先走时间，再变成已布置
+        ApplyEventEffects(e, () => stateMachine.ChangeState("已布置"));
     }
 
     private bool Judge_Arrange(out string hint)

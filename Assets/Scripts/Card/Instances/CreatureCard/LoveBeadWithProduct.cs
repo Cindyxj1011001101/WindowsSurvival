@@ -37,16 +37,16 @@ public class LoveBeadWithProduct : Card
 
     private void OpenByTool(Card tool, out string tip, CardEvent e)
     {
-        DestroyThis();
+        tip = string.Empty;
         tool.Use();
-
-        ApplyEventEffects(e);
-
-        // 变回爱情贝
-        TurnTo("爱情贝", Bag);
-
-        // 随机掉落
-        RandomDrop(dropList, out tip);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            // 变回爱情贝
+            TurnTo("爱情贝", Bag);
+            // 随机掉落
+            RandomDrop(dropList, out _);
+        });
     }
 
     private void Event_OpenByTool(out string tip, CardEvent e)

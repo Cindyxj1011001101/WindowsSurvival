@@ -38,9 +38,11 @@ public class GelBottler : Card
     private void Event_Bottling(out string tip, CardEvent e)
     {
         tip = string.Empty;
-        Use();
-        ApplyEventEffects(e);
-        AddCard("盐水", true);
+        ApplyEventEffects(e, () =>
+        {
+            Use();
+            AddCard("盐水", true);
+        });
     }
 
     private bool Judge_Bottling(out string hint)

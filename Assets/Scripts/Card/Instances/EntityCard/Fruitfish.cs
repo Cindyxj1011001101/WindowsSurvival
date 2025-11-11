@@ -86,7 +86,7 @@ public class Fruitfish : EntityCard
         {
             // 食果鲀消失
             DestroyThis();
-            ShowTip($"{CardName}逃跑了");
+            ShowTip($"{CardName}逃走了");
         }
     }
 
@@ -136,7 +136,7 @@ public class Fruitfish : EntityCard
 
         // 吃掉
         // TODO: 吃掉动效
-        (toEat as PlantCard).SetPlantGrowth(0);
+        (toEat as PlantCard).AddPlantGrowth(-100);
     }
 
     private List<Card> GetRipeFruitCrops()
@@ -147,14 +147,12 @@ public class Fruitfish : EntityCard
 
     private void Catch(Card tool, CardEvent e)
     {
-        // 销毁卡牌
-        DestroyThis();
         tool.Use();
-
-        ApplyEventEffects(e);
-
-        // 掉落产物
-        ParseAndDrop(deadDrops);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            ParseAndDrop(deadDrops);
+        });
     }
 
     private void Event_CatchByNet(out string tip, CardEvent e)

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MoveExploreManager : IManager
 {
@@ -195,14 +196,9 @@ public class MoveExploreManager : IManager
     /// <summary>
     /// 处理探索事件
     /// </summary>
-    public void HandleExplore(out string tip, out List<Card> droppedCards)
+    public void HandleExplore(UnityAction<List<Card>, string> dropExploredCards)
     {
-        tip = string.Empty;
-        droppedCards = new List<Card>();
-
         if (!CanMoveExplore()) return;
-
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
 
         var env = GameManager.Instance.CurEnvironmentBag;
 
@@ -214,8 +210,8 @@ public class MoveExploreManager : IManager
             return;
         }
 
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlaySound("抽卡", true);
+        // 掉落卡牌
+        var droppedCards = HandeleExploreDrop(out var tip, disposableDropList, deepExploreDropList);
 
         (_, int time, Dictionary<PlayerStateEnum, float> playerStateChanges) = GetExploreEffects();
 
@@ -223,10 +219,12 @@ public class MoveExploreManager : IManager
         StateManager.Instance.ApplyPlayerStateChanges(playerStateChanges);
 
         // 消耗时间
-        TimeManager.Instance.AddTime(time);
-
-        // 掉落卡牌
-        HandeleExploreDrop(out tip, out droppedCards, disposableDropList, deepExploreDropList);
+        TimeManager.Instance.AddTime(time, () =>
+        {
+            dropExploredCards?.Invoke(droppedCards, tip);
+        });
+        
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
     }
 
     /// <summary>
@@ -234,27 +232,24 @@ public class MoveExploreManager : IManager
     /// </summary>
     /// <param name="tip"></param>
     /// <param name="droppedCards"></param>
-    private void HandeleExploreDrop(out string tip, out List<Card> droppedCards, DropList disposableDropList, DeepExploreDropList deepExploreDropList)
+    private List<Card> HandeleExploreDrop(out string tip, DropList disposableDropList, DeepExploreDropList deepExploreDropList)
     {
         tip = string.Empty;
-        droppedCards = new List<Card>();
 
         // 当一次性探索列表还有剩余
         if (!disposableDropList.IsEmpty)
         {
             // 掉落卡牌
-            droppedCards = disposableDropList.RandomDrop(out tip);
+            return disposableDropList.RandomDrop(out tip);
         }
+
         // 如果还可以重复探索
-        else if (!deepExploreDropList.IsEmpty)
+        if (!deepExploreDropList.IsEmpty)
         {
-            droppedCards = deepExploreDropList.RandomDrop();
-            if (droppedCards.IsNullOrEmpty())
-            {
-                tip = "地点资源缺乏，什么都没找到";
-                SoundManager.Instance.PlaySound("错误提示");
-            }
+            return deepExploreDropList.RandomDrop();
         }
+
+        return new();
     }
     #endregion
 
@@ -266,18 +261,18 @@ public class MoveExploreManager : IManager
     }
 
     /// <summary>
-    /// 移动到目标场景
+    /// 移动到目标地点
     /// </summary>
-    /// <param name="targetPlace"></param>
+    /// <param name="targetEnv"></param>
     /// <param name="basicMoveTime"></param>
-    public void Move(PlaceEnum targetPlace, int basicMoveTime)
+    public void Move(PlaceEnum targetEnv, int basicMoveTime)
     {
         if (!CanMoveExplore()) return;
 
         var lastEnv = GameManager.Instance.CurEnvironmentBag;
 
         // 改变地点
-        GameManager.Instance.ChangeEnv(targetPlace);
+        GameManager.Instance.ChangeEnv(targetEnv);
 
         var env = GameManager.Instance.CurEnvironmentBag;
 
@@ -301,12 +296,13 @@ public class MoveExploreManager : IManager
         }
 
         // 移动消耗
-        (_, int time, Dictionary<PlayerStateEnum, float> playerStateChanges) = GetMoveEffects(basicMoveTime, targetPlace);
+        (_, int time, Dictionary<PlayerStateEnum, float> playerStateChanges) = GetMoveEffects(basicMoveTime, targetEnv);
         StateManager.Instance.ApplyPlayerStateChanges(playerStateChanges);
-        TimeManager.Instance.AddTime(time);
-
-        // 触发事件
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("EnterEnvironment", targetPlace.ToString()));
+        TimeManager.Instance.AddTime(time, () =>
+        {
+            // 触发事件
+            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("EnterEnvironment", targetEnv.ToString()));
+        });
     }
 
     /// <summary>

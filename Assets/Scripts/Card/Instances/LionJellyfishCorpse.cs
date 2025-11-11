@@ -27,10 +27,13 @@ public class LionJellyfishCorpse : Card
     #region 用刀切割
     private void PeelByKnife(Card knife, out string tip, CardEvent e)
     {
-        Use();
+        tip = string.Empty;
         knife.Use();
-        ApplyEventEffects(e);
-        RandomDrop(dropList, out tip);
+        ApplyEventEffects(e, () =>
+        {
+            Use();
+            RandomDrop(dropList, out _);
+        });
     }
 
     private void Event_PeelByKnife(out string tip, CardEvent e)

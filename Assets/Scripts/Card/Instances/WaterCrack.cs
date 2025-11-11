@@ -15,8 +15,8 @@ public class WaterCrack : Card
         PlaySound("堵住裂缝");
         DestroyThis();
         patch.DestroyThis();
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("渗水裂缝", "堵住"));
         ApplyEventEffects(e);
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("渗水裂缝", "堵住"));
     }
 
     private void Event_Fix(out string tip, CardEvent e)

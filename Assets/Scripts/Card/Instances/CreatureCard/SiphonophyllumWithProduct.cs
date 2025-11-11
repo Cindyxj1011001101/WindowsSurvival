@@ -17,10 +17,12 @@ public class SiphonophyllumWithProduct : Card
 
     private void Cut(Card tool, CardEvent e)
     {
-        DestroyThis();
         tool.Use();
-        ApplyEventEffects(e);
-        AddCards("磁性触手", 3, true);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            AddCards("磁性触手", 3, true);
+        });
     }
 
     private void Event_Cut(out string tip, CardEvent e)
@@ -42,14 +44,14 @@ public class SiphonophyllumWithProduct : Card
 
     private void Event_Collect(out string tip, CardEvent e)
     {
-        DestroyThis();
-
-        ApplyEventEffects(e);
-
-        // 变回虹吸海葵
-        TurnTo("虹吸海葵", Bag);
-
-        RandomDrop(dropList, out tip);
+        tip = string.Empty;
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            // 变回虹吸海葵
+            TurnTo("虹吸海葵", Bag);
+            RandomDrop(dropList, out _);
+        });
     }
 
     public override bool CanQuickInteract(Card card, out string tip)

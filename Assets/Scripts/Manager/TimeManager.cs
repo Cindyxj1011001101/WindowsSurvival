@@ -15,10 +15,11 @@ public class TimeManager : IManager
 
     public int Day => (CurTime - StartDateTime).Days + 1;
 
-    private bool timePassStopped = false;   // 时间流逝停止
-    private bool timePassFreezed = false;    // 时间流逝暂停
-    private float timeFreezeEndTime = 0;     // 时间流逝暂停结束时间
+    private bool timePassShut = false;   // 时间流逝停止
+    private bool timePassFreezed = false;   // 时间流逝暂停
+    private float timeFreezeEndTime = 0;    // 时间流逝暂停结束时间
     private int minutesToPass = 0;          // 待流逝的时间
+    private UnityAction onEnd = null;       // 一次完整的时间流逝结束后执行的逻辑
 
     public void Init()
     {
@@ -58,11 +59,12 @@ public class TimeManager : IManager
         }
     }
 
-    public void AddTime(int minutes)
+    public void AddTime(int minutes, UnityAction onEnd = null)
     {
-        timePassStopped = false;
+        timePassShut = false;
         timePassFreezed = false;
         minutesToPass = 0;
+        this.onEnd += onEnd;
 
         EventManager.Instance.TriggerEvent(EventType.StartChangeTime);
 
@@ -72,7 +74,7 @@ public class TimeManager : IManager
         int timespan = minutes;
 
         // 以一分钟为粒度流逝时间
-        while (!timePassStopped && timespan > 0)
+        while (!timePassShut && timespan > 0)
         {
             timespan--;
             UpdateCurInterval();
@@ -91,6 +93,13 @@ public class TimeManager : IManager
         }
 
         EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
+
+        // 一次完整的时间流逝结束
+        if (timePassShut || timespan <= 0)
+        {
+            this.onEnd?.Invoke();
+            this.onEnd = null;
+        }
     }
 
     private void UpdateCurInterval()
@@ -119,9 +128,9 @@ public class TimeManager : IManager
     /// <summary>
     /// 停止时间流逝
     /// </summary>
-    public void StopTimePass()
+    public void ShutTimePass()
     {
-        timePassStopped = true;
+        timePassShut = true;
     }
 
     /// <summary>

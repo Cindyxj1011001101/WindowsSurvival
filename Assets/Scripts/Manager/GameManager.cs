@@ -97,7 +97,7 @@ public class GameManager : IManager
 
         // 触发事件
         EventManager.Instance.TriggerEvent(EventType.ChangeCurrentEnvironment, CurEnvironmentBag);
-    }
+	}
 
     #region AddCard
     /// <summary>

@@ -35,11 +35,15 @@ public class CoralReef : Card
 
     private void DigByTool(Card tool, out string tip, CardEvent e)
     {
-        PlaySound("挖掘废料_01", true);
-        RandomDrop(dropList, out tip, 2, onDrop: () =>
+        tip = string.Empty;
+        tool.Use();
+        ApplyEventEffects(e, () =>
         {
-            tool.Use();
-            ApplyEventEffects(e);
+            RandomDrop(dropList, out _, 2, () =>
+            {
+                PlaySound("挖掘废料_01", true);
+                Use();
+            });
         });
     }
 

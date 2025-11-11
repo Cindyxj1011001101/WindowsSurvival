@@ -135,16 +135,15 @@ public class SkirtJellyfish : EntityCard
         // TODO: 吃掉动效
         toEat.DestroyThis();
     }
+
     private void Catch(Card tool, CardEvent e)
     {
-        // 销毁卡牌
-        DestroyThis();
         tool.Use();
-
-        ApplyEventEffects(e);
-
-        // 掉落产物
-        ParseAndDrop(deadDrops);
+        ApplyEventEffects(e, () =>
+        {
+            DestroyThis();
+            ParseAndDrop(deadDrops);
+        });
     }
 
     private void Event_CatchByNet(out string tip, CardEvent e)

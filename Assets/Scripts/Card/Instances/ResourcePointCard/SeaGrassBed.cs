@@ -30,21 +30,26 @@ public class SeaGrassBed : Card
 
     private void Event_CollectByHand(out string tip, CardEvent e)
     {
-        RandomDrop(dropListHand, out tip, 2, () =>
+        tip = string.Empty;
+        ApplyEventEffects(e, () =>
         {
-            Use();
-            ApplyEventEffects(e);
+            RandomDrop(dropListHand, out _, 2, () =>
+            {
+                Use();
+            });
         });
     }
 
     private void CollectByKnife(Card tool, out string tip, CardEvent e)
     {
-        RandomDrop(dropListKnife, out tip, 3, () =>
+        tip = string.Empty;
+        tool.Use();
+        ApplyEventEffects(e, () =>
         {
-            Use();
-            tool.Use();
-
-            ApplyEventEffects(e);
+            RandomDrop(dropListKnife, out _, 3, () =>
+            {
+                Use();
+            });
         });
     }
 
