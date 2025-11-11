@@ -307,11 +307,11 @@ public abstract class Card : IComparable<Card>
     #region Update
     [JsonProperty] protected int updateOrder = -1;
 
-    [JsonProperty] protected bool isUpdatePaused = false; // 是否暂停每回合更新
+    [JsonProperty] protected bool isUpdateFreezed = false; // 是否暂停每回合更新
 
     private void Update()
     {
-        if (isUpdatePaused || Destroyed) return;
+        if (isUpdateFreezed || Destroyed) return;
 
         // 更新组件
         foreach (var component in components.Values)
@@ -324,7 +324,7 @@ public abstract class Card : IComparable<Card>
 
     private void OnUpdateBegin()
     {
-        if (isUpdatePaused || Destroyed) return;
+        if (isUpdateFreezed || Destroyed) return;
 
         foreach (var component in components.Values)
         {
@@ -337,14 +337,14 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     protected virtual void OnUpdate() { }
 
-    public void PauseUpdating()
+    public void FreezeUpdate()
     {
-        isUpdatePaused = true;
+        isUpdateFreezed = true;
     }
 
-    public void ContinueUpdating()
+    public void UnfreezeUpdate()
     {
-        isUpdatePaused = false;
+        isUpdateFreezed = false;
     }
 
     #endregion
@@ -659,7 +659,7 @@ public abstract class Card : IComparable<Card>
         // 播放动效
         if (Transform != null)
         {
-            var tween = MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot(), pauseTime: true);
+            var tween = MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot(), freezeTime: true);
             MouseManager.Instance.Wait(tween.Duration());
         }
     }

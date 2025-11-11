@@ -134,7 +134,7 @@ public class FuelFurnace : ConstructionCard
         leftProcessRounds = MAX_PROCESS_ROUNDS;
 
         // 暂停内容物的更新
-        innerContents.PauseUpdating();
+        innerContents.FreezeUpdate();
 
         // 不可以添加或移除内容物
         innerContents.allowAdd = innerContents.allowRemove = false;

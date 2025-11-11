@@ -138,7 +138,7 @@ public class GameManager : IManager
             {
                 card.RefreshSlot();
             },
-            pauseTime: true);
+            freezeTime: true);
     }
 
     public Tween AddCardsWithTween(bool toPlayerBag, Vector2 startPos, params Card[] cards)
@@ -156,7 +156,7 @@ public class GameManager : IManager
             {
                 card.RefreshSlot();
             },
-            pauseTime: true);
+            freezeTime: true);
     }
 
     public Tween AddCardWithTween(string cardId, bool toPlayerBag, Vector2 startPos, out Card card)

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TimeManager : IManager
 {
@@ -15,8 +16,8 @@ public class TimeManager : IManager
     public int Day => (CurTime - StartDateTime).Days + 1;
 
     private bool timePassStopped = false;   // 时间流逝停止
-    private bool timePassPaused = false;    // 时间流逝暂停
-    private float timePauseEndTime = 0;     // 时间流逝暂停结束时间
+    private bool timePassFreezed = false;    // 时间流逝暂停
+    private float timeFreezeEndTime = 0;     // 时间流逝暂停结束时间
     private int minutesToPass = 0;          // 待流逝的时间
 
     public void Init()
@@ -50,7 +51,7 @@ public class TimeManager : IManager
 
     private void Update()
     {
-        if (timePassPaused && Time.time >= timePauseEndTime)
+        if (timePassFreezed && Time.time >= timeFreezeEndTime)
         {
             // 继续时间流逝
             AddTime(minutesToPass);
@@ -60,7 +61,7 @@ public class TimeManager : IManager
     public void AddTime(int minutes)
     {
         timePassStopped = false;
-        timePassPaused = false;
+        timePassFreezed = false;
         minutesToPass = 0;
 
         EventManager.Instance.TriggerEvent(EventType.StartChangeTime);
@@ -77,13 +78,13 @@ public class TimeManager : IManager
             UpdateCurInterval();
 
             // 时间流逝暂停
-            if (timePassPaused)
+            if (timePassFreezed)
             {
                 if (timespan > 0)
                     // 记录下待流逝的时间
                     minutesToPass = timespan;
                 else
-                    timePassPaused = false;
+                    timePassFreezed = false;
                 // 退出循环
                 break;
             }
@@ -126,9 +127,9 @@ public class TimeManager : IManager
     /// <summary>
     /// 暂停时间流逝
     /// </summary>
-    public void PauseTimePass(float duration)
+    public void FreezeTimePass(float duration)
     {
-        timePassPaused = true;
-        timePauseEndTime = Mathf.Max(timePauseEndTime, Time.time + duration);
+        timePassFreezed = true;
+        timeFreezeEndTime = Mathf.Max(timeFreezeEndTime, Time.time + duration);
     }
 }

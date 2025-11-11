@@ -117,7 +117,6 @@ public class SafeInsurance : ConstructionCard
         PlaySound("摧毁_01", true);
         TurnTo("被撬开的保险柜", Bag, out var card);
         // 继承内容物
-        // TODO: 这里似乎有问题，因为继承过来的内容物组件没有init
         card.InheritComponent<InnerContentsComponent>(this, out var newComponent);
         newComponent.allowAdd = newComponent.allowRemove = newComponent.display = true;
     }

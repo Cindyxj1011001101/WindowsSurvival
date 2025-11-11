@@ -45,7 +45,7 @@ public class Campfire : ConstructionCard
         {
             if (fuelStorage.isBurning)
             {
-                c.PauseUpdating();
+                c.FreezeUpdate();
                 c.TryGetComponent<CookComponent>(out var cook);
                 if (cook.leftCookTime < 0) return;
 
@@ -62,7 +62,7 @@ public class Campfire : ConstructionCard
         // 取出时恢复每回合更新
         innerContents.onRemoveCard = (c) =>
         {
-            c.ContinueUpdating();
+            c.UnfreezeUpdate();
             c.RemoveComponent<TimerComponent>();
         };
     }
@@ -82,7 +82,7 @@ public class Campfire : ConstructionCard
         fuelStorage.Ignite(out s);
 
         // 点燃后暂停所有卡牌每回合更新
-        innerContents.PauseUpdating();
+        innerContents.FreezeUpdate();
 
         // 显示烹饪计时器
         innerContents.ForEachCard(c =>
@@ -114,7 +114,7 @@ public class Campfire : ConstructionCard
         fuelStorage.Extinguish(out s);
 
         // 熄灭后恢复所有卡牌每回合更新
-        innerContents.ContinueUpdating();
+        innerContents.UnfreezeUpdate();
 
         // 移除计时器组件
         innerContents.ForEachCard(c =>

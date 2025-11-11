@@ -77,7 +77,7 @@ public class Trap : ConstructionCard
         tip = string.Empty;
 
         // 内容物停止更新
-        innerContents.PauseUpdating();
+        innerContents.FreezeUpdate();
 
         // 不可添加或移除内容物
         innerContents.allowAdd = innerContents.allowRemove = false;

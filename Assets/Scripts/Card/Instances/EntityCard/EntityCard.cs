@@ -69,7 +69,7 @@ public abstract class EntityCard : Card, IEntity
 
     private void EntityUpdate()
     {
-        if (isUpdatePaused || Destroyed) return;
+        if (isUpdateFreezed || Destroyed) return;
 
         // 先更新仇恨
         UpdateAggro();

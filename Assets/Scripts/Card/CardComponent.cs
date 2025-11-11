@@ -383,14 +383,14 @@ public class InnerContentsComponent : CardComponent
 
     public void AddCard(Card card) => bag.AddCard(card);
 
-    public void PauseUpdating()
+    public void FreezeUpdate()
     {
-        ForEachCard(c => c.PauseUpdating());
+        ForEachCard(c => c.FreezeUpdate());
     }
 
-    public void ContinueUpdating()
+    public void UnfreezeUpdate()
     {
-        ForEachCard(c => c.ContinueUpdating());
+        ForEachCard(c => c.UnfreezeUpdate());
     }
 
     public void ForEachCard(UnityAction<Card> action)

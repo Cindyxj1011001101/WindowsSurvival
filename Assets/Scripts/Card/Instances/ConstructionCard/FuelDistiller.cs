@@ -58,7 +58,7 @@ public class FuelDistiller : ConstructionCard
         fuelStorage.Ignite(out s);
 
         // 点燃后暂停所有卡牌每回合更新
-        innerContents.PauseUpdating();
+        innerContents.FreezeUpdate();
 
         stateMachine.ChangeState("已点燃");
     }
@@ -68,7 +68,7 @@ public class FuelDistiller : ConstructionCard
         fuelStorage.Extinguish(out s);
 
         // 熄灭后恢复所有卡牌每回合更新
-        innerContents.ContinueUpdating();
+        innerContents.UnfreezeUpdate();
 
         stateMachine.ChangeState("未点燃");
     }

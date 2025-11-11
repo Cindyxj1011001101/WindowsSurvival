@@ -73,7 +73,7 @@ public class MFXUtility
         UnityAction onStart = null,
         UnityAction onComplete = null,
         Ease ease = Ease.OutQuad,
-        bool pauseTime = false)
+        bool freezeTime = false)
     {
         var slot = CreateSlot(sourcePosition);
 
@@ -101,8 +101,8 @@ public class MFXUtility
             SoundManager.Instance.PlaySound("放置卡牌", true);
         });
 
-        if (pauseTime)
-            TimeManager.Instance.PauseTimePass(seq.Duration());
+        if (freezeTime)
+            TimeManager.Instance.FreezeTimePass(seq.Duration());
 
         return seq;
     }
@@ -126,7 +126,7 @@ public class MFXUtility
         UnityAction onStart = null,
         UnityAction<Card> onComplete = null,
         Ease ease = Ease.OutQuad,
-        bool pauseTime = false
+        bool freezeTime = false
         )
     {
         var seq = DOTween.Sequence();
@@ -145,7 +145,7 @@ public class MFXUtility
                     onComplete?.Invoke(card);
                 },
                 ease,
-                pauseTime
+                freezeTime
                 ).SetDelay(i * interval));
         }
 
@@ -165,7 +165,7 @@ public class MFXUtility
         Card targetCard,
         UnityAction onStart = null,
         UnityAction onComplete = null,
-        bool pauseTime = false)
+        bool freezeTime = false)
     {
         var slot = CreateSlot(sourceCard.Transform.position);
         slot.DisplayCard(sourceCard, 1, false);
@@ -213,8 +213,8 @@ public class MFXUtility
             SoundManager.Instance.PlaySound("放置卡牌", true);
         });
 
-        if (pauseTime)
-            TimeManager.Instance.PauseTimePass(mainSeq.Duration());
+        if (freezeTime)
+            TimeManager.Instance.FreezeTimePass(mainSeq.Duration());
 
         return mainSeq;
     }
