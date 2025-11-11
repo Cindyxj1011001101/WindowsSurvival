@@ -96,14 +96,14 @@ public class TimeManager : IManager
     {
         CurInterval--;
         CurTime = CurTime.AddMinutes(1);
-        EventManager.Instance.TriggerEvent(EventType.AddOneMinute);
+        HandleAnotherDay();
         if (CurInterval <= 0)
         {
             // 每15分钟触发一次Update事件
             CurInterval = SETTLEMENT_INTERVAL;
             EventManager.Instance.TriggerEvent(EventType.Update);
         }
-        HandleAnotherDay();
+        EventManager.Instance.TriggerEvent(EventType.FineUpdate);
     }
 
     private bool HandleAnotherDay()

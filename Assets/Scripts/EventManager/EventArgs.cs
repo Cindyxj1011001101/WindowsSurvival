@@ -1,8 +1,9 @@
 ﻿public enum EventType
 {
-    Update,                             // 回合结算
+    Update,                             // 回合结算(15分钟一次)
     UpdateBegin,                        // 回合结算开始，记录快照
-    AddOneMinute,                       // 经过一分钟
+    FineUpdate,                         // 一分钟一次
+    AnotherDay,                         // 跨天行为触发
     ChangeCardProperty,                 // 卡牌属性变化
     ChangeCurrentEnvironment,           // 改变当前地点
     RefreshPlayerState,                 // 更新玩家状态数据
@@ -13,7 +14,6 @@
     GameOver,                           // 游戏结束
     TriggerParagraph,                   // 触发对话
     DialogueCondition,                  // 触发对话条件
-    AnotherDay,                         // 跨天行为触发
     StudyStarted,                       // 研究开始
     StudyStopped,                       // 研究暂停
     StudyComplished,                    // 研究完成

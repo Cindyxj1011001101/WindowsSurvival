@@ -54,7 +54,7 @@ public abstract class EntityCard : Card, IEntity
             TryGetNewIntention();
         }
 
-        EventManager.Instance.AddListener(EventType.AddOneMinute, EntityUpdate);
+        EventManager.Instance.AddListener(EventType.FineUpdate, EntityUpdate);
         EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
@@ -63,7 +63,7 @@ public abstract class EntityCard : Card, IEntity
         intentions.Clear();
         aggroCollection.Clear();
         GlobalDataManager.Instance.DestroyEntity(this);
-        EventManager.Instance.RemoveListener(EventType.AddOneMinute, EntityUpdate);
+        EventManager.Instance.RemoveListener(EventType.FineUpdate, EntityUpdate);
         EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
 
@@ -221,10 +221,10 @@ public abstract class EntityCard : Card, IEntity
         return aggroCollection.GetHighestPriority();
     }
 
-    ///// <summary>
-    ///// 移除仇恨实体
-    ///// </summary>
-    //protected void RemoveAggroEntity(IEntity entity) => aggroCollection.RemoveByUuid(entity.Uuid);
+    /// <summary>
+    /// 移除仇恨
+    /// </summary>
+    protected void RemoveAggro(IEntity entity) => aggroCollection.RemoveByUuid(entity.Uuid);
 
     ///// <summary>
     ///// 清除无效的仇恨目标
