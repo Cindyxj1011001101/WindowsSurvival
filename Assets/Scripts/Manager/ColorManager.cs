@@ -82,4 +82,8 @@ public static class ColorManager
 
         return $"<color=#{hexColor}>{text}</color>";
     }
+
+    public static string Alert(string text) => Colorize(text, Red);
+
+    public static string Warning(string text) => Colorize(text, Yellow);
 }

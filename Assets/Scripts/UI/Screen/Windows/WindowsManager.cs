@@ -31,6 +31,7 @@ public class WindowsManager : MonoBehaviour
 
     [SerializeField] private HoverableButton saveButton;
     [SerializeField] private HoverableButton restButton;
+    [SerializeField] private HoverableButton quitButton;
 
     [SerializeField] private List<HoverableButton> presetButtons = new(); // 预设按钮
     [SerializeField] private List<WindowsLayoutPreset> presets = new(); // 预设配置
@@ -51,8 +52,20 @@ public class WindowsManager : MonoBehaviour
     {
         saveButton.onClick.AddListener(() =>
         {
+            MouseManager.Instance.Wait();
             GameDataManager.Instance.SaveAllData();
-            MySceneManager.LoadScene(0);
+            //MySceneManager.LoadScene(0);
+        });
+
+        quitButton.onClick.AddListener(() =>
+        {
+            var window = OpenWindow("Confirm", true) as ConfirmWindow;
+            window.SetContent($"退出到开始界面。\n{ColorManager.Alert("未保存的内容将会丢失！！")}\n确认退出吗？");
+            window.onConfirm = () =>
+            {
+                MouseManager.Instance.Wait();
+                MySceneManager.LoadScene(0);
+            };
         });
 
         restButton.onClick.AddListener(HandleRestOnTheGround);

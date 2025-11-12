@@ -12,7 +12,7 @@ public class GarbageDestroyer : ConstructionCard
     private void Event_Destroy(CardEvent e)
     {
         var window = WindowsManager.Instance.OpenWindow("Confirm", true) as ConfirmWindow;
-        window.SetContent("确认要销毁所有内容物吗？");
+        window.SetContent($"{ColorManager.Alert("内容物将被全部销毁！！")}\n确认这样做吗？");
         window.onConfirm = () =>
         {
             PlaySound("挖掘废料_01", true);
