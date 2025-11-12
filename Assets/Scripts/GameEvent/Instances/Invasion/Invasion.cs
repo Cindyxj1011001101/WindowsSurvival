@@ -19,6 +19,12 @@ public class Invasion : GameEvent
         return "一群奇怪的生物入侵了这片区域，它们充满了恶意且以麦麦为猎杀目标。";
     }
 
+    protected override bool CanTriggerThisEvent()
+    {
+        // 前三天不会触发入侵
+        return TimeManager.Instance.Day >= 3;
+    }
+
     protected override void OnTrigger()
     {
         GenerateInvasion(CalculateThreatIntensity());
