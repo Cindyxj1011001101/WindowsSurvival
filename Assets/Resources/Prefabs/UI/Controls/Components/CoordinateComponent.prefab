@@ -182,8 +182,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2106701129682650482}
   - {fileID: 1133283340724747905}
+  - {fileID: 2106701129682650482}
   m_Father: {fileID: 4528623735136518218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -718,13 +718,13 @@ MonoBehaviour:
   stateNameText: {fileID: 0}
   valueText: {fileID: 7766327925615960705}
   slider: {fileID: 5404795882633578610}
-  button: {fileID: 0}
-  displayPercentage: 0
   arrow: {fileID: 0}
   ceil: {fileID: 0}
   floor: {fileID: 0}
   arrowSprites: []
+  button: {fileID: 0}
   tipController: {fileID: 5401633199307765810}
+  displayPercentage: 0
   fillColor: {r: 1, g: 1, b: 1, a: 1}
   playerCoordSlider: {fileID: 3685430648194429649}
 --- !u!1 &4823325424989648684
