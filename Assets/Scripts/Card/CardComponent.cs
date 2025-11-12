@@ -358,7 +358,7 @@ public class InnerContentsComponent : CardComponent
 
     public int DestroyCardsByCardId(string cardId, int count) => bag.DestroyCardsByCardId(cardId, count);
 
-    public List<Card> GetAllCards() => bag.GetAllCards();
+    public List<Card> GetAllCards(bool excludeLocked = true) => bag.GetAllCards(excludeLocked);
 
     public bool CanQuickInteract(Card card, out string tip)
     {

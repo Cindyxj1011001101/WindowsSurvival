@@ -135,6 +135,14 @@ public class EntityAggroCollection
                 continue;
             }
 
+            // 如果仇恨目标被摧毁或锁定
+            if (item.Target is EntityCard c && (c.Destroyed || c.Locked))
+            {
+                // 将目标移出集合，继续寻找
+                RemoveByUuid(item.TargetUuid);
+                continue;
+            }
+
             // 如果仇恨持续时间结束
             if (!item.IsRemaining)
             {

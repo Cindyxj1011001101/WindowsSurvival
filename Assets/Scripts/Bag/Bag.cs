@@ -242,7 +242,7 @@ public abstract class Bag
         });
     }
 
-    public List<Card> FindCards(Func<Card, bool> predicate)
+    public List<Card> FindCards(Func<Card, bool> predicate, bool excludeLocked = true)
     {
         var result = new List<Card>();
 
@@ -252,34 +252,27 @@ public abstract class Bag
 
             if (!predicate(slot.PeekCard())) continue;
 
-            result.AddRange(slot.Cards);
+            if (excludeLocked)
+                result.AddRange(slot.Cards.Where(c => !c.Locked));
+            else
+                result.AddRange(slot.Cards);
         }
 
         return result;
     }
 
-    public List<Card> GetAllCards()
+    public List<Card> GetAllCards(bool excludeLocked = true)
     {
-        var result = new List<Card>();
-
-        foreach (var slot in Slots)
-        {
-            if (slot.IsEmpty) continue;
-
-            result.AddRange(slot.Cards);
-        }
-
-        return result;
+        return FindCards(c => true, excludeLocked);
     }
 
     /// <summary>
     /// 根据tag查找卡牌
     /// </summary>
     /// <param name="tag"></param>
-    /// <exception cref="NotImplementedException"></exception>
-    public List<Card> FindCardsOfTag(CardTag tag)
+    public List<Card> FindCardsOfTag(CardTag tag, bool excludeLocked = true)
     {
-        return FindCards(c => c.Tags.Contains(tag));
+        return FindCards(c => c.Tags.Contains(tag), excludeLocked);
     }
     #endregion
 
