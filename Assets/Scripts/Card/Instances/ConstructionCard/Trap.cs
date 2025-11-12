@@ -127,13 +127,12 @@ public class Trap : ConstructionCard
         Card outcomeCard;
         foreach (var card in dropCards)
         {
-            if (CardFactory.ContainsCard("被捉住的" + CardName))
-                outcomeCard = CardFactory.CreateCard("被捉住的" + CardName);
+            if (CardFactory.ContainsCard("被捉住的" + card.CardId))
+                outcomeCard = CardFactory.CreateCard("被捉住的" + card.CardId);
             else
                 outcomeCard = card;
 
-            GameManager.Instance.AddCard(card, innerContents.bag);
-            card.RefreshSlot();
+            AddCard(outcomeCard, innerContents.bag);
         }
 
         ShowTip("捉到了好东西");

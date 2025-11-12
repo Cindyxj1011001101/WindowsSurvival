@@ -236,10 +236,7 @@ public class FuelFurnace : ConstructionCard
             innerContents.notAllowAddReason = "请先取出加工产物";
             
             // 添加产物
-            var outcomeCard = CardFactory.CreateCard(outcomeCardId);
-            GameManager.Instance.AddCard(outcomeCard, innerContents.bag);
-            outcomeCard.RefreshSlot();
-
+            AddCard(CardFactory.CreateCard(outcomeCardId), innerContents.bag);
             ShowTip("燃料炉加工完成");
 
             // 移除计时器

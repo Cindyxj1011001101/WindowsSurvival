@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-public class MFXUtility
+public static class MFXUtility
 {
     private static Canvas canvas;
 
@@ -72,8 +72,7 @@ public class MFXUtility
         float duration = 0.3f,
         UnityAction onStart = null,
         UnityAction onComplete = null,
-        Ease ease = Ease.OutQuad,
-        bool freezeTime = false)
+        Ease ease = Ease.OutQuad)
     {
         var slot = CreateSlot(sourcePosition);
 
@@ -101,9 +100,6 @@ public class MFXUtility
             SoundManager.Instance.PlaySound("放置卡牌", true);
         });
 
-        if (freezeTime)
-            TimeManager.Instance.FreezeTimePass(seq.Duration());
-
         return seq;
     }
 
@@ -125,9 +121,7 @@ public class MFXUtility
         float interval = 0.1f,
         UnityAction onStart = null,
         UnityAction<Card> onComplete = null,
-        Ease ease = Ease.OutQuad,
-        bool freezeTime = false
-        )
+        Ease ease = Ease.OutQuad)
     {
         var seq = DOTween.Sequence();
         
@@ -144,8 +138,7 @@ public class MFXUtility
                 {
                     onComplete?.Invoke(card);
                 },
-                ease,
-                freezeTime
+                ease
                 ).SetDelay(i * interval));
         }
 
@@ -164,8 +157,7 @@ public class MFXUtility
         Card sourceCard,
         Card targetCard,
         UnityAction onStart = null,
-        UnityAction onComplete = null,
-        bool freezeTime = false)
+        UnityAction onComplete = null)
     {
         var slot = CreateSlot(sourceCard.SlotTransform.position);
         slot.DisplayCard(sourceCard, 1, false);
@@ -213,10 +205,34 @@ public class MFXUtility
             SoundManager.Instance.PlaySound("放置卡牌", true);
         });
 
-        if (freezeTime)
-            TimeManager.Instance.FreezeTimePass(mainSeq.Duration());
-
         return mainSeq;
+    }
+
+    public static Tween MoveCard(this Vector3 sourcePosition, Card card)
+    {
+        var tween = MoveCard(card, 1, sourcePosition, 0.4f, onComplete: () => { card.RefreshSlot(); });
+        var duration = tween.Duration();
+        MouseManager.Instance.Wait(duration);
+        TimeManager.Instance.FreezeTimePass(duration);
+        return tween;
+    }
+
+    public static Tween MoveCards(this Vector3 sourcePosition, Card[] cards)
+    {
+        var tween = MoveCards(cards, sourcePosition, 0.4f, onComplete: (card) => { card.RefreshSlot(); });
+        var duration = tween.Duration();
+        MouseManager.Instance.Wait(duration);
+        TimeManager.Instance.FreezeTimePass(duration);
+        return tween;
+    }
+
+    public static Tween TurnTo(this Card sourceCard, Card targetCard)
+    {
+        var tween = TurnTo(sourceCard, targetCard, onComplete: () => { targetCard.RefreshSlot(); });
+        var duration = tween.Duration();
+        MouseManager.Instance.Wait(duration);
+        TimeManager.Instance.FreezeTimePass(duration);
+        return tween;
     }
 
     public static void ShowTip(string tip, Vector3 position, float duration = 2f)
@@ -277,5 +293,45 @@ public class MFXUtility
         {
             ShowArrows(rectTransform, up, level, color, arrowCount / groups.Count);
         }
+    }
+
+    public static Tween Bounce(this Transform target, float maxScale = 1.09f, float duration = 0.15f)
+    {
+        var originalScale = target.localScale;
+        return target.DOScale(maxScale, duration).SetLoops(2, LoopType.Yoyo).OnComplete(() => target.localScale = originalScale);
+    }
+
+    public static Tween Punch(this Transform target, float duration,
+                           float pStrengthX, float pStrengthY, float pStrengthZ, int pVibrato,
+                           float rStrengthX, float rStrengthY, float rStrengthZ, int rVibrato)
+    {
+        target.GetPositionAndRotation(out var originalPos, out var originalRotation);
+
+        var seq = DOTween.Sequence();
+        seq.Join(target.DOPunchPosition(new Vector3(pStrengthX, pStrengthY, pStrengthZ), duration, vibrato: pVibrato).OnComplete(() => { target.position = originalPos; })); // 位置抖动
+        seq.Join(target.DOPunchRotation(new Vector3(rStrengthX, rStrengthY, rStrengthZ), duration, vibrato: rVibrato).OnComplete(() => { target.rotation = originalRotation; })); // 旋转抖动
+
+        return seq;
+    }
+
+    public static Tween PunchAndBounce(this Transform target,
+                                    TweenCallback onPunchComplete = null,
+                                    TweenCallback onBounceComplete = null,
+                                    float bounceMaxScale = 1.09f, float bounceDuration = 0.15f,
+                                    float punchDuration = .6f,
+                                    float pStrengthX = 4f, float pStrengthY = 2.5f, float pStrengthZ = 0, int pVibrato = 18,
+                                    float rStrengthX = 0, float rStrengthY = 0, float rStrengthZ = 1.5f, int rVibrato = 15)
+    {
+        var seq = DOTween.Sequence();
+
+        seq.Join(target.Punch(punchDuration, pStrengthX, pStrengthY, pStrengthZ, pVibrato, rStrengthX, rStrengthY, rStrengthZ, rVibrato).OnComplete(onPunchComplete));
+        seq.Join(target.Bounce(bounceMaxScale, bounceDuration).SetDelay(punchDuration * .82f).OnComplete(onBounceComplete));
+
+        return seq;
+    }
+
+    public static void ShowTip(this Transform target, string tip, float vecticalOffsetScale = .4f)
+    {
+        ShowTip(tip, target.position + (target as RectTransform).sizeDelta.y * vecticalOffsetScale * Vector3.up);
     }
 }

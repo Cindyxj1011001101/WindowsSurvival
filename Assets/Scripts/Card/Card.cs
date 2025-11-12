@@ -652,8 +652,7 @@ public abstract class Card : IComparable<Card>
             var trans = Transform;
             if (!playAnim || trans == null || card.SlotTransform == null) return;
 
-            var tween = MFXUtility.MoveCard(card, 1, trans.position, onComplete: () => card.RefreshSlot(), freezeTime: true);
-            MouseManager.Instance.Wait(tween.Duration());
+            trans.position.MoveCard(card);
         }
         // 放不下看targetBag是不是内容物背包
         else if (preferredBag is InnerBag innerBag)
@@ -695,14 +694,10 @@ public abstract class Card : IComparable<Card>
         if (trans == null || targetCard.SlotTransform == null) return;
 
         // 动效
-        Tween tween = null;
         if (trans == ParentTransform)
-            tween = MFXUtility.MoveCard(targetCard, 1, trans.position, onComplete: () => targetCard.RefreshSlot(), freezeTime: true);
+            trans.position.MoveCard(targetCard);
         else
-            // TurnTo
-            tween = MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot(), freezeTime: true);
-
-        MouseManager.Instance.Wait(tween.Duration());
+            this.TurnTo(targetCard);
     }
 
     public void TurnTo(string cardId, Bag targetBag, out Card card)

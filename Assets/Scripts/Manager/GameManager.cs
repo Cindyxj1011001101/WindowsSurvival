@@ -7,8 +7,6 @@ public class GameManager : IManager
 {
     public static GameManager Instance { get; private set; } = new();
 
-    private float addCardTransition = 0.4f;
-
     public PlayerBag PlayerBag { get; private set; }
     public Dictionary<PlaceEnum, EnvironmentBag> EnvironmentBags { get; private set; } = new();
     public EnvironmentBag CurEnvironmentBag { get; private set; }
@@ -125,58 +123,41 @@ public class GameManager : IManager
     /// <param name="card"></param>
     /// <param name="targetBag"></param>
     /// <returns></returns>
-    public Tween AddCardWithTween(Card card, Bag targetBag, Vector2 startPos)
+    public Tween AddCardWithTween(Card card, Bag targetBag, Vector3 sourcePosition)
     {
         AddCard(card, targetBag);
 
-        return MFXUtility.MoveCard(
-            card,
-            1,
-            startPos,
-            addCardTransition,
-            onComplete: () =>
-            {
-                card.RefreshSlot();
-            },
-            freezeTime: true);
+        return sourcePosition.MoveCard(card);
     }
 
-    public Tween AddCardsWithTween(bool toPlayerBag, Vector2 startPos, params Card[] cards)
+    public Tween AddCardsWithTween(bool toPlayerBag, Vector3 sourcePosition, params Card[] cards)
     {
         foreach (var card in cards)
         {
             AddCard(card, toPlayerBag);
         }
 
-        return MFXUtility.MoveCards(
-            cards,
-            startPos,
-            addCardTransition,
-            onComplete: (card) =>
-            {
-                card.RefreshSlot();
-            },
-            freezeTime: true);
+        return sourcePosition.MoveCards(cards);
     }
 
-    public Tween AddCardWithTween(string cardId, bool toPlayerBag, Vector2 startPos, out Card card)
+    public Tween AddCardWithTween(string cardId, bool toPlayerBag, Vector3 sourcePosition, out Card card)
     {
         card = CardFactory.CreateCard(cardId);
 
-        return AddCardWithTween(card, toPlayerBag, startPos);
+        return AddCardWithTween(card, toPlayerBag, sourcePosition);
     }
 
-    public Tween AddCardWithTween(Card card, bool toPlayerBag, Vector2 startPos)
+    public Tween AddCardWithTween(Card card, bool toPlayerBag, Vector3 sourcePosition)
     {
-        return AddCardsWithTween(toPlayerBag, startPos, card);
+        return AddCardsWithTween(toPlayerBag, sourcePosition, card);
     }
 
-    public Tween AddCardsWithTween(List<Card> cards, bool toPlayerBag, Vector2 startPos)
+    public Tween AddCardsWithTween(List<Card> cards, bool toPlayerBag, Vector3 sourcePosition)
     {
-        return AddCardsWithTween(toPlayerBag, startPos, cards.ToArray());
+        return AddCardsWithTween(toPlayerBag, sourcePosition, cards.ToArray());
     }
 
-    public Tween AddCardsWithTween(string cardId, int count, bool toPlayerBag, Vector2 startPos, out List<Card> cards)
+    public Tween AddCardsWithTween(string cardId, int count, bool toPlayerBag, Vector3 sourcePosition, out List<Card> cards)
     {
         cards = new();
 
@@ -185,14 +166,14 @@ public class GameManager : IManager
             cards.Add(CardFactory.CreateCard(cardId));
         }
 
-        return AddCardsWithTween(cards, toPlayerBag, startPos);
+        return AddCardsWithTween(cards, toPlayerBag, sourcePosition);
     }
 
     public void AddCardsToTargetEnv(List<Card> cards, EnvironmentBag targetEnv)
     {
         if (targetEnv == CurEnvironmentBag)
         {
-            AddCardsWithTween(cards, false, Vector2.up * 600);
+            AddCardsWithTween(cards, false, Vector3.up * 600);
         }
         else
         {
@@ -214,7 +195,7 @@ public class GameManager : IManager
     /// 穿上装备
     /// </summary>
     /// <param name="equipment"></param>
-    public void Equip(Card equipment, Vector3 startPos)
+    public void Equip(Card equipment, Vector3 sourcePosition)
     {
         //// 找到卡牌位置
         //Transform transform = null;
@@ -227,7 +208,7 @@ public class GameManager : IManager
         equipment.SlotCards?.RemoveCard(equipment);
 
         // 添加到装备格子里
-        AddCardWithTween(equipment, EquipmentBag, startPos); // transform 理论上不会为空
+        AddCardWithTween(equipment, EquipmentBag, sourcePosition); // transform 理论上不会为空
     }
 
     /// <summary>

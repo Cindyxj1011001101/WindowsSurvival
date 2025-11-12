@@ -130,8 +130,7 @@ public class FuelDistiller : ConstructionCard
 
         // 淡水储量清0，生成一瓶瓶装水
         freshWaterStorage.SetValue(0);
-        var card = CardFactory.CreateCard("瓶装水");
-        AddCard(card, innerContents.bag);
+        AddCard(CardFactory.CreateCard("瓶装水"), innerContents.bag);
         ShowTip("蒸馏得到了一瓶瓶装水");
     }
 
