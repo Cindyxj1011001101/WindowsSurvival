@@ -103,8 +103,7 @@ public class SkirtJellyfish : EntityCard
         }
 
         // 与目标的攻击距离 > 5，且和目标不在一个地点
-        // TODO: 跨地点
-
+        ChaseTargetAcrossLocation(target);
     }
 
     /// <summary>

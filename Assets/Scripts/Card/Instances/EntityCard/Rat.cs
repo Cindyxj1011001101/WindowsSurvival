@@ -73,8 +73,7 @@ public class Rat : EntityCard
         }
 
         // 与目标的攻击距离 > 1，且和目标不在一个地点
-        // TODO: 跨地点
-
+        ChaseTargetAcrossLocation(target);
     }
 
     private void Intention_Eat(object[] cache)

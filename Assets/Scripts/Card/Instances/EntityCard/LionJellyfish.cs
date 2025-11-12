@@ -108,8 +108,7 @@ public class LionJellyfish : EntityCard
         }
 
         // 与目标的攻击距离 > 10，且和目标不在一个地点
-        // TODO: 跨地点
-
+        ChaseTargetAcrossLocation(target);
     }
     
     /// <summary>

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 
 public abstract class EntityCard : Card, IEntity
@@ -225,11 +226,6 @@ public abstract class EntityCard : Card, IEntity
     /// </summary>
     protected void RemoveAggro(IEntity entity) => aggroCollection.RemoveByUuid(entity.Uuid);
 
-    ///// <summary>
-    ///// 清除无效的仇恨目标
-    ///// </summary>
-    //protected void RemoveUnavailableAggroEntities() => aggroCollection.RemoveUnavailableItems();
-
     /// <summary>
     /// 更新仇恨
     /// </summary>
@@ -268,6 +264,14 @@ public abstract class EntityCard : Card, IEntity
     protected void NormalAttack(IEntity target, float atkMultiplier = 1.0f)
     {
         target.TakeDamage(atk * atkMultiplier, this);
+    }
+
+    protected void ChaseTargetAcrossLocation(IEntity target, float successProb = 0.1f)
+    {
+        if (Random.value > successProb) return;
+
+        SlotCards.RemoveCard(this);
+        GameManager.Instance.AddCardsToTargetEnv(target.Coordinate.Location, this);
     }
     #endregion
 }
