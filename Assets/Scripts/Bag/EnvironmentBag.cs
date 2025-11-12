@@ -92,9 +92,7 @@ public class EnvironmentBag : Bag
     {
         foreach (var cardId in PlaceData.initialBagStateConfig.containedCards)
         {
-            var card = CardFactory.CreateCard(cardId);
-            AddCard(card);
-            card.Init();
+            GameManager.Instance.AddCard(CardFactory.CreateCard(cardId), this);
         }
     }
 

@@ -25,6 +25,7 @@ public class SlotCards : IComparable<SlotCards>
         foreach (var card in Cards)
         {
             card.SetSlotCards(this);
+            card.AssignComponentValues();
 
             if (Bag is EnvironmentBag env)
             {

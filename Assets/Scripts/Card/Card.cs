@@ -266,8 +266,6 @@ public abstract class Card : IComparable<Card>
 
         init = true;
 
-        AssignComponentValues();
-
         // 记录全局数量
         GlobalDataManager.Instance.CreateCard(this);
 
@@ -428,7 +426,7 @@ public abstract class Card : IComparable<Card>
 
     private bool assigned = false;
 
-    private void AssignComponentValues()
+    public void AssignComponentValues()
     {
         if (assigned) return;
 
