@@ -12,20 +12,15 @@ using UnityEngine.Events;
 public abstract class Card : IComparable<Card>
 {
     #region 属性
-    [JsonProperty]
-    public string CardId { get; private set; } // 卡牌ID
+    [JsonProperty] public string CardId { get; private set; } // 卡牌ID
 
-    [JsonProperty]
-    public string Uuid { get; private set; } // Uuid
+    [JsonProperty] public string Uuid { get; private set; } // Uuid
 
-    [JsonProperty]
-    protected Dictionary<Type, CardComponent> components = new();
+    [JsonProperty] protected Dictionary<Type, CardComponent> components = new();
 
-    [JsonIgnore]
-    public List<CardEvent> Events { get; protected set; } = new(); // 可交互事件
+    [JsonIgnore] public List<CardEvent> Events { get; protected set; } = new(); // 可交互事件
 
-    [JsonIgnore]
-    public string CardName => CardFactory.GetCardName(CardId);
+    [JsonIgnore] public string CardName => CardFactory.GetCardName(CardId);
 
     [JsonIgnore]
     public virtual string ExtraInfo
@@ -43,17 +38,13 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    [JsonIgnore]
-    public string CardDesc => CardFactory.GetCardDesc(CardId);
+    [JsonIgnore] public string CardDesc => CardFactory.GetCardDesc(CardId);
 
-    [JsonIgnore]
-    public CardType CardType => CardFactory.GetCardType(CardId);
+    [JsonIgnore] public CardType CardType => CardFactory.GetCardType(CardId);
 
-    [JsonIgnore]
-    public int MaxStackNum => CardFactory.GetMaxStackNum(CardId);
+    [JsonIgnore] public int MaxStackNum => CardFactory.GetMaxStackNum(CardId);
 
-    [JsonIgnore]
-    public bool Moveable => CardFactory.GetMoveable(CardId);
+    [JsonIgnore] public bool Moveable => CardFactory.GetMoveable(CardId);
 
     [JsonIgnore]
     public float Weight
@@ -77,8 +68,7 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    [JsonIgnore]
-    public List<CardTag> Tags => CardFactory.GetTags(CardId);
+    [JsonIgnore] public List<CardTag> Tags => CardFactory.GetTags(CardId);
 
     [JsonIgnore]
     public Sprite CardImage
@@ -96,21 +86,24 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    [JsonIgnore]
-    public bool IsBigIcon => CardFactory.GetIsBigIcon(CardId);
+    [JsonIgnore] public bool IsBigIcon => CardFactory.GetIsBigIcon(CardId);
 
-    [JsonIgnore]
-    /// 是否有循环音效，默认无
-    public virtual bool HasLoopSound => false;
+    [JsonIgnore] public virtual bool HasLoopSound => false;
 
-    [JsonIgnore]
-    public SlotCards SlotCards { get; protected set; } = null;
+    [JsonIgnore] public SlotCards SlotCards { get; protected set; } = null;
 
-    [JsonIgnore]
-    public Bag Bag => SlotCards?.Bag;
+    [JsonIgnore] public Bag Bag => SlotCards?.Bag;
 
-    [JsonIgnore]
-    public CardSlot Slot => SlotCards?.CardSlot;
+    [JsonIgnore] public CardSlot Slot => SlotCards?.CardSlot;
+
+    [JsonIgnore] public Card ParentCard
+    {
+        get
+        {
+            if (Bag is InnerBag innerBag) return innerBag.BelongedCard;
+            return null;
+        }
+    }
 
     // 卡牌的临时位置，用来处理从临时位置处发出一张卡牌的动效，例如从详情窗口的slot处
     private Transform transform;
@@ -122,9 +115,9 @@ public abstract class Card : IComparable<Card>
         {
             if (transform != null) return transform;
 
-            if (Slot != null) return Slot.transform;
+            if (SlotTransform != null) return SlotTransform;
 
-            if (Bag is InnerBag innerBag && innerBag.BelongedCard.Slot != null) return innerBag.BelongedCard.Slot.transform;
+            if (ParentTransform != null) return ParentTransform;
 
             return null;
         }
@@ -133,6 +126,18 @@ public abstract class Card : IComparable<Card>
             transform = value;
         }
     }
+
+    [JsonIgnore]
+    public Transform SlotTransform
+    {
+        get
+        {
+            if (Slot != null) return Slot.transform;
+            return null;
+        }
+    }
+
+    [JsonIgnore] public Transform ParentTransform => ParentCard?.SlotTransform;
     #endregion
 
     #region BasicMethod
@@ -642,24 +647,24 @@ public abstract class Card : IComparable<Card>
         if (preferredBag.CanAddCard(card, out _))
         {
             // 成功放置
-            // 当前卡牌和其父卡牌都没有显示在场景里
-            if (!playAnim || Transform == null)
-                // 没有动效直接添加
-                GameManager.Instance.AddCard(card, preferredBag);
-            else
-                // 添加并且播放动效
-                GameManager.Instance.AddCardWithTween(card, preferredBag, Transform.position);
+            GameManager.Instance.AddCard(card, preferredBag);
+
+            var trans = Transform;
+            if (!playAnim || trans == null || card.SlotTransform == null) return;
+
+            var tween = MFXUtility.MoveCard(card, 1, trans.position, onComplete: () => card.RefreshSlot(), freezeTime: true);
+            MouseManager.Instance.Wait(tween.Duration());
         }
         // 放不下看targetBag是不是内容物背包
         else if (preferredBag is InnerBag innerBag)
         {
             // 是的话尝试放在内容物背包的父物体所在的背包里
-            AddCard(card, innerBag.BelongedCard.Bag);
+            AddCard(card, innerBag.BelongedCard.Bag, playAnim);
         }
-        // 否则放在当前环境里
+        // 否则放在当前地点里
         else
         {
-            AddCard(card, GameManager.Instance.CurEnvironmentBag);
+            AddCard(card, GameManager.Instance.CurEnvironmentBag, playAnim);
         }
     }
 
@@ -685,12 +690,19 @@ public abstract class Card : IComparable<Card>
         DestroyThis();
         // 添加目标卡牌到包中
         AddCard(targetCard, targetBag, false);
-        // 播放动效
-        if (Transform != null)
-        {
-            var tween = MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot(), freezeTime: true);
-            MouseManager.Instance.Wait(tween.Duration());
-        }
+
+        var trans = Transform;
+        if (trans == null || targetCard.SlotTransform == null) return;
+
+        // 动效
+        Tween tween = null;
+        if (trans == ParentTransform)
+            tween = MFXUtility.MoveCard(targetCard, 1, trans.position, onComplete: () => targetCard.RefreshSlot(), freezeTime: true);
+        else
+            // TurnTo
+            tween = MFXUtility.TurnTo(this, targetCard, onComplete: () => targetCard.RefreshSlot(), freezeTime: true);
+
+        MouseManager.Instance.Wait(tween.Duration());
     }
 
     public void TurnTo(string cardId, Bag targetBag, out Card card)

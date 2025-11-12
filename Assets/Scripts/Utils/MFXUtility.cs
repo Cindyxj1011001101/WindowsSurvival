@@ -86,7 +86,7 @@ public class MFXUtility
 
         var seq = DOTween.Sequence();
 
-        seq.Join(slot.transform.DOMove(card.Slot.transform.position, duration).SetEase(ease));
+        seq.Join(slot.transform.DOMove(card.SlotTransform.position, duration).SetEase(ease));
 
         seq.Join(slot.transform.DOScale(1f, duration));
 
@@ -167,7 +167,7 @@ public class MFXUtility
         UnityAction onComplete = null,
         bool freezeTime = false)
     {
-        var slot = CreateSlot(sourceCard.Transform.position);
+        var slot = CreateSlot(sourceCard.SlotTransform.position);
         slot.DisplayCard(sourceCard, 1, false);
 
         // 打开卡牌目标背包所属的窗口
