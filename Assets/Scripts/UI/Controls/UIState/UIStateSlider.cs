@@ -80,7 +80,7 @@ public class UIStateSlider : MonoBehaviour
         SetValue(state.CurValue, state.MaxValue);
 
         // 显示变化率
-        DisplayChangeRate(state.ChangeRate, state.CurValue, state.MaxValue, state.HigherIsBetter, state.LowerIsBetter, state.DecreaseNaturally, state.IncreaseNaturally);
+        DisplayChangeRate(state.ChangeRate, state.CurValue, state.MaxValue, state.HigherIsBetter, state.LowerIsBetter, state.IsDecreaseNatural, state.IsIncreaseNatural);
 
         // 根据状态的危险程度，给予提示
         PlayerStateDangerAlert(state.DangerLevel);
@@ -117,7 +117,7 @@ public class UIStateSlider : MonoBehaviour
 
     private void DisplayChangeRate(float changeRate, float curValue, float maxValue,
         bool higherIsBetter, bool lowerIsBetter,
-        bool decreaseNaturally, bool increaseNaturally)
+        bool isDecreaseNatural, bool isIncreaseNatural)
     {
         if (changeRate == 0)
         {
@@ -143,12 +143,12 @@ public class UIStateSlider : MonoBehaviour
         tipController.SetTip(tip);
 
         // 显示变化箭头
-        DisplayChangeRateArrow(changeRate, curValue, maxValue, higherIsBetter, lowerIsBetter, decreaseNaturally, increaseNaturally);
+        DisplayChangeRateArrow(changeRate, curValue, maxValue, higherIsBetter, lowerIsBetter, isDecreaseNatural, isIncreaseNatural);
     }
 
     private void DisplayChangeRateArrow(float changeRate, float curValue, float maxValue,
         bool higherIsBetter, bool lowerIsBetter,
-        bool decreaseNaturally, bool increaseNaturally)
+        bool isDecreaseNatural, bool isIncreaseNatural)
     {
         // 箭头显示
         var lastLevel = curChangeLavel;
@@ -167,8 +167,8 @@ public class UIStateSlider : MonoBehaviour
         }
 
         // 处理变化率为 +-1 的情况
-        if (curChangeLavel == -1 && decreaseNaturally ||    // 如果当前变化率为-1，且该状态是自然下降的
-            curChangeLavel == 1 && increaseNaturally)       // 如果当前变化率为+1，且该状态是自然上升的
+        if (curChangeLavel == -1 && isDecreaseNatural ||    // 如果当前变化率为-1，且该状态是自然下降的
+            curChangeLavel == 1 && isIncreaseNatural)       // 如果当前变化率为+1，且该状态是自然上升的
         {
             // 不显示箭头
             DisableArrow();

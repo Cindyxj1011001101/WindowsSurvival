@@ -21,8 +21,8 @@ public class State
     [JsonProperty] private float normParam = 0;                     // 归一化参数
     [JsonProperty] private bool higherIsBetter;                     // 数值越高越好
     [JsonProperty] private bool lowerIsBetter;                      // 数值越低越好
-    [JsonProperty] private bool decreaseNaturally;                  // 是否自然下降，即下降是否是符合尝试的
-    [JsonProperty] private bool increaseNaturally;                  // 是否自然上升，即上升是否是符合尝试的
+    [JsonProperty] private bool isDecreaseNatural;                  // 是否自然下降，即下降是否是符合尝试的
+    [JsonProperty] private bool isIncreaseNatural;                  // 是否自然上升，即上升是否是符合尝试的
 
     private float tempBasicChangeRate;                              // 临时基础变化率
 
@@ -36,8 +36,8 @@ public class State
     [JsonIgnore] public float ChangeRate => tempBasicChangeRate == 0 ? basicChangeRate + extraChangeRate : tempBasicChangeRate + extraChangeRate;
     [JsonIgnore] public bool HigherIsBetter => higherIsBetter;
     [JsonIgnore] public bool LowerIsBetter => lowerIsBetter;
-    [JsonIgnore] public bool DecreaseNaturally => decreaseNaturally;
-    [JsonIgnore] public bool IncreaseNaturally => increaseNaturally;
+    [JsonIgnore] public bool IsDecreaseNatural => isDecreaseNatural;
+    [JsonIgnore] public bool IsIncreaseNatural => isIncreaseNatural;
     [JsonIgnore]
     public float ConstValue
     {
@@ -164,7 +164,7 @@ public class State
         List<StateThreshold> thresholds, List<StateEffect> effects,
         List<int> lowDangerLevels, List<int> highDangerLevels,
         bool higherIsBetter = false, bool lowerIsBetter = false,
-        bool decreaseNaturally = false, bool increaseNaturally = false,
+        bool isDecreaseNatural = false, bool isIncreaseNatural = false,
         float normParam = 0)
     {
         extraValue = 0;
@@ -178,16 +178,16 @@ public class State
         extraChangeRate = 0;
         this.lowDangerLevels = lowDangerLevels;
         this.highDangerLevels = highDangerLevels;
-        this.decreaseNaturally = decreaseNaturally;
-        this.increaseNaturally = increaseNaturally;
+        this.isDecreaseNatural = isDecreaseNatural;
+        this.isIncreaseNatural = isIncreaseNatural;
         this.normParam = normParam;
     }
 
     public State(float value, float maxValue, float basicChangeRate = 0,
         bool higherIsBetter = false, bool lowerIsBetter = false,
-        bool decreaseNaturally = false, bool increaseNaturally = false,
+        bool isDecreaseNatural = false, bool isIncreaseNatural = false,
         float normParam = 0)
-        : this(value, maxValue, basicChangeRate, new(), new(), new(), new(), higherIsBetter, lowerIsBetter, decreaseNaturally, increaseNaturally, normParam) { }
+        : this(value, maxValue, basicChangeRate, new(), new(), new(), new(), higherIsBetter, lowerIsBetter, isDecreaseNatural, isIncreaseNatural, normParam) { }
 }
 
 // 状态阈值配置
