@@ -167,7 +167,7 @@ public class StateManager : IManager
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new State(100, 250, -1f, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true);
+        return new State(100, 250, -1f, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true, decreaseNaturally: true);
     }
 
     private State InitHydrationState()
@@ -188,7 +188,7 @@ public class StateManager : IManager
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new State(100, 200, -1.3f, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true);
+        return new State(100, 200, -1.3f, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true, decreaseNaturally: true);
     }
 
     private State InitSanityState()
@@ -251,7 +251,7 @@ public class StateManager : IManager
         };
         var lowDangerLevels = new List<int>() { 2 };
         var highDangerLevels = new List<int>() { 0, 1 };
-        return new State(150, 180, -1, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true);
+        return new State(150, 180, -1, thresholds, effects, lowDangerLevels, highDangerLevels, higherIsBetter: true, decreaseNaturally: true);
     }
 
     private State InitLoadState()

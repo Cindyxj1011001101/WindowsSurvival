@@ -28,6 +28,12 @@ public class UIStateSlider : MonoBehaviour
 
     public float value => slider.value;
 
+    private float arrowMoveTransition = 0.35f;
+    private float highDangerScale = 1.25f;
+    private float lowDangerScale = 1.1f;
+    private float highDangerTransition = 0.3f;
+    private float lowDangerTransition = 0.4f;
+
     private void OnDisable()
     {
         init = false;
@@ -43,7 +49,7 @@ public class UIStateSlider : MonoBehaviour
         stateNameText.text = name;
     }
 
-    public virtual void SetValue(float value, float maxValue)
+    public virtual void SetValue(float curValue, float maxValue)
     {
         if (slider.fillRect.TryGetComponent<Image>(out var fill))
         {
@@ -59,14 +65,14 @@ public class UIStateSlider : MonoBehaviour
             }
         }
 
-        slider.value = value / maxValue;
+        slider.value = curValue / maxValue;
 
         if (valueText == null) return;
 
         if (displayPercentage)
-            valueText.text = $"{value * 100 / maxValue: 0.0}%";
+            valueText.text = $"{curValue * 100 / maxValue: 0.0}%";
         else
-            valueText.text = $"{(int)value}/{maxValue}";
+            valueText.text = $"{(int)curValue}/{maxValue}";
     }
 
     public void SetValue(State state)
@@ -74,7 +80,7 @@ public class UIStateSlider : MonoBehaviour
         SetValue(state.CurValue, state.MaxValue);
 
         // 显示变化率
-        DisplayChangeRate(state.ChangeRate, state.CurValue, state.MaxValue, state.HigherIsBetter, state.LowerIsBetter);
+        DisplayChangeRate(state.ChangeRate, state.CurValue, state.MaxValue, state.HigherIsBetter, state.LowerIsBetter, state.DecreaseNaturally, state.IncreaseNaturally);
 
         // 根据状态的危险程度，给予提示
         PlayerStateDangerAlert(state.DangerLevel);
@@ -92,10 +98,10 @@ public class UIStateSlider : MonoBehaviour
         switch (dangerLevel)
         {
             case DangerLevelEnum.High:
-                IconSizeYoloTween(1.25f, .3f);
+                IconSizeYoloTween(highDangerScale, highDangerTransition);
                 break;
             case DangerLevelEnum.Low:
-                IconSizeYoloTween(1.1f, .5f);
+                IconSizeYoloTween(lowDangerScale, lowDangerTransition);
                 break;
             case DangerLevelEnum.None:
                 break;
@@ -109,14 +115,13 @@ public class UIStateSlider : MonoBehaviour
             .SetEase(Ease.InOutSine);    // 设置缓动效果
     }
 
-    private void DisplayChangeRate(float changeRate, float value, float maxValue,
-        bool higherIsBetter, bool lowerIsBetter)
+    private void DisplayChangeRate(float changeRate, float curValue, float maxValue,
+        bool higherIsBetter, bool lowerIsBetter,
+        bool decreaseNaturally, bool increaseNaturally)
     {
-        var percentage = changeRate / maxValue;
-        if (percentage == 0)
+        if (changeRate == 0)
         {
-            arrow.rectTransform.DOKill();
-            arrow.gameObject.SetActive(false);
+            DisableArrow();
             tipController.enabled = false;
             curChangeLavel = 0;
             return;
@@ -124,10 +129,12 @@ public class UIStateSlider : MonoBehaviour
 
         // 悬浮显示
         tipController.enabled = true;
-        string tip;
 
+        string tip;
+        // 百分比显示
         if (displayPercentage)
             tip = $"{changeRate / maxValue * 100:0.0}%";
+        // 数值显示
         else
             tip = changeRate.ToString("0.0");
 
@@ -135,40 +142,57 @@ public class UIStateSlider : MonoBehaviour
 
         tipController.SetTip(tip);
 
+        // 显示变化箭头
+        DisplayChangeRateArrow(changeRate, curValue, maxValue, higherIsBetter, lowerIsBetter, decreaseNaturally, increaseNaturally);
+    }
 
+    private void DisplayChangeRateArrow(float changeRate, float curValue, float maxValue,
+        bool higherIsBetter, bool lowerIsBetter,
+        bool decreaseNaturally, bool increaseNaturally)
+    {
         // 箭头显示
         var lastLevel = curChangeLavel;
-        curChangeLavel = CalcLevel(percentage);
+        curChangeLavel = CalcLevel(changeRate / maxValue);
 
-        // 如果当前值已经为0 且 变化率为负 且 低值更好
-        // 或者
-        // 当前值已经为最大值 且 变化率为正 且 高值更好
-        // 则不显示箭头
-        if (value <= 0 && changeRate < 0 && lowerIsBetter ||
-            value >= maxValue && changeRate > 0 && higherIsBetter)
+        // 变化率等级不变，不做处理
+        if (curChangeLavel == lastLevel) return;
+
+        // 处理状态值为极值的情况
+        if (curValue <= 0 && changeRate < 0 && lowerIsBetter ||         // 如果当前值已经为0 且 变化率为负 且 低值更好
+            curValue >= maxValue && changeRate > 0 && higherIsBetter)   // 当前值已经为最大值 且 变化率为正 且 高值更好
         {
-            arrow.rectTransform.DOKill();
-            arrow.gameObject.SetActive(false);
+            // 不显示箭头
+            DisableArrow();
             return;
         }
 
-        if (curChangeLavel == lastLevel) return;
+        // 处理变化率为 +-1 的情况
+        if (curChangeLavel == -1 && decreaseNaturally ||    // 如果当前变化率为-1，且该状态是自然下降的
+            curChangeLavel == 1 && increaseNaturally)       // 如果当前变化率为+1，且该状态是自然上升的
+        {
+            // 不显示箭头
+            DisableArrow();
+            return;
+        }
 
         arrow.gameObject.SetActive(true);
         arrow.rectTransform.DOKill();
 
+        // 设置贴图
         arrow.sprite = arrowSprites[Mathf.Abs(curChangeLavel) - 1];
-        arrow.transform.localEulerAngles = new Vector3(percentage > 0 ? 0 : 180, 0, 0);
+        // 设置箭头方向
+        arrow.transform.localEulerAngles = new Vector3(changeRate > 0 ? 0 : 180, 0, 0);
 
-        float duration = .35f;
-        if (percentage > 0)
-        {
-            arrow.rectTransform.DOAnchorPos(ceil.anchoredPosition, duration).From(floor.anchoredPosition).SetLoops(-1, LoopType.Yoyo);
-        }
+        if (changeRate > 0)
+            arrow.rectTransform.DOAnchorPos(ceil.anchoredPosition, arrowMoveTransition).From(floor.anchoredPosition).SetLoops(-1, LoopType.Yoyo);
         else
-        {
-            arrow.rectTransform.DOAnchorPos(floor.anchoredPosition, duration).From(ceil.anchoredPosition).SetLoops(-1, LoopType.Yoyo);
-        }
+            arrow.rectTransform.DOAnchorPos(floor.anchoredPosition, arrowMoveTransition).From(ceil.anchoredPosition).SetLoops(-1, LoopType.Yoyo);
+    }
+
+    private void DisableArrow()
+    {
+        arrow.rectTransform.DOKill();
+        arrow.gameObject.SetActive(false);
     }
 
     /// <summary>
