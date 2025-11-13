@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -15,11 +16,8 @@ public class TimeManager : IManager
 
     public int Day => (CurTime - StartDateTime).Days + 1;
 
-    private bool timePassShut = false;   // 时间流逝停止
-    private bool timePassFreezed = false;   // 时间流逝暂停
-    private float timeFreezeEndTime = 0;    // 时间流逝暂停结束时间
-    private int minutesToPass = 0;          // 待流逝的时间
-    private UnityAction onEnd = null;       // 一次完整的时间流逝结束后执行的逻辑
+    private bool timePassShut = false;      // 时间流逝停止
+    private float unfreezeTime = 0;         // 时间流逝暂停结束时间
 
     public void Init()
     {
@@ -40,31 +38,20 @@ public class TimeManager : IManager
 
         // 初始化lastDay
         lastDay = CurTime.Date;
-
-        // 处理帧更新事件
-        PublicMono.Instance.AddUpdateListener(Update);
     }
 
     public void Reset()
     {
-        PublicMono.Instance.RemoveUpdateListener(Update);
-    }
-
-    private void Update()
-    {
-        if (timePassFreezed && Time.time >= timeFreezeEndTime)
-        {
-            // 继续时间流逝
-            AddTime(minutesToPass);
-        }
     }
 
     public void AddTime(int minutes, UnityAction onEnd = null)
     {
+        PublicMono.Instance.StartCoroutine(AddTimeCo(minutes, onEnd));
+    }
+
+    private IEnumerator AddTimeCo(int minutes, UnityAction onEnd = null)
+    {
         timePassShut = false;
-        timePassFreezed = false;
-        minutesToPass = 0;
-        this.onEnd += onEnd;
 
         EventManager.Instance.TriggerEvent(EventType.StartChangeTime);
 
@@ -76,30 +63,19 @@ public class TimeManager : IManager
         // 以一分钟为粒度流逝时间
         while (!timePassShut && timespan > 0)
         {
+            while (Time.time < unfreezeTime)
+            {
+                yield return null;
+            }
+
             timespan--;
             UpdateCurInterval();
-
-            // 时间流逝暂停
-            if (timePassFreezed)
-            {
-                if (timespan > 0)
-                    // 记录下待流逝的时间
-                    minutesToPass = timespan;
-                else
-                    timePassFreezed = false;
-                // 退出循环
-                break;
-            }
         }
 
         EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
 
         // 一次完整的时间流逝结束
-        if (timePassShut || timespan <= 0)
-        {
-            this.onEnd?.Invoke();
-            this.onEnd = null;
-        }
+        onEnd?.Invoke();
     }
 
     private void UpdateCurInterval()
@@ -148,7 +124,6 @@ public class TimeManager : IManager
     /// </summary>
     public void FreezeTimePass(float duration)
     {
-        timePassFreezed = true;
-        timeFreezeEndTime = Mathf.Max(timeFreezeEndTime, Time.time + duration);
+        unfreezeTime = Mathf.Max(unfreezeTime, Time.time + duration + 0.1f);
     }
 }

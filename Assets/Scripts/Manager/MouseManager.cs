@@ -1,7 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 
 public enum MouseState
 {
@@ -57,11 +57,6 @@ public class MouseManager : MonoBehaviour
     public void Update()
     {
         SetCursor();
-
-        if (_isWaiting && Time.time >= _endTime)
-        {
-            EndWaiting();
-        }
     }
 
     private void SetCursor()
@@ -163,8 +158,6 @@ public class MouseManager : MonoBehaviour
 
     private void StartWaiting()
     {
-        if (_isWaiting) return;
-
         _isWaiting = true;
 
         // 禁用鼠标
@@ -176,13 +169,24 @@ public class MouseManager : MonoBehaviour
         // 播放动画
         animator.gameObject.SetActive(true);
         animator.Play("Waiting");
+
+        PublicMono.Instance.StartCoroutine(WaitingCo());
+    }
+
+    private IEnumerator WaitingCo()
+    {
+        while (Time.time < _endTime)
+        {
+            yield return null;
+        }
+
+        EndWaiting();
     }
 
     private void EndWaiting()
     {
-        if (!_isWaiting) return;
-
         _isWaiting = false;
+
         // 停止动画
         animator.Play("");
         animator.gameObject.SetActive(false);
@@ -200,12 +204,11 @@ public class MouseManager : MonoBehaviour
     /// <param name="waitTime">等待时间（秒）</param>
     public void Wait(float waitTime = DEFAULT_WAIT_TIME)
     {
-        float currentTime = Time.time;
-
-        _endTime = Mathf.Max(_endTime, currentTime + waitTime);
+        _endTime = Mathf.Max(_endTime, Time.time + waitTime + 0.1f);
 
         // 如果当前不在等待，或者新的等待时间比剩余时间更长，则更新结束时间
-        StartWaiting();
+        if (!_isWaiting)
+            StartWaiting();
     }
 
     private void SetMouseVisible(bool visible)
