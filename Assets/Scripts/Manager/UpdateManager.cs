@@ -14,40 +14,53 @@ public class UpdateManager : IManager
     public UnityEvent TechnologyUpdate { get; private set; } = new();
     public UnityEvent SunlightUpdate { get; private set; } = new();
 
-    private SortedList<int, UnityAction> sortedCardUpdateList = new();
+    private SortedList<int, UnityAction> sortedCardUpdates = new();
+    private SortedList<int, UnityAction> sortedCardFineUpdates = new();
     private int currentOrder = 0;
 
 
     public void Init()
     {
         EventManager.Instance.AddListener(EventType.Update, OnUpdate);
+        EventManager.Instance.AddListener(EventType.FineUpdate, OnFineUpdate);
     }
 
     public void Reset()
     {
         Clear();
         EventManager.Instance.RemoveListener(EventType.Update, OnUpdate);
+        EventManager.Instance.AddListener(EventType.FineUpdate, OnFineUpdate);
     }
 
-    public void AddCardUpdateListener(ref int order, UnityAction update)
+    public void AddCardUpdateListener(ref int order, UnityAction update, UnityAction fineUpdate)
     {
         if (order <= 0)
             order = currentOrder + 1;
         
-        sortedCardUpdateList.Add(order, update);
+        sortedCardUpdates.Add(order, update);
+        sortedCardFineUpdates.Add(order, fineUpdate);
         currentOrder = Mathf.Max(currentOrder, order);
     }
 
     public void RemoveCardUpdateListener(int order)
     {
-        sortedCardUpdateList.Remove(order);
+        sortedCardUpdates.Remove(order);
+        sortedCardFineUpdates.Remove(order);
     }
 
     private void CardUpdate()
     {
-        foreach (var update in sortedCardUpdateList.Values.ToList())
+        foreach (var update in sortedCardUpdates.Values.ToList())
         {
             update();
+        }
+    }
+
+    private void CardFineUpdate()
+    {
+        foreach (var fineUpdate in sortedCardFineUpdates.Values.ToList())
+        {
+            fineUpdate();
         }
     }
 
@@ -65,9 +78,15 @@ public class UpdateManager : IManager
         SunlightUpdate.Invoke();
     }
 
+    private void OnFineUpdate()
+    {
+        CardFineUpdate();
+    }
+
     private void Clear()
     {
-        sortedCardUpdateList.Clear();
+        sortedCardUpdates.Clear();
+        sortedCardFineUpdates.Clear();
         GameEventUpdate.RemoveAllListeners();
         PlayerUpdate.RemoveAllListeners();
         EnvironmentUpdate.RemoveAllListeners();

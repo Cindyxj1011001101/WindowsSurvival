@@ -55,7 +55,6 @@ public abstract class EntityCard : Card, IEntity
             TryGetNewIntention();
         }
 
-        EventManager.Instance.AddListener(EventType.FineUpdate, EntityUpdate);
         EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
@@ -64,14 +63,11 @@ public abstract class EntityCard : Card, IEntity
         intentions.Clear();
         aggroCollection.Clear();
         GlobalDataManager.Instance.DestroyEntity(this);
-        EventManager.Instance.RemoveListener(EventType.FineUpdate, EntityUpdate);
         EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
 
-    private void EntityUpdate()
+    protected override void OnFineUpdate()
     {
-        if (isUpdateFreezed || Destroyed) return;
-
         // 先更新仇恨
         UpdateAggro();
         // 再更新AI
