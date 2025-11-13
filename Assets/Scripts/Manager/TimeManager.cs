@@ -14,7 +14,8 @@ public class TimeManager : IManager
 
     private DateTime lastDay;
 
-    public int Day => (CurTime - StartDateTime).Days + 1;
+    public int Days => (CurTime - StartDateTime).Days + 1;
+    public double TotalDays => (CurTime - StartDateTime).TotalDays;
 
     private bool timePassShut = false;      // 时间流逝停止
     private float unfreezeTime = 0;         // 时间流逝暂停结束时间

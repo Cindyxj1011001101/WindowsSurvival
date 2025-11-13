@@ -46,7 +46,7 @@ public class DateTimeScrollSnap : MonoBehaviour
         {
             for (int i = 0; i < dateScrollSnap.Content.childCount; i++)
             {
-                SetChildText(dateScrollSnap.CenteredPanel + i, (TimeManager.Instance.Day + i).ToString());
+                SetChildText(dateScrollSnap.CenteredPanel + i, (TimeManager.Instance.Days + i).ToString());
             }
         });
     }
@@ -58,7 +58,7 @@ public class DateTimeScrollSnap : MonoBehaviour
         // 初始化日期
         for (int i = 0; i < dateScrollSnap.Content.childCount; i++)
         {
-            SetChildText(dateScrollSnap.CenteredPanel + i, (TimeManager.Instance.Day + i).ToString());
+            SetChildText(dateScrollSnap.CenteredPanel + i, (TimeManager.Instance.Days + i).ToString());
         }
 
         // 初始化小时和分钟

@@ -83,7 +83,7 @@ public class GameEventTipController : MonoBehaviour
         sb.AppendLine(eventDetails);
         sb.AppendLine();
         sb.AppendLine();
-        sb.AppendLine(ColorManager.Colorize($" -  Day {TimeManager.Instance.Day}   {TimeManager.Instance.CurTime:HH : mm}", ColorManager.LightGrey));
+        sb.AppendLine(ColorManager.Colorize($" -  Day {TimeManager.Instance.Days}   {TimeManager.Instance.CurTime:HH : mm}", ColorManager.LightGrey));
         return sb.ToString();
     }
 

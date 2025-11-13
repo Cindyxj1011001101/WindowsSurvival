@@ -71,7 +71,7 @@ public abstract class GameEvent
     {
         var config = GameEventManager.Instance.InvasionEventConfig;
         // 计算生存天数影响部分（受上限限制）
-        float effectiveSurvivalDays = Mathf.Min(TimeManager.Instance.Day, config.maxSurvivalDayEffect);
+        float effectiveSurvivalDays = Mathf.Min(TimeManager.Instance.Days, config.maxSurvivalDayEffect);
         float survivalPart = effectiveSurvivalDays * config.threatCoefficient;
 
         // 计算基础部分

@@ -22,7 +22,7 @@ public class Invasion : GameEvent
     protected override bool CanTriggerThisEvent()
     {
         // 前三天不会触发入侵
-        return TimeManager.Instance.Day >= 3;
+        return TimeManager.Instance.Days >= 3;
     }
 
     protected override void OnTrigger()
