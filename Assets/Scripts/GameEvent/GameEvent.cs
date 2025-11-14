@@ -21,7 +21,7 @@ public abstract class GameEvent
         { "太空垃圾", typeof(SpaceJunk) },
         { "泥沙涌动", typeof(SedimentSurge) },
         { "恒星食", typeof(StellarEclipse) },
-        { "一氧化碳爆炸", typeof(COExplosion) },
+        { "CO爆炸", typeof(COExplosion) },
         { "制作激励", typeof(CraftIncentive) },
         { "移动激励", typeof(MovementIncentive) },
     };
@@ -41,18 +41,20 @@ public abstract class GameEvent
         instance.eventName = eventName;
         instance.threatLevel = ExcelReader.ParseInt(row[1].ToString());
         instance.basicTriggerWeight = ExcelReader.ParseFloat(row[2].ToString());
-        instance.triggerInterval = ExcelReader.ParseFloat(row[4].ToString());
+        instance.totalDaysCondition = ExcelReader.ParseFloat(row[4].ToString());
+        instance.repeatIntervalDays = ExcelReader.ParseFloat(row[5].ToString());
 
         return instance;
     }
     #endregion
 
-    [JsonProperty] private string eventName;         // 事件名称
-    [JsonProperty] private int threatLevel;          // 威胁程度
-    [JsonProperty] private float basicTriggerWeight; // 基础触发权重
-    [JsonProperty] private float triggerInterval;    // 触发间隔(天)
-    [JsonProperty] private int remainingMinutes;     // 剩余持续时间(分钟)
-    [JsonProperty] private int remainingCoolDown;    // 剩余冷却时间(分钟)
+    [JsonProperty] private string eventName;            // 事件名称
+    [JsonProperty] private int threatLevel;             // 威胁程度
+    [JsonProperty] private float basicTriggerWeight;    // 基础触发权重
+    [JsonProperty] private float totalDaysCondition;    // 天数限制，小于天数不能触发
+    [JsonProperty] private float repeatIntervalDays;    // 重复触发间隔(天)
+    [JsonProperty] private int remainingMinutes;        // 剩余持续时间(分钟)
+    [JsonProperty] private int remainingCoolDown;       // 剩余冷却时间(分钟)
 
     [JsonIgnore] public int ThreatLevel => threatLevel;
     [JsonIgnore] public float BasicTriggerWeight => basicTriggerWeight;
@@ -90,12 +92,14 @@ public abstract class GameEvent
 
     public bool IsInCoolDown() => remainingCoolDown > 0;
 
-    public bool IsReady() => !IsOngoing() && !IsInCoolDown() && CanTriggerThisEvent();
+    public bool IsTotalDaysConditionMet() => TimeManager.Instance.TotalDays > totalDaysCondition;
+
+    public bool IsReady() => !IsOngoing() && !IsInCoolDown() && IsTotalDaysConditionMet() && CanTriggerThisEvent();
 
     public void Trigger()
     {
         // 设置冷却时间
-        remainingCoolDown = Mathf.CeilToInt(triggerInterval * 24 * 60);
+        remainingCoolDown = Mathf.CeilToInt(repeatIntervalDays * 24 * 60);
         OnTrigger();
         EventManager.Instance.TriggerEvent(EventType.OnGameEventTrigger, this);
         Debug.Log($"触发事件：{eventName}，持续时间：{remainingMinutes}分钟");
