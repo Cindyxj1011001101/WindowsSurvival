@@ -34,6 +34,7 @@ public class DetailsWindow : BagWindow
     protected override void Awake()
     {
         base.Awake();
+        // TODO: 行星磁暴结束时刷新
         EventManager.Instance.AddListener<Card>(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);

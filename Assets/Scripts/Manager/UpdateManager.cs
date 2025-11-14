@@ -9,6 +9,7 @@ public class UpdateManager : IManager
 
     public UnityEvent GameEventUpdate { get; private set; } = new();
     public UnityEvent PlayerUpdate { get; private set; } = new();
+    public UnityEvent PowerUpdate {  get; private set; } = new();
     public UnityEvent EnvironmentUpdate { get; private set; } = new();
     public UnityEvent PopulationUpdate { get; private set; } = new();
     public UnityEvent TechnologyUpdate { get; private set; } = new();
@@ -17,7 +18,6 @@ public class UpdateManager : IManager
     private SortedList<int, UnityAction> sortedCardUpdates = new();
     private SortedList<int, UnityAction> sortedEntityUpdates = new();
     private int currentOrder = 0;
-
 
     public void Init()
     {
@@ -61,6 +61,7 @@ public class UpdateManager : IManager
         TechnologyUpdate.Invoke();
         //CardUpdate.Invoke();
         CardUpdate();
+        PowerUpdate.Invoke();
         EnvironmentUpdate.Invoke();
         PlayerUpdate.Invoke();
         PopulationUpdate.Invoke();
@@ -106,5 +107,6 @@ public class UpdateManager : IManager
         PopulationUpdate.RemoveAllListeners();
         TechnologyUpdate.RemoveAllListeners();
         SunlightUpdate.RemoveAllListeners();
+        PowerUpdate.RemoveAllListeners();
     }
 }

@@ -489,4 +489,21 @@ public class GameDataManager
         JsonManager.SaveData(gameEventData, CurLoadName, "GameEventData");
     }
     #endregion
+
+    #region 电力数据
+    private ElectricPowerData electricPowerData;
+
+    public ElectricPowerData ElectricPowerData => electricPowerData;
+
+    public void SavePowerData()
+    {
+        electricPowerData = new()
+        {
+            init = true,
+            connectedAppliances = ElectricPowerManager.Instance.SortedConnectedAppliances,
+            power = ElectricPowerManager.Instance.Power
+        };
+        JsonManager.SaveData(electricPowerData, CurLoadName, "PowerData");
+    }
+    #endregion
 }
