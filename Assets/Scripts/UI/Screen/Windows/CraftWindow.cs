@@ -38,8 +38,8 @@ public class CraftWindow : WindowBase
         EventManager.Instance.AddListener(EventType.UnlockRecipe, RefreshDisplay);
         EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
         // 触发或结束制作激励事件时，刷新显示
-        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnCraftIncentiveTriggerEnd);
-        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnCraftIncentiveTriggerEnd);
+        EventManager.Instance.AddListener<GameEvent>(EventType.GameEventBegin, OnCraftIncentiveBeginEnd);
+        EventManager.Instance.AddListener<GameEvent>(EventType.GameEventEnd, OnCraftIncentiveBeginEnd);
 
         // 建筑制作限制
         foreach (Transform child in limitationLayout)
@@ -64,8 +64,8 @@ public class CraftWindow : WindowBase
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, RefreshDisplay);
         EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshDisplay);
         EventManager.Instance.RemoveListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
-        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventTrigger, OnCraftIncentiveTriggerEnd);
-        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventEnd, OnCraftIncentiveTriggerEnd);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.GameEventBegin, OnCraftIncentiveBeginEnd);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.GameEventEnd, OnCraftIncentiveBeginEnd);
     }
 
     protected override void Init()
@@ -81,7 +81,7 @@ public class CraftWindow : WindowBase
 
     private void RefreshDisplay() => DisplayRecipesByType(currentRecipeType, true); // 传递true表示是刷新操作
 
-    private void OnCraftIncentiveTriggerEnd(GameEvent gameEvent)
+    private void OnCraftIncentiveBeginEnd(GameEvent gameEvent)
     {
         if (gameEvent.GetType() != typeof(CraftIncentive)) return;
 

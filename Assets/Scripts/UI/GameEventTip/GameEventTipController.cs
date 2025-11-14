@@ -25,14 +25,14 @@ public class GameEventTipController : MonoBehaviour
 
     private void Start()
     {
-        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnGameEventTrigger);
-        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnGameEventEnd);
+        EventManager.Instance.AddListener<GameEvent>(EventType.GameEventBegin, OnGameEventTrigger);
+        EventManager.Instance.AddListener<GameEvent>(EventType.GameEventEnd, OnGameEventEnd);
     }
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventTrigger, OnGameEventTrigger);
-        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventEnd, OnGameEventEnd);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.GameEventBegin, OnGameEventTrigger);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.GameEventEnd, OnGameEventEnd);
     }
 
     private void OnGameEventTrigger(GameEvent gameEvent)

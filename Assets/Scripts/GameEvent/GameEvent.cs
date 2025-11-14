@@ -101,7 +101,7 @@ public abstract class GameEvent
         // 设置冷却时间
         remainingCoolDown = Mathf.CeilToInt(repeatIntervalDays * 24 * 60);
         OnTrigger();
-        EventManager.Instance.TriggerEvent(EventType.OnGameEventTrigger, this);
+        EventManager.Instance.TriggerEvent(EventType.GameEventBegin, this);
         Debug.Log($"触发事件：{eventName}，持续时间：{remainingMinutes}分钟");
     }
 
@@ -116,7 +116,7 @@ public abstract class GameEvent
                 remainingMinutes = 0;
                 // 调用结束处理
                 OnEnd();
-                EventManager.Instance.TriggerEvent(EventType.OnGameEventEnd, this);
+                EventManager.Instance.TriggerEvent(EventType.GameEventEnd, this);
                 Debug.Log($"事件结束：{eventName}");
             }
         }

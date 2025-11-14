@@ -69,8 +69,8 @@ public class ElectricPowerManager : IManager
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
 
         // 监听行星磁暴事件
-        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
-        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
+        EventManager.Instance.AddListener<GameEvent>(EventType.GameEventBegin, OnMagneticStormBegin);
+        EventManager.Instance.AddListener<GameEvent>(EventType.GameEventEnd, OnMagneticStormEnd);
     }
 
     public void Reset()
@@ -81,8 +81,8 @@ public class ElectricPowerManager : IManager
         connectedApplianceLookup.Clear();
         UpdateManager.Instance.PowerUpdate.RemoveListener(Update);
         EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
-        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
-        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.GameEventBegin, OnMagneticStormBegin);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.GameEventEnd, OnMagneticStormEnd);
     }
 
     private void OnMagneticStormBegin(GameEvent gameEvent)
