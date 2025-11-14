@@ -1142,3 +1142,71 @@ public class WeaponComponent : CardComponent
     }
 }
 #endregion
+
+#region 用电组件
+public class PowerConsumptionComponent : CardComponent
+{
+    public float consumptionRate;
+
+    public bool connected = false;
+
+    [JsonIgnore] public UnityAction powerOn;
+    [JsonIgnore] public UnityAction powerOff;
+
+    private string key => BelongedCard.CardId + BelongedCard.Uuid;
+
+    public PowerConsumptionComponent() { }
+
+    public PowerConsumptionComponent(float consumptionRate)
+    {
+        this.consumptionRate = consumptionRate;
+    }
+
+    public void PowerOn()
+    {
+        connected = true;
+        powerOn?.Invoke();
+        RefreshSlot();
+    }
+
+    public void PowerOff()
+    {
+        connected = false;
+        powerOff?.Invoke();
+        RefreshSlot();
+
+        // 主动断电: this.DisconnectPower -> ElectricPowerManager.Instance.DisconnectPower -> this.PowerOff
+        // 被动断电: ElectricPowerManager.Instance.AutoDisconnectPower -> ElectricPowerManager.Instance.DisconnectPower -> this.PowerOff
+        StackTrace stackTrace = new();
+        MethodBase callerMethod = stackTrace.GetFrame(2).GetMethod();
+        if (callerMethod.Name == "AutoDisconnectPower")
+            ShowTip($"{BelongedCard.CardName}已自动断电");
+    }
+
+    public void ConnectPower(CardEvent e = null)
+    {
+        ElectricPowerManager.Instance.ConnectPower(key, consumptionRate);
+    }
+
+    public void DisconnectPower(CardEvent e = null)
+    {
+        ElectricPowerManager.Instance.DisconnectPower(key);
+    }
+
+    public void RegisterPowerOnOffActions()
+    {
+        ElectricPowerManager.Instance.RegisterPowerOnOffActions(key, PowerOn, PowerOff);
+    }
+
+    public bool CanConnectPower(out string reason)
+    {
+        return ElectricPowerManager.Instance.CanConnectPower(consumptionRate, out reason);
+    }
+
+    public bool CanDisconnectPower(out string reason)
+    {
+        reason = string.Empty;
+        return connected;
+    }
+}
+#endregion

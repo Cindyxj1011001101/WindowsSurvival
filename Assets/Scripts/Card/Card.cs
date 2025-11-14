@@ -282,6 +282,9 @@ public abstract class Card : IComparable<Card>
         // 初始化内容物
         InitInnerContents();
 
+        // 初始化电力消耗
+        InitPowerConsumption();
+
         // 派生类初始化
         OnInit();
 
@@ -291,14 +294,22 @@ public abstract class Card : IComparable<Card>
 
     private void InitInnerContents()
     {
-        // 处理内容物的过滤器
-        if (innerContents != null)
-        {
-            innerContents.contentFilter = ReflectionUtility.BindToDelegate<CardFilterDelegate>(this, "ContentFilter", true);
-        }
+        if (innerContents == null) return;
 
+        // 处理内容物的过滤器
+        innerContents.contentFilter = ReflectionUtility.BindToDelegate<CardFilterDelegate>(this, "ContentFilter", true);
         // 内容物初始化
-        innerContents?.Init();
+        innerContents.Init();
+    }
+
+    private void InitPowerConsumption()
+    {
+        if (powerConsumption == null) return;
+
+        // 注册接电断电事件
+        powerConsumption.powerOn = ReflectionUtility.BindToDelegate<UnityAction>(this, "PowerOn", true);
+        powerConsumption.powerOff = ReflectionUtility.BindToDelegate<UnityAction>(this, "PowerOff", true);
+        powerConsumption.RegisterPowerOnOffActions();
     }
 
     protected virtual void OnInit() { }
@@ -374,6 +385,11 @@ public abstract class Card : IComparable<Card>
 
         SlotCards.RemoveCard(this);
 
+        // 自动断电
+        powerConsumption?.DisconnectPower();
+
+        // TODO: 自动熄灭
+
         OnDestroy();
 
         OnLeaveEnvironment();
@@ -428,6 +444,7 @@ public abstract class Card : IComparable<Card>
     protected EntityComponent entity;
     protected CoordinateComponent coordinate;
     protected WeaponComponent weapon;
+    protected PowerConsumptionComponent powerConsumption;
 
     private bool assigned = false;
 
@@ -459,6 +476,7 @@ public abstract class Card : IComparable<Card>
         TryGetComponent(out entity);
         TryGetComponent(out coordinate);
         TryGetComponent(out weapon);
+        TryGetComponent(out powerConsumption);
         // 这里没有处理TimerComponent，是因为它是临时的
 
         foreach (var c in components.Values)
