@@ -277,7 +277,7 @@ public abstract class Card : IComparable<Card>
         // 监听事件
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
         //UpdateManager.Instance.CardUpdate.AddListener(Update);
-        UpdateManager.Instance.AddCardUpdateListener(ref updateOrder, Update, FineUpdate);
+        UpdateManager.Instance.AddCardUpdateListener(ref updateOrder, Update);
 
         // 初始化内容物
         InitInnerContents();
@@ -336,15 +336,6 @@ public abstract class Card : IComparable<Card>
     /// 每回合结算时执行
     /// </summary>
     protected virtual void OnUpdate() { }
-
-    private void FineUpdate()
-    {
-        if (isUpdateFreezed || Locked || Destroyed) return;
-
-        OnFineUpdate();
-    }
-
-    protected virtual void OnFineUpdate() { }
 
     /// <summary>
     /// 暂停更新

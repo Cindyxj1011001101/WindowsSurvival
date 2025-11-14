@@ -15,56 +15,46 @@ public class UpdateManager : IManager
     public UnityEvent SunlightUpdate { get; private set; } = new();
 
     private SortedList<int, UnityAction> sortedCardUpdates = new();
-    private SortedList<int, UnityAction> sortedCardFineUpdates = new();
+    private SortedList<int, UnityAction> sortedEntityUpdates = new();
     private int currentOrder = 0;
 
 
     public void Init()
     {
-        EventManager.Instance.AddListener(EventType.Update, OnUpdate);
-        EventManager.Instance.AddListener(EventType.FineUpdate, OnFineUpdate);
+        EventManager.Instance.AddListener(EventType.Update, Update);
+        EventManager.Instance.AddListener(EventType.FineUpdate, FineUpdate);
     }
 
     public void Reset()
     {
         Clear();
-        EventManager.Instance.RemoveListener(EventType.Update, OnUpdate);
-        EventManager.Instance.AddListener(EventType.FineUpdate, OnFineUpdate);
+        EventManager.Instance.RemoveListener(EventType.Update, Update);
+        EventManager.Instance.RemoveListener(EventType.FineUpdate, FineUpdate);
     }
 
-    public void AddCardUpdateListener(ref int order, UnityAction update, UnityAction fineUpdate)
+    public void AddCardUpdateListener(ref int order, UnityAction update)
     {
         if (order <= 0)
             order = currentOrder + 1;
         
         sortedCardUpdates.Add(order, update);
-        sortedCardFineUpdates.Add(order, fineUpdate);
         currentOrder = Mathf.Max(currentOrder, order);
     }
 
     public void RemoveCardUpdateListener(int order)
     {
         sortedCardUpdates.Remove(order);
-        sortedCardFineUpdates.Remove(order);
     }
 
     private void CardUpdate()
     {
-        foreach (var update in sortedCardUpdates.Values.ToList())
+        foreach (var update in sortedCardUpdates.Values.ToList()) // 这里需要tolist是因为update可能会修改sortedCardUpdates
         {
             update();
         }
     }
 
-    private void CardFineUpdate()
-    {
-        foreach (var fineUpdate in sortedCardFineUpdates.Values.ToList())
-        {
-            fineUpdate();
-        }
-    }
-
-    private void OnUpdate()
+    private void Update()
     {
         EventManager.Instance.TriggerEvent(EventType.UpdateBegin);
         // 顺序很重要
@@ -78,15 +68,37 @@ public class UpdateManager : IManager
         SunlightUpdate.Invoke();
     }
 
-    private void OnFineUpdate()
+    public void AddEntityUpdateListener(ref int order, UnityAction update)
     {
-        CardFineUpdate();
+        if (order <= 0)
+            order = currentOrder + 1;
+
+        sortedEntityUpdates.Add(order, update);
+        currentOrder = Mathf.Max(currentOrder, order);
+    }
+
+    public void RemoveEntityUpdateListener(int order)
+    {
+        sortedEntityUpdates.Remove(order);
+    }
+
+    private void EntityUpdate()
+    {
+        foreach (var update in sortedEntityUpdates.Values.ToList())
+        {
+            update();
+        }
+    }
+
+    private void FineUpdate()
+    {
+        EntityUpdate();
     }
 
     private void Clear()
     {
         sortedCardUpdates.Clear();
-        sortedCardFineUpdates.Clear();
+        sortedEntityUpdates.Clear();
         GameEventUpdate.RemoveAllListeners();
         PlayerUpdate.RemoveAllListeners();
         EnvironmentUpdate.RemoveAllListeners();
