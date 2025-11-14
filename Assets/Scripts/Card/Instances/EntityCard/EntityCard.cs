@@ -57,7 +57,6 @@ public abstract class EntityCard : Card, IEntity
 
         // 监听每分钟的实体更新
         UpdateManager.Instance.AddEntityUpdateListener(ref updateOrder, OnEntityUpdate);
-        EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
     protected override void OnDestroy()
@@ -66,7 +65,6 @@ public abstract class EntityCard : Card, IEntity
         aggroCollection.Clear();
         GlobalDataManager.Instance.DestroyEntity(this);
         UpdateManager.Instance.RemoveEntityUpdateListener(updateOrder);
-        EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
 
     private void OnEntityUpdate()

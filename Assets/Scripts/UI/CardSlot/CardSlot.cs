@@ -63,6 +63,7 @@ public class CardSlot : MonoBehaviour
         EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
         EventManager.Instance.AddListener<Card>(EventType.PickUpCard, OnCardPickedUp);
         EventManager.Instance.AddListener(EventType.PutDownCard, OnCardPutDown);
+        EventManager.Instance.AddListener(EventType.PlayerMove, OnPlayerMove);
     }
 
     private void OnDisable()
@@ -79,6 +80,7 @@ public class CardSlot : MonoBehaviour
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
         EventManager.Instance.RemoveListener<Card>(EventType.PickUpCard, OnCardPickedUp);
         EventManager.Instance.RemoveListener(EventType.PutDownCard, OnCardPutDown);
+        EventManager.Instance.RemoveListener(EventType.PlayerMove, OnPlayerMove);
     }
 
     public void Init(SlotCards slotCards)
@@ -86,6 +88,11 @@ public class CardSlot : MonoBehaviour
         Cards = slotCards;
         slotCards.SetCardSlot(this);
         RefreshDisplay();
+    }
+
+    private void OnPlayerMove()
+    {
+        if (componentSliders.ContainsKey(typeof(CoordinateComponent))) RefreshDisplay();
     }
 
     #region 显示
@@ -226,12 +233,10 @@ public class CardSlot : MonoBehaviour
     {
         if (!componentSliders.TryGetValue(component.GetType(), out UIStateSlider slider))
         {
-            if (component is TemperatureComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(TemperatureComponent), parent).GetComponent<UIStateSlider>();
-            else if (component is TimerComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(TimerComponent), parent).GetComponent<UIStateSlider>();
-            else if (component is CoordinateComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(CoordinateComponent), parent).GetComponent<UIStateSlider>();
+            if (component is TemperatureComponent ||
+                component is TimerComponent ||
+                component is CoordinateComponent)
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", component.GetType().Name, parent).GetComponent<UIStateSlider>();
             else
                 slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent).GetComponent<UIStateSlider>();
 

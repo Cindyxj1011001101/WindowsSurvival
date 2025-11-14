@@ -20,13 +20,11 @@
     protected override void OnInit()
     {
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
-        EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
     protected override void OnDestroy()
     {
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
-        EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
 
     /// <summary>
