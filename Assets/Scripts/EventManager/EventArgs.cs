@@ -30,7 +30,6 @@
     OnGameEventTrigger,                 // 全局效果生效
     OnGameEventEnd,                     // 全局效果失效
     UpdateSunlight,                     // 恒星光照更新
-    ElectricPowerChange,                // 电力变化
 }
 
 public class ChangePlayerBagCardsArgs

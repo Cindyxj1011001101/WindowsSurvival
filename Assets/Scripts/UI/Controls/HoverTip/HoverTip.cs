@@ -110,7 +110,7 @@ public class HoverTip : MonoBehaviour
                 if (type == EnvironmentStateEnum.Electricity)
                 {
                     var stateTip = transform.Find($"E_{type}").GetComponent<UIStateTip>();
-                    stateTip.SetValue(StateManager.Instance.Electricity, delta);
+                    stateTip.SetValue(ElectricPowerManager.Instance.Power, delta);
                     stateTip.gameObject.SetActive(true);
                     continue;
                 }

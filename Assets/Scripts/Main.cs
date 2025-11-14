@@ -19,6 +19,7 @@ public class Main : MonoBehaviour
         TechnologyManager.Instance,
         CraftManager.Instance,
         GameEventManager.Instance,
+        ElectricPowerManager.Instance,
         Player.Instance,
         StateManager.Instance,
         GameManager.Instance,

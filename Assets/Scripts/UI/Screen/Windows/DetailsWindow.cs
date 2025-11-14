@@ -34,10 +34,10 @@ public class DetailsWindow : BagWindow
     protected override void Awake()
     {
         base.Awake();
-        // TODO: 行星磁暴结束时刷新
         EventManager.Instance.AddListener<Card>(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
         EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChange);
     }
 
     private void OnDestroy()
@@ -46,6 +46,7 @@ public class DetailsWindow : BagWindow
         EventManager.Instance.RemoveListener<Card>(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
         EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChange);
     }
 
     protected override void Init()
@@ -78,8 +79,26 @@ public class DetailsWindow : BagWindow
     /// <param name="args"></param>
     private void OnPlayerCardsChanged(ChangePlayerBagCardsArgs args)
     {
-        if (currentDisplayedCard != null)
-            DisplayEventButtons();
+        if (currentDisplayedCard == null) return;
+
+        DisplayEventButtons();
+    }
+
+    /// <summary>
+    /// 电力变化时触发，这是为了刷新卡牌事件的触发条件
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnEnvironmentStateChange(RefreshEnvironmentStateArgs args)
+    {
+        if (currentDisplayedCard == null) return;
+
+        switch (args.stateEnum)
+        {
+            case EnvironmentStateEnum.Electricity:
+            case EnvironmentStateEnum.WaterLevel:
+                DisplayEventButtons();
+                break;
+        }
     }
 
     private void RefreshCard(Card card)
@@ -309,7 +328,7 @@ public class DetailsWindow : BagWindow
             else
             {
                 btnText.color = ColorManager.DarkGrey;
-                button.GetComponent<HoverTipController>().SetTip(e.Description);
+                button.GetComponent<HoverTipController>().SetTip(e.Hint);
             }
 
             button.transform.localScale = Vector3.one; // 确保按钮缩放为1
@@ -391,7 +410,7 @@ public class DetailsWindow : BagWindow
 
         float maxValue;
         if (state == EnvironmentStateEnum.Electricity)
-            maxValue = StateManager.Instance.Electricity.MaxValue;
+            maxValue = ElectricPowerManager.Instance.Power.MaxValue;
         else if (state == EnvironmentStateEnum.WaterLevel)
             maxValue = StateManager.Instance.WaterLevel.MaxValue;
         else

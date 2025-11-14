@@ -276,11 +276,6 @@ public class CardSlot : MonoBehaviour
             case FuelStorageComponent fuelStorageComponent:
                 slider.SetValue(fuelStorageComponent.value, fuelStorageComponent.maxValue);
                 string tip = $"剩余燃料:  {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}";
-
-                iconLayout.SetActive(true);
-                fireIcon.gameObject.SetActive(true);
-                fireIcon.color = fuelStorageComponent.isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
-
                 // 显示燃料消耗
                 tip += $"\n自然消耗:  -{fuelStorageComponent.basicFuelConsumption:0.0}/15min";
                 if (StateManager.Instance.WaterLevel.CurValue > 0)
@@ -369,13 +364,6 @@ public class CardSlot : MonoBehaviour
     /// <param name="state"></param>
     private void DisplayCardState(Card card, CardState state)
     {
-        if (state.needElectricity)
-        {
-            iconLayout.SetActive(true);
-            flashIcon.gameObject.SetActive(true);
-            flashIcon.color = state.isConsumingElectricity ? ColorManager.Yellow : ColorManager.DarkGrey;
-        }
-
         // 有动画的播放动画
         if (state.isAnim)
         {
@@ -387,6 +375,27 @@ public class CardSlot : MonoBehaviour
             cardAnimator.Play("");
             cardAnimator.enabled = false;
         }
+    }
+
+    /// <summary>
+    /// 显示电力消耗图标
+    /// </summary>
+    private void DisplayElectricPowerIcon(bool connected)
+    {
+        iconLayout.SetActive(true);
+        flashIcon.gameObject.SetActive(true);
+        flashIcon.color = connected ? ColorManager.Yellow : ColorManager.DarkGrey;
+    }
+
+    /// <summary>
+    /// 显示燃烧图标
+    /// </summary>
+    private void DisplayBuriningIcon(bool isBurning)
+    {
+        iconLayout.SetActive(true);
+        fireIcon.gameObject.SetActive(true);
+        fireIcon.color = isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
+
     }
 
     /// <summary>
@@ -428,7 +437,10 @@ public class CardSlot : MonoBehaviour
             DisplayInnerContentsComponent(i);
         // 显示燃料存储
         if (card.TryGetComponent<FuelStorageComponent>(out var fc))
+        {
             DisplayContinuousValueComponent(fc, middle);
+            DisplayBuriningIcon(fc.isBurning);
+        }
         // 显示温度
         if (card.TryGetComponent<TemperatureComponent>(out var t))
             DisplayContinuousValueComponent(t, right);
@@ -461,6 +473,9 @@ public class CardSlot : MonoBehaviour
         // 显示实体生命值
         if (card.TryGetComponent<EntityComponent>(out var ec))
             DisplayContinuousValueComponent(ec, middle);
+        // 显示电力消耗
+        if (card.TryGetComponent<PowerConsumptionComponent>(out var pc) && pc.consumptionRate > 0)
+            DisplayElectricPowerIcon(pc.Connected);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;

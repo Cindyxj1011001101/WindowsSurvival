@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
-using UnityEditorInternal;
 using UnityEngine.Events;
 
 public class ElectricalAppliance : IComparable<ElectricalAppliance>
@@ -72,6 +70,7 @@ public class ElectricPowerManager : IManager
 
         // 监听行星磁暴事件
         EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
     }
 
     public void Reset()
@@ -83,6 +82,7 @@ public class ElectricPowerManager : IManager
         UpdateManager.Instance.PowerUpdate.RemoveListener(Update);
         EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
         EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
+        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
     }
 
     private void OnMagneticStormBegin(GameEvent gameEvent)
@@ -91,6 +91,15 @@ public class ElectricPowerManager : IManager
 
         // 断开所有连接的电器
         AutoDisconnectPower(true);
+
+        RefreshElectricPower();
+    }
+
+    private void OnMagneticStormEnd(GameEvent gameEvent)
+    {
+        if (gameEvent.GetType() != typeof(MagneticStorm)) return;
+
+        RefreshElectricPower();
     }
 
     /// <summary>
@@ -113,7 +122,7 @@ public class ElectricPowerManager : IManager
     /// <param name="powerConsumptionRate"></param>
     public void ConnectPower(string key, float powerConsumptionRate)
     {
-        if (connectedApplianceLookup.ContainsKey(key)) return;
+        if (IsAlreadyConnected(key)) return;
 
         // 加入对照表和已连接的电器列表
         var newApp = new ElectricalAppliance(key, powerConsumptionRate);
@@ -139,17 +148,26 @@ public class ElectricPowerManager : IManager
         reason = string.Empty;
         if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            reason = "受行星磁暴影响，无法接电";
+            reason = "受磁暴影响，无法使用";
             return false;
         }
 
-        if (Power.CurValue + Power.ChangeRate + powerConsumptionRate < 0)
+        if (Power.CurValue + Power.ChangeRate - powerConsumptionRate < 0)
         {
             reason = "电力供应不足";
             return false;
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// 是否已经接电
+    /// </summary>
+    /// <returns></returns>
+    public bool IsAlreadyConnected(string key)
+    {
+        return connectedApplianceLookup.ContainsKey(key);
     }
 
     /// <summary>
@@ -180,6 +198,7 @@ public class ElectricPowerManager : IManager
         while (SortedConnectedAppliances.Count > 0 &&
                (disconnectAll || Power.CurValue + Power.ChangeRate < 0))
         {
+            UnityEngine.Debug.Log(SortedConnectedAppliances.Max.key + "断电了");
             DisconnectPower(SortedConnectedAppliances.Max.key);
         }
     }
@@ -191,10 +210,20 @@ public class ElectricPowerManager : IManager
     public void ChangePower(float delta)
     {
         Power.AddValue(delta);
-        EventManager.Instance.TriggerEvent(EventType.ElectricPowerChange, Power);
 
         // 若电力不足，根据耗电量从低到高断掉部分电器
         AutoDisconnectPower(false);
+
+        RefreshElectricPower();
+    }
+
+    private void RefreshElectricPower()
+    {
+        var env = GameManager.Instance.CurEnvironmentBag;
+        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.Electricity)
+        {
+            stateValue = Power
+        });
     }
 
     /// <summary>
@@ -204,7 +233,8 @@ public class ElectricPowerManager : IManager
     private void ChangePowerConsumptionRate(float delta)
     {
         Power.AddChangeRate(delta);
-        EventManager.Instance.TriggerEvent(EventType.ElectricPowerChange, Power);
+
+        RefreshElectricPower();
     }
 
     private float powerChangeRateSnapshot;

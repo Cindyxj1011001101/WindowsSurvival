@@ -582,18 +582,14 @@ public class CardState
     public string displayName; // 对外显示的名称
     public string imagePath; // 图片路径
     public bool isAnim; // 是否为动画
-    public bool needElectricity; // 是否需要电力
-    public bool isConsumingElectricity; // 是否正在消耗电力
 
     public CardState() { }
 
-    public CardState(string name, string imagePath, bool isAnim = false, bool needElectricity = false, bool isConsumingElectricity = false)
+    public CardState(string name, string imagePath, bool isAnim = false)
     {
         this.name = this.displayName = name;
         this.imagePath = imagePath;
         this.isAnim = isAnim;
-        this.needElectricity = needElectricity;
-        this.isConsumingElectricity = isConsumingElectricity;
     }
 }
 
@@ -988,7 +984,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip)) // tip不为空说明不是因为正在燃烧中而导致无法点燃
         {
             Extinguish();
-            ShowTip($"{tip}，{BelongedCard.CardName}已熄灭");
+            ShowTip($"{tip}，{BelongedCard.CardName}已自动熄灭");
         }
     }
 }
@@ -1148,12 +1144,10 @@ public class PowerConsumptionComponent : CardComponent
 {
     public float consumptionRate;
 
-    public bool connected = false;
+    [JsonIgnore] public bool Connected => ElectricPowerManager.Instance.IsAlreadyConnected(BelongedCard.Uuid);
 
     [JsonIgnore] public UnityAction powerOn;
     [JsonIgnore] public UnityAction powerOff;
-
-    private string key => BelongedCard.CardId + BelongedCard.Uuid;
 
     public PowerConsumptionComponent() { }
 
@@ -1164,14 +1158,12 @@ public class PowerConsumptionComponent : CardComponent
 
     public void PowerOn()
     {
-        connected = true;
         powerOn?.Invoke();
         RefreshSlot();
     }
 
     public void PowerOff()
     {
-        connected = false;
         powerOff?.Invoke();
         RefreshSlot();
 
@@ -1185,28 +1177,29 @@ public class PowerConsumptionComponent : CardComponent
 
     public void ConnectPower(CardEvent e = null)
     {
-        ElectricPowerManager.Instance.ConnectPower(key, consumptionRate);
+        ElectricPowerManager.Instance.ConnectPower(BelongedCard.Uuid, consumptionRate);
     }
 
     public void DisconnectPower(CardEvent e = null)
     {
-        ElectricPowerManager.Instance.DisconnectPower(key);
+        ElectricPowerManager.Instance.DisconnectPower(BelongedCard.Uuid);
     }
 
     public void RegisterPowerOnOffActions()
     {
-        ElectricPowerManager.Instance.RegisterPowerOnOffActions(key, PowerOn, PowerOff);
+        ElectricPowerManager.Instance.RegisterPowerOnOffActions(BelongedCard.Uuid, PowerOn, PowerOff);
     }
 
     public bool CanConnectPower(out string reason)
     {
-        return ElectricPowerManager.Instance.CanConnectPower(consumptionRate, out reason);
+        reason = string.Empty;
+        return !Connected && ElectricPowerManager.Instance.CanConnectPower(consumptionRate, out reason);
     }
 
     public bool CanDisconnectPower(out string reason)
     {
         reason = string.Empty;
-        return connected;
+        return Connected;
     }
 }
 #endregion

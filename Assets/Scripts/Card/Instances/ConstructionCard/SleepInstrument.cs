@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
 
 /// <summary>
@@ -6,16 +5,14 @@ using System.Collections.Generic;
 /// </summary>
 public class SleepInstrument : ConstructionCard
 {
-    private const float ELECTRICITY_CONSUMPTION = 0.6f; // 每回合耗电量
-    private const float EXTRA_SOBRIETY_INCREASE = 1.2f; // 额外清醒度增加
-    private const float EXTRA_HEALTH_INCREASE = 1.2f;   // 额外清醒度增加
-
-    [JsonProperty] private bool isWorking = false;
+    private const float POWER_CONSUMPTION_RATE = 0.6f;          // 每回合耗电量
+    private const float EXTRA_SOBRIETY_INCREASE_RATE = 1.2f;    // 额外清醒度增加
+    private const float EXTRA_HEALTH_INCREASE_RATE = 1.2f;      // 额外精神值增加
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("接电", $"将其接入电网。接电后当麦麦在安装了{CardName}的地点休息时，每15分钟额外+{EXTRA_SOBRIETY_INCREASE}清醒度和{EXTRA_HEALTH_INCREASE}健康，" +
-                            $"并消耗{ELECTRICITY_CONSUMPTION}单位电力", Event_TurnOn, Judge_TurnOn);
+        AddCardEvent("开启", $"开启机器。开启后当麦麦在安装了{CardName}的地点休息时，机器会自动接电，使麦麦每15分钟额外回复{EXTRA_SOBRIETY_INCREASE_RATE}清醒度和{EXTRA_HEALTH_INCREASE_RATE}健康，" +
+                            $"并消耗{POWER_CONSUMPTION_RATE}单位电力", Event_TurnOn, Judge_TurnOn);
 		AddCardEvent("断电", "", Event_TurnOff, Judge_TurnOff);
         base.RegisterCardEvents(); // 拆毁
     }
@@ -24,124 +21,83 @@ public class SleepInstrument : ConstructionCard
     {
         var states = new List<CardState>()
         {
-            new ("已接电", "11", true, true, true),
-            new ("未接电", "12", false, true, false),
+            new ("已开启", "11", true),
+            new ("未开启", "12", false),
         };
-        stateMachine = new StateMachineComponent("未接电", states);
+        stateMachine = new StateMachineComponent("未开启", states);
         AddComponent(stateMachine);
+
+        powerConsumption = new(POWER_CONSUMPTION_RATE);
+        AddComponent(powerConsumption);
     }
 
     protected override void OnInit()
     {
         EventManager.Instance.AddListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.AddListener(EventType.StopSleeping, OnStopSleeping);
-        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
-        EventManager.Instance.AddListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
-        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 
     protected override void OnDestroy()
     {
         EventManager.Instance.RemoveListener(EventType.StartSleeping, OnStartSleeping);
         EventManager.Instance.RemoveListener(EventType.StopSleeping, OnStopSleeping);
-        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventTrigger, OnMagneticStormBegin);
-        EventManager.Instance.RemoveListener<GameEvent>(EventType.OnGameEventEnd, OnMagneticStormEnd);
-        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
     }
 
-    private void OnMagneticStormBegin(GameEvent gameEvent)
+    private void PowerOn()
     {
-        if (gameEvent.GetType() != typeof(MagneticStorm) || stateMachine.currentStateName == "未接电") return;
-
-        Event_TurnOff(null);
-        ShowTip($"受行星磁暴影响，{CardName}已断电并停止工作");
+        // 额外恢复清醒度和精神值
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, EXTRA_SOBRIETY_INCREASE_RATE);
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, EXTRA_HEALTH_INCREASE_RATE);
     }
 
-    private void OnMagneticStormEnd(GameEvent gameEvent)
+    private void PowerOff()
     {
-        if (gameEvent.GetType() != typeof(MagneticStorm)) return;
-
-        RefreshSlot();
-    }
-
-    private void OnElectricityChange(RefreshEnvironmentStateArgs args)
-    {
-        if (args.stateEnum != EnvironmentStateEnum.Electricity || !isWorking) return;
-
-        if (args.stateValue.GetPredictedVariableValue() < 0) // 已经接电了这里就要判断 < 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
-        {
-            Event_TurnOff(null);
-            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
-        }
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, -EXTRA_SOBRIETY_INCREASE_RATE);
+        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, -EXTRA_HEALTH_INCREASE_RATE);
     }
 
     private void OnStartSleeping()
     {
-        if (GameManager.Instance.CurEnvironmentBag != Bag || stateMachine.currentStateName == "未接电" || isWorking) return;
+        // 未开启机器
+        if (stateMachine.currentStateName == "未开启") return;
 
-        // 开始睡觉时判断电力是否充足
-        if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION)
+        // 玩家不在机器所在地点休息
+        if (!GameManager.Instance.IsCurrentEnvironment(Bag)) return;
+
+        // 可以接电，则接电
+        if (powerConsumption.CanConnectPower(out _))
         {
-            Event_TurnOff(null);
-            ShowTip($"电力供应不足，{CardName}已断电并停止工作");
-            return;
+            powerConsumption.ConnectPower();
         }
-
-        StartWorking();
     }
 
     private void OnStopSleeping()
     {
-        if (!isWorking) return;
+        if (!powerConsumption.Connected) return;
 
-        StopWorking();
+        powerConsumption.DisconnectPower();
+        ShowTip($"睡眠结束，{CardName}已自动断电");
     }
 
-    private void StartWorking()
-    {
-        isWorking = true;
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, EXTRA_SOBRIETY_INCREASE);
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, EXTRA_HEALTH_INCREASE);
-        StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_CONSUMPTION);
-    }
-
-    private void StopWorking()
-    {
-        isWorking = false;
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, -EXTRA_SOBRIETY_INCREASE);
-        StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, -EXTRA_HEALTH_INCREASE);
-        StateManager.Instance.ChangeElectricityChangeRate(+ELECTRICITY_CONSUMPTION);
-    }
-
-    /// <summary>
-    /// 接电
-    /// </summary>
-    /// <param name="tip"></param>
     private void Event_TurnOn(CardEvent e)
     {
-        stateMachine.ChangeState("已接电");
+        stateMachine.ChangeState("已开启");
     }
 
     private bool Judge_TurnOn(out string hint)
     {
         hint = string.Empty;
-        return stateMachine.currentStateName == "未接电";
+        return stateMachine.currentStateName == "未开启";
     }
 
-    /// <summary>
-    /// 断电
-    /// </summary>
-    /// <param name="tip"></param>
     private void Event_TurnOff(CardEvent e)
     {
-        if (isWorking)
-            StopWorking();
-        stateMachine.ChangeState("未接电");
+        stateMachine.ChangeState("未开启");
     }
 
     private bool Judge_TurnOff(out string hint)
     {
         hint = string.Empty;
-        return stateMachine.currentStateName == "已接电";
+        return stateMachine.currentStateName == "已开启";
     }
 }

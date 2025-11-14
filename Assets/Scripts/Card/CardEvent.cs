@@ -22,13 +22,14 @@ public class CardEvent
     {
         get
         {
-            if (!string.IsNullOrEmpty(hint)) return hint;
-
             if (getDescription != null) return getDescription();
 
             return description;
         }
     }
+
+    public string Hint => hint;
+
     public string Name => name;
 
     public CardEvent(

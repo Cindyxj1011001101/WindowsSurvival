@@ -132,7 +132,7 @@ public static class AfterChatFactory
         switch (stateName)
         {
             case "电力":
-                StateManager.Instance.ChangeElectricity(delta);
+                ElectricPowerManager.Instance.ChangePower(delta);
                 break;
             case "氧气":
                 env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, delta);

@@ -64,6 +64,8 @@ public class GameDataManager
         playerData = JsonManager.LoadData<PlayerData>(CurLoadName, "PlayerData");
         // 游戏事件数据
         gameEventData = JsonManager.LoadData<GameEventData>(CurLoadName, "GameEventData");
+        // 电力数据
+        electricPowerData = JsonManager.LoadData<ElectricPowerData>(CurLoadName, "ElectricPowerData");
     }
 
     public void SaveAllData()
@@ -96,6 +98,8 @@ public class GameDataManager
         SavePlayerData();
         // 游戏事件数据
         SaveGameEventData();
+        // 保存电力数据
+        SaveElectricPowerData();
 
         if (loadData == null)
         {
@@ -377,7 +381,6 @@ public class GameDataManager
         stateData = new StateData
         {
             init = true,
-            electricity = StateManager.Instance.Electricity,
             waterLevel = StateManager.Instance.WaterLevel,
             playerState = StateManager.Instance.PlayerStateDict,
         };
@@ -495,7 +498,7 @@ public class GameDataManager
 
     public ElectricPowerData ElectricPowerData => electricPowerData;
 
-    public void SavePowerData()
+    public void SaveElectricPowerData()
     {
         electricPowerData = new()
         {
@@ -503,7 +506,7 @@ public class GameDataManager
             connectedAppliances = ElectricPowerManager.Instance.SortedConnectedAppliances,
             power = ElectricPowerManager.Instance.Power
         };
-        JsonManager.SaveData(electricPowerData, CurLoadName, "PowerData");
+        JsonManager.SaveData(electricPowerData, CurLoadName, "ElectricPowerData");
     }
     #endregion
 }

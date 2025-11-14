@@ -6,10 +6,12 @@ public class TechnologyManager : IManager
 {
     public static TechnologyManager Instance { get; } = new();
 
-    private const float ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES = 0.5f;
+    private const float POWER_CONSUMPTION_RATE_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES = 0.5f;
 
     private TechnologyData techData;
+
     private Dictionary<string, ScriptableTechnologyNode> allTechNodes = new();
+    
     public float CurStudyRate { get; private set; }
 
     public ScriptableTechnologyNode CurStudiedTechNode
@@ -23,8 +25,6 @@ public class TechnologyManager : IManager
     }
 
     public bool AllTechnologiesStudied => techData.studiedTechNodes.Count == techData.techNodeProgressDict.Count;
-
-    private bool isIntermediateTechnologiesUnlocked;
 
     private TechnologyManager() { }
 
@@ -49,10 +49,10 @@ public class TechnologyManager : IManager
             {
                 techData.techNodeProgressDict.Add(node.techName, new TechNodeData { name = node.techName, progress = 0 });
             }
+            techData.basicStudyRate = 2.0f;
+            techData.isIntermediateTechLocked = true;
+            techData.intermediateTechLockedReason = "缺少\"数据传输台\"";
         }
-
-        // 中极科技是否解锁
-        isIntermediateTechnologiesUnlocked = GlobalDataManager.Instance.GetCardNum("数据传输台") >= 1 && StateManager.Instance.Electricity.GetPredictedVariableValue() >= ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES;
 
         CurStudyRate = CalcStudyRate();
 
@@ -61,7 +61,11 @@ public class TechnologyManager : IManager
 
         // 监听数据传输台的数量变化
         EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, OnCardNumChanged);
-        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
+
+        // 监听电力变化
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricPowerChange);
+        // 断电时检查中级科技解锁情况
+        ElectricPowerManager.Instance.RegisterPowerOnOffActions(nameof(TechnologyManager), null, CheckIntermediateTechUnlockCondition);
     }
 
     public void Reset()
@@ -69,7 +73,7 @@ public class TechnologyManager : IManager
         techData = null;
         UpdateManager.Instance.TechnologyUpdate.RemoveListener(OnStudy);
         EventManager.Instance.RemoveListener<(string, int)>(EventType.CardNumChange, OnCardNumChanged);
-        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricityChange);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricPowerChange);
     }
 
     /// <summary>
@@ -79,10 +83,10 @@ public class TechnologyManager : IManager
     public void Study(ScriptableTechnologyNode techNode)
     {
         techData.curStudiedTechNodeName = techNode.techName;
-        
+
         // 如果是中级科技，消耗电力
         if (techNode.techLevel == TechLevl.Intermediate)
-            StateManager.Instance.ChangeElectricityChangeRate(-ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES);
+            ElectricPowerManager.Instance.ConnectPower(nameof(TechnologyManager), POWER_CONSUMPTION_RATE_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES);
 
         EventManager.Instance.TriggerEvent(EventType.StudyStarted, techNode);
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("StartResearch", techNode.techName));
@@ -93,16 +97,16 @@ public class TechnologyManager : IManager
     /// </summary>
     public void StopStudy()
     {
-        if (CurStudiedTechNode != null)
-        {
-            // 恢复中级科技研究的电力消耗
-            if (CurStudiedTechNode.techLevel == TechLevl.Intermediate)
-                StateManager.Instance.ChangeElectricityChangeRate(ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES);
-        }
+        if (CurStudiedTechNode == null) return;
+
+        // 恢复中级科技研究的电力消耗
+        if (CurStudiedTechNode.techLevel == TechLevl.Intermediate)
+            ElectricPowerManager.Instance.DisconnectPower(nameof(TechnologyManager));
 
         // 设置正在研究的科技节点为空
         techData.curStudiedTechNodeName = "";
 
+        // 触发研究完成事件
         EventManager.Instance.TriggerEvent(EventType.StudyStopped);
     }
 
@@ -186,20 +190,11 @@ public class TechnologyManager : IManager
             return true;
         }
 
-        // 中级科技未解锁
-        if (techNode.techLevel == TechLevl.Intermediate)
+        // 中级科技
+        if (techNode.techLevel == TechLevl.Intermediate && techData.isIntermediateTechLocked)
         {
-            if (GlobalDataManager.Instance.GetCardNum("数据传输台") < 1)
-            {
-                reason = "缺少\"数据传输台\"";
-                return true;
-            }
-
-            if (StateManager.Instance.Electricity.GetPredictedVariableValue() < ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES)
-            {
-                reason = "电力供应不足";
-                return true;
-            }
+            reason = techData.intermediateTechLockedReason;
+            return true;
         }
 
         return false;
@@ -235,57 +230,69 @@ public class TechnologyManager : IManager
     }
 
     #region 中级科技
-    private void OnCardNumChanged((string cardId, int num) args)
+    /// <summary>
+    /// 中级科技是否锁定
+    /// </summary>
+    /// <returns></returns>
+    private bool GetIsIntermediateTechLocked(out string reason)
     {
-        // 当数据传输台的数量变化时，锁定或解锁中级科技
-        if (args.cardId != "数据传输台") return;
-
-        // 中级科技未解锁
-        if (!isIntermediateTechnologiesUnlocked)
+        reason = string.Empty;
+        if (GlobalDataManager.Instance.GetCardNum("数据传输台") < 1)
         {
-            SetIsIntermediateTechnologiesUnlocked(StateManager.Instance.Electricity.GetPredictedVariableValue() >= ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES && GlobalDataManager.Instance.GetCardNum("数据传输台") > 0);
-            return;
+            reason = "缺少\"数据传输台\"";
+            return true;
         }
 
-        // 中级科技已解锁
-        SetIsIntermediateTechnologiesUnlocked(GlobalDataManager.Instance.GetCardNum("数据传输台") > 0, "缺少数据传输台");
+        if (!ElectricPowerManager.Instance.IsAlreadyConnected(nameof(TechnologyManager)) && // 没有接电
+            !ElectricPowerManager.Instance.CanConnectPower(POWER_CONSUMPTION_RATE_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES, out reason)) // 并且不能接电
+        {
+            return true;
+        }
+
+        return false;
     }
 
-    private void OnElectricityChange(RefreshEnvironmentStateArgs args)
+    /// <summary>
+    /// 数据传输台数量变化时
+    /// </summary>
+    /// <param name="args"></param>
+    private void OnCardNumChanged((string cardId, int num) args)
+    {
+        // 当数据传输台的数量变化时
+        if (args.cardId != "数据传输台") return;
+
+        // 检查中级科技解锁情况
+        CheckIntermediateTechUnlockCondition();
+    }
+
+    /// <summary>
+    /// 电力变化时执行
+    /// </summary>
+    private void OnElectricPowerChange(RefreshEnvironmentStateArgs args)
     {
         if (args.stateEnum != EnvironmentStateEnum.Electricity) return;
 
-        // 中级科技未解锁
-        if (!isIntermediateTechnologiesUnlocked)
-        {
-            SetIsIntermediateTechnologiesUnlocked(args.stateValue.GetPredictedVariableValue() >= ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES && GlobalDataManager.Instance.GetCardNum("数据传输台") > 0);
-            return;
-        }
-
-        // 中级科技已解锁
-        // 正在研究中级科技
-        if (CurStudiedTechNode != null && CurStudiedTechNode.techLevel == TechLevl.Intermediate)
-        {
-            SetIsIntermediateTechnologiesUnlocked(args.stateValue.GetPredictedVariableValue() >= 0, "电力供应不足"); // 已经接电了这里就要判断 >= 0，因为 ELECTRICITY_CONSUMPTION 那部分已经包含在 GetPredictedVariableValue 里面了
-            return;
-        }
-
-        // 没在研究中级科技
-        SetIsIntermediateTechnologiesUnlocked(args.stateValue.GetPredictedVariableValue() >= ELECTRICITY_CONSUMPTION_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES, "电力供应不足");
+        CheckIntermediateTechUnlockCondition();
     }
 
-    private void SetIsIntermediateTechnologiesUnlocked(bool value, string reason = "")
+    /// <summary>
+    /// 检查中级科技解锁情况
+    /// </summary>
+    private void CheckIntermediateTechUnlockCondition()
     {
-        if (isIntermediateTechnologiesUnlocked == value) return;
+        // 原来是否锁定
+        var preLocked = techData.isIntermediateTechLocked;
+        // 当前是否锁定
+        techData.isIntermediateTechLocked = GetIsIntermediateTechLocked(out techData.intermediateTechLockedReason);
 
-        isIntermediateTechnologiesUnlocked = value;
+        if (preLocked == techData.isIntermediateTechLocked) return;
 
-        // false => true
-        if (value)
-            UnlockIntermediateTechnologies();
-        // true => false
+        // 解锁 -> 锁定
+        if (techData.isIntermediateTechLocked)
+            LockIntermediateTechnologies();
+        // 锁定 -> 解锁
         else
-            LockIntermediateTechnologies(reason);
+            UnlockIntermediateTechnologies();
     }
 
     /// <summary>
@@ -299,7 +306,7 @@ public class TechnologyManager : IManager
     /// <summary>
     /// 锁定中级科技
     /// </summary>
-    private void LockIntermediateTechnologies(string reason)
+    private void LockIntermediateTechnologies()
     {
         // 如果正在研究中级科技
         if (CurStudiedTechNode != null && CurStudiedTechNode.techLevel == TechLevl.Intermediate)
@@ -307,7 +314,7 @@ public class TechnologyManager : IManager
             // 暂停当前研究
             StopStudy();
             // 显示原因
-            EventManager.Instance.TriggerEvent(EventType.StudyInterrupted, reason);
+            EventManager.Instance.TriggerEvent(EventType.StudyInterrupted, techData.intermediateTechLockedReason);
         }
 
         EventManager.Instance.TriggerEvent(EventType.LockUnlockIntermediateTechnologies);

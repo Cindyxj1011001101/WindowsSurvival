@@ -27,9 +27,9 @@ public abstract class Card : IComparable<Card>
     {
         get
         {
-            if (TryGetComponent<StateMachineComponent>(out var s))
+            if (stateMachine != null)
             {
-                return s.CurrentState.displayName;
+                return stateMachine.CurrentState.displayName;
             }
             else
             {
@@ -247,7 +247,7 @@ public abstract class Card : IComparable<Card>
     public void LateConstrcutor()
     {
         // 设置uuid
-        Uuid = Guid.NewGuid().ToString();
+        Uuid = CardId + "_" + Guid.NewGuid().ToString();
         // 分配组件值
         AssignComponentValues();
         // 派生类的构造逻辑
