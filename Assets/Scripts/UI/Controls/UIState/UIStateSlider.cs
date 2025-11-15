@@ -18,6 +18,7 @@ public class UIStateSlider : MonoBehaviour
     public HoverTipController tipController;
 
     public bool displayPercentage;          // 是否以百分比形式显示数值
+    public int displayDigits;               // 显示几位小数
 
     private DangerLevelEnum curDangerLevel; // 当前危险等级
     private bool init;                      // 是否已初始化
@@ -72,7 +73,7 @@ public class UIStateSlider : MonoBehaviour
         if (displayPercentage)
             valueText.text = $"{curValue * 100 / maxValue: 0.0}%";
         else
-            valueText.text = $"{(int)curValue}/{maxValue}";
+            valueText.text = $"{curValue.ToString($"F{displayDigits}")}/{maxValue}";
     }
 
     public void SetValue(State state)
