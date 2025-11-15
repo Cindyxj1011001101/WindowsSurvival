@@ -135,7 +135,7 @@ public class EnvironmentBag : Bag
         switch (stateEnum)
         {
             case EnvironmentStateEnum.Electricity:
-                StateManager.Instance.ChangeElectricity(delta); // 电力变化转发到StateManager处理
+                ElectricPowerManager.Instance.ChangePower(delta); // 电力变化转发到ElectricPowerManager处理
                 break;
             case EnvironmentStateEnum.WaterLevel:
                 StateManager.Instance.ChangeWaterLevel(delta); // 水平面变化转发到StateManager处理
@@ -167,10 +167,8 @@ public class EnvironmentBag : Bag
         switch (stateEnum)
         {
             case EnvironmentStateEnum.Electricity:
-                StateManager.Instance.ChangeElectricityChangeRate(delta); // 电力变化转发到StateManager处理
-                break;
             case EnvironmentStateEnum.WaterLevel:
-                StateManager.Instance.ChangeWaterLevelChangeRate(delta); // 水平面变化转发到StateManager处理
+                // 不做处理
                 break;
             case EnvironmentStateEnum.HasCable:
             case EnvironmentStateEnum.PressureLevel:

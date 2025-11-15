@@ -27,8 +27,8 @@
     CardNumChange,                      // 卡牌数量变化
     PlayerMove,                         // 玩家移动
     StudyInterrupted,                   // 研究中断
-    OnGameEventTrigger,                 // 全局效果生效
-    OnGameEventEnd,                     // 全局效果失效
+    GameEventBegin,                     // 全局效果开始
+    GameEventEnd,                       // 全局效果结束
     UpdateSunlight,                     // 恒星光照更新
 }
 

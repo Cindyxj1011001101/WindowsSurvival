@@ -27,9 +27,9 @@ public abstract class Card : IComparable<Card>
     {
         get
         {
-            if (TryGetComponent<StateMachineComponent>(out var s))
+            if (stateMachine != null)
             {
-                return s.CurrentState.displayName;
+                return stateMachine.CurrentState.displayName;
             }
             else
             {
@@ -247,7 +247,7 @@ public abstract class Card : IComparable<Card>
     public void LateConstrcutor()
     {
         // 设置uuid
-        Uuid = Guid.NewGuid().ToString();
+        Uuid = CardId + "_" + Guid.NewGuid().ToString();
         // 分配组件值
         AssignComponentValues();
         // 派生类的构造逻辑
@@ -277,10 +277,13 @@ public abstract class Card : IComparable<Card>
         // 监听事件
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
         //UpdateManager.Instance.CardUpdate.AddListener(Update);
-        UpdateManager.Instance.AddCardUpdateListener(ref updateOrder, Update, FineUpdate);
+        UpdateManager.Instance.AddCardUpdateListener(ref updateOrder, Update);
 
         // 初始化内容物
         InitInnerContents();
+
+        // 初始化电力消耗
+        InitPowerConsumption();
 
         // 派生类初始化
         OnInit();
@@ -291,14 +294,22 @@ public abstract class Card : IComparable<Card>
 
     private void InitInnerContents()
     {
-        // 处理内容物的过滤器
-        if (innerContents != null)
-        {
-            innerContents.contentFilter = ReflectionUtility.BindToDelegate<CardFilterDelegate>(this, "ContentFilter", true);
-        }
+        if (innerContents == null) return;
 
+        // 处理内容物的过滤器
+        innerContents.contentFilter = ReflectionUtility.BindToDelegate<CardFilterDelegate>(this, "ContentFilter", true);
         // 内容物初始化
-        innerContents?.Init();
+        innerContents.Init();
+    }
+
+    private void InitPowerConsumption()
+    {
+        if (powerConsumption == null) return;
+
+        // 注册接电断电事件
+        powerConsumption.powerOn = ReflectionUtility.BindToDelegate<UnityAction>(this, "PowerOn", true);
+        powerConsumption.powerOff = ReflectionUtility.BindToDelegate<UnityAction>(this, "PowerOff", true);
+        powerConsumption.RegisterPowerOnOffActions();
     }
 
     protected virtual void OnInit() { }
@@ -337,15 +348,6 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     protected virtual void OnUpdate() { }
 
-    private void FineUpdate()
-    {
-        if (isUpdateFreezed || Locked || Destroyed) return;
-
-        OnFineUpdate();
-    }
-
-    protected virtual void OnFineUpdate() { }
-
     /// <summary>
     /// 暂停更新
     /// </summary>
@@ -382,6 +384,11 @@ public abstract class Card : IComparable<Card>
         GlobalDataManager.Instance.DestroyCard(this);
 
         SlotCards.RemoveCard(this);
+
+        // 自动断电
+        powerConsumption?.DisconnectPower();
+
+        // TODO: 自动熄灭
 
         OnDestroy();
 
@@ -437,6 +444,7 @@ public abstract class Card : IComparable<Card>
     protected EntityComponent entity;
     protected CoordinateComponent coordinate;
     protected WeaponComponent weapon;
+    protected PowerConsumptionComponent powerConsumption;
 
     private bool assigned = false;
 
@@ -468,6 +476,7 @@ public abstract class Card : IComparable<Card>
         TryGetComponent(out entity);
         TryGetComponent(out coordinate);
         TryGetComponent(out weapon);
+        TryGetComponent(out powerConsumption);
         // 这里没有处理TimerComponent，是因为它是临时的
 
         foreach (var c in components.Values)

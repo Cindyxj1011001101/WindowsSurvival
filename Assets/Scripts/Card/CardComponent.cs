@@ -582,18 +582,14 @@ public class CardState
     public string displayName; // 对外显示的名称
     public string imagePath; // 图片路径
     public bool isAnim; // 是否为动画
-    public bool needElectricity; // 是否需要电力
-    public bool isConsumingElectricity; // 是否正在消耗电力
 
     public CardState() { }
 
-    public CardState(string name, string imagePath, bool isAnim = false, bool needElectricity = false, bool isConsumingElectricity = false)
+    public CardState(string name, string imagePath, bool isAnim = false)
     {
         this.name = this.displayName = name;
         this.imagePath = imagePath;
         this.isAnim = isAnim;
-        this.needElectricity = needElectricity;
-        this.isConsumingElectricity = isConsumingElectricity;
     }
 }
 
@@ -849,7 +845,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     public int extraFuelConsumptionWhenWaterLevelHigh;     // 水平面高时导致的额外燃料消耗
     public int autoExtinguishWaterLevelThreshold;          // 导致自动熄灭的水平面高度
     public float oxygenConsumptionWhileBurning;            // 燃烧时导致的氧气变化
-    public float coProductionWhileBurning;     // 燃烧时导致的一氧化碳变化
+    public float coProductionWhileBurning;                 // 燃烧时导致的一氧化碳变化
 
     [JsonIgnore] public UnityAction whileBurning;    // 燃烧时每回合处理
     [JsonIgnore] public UnityAction whileNotBurning; // 非燃烧时每回合处理
@@ -988,7 +984,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         if (!CanIgnite(out var tip) && !string.IsNullOrEmpty(tip)) // tip不为空说明不是因为正在燃烧中而导致无法点燃
         {
             Extinguish();
-            ShowTip($"{tip}，{BelongedCard.CardName}已熄灭");
+            ShowTip($"{tip}，{BelongedCard.CardName}已自动熄灭");
         }
     }
 }
@@ -1139,6 +1135,71 @@ public class WeaponComponent : CardComponent
     {
         var dist = target.DistanceTo(Player.Instance);
         return dist <= maxAtkDist && dist >= minAtkDist;
+    }
+}
+#endregion
+
+#region 用电组件
+public class PowerConsumptionComponent : CardComponent
+{
+    public float consumptionRate;
+
+    [JsonIgnore] public bool Connected => ElectricPowerManager.Instance.IsAlreadyConnected(BelongedCard.Uuid);
+
+    [JsonIgnore] public UnityAction powerOn;
+    [JsonIgnore] public UnityAction powerOff;
+
+    public PowerConsumptionComponent() { }
+
+    public PowerConsumptionComponent(float consumptionRate)
+    {
+        this.consumptionRate = consumptionRate;
+    }
+
+    public void PowerOn()
+    {
+        powerOn?.Invoke();
+        RefreshSlot();
+    }
+
+    public void PowerOff()
+    {
+        powerOff?.Invoke();
+        RefreshSlot();
+
+        // 主动断电: this.DisconnectPower -> ElectricPowerManager.Instance.DisconnectPower -> this.PowerOff
+        // 被动断电: ElectricPowerManager.Instance.AutoDisconnectPower -> ElectricPowerManager.Instance.DisconnectPower -> this.PowerOff
+        StackTrace stackTrace = new();
+        MethodBase callerMethod = stackTrace.GetFrame(2).GetMethod();
+        if (callerMethod.Name == "AutoDisconnectPower")
+            ShowTip($"{BelongedCard.CardName}已自动断电");
+    }
+
+    public void ConnectPower(CardEvent e = null)
+    {
+        ElectricPowerManager.Instance.ConnectPower(BelongedCard.Uuid, consumptionRate);
+    }
+
+    public void DisconnectPower(CardEvent e = null)
+    {
+        ElectricPowerManager.Instance.DisconnectPower(BelongedCard.Uuid);
+    }
+
+    public void RegisterPowerOnOffActions()
+    {
+        ElectricPowerManager.Instance.RegisterPowerOnOffActions(BelongedCard.Uuid, PowerOn, PowerOff);
+    }
+
+    public bool CanConnectPower(out string reason)
+    {
+        reason = string.Empty;
+        return !Connected && ElectricPowerManager.Instance.CanConnectPower(consumptionRate, out reason);
+    }
+
+    public bool CanDisconnectPower(out string reason)
+    {
+        reason = string.Empty;
+        return Connected;
     }
 }
 #endregion

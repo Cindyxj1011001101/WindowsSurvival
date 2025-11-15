@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 /// <summary>
 /// 当前危险程度
@@ -23,11 +22,6 @@ public class StateManager : IManager
     public Dictionary<PlayerStateEnum, State> PlayerStateDict { get; private set; } = new();
 
     /// <summary>
-    /// 电力
-    /// </summary>
-    public State Electricity { get; private set; } = new();
-
-    /// <summary>
     /// 飞船水平面高度
     /// </summary>
     public State WaterLevel { get; private set; } = new();
@@ -39,12 +33,10 @@ public class StateManager : IManager
         if (!stateData.init)
         {
             InitPlayerStates();
-            InitElectricity();
             InitWaterLevel();
         }
         else
         {
-            Electricity = stateData.electricity;
             WaterLevel = stateData.waterLevel;
             PlayerStateDict = stateData.playerState;
         }
@@ -71,7 +63,6 @@ public class StateManager : IManager
     {
         IsResting = false;
         _lastDangerLevel = DangerLevelEnum.None;
-        Electricity = new();
         WaterLevel = new();
         PlayerStateDict = new();
         UpdateManager.Instance.PlayerUpdate.RemoveListener(PlayerUpdate);
@@ -362,11 +353,6 @@ public class StateManager : IManager
     }
     #endregion
 
-    private void InitElectricity()
-    {
-        Electricity = new(Random.Range(30, 45), 50, higherIsBetter: true);
-    }
-
     private void InitWaterLevel()
     {
         WaterLevel = new(0, 100, lowerIsBetter: true);
@@ -578,33 +564,7 @@ public class StateManager : IManager
     }
     #endregion
 
-    #region 电力和水平面相关
-    /// <summary>
-    /// 改变全局电力
-    /// </summary>
-    /// <param name="delta"></param>
-    public void ChangeElectricity(float delta)
-    {
-        Electricity.AddValue(delta);
-        // 刷新前端显示
-        var env = GameManager.Instance.CurEnvironmentBag;
-        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.Electricity)
-        {
-            stateValue = Electricity
-        });
-    }
-
-    public void ChangeElectricityChangeRate(float delta)
-    {
-        Electricity.AddChangeRate(delta);
-
-        var env = GameManager.Instance.CurEnvironmentBag;
-        EventManager.Instance.TriggerEvent(EventType.RefreshEnvironmentState, new RefreshEnvironmentStateArgs(env.PlaceData.placeType, EnvironmentStateEnum.Electricity)
-        {
-            stateValue = Electricity
-        });
-    }
-
+    #region 水平面相关
     /// <summary>
     /// 改变水平面
     /// </summary>
@@ -639,7 +599,6 @@ public class StateManager : IManager
     #endregion
 
     #region 定时结算相关
-    private float electricityChangeRateSnapshot;
     private float waterLevelChangeRateSnapshot;
 
     private Dictionary<PlayerStateEnum, float> playerStateChangeRatesSnapshot = new(); // 记录玩家状态的当前变化率，防止玩家状态的结算顺序影响结算结果
@@ -647,7 +606,6 @@ public class StateManager : IManager
     private void OnUpdateBegin()
     {
         // 记录快照
-        electricityChangeRateSnapshot = Electricity.ChangeRate;
         waterLevelChangeRateSnapshot = WaterLevel.ChangeRate;
 
         CalcBodyTemperatureChangeRate(GameManager.Instance.CurEnvironmentBag);
@@ -668,7 +626,6 @@ public class StateManager : IManager
     /// </summary>
     private void EnvironmentUpdate()
     {
-        ChangeElectricity(electricityChangeRateSnapshot);
         ChangeWaterLevel(waterLevelChangeRateSnapshot);
     }
 

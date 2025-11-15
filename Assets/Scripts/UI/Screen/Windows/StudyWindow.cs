@@ -99,7 +99,7 @@ public class StudyWindow : WindowBase
     {
         if (string.IsNullOrEmpty(reason)) return;
 
-        studyStateButton.transform.ShowTip($"由于{reason}，研究中止！", 1.4f);
+        studyStateButton.transform.ShowTip($"{reason}，研究中止！", 1.4f);
         SoundManager.Instance.PlaySound("错误提示");
     }
 

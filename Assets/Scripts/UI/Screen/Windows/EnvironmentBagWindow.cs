@@ -184,7 +184,7 @@ public class EnvironmentBagWindow : BagWindow
         if (env.HasCable)
         {
             continuousValueStates[EnvironmentStateEnum.Electricity].gameObject.SetActive(true);
-            continuousValueStates[EnvironmentStateEnum.Electricity].SetValue(StateManager.Instance.Electricity);
+            continuousValueStates[EnvironmentStateEnum.Electricity].SetValue(ElectricPowerManager.Instance.Power);
         }
 
         // 在飞船内显示水平面高度

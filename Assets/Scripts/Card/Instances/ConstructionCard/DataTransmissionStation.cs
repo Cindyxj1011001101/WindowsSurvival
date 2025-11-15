@@ -5,9 +5,11 @@ using System.Collections.Generic;
 /// </summary>
 public class DataTransmissionStation : ConstructionCard
 {
+    private const int STUDY_PROGRESS_ADD = 28;
+
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("数据传输", "使当前研究科技的研究进度+28\n（数据传输1天内最多可以进行2次）", Event_Transmit, Judge_Transmit,
+        AddCardEvent("数据传输", $"使正在研究科的技的进度{ColorManager.Colorize(STUDY_PROGRESS_ADD, ColorManager.Green)}\n（数据传输1天内最多可以进行2次）", Event_Transmit, Judge_Transmit,
             () => 60,
             () => new()
             {
@@ -24,8 +26,8 @@ public class DataTransmissionStation : ConstructionCard
     {
         var states = new List<CardState>()
         {
-            new ("待机中", "20", false, true, false),
-            new ("运行中", "20", true, true, true),
+            new ("待机中", "20", false),
+            new ("运行中", "20", true),
         };
         stateMachine = new StateMachineComponent("待机中", states);
         AddComponent(stateMachine);
@@ -99,7 +101,7 @@ public class DataTransmissionStation : ConstructionCard
             return false;
         }
 
-        if (StateManager.Instance.Electricity.CurValue < 5f)
+        if (ElectricPowerManager.Instance.Power.CurValue < 5f)
         {
             hint = "电力供应不足";
             return false;

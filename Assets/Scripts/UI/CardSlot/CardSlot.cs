@@ -63,6 +63,7 @@ public class CardSlot : MonoBehaviour
         EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
         EventManager.Instance.AddListener<Card>(EventType.PickUpCard, OnCardPickedUp);
         EventManager.Instance.AddListener(EventType.PutDownCard, OnCardPutDown);
+        EventManager.Instance.AddListener(EventType.PlayerMove, OnPlayerMove);
     }
 
     private void OnDisable()
@@ -79,6 +80,7 @@ public class CardSlot : MonoBehaviour
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
         EventManager.Instance.RemoveListener<Card>(EventType.PickUpCard, OnCardPickedUp);
         EventManager.Instance.RemoveListener(EventType.PutDownCard, OnCardPutDown);
+        EventManager.Instance.RemoveListener(EventType.PlayerMove, OnPlayerMove);
     }
 
     public void Init(SlotCards slotCards)
@@ -86,6 +88,11 @@ public class CardSlot : MonoBehaviour
         Cards = slotCards;
         slotCards.SetCardSlot(this);
         RefreshDisplay();
+    }
+
+    private void OnPlayerMove()
+    {
+        if (componentSliders.ContainsKey(typeof(CoordinateComponent))) RefreshDisplay();
     }
 
     #region 显示
@@ -226,12 +233,10 @@ public class CardSlot : MonoBehaviour
     {
         if (!componentSliders.TryGetValue(component.GetType(), out UIStateSlider slider))
         {
-            if (component is TemperatureComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(TemperatureComponent), parent).GetComponent<UIStateSlider>();
-            else if (component is TimerComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(TimerComponent), parent).GetComponent<UIStateSlider>();
-            else if (component is CoordinateComponent)
-                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", nameof(CoordinateComponent), parent).GetComponent<UIStateSlider>();
+            if (component is TemperatureComponent ||
+                component is TimerComponent ||
+                component is CoordinateComponent)
+                slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", component.GetType().Name, parent).GetComponent<UIStateSlider>();
             else
                 slider = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/Components", $"{(vertical ? "Vertical" : "")}Component", parent).GetComponent<UIStateSlider>();
 
@@ -271,11 +276,6 @@ public class CardSlot : MonoBehaviour
             case FuelStorageComponent fuelStorageComponent:
                 slider.SetValue(fuelStorageComponent.value, fuelStorageComponent.maxValue);
                 string tip = $"剩余燃料:  {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}";
-
-                iconLayout.SetActive(true);
-                fireIcon.gameObject.SetActive(true);
-                fireIcon.color = fuelStorageComponent.isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
-
                 // 显示燃料消耗
                 tip += $"\n自然消耗:  -{fuelStorageComponent.basicFuelConsumption:0.0}/15min";
                 if (StateManager.Instance.WaterLevel.CurValue > 0)
@@ -364,13 +364,6 @@ public class CardSlot : MonoBehaviour
     /// <param name="state"></param>
     private void DisplayCardState(Card card, CardState state)
     {
-        if (state.needElectricity)
-        {
-            iconLayout.SetActive(true);
-            flashIcon.gameObject.SetActive(true);
-            flashIcon.color = state.isConsumingElectricity ? ColorManager.Yellow : ColorManager.DarkGrey;
-        }
-
         // 有动画的播放动画
         if (state.isAnim)
         {
@@ -381,6 +374,38 @@ public class CardSlot : MonoBehaviour
         {
             cardAnimator.Play("");
             cardAnimator.enabled = false;
+        }
+    }
+
+    /// <summary>
+    /// 显示电力消耗图标
+    /// </summary>
+    private void DisplayElectricPowerIcon(bool connected, float consumptionRate)
+    {
+        iconLayout.SetActive(true);
+        flashIcon.gameObject.SetActive(true);
+        flashIcon.color = connected ? ColorManager.Yellow : ColorManager.DarkGrey;
+
+        if (flashIcon.TryGetComponent<HoverTipController>(out var controller))
+        {
+            controller.enabled = connected;
+            controller.SetTip($"电力: -{consumptionRate:0.0}/15min", ColorManager.Yellow);
+        }
+    }
+
+    /// <summary>
+    /// 显示燃烧图标
+    /// </summary>
+    private void DisplayBuriningIcon(bool isBurning, float oxygenConsumptionRate, float coProductionRate)
+    {
+        iconLayout.SetActive(true);
+        fireIcon.gameObject.SetActive(true);
+        fireIcon.color = isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
+
+        if (fireIcon.TryGetComponent<HoverTipController>(out var controller))
+        {
+            controller.enabled = isBurning;
+            controller.SetTip($"氧气:  -{oxygenConsumptionRate:0.0}/15min\nCO浓度:  +{coProductionRate:0.0}/15min", ColorManager.BurntOrange);
         }
     }
 
@@ -423,7 +448,10 @@ public class CardSlot : MonoBehaviour
             DisplayInnerContentsComponent(i);
         // 显示燃料存储
         if (card.TryGetComponent<FuelStorageComponent>(out var fc))
+        {
             DisplayContinuousValueComponent(fc, middle);
+            DisplayBuriningIcon(fc.isBurning, fc.oxygenConsumptionWhileBurning, fc.coProductionWhileBurning);
+        }
         // 显示温度
         if (card.TryGetComponent<TemperatureComponent>(out var t))
             DisplayContinuousValueComponent(t, right);
@@ -456,6 +484,9 @@ public class CardSlot : MonoBehaviour
         // 显示实体生命值
         if (card.TryGetComponent<EntityComponent>(out var ec))
             DisplayContinuousValueComponent(ec, middle);
+        // 显示电力消耗
+        if (card.TryGetComponent<PowerConsumptionComponent>(out var pc) && pc.consumptionRate > 0)
+            DisplayElectricPowerIcon(pc.Connected, pc.consumptionRate);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;

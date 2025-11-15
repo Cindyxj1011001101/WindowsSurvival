@@ -33,7 +33,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "\u7535\u52A8\u6392\u6C34\u673A\u5DF2\u5F00\u542F"
+  m_Name: "\u7535\u52A8\u6392\u6C34\u673A\u5DF2\u63A5\u7535"
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -59,7 +59,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "\u77FF\u77F3\u91CA\u6C27\u673A\u5DF2\u5F00\u542F"
+  m_Name: "\u77FF\u77F3\u91CA\u6C27\u673A\u5DF2\u63A5\u7535"
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -85,7 +85,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: "\u7761\u7720\u8109\u51B2\u4EEA\u5DF2\u63A5\u7535"
+  m_Name: "\u7761\u7720\u8109\u51B2\u4EEA\u5DF2\u5F00\u542F"
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -137,25 +137,25 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: 8629978406074536554}
-    m_Position: {x: 350, y: 280, z: 0}
+    m_Position: {x: 30, y: 240, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2622316692863868480}
-    m_Position: {x: 350, y: 70, z: 0}
+    m_Position: {x: 360, y: 60, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -708953034260175312}
-    m_Position: {x: 340, y: 190, z: 0}
+    m_Position: {x: 360, y: 360, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5225645305230054469}
-    m_Position: {x: 340, y: 140, z: 0}
+    m_Position: {x: 360, y: 120, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -403628209265171185}
-    m_Position: {x: 375, y: 205, z: 0}
+    m_Position: {x: 360, y: 180, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -2657798030866202922}
-    m_Position: {x: 410, y: 270, z: 0}
+    m_Position: {x: 360, y: 240, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1857653621898766163}
-    m_Position: {x: 445, y: 335, z: 0}
+    m_Position: {x: 360, y: 300, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -225,7 +225,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New State
+  m_Name: EmptyState
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
