@@ -845,7 +845,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     public int extraFuelConsumptionWhenWaterLevelHigh;     // 水平面高时导致的额外燃料消耗
     public int autoExtinguishWaterLevelThreshold;          // 导致自动熄灭的水平面高度
     public float oxygenConsumptionWhileBurning;            // 燃烧时导致的氧气变化
-    public float coProductionWhileBurning;     // 燃烧时导致的一氧化碳变化
+    public float coProductionWhileBurning;                 // 燃烧时导致的一氧化碳变化
 
     [JsonIgnore] public UnityAction whileBurning;    // 燃烧时每回合处理
     [JsonIgnore] public UnityAction whileNotBurning; // 非燃烧时每回合处理

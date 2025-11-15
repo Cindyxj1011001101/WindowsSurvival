@@ -380,22 +380,33 @@ public class CardSlot : MonoBehaviour
     /// <summary>
     /// 显示电力消耗图标
     /// </summary>
-    private void DisplayElectricPowerIcon(bool connected)
+    private void DisplayElectricPowerIcon(bool connected, float consumptionRate)
     {
         iconLayout.SetActive(true);
         flashIcon.gameObject.SetActive(true);
         flashIcon.color = connected ? ColorManager.Yellow : ColorManager.DarkGrey;
+
+        if (flashIcon.TryGetComponent<HoverTipController>(out var controller))
+        {
+            controller.enabled = connected;
+            controller.SetTip($"电力: -{consumptionRate:0.0}/15min", ColorManager.Yellow);
+        }
     }
 
     /// <summary>
     /// 显示燃烧图标
     /// </summary>
-    private void DisplayBuriningIcon(bool isBurning)
+    private void DisplayBuriningIcon(bool isBurning, float oxygenConsumptionRate, float coProductionRate)
     {
         iconLayout.SetActive(true);
         fireIcon.gameObject.SetActive(true);
         fireIcon.color = isBurning ? ColorManager.BurntOrange : ColorManager.DarkGrey;
 
+        if (fireIcon.TryGetComponent<HoverTipController>(out var controller))
+        {
+            controller.enabled = isBurning;
+            controller.SetTip($"氧气:  -{oxygenConsumptionRate:0.0}/15min\nCO浓度:  +{coProductionRate:0.0}/15min", ColorManager.BurntOrange);
+        }
     }
 
     /// <summary>
@@ -439,7 +450,7 @@ public class CardSlot : MonoBehaviour
         if (card.TryGetComponent<FuelStorageComponent>(out var fc))
         {
             DisplayContinuousValueComponent(fc, middle);
-            DisplayBuriningIcon(fc.isBurning);
+            DisplayBuriningIcon(fc.isBurning, fc.oxygenConsumptionWhileBurning, fc.coProductionWhileBurning);
         }
         // 显示温度
         if (card.TryGetComponent<TemperatureComponent>(out var t))
@@ -475,7 +486,7 @@ public class CardSlot : MonoBehaviour
             DisplayContinuousValueComponent(ec, middle);
         // 显示电力消耗
         if (card.TryGetComponent<PowerConsumptionComponent>(out var pc) && pc.consumptionRate > 0)
-            DisplayElectricPowerIcon(pc.Connected);
+            DisplayElectricPowerIcon(pc.Connected, pc.consumptionRate);
 
         // 显示额外信息
         moreInfoText.text = card.ExtraInfo;
