@@ -9,14 +9,17 @@
     protected override void OnInit()
     {
         // 装备损坏后尝试从背包中重新找到一件相同的装备并且穿上
-        durability.onBroken = () =>
+        if (durability != null)
+            durability.onBroken = TryEquipSameOneOnBroken;
+    }
+
+    private void TryEquipSameOneOnBroken()
+    {
+        var sameEquipment = GameManager.Instance.PlayerBag.FindCardOfName(CardName);
+        if (sameEquipment != null && GameManager.Instance.CanEquip(sameEquipment, out _))
         {
-            var sameEquipment = GameManager.Instance.PlayerBag.FindCardOfName(CardName);
-            if (sameEquipment != null && GameManager.Instance.CanEquip(sameEquipment, out _))
-            {
-                GameManager.Instance.Equip(sameEquipment, sameEquipment.Slot.transform.position);
-            }
-        };
+            GameManager.Instance.Equip(sameEquipment, sameEquipment.Slot.transform.position);
+        }
     }
 
     public abstract void OnEquipped();
