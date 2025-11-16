@@ -151,7 +151,7 @@ public class GameManager : IManager
     {
         AddCard(card, targetBag);
 
-        return sourcePosition.MoveCard(card);
+        return sourcePosition.MoveCardAndFreezeTime(card);
     }
 
     public Tween AddCardsWithTween(bool toPlayerBag, Vector3 sourcePosition, params Card[] cards)
@@ -161,7 +161,7 @@ public class GameManager : IManager
             AddCard(card, toPlayerBag);
         }
 
-        return sourcePosition.MoveCards(cards);
+        return sourcePosition.MoveCardsAndFreezeTime(cards);
     }
 
     public Tween AddCardWithTween(string cardId, bool toPlayerBag, Vector3 sourcePosition, out Card card)

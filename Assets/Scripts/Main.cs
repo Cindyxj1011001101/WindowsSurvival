@@ -1,17 +1,17 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 public class Main : MonoBehaviour
 {
     public int targetWidth = 1920;
     public int targetHeight = 1080;
-    public bool isFullscreen = true; // ¸ù¾İĞèÇóÉèÖÃÈ«ÆÁ»¹ÊÇ´°¿ÚÄ£Ê½
+    public bool isFullscreen = true; // æ ¹æ®éœ€æ±‚è®¾ç½®å…¨å±è¿˜æ˜¯çª—å£æ¨¡å¼
 
     public int targetFrameRate = 60;
 
     private List<IManager> orderedManagers = new()
     {
-        // °´Ë³ĞòÁĞ³öËùÓĞĞèÒª³õÊ¼»¯µÄManager
+        // æŒ‰é¡ºåºåˆ—å‡ºæ‰€æœ‰éœ€è¦åˆå§‹åŒ–çš„Manager
         UpdateManager.Instance,
         GlobalDataManager.Instance,
         TimeManager.Instance,
@@ -28,11 +28,11 @@ public class Main : MonoBehaviour
 
     private void Awake()
     {
-        // ÉèÖÃ·Ö±æÂÊ
+        // è®¾ç½®åˆ†è¾¨ç‡
         SetResolution();
         //SetFrameRate();
 
-        // ³õÊ¼»¯¸÷Àà¹ÜÀíÆ÷
+        // åˆå§‹åŒ–å„ç±»ç®¡ç†å™¨
         InitManagers();
     }
 
@@ -54,15 +54,15 @@ public class Main : MonoBehaviour
 
     private void SetResolution()
     {
-        // ¼ì²éµ±Ç°·Ö±æÂÊÊÇ·ñÒÑÊÇÄ¿±ê·Ö±æÂÊ£¬±ÜÃâ²»±ØÒªµÄÉèÖÃ£¨¿ÉÑ¡£©
+        // æ£€æŸ¥å½“å‰åˆ†è¾¨ç‡æ˜¯å¦å·²æ˜¯ç›®æ ‡åˆ†è¾¨ç‡ï¼Œé¿å…ä¸å¿…è¦çš„è®¾ç½®ï¼ˆå¯é€‰ï¼‰
         if (Screen.currentResolution.width != targetWidth || Screen.currentResolution.height != targetHeight || Screen.fullScreen != isFullscreen)
         {
-            // ÉèÖÃÆÁÄ»·Ö±æÂÊ
+            // è®¾ç½®å±å¹•åˆ†è¾¨ç‡
             Screen.SetResolution(targetWidth, targetHeight, isFullscreen);
-            // Èç¹ûÄãÏ£Íû´°¿ÚÄ£Ê½£¬¿ÉÒÔ½« isFullscreen ÉèÖÃÎª false
+            // å¦‚æœä½ å¸Œæœ›çª—å£æ¨¡å¼ï¼Œå¯ä»¥å°† isFullscreen è®¾ç½®ä¸º false
             // Screen.SetResolution(targetWidth, targetHeight, FullScreenMode.Windowed);
         }
-        // È·±£ÔÚÆäËûµØ·½Ã»ÓĞ¸²¸Ç´ËÉèÖÃ£¨ÀıÈç£¬ÔÚÍæ¼Ò¸ü¸ÄÉèÖÃºó±£´æ²¢¼ÓÔØËûÃÇµÄÆ«ºÃ£©
+        // ç¡®ä¿åœ¨å…¶ä»–åœ°æ–¹æ²¡æœ‰è¦†ç›–æ­¤è®¾ç½®ï¼ˆä¾‹å¦‚ï¼Œåœ¨ç©å®¶æ›´æ”¹è®¾ç½®åä¿å­˜å¹¶åŠ è½½ä»–ä»¬çš„åå¥½ï¼‰
     }
 
     private void SetFrameRate()

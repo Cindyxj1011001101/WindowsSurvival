@@ -208,30 +208,24 @@ public static class MFXUtility
         return mainSeq;
     }
 
-    public static Tween MoveCard(this Vector3 sourcePosition, Card card)
+    public static Tween MoveCardAndFreezeTime(this Vector3 sourcePosition, Card card)
     {
         var tween = MoveCard(card, 1, sourcePosition, 0.4f, onComplete: () => { card.RefreshSlot(); });
-        var duration = tween.Duration();
-        MouseManager.Instance.Wait(duration);
-        TimeManager.Instance.FreezeTimePass(duration);
+        TimeManager.Instance.FreezeTimePass(tween.Duration());
         return tween;
     }
 
-    public static Tween MoveCards(this Vector3 sourcePosition, Card[] cards)
+    public static Tween MoveCardsAndFreezeTime(this Vector3 sourcePosition, Card[] cards)
     {
         var tween = MoveCards(cards, sourcePosition, 0.4f, onComplete: (card) => { card.RefreshSlot(); });
-        var duration = tween.Duration();
-        MouseManager.Instance.Wait(duration);
-        TimeManager.Instance.FreezeTimePass(duration);
+        TimeManager.Instance.FreezeTimePass(tween.Duration());
         return tween;
     }
 
-    public static Tween TurnTo(this Card sourceCard, Card targetCard)
+    public static Tween TurnToAndFreezeTime(this Card sourceCard, Card targetCard)
     {
         var tween = TurnTo(sourceCard, targetCard, onComplete: () => { targetCard.RefreshSlot(); });
-        var duration = tween.Duration();
-        MouseManager.Instance.Wait(duration);
-        TimeManager.Instance.FreezeTimePass(duration);
+        TimeManager.Instance.FreezeTimePass(tween.Duration());
         return tween;
     }
 

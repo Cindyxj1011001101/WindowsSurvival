@@ -125,6 +125,7 @@ public class TimeManager : IManager
     /// </summary>
     public void FreezeTimePass(float duration)
     {
+        MouseManager.Instance.Wait(duration);
         unfreezeTime = Mathf.Max(unfreezeTime, Time.time + duration + 0.1f);
     }
 }
