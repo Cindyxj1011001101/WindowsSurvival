@@ -91,9 +91,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 3200202362486485391}
+  image: {fileID: 3200202362486485391}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
@@ -203,9 +204,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 4241052829316780249}
+  image: {fileID: 4241052829316780249}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
@@ -315,9 +317,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 3853024461364996602}
+  image: {fileID: 3853024461364996602}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
@@ -753,7 +756,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eefec68fc3292944bf54802c7841d2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetToMove: {fileID: 0}
   onPointerDown:
     m_PersistentCalls:
       m_Calls: []
@@ -785,9 +787,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
@@ -883,9 +886,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 8870911142962504880}
+  image: {fileID: 8870911142962504880}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"

@@ -132,7 +132,7 @@ public abstract class WindowBase : PanelBase
         // 最大化按钮图标改变
         if (maximizeButton.gameObject.activeSelf)
         {
-            maximizeButton.normalImage.sprite = isMaximized ? restore_default : maximize_default;
+            maximizeButton.image.sprite = isMaximized ? restore_default : maximize_default;
             (maximizeButton.hoveredGraphics[0] as Image).sprite = isMaximized ? restore_hovered : maximize_hovered;
         }
     }
@@ -303,7 +303,7 @@ public abstract class WindowBase : PanelBase
         // 最大化按钮图标改变
         if (maximizeButton.gameObject.activeSelf)
         {
-            maximizeButton.normalImage.sprite = restore_default;
+            maximizeButton.image.sprite = restore_default;
             (maximizeButton.hoveredGraphics[0] as Image).sprite = restore_hovered;
         }
 

@@ -33,9 +33,9 @@ public class UIPressureLevel : MonoBehaviour
         if (button != null)
         {
             button.currentColor = button.hoveredColor = color;
-            if (button.normalImage != null)
+            if (button.image != null)
             {
-                button.normalImage.color = color;
+                button.image.color = color;
             }
         }
     }

@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class GameEventTip : HoverableButton
 {
-    public Text eventNameText;
     public Image frameImage;
     public RectTransform body;
 
@@ -36,9 +35,9 @@ public class GameEventTip : HoverableButton
 
     public void SetGameEvent(Sprite icon, Color color, string eventName)
     {
-        normalImage.sprite = icon;
-        eventNameText.text = eventName;
-        normalImage.color = eventNameText.color = frameImage.color = color;
+        image.sprite = icon;
+        text.text = eventName;
+        image.color = text.color = frameImage.color = color;
     }
 
     public override void OnPointerEnter(PointerEventData eventData)

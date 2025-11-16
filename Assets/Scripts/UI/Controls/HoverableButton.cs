@@ -7,9 +7,10 @@ using System.Collections.Generic;
 
 public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    public Image normalImage; // 正常状态的图像
-    public List<Graphic> hoveredGraphics; // 鼠标悬停时显示的图像
-    public float fadeDuration = 0.1f; // 淡入淡出持续时间
+    public Image image;                     // 正常状态的图像
+    public Text text;                       // 正常状态的图像
+    public List<Graphic> hoveredGraphics;   // 鼠标悬停时显示的图像
+    public float fadeTransition = 0.1f;     // 淡入淡出持续时间
 
     public Text[] textsNeedToReverseColor;
     public Image[] imagseNeedToReverseColor;
@@ -55,8 +56,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     protected virtual void Awake()
     {
-        if (normalImage != null)
-            currentColor = normalImage.color;
+        if (image != null)
+            currentColor = image.color;
         else
             currentColor = ColorManager.White;
 
@@ -110,7 +111,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         {
             graphic.gameObject.SetActive(true); // 确保图像可见
             graphic.DOKill(); // 停止所有正在进行的动画
-            graphic.DOFade(1f, fadeDuration)
+            graphic.DOFade(1f, fadeTransition)
                 .SetEase(Ease.OutQuad)
                 .OnStart(() =>
                 {
@@ -130,7 +131,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         foreach (var graphic in hoveredGraphics)
         {
             graphic.DOKill(); // 停止所有正在进行的动画
-            graphic.DOFade(0f, fadeDuration)
+            graphic.DOFade(0f, fadeTransition)
                 .SetEase(Ease.InQuad)
                 .OnComplete(() => graphic.gameObject.SetActive(false)) // 动画完成后禁用图像
                 .OnStart(() => ChangeColor(currentColor));

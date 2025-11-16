@@ -250,10 +250,10 @@ public class EnvironmentBagWindow : BagWindow
         // 显示探索度
         discoveryDegreeSlider.SetValue(degree, 1);
 
-        var text = exploreButton.GetComponentInChildren<Text>();
+        var text = exploreButton.text;
         if (completed)
         {
-            exploreButton.normalImage.gameObject.SetActive(false);
+            exploreButton.image.gameObject.SetActive(false);
             exploreButton.Interactable = false;
             text.text = "探索完成";
             text.color = ColorManager.Cyan;
@@ -264,7 +264,7 @@ public class EnvironmentBagWindow : BagWindow
         else if (degree == 1)
         {
             // 深入探索
-            exploreButton.normalImage.gameObject.SetActive(true);
+            exploreButton.image.gameObject.SetActive(true);
             exploreButton.Interactable = true;
             text.text = "深入探索";
             text.color = ColorManager.White;
@@ -273,7 +273,7 @@ public class EnvironmentBagWindow : BagWindow
         }
         else
         {
-            exploreButton.normalImage.gameObject.SetActive(true);
+            exploreButton.image.gameObject.SetActive(true);
             exploreButton.Interactable = true;
             text.text = "开始探索";
             text.color = ColorManager.White;

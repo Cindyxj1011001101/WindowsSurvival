@@ -1378,9 +1378,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 190290344}
   imagseNeedToReverseColor: []
@@ -2004,9 +2005,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 1379567268}
   imagseNeedToReverseColor: []
@@ -9304,9 +9306,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 1544468771}
   imagseNeedToReverseColor: []
@@ -10129,9 +10132,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 1736697990}
   imagseNeedToReverseColor: []
@@ -10566,9 +10570,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 116017692}
   imagseNeedToReverseColor: []
@@ -11819,9 +11824,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 1986778225}
   imagseNeedToReverseColor: []
@@ -16917,9 +16923,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 500978105}
   imagseNeedToReverseColor: []
@@ -20305,10 +20312,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4927142516398092504, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
-      propertyPath: displayDigits
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5241267480374871521, guid: b84248dec2d8a0a4895a7ab5e4859ff4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -22608,9 +22611,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 1152911112}
   imagseNeedToReverseColor:

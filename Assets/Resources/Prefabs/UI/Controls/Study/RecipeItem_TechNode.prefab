@@ -93,9 +93,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 6918878457431914790}
+  image: {fileID: 6918878457431914790}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 6918878457431914790}

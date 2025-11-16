@@ -38,7 +38,7 @@ public class UITechNode : HoverableButton
         foreach (var recipe in techNode.recipes)
         {
             button = ObjectBufferPool.Instance.Get(recipeItemPrefab, recipeLayout).GetComponent<HoverableButton>();
-            button.normalImage.sprite = recipe.CardImage;
+            button.image.sprite = recipe.CardImage;
 
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
@@ -60,7 +60,7 @@ public class UITechNode : HoverableButton
             // 设置颜色
             foreach (var btn in recipeButtons)
             {
-                btn.hoveredColor = btn.currentColor = btn.normalImage.color = ColorManager.Cyan;
+                btn.hoveredColor = btn.currentColor = btn.image.color = ColorManager.Cyan;
             }
         }
         // 未解锁
@@ -72,7 +72,7 @@ public class UITechNode : HoverableButton
             // 设置颜色
             foreach (var btn in recipeButtons)
             {
-                btn.currentColor = btn.normalImage.color = ColorManager.DarkGrey;
+                btn.currentColor = btn.image.color = ColorManager.DarkGrey;
             }
             techName.color = ColorManager.DarkGrey;
         }
@@ -85,7 +85,7 @@ public class UITechNode : HoverableButton
             // 设置颜色
             foreach (var btn in recipeButtons)
             {
-                btn.currentColor = btn.normalImage.color = ColorManager.White;
+                btn.currentColor = btn.image.color = ColorManager.White;
             }
             foreground_inProgress.GetComponent<Image>().color = ColorManager.White;
             gifObject.SetActive(true);
@@ -100,7 +100,7 @@ public class UITechNode : HoverableButton
             // 设置颜色
             foreach (var btn in recipeButtons)
             {
-                btn.currentColor = btn.normalImage.color = ColorManager.LightGrey;
+                btn.currentColor = btn.image.color = ColorManager.LightGrey;
             }
             foreground_inProgress.GetComponent<Image>().color = ColorManager.LightGrey;
             gifObject.SetActive(false);

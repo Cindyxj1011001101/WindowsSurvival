@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class StudyButton : HoverableButton
 {
-    public Text text;
     public GameObject iconObject;
 
     private bool beingStudied = false;

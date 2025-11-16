@@ -1655,9 +1655,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 5857032994808870838}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
@@ -2067,9 +2068,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 229459063425166163}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
@@ -2813,6 +2815,7 @@ MonoBehaviour:
   button: {fileID: 0}
   tipController: {fileID: 0}
   displayPercentage: 1
+  displayDigits: 0
   fillColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &5177177482958789841
 GameObject:
@@ -2962,9 +2965,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 9142865435215076351}
+  image: {fileID: 9142865435215076351}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 9142865435215076351}
@@ -4436,9 +4440,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 5337621821448528104}
+  image: {fileID: 5337621821448528104}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor:
   - {fileID: 5337621821448528104}
@@ -5177,9 +5182,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 8824751566588550233}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 5837318567722849479}
   imagseNeedToReverseColor:
@@ -5330,9 +5336,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 257466952867962457}
+  image: {fileID: 257466952867962457}
+  text: {fileID: 2824365295664316032}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 2824365295664316032}
   imagseNeedToReverseColor:
@@ -6047,6 +6054,7 @@ MonoBehaviour:
   button: {fileID: 191631981236734606}
   tipController: {fileID: 6527655283263610742}
   displayPercentage: 0
+  displayDigits: 0
   fillColor: {r: 1, g: 1, b: 1, a: 1}
   levels: []
 --- !u!114 &5889874112837475390
@@ -6075,6 +6083,7 @@ MonoBehaviour:
   button: {fileID: 191631981236734606}
   tipController: {fileID: 6527655283263610742}
   displayPercentage: 0
+  displayDigits: 0
   fillColor: {r: 1, g: 1, b: 1, a: 1}
   levels: []
 --- !u!224 &4551475210616384079 stripped
@@ -6489,6 +6498,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1307717986450091551}
     m_Modifications:
+    - target: {fileID: 1300135366306412167, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
+      propertyPath: displayDigits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1680979510513311346, guid: d4a887a504fc25f49aa364bcd5a4eb8c, type: 3}
       propertyPath: m_Name
       value: Electricity

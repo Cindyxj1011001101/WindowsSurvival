@@ -222,8 +222,8 @@ public class StudyWindow : WindowBase
         foreach (var recipe in techNode.recipes)
         {
             button = ObjectBufferPool.Instance.Get(recipeItem, detailLayout).GetComponent<HoverableButton>();
-            button.normalImage.sprite = recipe.CardImage;
-            button.GetComponentsInChildren<Text>()[1].text = recipe.cardId;
+            button.image.sprite = recipe.CardImage;
+            button.text.text = recipe.cardId;
 
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>

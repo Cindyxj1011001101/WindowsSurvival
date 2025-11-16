@@ -487,14 +487,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91e8eeaba2eefbb4796ec6b5d5f3905d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 3209813500792952871}
+  image: {fileID: 3209813500792952871}
+  text: {fileID: 269574599763228029}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
-  eventNameText: {fileID: 269574599763228029}
   frameImage: {fileID: 9004040112451921008}
   body: {fileID: 3123412921082586269}
 --- !u!114 &6557780079124579537

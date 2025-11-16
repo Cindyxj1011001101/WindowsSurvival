@@ -49,12 +49,12 @@ public class CustomMenuItem : HoverableButton
     {
         tipCanvas.DOKill(); // 停止所有正在进行的动画
         tipCanvas.gameObject.SetActive(true);
-        tipCanvas.DOFade(1, fadeDuration).SetEase(Ease.OutQuad);
+        tipCanvas.DOFade(1, fadeTransition).SetEase(Ease.OutQuad);
     }
 
     private void HideTipTween()
     {
         tipCanvas.DOKill(); // 停止所有正在进行的动画
-        tipCanvas.DOFade(0, fadeDuration).SetEase(Ease.InQuad).OnComplete(() => tipCanvas.gameObject.SetActive(false));
+        tipCanvas.DOFade(0, fadeTransition).SetEase(Ease.InQuad).OnComplete(() => tipCanvas.gameObject.SetActive(false));
     }
 }

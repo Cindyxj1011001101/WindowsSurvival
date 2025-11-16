@@ -247,8 +247,7 @@ public class DetailsWindow : BagWindow
         if (displayType == DisplayType.DetailsAndCraftButton)
         {
             var button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
-            var btnText = button.GetComponentInChildren<Text>();
-            btnText.text = "前往制作";
+            button.text.text = "前往制作";
             button.Interactable = WindowsManager.Instance.GetUnlockedShortcuts().Contains("Craft");
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
@@ -259,12 +258,12 @@ public class DetailsWindow : BagWindow
 
             if (button.Interactable)
             {
-                btnText.color = ColorManager.White;
+                button.text.color = ColorManager.White;
                 button.GetComponent<HoverTipController>().SetTip("");
             }
             else
             {
-                btnText.color = ColorManager.DarkGrey;
+                button.text.color = ColorManager.DarkGrey;
                 button.GetComponent<HoverTipController>().SetTip("制作窗口尚未解锁");
             }
 
@@ -277,8 +276,7 @@ public class DetailsWindow : BagWindow
         {
             var card = currentDisplayedCard;
             var button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
-            var btnText = button.GetComponentInChildren<Text>();
-            btnText.text = e.Name;
+            button.text.text = e.Name;
 
             var interactable = e.Judge();
             button.Interactable = interactable;
@@ -327,7 +325,7 @@ public class DetailsWindow : BagWindow
             }
             else
             {
-                btnText.color = ColorManager.DarkGrey;
+                button.text.color = ColorManager.DarkGrey;
                 button.GetComponent<HoverTipController>().SetTip(e.Hint);
             }
 

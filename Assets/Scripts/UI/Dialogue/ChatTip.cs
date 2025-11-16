@@ -10,7 +10,6 @@ public class ChatTip : HoverableButton
     public CanvasGroup iconEnter;
     public CanvasGroup iconExit;
     public Image bubble;
-    public Text text;
 
     public Color playerBubbleColor;
     public Color othersBubbleColor;
@@ -80,7 +79,7 @@ public class ChatTip : HoverableButton
         string newStr = text;
         if (text.Length > 10)
         {
-            newStr = text.Substring(0, 10);
+            newStr = text[..10];
             newStr += "...";
         }
         this.text.text = newStr;
