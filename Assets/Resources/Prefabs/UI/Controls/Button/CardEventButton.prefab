@@ -64,6 +64,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 576773620984651417}
+  minWidth: 0
+  reservedWidth: 8
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor:
@@ -71,6 +73,7 @@ MonoBehaviour:
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!114 &4939259059235914899
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
-//[RequireComponent(typeof(UnityEngine.UI.Graphic))]
 public class DoubleClickHandler : MonoBehaviour, IPointerClickHandler
 {
     [Tooltip("双击间隔")]

@@ -17,6 +17,7 @@ public class CardEvent
     private Func<int> getTimeChange;
     private Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges;
     private Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges;
+    private Func<bool> shouldHideThis;
 
     public string Description
     {
@@ -40,7 +41,8 @@ public class CardEvent
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
         Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null,
-        string sound = null)
+        string sound = null,
+        Func<bool> shouldHideThis = null)
     {
         this.name = name;
         this.description = description;
@@ -50,6 +52,7 @@ public class CardEvent
         this.getPlayerStateChanges = getPlayerStateChanges;
         this.getEnvStateChanges = getEnvStateChanges;
         this.sound = sound;
+        this.shouldHideThis = shouldHideThis;
     }
 
     public CardEvent(
@@ -60,7 +63,8 @@ public class CardEvent
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
         Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null,
-        string sound = null) : this(name, string.Empty, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges, sound)
+        string sound = null,
+        Func<bool> shouldHideThis = null) : this(name, string.Empty, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges, sound, shouldHideThis)
     {
         this.getDescription = getDescription;
     }
@@ -76,6 +80,11 @@ public class CardEvent
     {
         hint = string.Empty;
         return condition == null || condition(out hint);
+    }
+
+    public bool ShouldHideThis()
+    {
+        return shouldHideThis != null && shouldHideThis();
     }
 
     public int GetTimeChange()

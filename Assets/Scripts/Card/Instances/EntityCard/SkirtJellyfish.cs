@@ -9,6 +9,7 @@ public class SkirtJellyfish : EntityCard
     protected override void RegisterCardEvents()
     {
         AddCardEvent("用捞网捉", "", Event_CatchByNet, Judge_CatchByNet, () => 15);
+        base.RegisterCardEvents(); // 攻击事件
     }
 
     // 潜在仇恨目标

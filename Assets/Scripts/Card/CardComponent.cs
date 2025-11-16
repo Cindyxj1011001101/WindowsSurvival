@@ -1136,6 +1136,25 @@ public class WeaponComponent : CardComponent
         var dist = target.DistanceTo(Player.Instance);
         return dist <= maxAtkDist && dist >= minAtkDist;
     }
+
+    public bool CanAttack(IEntity target, out string reason)
+    {
+        reason = string.Empty;
+        var dist = target.DistanceTo(Player.Instance);
+        if (dist > maxAtkDist)
+        {
+            reason = "距离目标太远";
+            return false;
+        }
+
+        if (dist < minAtkDist)
+        {
+            reason = "距离目标太近";
+            return false;
+        }
+
+        return true;
+    }
 }
 #endregion
 

@@ -206,6 +206,24 @@ public class DetailsWindow : BagWindow
         // 打开详情如果卡牌有循环音
         if (currentDisplayedCard.HasLoopSound)
             currentDisplayedCard.OnDetailOpen();
+
+        // 调整显示区域
+        var rectTransform = buttonLayout.transform as RectTransform;
+        var widthDiff = rectTransform.sizeDelta.x - (buttonLayout.parent.transform as RectTransform).sizeDelta.x;
+        // 如果按钮显示区域长于viewport
+        if (widthDiff > 0)
+        {
+            // 则居左显示
+            rectTransform.anchoredPosition = new(rectTransform.anchoredPosition.x + widthDiff / 2, rectTransform.anchoredPosition.y);
+        }
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            print(currentDisplayedCard);
+        }
     }
 
     private void DisplayDetails()
@@ -242,7 +260,6 @@ public class DetailsWindow : BagWindow
 
         ObjectBufferPool.Instance.RestoreAllChildren(buttonLayout);
 
-
         // 显示详情和前往制作按钮
         if (displayType == DisplayType.DetailsAndCraftButton)
         {
@@ -277,6 +294,12 @@ public class DetailsWindow : BagWindow
             var card = currentDisplayedCard;
             var button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
             button.text.text = e.Name;
+
+            if (e.ShouldHideThis())
+            {
+                button.gameObject.SetActive(false);
+                continue;
+            }
 
             var interactable = e.Judge();
             button.Interactable = interactable;
@@ -331,6 +354,7 @@ public class DetailsWindow : BagWindow
 
             button.transform.localScale = Vector3.one; // 确保按钮缩放为1
             button.transform.SetAsLastSibling();
+            button.AdaptWidth(); // 自适应宽度
         }
 
         MonoUtility.UpdateLayoutSize(buttonLayout.GetComponent<ILayoutGroup>());

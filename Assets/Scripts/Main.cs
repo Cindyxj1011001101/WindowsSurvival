@@ -32,6 +32,9 @@ public class Main : MonoBehaviour
         SetResolution();
         //SetFrameRate();
 
+        // 初始化卡牌工厂
+        CardFactory.Init();
+
         // 初始化各类管理器
         InitManagers();
     }

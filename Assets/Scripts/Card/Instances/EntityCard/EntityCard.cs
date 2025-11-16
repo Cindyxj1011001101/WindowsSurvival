@@ -30,6 +30,48 @@ public abstract class EntityCard : Card, IEntity
 
     public virtual void TakeDamage(float damage, IEntity damageDealer) => entity.TakeDamage(damage, damageDealer);
 
+    protected override void RegisterCardEvents()
+    {
+        // 注册所有武器的攻击
+        foreach (var c in CardFactory.GetStaticCardInstancesByComponent<WeaponComponent>())
+        {
+            c.TryGetComponent<WeaponComponent>(out var weapon);
+            var weaponName = c.CardName;
+            var weaponAtk = weapon.atk;
+            var weaponAtkTime = weapon.attackTime;
+            AddCardEvent($"用{weaponName}攻击", $"用{weaponName}攻击{CardName}\n造成伤害:  {weaponAtk}",
+                e => BeAttacked(GameManager.Instance.PlayerBag.FindCardOfName(weaponName)),
+                (out string s) => CanBeAttacked(weaponName, out s),
+                () => weaponAtkTime,
+                shouldHideThis: () => GameManager.Instance.PlayerBag.FindCardOfName(weaponName) == null); // 没有对应武器则隐藏交互
+        }
+
+        // 注册空手攻击
+        AddCardEvent($"空手攻击", $"用双手攻击{CardName}\n造成伤害:  {Player.Instance.Atk}",
+                e => Player.Instance.DealDamage(this),
+                (out string s) => Player.Instance.CanAttack(this, out s),
+                () => Player.Instance.AttackTime);
+    }
+
+    private bool CanBeAttacked(string weaponName, out string s)
+    {
+        var weaponCard = GameManager.Instance.PlayerBag.FindCardOfName(weaponName);
+        if (weaponCard == null)
+        {
+            s = $"需要{weaponName}";
+            return false;
+        }
+
+        weaponCard.TryGetComponent<WeaponComponent>(out var weapon);
+        return weapon.CanAttack(this, out s);
+    }
+
+    private void BeAttacked(Card weaponCard)
+    {
+        weaponCard.TryGetComponent<WeaponComponent>(out var weapon);
+        weapon.DealDamage(this);
+    }
+
     protected override void OnLateConstructor()
     {
         // 添加坐标组件
@@ -44,6 +86,9 @@ public abstract class EntityCard : Card, IEntity
     {
         // 记录到全局数据中
         GlobalDataManager.Instance.CreateEntity(this);
+
+        // 加入当前地点中
+        (Bag as EnvironmentBag).AddEntity(this);
 
         // 初始化仇恨
         aggroCollection.Init(this);
@@ -90,9 +135,7 @@ public abstract class EntityCard : Card, IEntity
 
     public override void QuickIneract(SlotCards slot, int count)
     {
-        var card = slot.PeekCard();
-        card.TryGetComponent<WeaponComponent>(out var weapon);
-        weapon.DealDamage(this); // 消耗时间在dealdamage方法里面处理了
+        BeAttacked(slot.PeekCard());
     }
 
     #region AI

@@ -25,22 +25,6 @@ public class SlotCards : IComparable<SlotCards>
         foreach (var card in Cards)
         {
             card.SetSlotCards(this);
-            card.AssignComponentValues();
-
-            if (Bag is EnvironmentBag env)
-            {
-                // 将所有实体加入地点实体列表
-                if (card is IEntity entity)
-                {
-                    env.AddEntity(entity);
-                }
-                // 设置卡牌坐标地点
-                else if (card.TryGetComponent<CoordinateComponent>(out var c))
-                {
-                    c.coordinate.SetLocation(env);
-                }
-            }
-
             card.Init();
         }
     }

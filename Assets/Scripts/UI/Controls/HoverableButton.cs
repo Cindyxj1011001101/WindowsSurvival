@@ -1,14 +1,16 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using DG.Tweening;
-using System.Collections.Generic;
 
 public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public Image image;                     // 正常状态的图像
     public Text text;                       // 正常状态的图像
+    public float minWidth;                  // 最小宽度
+    public float reservedWidth;             // 预留长度
     public List<Graphic> hoveredGraphics;   // 鼠标悬停时显示的图像
     public float fadeTransition = 0.1f;     // 淡入淡出持续时间
 
@@ -26,6 +28,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public UnityEvent onClick { get; set; } = new UnityEvent();
     public UnityEvent onPointerEnter { get; set; } = new UnityEvent();
     public UnityEvent onPointerExit { get; set; } = new UnityEvent();
+
+    public RectTransform rectTransform;
 
     public bool Interactable
     {
@@ -56,6 +60,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     protected virtual void Awake()
     {
+        rectTransform = transform as RectTransform;
+
         if (image != null)
             currentColor = image.color;
         else
@@ -72,6 +78,9 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
     protected virtual void OnEnable()
     {
+        if (minWidth == 0)
+            minWidth = rectTransform.sizeDelta.x;
+
         // 初始化时确保hoveredImage是透明的
         foreach (var graphic in hoveredGraphics)
         {
@@ -87,6 +96,14 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         {
             graphic.DOKill(); // 停止所有正在进行的动画
         }
+
+        rectTransform.sizeDelta = new(minWidth, rectTransform.sizeDelta.y);
+    }
+
+    public void AdaptWidth()
+    {
+        var newWidth = Mathf.Max(minWidth, text.preferredWidth + reservedWidth);
+        rectTransform.sizeDelta = new(newWidth, rectTransform.sizeDelta.y);
     }
 
     public virtual void OnPointerClick(PointerEventData eventData)

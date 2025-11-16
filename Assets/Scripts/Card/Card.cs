@@ -271,6 +271,9 @@ public abstract class Card : IComparable<Card>
 
         init = true;
 
+        // 分配组件值，方便后续调用
+        AssignComponentValues();
+
         // 记录全局数量
         GlobalDataManager.Instance.CreateCard(this);
 
@@ -278,10 +281,14 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
         //UpdateManager.Instance.CardUpdate.AddListener(Update);
         UpdateManager.Instance.AddCardUpdateListener(ref updateOrder, Update);
-
+        
         if (coordinate != null)
-            // 坐标组件不空的情况下，监听玩家移动
+        {
+            // 设置卡牌坐标地点
+            coordinate.coordinate.SetLocation(Bag as EnvironmentBag);
+            // 监听玩家移动
             EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
+        }
 
         // 初始化内容物
         InitInnerContents();
@@ -664,10 +671,10 @@ public abstract class Card : IComparable<Card>
     /// <param name="card"></param>
     /// <param name="preferredBag">优先添加到的背包(不能保证一定添加到这个背包里)</param>
     /// <param name="playAnim"></param>
-    public void AddCard(Card card, Bag preferredBag, bool playAnim = true)
+    public void AddCard(Card card, Bag preferredBag, bool playAnim = true, bool forceAdd = false)
     {
         // 尝试放在targetBag里
-        if (preferredBag.CanAddCard(card, out _))
+        if (preferredBag.CanAddCard(card, out _) || forceAdd)
         {
             // 成功放置
             GameManager.Instance.AddCard(card, preferredBag);
@@ -761,9 +768,10 @@ public abstract class Card : IComparable<Card>
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
         Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null,
-        string sound = null)
+        string sound = null,
+        Func<bool> shouldHideThis = null)
     {
-        Events.Add(new(name, description, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges, sound));
+        Events.Add(new(name, description, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges, sound, shouldHideThis));
     }
 
     protected void AddCardEvent(
@@ -774,9 +782,10 @@ public abstract class Card : IComparable<Card>
         Func<int> getTimeChange = null,
         Func<Dictionary<PlayerStateEnum, float>> getPlayerStateChanges = null,
         Func<Dictionary<EnvironmentStateEnum, float>> getEnvStateChanges = null,
-        string sound = null)
+        string sound = null,
+        Func<bool> shouldHideThis = null)
     {
-        Events.Add(new(name, getDescription, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges, sound));
+        Events.Add(new(name, getDescription, action, condition, getTimeChange, getPlayerStateChanges, getEnvStateChanges, sound, shouldHideThis));
     }
 
     protected void EasyEvent_Destroy(CardEvent e)
