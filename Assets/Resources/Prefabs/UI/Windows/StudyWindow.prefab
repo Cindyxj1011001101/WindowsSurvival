@@ -332,7 +332,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -2142871442, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
+  m_Sprite: {fileID: 181706792, guid: 3dbbec72d135f75498eeabf0c71adb4a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3231,6 +3231,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor:
@@ -3239,6 +3241,7 @@ MonoBehaviour:
   - {fileID: 4887545118060075007}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!114 &11412429354276634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3421,12 +3424,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!114 &7652657150264652283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3871,6 +3877,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor:
@@ -3879,6 +3887,7 @@ MonoBehaviour:
   - {fileID: 2383390278019256736}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!114 &6578303684141513204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4162,6 +4171,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor:
@@ -4170,6 +4181,7 @@ MonoBehaviour:
   - {fileID: 1466251284414074682}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!114 &9221692372896344760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5341,12 +5353,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!1 &6849259027518985498
 GameObject:
   m_ObjectHideFlags: 0
@@ -5669,6 +5684,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 1040013280176371401}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor:
@@ -5677,6 +5694,7 @@ MonoBehaviour:
   - {fileID: 7161306012796890719}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
   iconObject: {fileID: 2994296902885939587}
   studyingAnim: {fileID: 3803718338073849863}
 --- !u!114 &3470444017205608536
@@ -5787,6 +5805,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor:
@@ -5795,6 +5815,7 @@ MonoBehaviour:
   - {fileID: 111766553297307591}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!114 &2128008526701908846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6060,6 +6081,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor:
@@ -6068,6 +6091,7 @@ MonoBehaviour:
   - {fileID: 735355452217826482}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!114 &9085301203020431379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6249,12 +6273,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!1 &8132048998647038460
 GameObject:
   m_ObjectHideFlags: 0
@@ -6349,6 +6376,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor:
@@ -6357,6 +6386,7 @@ MonoBehaviour:
   - {fileID: 2916141191915302801}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!114 &5721834055497143832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6527,12 +6557,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!114 &8960763727766104467
 MonoBehaviour:
   m_ObjectHideFlags: 0
