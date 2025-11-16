@@ -53,37 +53,18 @@ public abstract class EntityCard : Card, IEntity
                 () => Player.Instance.AttackTime);
     }
 
-    private bool CanBeAttacked(string weaponName, out string s)
-    {
-        var weaponCard = GameManager.Instance.PlayerBag.FindCardOfName(weaponName);
-        if (weaponCard == null)
-        {
-            s = $"需要{weaponName}";
-            return false;
-        }
-
-        weaponCard.TryGetComponent<WeaponComponent>(out var weapon);
-        return weapon.CanAttack(this, out s);
-    }
-
-    private void BeAttacked(Card weaponCard)
-    {
-        weaponCard.TryGetComponent<WeaponComponent>(out var weapon);
-        weapon.DealDamage(this);
-    }
-
     protected override void OnLateConstructor()
     {
         // 添加坐标组件
         coordinate = new();
         AddComponent(coordinate);
-
-        // 注册意图
-        RegisterIntentions();
     }
 
     protected override void OnInit()
     {
+        // 注册意图
+        RegisterIntentions();
+
         // 记录到全局数据中
         GlobalDataManager.Instance.CreateEntity(this);
 
@@ -110,6 +91,25 @@ public abstract class EntityCard : Card, IEntity
         aggroCollection.Clear();
         GlobalDataManager.Instance.DestroyEntity(this);
         UpdateManager.Instance.RemoveEntityUpdateListener(updateOrder);
+    }
+
+    private bool CanBeAttacked(string weaponName, out string s)
+    {
+        var weaponCard = GameManager.Instance.PlayerBag.FindCardOfName(weaponName);
+        if (weaponCard == null)
+        {
+            s = $"需要{weaponName}";
+            return false;
+        }
+
+        weaponCard.TryGetComponent<WeaponComponent>(out var weapon);
+        return weapon.CanAttack(this, out s);
+    }
+
+    private void BeAttacked(Card weaponCard)
+    {
+        weaponCard.TryGetComponent<WeaponComponent>(out var weapon);
+        weapon.DealDamage(this);
     }
 
     private void OnEntityUpdate()
