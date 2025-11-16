@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 50e0d9d89ff93ac4485d4855d9b1f4d0
+guid: 91a2241819a63bc47b7a0142665b5eef
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,13 +97,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ResourcePoint_0
+      name: Intention_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 230
-        width: 46
-        height: 46
+        y: 56
+        width: 18
+        height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -111,20 +111,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9b27129c06548cc468d2690d41eaf37e
-      internalID: -951351153
+      spriteID: b8249e172f038194f8d0c0b6a9bf3b1e
+      internalID: 743020484
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ResourcePoint_1
+      name: Intention_1
       rect:
         serializedVersion: 2
-        x: 46
-        y: 230
-        width: 46
-        height: 46
+        x: 18
+        y: 56
+        width: 18
+        height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,62 +132,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9cc2341fedd08744b86b61572ebd1e83
-      internalID: 1212837878
+      spriteID: 84e0bed32b8fb8741ba72acf58819424
+      internalID: -175200382
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ResourcePoint_2
-      rect:
-        serializedVersion: 2
-        x: 92
-        y: 230
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 22a3295aba0ee8a438db3ec2d221b7c8
-      internalID: -1686275221
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ResourcePoint_3
-      rect:
-        serializedVersion: 2
-        x: 138
-        y: 230
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6751cd6bbfa8e80499f9c5b129306a1a
-      internalID: -69031702
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ResourcePoint_4
+      name: Intention_2
       rect:
         serializedVersion: 2
         x: 0
-        y: 184
-        width: 46
-        height: 46
+        y: 42
+        width: 18
+        height: 14
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -195,8 +153,155 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ec7a1c32582a41b489a33a16c9848b1f
-      internalID: -1061112801
+      spriteID: 311bbbc00827103468a1f7e7d73a0e40
+      internalID: 570405076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Intention_3
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 42
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4d0486b8063306344a0651d06d1ac8ee
+      internalID: 91180262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Intention_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 28
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27df04dea5801b84d8aa77b672355bef
+      internalID: 612906910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Intention_5
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 28
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 407a40bb4d21ff64698bf95bbe53b9f5
+      internalID: -407770475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Intention_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 14
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4cecfadca53ec34ab70f77089e9fa1b
+      internalID: 430820737
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Intention_7
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 14
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bb20af0c199ecf043bae619ad655cfdc
+      internalID: -196048372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Intention_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f79ea8bbf7384f8409636dc748e20534
+      internalID: -1520337768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Intention_9
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 0
+        width: 18
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f085bb9be9bdc064d81dabaaa1c66462
+      internalID: 1639642046
       vertices: []
       indices: 
       edges: []
@@ -212,13 +317,18 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ResourcePoint_0: -951351153
-      ResourcePoint_1: 1212837878
-      ResourcePoint_2: -1686275221
-      ResourcePoint_3: -69031702
-      ResourcePoint_4: -1061112801
+      Intention_0: 743020484
+      Intention_1: -175200382
+      Intention_2: 570405076
+      Intention_3: 91180262
+      Intention_4: 612906910
+      Intention_5: -407770475
+      Intention_6: 430820737
+      Intention_7: -196048372
+      Intention_8: -1520337768
+      Intention_9: 1639642046
   mipmapLimitGroupName: 
-  pSDRemoveMatte: 1
+  pSDRemoveMatte: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
