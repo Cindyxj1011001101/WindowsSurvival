@@ -51,4 +51,10 @@ public class Player : IEntity, IManager
     public void AddMoveSpeedMultiplier(float multipier) => MoveSpeedMultiplier.Add(multipier);
 
     public void RemoveMoveSpeedMultiplier(float multipier) => MoveSpeedMultiplier.Remove(multipier);
+
+    public void MoveTo(float targetPosition)
+    {
+        Coordinate.SetPosition(targetPosition);
+        EventManager.Instance.TriggerEvent(EventType.PlayerMove);
+    }
 }

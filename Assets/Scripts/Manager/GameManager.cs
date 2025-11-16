@@ -60,6 +60,7 @@ public class GameManager : IManager
     /// <param name="targetEnv">目标地点</param>
     public void ChangeEnv(PlaceEnum targetEnv)
     {
+        var lastEnv = CurEnvironmentBag;
         // 玩家实体从原地点移除
         CurEnvironmentBag.RemoveEntity(Player.Instance);
 
@@ -89,6 +90,29 @@ public class GameManager : IManager
                     card.OnEnterEnvironment();
             }
         }
+
+        var env = CurEnvironmentBag;
+
+        // 从切换后的场景单次探索列表中拿出回到原先场景的牌，加入当前场景背包
+        var passageCardId = $"从{env.PlaceName}到{lastEnv.PlaceName}";
+        Card passageCard = env.FindCardOfId(passageCardId);
+        // 先尝试从探索列表里面取出
+        if (passageCard == null)
+        {
+            var droppedCards = env.DisposableDropList.CertainDrop(passageCardId);
+            if (!droppedCards.IsNullOrEmpty())
+            {
+                passageCard = droppedCards[0];
+            }
+            // 探索列表里面没有就直接创建
+            passageCard ??= CardFactory.CreateCard(passageCardId);
+            // 加入当前场景背包
+            AddCard(passageCard, env);
+        }
+
+        // 玩家坐标设置在通道位置
+        passageCard.TryGetComponent<CoordinateComponent>(out var coordinate);
+        Player.Instance.MoveTo(coordinate.coordinate.Position);
 
         // 播放新地点环境音
         SoundManager.Instance.PlayPlaceMusic(CurEnvironmentBag);

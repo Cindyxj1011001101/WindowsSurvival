@@ -254,12 +254,6 @@ public class MoveExploreManager : IManager
     #endregion
 
     #region 移动
-    private void SetPlayerPosition(float targetPosition)
-    {
-        Player.Instance.Coordinate.SetPosition(targetPosition);
-        EventManager.Instance.TriggerEvent(EventType.PlayerMove);
-    }
-
     /// <summary>
     /// 移动到目标地点
     /// </summary>
@@ -269,31 +263,8 @@ public class MoveExploreManager : IManager
     {
         if (!CanMoveExplore()) return;
 
-        var lastEnv = GameManager.Instance.CurEnvironmentBag;
-
         // 改变地点
         GameManager.Instance.ChangeEnv(targetEnv);
-
-        var env = GameManager.Instance.CurEnvironmentBag;
-
-        //从切换后的场景单次探索列表中拿出回到原先场景的牌，加入当前场景背包
-        Card passage = null;
-        var passageCardId = $"从{env.PlaceName}到{lastEnv.PlaceName}";
-        var droppedCards = env.DisposableDropList.CertainDrop(passageCardId);
-        if (!droppedCards.IsNullOrEmpty())
-        {
-            passage = droppedCards[0];
-            GameManager.Instance.AddCard(passage, false);
-            passage.RefreshSlot();
-        }
-
-        // 玩家坐标设置在通道位置
-        passage ??= env.FindCardOfId(passageCardId);
-        if (passage != null)
-        {
-            passage.TryGetComponent<CoordinateComponent>(out var coordinate);
-            SetPlayerPosition(coordinate.coordinate.Position);
-        }
 
         // 移动消耗
         (_, int time, Dictionary<PlayerStateEnum, float> playerStateChanges) = GetMoveEffects(basicMoveTime, targetEnv);
@@ -318,7 +289,7 @@ public class MoveExploreManager : IManager
             GetMoveEffects(targetPosition);
 
         // 执行移动
-        SetPlayerPosition(targetPosition);
+        Player.Instance.MoveTo(targetPosition);
         StateManager.Instance.ApplyPlayerStateChanges(playerStateChanges);
         TimeManager.Instance.AddTime(time);
     }
