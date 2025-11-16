@@ -316,8 +316,10 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// <param name="startPos"></param>
     /// <param name="endPos"></param>
     /// <param name="count"></param>
-    private void AnimateCardPlacement(Card card, UnityAction placementAction, Vector3 startPos, int count)
+    private void AnimateCardPlacement(Card card, Vector3 startPos, int count)
     {
+        var targetSlot = card.Slot;
+        targetSlot.DontRefresh = true;
         MFXUtility.MoveCard(
             card,
             count,
@@ -326,8 +328,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             onStart: null,
             onComplete: () =>
             {
-                placementAction.Invoke();
                 sourceSlot.DontRefresh = false;
+                targetSlot.DontRefresh = false;
             }
         );
     }
@@ -373,11 +375,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         {
             AnimateCardPlacement(
                 movedCard[0],
-                () =>
-                {
-                    // 再刷新显示
-                    targetSlot.RefreshDisplay();
-                },
                 dragEndPosition,
                 movedCard.Count
             );
@@ -415,11 +412,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 AnimateCardPlacement(
                     group.ToList()[0],
-                    () =>
-                    {
-                        // 再刷新显示
-                        group.Key.RefreshDisplay();
-                    },
                     startPos,
                     group.Count()
                 );

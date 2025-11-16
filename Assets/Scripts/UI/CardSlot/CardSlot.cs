@@ -11,21 +11,22 @@ public class CardSlot : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
     [SerializeField] private Text nameText;
-    [SerializeField] private GameObject stackObject; // 控制是否显示堆叠
-    [SerializeField] private Text stackNumText; // 显示数量
-    [SerializeField] private Image maxStackNumImage; // 显示最大堆叠数量的图标
+    [SerializeField] private GameObject stackObject;                // 控制是否显示堆叠
+    [SerializeField] private Text stackNumText;                     // 显示数量
+    [SerializeField] private Image maxStackNumImage;                // 显示最大堆叠数量的图标
+    [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private CanvasGroup cardCanvasGroup;
-    [SerializeField] private Text moreInfoText; // 额外信息
-    [SerializeField] private RectTransform particleDisplayRect; // 显示粒子的区域
+    [SerializeField] private Text moreInfoText;                     // 额外信息
+    [SerializeField] private RectTransform particleDisplayRect;     // 显示粒子的区域
     [SerializeField] private GameObject mask;
 
-    [SerializeField] private RectTransform middle; // 用于显示新鲜度、耐久等组件的布局
-    [SerializeField] private RectTransform left; // 用于显示计时器和盐水
-    [SerializeField] private RectTransform right; // 用于显示温度和淡水
-    [SerializeField] private RectTransform innerContentsComponent; // 用于显示内容物组件
-    [SerializeField] private GameObject iconLayout; // 用于显示图标的布局
-    [SerializeField] private Image fireIcon; // 图标上的火焰
-    [SerializeField] private Image flashIcon; // 图标上的闪电
+    [SerializeField] private RectTransform middle;                  // 用于显示新鲜度、耐久等组件的布局
+    [SerializeField] private RectTransform left;                    // 用于显示计时器和盐水
+    [SerializeField] private RectTransform right;                   // 用于显示温度和淡水
+    [SerializeField] private RectTransform innerContentsComponent;  // 用于显示内容物组件
+    [SerializeField] private GameObject iconLayout;                 // 用于显示图标的布局
+    [SerializeField] private Image fireIcon;                        // 图标上的火焰
+    [SerializeField] private Image flashIcon;                       // 图标上的闪电
 
     [SerializeField] private Animator cardAnimator;
 
@@ -51,6 +52,7 @@ public class CardSlot : MonoBehaviour
         {
             dontRefresh = value;
             if (!value) RefreshDisplay();
+            else GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
     }
 
@@ -162,6 +164,7 @@ public class CardSlot : MonoBehaviour
 
         mask.SetActive(false);
         Interactable = false;
+        GetComponent<CanvasGroup>().blocksRaycasts = true;
 
         if (IsEmpty)
         {

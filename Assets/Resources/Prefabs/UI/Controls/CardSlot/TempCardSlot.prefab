@@ -1924,7 +1924,6 @@ GameObject:
   - component: {fileID: 455938007580153851}
   - component: {fileID: 2762523007511967095}
   - component: {fileID: 6690425000989068104}
-  - component: {fileID: 8014396052288948562}
   - component: {fileID: 8689490011251333666}
   - component: {fileID: 4750413819344185410}
   - component: {fileID: 527027144953067077}
@@ -1991,22 +1990,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34b4454ca4eab604a98abd53fbec83e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8014396052288948562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7221006975776441215}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b2068d30dc5594d97e907c2f78e721, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  doubleClickInterval: 0.3
-  onDoubleClick:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!222 &8689490011251333666
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2057,9 +2040,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
@@ -2076,7 +2060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 509a43fa587ce524ebe9837f0b378be8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  changeMouseType: 0
+  changeMouseType: 1
   InButton: 0
 --- !u!114 &9044048913553053745
 MonoBehaviour:
@@ -2256,8 +2240,8 @@ GameObject:
   - component: {fileID: 2441306981739141532}
   - component: {fileID: 545166251674420746}
   - component: {fileID: 6612119921627977956}
-  - component: {fileID: 8356294659441100970}
   - component: {fileID: 116830883134121135}
+  - component: {fileID: 2039510897152221582}
   m_Layer: 5
   m_Name: TempCardSlot
   m_TagString: Untagged
@@ -2341,6 +2325,7 @@ MonoBehaviour:
   stackObject: {fileID: 4881063295985015584}
   stackNumText: {fileID: 2098704030238793200}
   maxStackNumImage: {fileID: 5079525843909057303}
+  canvasGroup: {fileID: 2039510897152221582}
   cardCanvasGroup: {fileID: 2762523007511967095}
   moreInfoText: {fileID: 8165112822295029467}
   particleDisplayRect: {fileID: 9169598366305317293}
@@ -2355,18 +2340,6 @@ MonoBehaviour:
   cardAnimator: {fileID: 1024847263152617096}
   tipController: {fileID: 9044048913553053745}
   onlyDisplay: 0
---- !u!225 &8356294659441100970
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8250425150690940461}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!114 &116830883134121135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2380,6 +2353,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCount: 128
+--- !u!225 &2039510897152221582
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8250425150690940461}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &8271824455966453760
 GameObject:
   m_ObjectHideFlags: 0
