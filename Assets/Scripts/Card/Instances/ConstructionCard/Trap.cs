@@ -103,10 +103,10 @@ public class Trap : ConstructionCard
 
         if (caught || stateMachine.currentStateName == "未布置" || Bag is not EnvironmentBag env || env.DeepExploreDropList.IsEmpty) return;
 
-        int probability = innerContents.bag.IsFull ? 3 : 48;
+        float prob = innerContents.bag.IsFull ? 1 / 3f : 1 / 48f;
 
         // 这个回合不抽牌
-        if (Random.Range(0, probability) != 0) return;
+        if (Random.value > prob) return;
 
         // 从所在环境的深度探索列表中抽牌
         List<Card> dropCards = env.DeepExploreDropList.RandomDropTrappable();
@@ -132,7 +132,7 @@ public class Trap : ConstructionCard
             else
                 outcomeCard = card;
 
-            AddCard(outcomeCard, innerContents.bag);
+            AddCard(outcomeCard, innerContents.bag, forceAdd: true);
         }
 
         ShowTip("捉到了好东西");
