@@ -63,7 +63,6 @@ public class CardSlot : MonoBehaviour
         EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
         EventManager.Instance.AddListener<Card>(EventType.PickUpCard, OnCardPickedUp);
         EventManager.Instance.AddListener(EventType.PutDownCard, OnCardPutDown);
-        EventManager.Instance.AddListener(EventType.PlayerMove, OnPlayerMove);
     }
 
     private void OnDisable()
@@ -80,7 +79,6 @@ public class CardSlot : MonoBehaviour
         EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
         EventManager.Instance.RemoveListener<Card>(EventType.PickUpCard, OnCardPickedUp);
         EventManager.Instance.RemoveListener(EventType.PutDownCard, OnCardPutDown);
-        EventManager.Instance.RemoveListener(EventType.PlayerMove, OnPlayerMove);
     }
 
     public void Init(SlotCards slotCards)
@@ -88,11 +86,6 @@ public class CardSlot : MonoBehaviour
         Cards = slotCards;
         slotCards.SetCardSlot(this);
         RefreshDisplay();
-    }
-
-    private void OnPlayerMove()
-    {
-        if (componentSliders.ContainsKey(typeof(CoordinateComponent))) RefreshDisplay();
     }
 
     #region 显示

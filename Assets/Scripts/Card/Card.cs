@@ -279,6 +279,10 @@ public abstract class Card : IComparable<Card>
         //UpdateManager.Instance.CardUpdate.AddListener(Update);
         UpdateManager.Instance.AddCardUpdateListener(ref updateOrder, Update);
 
+        if (coordinate != null)
+            // 坐标组件不空的情况下，监听玩家移动
+            EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
+
         // 初始化内容物
         InitInnerContents();
 
@@ -397,6 +401,7 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
         //UpdateManager.Instance.CardUpdate.RemoveListener(Update);
         UpdateManager.Instance.RemoveCardUpdateListener(updateOrder);
+        EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
 
     protected virtual void OnDestroy() { }
