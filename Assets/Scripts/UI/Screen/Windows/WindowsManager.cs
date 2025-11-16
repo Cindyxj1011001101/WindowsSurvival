@@ -55,18 +55,24 @@ public class WindowsManager : MonoBehaviour
             MouseManager.Instance.Wait();
             GameDataManager.Instance.SaveAllData();
             saveButton.transform.ShowTip("保存成功！", -1.4f);
-            //MySceneManager.LoadScene(0);
         });
 
         quitButton.onClick.AddListener(() =>
         {
-            var window = OpenWindow("Confirm", true) as ConfirmWindow;
+            var window = OpenWindow("Custom", true) as CustomWindow;
             window.SetContent($"退出到开始界面。\n{ColorManager.Alert("未保存的内容将会丢失！！")}\n确认退出吗？");
-            window.onConfirm = () =>
+            window.AddButton("保存并退出", () =>
+            {
+                MouseManager.Instance.Wait();
+                GameDataManager.Instance.SaveAllData();
+                MySceneManager.LoadScene(0);
+            });
+            window.AddButton("直接退出", () =>
             {
                 MouseManager.Instance.Wait();
                 MySceneManager.LoadScene(0);
-            };
+            });
+            window.AddButton("取消", null);
         });
 
         restButton.onClick.AddListener(HandleRestOnTheGround);
@@ -112,13 +118,13 @@ public class WindowsManager : MonoBehaviour
 
             button.onClick.AddListener(() =>
             {
-                var window = (OpenWindow("Confirm", true) as ConfirmWindow);
+                var window = (OpenWindow("Custom", true) as CustomWindow);
                 window.SetContent("是否要应用窗口布局预设" + buttonText + "？"); // 使用局部变量
-                window.onConfirm += () =>
+                window.ConfirmAndCancel(() =>
                 {
                     ApplyPreset(index); // 使用局部变量 index
                     ResetWindowsPositionAndSizeDelta();
-                };
+                });
             });
         }
     }

@@ -11,13 +11,15 @@ public class GarbageDestroyer : ConstructionCard
 
     private void Event_Destroy(CardEvent e)
     {
-        var window = WindowsManager.Instance.OpenWindow("Confirm", true) as ConfirmWindow;
+        var window = WindowsManager.Instance.OpenWindow("Custom", true) as CustomWindow;
         window.SetContent($"{ColorManager.Alert("内容物将被全部销毁！！")}\n确认这样做吗？");
-        window.onConfirm = () =>
+        window.ConfirmAndCancel(() =>
         {
+            MouseManager.Instance.Wait();
             PlaySound("挖掘废料_01", true);
             innerContents.Clear();
-        };
+            ShowTip("内容物已完全销毁");
+        });
     }
 
     private bool Judge_Destroy(out string hint)
