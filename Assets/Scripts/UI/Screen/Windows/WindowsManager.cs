@@ -54,6 +54,7 @@ public class WindowsManager : MonoBehaviour
         {
             MouseManager.Instance.Wait();
             GameDataManager.Instance.SaveAllData();
+            saveButton.transform.ShowTip("保存成功！", -1.4f);
             //MySceneManager.LoadScene(0);
         });
 
