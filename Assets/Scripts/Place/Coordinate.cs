@@ -41,15 +41,12 @@ public class Coordinate
 
         // 中间位置
         var middle = (Location.PlaceData.maxCoord - Location.PlaceData.minCoord) / 2;
-        
-        // 在中间位置靠左，则向左
-        if (Position < middle) return -1;
-        // 在中间位置靠右，则向右
-        if (Position > middle) return 1;
 
-        // 在中间位置
-        // 随机返回一个方向
-        return Random.value > .5f ? 1 : -1;
+        // 在中间位置或中间靠右，则向右
+        if (Position >= middle) return 1;
+
+        // 在中间位置靠左，则向左
+        else return -1;
     }
 
     public void Move(float dist)

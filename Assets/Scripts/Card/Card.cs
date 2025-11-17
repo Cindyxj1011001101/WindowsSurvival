@@ -827,6 +827,6 @@ public abstract class Card : IComparable<Card>
             SoundManager.Instance.PlaySound(sound, randomVolume);
     }
 
-    protected bool IsInSameBag(Card other) => Bag != null && Bag == other.Bag;
+    public bool IsInSameBag(Card other) => Bag != null && Bag == other.Bag;
     #endregion
 }

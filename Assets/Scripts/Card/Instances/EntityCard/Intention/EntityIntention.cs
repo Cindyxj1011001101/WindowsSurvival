@@ -1,16 +1,14 @@
 ﻿using Newtonsoft.Json;
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// 实体意图
 /// </summary>
-public class EntityIntention
+public abstract class EntityIntention
 {
-    [JsonProperty] private int executionCountdown;      // 意图执行倒计时
-    [JsonProperty] private int preparationMinutes;      // 意图执行准备时间
-    [JsonProperty] private object[] cache;              // 缓存意图执行判断时的目标等在执行时需要的数据
-    [JsonIgnore] public UnityAction<object[]> action;   // 意图执行逻辑
+    [JsonProperty] protected int executionCountdown;    // 意图执行倒计时
+    [JsonProperty] protected int preparationMinutes;    // 意图执行准备时间
+    [JsonIgnore] protected EntityCard belongedEntity;   // 所属实体
 
     [JsonIgnore] public int PreparationMinutes => preparationMinutes;
     [JsonIgnore] public bool IsReady => executionCountdown <= 0;
@@ -20,9 +18,13 @@ public class EntityIntention
         this.preparationMinutes = preparationMinutes;
     }
 
-    public void Prepare(object[] cache)
+    public void SetBelongedEntity(EntityCard entity)
     {
-        this.cache = cache;
+        belongedEntity = entity;
+    }
+
+    public void Prepare()
+    {
         executionCountdown = preparationMinutes;
     }
 
@@ -35,9 +37,8 @@ public class EntityIntention
         executionCountdown = Mathf.Max(executionCountdown - 1, 0);
     }
 
-    public void Execute()
-    {
-        action?.Invoke(cache);
-        cache = null;
-    }
+    public abstract string GiveName();
+    public abstract bool CanExecute();
+    public abstract void Execute();
+    public abstract string GetDescription();
 }

@@ -1,7 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public abstract class EntityCard : Card, IEntity
 {
@@ -12,21 +10,12 @@ public abstract class EntityCard : Card, IEntity
     protected string deadDrops => entity.deadDrops;
     protected BehavioralTendency behavioralTendency => entity.behavioralTendency;
 
-    [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;                 // 坐标
-    [JsonProperty] protected Dictionary<string, EntityIntention> intentions = new();    // 所有可能的意图
-    [JsonProperty] private string currentIntention;                                     // 当前意图
-    [JsonProperty] private int aiRefreshCooldown = 0;                                   // ai刷新冷却
-    [JsonProperty] private EntityAggroCollection aggroCollection = new();               // 仇恨列表
+    [JsonProperty] private EntityIntention currentIntention = null;             // 当前意图
+    [JsonProperty] private int aiRefreshCooldown = 0;                           // ai刷新冷却
+    [JsonProperty] private EntityAggroCollection aggroCollection = new();       // 仇恨列表
 
-    protected EntityIntention CurrentIntention
-    {
-        get
-        {
-            if (string.IsNullOrEmpty(currentIntention) || !intentions.ContainsKey(currentIntention)) return null;
-
-            return intentions[currentIntention];
-        }
-    }
+    [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;         // 坐标
+    [JsonIgnore] public EntityIntention CurrentIntention => currentIntention;   // 当前意图
 
     public virtual void TakeDamage(float damage, IEntity damageDealer) => entity.TakeDamage(damage, damageDealer);
 
@@ -62,9 +51,6 @@ public abstract class EntityCard : Card, IEntity
 
     protected override void OnInit()
     {
-        // 注册意图
-        RegisterIntentions();
-
         // 记录到全局数据中
         GlobalDataManager.Instance.CreateEntity(this);
 
@@ -75,7 +61,7 @@ public abstract class EntityCard : Card, IEntity
         aggroCollection.Init(this);
 
         // 刷新冷却为0，且当前意图为空，说明是第一次生成
-        if (aiRefreshCooldown == 0 && string.IsNullOrEmpty(currentIntention))
+        if (aiRefreshCooldown == 0 && currentIntention == null)
         {
             // 第一次生成时获取一下意图
             TryGetNewIntention();
@@ -87,7 +73,6 @@ public abstract class EntityCard : Card, IEntity
 
     protected override void OnDestroy()
     {
-        intentions.Clear();
         aggroCollection.Clear();
         GlobalDataManager.Instance.DestroyEntity(this);
         UpdateManager.Instance.RemoveEntityUpdateListener(updateOrder);
@@ -142,21 +127,7 @@ public abstract class EntityCard : Card, IEntity
     /// <summary>
     /// 得到优先级最高的意图
     /// </summary>
-    protected abstract string GetHighestPriorityIntention(out object[] cache);
-
-    /// <summary>
-    /// 注册该实体的所有可能意图
-    /// </summary>
-    protected abstract void RegisterIntentions();
-
-    protected void AddIntention(string name, int preparationMinutes, UnityAction<object[]> action)
-    {
-        if (!intentions.ContainsKey(name))
-        {
-            intentions.Add(name, new(preparationMinutes));
-        }
-        intentions[name].action = action;
-    }
+    protected abstract EntityIntention GetHighestPriorityIntention();
 
     /// <summary>
     /// 更新AI逻辑
@@ -198,10 +169,10 @@ public abstract class EntityCard : Card, IEntity
     private void TryGetNewIntention()
     {
         // 获取最高优先级意图
-        currentIntention = GetHighestPriorityIntention(out var cache);
+        currentIntention = GetHighestPriorityIntention();
 
         // 没有可执行的意图
-        if (CurrentIntention == null)
+        if (currentIntention == null)
         {
             // 重置ai冷却
             aiRefreshCooldown = entity.aiRefreshInterval;
@@ -210,7 +181,7 @@ public abstract class EntityCard : Card, IEntity
         else
         {
             // 开始准备意图
-            CurrentIntention.Prepare(cache);
+            currentIntention.Prepare();
         }
     }
 
@@ -220,11 +191,11 @@ public abstract class EntityCard : Card, IEntity
     private void UpdateCurrentIntention()
     {
         // 更新意图执行倒计时
-        CurrentIntention.UpdateExecutionCountdown();
-        if (CurrentIntention.IsReady)
+        currentIntention.UpdateExecutionCountdown();
+        if (currentIntention.IsReady)
         {
             // 倒计时完成，执行意图
-            CurrentIntention.Execute();
+            currentIntention.Execute();
             // 刷新意图
             TryGetNewIntention();
         }
@@ -293,8 +264,26 @@ public abstract class EntityCard : Card, IEntity
     public float DistanceTo(IEntity other) => coordinate.DistanceTo(other);
     public bool IsInSameLocation(IEntity other) => coordinate.IsInSameLocation(other);
     public void Move(float dist) => coordinate.Move(dist);
-    public void MoveTowards(IEntity other, float dist, bool stopAfterReach = true) => coordinate.MoveTowards(other, dist, stopAfterReach);
-    public void MoveAwayFrom(IEntity other, float dist) => coordinate.MoveAwayFrom(other, dist);
+    /// <summary>
+    /// 估计移动结束位置
+    /// </summary>
+    public float EstimateMoveEndPosition(IEntity target, float moveDist, bool moveClose, bool stopAfterReach = true)
+    {
+        var distToTarget = DistanceTo(target); // 目标距离
+        var moveDir = Coordinate.DirectionTo(target.Coordinate); // 目标方向
+
+        if (!moveClose)
+            moveDir = -moveDir;
+
+        if (stopAfterReach)
+            moveDist = Mathf.Min(distToTarget, moveDist);
+
+        float dest = Coordinate.Position + moveDist * moveDir;
+
+        dest = Mathf.Clamp(dest, Coordinate.Location.PlaceData.minCoord, Coordinate.Location.PlaceData.maxCoord);
+
+        return dest;
+    }
     #endregion
 
     #region 行为
@@ -302,18 +291,35 @@ public abstract class EntityCard : Card, IEntity
     /// 普通攻击
     /// </summary>
     /// <param name="target">目标</param>
-    /// <param name="atkMultiplier">攻击倍率</param>
-    protected void NormalAttack(IEntity target, float atkMultiplier = 1.0f)
+    /// <param name="dmg">伤害值</param>
+    public void SingleAttack(IEntity target, float dmg)
     {
-        target.TakeDamage(atk * atkMultiplier, this);
+        target.TakeDamage(dmg, this);
     }
 
-    protected void ChaseTargetAcrossLocation(IEntity target, float successProb = 0.1f)
+    public void ChaseAcrossLocation(IEntity target, float successProb = 0.1f)
     {
         if (Random.value > successProb) return;
 
         SlotCards.RemoveCard(this);
         GameManager.Instance.AddCardsToTargetEnv(target.Coordinate.Location, this);
+    }
+
+    public void MoveTowards(IEntity other, float dist, bool stopAfterReach = true) => coordinate.MoveTowards(other, dist, stopAfterReach);
+
+    public void MoveAwayFrom(IEntity other, float dist) => coordinate.MoveAwayFrom(other, dist);
+
+    public void EscapeFrom(IEntity entity, float dist)
+    {
+        // 向远离entity的方向移动
+        MoveAwayFrom(entity, dist);
+        // 如果移动到了边界，且不在室内
+        if (Coordinate.IsAtBoundary && !(Bag as EnvironmentBag).PlaceData.isIndoor)
+        {
+            // 消失
+            DestroyThis();
+            ShowTip($"{CardName}逃走了");
+        }
     }
     #endregion
 }
