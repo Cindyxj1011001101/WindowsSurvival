@@ -582,7 +582,7 @@ public class CardState
     public string displayName;  // 对外显示的名称
     public string imagePath;    // 图片路径
     public bool isAnim;         // 是否为动画
-    public bool isBigIcon;          // 是否是大图
+    public bool isBigIcon;      // 是否是大图
 
     public CardState() { }
 

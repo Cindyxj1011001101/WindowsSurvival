@@ -22,8 +22,8 @@ public class FuelGenerator : ConstructionCard
 
         var states = new List<CardState>()
         {
-            new ("未点燃", "18"),
-            new ("已点燃", "18", true),
+            new ("未点燃", "26"),
+            new ("已点燃", "26", true, true),
         };
         stateMachine = new StateMachineComponent("未点燃", states);
         AddComponent(stateMachine);

@@ -178,14 +178,26 @@ public class CardSlot : MonoBehaviour
     private void DisplayCardImage(Sprite sprite, bool isBigIcon)
     {
         iconImage.sprite = sprite;
-        Vector2 offset = isBigIcon ? new Vector2(16, -16) : new Vector2(30, -30);
-        (iconImage.transform as RectTransform).anchoredPosition = offset;
-        // 设置原始大小
-        iconImage.SetNativeSize();
+        float offset;
+        float posY;
+        float imgSize;
 
-        // 设置组件布局的中心点
-        var posY = isBigIcon ? 57 : 65;
+        if (isBigIcon)
+        {
+            posY = 57;
+            imgSize = 92;
+            offset = 16;
+        }
+        else
+        {
+            posY = 65;
+            imgSize = 64;
+            offset = 30;
+        }
+
+        iconImage.rectTransform.anchoredPosition = new Vector2(offset, -offset);
         middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, posY);
+        iconImage.rectTransform.sizeDelta = new(imgSize, imgSize);
     }
 
     private void DisplayStackNum(int stackNum, int maxStackNum, bool displayStack)
@@ -371,6 +383,8 @@ public class CardSlot : MonoBehaviour
             cardAnimator.Play("");
             cardAnimator.enabled = false;
         }
+        // 组件摆放的位置同小图
+        middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, 57);
     }
 
     /// <summary>
