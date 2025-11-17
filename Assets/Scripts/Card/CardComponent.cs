@@ -578,18 +578,20 @@ public class CookComponent : CardComponent
 #region 状态机组件
 public class CardState
 {
-    public string name; // 状态名称
-    public string displayName; // 对外显示的名称
-    public string imagePath; // 图片路径
-    public bool isAnim; // 是否为动画
+    public string name;         // 状态名称
+    public string displayName;  // 对外显示的名称
+    public string imagePath;    // 图片路径
+    public bool isAnim;         // 是否为动画
+    public bool isBigIcon;          // 是否是大图
 
     public CardState() { }
 
-    public CardState(string name, string imagePath, bool isAnim = false)
+    public CardState(string name, string imagePath, bool isAnim = false, bool isBig = false)
     {
-        this.name = this.displayName = name;
+        this.name = displayName = name;
         this.imagePath = imagePath;
         this.isAnim = isAnim;
+        this.isBigIcon = isBig;
     }
 }
 

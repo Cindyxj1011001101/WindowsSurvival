@@ -75,7 +75,7 @@ public abstract class Card : IComparable<Card>
     {
         get
         {
-            if (TryGetComponent<StateMachineComponent>(out var stateMachine) && !string.IsNullOrEmpty(stateMachine.CurrentState.imagePath))
+            if (stateMachine != null && !string.IsNullOrEmpty(stateMachine.CurrentState.imagePath))
             {
                 return CardFactory.GetCardImage(CardId, stateMachine.CurrentState.imagePath);
             }
@@ -86,7 +86,20 @@ public abstract class Card : IComparable<Card>
         }
     }
 
-    [JsonIgnore] public bool IsBigIcon => CardFactory.GetIsBigIcon(CardId);
+    [JsonIgnore] public bool IsBigIcon
+    {
+        get
+        {
+            if (stateMachine != null)
+            {
+                return stateMachine.CurrentState.isBigIcon;
+            }
+            else
+            {
+                return CardFactory.GetIsBigIcon(CardId);
+            }
+        }
+    }
 
     [JsonIgnore] public virtual bool HasLoopSound => false;
 
