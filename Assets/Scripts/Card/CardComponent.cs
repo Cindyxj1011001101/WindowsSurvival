@@ -1039,6 +1039,9 @@ public class EntityComponent : ContinuousValueComponent
         UnityEngine.Debug.Log($"{BelongedCard.CardName}受到伤害！伤害值：{damage}，伤害者：{damageDealer}");
 
         AddValue(-damage);
+
+        BelongedCard.DisplayComponentValueChange(GetType(), -damage);
+
         if (value <= 0)
         {
             ShowTip($"{BelongedCard.CardName}死亡了");
