@@ -1,16 +1,16 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// ÒÆ¶¯¼¤Àø
+/// ç§»åŠ¨æ¿€åŠ±
 /// </summary>
 public class MovementIncentive : GameEvent
 {
-    private const float SAN_THRESHOLD = 0.85f; // ¾«Éñ×´Ì¬ãĞÖµ
+    private const float SAN_THRESHOLD = 0.85f; // ç²¾ç¥çŠ¶æ€é˜ˆå€¼
 
     public override string GetDetails()
     {
-        return $"ÂóÂó×î½ü¾«ÉñºÜºÃ£¬Á¬ÓÎÓ¾ºÍÅÜ²½¶¼±ä¿ìÁË²»ÉÙ¡£\n\n" +
-               $"ÔÚ½ÓÏÂÀ´µÄÒ»¶ÎÊ±¼äÀï£¬ÂóÂó{ColorManager.Colorize("-50%", ColorManager.Green)}ÒÆ¶¯Ê±³¤¡£";
+        return $"éº¦éº¦æœ€è¿‘ç²¾ç¥å¾ˆå¥½ï¼Œè¿æ¸¸æ³³å’Œè·‘æ­¥éƒ½å˜å¿«äº†ä¸å°‘ã€‚\n\n" +
+               $"åœ¨æ¥ä¸‹æ¥çš„ä¸€æ®µæ—¶é—´é‡Œï¼Œéº¦éº¦{ColorManager.Colorize("-50%", ColorManager.Green)}ç§»åŠ¨æ—¶é•¿ã€‚";
     }
 
     protected override bool CanTriggerThisEvent()
@@ -22,11 +22,11 @@ public class MovementIncentive : GameEvent
     protected override void OnTrigger()
     {
         SetRemainingMinutes(Random.Range(120, 1441));
-        MoveExploreManager.Instance.AddMoveExtraEffect("ÒÆ¶¯¼¤Àø", -0.5f, null);
+        MoveExploreManager.Instance.AddMoveExtraEffect("ç§»åŠ¨æ¿€åŠ±", -0.5f, null);
     }
 
     protected override void OnEnd()
     {
-        MoveExploreManager.Instance.RemoveMoveExtraEffect("ÒÆ¶¯¼¤Àø");
+        MoveExploreManager.Instance.RemoveMoveExtraEffect("ç§»åŠ¨æ¿€åŠ±");
     }
 }

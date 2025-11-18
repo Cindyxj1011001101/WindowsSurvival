@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Êó»¼
+/// é¼ æ‚£
 /// </summary>
 public class RatInfestation : GameEvent
 {
@@ -12,9 +12,9 @@ public class RatInfestation : GameEvent
 
     public override string GetDetails()
     {
-        return $"Ò»µÀºÚÓ°ÉÁ¹ı£¬µØÉÏµÄÊ³Îï¾Í²»¼ûÁË¡£\n\n" +
-               $"Ò²Ğí±ğ°ÑÊ³Îï·ÅÔÚµØÉÏ»á±È½ÏºÃ¡£\n\n" +
-               $"ËğÊ§ÁËÕâĞ©¶«Î÷: " + lostCardsStr;
+        return $"ä¸€é“é»‘å½±é—ªè¿‡ï¼Œåœ°ä¸Šçš„é£Ÿç‰©å°±ä¸è§äº†ã€‚\n\n" +
+               $"ä¹Ÿè®¸åˆ«æŠŠé£Ÿç‰©æ”¾åœ¨åœ°ä¸Šä¼šæ¯”è¾ƒå¥½ã€‚\n\n" +
+               $"æŸå¤±äº†è¿™äº›ä¸œè¥¿: " + lostCardsStr;
     }
 
     protected override bool CanTriggerThisEvent()
@@ -25,18 +25,18 @@ public class RatInfestation : GameEvent
 
     protected override void OnTrigger()
     {
-        var destroyCount = Random.Range(2, 8); // Ëæ»úÆÆ»µ2~7ÕÅÊ³Îï¿¨ÅÆ
-        destroyCount = Mathf.Min(destroyCount, foodCards.Count); // ²»³¬¹ıÏÖÓĞÊ³Îï¿¨ÅÆÊıÁ¿
+        var destroyCount = Random.Range(2, 8); // éšæœºç ´å2~7å¼ é£Ÿç‰©å¡ç‰Œ
+        destroyCount = Mathf.Min(destroyCount, foodCards.Count); // ä¸è¶…è¿‡ç°æœ‰é£Ÿç‰©å¡ç‰Œæ•°é‡
 
         var destroyedCards = new Dictionary<string, int>();
 
         for (int i = 0; i < destroyCount; i++)
         {
-            // Ëæ»úÑ¡ÔñÒ»ÕÅÊ³Îï¿¨ÅÆ½øĞĞÆÆ»µ
+            // éšæœºé€‰æ‹©ä¸€å¼ é£Ÿç‰©å¡ç‰Œè¿›è¡Œç ´å
             var cardToDestroy = foodCards.GetRandomly(false);
             cardToDestroy.DestroyThis();
 
-            // ¼ÇÂ¼±»ÆÆ»µµÄ¿¨ÅÆÊıÁ¿
+            // è®°å½•è¢«ç ´åçš„å¡ç‰Œæ•°é‡
             if (!destroyedCards.ContainsKey(cardToDestroy.CardName))
                 destroyedCards.Add(cardToDestroy.CardName, 0);
             else
@@ -46,16 +46,16 @@ public class RatInfestation : GameEvent
         lostCardsStr = "";
         foreach (var kvp in destroyedCards)
         {
-            lostCardsStr += $"{kvp.Key} x {kvp.Value + 1}¡¢";
+            lostCardsStr += $"{kvp.Key} x {kvp.Value + 1}ã€";
         }
 
-        lostCardsStr = lostCardsStr.TrimEnd('¡¢');
+        lostCardsStr = lostCardsStr.TrimEnd('ã€');
         foodCards.Clear();
 
-        // 50%¸ÅÂÊÉú³ÉÒ»ÕÅÀÏÊó¿¨ÅÆ
+        // 50%æ¦‚ç‡ç”Ÿæˆä¸€å¼ è€é¼ å¡ç‰Œ
         if (Random.value < 0.5f)
         {
-            GameManager.Instance.AddCardsToTargetEnv(GameManager.Instance.CurEnvironmentBag, CardFactory.CreateCard("ÀÏÊó"));
+            GameManager.Instance.AddCardsToTargetEnv(GameManager.Instance.CurEnvironmentBag, CardFactory.CreateCard("è€é¼ "));
         }
     }
 }

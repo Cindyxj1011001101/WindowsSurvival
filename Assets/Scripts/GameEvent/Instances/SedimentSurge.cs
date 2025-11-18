@@ -1,7 +1,7 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// ÄàÉ³·­Ó¿
+/// æ³¥æ²™ç¿»æ¶Œ
 /// </summary>
 public class SedimentSurge : GameEvent
 {
@@ -9,9 +9,9 @@ public class SedimentSurge : GameEvent
 
     public override string GetDetails()
     {
-        return $"¶´Ñ¨ÖĞµÄÄàÉ³¿ªÊ¼Ó¿¶¯£¬Ê¹µÃ¶´Ñ¨ÄÜ¼û¶È±äµÃºÜµÍ¡£\n\n" +
-               $"½öÓÃÎ¢Èõ¹âÕÕµÄÕÕÃ÷Éè±¸ÎŞ·¨¿´ÇåÎïÌå£¬¿´À´Ö»ÄÜÔİÊ±ÃşºÚÁË¡£\n\n" +
-               $"ÊÜµ½Ó°ÏìµÄµØµã: " + ColorManager.Colorize(affectedPlacesStr, ColorManager.Yellow);
+        return $"æ´ç©´ä¸­çš„æ³¥æ²™å¼€å§‹æ¶ŒåŠ¨ï¼Œä½¿å¾—æ´ç©´èƒ½è§åº¦å˜å¾—å¾ˆä½ã€‚\n\n" +
+               $"ä»…ç”¨å¾®å¼±å…‰ç…§çš„ç…§æ˜è®¾å¤‡æ— æ³•çœ‹æ¸…ç‰©ä½“ï¼Œçœ‹æ¥åªèƒ½æš‚æ—¶æ‘¸é»‘äº†ã€‚\n\n" +
+               $"å—åˆ°å½±å“çš„åœ°ç‚¹: " + ColorManager.Colorize(affectedPlacesStr, ColorManager.Yellow);
     }
 
     protected override bool CanTriggerThisEvent()
@@ -21,20 +21,20 @@ public class SedimentSurge : GameEvent
 
     protected override void OnTrigger()
     {
-        // ¼ÆËãÍşĞ²ÊÂ¼şÇ¿¶È
+        // è®¡ç®—å¨èƒäº‹ä»¶å¼ºåº¦
         var threatIntensity = CalculateThreatIntensity();
-        // ¼ÆËã³ÖĞøÊ±¼ä
+        // è®¡ç®—æŒç»­æ—¶é—´
         SetRemainingMinutes(Mathf.CeilToInt((.75f + threatIntensity / 100) * Random.Range(60, 601)));
 
         affectedPlacesStr = GameManager.Instance.CurEnvironmentBag.PlaceData.placeName;
 
-        // µØµã¹âÕÕ-95
-        GameManager.Instance.CurEnvironmentBag.SetBrightnessConstValue("ÄàÉ³Ó¿¶¯", -95);
+        // åœ°ç‚¹å…‰ç…§-95
+        GameManager.Instance.CurEnvironmentBag.SetBrightnessConstValue("æ³¥æ²™æ¶ŒåŠ¨", -95);
     }
 
     protected override void OnEnd()
     {
-        // ÒÆ³ıµØµã¹âÕÕ-95
-        GameManager.Instance.CurEnvironmentBag.SetBrightnessConstValue("ÄàÉ³Ó¿¶¯", 0);
+        // ç§»é™¤åœ°ç‚¹å…‰ç…§-95
+        GameManager.Instance.CurEnvironmentBag.SetBrightnessConstValue("æ³¥æ²™æ¶ŒåŠ¨", 0);
     }
 }

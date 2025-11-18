@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 
 /// <summary>
-/// Ò»Ñõ»¯Ì¼±¬Õ¨
+/// ä¸€æ°§åŒ–ç¢³çˆ†ç‚¸
 /// </summary>
 public class COExplosion : GameEvent
 {
-    private const float CO_LEVEL_THRESHOLD = 75f; // Ò»Ñõ»¯Ì¼Å¨¶ÈãĞÖµ
+    private const float CO_LEVEL_THRESHOLD = 75f; // ä¸€æ°§åŒ–ç¢³æµ“åº¦é˜ˆå€¼
 
     private List<Card> fireSources = new();
 
@@ -13,10 +13,10 @@ public class COExplosion : GameEvent
 
     public override string GetDetails()
     {
-        return "ÂóÂóÔÚÓĞ×Å¸ßÅ¨¶ÈÒ»Ñõ»¯Ì¼µÄÊÒÄÚµã»ğ£¬ÕæÊÇÓÂ¸Ò¡£\n\n" +
-               "×ÜÖ®£¬µØµãÖĞµÄ»ğÔ´±¬Õ¨ÁË£¬ÂóÂóÒÔ¼°¸ÃµØµãÄÚµÄËùÓĞÉúÎï¶¼±»Õ¨µÃÌåÎŞÍê·ô¡£\n\n" +
-               "µØµãÀïµÄÒ»Ñõ»¯Ì¼ºÍÑõÆø¼õÉÙÁË¡£\n\n" +
-               "ÕâĞ©¶«Î÷±»Õ¨»ÙÁË: " + destroyedCardsStr;
+        return "éº¦éº¦åœ¨æœ‰ç€é«˜æµ“åº¦ä¸€æ°§åŒ–ç¢³çš„å®¤å†…ç‚¹ç«ï¼ŒçœŸæ˜¯å‹‡æ•¢ã€‚\n\n" +
+               "æ€»ä¹‹ï¼Œåœ°ç‚¹ä¸­çš„ç«æºçˆ†ç‚¸äº†ï¼Œéº¦éº¦ä»¥åŠè¯¥åœ°ç‚¹å†…çš„æ‰€æœ‰ç”Ÿç‰©éƒ½è¢«ç‚¸å¾—ä½“æ— å®Œè‚¤ã€‚\n\n" +
+               "åœ°ç‚¹é‡Œçš„ä¸€æ°§åŒ–ç¢³å’Œæ°§æ°”å‡å°‘äº†ã€‚\n\n" +
+               "è¿™äº›ä¸œè¥¿è¢«ç‚¸æ¯äº†: " + destroyedCardsStr;
     }
 
     protected override bool CanTriggerThisEvent()
@@ -28,32 +28,32 @@ public class COExplosion : GameEvent
         var coLevel = value.CurValue;
         fireSources = env.FindCards(c => c.TryGetComponent<FuelStorageComponent>(out var fuelStorage) && fuelStorage.isBurning);
 
-        return coLevel >= CO_LEVEL_THRESHOLD && !fireSources.IsNullOrEmpty(); // µ±Ò»Ñõ»¯Ì¼Å¨¶È¸ßÇÒÓĞÈ¼ÉÕÔ´Ê±£¬ÊÂ¼ş¿ÉÒÔ´¥·¢
+        return coLevel >= CO_LEVEL_THRESHOLD && !fireSources.IsNullOrEmpty(); // å½“ä¸€æ°§åŒ–ç¢³æµ“åº¦é«˜ä¸”æœ‰ç‡ƒçƒ§æºæ—¶ï¼Œäº‹ä»¶å¯ä»¥è§¦å‘
     }
 
     protected override void OnTrigger()
     {
         var env = GameManager.Instance.CurEnvironmentBag;
-        // ¼õÉÙ70ÑõÆø
+        // å‡å°‘70æ°§æ°”
         env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, -70f);
-        // ¼õÉÙ70Ò»Ñõ»¯Ì¼Å¨¶È
+        // å‡å°‘70ä¸€æ°§åŒ–ç¢³æµ“åº¦
         env.ChangeEnvironmentState(EnvironmentStateEnum.COLevel, -70f);
-        // Ôö¼Ó250ÌÛÍ´
+        // å¢åŠ 250ç–¼ç—›
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.PainLevel, 250f);
-        // ËùÓĞÊµÌå¼õÉÙ60ÉúÃü
+        // æ‰€æœ‰å®ä½“å‡å°‘60ç”Ÿå‘½
         var entites = new List<IEntity>(GameManager.Instance.CurEnvironmentBag.AllEntities);
         foreach (var entity in entites)
         {
-            // Íæ¼Òµ¥¶À´¦Àí
+            // ç©å®¶å•ç‹¬å¤„ç†
             if (entity is Player)
             {
-                // Íæ¼Ò¼õÉÙ30ÉúÃü
+                // ç©å®¶å‡å°‘30ç”Ÿå‘½
                 entity.TakeDamage(-30f, null);
                 continue;
             }
             entity.TakeDamage(-60f, null);
         }
-        // É¾³ıËùÓĞ»ğÔ´µÄÄÚÈİÎï
+        // åˆ é™¤æ‰€æœ‰ç«æºçš„å†…å®¹ç‰©
         destroyedCardsStr = "";
         foreach (var fireSource in fireSources)
         {
@@ -61,14 +61,14 @@ public class COExplosion : GameEvent
             {
                 inn.Clear();
             }
-            // »ğÔ´±»²ğ»Ù£¬µôÂäµôÂäÎï
+            // ç«æºè¢«æ‹†æ¯ï¼Œæ‰è½æ‰è½ç‰©
             if (fireSource is ConstructionCard con)
             {
                 con.DemolishThis(null);
             }
-            destroyedCardsStr += $"{fireSource.CardName}¡¢";
+            destroyedCardsStr += $"{fireSource.CardName}ã€";
         }
-        destroyedCardsStr = destroyedCardsStr.TrimEnd('¡¢');
+        destroyedCardsStr = destroyedCardsStr.TrimEnd('ã€');
         fireSources.Clear();
     }
 }

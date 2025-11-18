@@ -1,21 +1,21 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// ºãĞÇÊ³
+/// æ’æ˜Ÿé£Ÿ
 /// </summary>
 public class StellarEclipse : GameEvent
 {
     public override string GetDetails()
     {
-        return $"ºÚÉ«´ÓÌì¿ÕÖĞºãĞÇµÄÒ»½ÇÂşÉÏÀ´£¬½¥½¥ÍÌÊÉÁË¹â£¬ºãĞÇÊ³À´ÁË¡£\n\n" +
-               $"ÔÚ½ÓÏÂÁËµÄÊıĞ¡Ê±ÉõÖÁÊıÌìÀï½«²»»áÓĞÈÎºÎºãĞÇ¹âÕÕ¡£";
+        return $"é»‘è‰²ä»å¤©ç©ºä¸­æ’æ˜Ÿçš„ä¸€è§’æ¼«ä¸Šæ¥ï¼Œæ¸æ¸åå™¬äº†å…‰ï¼Œæ’æ˜Ÿé£Ÿæ¥äº†ã€‚\n\n" +
+               $"åœ¨æ¥ä¸‹äº†çš„æ•°å°æ—¶ç”šè‡³æ•°å¤©é‡Œå°†ä¸ä¼šæœ‰ä»»ä½•æ’æ˜Ÿå…‰ç…§ã€‚";
     }
 
     protected override void OnTrigger()
     {
-        // ¼ÆËãÍşĞ²ÊÂ¼şÇ¿¶È
+        // è®¡ç®—å¨èƒäº‹ä»¶å¼ºåº¦
         var threatIntensity = CalculateThreatIntensity();
-        // ¼ÆËã³ÖĞøÊ±¼ä
+        // è®¡ç®—æŒç»­æ—¶é—´
         SetRemainingMinutes(Mathf.CeilToInt((.75f + threatIntensity / 100) * Random.Range(100, 3601)));
     }
 }

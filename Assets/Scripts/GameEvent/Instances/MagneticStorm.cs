@@ -1,21 +1,21 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// ĞĞĞÇ´Å±©
+/// è¡Œæ˜Ÿç£æš´
 /// </summary>
 public class MagneticStorm : GameEvent
 {
     public override string GetDetails()
     {
-        return $"ËùÓĞµÄµçÆ÷Í»È»Í£Ö¹ÁËÔË×÷£¬ÂóÂóËµ¿ÉÄÜÊÇÒòÎªĞĞĞÇ´Å±©¡£\n\n" +
-               $"×ÜÖ®£¬½ÓÏÂÀ´µÄÒ»¶ÎÊ±¼äÀï£¬ËùÓĞµçÆ÷¶¼ÎŞ·¨Ê¹ÓÃÁË¡£µ«Ô¸´Å±©²»»á³ÖĞøÌ«¾Ã¡£";
+        return $"æ‰€æœ‰çš„ç”µå™¨çªç„¶åœæ­¢äº†è¿ä½œï¼Œéº¦éº¦è¯´å¯èƒ½æ˜¯å› ä¸ºè¡Œæ˜Ÿç£æš´ã€‚\n\n" +
+               $"æ€»ä¹‹ï¼Œæ¥ä¸‹æ¥çš„ä¸€æ®µæ—¶é—´é‡Œï¼Œæ‰€æœ‰ç”µå™¨éƒ½æ— æ³•ä½¿ç”¨äº†ã€‚ä½†æ„¿ç£æš´ä¸ä¼šæŒç»­å¤ªä¹…ã€‚";
     }
 
     protected override void OnTrigger()
     {
-        // ¼ÆËãÍşĞ²ÊÂ¼şÇ¿¶È
+        // è®¡ç®—å¨èƒäº‹ä»¶å¼ºåº¦
         var threatIntensity = CalculateThreatIntensity();
-        // ¼ÆËã³ÖĞøÊ±¼ä
+        // è®¡ç®—æŒç»­æ—¶é—´
         SetRemainingMinutes(Mathf.CeilToInt((.75f + threatIntensity / 100) * Random.Range(190, 4501)));
     }
 }

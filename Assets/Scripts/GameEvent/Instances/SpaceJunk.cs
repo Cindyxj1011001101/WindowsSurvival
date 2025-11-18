@@ -1,22 +1,22 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Ì«¿ÕÀ¬»ø
+/// å¤ªç©ºåƒåœ¾
 /// </summary>
 public class SpaceJunk : GameEvent
 {
     private static DropList dropList = new(
-        new Drop(35, "·Ï½ğÊô", 5, 10),
-        new Drop(35, "ÈÍĞÔ½º¹Ü", 3, 8),
-        new Drop(4, "ÑõÖò", 1, 3),
-        new Drop(20, "È¼ËØ", 2, 6),
-        new Drop(5, "Ğ¡¿éÉúÈâ", 2, 5),
-        new Drop(4, "µç³Ø", 1, 3),
-        new Drop(1, "¸Ö´¸", 1),
-        new Drop(3, "·ÏÌúµ¶", 1),
-        new Drop(1, "Ìú³İÍ­ÑÀ²Í", 1),
-        new Drop(1, "Õ¨³æ´®", 1)
+        new Drop(35, "åºŸé‡‘å±", 5, 10),
+        new Drop(35, "éŸ§æ€§èƒ¶ç®¡", 3, 8),
+        new Drop(4, "æ°§çƒ›", 1, 3),
+        new Drop(20, "ç‡ƒç´ ", 2, 6),
+        new Drop(5, "å°å—ç”Ÿè‚‰", 2, 5),
+        new Drop(4, "ç”µæ± ", 1, 3),
+        new Drop(1, "é’¢é”¤", 1),
+        new Drop(3, "åºŸé“åˆ€", 1),
+        new Drop(1, "é“é½¿é“œç‰™é¤", 1),
+        new Drop(1, "ç‚¸è™«ä¸²", 1)
         )
     { disposable = true };
 
@@ -30,26 +30,26 @@ public class SpaceJunk : GameEvent
 
     public override string GetDetails()
     {
-        return $"Ò»ÍÅ¾Ş´óµÄÌ«¿ÕÀ¬»ø°ü¹ü´ÓÌì¶ø½µ£¬Ëµ²»¶¨ÀïÃæÄÜÕÒµ½Ğ©ÓĞÓÃµÄÎï×Ê¡£\n\n" +
-               $"ÆäÊµËüÃÇ²»Ò»¶¨ÊÇÀ¬»ø£¬»òĞíÊÇ»õÎï£¬µ«ÂóÂó¼á³ÖÕâÃ´Ëµ£¬·´ÕıÒ²Ã»ÈËÈÏÁì¡£\n\n" +
-               $"°ü¹ü½µÂäµÄµØµã: " + ColorManager.Colorize(landedPlaceStr, ColorManager.Cyan);
+        return $"ä¸€å›¢å·¨å¤§çš„å¤ªç©ºåƒåœ¾åŒ…è£¹ä»å¤©è€Œé™ï¼Œè¯´ä¸å®šé‡Œé¢èƒ½æ‰¾åˆ°äº›æœ‰ç”¨çš„ç‰©èµ„ã€‚\n\n" +
+               $"å…¶å®å®ƒä»¬ä¸ä¸€å®šæ˜¯åƒåœ¾ï¼Œæˆ–è®¸æ˜¯è´§ç‰©ï¼Œä½†éº¦éº¦åšæŒè¿™ä¹ˆè¯´ï¼Œåæ­£ä¹Ÿæ²¡äººè®¤é¢†ã€‚\n\n" +
+               $"åŒ…è£¹é™è½çš„åœ°ç‚¹: " + ColorManager.Colorize(landedPlaceStr, ColorManager.Cyan);
     }
 
     protected override void OnTrigger()
     {
-        // Ëæ»úÒ»¸öµØµã
+        // éšæœºä¸€ä¸ªåœ°ç‚¹
         var placeType = candidatePlaces[Random.Range(0, candidatePlaces.Count)];
         var env = GameManager.Instance.EnvironmentBags[placeType];
 
         landedPlaceStr = env.PlaceName;
 
-        var junkPackage = CardFactory.CreateCard("À¬»ø°ü¹ü");
+        var junkPackage = CardFactory.CreateCard("åƒåœ¾åŒ…è£¹");
         junkPackage.TryGetComponent<InnerContentsComponent>(out var innerContents);
 
-        // ¿½±´µôÂäÁĞ±í
+        // æ‹·è´æ‰è½åˆ—è¡¨
         var actualDropList = JsonManager.DeepCopy(dropList);
 
-        // Ëæ»ú³éÈ¡2~4ÖÖÎï×Ê
+        // éšæœºæŠ½å–2~4ç§ç‰©èµ„
         var count = Random.Range(2, 5);
         for (int i = 0; i < count; i++)
         {
@@ -59,7 +59,7 @@ public class SpaceJunk : GameEvent
             }
         }
 
-        // µôÂäµ½µØµã
+        // æ‰è½åˆ°åœ°ç‚¹
         GameManager.Instance.AddCardsToTargetEnv(env, junkPackage);
     }
 }
