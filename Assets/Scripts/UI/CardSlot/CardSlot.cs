@@ -384,7 +384,7 @@ public class CardSlot : MonoBehaviour
             cardAnimator.enabled = false;
         }
         // 组件摆放的位置同小图
-        middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, 57);
+        middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, 65);
     }
 
     /// <summary>
