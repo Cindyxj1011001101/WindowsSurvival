@@ -19,7 +19,7 @@ public class GameEventManager : IManager
     private const float MAX_TREND_VALUE = 4f;
     private const float MIN_TREND_VALUE = -4f;
 
-    private const float EVENT_TRIGGER_PROB = 96f / 96f; // 每次结算触发事件的基础概率（约1.04%），期望触发间隔为24小时
+    private const float EVENT_TRIGGER_PROB = 1f / 96f; // 每次结算触发事件的基础概率（约1.04%），期望触发间隔为24小时
 
     public InvasionEventConfig InvasionEventConfig { get; private set; } = new();
 
