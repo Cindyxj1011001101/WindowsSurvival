@@ -24,8 +24,8 @@ public class SeaGrassBed : Card
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("用手采集", "获得的东西更少且有可能划伤手", Event_CollectByHand, null, () => 30);
-        AddCardEvent("用刀采集", "耗时更少但获得更多产物", Event_CollectByKnife, Judge_CollectByKnife, () => 15);
+        AddCardEvent("用手采集", "获得的东西更少且有可能划伤手", Event_CollectByHand, null, () => 30, sound: "采摘植物或采摘果子的音效");
+        AddCardEvent("用刀采集", "耗时更少但获得更多产物", Event_CollectByKnife, Judge_CollectByKnife, () => 15, sound: "切割声");
     }
 
     private void Event_CollectByHand(CardEvent e)
@@ -37,6 +37,7 @@ public class SeaGrassBed : Card
                 Use();
             });
         });
+
     }
 
     private void CollectByKnife(Card tool, CardEvent e)

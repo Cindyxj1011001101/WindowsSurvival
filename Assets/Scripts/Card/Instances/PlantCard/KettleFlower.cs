@@ -13,8 +13,8 @@ public class KettleFlower : PlantCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("划一个口", "在水壶兰的茎部划一个口，从而可以饮用其中的汁液，并且有概率获得一颗种子。\n伤口需要一段时间愈合，愈合前水壶兰不会生长", Event_Hurt, Judge_Hurt, () => 15);
-        AddCardEvent("铲起", "将水壶兰连根铲起。将会获得一颗种子", Event_DigUp, Judge_DigUp, () => 15);
+        AddCardEvent("划一个口", "在水壶兰的茎部划一个口，从而可以饮用其中的汁液，并且有概率获得一颗种子。\n伤口需要一段时间愈合，愈合前水壶兰不会生长", Event_Hurt, Judge_Hurt, () => 15, sound: "切割声");
+        AddCardEvent("铲起", "将水壶兰连根铲起。将会获得一颗种子", Event_DigUp, Judge_DigUp, () => 15, sound: "挖掘废料_01");
         AddCardEvent("饮用汁液", "", Event_Drink, Judge_Drink,
             () => 15,
             () => new()

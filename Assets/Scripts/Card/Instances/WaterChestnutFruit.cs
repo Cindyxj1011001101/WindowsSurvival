@@ -10,8 +10,8 @@ public class WaterChestnutFruit : Card
             () => new()
             {
                 { PlayerStateEnum.PainLevel, +20 }
-            });
-        AddCardEvent("用锤子敲", "用锤子将果实敲开。将会获得四角菱果肉", Event_BreakByTool, Judge_BreakByTool, () => 3);
+            },sound:"凿_01");
+        AddCardEvent("用锤子敲", "用锤子将果实敲开。将会获得四角菱果肉", Event_BreakByTool, Judge_BreakByTool, () => 3,sound: "凿_01");
     }
 
     private void Event_BreakByHand(CardEvent e)

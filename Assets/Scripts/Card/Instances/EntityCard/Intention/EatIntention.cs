@@ -30,9 +30,15 @@ public class EatIntention : EntityIntention
         var toEat = GlobalDataManager.Instance.GetCardByUuid(targetUuid);
 
         if (toEat is PlantCard plant)
+        {
             plant.AddPlantGrowth(-100);
+            SoundManager.Instance.PlaySound("采摘植物或采摘果子的音效", true);
+        }  
         else
+        {
             toEat.DestroyThis();
+        }
+        SoundManager.Instance.PlaySound("吃_01", true);  
 
         // TODO: 吃掉动效
     }
