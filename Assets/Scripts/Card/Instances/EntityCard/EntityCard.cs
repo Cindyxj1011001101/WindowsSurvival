@@ -57,8 +57,11 @@ public abstract class EntityCard : Card, IEntity
         // 加入当前地点中
         (Bag as EnvironmentBag).AddEntity(this);
 
-        // 初始化仇恨
+        // 初始化仇恨集
         aggroCollection.Init(this);
+
+        // 设置意图的执行者
+        currentIntention?.SetBelongedEntity(this);
 
         // 刷新冷却为0，且当前意图为空，说明是第一次生成
         if (aiRefreshCooldown == 0 && currentIntention == null)
@@ -182,6 +185,7 @@ public abstract class EntityCard : Card, IEntity
         {
             // 开始准备意图
             currentIntention.Prepare();
+            currentIntention.SetBelongedEntity(this);
         }
     }
 
@@ -192,13 +196,17 @@ public abstract class EntityCard : Card, IEntity
     {
         // 更新意图执行倒计时
         currentIntention.UpdateExecutionCountdown();
-        if (currentIntention.IsReady)
+
+        if (!currentIntention.IsReady) return;
+
+        // 倒计时完成，尝试执行意图
+        if (currentIntention.CanExecute())
         {
-            // 倒计时完成，执行意图
             currentIntention.Execute();
-            // 刷新意图
-            TryGetNewIntention();
         }
+
+        // 无论执行是否成功，都刷新意图
+        TryGetNewIntention();
     }
     #endregion
 
