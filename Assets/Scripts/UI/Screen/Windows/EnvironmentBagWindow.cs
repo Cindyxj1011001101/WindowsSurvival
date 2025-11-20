@@ -84,14 +84,17 @@ public class EnvironmentBagWindow : BagWindow
             targetPosition.text = TargetPosition.ToString("0.0");
             deltaPosition.text = DeltaPosition.ToString("0.0");
             FillBetween();
+            SoundManager.Instance.PlaySound("简单点击_01", true);
         });
         moveLeftButton.onClick.AddListener(() =>
         {
             targetCoordSlider.value--;
+            SoundManager.Instance.PlaySound("简单点击_01", true);
         });
         moveRightButton.onClick.AddListener(() =>
         {
             targetCoordSlider.value++;
+            SoundManager.Instance.PlaySound("简单点击_01", true);
         });
 
         // 执行移动
@@ -320,7 +323,19 @@ public class EnvironmentBagWindow : BagWindow
     private void ExecuteMove()
     {
         if (Mathf.Abs(TargetPosition - Player.Instance.Coordinate.Position) < MoveDistResolution) return;
-
         MoveExploreManager.Instance.Move(TargetPosition);
+        
+        // 根据当前地点是否为水域播放不同的移动音效
+        if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
+        {
+            // 水域环境：播放游动
+            SoundManager.Instance.PlaySound("游动音效", true);
+        }
+        else
+        {
+            // 非水域环境：播放走路
+            SoundManager.Instance.PlaySound("走路音效", true);
+        }
+        
     }
 }
