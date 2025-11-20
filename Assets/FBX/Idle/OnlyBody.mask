@@ -1,0 +1,2249 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: OnlyBody
+  m_Mask: 00000000010000000000000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Armature
+    m_Weight: 1
+  - m_Path: Armature/Hips
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/Eye_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/Eye_L/Eye_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/Eye_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/Eye_R/Eye_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.B.L/brow.B.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.B.L.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.B.L.004/brow.B.L.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.B.R/brow.B.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.B.R.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.B.R.004/brow.B.R.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.L/brow.T.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.L.001/brow.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.L.003/brow.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.R/brow.T.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.R.001/brow.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/brow.T.R.003/brow.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/cheek.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/cheek.T.L.001/ORG-cheek_glue.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/cheek.T.L.001/ORG-cheek_glue.T.L.001/ORG-cheek_glue.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/cheek.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/cheek.T.R.001/ORG-cheek_glue.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/cheek.T.R.001/ORG-cheek_glue.T.R.001/ORG-cheek_glue.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.L/DEF-brow.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.L/DEF-brow.B.L.001/DEF-brow.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.L/DEF-brow.B.L.001/DEF-brow.B.L.002/DEF-brow.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.L/DEF-brow.B.L.001/DEF-brow.B.L.002/DEF-brow.B.L.003/DEF-brow.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.L.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.L.004/DEF-nose.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.L.004/DEF-nose.L/DEF-nose.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.R/DEF-brow.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.R/DEF-brow.B.R.001/DEF-brow.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.R/DEF-brow.B.R.001/DEF-brow.B.R.002/DEF-brow.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.R/DEF-brow.B.R.001/DEF-brow.B.R.002/DEF-brow.B.R.003/DEF-brow.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.R.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.R.004/DEF-nose.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.B.R.004/DEF-nose.R/DEF-nose.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.L/DEF-brow.T.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.L.001/DEF-brow.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.L.001/DEF-brow.T.L.002/DEF-brow.T.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.L.003/DEF-brow.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.R/DEF-brow.T.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.R.001/DEF-brow.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.R.001/DEF-brow.T.R.002/DEF-brow.T.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-brow.T.R.003/DEF-brow.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.B.L/DEF-cheek.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.B.L/DEF-cheek.B.L.001/DEF-cheek.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.B.R/DEF-cheek.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.B.R/DEF-cheek.B.R.001/DEF-cheek.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.T.L/DEF-cheek.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.T.L/DEF-cheek.T.L.001/DEF-cheek.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.T.R/DEF-cheek.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-cheek.T.R/DEF-cheek.T.R.001/DEF-cheek.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-face
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-face/DEF-face_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L/DEF-forehead.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L.001/DEF-forehead.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L.002/DEF-forehead.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L.003/DEF-forehead.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L.004/DEF-forehead.L.005
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L.004/DEF-forehead.L.005/DEF-forehead.L.006
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.L.004/DEF-forehead.L.005/DEF-forehead.L.006/DEF-forehead.L.006_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R/DEF-forehead.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R.001/DEF-forehead.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R.002/DEF-forehead.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R.003/DEF-forehead.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R.004/DEF-forehead.R.005
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R.004/DEF-forehead.R.005/DEF-forehead.R.006
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-forehead.R.004/DEF-forehead.R.005/DEF-forehead.R.006/DEF-forehead.R.006_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-nose
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-nose/DEF-nose.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-nose/DEF-nose.001/DEF-nose.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-nose.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-nose.004/DEF-nose.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-temple.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-temple.L/DEF-temple.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-temple.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/DEF-temple.R/DEF-temple.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/MCH-eye.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/MCH-eye.L/DEF-eye.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/MCH-eye.L/DEF-eye.L/DEF-eye_iris.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/MCH-eye.L/DEF-eye.L/DEF-eye_iris.L/DEF-eye_iris.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/MCH-eye_track.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/MCH-eye_track.L/MCH-eye_track.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-eye_master.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-eye_master.L/DEF-eye_master.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-lid.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-lid.B.L/DEF-lid.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-lid.B.L/DEF-lid.B.L.001/DEF-lid.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-lid.B.L/DEF-lid.B.L.001/DEF-lid.B.L.002/DEF-lid.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-lid.B.L/DEF-lid.B.L.001/DEF-lid.B.L.002/DEF-lid.B.L.003/DEF-lid.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-lid.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-lid.T.L/DEF-lid.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-lid.T.L/DEF-lid.T.L.001/DEF-lid.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-lid.T.L/DEF-lid.T.L.001/DEF-lid.T.L.002/DEF-lid.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/DEF-lid.T.L/DEF-lid.T.L.001/DEF-lid.T.L.002/DEF-lid.T.L.003/DEF-lid.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/lid.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/lid.B.L/lid.B.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/lid.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/lid.T.L/lid.T.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_end_handle.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_end_handle.B.L.003/MCH-lid_end_handle.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_end_handle.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_end_handle.T.L.003/MCH-lid_end_handle.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_end_handle_pre.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_end_handle_pre.B.L.003/MCH-lid_end_handle_pre.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_end_handle_pre.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_end_handle_pre.T.L.003/MCH-lid_end_handle_pre.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.B.L/MCH-lid_handle.B.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.B.L.001/MCH-lid_handle.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.B.L.002/MCH-lid_handle.B.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.B.L.003/MCH-lid_handle.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.T.L/MCH-lid_handle.T.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.T.L.001/MCH-lid_handle.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.T.L.002/MCH-lid_handle.T.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle.T.L.003/MCH-lid_handle.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.B.L/MCH-lid_handle_pre.B.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.B.L.001/MCH-lid_handle_pre.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.B.L.002/MCH-lid_handle_pre.B.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.B.L.003/MCH-lid_handle_pre.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.T.L/MCH-lid_handle_pre.T.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.T.L.001/MCH-lid_handle_pre.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.T.L.002/MCH-lid_handle_pre.T.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_handle_pre.T.L.003/MCH-lid_handle_pre.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.B.L.001/lid.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.B.L.001/lid.B.L.001/lid.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.B.L.002/lid.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.B.L.002/lid.B.L.002/ORG-lid_glue.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.B.L.002/lid.B.L.002/ORG-lid_glue.B.L.002/ORG-lid_glue.B.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.B.L.003/lid.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.B.L.003/lid.B.L.003/lid.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.T.L.001/lid.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.T.L.001/lid.T.L.001/lid.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.T.L.002/lid.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.T.L.002/lid.T.L.002/lid.T.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.T.L.003/lid.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/MCH-lid_offset.T.L.003/lid.T.L.003/lid.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/ORG-lid.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/ORG-lid.B.L/ORG-lid.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/ORG-lid.B.L/ORG-lid.B.L.001/ORG-lid.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/ORG-lid.B.L/ORG-lid.B.L.001/ORG-lid.B.L.002/ORG-lid.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/ORG-lid.B.L/ORG-lid.B.L.001/ORG-lid.B.L.002/ORG-lid.B.L.003/ORG-lid.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/ORG-lid.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/ORG-lid.T.L/ORG-lid.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/ORG-lid.T.L/ORG-lid.T.L.001/ORG-lid.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/ORG-lid.T.L/ORG-lid.T.L.001/ORG-lid.T.L.002/ORG-lid.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.L/ORG-eye.L/ORG-lid.T.L/ORG-lid.T.L.001/ORG-lid.T.L.002/ORG-lid.T.L.003/ORG-lid.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/MCH-eye.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/MCH-eye.R/DEF-eye.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/MCH-eye.R/DEF-eye.R/DEF-eye_iris.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/MCH-eye.R/DEF-eye.R/DEF-eye_iris.R/DEF-eye_iris.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/MCH-eye_track.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/MCH-eye_track.R/MCH-eye_track.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-eye_master.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-eye_master.R/DEF-eye_master.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-lid.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-lid.B.R/DEF-lid.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-lid.B.R/DEF-lid.B.R.001/DEF-lid.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-lid.B.R/DEF-lid.B.R.001/DEF-lid.B.R.002/DEF-lid.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-lid.B.R/DEF-lid.B.R.001/DEF-lid.B.R.002/DEF-lid.B.R.003/DEF-lid.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-lid.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-lid.T.R/DEF-lid.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-lid.T.R/DEF-lid.T.R.001/DEF-lid.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-lid.T.R/DEF-lid.T.R.001/DEF-lid.T.R.002/DEF-lid.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/DEF-lid.T.R/DEF-lid.T.R.001/DEF-lid.T.R.002/DEF-lid.T.R.003/DEF-lid.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/lid.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/lid.B.R/lid.B.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/lid.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/lid.T.R/lid.T.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_end_handle.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_end_handle.B.R.003/MCH-lid_end_handle.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_end_handle.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_end_handle.T.R.003/MCH-lid_end_handle.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_end_handle_pre.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_end_handle_pre.B.R.003/MCH-lid_end_handle_pre.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_end_handle_pre.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_end_handle_pre.T.R.003/MCH-lid_end_handle_pre.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.B.R/MCH-lid_handle.B.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.B.R.001/MCH-lid_handle.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.B.R.002/MCH-lid_handle.B.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.B.R.003/MCH-lid_handle.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.T.R/MCH-lid_handle.T.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.T.R.001/MCH-lid_handle.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.T.R.002/MCH-lid_handle.T.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle.T.R.003/MCH-lid_handle.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.B.R/MCH-lid_handle_pre.B.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.B.R.001/MCH-lid_handle_pre.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.B.R.002/MCH-lid_handle_pre.B.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.B.R.003/MCH-lid_handle_pre.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.T.R/MCH-lid_handle_pre.T.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.T.R.001/MCH-lid_handle_pre.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.T.R.002/MCH-lid_handle_pre.T.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_handle_pre.T.R.003/MCH-lid_handle_pre.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.B.R.001/lid.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.B.R.001/lid.B.R.001/lid.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.B.R.002/lid.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.B.R.002/lid.B.R.002/ORG-lid_glue.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.B.R.002/lid.B.R.002/ORG-lid_glue.B.R.002/ORG-lid_glue.B.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.B.R.003/lid.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.B.R.003/lid.B.R.003/lid.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.T.R.001/lid.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.T.R.001/lid.T.R.001/lid.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.T.R.002/lid.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.T.R.002/lid.T.R.002/lid.T.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.T.R.003/lid.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/MCH-lid_offset.T.R.003/lid.T.R.003/lid.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/ORG-lid.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/ORG-lid.B.R/ORG-lid.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/ORG-lid.B.R/ORG-lid.B.R.001/ORG-lid.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/ORG-lid.B.R/ORG-lid.B.R.001/ORG-lid.B.R.002/ORG-lid.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/ORG-lid.B.R/ORG-lid.B.R.001/ORG-lid.B.R.002/ORG-lid.B.R.003/ORG-lid.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/ORG-lid.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/ORG-lid.T.R/ORG-lid.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/ORG-lid.T.R/ORG-lid.T.R.001/ORG-lid.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/ORG-lid.T.R/ORG-lid.T.R.001/ORG-lid.T.R.002/ORG-lid.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/eye_master.R/ORG-eye.R/ORG-lid.T.R/ORG-lid.T.R.001/ORG-lid.T.R.002/ORG-lid.T.R.003/ORG-lid.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.L/forehead.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.L.001/forehead.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.L.002/forehead.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.R/forehead.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.R.001/forehead.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead.R.002/forehead.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead_end.006
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/forehead_end.006/forehead_end.006_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw.L/jaw.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw.R/jaw.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/chin
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/chin/chin_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/chin.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/chin.L/chin.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/chin.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/chin.R/chin.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/chin_end.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/chin_end.001/ORG-chin_end_glue.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/chin_end.001/ORG-chin_end_glue.001/ORG-chin_end_glue.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-chin
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-chin/DEF-chin.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-chin/DEF-chin.001/DEF-chin.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw/DEF-jaw_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw.L/DEF-jaw.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw.L/DEF-jaw.L.001/DEF-chin.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw.L/DEF-jaw.L.001/DEF-chin.L/DEF-chin.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw.R/DEF-jaw.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw.R/DEF-jaw.R.001/DEF-chin.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw.R/DEF-jaw.R.001/DEF-chin.R/DEF-chin.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw_master
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-jaw_master/DEF-jaw_master_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-tongue
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-tongue/DEF-tongue.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-tongue/DEF-tongue.001/DEF-tongue.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/DEF-tongue/DEF-tongue.001/DEF-tongue.002/DEF-tongue.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/jaw
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/jaw/jaw_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/jaw.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/jaw.L.001/jaw.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/jaw.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/jaw.R.001/jaw.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_end_glue_reparent.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_end_glue_reparent.001/MCH-chin_end_glue_reparent.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_end_handle.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_end_handle.001/MCH-chin_end_handle.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_end_handle.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_end_handle.L/MCH-chin_end_handle.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_end_handle.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_end_handle.R/MCH-chin_end_handle.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_handle
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_handle/MCH-chin_handle_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_handle.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_handle.001/MCH-chin_handle.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_handle.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_handle.L/MCH-chin_handle.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_handle.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_handle.R/MCH-chin_handle.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_offset.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_offset.001/chin.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-chin_offset.001/chin.001/chin.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-jaw_handle
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-jaw_handle/MCH-jaw_handle_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-jaw_handle.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-jaw_handle.L/MCH-jaw_handle.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-jaw_handle.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-jaw_handle.L.001/MCH-jaw_handle.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-jaw_handle.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-jaw_handle.R/MCH-jaw_handle.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-jaw_handle.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-jaw_handle.R.001/MCH-jaw_handle.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-tongue.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-tongue.001/tweak_tongue.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-tongue.001/tweak_tongue.001/tweak_tongue.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-tongue.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-tongue.002/tweak_tongue.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/MCH-tongue.002/tweak_tongue.002/tweak_tongue.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-chin
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-chin/ORG-chin.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-chin/ORG-chin.001/ORG-chin.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-jaw
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-jaw/ORG-jaw_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-jaw.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-jaw.L/ORG-jaw.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-jaw.L/ORG-jaw.L.001/ORG-chin.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-jaw.L/ORG-jaw.L.001/ORG-chin.L/ORG-chin.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-jaw.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-jaw.R/ORG-jaw.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-jaw.R/ORG-jaw.R.001/ORG-chin.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-jaw.R/ORG-jaw.R.001/ORG-chin.R/ORG-chin.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-teeth.B
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-teeth.B/DEF-teeth.B
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-teeth.B/DEF-teeth.B/DEF-teeth.B_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-tongue
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-tongue/ORG-tongue.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-tongue/ORG-tongue.001/ORG-tongue.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/ORG-tongue/ORG-tongue.001/ORG-tongue.002/ORG-tongue.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/teeth.B
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/teeth.B/teeth.B_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/tongue
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/tongue/tweak_tongue
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/tongue/tweak_tongue/tweak_tongue_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/tweak_tongue.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/jaw_master/ORG-jaw_master/tweak_tongue.003/tweak_tongue.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_end_handle.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_end_handle.T.L.003/MCH-brow_end_handle.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_end_handle.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_end_handle.T.R.003/MCH-brow_end_handle.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.L/MCH-brow_handle.B.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.L.001/MCH-brow_handle.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.L.002/MCH-brow_handle.B.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.L.003/MCH-brow_handle.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.L.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.L.004/MCH-brow_handle.B.L.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.R/MCH-brow_handle.B.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.R.001/MCH-brow_handle.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.R.002/MCH-brow_handle.B.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.R.003/MCH-brow_handle.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.R.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.B.R.004/MCH-brow_handle.B.R.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.L/MCH-brow_handle.T.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.L.001/MCH-brow_handle.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.L.002/MCH-brow_handle.T.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.L.003/MCH-brow_handle.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.R/MCH-brow_handle.T.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.R.001/MCH-brow_handle.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.R.002/MCH-brow_handle.T.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_handle.T.R.003/MCH-brow_handle.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.L.001/brow.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.L.001/brow.B.L.001/brow.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.L.002/brow.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.L.002/brow.B.L.002/ORG-brow_glue.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.L.002/brow.B.L.002/ORG-brow_glue.B.L.002/ORG-brow_glue.B.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.L.003/brow.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.L.003/brow.B.L.003/brow.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.R.001/brow.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.R.001/brow.B.R.001/brow.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.R.002/brow.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.R.002/brow.B.R.002/ORG-brow_glue.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.R.002/brow.B.R.002/ORG-brow_glue.B.R.002/ORG-brow_glue.B.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.R.003/brow.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.B.R.003/brow.B.R.003/brow.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.T.L.002/brow.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.T.L.002/brow.T.L.002/brow.T.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.T.R.002/brow.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_offset.T.R.002/brow.T.R.002/brow.T.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_reparent.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_reparent.T.L.002/MCH-brow_reparent.T.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_reparent.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-brow_reparent.T.R.002/MCH-brow_reparent.T.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_end_handle.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_end_handle.T.L.001/MCH-cheek_end_handle.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_end_handle.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_end_handle.T.R.001/MCH-cheek_end_handle.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.B.L/MCH-cheek_handle.B.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.B.L.001/MCH-cheek_handle.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.B.R/MCH-cheek_handle.B.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.B.R.001/MCH-cheek_handle.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.T.L/MCH-cheek_handle.T.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.T.L.001/MCH-cheek_handle.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.T.R/MCH-cheek_handle.T.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_handle.T.R.001/MCH-cheek_handle.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_offset.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_offset.B.L.001/cheek.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_offset.B.L.001/cheek.B.L.001/cheek.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_offset.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_offset.B.R.001/cheek.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_offset.B.R.001/cheek.B.R.001/cheek.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_reparent.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_reparent.B.L/MCH-cheek_reparent.B.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_reparent.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_reparent.B.L.001/MCH-cheek_reparent.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_reparent.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_reparent.B.R/MCH-cheek_reparent.B.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_reparent.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-cheek_reparent.B.R.001/MCH-cheek_reparent.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.L/MCH-forehead_end_handle.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.L.001/MCH-forehead_end_handle.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.L.002/MCH-forehead_end_handle.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.L.003/MCH-forehead_end_handle.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.L.006
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.L.006/MCH-forehead_end_handle.L.006_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.R/MCH-forehead_end_handle.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.R.001/MCH-forehead_end_handle.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.R.002/MCH-forehead_end_handle.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.R.003/MCH-forehead_end_handle.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.R.006
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_end_handle.R.006/MCH-forehead_end_handle.R.006_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L/MCH-forehead_handle.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.001/MCH-forehead_handle.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.002/MCH-forehead_handle.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.003/MCH-forehead_handle.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.004/MCH-forehead_handle.L.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.005
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.005/MCH-forehead_handle.L.005_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.006
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.L.006/MCH-forehead_handle.L.006_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R/MCH-forehead_handle.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.001/MCH-forehead_handle.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.002/MCH-forehead_handle.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.003/MCH-forehead_handle.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.004/MCH-forehead_handle.R.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.005
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.005/MCH-forehead_handle.R.005_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.006
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-forehead_handle.R.006/MCH-forehead_handle.R.006_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/DEF-lip.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/DEF-lip.B.L/DEF-lip.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/DEF-lip.B.L/DEF-lip.B.L.001/DEF-lip.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/DEF-lip.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/DEF-lip.B.R/DEF-lip.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/DEF-lip.B.R/DEF-lip.B.R.001/DEF-lip.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_end_handle.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_end_handle.B.L.001/MCH-lip_end_handle.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_end_handle.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_end_handle.B.R.001/MCH-lip_end_handle.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_handle.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_handle.B.L/MCH-lip_handle.B.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_handle.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_handle.B.L.001/MCH-lip_handle.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_handle.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_handle.B.R/MCH-lip_handle.B.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_handle.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/MCH-lip_handle.B.R.001/MCH-lip_handle.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/ORG-lip.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/ORG-lip.B.L/ORG-lip.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/ORG-lip.B.L/ORG-lip.B.L.001/ORG-lip.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/ORG-lip.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/ORG-lip.B.R/ORG-lip.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_bottom/ORG-lip.B.R/ORG-lip.B.R.001/ORG-lip.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_lock
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_lock/MCH-jaw_master_lock_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/DEF-lip.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/DEF-lip.T.L/DEF-lip.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/DEF-lip.T.L/DEF-lip.T.L.001/DEF-lip.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/DEF-lip.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/DEF-lip.T.R/DEF-lip.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/DEF-lip.T.R/DEF-lip.T.R.001/DEF-lip.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_bottom_out
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_bottom_out/MCH-lip_arm.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_bottom_out/MCH-lip_arm.B.L/lip.B
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_bottom_out/MCH-lip_arm.B.L/lip.B/lip.B_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_middle_out
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_middle_out/MCH-lip_end_arm.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_middle_out/MCH-lip_end_arm.B.L.001/lip_end.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_middle_out/MCH-lip_end_arm.B.L.001/lip_end.L.001/lip_end.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_middle_out/MCH-lip_end_arm.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_middle_out/MCH-lip_end_arm.B.R.001/lip_end.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_middle_out/MCH-lip_end_arm.B.R.001/lip_end.R.001/lip_end.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_top_out
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_top_out/MCH-lip_arm.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_top_out/MCH-lip_arm.T.L/lip.T
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-jaw_master_middle/jaw_master_mouth/MCH-jaw_master_top_out/MCH-lip_arm.T.L/lip.T/lip.T_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_end_handle.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_end_handle.T.L.001/MCH-lip_end_handle.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_end_handle.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_end_handle.T.R.001/MCH-lip_end_handle.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_handle.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_handle.T.L/MCH-lip_handle.T.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_handle.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_handle.T.L.001/MCH-lip_handle.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_handle.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_handle.T.R/MCH-lip_handle.T.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_handle.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/MCH-lip_handle.T.R.001/MCH-lip_handle.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/ORG-lip.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/ORG-lip.T.L/ORG-lip.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/ORG-lip.T.L/ORG-lip.T.L.001/ORG-lip.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/ORG-lip.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/ORG-lip.T.R/ORG-lip.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-jaw_master_top/ORG-lip.T.R/ORG-lip.T.R.001/ORG-lip.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_glue_reparent.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_glue_reparent.004/MCH-nose_end_glue_reparent.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_handle.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_handle.004/MCH-nose_end_handle.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_handle.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_handle.L/MCH-nose_end_handle.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_handle.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_handle.R/MCH-nose_end_handle.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_reparent.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_reparent.001/MCH-nose_end_reparent.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_reparent.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_reparent.L/MCH-nose_end_reparent.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_reparent.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_end_reparent.R/MCH-nose_end_reparent.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_glue_reparent.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_glue_reparent.L.001/MCH-nose_glue_reparent.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_glue_reparent.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_glue_reparent.R.001/MCH-nose_glue_reparent.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_handle
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_handle/MCH-nose_handle_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_handle.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_handle.001/MCH-nose_handle.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_handle.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_handle.004/MCH-nose_handle.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_handle.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_handle.L/MCH-nose_handle.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_handle.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_handle.R/MCH-nose_handle.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_offset.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_offset.001/nose.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_offset.001/nose.001/nose.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_offset.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_offset.L/nose.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_offset.L/nose.L/nose.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_offset.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_offset.R/nose.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-nose_offset.R/nose.R/nose.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-temple_end_handle.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-temple_end_handle.L/MCH-temple_end_handle.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-temple_end_handle.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-temple_end_handle.R/MCH-temple_end_handle.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-temple_handle.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-temple_handle.L/MCH-temple_handle.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-temple_handle.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/MCH-temple_handle.R/MCH-temple_handle.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/nose
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/nose/nose_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/nose_end.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/nose_end.004/ORG-nose_end_glue.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/nose_end.004/ORG-nose_end_glue.004/ORG-nose_end_glue.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/nose_master
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/nose_master/nose_master_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.L/ORG-brow.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.L/ORG-brow.B.L.001/ORG-brow.B.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.L/ORG-brow.B.L.001/ORG-brow.B.L.002/ORG-brow.B.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.L/ORG-brow.B.L.001/ORG-brow.B.L.002/ORG-brow.B.L.003/ORG-brow.B.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.L.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.L.004/ORG-nose.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.L.004/ORG-nose.L/ORG-nose.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.R/ORG-brow.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.R/ORG-brow.B.R.001/ORG-brow.B.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.R/ORG-brow.B.R.001/ORG-brow.B.R.002/ORG-brow.B.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.R/ORG-brow.B.R.001/ORG-brow.B.R.002/ORG-brow.B.R.003/ORG-brow.B.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.R.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.R.004/ORG-nose.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.B.R.004/ORG-nose.R/ORG-nose.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.L/ORG-brow.T.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.L.001/ORG-brow.T.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.L.001/ORG-brow.T.L.002/ORG-brow.T.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.L.003/ORG-brow.T.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.R/ORG-brow.T.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.R.001/ORG-brow.T.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.R.001/ORG-brow.T.R.002/ORG-brow.T.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-brow.T.R.003/ORG-brow.T.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.B.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.B.L/ORG-cheek.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.B.L/ORG-cheek.B.L.001/ORG-cheek.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.B.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.B.R/ORG-cheek.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.B.R/ORG-cheek.B.R.001/ORG-cheek.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.T.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.T.L/ORG-cheek.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.T.L/ORG-cheek.T.L.001/ORG-cheek.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.T.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.T.R/ORG-cheek.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-cheek.T.R/ORG-cheek.T.R.001/ORG-cheek.T.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L/ORG-forehead.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L.001/ORG-forehead.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L.002/ORG-forehead.L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L.003/ORG-forehead.L.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L.004/ORG-forehead.L.005
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L.004/ORG-forehead.L.005/ORG-forehead.L.006
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.L.004/ORG-forehead.L.005/ORG-forehead.L.006/ORG-forehead.L.006_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R/ORG-forehead.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R.001/ORG-forehead.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R.002/ORG-forehead.R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R.003/ORG-forehead.R.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R.004/ORG-forehead.R.005
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R.004/ORG-forehead.R.005/ORG-forehead.R.006
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-forehead.R.004/ORG-forehead.R.005/ORG-forehead.R.006/ORG-forehead.R.006_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose/ORG-nose.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose/ORG-nose.001/ORG-nose.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose.004/ORG-nose.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/DEF-nose.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/DEF-nose.002/DEF-nose.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/DEF-nose.002/DEF-nose.003/DEF-nose.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/DEF-nose.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/DEF-nose.L.001/DEF-nose.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/DEF-nose.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/DEF-nose.R.001/DEF-nose.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_end_handle.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_end_handle.L.001/MCH-nose_end_handle.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_end_handle.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_end_handle.R.001/MCH-nose_end_handle.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_handle.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_handle.002/MCH-nose_handle.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_handle.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_handle.003/MCH-nose_handle.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_handle.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_handle.L.001/MCH-nose_handle.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_handle.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_handle.R.001/MCH-nose_handle.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_offset.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_offset.003/nose.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/MCH-nose_offset.003/nose.003/nose.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.002/nose.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.004/ORG-nose_glue.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.004/ORG-nose_glue.004/ORG-nose_glue.004_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.L.001/ORG-nose_glue.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.L.001/ORG-nose_glue.L.001/ORG-nose_glue.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.R.001/ORG-nose_glue.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/nose.R.001/ORG-nose_glue.R.001/ORG-nose_glue.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/ORG-nose.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/ORG-nose.002/ORG-nose.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/ORG-nose.002/ORG-nose.003/ORG-nose.003_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/ORG-nose.L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/ORG-nose.L.001/ORG-nose.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/ORG-nose.R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-nose_master/ORG-nose.R.001/ORG-nose.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-teeth.T
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-teeth.T/DEF-teeth.T
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-teeth.T/DEF-teeth.T/DEF-teeth.T_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-temple.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-temple.L/ORG-temple.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-temple.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/ORG-temple.R/ORG-temple.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/teeth.T
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/teeth.T/teeth.T_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/temple.L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/temple.L/temple.L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/temple.R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/face/ORG-face/temple.R/temple.R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapHeadRibbonRoot
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapHeadRibbonRoot/xLapHeadRibbon1
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapHeadRibbonRoot/xLapHeadRibbon1/xLapHeadRibbon1_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapHeadRibbonRoot/xLapHeadRibbon2
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapHeadRibbonRoot/xLapHeadRibbon2/xLapHeadRibbon2_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair2_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair2_L/xLapPonyFrontHair2_L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair2_L/xLapPonyFrontHair2_L.001/xLapPonyFrontHair2_L.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair2_L/xLapPonyFrontHair2_L.001/xLapPonyFrontHair2_L.002/xLapPonyFrontHair2_L.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair2_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair2_R/xLapPonyFrontHair2_R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair2_R/xLapPonyFrontHair2_R.001/xLapPonyFrontHair2_R.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair2_R/xLapPonyFrontHair2_R.001/xLapPonyFrontHair2_R.002/xLapPonyFrontHair2_R.002_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair3_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair3_R/xLapPonyFrontHair3_R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair3_R/xLapPonyFrontHair3_R.001/xLapPonyFrontHair3_R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair_F
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair_F/xLapPonyFrontHair_F.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair_F/xLapPonyFrontHair_F.001/xLapPonyFrontHair_F.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair_L/xLapPonyFrontHair_L.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair_L/xLapPonyFrontHair_L.001/xLapPonyFrontHair_L.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair_R/xLapPonyFrontHair_R.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyFrontHairRoot/xLapPonyFrontHair_R/xLapPonyFrontHair_R.001/xLapPonyFrontHair_R.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.001/xLapPony.002
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.001/xLapPony.002/xLapPony.003
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.001/xLapPony.002/xLapPony.003/xLapPony.023
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.001/xLapPony.002/xLapPony.003/xLapPony.023/xLapPony.023_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.004
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.004/xLapPony.005
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.004/xLapPony.005/xLapPony.006
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.004/xLapPony.005/xLapPony.006/xLapPony.007
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.004/xLapPony.005/xLapPony.006/xLapPony.007/xLapPony.007_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.012
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.012/xLapPony.017
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.012/xLapPony.017/xLapPony.018
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.012/xLapPony.017/xLapPony.018/xLapPony.018_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.014
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.014/xLapPony.022
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.014/xLapPony.022/xLapPony.015
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.014/xLapPony.022/xLapPony.015/xLapPony.016
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony/xLapPony.024/xLapPony.025/xLapPony.014/xLapPony.022/xLapPony.015/xLapPony.016/xLapPony.016_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008/xLapPony.021
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008/xLapPony.021/xLapPony.009
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008/xLapPony.021/xLapPony.009/xLapPony.020
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008/xLapPony.021/xLapPony.009/xLapPony.020/xLapPony.010
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008/xLapPony.021/xLapPony.009/xLapPony.020/xLapPony.010/xLapPony.011
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008/xLapPony.021/xLapPony.009/xLapPony.020/xLapPony.010/xLapPony.011/xLapPony.026
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008/xLapPony.021/xLapPony.009/xLapPony.020/xLapPony.010/xLapPony.011/xLapPony.026/xLapPony.026_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008/xLapPony.021/xLapPony.013
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008/xLapPony.021/xLapPony.013/xLapPony.019
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPony.008/xLapPony.021/xLapPony.013/xLapPony.019/xLapPony.019_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPonyRibbon
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPonyRibbon/xLapPonyRibbon.001
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Neck/Head/xLapPonyRoot/xLapPonyRibbon/xLapPonyRibbon.001/xLapPonyRibbon.001_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Index1_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Index1_L/Index2_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Index1_L/Index2_L/Index3_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Index1_L/Index2_L/Index3_L/Index3_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Middle1_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Middle1_L/Middle2_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Middle1_L/Middle2_L/Middle3_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Middle1_L/Middle2_L/Middle3_L/Middle3_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Pinky1_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Pinky1_L/Pinky2_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Pinky1_L/Pinky2_L/Pinky3_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Pinky1_L/Pinky2_L/Pinky3_L/Pinky3_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Ring1_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Ring1_L/Ring2_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Ring1_L/Ring2_L/Ring3_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Ring1_L/Ring2_L/Ring3_L/Ring3_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Thumb1_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Thumb1_L/Thumb2_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Thumb1_L/Thumb2_L/Thumb3_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Thumb1_L/Thumb2_L/Thumb3_L/Thumb3_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Thumb1Dummy_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Thumb1Dummy_L/Thumb2Dummy_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Thumb1Dummy_L/Thumb2Dummy_L/Thumb3Dummy_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/Hand_L/Thumb1Dummy_L/Thumb2Dummy_L/Thumb3Dummy_L/Thumb3Dummy_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/LowerArmTwist_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerArm_L/LowerArmTwist_L/LowerArmTwist_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerElbow_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/LowerElbow_L/LowerElbow_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/UpperArmTwist_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_L/UpperArm_L/UpperArmTwist_L/UpperArmTwist_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Index1_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Index1_R/Index2_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Index1_R/Index2_R/Index3_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Index1_R/Index2_R/Index3_R/Index3_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Middle1_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Middle1_R/Middle2_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Middle1_R/Middle2_R/Middle3_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Middle1_R/Middle2_R/Middle3_R/Middle3_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Pinky1_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Pinky1_R/Pinky2_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Pinky1_R/Pinky2_R/Pinky3_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Pinky1_R/Pinky2_R/Pinky3_R/Pinky3_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Ring1_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Ring1_R/Ring2_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Ring1_R/Ring2_R/Ring3_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Ring1_R/Ring2_R/Ring3_R/Ring3_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Thumb1_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Thumb1_R/Thumb2_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Thumb1_R/Thumb2_R/Thumb3_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Thumb1_R/Thumb2_R/Thumb3_R/Thumb3_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Thumb1Dummy_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Thumb1Dummy_R/Thumb2Dummy_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Thumb1Dummy_R/Thumb2Dummy_R/Thumb3Dummy_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/Hand_R/Thumb1Dummy_R/Thumb2Dummy_R/Thumb3Dummy_R/Thumb3Dummy_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/LowerArmTwist_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerArm_R/LowerArmTwist_R/LowerArmTwist_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerElbow_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/LowerElbow_R/LowerElbow_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/UpperArmTwist_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/Spine/Chest/Shoulder_R/UpperArm_R/UpperArmTwist_R/UpperArmTwist_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_L/LowerLeg_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_L/LowerLeg_L/Foot_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_L/LowerLeg_L/Foot_L/Toe_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_L/LowerLeg_L/Foot_L/Toe_L/Toe_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_L/LowerLegKnee_L
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_L/LowerLegKnee_L/LowerLegKnee_L_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_R/LowerLeg_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_R/LowerLeg_R/Foot_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_R/LowerLeg_R/Foot_R/Toe_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_R/LowerLeg_R/Foot_R/Toe_R/Toe_R_end
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_R/LowerLegKnee_R
+    m_Weight: 1
+  - m_Path: Armature/Hips/UpperLeg_R/LowerLegKnee_R/LowerLegKnee_R_end
+    m_Weight: 1
+  - m_Path: Armature/MCH-eye_common.parent
+    m_Weight: 1
+  - m_Path: Armature/MCH-eye_common.parent/eye_common
+    m_Weight: 1
+  - m_Path: Armature/MCH-eye_common.parent/eye_common/eye.L
+    m_Weight: 1
+  - m_Path: Armature/MCH-eye_common.parent/eye_common/eye.L/eye.L_end
+    m_Weight: 1
+  - m_Path: Armature/MCH-eye_common.parent/eye_common/eye.R
+    m_Weight: 1
+  - m_Path: Armature/MCH-eye_common.parent/eye_common/eye.R/eye.R_end
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.B.L.001/MCH-lip_offset.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.B.L.001/MCH-lip_offset.B.L.001/lip.B.L.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.B.L.001/MCH-lip_offset.B.L.001/lip.B.L.001/lip.B.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.B.R.001/MCH-lip_offset.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.B.R.001/MCH-lip_offset.B.R.001/lip.B.R.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.B.R.001/MCH-lip_offset.B.R.001/lip.B.R.001/lip.B.R.001_end
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.T.L.001/MCH-lip_offset.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.T.L.001/MCH-lip_offset.T.L.001/lip.T.L.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.T.L.001/MCH-lip_offset.T.L.001/lip.T.L.001/lip.T.L.001_end
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.T.R.001/MCH-lip_offset.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.T.R.001/MCH-lip_offset.T.R.001/lip.T.R.001
+    m_Weight: 1
+  - m_Path: Armature/MCH-lip_arm.T.R.001/MCH-lip_offset.T.R.001/lip.T.R.001/lip.T.R.001_end
+    m_Weight: 1
+  - m_Path: Body
+    m_Weight: 1
+  - m_Path: Face
+    m_Weight: 1
+  - m_Path: FaceitControlRig
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_cheekPuff_slider_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_cheekPuff_slider_parent/c_cheekPuff_slider
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_cheekPuff_slider_parent/c_cheekPuff_slider/c_cheekPuff_slider_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_cheekPuff_slider_parent/c_cheekPuff_slider_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_cheekPuff_slider_parent/c_cheekPuff_slider_txt/c_cheekPuff_slider_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_EyeLeft_slider2d_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_EyeLeft_slider2d_parent/c_EyeLeft_slider2d
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_EyeLeft_slider2d_parent/c_EyeLeft_slider2d/c_EyeLeft_slider2d_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_EyeLeft_slider2d_parent/c_EyeLeft_slider2d_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_EyeLeft_slider2d_parent/c_EyeLeft_slider2d_txt/c_EyeLeft_slider2d_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_EyeRight_slider2d_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_EyeRight_slider2d_parent/c_EyeRight_slider2d
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_EyeRight_slider2d_parent/c_EyeRight_slider2d/c_EyeRight_slider2d_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_EyeRight_slider2d_parent/c_EyeRight_slider2d_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_EyeRight_slider2d_parent/c_EyeRight_slider2d_txt/c_EyeRight_slider2d_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_forceMouthClose_slider_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_forceMouthClose_slider_parent/c_forceMouthClose_slider
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_forceMouthClose_slider_parent/c_forceMouthClose_slider/c_forceMouthClose_slider_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_forceMouthClose_slider_parent/c_forceMouthClose_slider_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_forceMouthClose_slider_parent/c_forceMouthClose_slider_txt/c_forceMouthClose_slider_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_LookAt2D_slider2d_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_LookAt2D_slider2d_parent/c_LookAt2D_slider2d
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_LookAt2D_slider2d_parent/c_LookAt2D_slider2d/c_LookAt2D_slider2d_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_LookAt2D_slider2d_parent/c_LookAt2D_slider2d_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_LookAt2D_slider2d_parent/c_LookAt2D_slider2d_txt/c_LookAt2D_slider2d_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_mouthFunnel_slider_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_mouthFunnel_slider_parent/c_mouthFunnel_slider
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_mouthFunnel_slider_parent/c_mouthFunnel_slider/c_mouthFunnel_slider_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_mouthFunnel_slider_parent/c_mouthFunnel_slider_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_mouthFunnel_slider_parent/c_mouthFunnel_slider_txt/c_mouthFunnel_slider_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_mouthPucker_slider_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_mouthPucker_slider_parent/c_mouthPucker_slider
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_mouthPucker_slider_parent/c_mouthPucker_slider/c_mouthPucker_slider_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_mouthPucker_slider_parent/c_mouthPucker_slider_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_mouthPucker_slider_parent/c_mouthPucker_slider_txt/c_mouthPucker_slider_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider2d_ref_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider2d_ref_parent/c_slider2d_ref
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider2d_ref_parent/c_slider2d_ref/c_slider2d_ref_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider2d_ref_parent/c_slider2d_ref_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider2d_ref_parent/c_slider2d_ref_txt/c_slider2d_ref_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider_ref_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider_ref_parent/c_slider_ref
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider_ref_parent/c_slider_ref/c_slider_ref_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider_ref_parent/c_slider_ref_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider_ref_parent/c_slider_ref_txt/c_slider_ref_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider_small_ref_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider_small_ref_parent/c_slider_small_ref
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider_small_ref_parent/c_slider_small_ref/c_slider_small_ref_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider_small_ref_parent/c_slider_small_ref_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_slider_small_ref_parent/c_slider_small_ref_txt/c_slider_small_ref_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_SwitchLookAt_slider_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_SwitchLookAt_slider_parent/c_SwitchLookAt_slider
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_SwitchLookAt_slider_parent/c_SwitchLookAt_slider/c_SwitchLookAt_slider_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_SwitchLookAt_slider_parent/c_SwitchLookAt_slider_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_SwitchLookAt_slider_parent/c_SwitchLookAt_slider_txt/c_SwitchLookAt_slider_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_tongueOut_slider_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_tongueOut_slider_parent/c_tongueOut_slider
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_tongueOut_slider_parent/c_tongueOut_slider/c_tongueOut_slider_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_tongueOut_slider_parent/c_tongueOut_slider_txt
+    m_Weight: 1
+  - m_Path: FaceitControlRig/All_Sliders_Parent/c_tongueOut_slider_parent/c_tongueOut_slider_txt/c_tongueOut_slider_txt_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_eye_lookat
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_eye_lookat/c_eye_lookat.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_eye_lookat/c_eye_lookat.L/c_eye_lookat_target.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_eye_lookat/c_eye_lookat.L/c_eye_lookat_target.L/c_eye_lookat_target.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_eye_lookat/c_eye_lookat.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_eye_lookat/c_eye_lookat.R/c_eye_lookat_target.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_eye_lookat/c_eye_lookat.R/c_eye_lookat_target.R/c_eye_lookat_target.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_inner.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_inner.L/c_brow_inner.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_inner.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_inner.R/c_brow_inner.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_master.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_master.L/c_brow_master.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_master.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_master.R/c_brow_master.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_outer.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_outer.L/c_brow_outer.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_outer.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_brow_outer.R/c_brow_outer.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_cheek_upper.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_cheek_upper.L/c_cheek_upper.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_cheek_upper.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_cheek_upper.R/c_cheek_upper.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_eyebrow_mid
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_eyebrow_mid/c_eyebrow_mid_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_eyelid_lower.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_eyelid_lower.L/c_eyelid_lower.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_eyelid_lower.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_eyelid_lower.R/c_eyelid_lower.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_eyelid_upper.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_eyelid_upper.L/c_eyelid_upper.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_eyelid_upper.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_eyelid_upper.R/c_eyelid_upper.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_jaw_target_master
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_jaw_target_master/c_jaw_target
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_jaw_target_master/c_jaw_target/c_jaw_target_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_parent
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_parent/c_lips_corner.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_parent/c_lips_corner.L/c_lips_corner_adjust.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_parent/c_lips_corner.L/c_lips_corner_adjust.L/c_lips_corner_adjust.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_parent/c_lips_corner.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_parent/c_lips_corner.R/c_lips_corner_adjust.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_parent/c_lips_corner.R/c_lips_corner_adjust.R/c_lips_corner_adjust.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_parent/c_mouth_controller
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_parent/c_mouth_controller/c_lips_closed
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_parent/c_mouth_controller/c_lips_closed/c_lips_closed_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_upper
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_upper/c_lips_outer_upper.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_upper/c_lips_outer_upper.L/c_lips_outer_upper.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_upper/c_lips_outer_upper.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_upper/c_lips_outer_upper.R/c_lips_outer_upper.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_upper/c_lips_upper_roll
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lips_upper/c_lips_upper_roll/c_lips_upper_roll_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lookat_mch.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lookat_mch.L/c_lookat_mch.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lookat_mch.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lookat_mch.R/c_lookat_mch.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lower_lips
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lower_lips/c_lips_lower
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lower_lips/c_lips_lower/c_lips_lower_roll
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lower_lips/c_lips_lower/c_lips_lower_roll/c_lips_lower_roll_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lower_lips/c_lips_lower/c_lips_outer_lower.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lower_lips/c_lips_lower/c_lips_outer_lower.L/c_lips_outer_lower.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lower_lips/c_lips_lower/c_lips_outer_lower.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_lower_lips/c_lips_lower/c_lips_outer_lower.R/c_lips_outer_lower.R_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_nose_sneer.L
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_nose_sneer.L/c_nose_sneer.L_end
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_nose_sneer.R
+    m_Weight: 1
+  - m_Path: FaceitControlRig/c_face_main/c_nose_sneer.R/c_nose_sneer.R_end
+    m_Weight: 1
+  - m_Path: HairPony
+    m_Weight: 1
+  - m_Path: Underwear
+    m_Weight: 1

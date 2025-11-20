@@ -71,4 +71,23 @@ public class GlobalData
         return value.curReduceCount == value.maxReduceCount;
     }
     #endregion
+    #region 全局数据
+    public Dictionary<string, object> globalDataDict = new();
+
+    public void SetGlobalData(string key, object value)
+    {
+        if (globalDataDict.ContainsKey(key))
+            globalDataDict[key] = value;
+        else
+            globalDataDict.Add(key, value);
+    }
+
+    public object GetGlobalData(string key)
+    {
+        if (globalDataDict.TryGetValue(key, out var value))
+            return value;
+
+        return null;
+    }
+    #endregion
 }

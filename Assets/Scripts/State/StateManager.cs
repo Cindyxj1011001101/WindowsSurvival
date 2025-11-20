@@ -385,6 +385,7 @@ public class StateManager : IManager
 
         // 判断危险等级，播放音乐
         EvaluateDangerLevel();
+        EventManager.Instance.TriggerEvent(EventType.RefreshAnimator, PlayerStateDict);
     }
 
     public void ChangePlayerStateChangeRate(PlayerStateEnum stateEnum, float delta)

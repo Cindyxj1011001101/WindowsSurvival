@@ -30,6 +30,7 @@
     GameEventBegin,                     // 全局效果开始
     GameEventEnd,                       // 全局效果结束
     UpdateSunlight,                     // 恒星光照更新
+    RefreshAnimator,                    // 更新动画器
 }
 
 public class ChangePlayerBagCardsArgs
