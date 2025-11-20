@@ -11,7 +11,7 @@ public class LionJellyfishCorpse : Card
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("用刀切割", "", Event_PeelByKnife, Judge_PeelByKnife, () => 15);
+        AddCardEvent("用刀切割", "", Event_PeelByKnife, Judge_PeelByKnife, () => 15, sound: "切割声");
         AddCardEvent("咬一口", "", EasyEvent_Use, null,
             () => 15,
             () => new()

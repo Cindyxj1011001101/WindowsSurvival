@@ -15,7 +15,7 @@ public class JellyfishSkin : Card
                 { PlayerStateEnum.Itchiness, +45 }
             },
             sound: "吃_01");
-        AddCardEvent("腌渍脱毒", "", Event_Pickle, Judge_Pickle, () => 5);
+        AddCardEvent("腌渍脱毒", "", Event_Pickle, Judge_Pickle, () => 5,sound: "肉质感的卡牌拿起");
     }
 
     private void Pickle(Card salineWater, CardEvent e)

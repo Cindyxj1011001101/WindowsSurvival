@@ -5,8 +5,8 @@ public class SeaGrass : Card
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("用手提取", "用手提取纤维", Event_CollectByHand, null, () => 30);
-        AddCardEvent("用刀提取", "用刀提取纤维", Event_CollectByKnife, Judge_CollectByKnife, () => 15);
+        AddCardEvent("用手提取", "用手提取纤维", Event_CollectByHand, null, () => 30,sound: "采摘植物或采摘果子的音效");
+        AddCardEvent("用刀提取", "用刀提取纤维", Event_CollectByKnife, Judge_CollectByKnife, () => 15, sound: "切割声");
     }
 
     private void Event_CollectByHand(CardEvent e)
@@ -26,6 +26,7 @@ public class SeaGrass : Card
             DestroyThis();
             AddCard("纤维", true);
         });
+        
     }
 
     private void Event_CollectByKnife(CardEvent e)

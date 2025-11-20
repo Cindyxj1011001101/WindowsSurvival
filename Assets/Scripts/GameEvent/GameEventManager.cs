@@ -19,7 +19,7 @@ public class GameEventManager : IManager
     private const float MAX_TREND_VALUE = 4f;
     private const float MIN_TREND_VALUE = -4f;
 
-    private const float EVENT_TRIGGER_PROB = 1 / 96f; // 每次结算触发事件的基础概率（约1.04%），期望触发间隔为24小时
+    private const float EVENT_TRIGGER_PROB = 1f / 96f; // 每次结算触发事件的基础概率（约1.04%），期望触发间隔为24小时
 
     public InvasionEventConfig InvasionEventConfig { get; private set; } = new();
 
@@ -113,6 +113,9 @@ public class GameEventManager : IManager
 
         // 触发事件
         selectedEvent.Trigger();
+
+        // 根据威胁程度播放对应音效
+        PlaySoundByThreatLevel(selectedEvent.ThreatLevel);
     }
 
     /// <summary>
@@ -182,5 +185,32 @@ public class GameEventManager : IManager
     {
         TrendValue -= threatLevel;
         TrendValue = Math.Clamp(TrendValue, MIN_TREND_VALUE, MAX_TREND_VALUE);
+    }
+
+    // 根据危险程度播放不同音效
+    private void PlaySoundByThreatLevel(int threatLevel)
+    {
+        // 根据事件危险程度不同播不同音效
+        if (threatLevel <= -2)
+        {
+            // 播某某音效（有益事件）
+            SoundManager.Instance.PlaySound("有益事件触发音效",true,4.0f); 
+        }
+        else if (threatLevel >= -1 && threatLevel <= 1)
+        {
+            // 播某某音效（中立事件）
+            SoundManager.Instance.PlaySound("中立事件触发音效",true,4.0f); 
+        }
+        else if (threatLevel >= 2 && threatLevel <= 3)
+        {
+            // 播某某音效（威胁事件）
+            SoundManager.Instance.PlaySound("威胁事件触发音效",true,4.0f); 
+            
+        }
+        else if (threatLevel == 4)
+        {
+            // 播某某音效（极高威胁）
+            SoundManager.Instance.PlaySound("极高威胁事件触发音效",true,1.2f); 
+        }
     }
 }

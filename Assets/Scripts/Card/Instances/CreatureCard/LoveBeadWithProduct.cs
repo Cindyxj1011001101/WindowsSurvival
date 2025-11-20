@@ -32,7 +32,7 @@ public class LoveBeadWithProduct : Card
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("撬开", "像开宝箱一样获得随机产物", Event_OpenByTool, Judge_OpenByTool, () => 15);
+        AddCardEvent("撬开", "像开宝箱一样获得随机产物", Event_OpenByTool, Judge_OpenByTool, () => 15, sound: "切割声");
     }
 
     private void OpenByTool(Card tool, CardEvent e)
