@@ -1114,6 +1114,68 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &4579719624216042262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4351217951213320155}
+  - component: {fileID: 3586976610020075577}
+  m_Layer: 5
+  m_Name: Top
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4351217951213320155
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4579719624216042262}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 455938007580153851}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 76}
+  m_SizeDelta: {x: 100, y: 10}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3586976610020075577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4579719624216042262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &4824779941567153917
 GameObject:
   m_ObjectHideFlags: 0
@@ -1973,6 +2035,7 @@ RectTransform:
   - {fileID: 687831485650031595}
   - {fileID: 3282579997205312460}
   - {fileID: 436820841303494396}
+  - {fileID: 4351217951213320155}
   - {fileID: 3547804111521056403}
   - {fileID: 8397116558062809505}
   - {fileID: 9169598366305317293}
@@ -2059,12 +2122,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 0}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor: []
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
+  rectTransform: {fileID: 0}
 --- !u!114 &502016104440838314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2350,6 +2416,7 @@ MonoBehaviour:
   middle: {fileID: 3797233462845240790}
   left: {fileID: 436820841303494396}
   right: {fileID: 3282579997205312460}
+  top: {fileID: 4351217951213320155}
   innerContentsComponent: {fileID: 687831485650031595}
   iconLayout: {fileID: 6404169810499836032}
   fireIcon: {fileID: 2463911327904468339}

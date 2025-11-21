@@ -9,6 +9,13 @@ using UnityEngine.UI;
 /// </summary>
 public class CardSlot : MonoBehaviour
 {
+    private const int BIG_ICON_IMAGE_SIZE = 92;
+    private const int SMALL_ICON_SIZE = 64;
+    private const int BIG_ICON_ANCHOR_POS = 16;
+    private const int SMALL_ICON_ANCHOR_POS = 30;
+    private const int BIG_ICON_MIDDLE_COMPONENT_LAYOUT_POSY = 57;
+    private const int SMALL_ICON_MIDDLE_COMPONENT_LAYOUT_POSY = 65;
+
     [SerializeField] private Image iconImage;
     [SerializeField] private Text nameText;
     [SerializeField] private GameObject stackObject;                // 控制是否显示堆叠
@@ -23,6 +30,7 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private RectTransform middle;                  // 用于显示新鲜度、耐久等组件的布局
     [SerializeField] private RectTransform left;                    // 用于显示计时器和盐水
     [SerializeField] private RectTransform right;                   // 用于显示温度和淡水
+    [SerializeField] private RectTransform top;                     // 用于显示实体的坐标
     [SerializeField] private RectTransform innerContentsComponent;  // 用于显示内容物组件
     [SerializeField] private GameObject iconLayout;                 // 用于显示图标的布局
     [SerializeField] private Image fireIcon;                        // 图标上的火焰
@@ -178,26 +186,19 @@ public class CardSlot : MonoBehaviour
     private void DisplayCardImage(Sprite sprite, bool isBigIcon)
     {
         iconImage.sprite = sprite;
-        float offset;
-        float posY;
-        float imgSize;
 
         if (isBigIcon)
         {
-            posY = 57;
-            imgSize = 92;
-            offset = 16;
+            iconImage.rectTransform.sizeDelta = new(BIG_ICON_IMAGE_SIZE, BIG_ICON_IMAGE_SIZE);
+            iconImage.rectTransform.anchoredPosition = new Vector2(BIG_ICON_ANCHOR_POS, -BIG_ICON_ANCHOR_POS);
+            middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, BIG_ICON_MIDDLE_COMPONENT_LAYOUT_POSY);
         }
         else
         {
-            posY = 65;
-            imgSize = 64;
-            offset = 30;
+            iconImage.rectTransform.sizeDelta = new(SMALL_ICON_SIZE, SMALL_ICON_SIZE);
+            iconImage.rectTransform.anchoredPosition = new Vector2(SMALL_ICON_ANCHOR_POS, -SMALL_ICON_ANCHOR_POS);
+            middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, SMALL_ICON_MIDDLE_COMPONENT_LAYOUT_POSY);
         }
-
-        iconImage.rectTransform.anchoredPosition = new Vector2(offset, -offset);
-        middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, posY);
-        iconImage.rectTransform.sizeDelta = new(imgSize, imgSize);
     }
 
     private void DisplayStackNum(int stackNum, int maxStackNum, bool displayStack)
@@ -384,7 +385,7 @@ public class CardSlot : MonoBehaviour
             cardAnimator.enabled = false;
         }
         // 组件摆放的位置同小图
-        middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, 65);
+        middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, SMALL_ICON_MIDDLE_COMPONENT_LAYOUT_POSY);
     }
 
     /// <summary>
@@ -435,8 +436,14 @@ public class CardSlot : MonoBehaviour
 
         EnableDisplay();
 
+        // 显示卡牌图
         DisplayCardImage(card.CardImage, card.IsBigIcon);
+
+        // 显示卡牌名称
         nameText.text = card.CardName;
+
+        // 显示额外信息
+        moreInfoText.text = card.ExtraInfo;
 
         // 显示堆叠数量
         DisplayStackNum(stackNum, card.MaxStackNum, displayStack);
@@ -490,16 +497,19 @@ public class CardSlot : MonoBehaviour
             DisplayContinuousValueComponent(pg, middle);
         // 显示坐标
         if (card.TryGetComponent<CoordinateComponent>(out var cc))
-            DisplayContinuousValueComponent(cc, middle);
+        {
+            if (card is EntityCard)
+                // 实体卡牌的坐标显示在顶部
+                DisplayContinuousValueComponent(cc, top);
+            else
+                DisplayContinuousValueComponent(cc, middle);
+        }
         // 显示实体生命值
         if (card.TryGetComponent<EntityComponent>(out var ec))
             DisplayContinuousValueComponent(ec, middle);
         // 显示电力消耗
         if (card.TryGetComponent<PowerConsumptionComponent>(out var pc) && pc.consumptionRate > 0)
             DisplayElectricPowerIcon(pc.Connected, pc.consumptionRate);
-
-        // 显示额外信息
-        moreInfoText.text = card.ExtraInfo;
     }
 
     /// <summary>
@@ -516,6 +526,7 @@ public class CardSlot : MonoBehaviour
         ObjectBufferPool.Instance.RestoreAllChildren(middle);
         ObjectBufferPool.Instance.RestoreAllChildren(left);
         ObjectBufferPool.Instance.RestoreAllChildren(right);
+        ObjectBufferPool.Instance.RestoreAllChildren(top);
 
         if (mask != null) mask.SetActive(false);
 
