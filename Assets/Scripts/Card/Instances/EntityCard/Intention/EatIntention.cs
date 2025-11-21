@@ -22,7 +22,7 @@ public class EatIntention : EntityIntention
     {
         var toEat = GlobalDataManager.Instance.GetCardByUuid(targetUuid);
         // 食物已不存在，意图执行失败
-        return toEat == null || !belongedEntity.IsInSameBag(toEat);
+        return toEat != null && belongedEntity.IsInSameBag(toEat);
     }
 
     public override void Execute()

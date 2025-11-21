@@ -7,9 +7,10 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 {
     private HoverTip hoverTip;
 
-    public Vector2 offset = new Vector2(10, 0);
+    [SerializeField] private Vector2 offset = new Vector2(10, 0);
 
-    public UnityEvent onPointerEnter = new();
+    public UnityAction onPointerEnter;
+    public UnityAction onPointerExit;
 
     private string textTip;
     private Color textColor;
@@ -25,7 +26,20 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        onPointerExit?.Invoke();
         HideTip();
+    }
+
+    public void OnDisable()
+    {
+        HideTip();
+        textTip = "";
+        time = 0;
+        textColor = ColorManager.White;
+        envStateChanges = null;
+        playerStateChanges = null;
+        onPointerEnter = null;
+        onPointerExit = null;
     }
 
     public void SetTip(
@@ -81,11 +95,6 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         if (hoverTip != null)
             hoverTip.Hide();
         hoverTip = null;
-    }
-
-    public void OnDisable()
-    {
-        HideTip();
     }
 
     private Vector3 CalcTipPos()

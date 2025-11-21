@@ -19,11 +19,6 @@ public abstract class AttackIntention : EntityIntention
         this.atkRange = atkRange;
     }
 
-    public override string GiveName()
-    {
-        return "攻击";
-    }
-
     public override bool CanExecute()
     {
         var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
@@ -90,9 +85,9 @@ public abstract class AttackIntention : EntityIntention
             sb.AppendLine($"目标距离:  {dist:0.0}");
 
             if (dist >= atkRange.Item1 && dist <= atkRange.Item2)
-                sb.AppendLine($"目标在攻击距离内:  否");
-            else
                 sb.AppendLine($"目标在攻击距离内:  是");
+            else
+                sb.AppendLine($"目标在攻击距离内:  否");
         }
 
         // TODO: 策划配置的描述文本

@@ -16,6 +16,7 @@ public abstract class EntityCard : Card, IEntity
 
     [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;         // 坐标
     [JsonIgnore] public EntityIntention CurrentIntention => currentIntention;   // 当前意图
+    [JsonIgnore] public int AIRefreshCooldown => aiRefreshCooldown;             // AI刷新冷却
 
     public virtual void TakeDamage(float damage, IEntity damageDealer) => entity.TakeDamage(damage, damageDealer);
 
@@ -187,6 +188,8 @@ public abstract class EntityCard : Card, IEntity
             currentIntention.Prepare();
             currentIntention.SetBelongedEntity(this);
         }
+
+        RefreshSlot();
     }
 
     /// <summary>
@@ -282,8 +285,7 @@ public abstract class EntityCard : Card, IEntity
 
         if (!moveClose)
             moveDir = -moveDir;
-
-        if (stopAfterReach)
+        else if (stopAfterReach)
             moveDist = Mathf.Min(distToTarget, moveDist);
 
         float dest = Coordinate.Position + moveDist * moveDir;

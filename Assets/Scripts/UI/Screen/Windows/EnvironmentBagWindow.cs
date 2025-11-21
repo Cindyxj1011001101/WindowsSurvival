@@ -45,7 +45,7 @@ public class EnvironmentBagWindow : BagWindow
 
         // 探索消耗显示
         exploreTipController = exploreButton.gameObject.AddComponent<HoverTipController>();
-        exploreTipController.onPointerEnter.AddListener(() =>
+        exploreTipController.onPointerEnter = () =>
         {
             if (MoveExploreManager.Instance.CanMoveExplore())
             {
@@ -55,11 +55,11 @@ public class EnvironmentBagWindow : BagWindow
             }
             else
                 exploreTipController.SetTip("身上太重了，无法探索");
-        });
+        };
 
         // 移动消耗显示
         moveTipController = executeMoveButton.gameObject.AddComponent<HoverTipController>();
-        moveTipController.onPointerEnter.AddListener(() =>
+        moveTipController.onPointerEnter = () =>
         {
             if (MoveExploreManager.Instance.CanMoveExplore())
             {
@@ -69,7 +69,7 @@ public class EnvironmentBagWindow : BagWindow
             }
             else
                 moveTipController.SetTip("身上太重了，无法移动");
-        });
+        };
 
         // 当前坐标显示
         currentCoordSlider.onValueChanged.AddListener((_) =>
@@ -89,12 +89,10 @@ public class EnvironmentBagWindow : BagWindow
         moveLeftButton.onClick.AddListener(() =>
         {
             targetCoordSlider.value--;
-            SoundManager.Instance.PlaySound("简单点击_01", true);
         });
         moveRightButton.onClick.AddListener(() =>
         {
             targetCoordSlider.value++;
-            SoundManager.Instance.PlaySound("简单点击_01", true);
         });
 
         // 执行移动

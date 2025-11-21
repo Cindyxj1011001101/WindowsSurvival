@@ -10,7 +10,7 @@ public abstract class EntityIntention
     [JsonProperty] protected int preparationMinutes;    // 意图执行准备时间
     [JsonIgnore] protected EntityCard belongedEntity;   // 所属实体
 
-    [JsonIgnore] public int PreparationMinutes => preparationMinutes;
+    [JsonIgnore] public int ExecutionCountdown => executionCountdown;
     [JsonIgnore] public bool IsReady => executionCountdown <= 0;
 
     public EntityIntention(int preparationMinutes)

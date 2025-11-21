@@ -24,7 +24,7 @@ public class EscapeIntention : EntityIntention
     {
         var threat = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 威胁丢失
-        return threat == null || !belongedEntity.IsInSameLocation(threat);
+        return threat != null && belongedEntity.IsInSameLocation(threat);
     }
 
     public override void Execute()

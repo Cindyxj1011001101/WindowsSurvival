@@ -15,14 +15,14 @@ public class AcrossLocationMoveIntention : EntityIntention
 
     public override string GiveName()
     {
-        return "长途移动";
+        return "移动";
     }
 
     public override bool CanExecute()
     {
         var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 目标消失或者目标在当前地点
-        return target == null || belongedEntity.IsInSameLocation(target);
+        return target != null && !belongedEntity.IsInSameLocation(target);
     }
 
     public override void Execute()

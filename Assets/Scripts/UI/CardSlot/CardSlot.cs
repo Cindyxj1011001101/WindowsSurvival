@@ -1,6 +1,7 @@
 ﻿using DG.Tweening;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,6 +36,9 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private GameObject iconLayout;                 // 用于显示图标的布局
     [SerializeField] private Image fireIcon;                        // 图标上的火焰
     [SerializeField] private Image flashIcon;                       // 图标上的闪电
+    [SerializeField] private Image intentionIcon;                   // 实体意图图标
+    [SerializeField] private List<Sprite> intentionSprites;         // 实体意图图标列表
+    [SerializeField] private List<Sprite> intentionSpritesReversedInColor;       // 反色实体意图图标列表
 
     [SerializeField] private Animator cardAnimator;
 
@@ -43,7 +47,9 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private bool onlyDisplay = false;
 
     private Dictionary<Type, float> lastComponentValues = new();
-    private Dictionary<Type, UIStateSlider> componentSliders = new(); // 用于存储组件的滑动条
+    private Dictionary<Type, UIStateSlider> componentSliders = new();   // 用于存储组件的滑动条
+    private Dictionary<string, Sprite> intentionSpriteLookup = new();   // 实体意图图标对照表
+    private Dictionary<string, Sprite> intentionSpriteReversedInColorLookup = new();   // 反色实体意图图标对照表
 
     public SlotCards Cards { get; protected set; }
     public bool IsEmpty => Cards.IsEmpty;
@@ -61,6 +67,19 @@ public class CardSlot : MonoBehaviour
             dontRefresh = value;
             if (!value) RefreshDisplay();
             else GetComponent<CanvasGroup>().blocksRaycasts = false;
+        }
+    }
+
+    private void Awake()
+    {
+        foreach (var sprite in intentionSprites)
+        {
+            intentionSpriteLookup[sprite.name.Replace("Intention_", "")] = sprite;
+        }
+
+        foreach (var sprite in intentionSpritesReversedInColor)
+        {
+            intentionSpriteReversedInColorLookup[sprite.name.Replace("Intention_r_", "")] = sprite;
         }
     }
 
@@ -421,6 +440,51 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
+    /// 显示实体意图
+    /// </summary>
+    /// <param name="intention"></param>
+    private void DisplayEntityIntention(EntityCard entity)
+    {
+        iconLayout.SetActive(true);
+        intentionIcon.gameObject.SetActive(true);
+        var tipController = intentionIcon.GetComponent<HoverTipController>();
+
+        var intention = entity.CurrentIntention;
+
+        if (intention == null)
+        {
+            intentionIcon.sprite = null;
+            tipController.onPointerEnter = () =>
+            {
+                tipController.SetTip($"暂无意图\n刷新倒计时:  {entity.AIRefreshCooldown}min");
+            };
+            tipController.onPointerExit = null;
+            return;
+        }
+
+        var intentionName = intention.GiveName();
+        var normalSprite = intentionSpriteLookup[intentionName]; // 正常颜色图标
+        var reversedColorSprite = intentionSpriteReversedInColorLookup[intentionName];  // 反色图标
+
+        intentionIcon.sprite = normalSprite;
+
+        tipController.onPointerEnter = () =>
+        {
+            intentionIcon.sprite = reversedColorSprite;
+            var tip = new StringBuilder();
+            tip.AppendLine("意图:  " + intentionName);
+            tip.AppendLine("执行倒计时:  " + intention.ExecutionCountdown + "min");
+            tip.Append(intention.GetDescription());
+            tipController.SetTip(tip.ToString().TrimEnd('\n'));
+        };
+
+        tipController.onPointerExit = () =>
+        {
+            intentionIcon.sprite = normalSprite;
+        };
+    }
+
+    /// <summary>
     /// 显示指定数量的卡牌
     /// </summary>
     /// <param name="card"></param>
@@ -507,6 +571,9 @@ public class CardSlot : MonoBehaviour
         // 显示实体生命值
         if (card.TryGetComponent<EntityComponent>(out var ec))
             DisplayContinuousValueComponent(ec, middle);
+        // 显示实体意图
+        if (card is EntityCard en)
+            DisplayEntityIntention(en);
         // 显示电力消耗
         if (card.TryGetComponent<PowerConsumptionComponent>(out var pc) && pc.consumptionRate > 0)
             DisplayElectricPowerIcon(pc.Connected, pc.consumptionRate);
@@ -534,6 +601,7 @@ public class CardSlot : MonoBehaviour
         if (iconLayout != null) iconLayout.SetActive(false);
         if (fireIcon != null) fireIcon.gameObject.SetActive(false);
         if (flashIcon != null) flashIcon.gameObject.SetActive(false);
+        if (intentionIcon != null) intentionIcon.gameObject.SetActive(false);
 
         componentSliders.Clear();
         lastComponentValues.Clear();

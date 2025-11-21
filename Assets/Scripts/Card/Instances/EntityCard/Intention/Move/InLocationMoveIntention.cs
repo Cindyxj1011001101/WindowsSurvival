@@ -19,14 +19,14 @@ public class InLocationMoveIntention : EntityIntention
 
     public override string GiveName()
     {
-        return moveClose ? "靠近" : "远离";
+        return "移动";
     }
 
     public override bool CanExecute()
     {
         var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 目标丢失
-        return target == null || !belongedEntity.IsInSameLocation(target);
+        return target != null && belongedEntity.IsInSameLocation(target);
     }
 
     public override void Execute()
@@ -62,6 +62,7 @@ public class InLocationMoveIntention : EntityIntention
             var dist = belongedEntity.DistanceTo(target);
             sb.AppendLine($"目标位置:  {target.Coordinate.Location:0.0}");
             sb.AppendLine($"目标距离:  {dist:0.0}");
+            sb.AppendLine($"移动方向:  {(moveClose ? "靠近" : "远离")}");
             sb.AppendLine($"预计到达位置:  {belongedEntity.EstimateMoveEndPosition(target, moveDist, moveClose):0.0}");
         }
 

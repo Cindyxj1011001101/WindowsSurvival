@@ -136,11 +136,11 @@ public class TimeSelectWindow : WindowBase
 
         if (getConfirmEffects == null) return;
 
-        tipController.onPointerEnter.AddListener(() =>
+        tipController.onPointerEnter = () =>
         {
             (string textTip, int time, Dictionary<PlayerStateEnum, float> p, Dictionary<EnvironmentStateEnum, float> e) = getConfirmEffects.Invoke(hour * 60 + minute);
             tipController.SetTip(textTip, time, p, e);
-        });
+        };
     }
 
     private void ClampTimeRange()
