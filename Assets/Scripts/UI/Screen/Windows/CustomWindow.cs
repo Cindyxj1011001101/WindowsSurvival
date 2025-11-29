@@ -26,10 +26,6 @@ public class CustomWindow : WindowBase
     {
         var button = ObjectBufferPool.Instance.Get(buttonPrefab, buttonLayout).GetComponent<HoverableButton>();
         button.text.text = text;
-        if (button.TryGetComponent<HoverTipController>(out var component))
-        {
-            component.SetTip("");
-        }
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() =>
         {

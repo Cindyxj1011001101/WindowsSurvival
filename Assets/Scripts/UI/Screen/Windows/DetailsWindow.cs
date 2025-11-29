@@ -291,15 +291,11 @@ public class DetailsWindow : BagWindow
 
         foreach (var e in currentDisplayedCard.Events)
         {
+            if (e.ShouldHideThis()) continue;
+
             var card = currentDisplayedCard;
             var button = ObjectBufferPool.Instance.Get(eventButtonPrefab, buttonLayout).GetComponent<HoverableButton>();
             button.text.text = e.Name;
-
-            if (e.ShouldHideThis())
-            {
-                button.gameObject.SetActive(false);
-                continue;
-            }
 
             var interactable = e.Judge();
             button.Interactable = interactable;
