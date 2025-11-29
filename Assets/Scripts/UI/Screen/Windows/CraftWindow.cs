@@ -297,17 +297,9 @@ public class CraftWindow : WindowBase
                 SoundManager.Instance.PlaySound("制作_03", true);
 
                 // 掉落制作出的卡牌
-                // 如果是装备卡牌，则尝试直接穿上
-                if (GameManager.Instance.CanEquip(outcomeCard, out _))
-                {
-                    GameManager.Instance.Equip(outcomeCard, slot.transform.position);
-                }
                 // 如果是建筑卡牌或者是有内容物的卡牌，则优先掉落到环境里
-                else
-                {
-                    var toPlayerBag = outcomeCard.CardType != CardType.Construction && !outcomeCard.TryGetComponent<InnerContentsComponent>(out _);
-                    GameManager.Instance.AddCardWithTween(outcomeCard, toPlayerBag, slot.transform.position);
-                }
+                var toPlayerBag = outcomeCard.CardType != CardType.Construction && !outcomeCard.TryGetComponent<InnerContentsComponent>(out _);
+                GameManager.Instance.AddCardWithTween(outcomeCard, toPlayerBag, slot.transform.position);
 
                 // 刷新显示
                 RefreshDisplay();
