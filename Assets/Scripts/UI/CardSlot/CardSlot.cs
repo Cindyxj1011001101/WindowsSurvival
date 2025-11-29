@@ -445,22 +445,18 @@ public class CardSlot : MonoBehaviour
     /// <param name="intention"></param>
     private void DisplayEntityIntention(EntityCard entity)
     {
-        iconLayout.SetActive(true);
-        intentionIcon.gameObject.SetActive(true);
-        var tipController = intentionIcon.GetComponent<HoverTipController>();
-
         var intention = entity.CurrentIntention;
 
         if (intention == null)
         {
-            intentionIcon.sprite = null;
-            tipController.onPointerEnter = () =>
-            {
-                tipController.SetTip($"暂无意图\n刷新倒计时:  {entity.AIRefreshCooldown}min");
-            };
-            tipController.onPointerExit = null;
+            iconLayout.SetActive(false);
+            intentionIcon.gameObject.SetActive(false);
             return;
         }
+
+        iconLayout.SetActive(true);
+        intentionIcon.gameObject.SetActive(true);
+        var tipController = intentionIcon.GetComponent<HoverTipController>();
 
         var intentionName = intention.GiveName();
         var normalSprite = intentionSpriteLookup[intentionName]; // 正常颜色图标
