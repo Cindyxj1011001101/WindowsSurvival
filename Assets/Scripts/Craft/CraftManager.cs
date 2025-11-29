@@ -66,6 +66,13 @@ public class CraftManager : IManager
         EventManager.Instance.TriggerEvent(EventType.UnlockRecipe);
     }
 
+    /// <summary>
+    /// 判断能否合成指定配方
+    /// </summary>
+    /// <param name="recipe"></param>
+    /// <param name="limitations"></param>
+    /// <param name="hint"></param>
+    /// <returns></returns>
     public bool CanCrfat(ScriptableRecipe recipe, out Dictionary<string, bool> limitations, out string hint)
     {
         limitations = null;
@@ -98,7 +105,7 @@ public class CraftManager : IManager
 
         // 配方已解锁，看材料是否充足
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
-        foreach (var material in recipe.materials)
+        foreach (var material in GetMaterials(recipe))
         {
             // 任何一项材料不满足数量需求，不能合成
             if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum)
@@ -112,6 +119,11 @@ public class CraftManager : IManager
         return true;
     }
 
+    /// <summary>
+    /// 得到建筑卡牌的建造限制
+    /// </summary>
+    /// <param name="component"></param>
+    /// <returns></returns>
     private Dictionary<string, bool> GetConstructionLimitations(ConstructionComponent component)
     {
         Dictionary<string, bool> result = new();
@@ -146,10 +158,16 @@ public class CraftManager : IManager
         return result;
     }
 
+    /// <summary>
+    /// 获取合成所需材料（考虑制作激励事件加成）
+    /// </summary>
+    /// <param name="recipe"></param>
+    /// <returns></returns>
     public List<RecipeMaterial> GetMaterials(ScriptableRecipe recipe)
     {
         List<RecipeMaterial> result = new();
 
+        // 制作激励事件进行中，材料需求减半
         var craftIncentive = GameEventManager.Instance.IsEventOngoing<CraftIncentive>();
 
         foreach (var m in recipe.materials)
@@ -161,6 +179,11 @@ public class CraftManager : IManager
         return result;
     }
 
+    /// <summary>
+    /// 得到合成所需时间（考虑制作激励事件加成）
+    /// </summary>
+    /// <param name="recipe"></param>
+    /// <returns></returns>
     public int GetCraftTime(ScriptableRecipe recipe)
     {
         var craftIncentive = GameEventManager.Instance.IsEventOngoing<CraftIncentive>();
