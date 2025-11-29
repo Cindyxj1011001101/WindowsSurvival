@@ -9,8 +9,8 @@ public class FuelGenerator : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("点燃", $"点燃{CardName}。点然后每15分钟产生{POWER_PRODUCTION_RATE}单位电力。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, CanIgnite);
-        AddCardEvent("熄灭", "", Extinguish, CanExtinguish);
+        AddCardEvent("点燃", $"点燃{CardName}。点然后每15分钟产生{POWER_PRODUCTION_RATE}单位电力。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, CanIgnite);
+        AddCardEvent("熄灭", "", fuelStorage.Extinguish, CanExtinguish);
         base.RegisterCardEvents(); // 拆毁
     }
 
@@ -34,37 +34,37 @@ public class FuelGenerator : ConstructionCard
 
     private void PowerOn()
     {
+        fuelStorage.Ignite();
+    }
+
+    private void PowerOff()
+    {
+        fuelStorage.Extinguish();
+    }
+
+    private void OnIgnite()
+    {
         PlaySound("点火_02");
 
-        fuelStorage.Ignite();
+        powerConsumption.ConnectPower();
 
         stateMachine.ChangeState("已点燃");
     }
 
-    private void PowerOff()
+    private void OnExtinguish()
     {
         // 只有玩家在同一地点时才停止音效
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
 
-        fuelStorage.Extinguish();
+        powerConsumption.DisconnectPower();
 
         stateMachine.ChangeState("未点燃");
-    }
-
-    private void Ignite(CardEvent e)
-    {
-        powerConsumption.ConnectPower();
     }
 
     private bool CanIgnite(out string s)
     {
         return powerConsumption.CanConnectPower(out s) && fuelStorage.CanIgnite(out s);
-    }
-
-    private void Extinguish(CardEvent e)
-    {
-        powerConsumption.DisconnectPower();
     }
 
     private bool CanExtinguish(out string s)

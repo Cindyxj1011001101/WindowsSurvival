@@ -27,8 +27,8 @@ public class FuelFurnace : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("点燃", "点燃燃料炉。点燃后可以使燃料炉快速升温。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite);
-        AddCardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish);
+        AddCardEvent("点燃", "点燃燃料炉。点燃后可以使燃料炉快速升温。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite);
+        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish);
         AddCardEvent("开始加工", "", Event_Process, Judge_Process);
         base.RegisterCardEvents(); // 拆毁
     }
@@ -60,27 +60,6 @@ public class FuelFurnace : ConstructionCard
 
     protected override void OnInit()
     {
-        fuelStorage.whileBurning = () =>
-        {
-            // 点燃时，每回合温度增加
-            temperature.AddValue(17); // 温度+17
-        };
-
-        fuelStorage.whileNotBurning = () =>
-        {
-            // 熄灭时，每回合温度减少
-            var waterLevel = StateManager.Instance.WaterLevel.CurValue;
-            temperature.AddValue(-4); // 温度-4
-            if (waterLevel >= 30) // 水平面>=30时，温度额外-8
-            {
-                temperature.AddValue(-8);
-            }
-            else if (waterLevel > 0) // 水平面>=0时，温度额外-4
-            {
-                temperature.AddValue(-4);
-            }
-        };
-
         innerContents.onRemoveCard = (c) =>
         {
             if (processComplished && innerContents.bag.IsEmpty)
@@ -93,21 +72,39 @@ public class FuelFurnace : ConstructionCard
         };
     }
 
-    private void Ignite(CardEvent e)
+    private void OnIgnite()
     {
         PlaySound("点火_02");
+
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "燃料炉音效", 1f);
-
-        fuelStorage.Ignite();
     }
 
-    private void Extinguish(CardEvent e)
+    private void OnExtinguish()
     {
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
+    }
 
-        fuelStorage.Extinguish();
+    private void OnBurning()
+    {
+        // 点燃时，每回合温度增加
+        temperature.AddValue(17); // 温度+17
+    }
+
+    private void OnNotBurning()
+    {
+        // 熄灭时，每回合温度减少
+        var waterLevel = StateManager.Instance.WaterLevel.CurValue;
+        temperature.AddValue(-4); // 温度-4
+        if (waterLevel >= 30) // 水平面>=30时，温度额外-8
+        {
+            temperature.AddValue(-8);
+        }
+        else if (waterLevel > 0) // 水平面>=0时，温度额外-4
+        {
+            temperature.AddValue(-4);
+        }
     }
 
     private bool ContentFilter(Card c, out string s)

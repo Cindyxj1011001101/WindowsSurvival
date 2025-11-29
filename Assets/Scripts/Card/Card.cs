@@ -294,26 +294,31 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
         //UpdateManager.Instance.CardUpdate.AddListener(Update);
         UpdateManager.Instance.AddCardUpdateListener(ref updateOrder, Update);
-        
-        if (coordinate != null)
-        {
-            // 设置卡牌坐标地点
-            coordinate.coordinate.SetLocation(Bag as EnvironmentBag);
-            // 监听玩家移动
-            EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
-        }
 
+        // 初始化坐标
+        InitCoordinate();
         // 初始化内容物
         InitInnerContents();
-
         // 初始化电力消耗
         InitPowerConsumption();
+        // 初始化燃料存储
+        InitFuelStorage();
 
         // 派生类初始化
         OnInit();
 
         // 注册卡牌事件
         RegisterCardEvents();
+    }
+
+    private void InitCoordinate()
+    {
+        if (coordinate == null) return;
+
+        // 设置卡牌坐标地点
+        coordinate.coordinate.SetLocation(Bag as EnvironmentBag);
+        // 监听玩家移动
+        EventManager.Instance.AddListener(EventType.PlayerMove, RefreshSlot);
     }
 
     private void InitInnerContents()
@@ -334,6 +339,16 @@ public abstract class Card : IComparable<Card>
         powerConsumption.powerOn = ReflectionUtility.BindToDelegate<UnityAction>(this, "PowerOn", true);
         powerConsumption.powerOff = ReflectionUtility.BindToDelegate<UnityAction>(this, "PowerOff", true);
         powerConsumption.RegisterPowerOnOffActions();
+    }
+
+    private void InitFuelStorage()
+    {
+        if (fuelStorage == null) return;
+
+        fuelStorage.onIgnite = ReflectionUtility.BindToDelegate<UnityAction>(this, "OnIgnite", true);
+        fuelStorage.onExtinguish = ReflectionUtility.BindToDelegate<UnityAction>(this, "OnExtinguish", true);
+        fuelStorage.onBurning = ReflectionUtility.BindToDelegate<UnityAction>(this, "OnBurning", true);
+        fuelStorage.onNotBurning = ReflectionUtility.BindToDelegate<UnityAction>(this, "OnNotBurning", true);
     }
 
     protected virtual void OnInit() { }
@@ -411,8 +426,8 @@ public abstract class Card : IComparable<Card>
 
         // 自动断电
         powerConsumption?.DisconnectPower();
-
-        // TODO: 自动熄灭
+        // 自动熄灭
+        fuelStorage?.Extinguish();
 
         OnDestroy();
 

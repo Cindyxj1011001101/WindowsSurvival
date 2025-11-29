@@ -7,8 +7,8 @@ public class FuelDistiller : ConstructionCard
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("点燃", "点燃蒸馏器。将盐水蒸馏成淡水。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite);
-        AddCardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish);
+        AddCardEvent("点燃", "点燃蒸馏器。将盐水蒸馏成淡水。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite);
+        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish);
         AddCardEvent("倒入盐水", "消耗盐水，使蒸馏器的盐水储量+12\n！可能会造成浪费！", Event_AddSalineWater, Judge_AddSalineWater);
         base.RegisterCardEvents(); // 拆毁
     }
@@ -42,8 +42,6 @@ public class FuelDistiller : ConstructionCard
 
     protected override void OnInit()
     {
-        fuelStorage.whileBurning = HandleDistillation;
-
         // 取出瓶装水时，如果淡水储量达到了上限，则再生成一瓶
         innerContents.onRemoveCard = (c) =>
         {
@@ -51,11 +49,9 @@ public class FuelDistiller : ConstructionCard
         };
     }
 
-    private void Ignite(CardEvent e)
+    private void OnIgnite()
     {
         PlaySound("点火_02");
-
-        fuelStorage.Ignite();
 
         // 点燃后暂停所有卡牌每回合更新
         innerContents.FreezeUpdate();
@@ -63,14 +59,17 @@ public class FuelDistiller : ConstructionCard
         stateMachine.ChangeState("已点燃");
     }
 
-    private void Extinguish(CardEvent e)
+    private void OnExtinguish()
     {
-        fuelStorage.Extinguish();
-
         // 熄灭后恢复所有卡牌每回合更新
         innerContents.UnfreezeUpdate();
 
         stateMachine.ChangeState("未点燃");
+    }
+
+    private void OnBurning()
+    {
+        HandleDistillation();
     }
 
     /// <summary>

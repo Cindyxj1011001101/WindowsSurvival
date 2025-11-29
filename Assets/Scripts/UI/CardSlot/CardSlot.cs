@@ -527,7 +527,7 @@ public class CardSlot : MonoBehaviour
         if (card.TryGetComponent<FuelStorageComponent>(out var fc))
         {
             DisplayContinuousValueComponent(fc, middle);
-            DisplayBuriningIcon(fc.isBurning, fc.oxygenConsumptionWhileBurning, fc.coProductionWhileBurning);
+            DisplayBuriningIcon(fc.isBurning, fc.oxygenConsumptionOnBurning, fc.coProductionOnBurning);
         }
         // 显示温度
         if (card.TryGetComponent<TemperatureComponent>(out var t))

@@ -846,11 +846,13 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     public int extraFuelConsumptionWhenWinter;             // 冰层季导致的额外燃料消耗
     public int extraFuelConsumptionWhenWaterLevelHigh;     // 水平面高时导致的额外燃料消耗
     public int autoExtinguishWaterLevelThreshold;          // 导致自动熄灭的水平面高度
-    public float oxygenConsumptionWhileBurning;            // 燃烧时导致的氧气变化
-    public float coProductionWhileBurning;                 // 燃烧时导致的一氧化碳变化
+    public float oxygenConsumptionOnBurning;               // 燃烧时导致的地点氧气减少
+    public float coProductionOnBurning;                    // 燃烧时导致的地点一氧化碳增加
 
-    [JsonIgnore] public UnityAction whileBurning;    // 燃烧时每回合处理
-    [JsonIgnore] public UnityAction whileNotBurning; // 非燃烧时每回合处理
+    [JsonIgnore] public UnityAction onBurning;          // 燃烧时每回合处理
+    [JsonIgnore] public UnityAction onNotBurning;       // 非燃烧时每回合处理
+    [JsonIgnore] public UnityAction onIgnite;           // 点燃时触发
+    [JsonIgnore] public UnityAction onExtinguish;       // 熄灭时触发
     
     [JsonIgnore]
     public int FuelConsumption
@@ -879,8 +881,8 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         this.extraFuelConsumptionWhenWinter = extraFuelConsumptionWhenWinter;
         this.extraFuelConsumptionWhenWaterLevelHigh = extraFuelConsumptionWhenWaterLevelHigh;
         this.autoExtinguishWaterLevelThreshold = autoExtinguishWaterLevelThreshold;
-        this.oxygenConsumptionWhileBurning = oxygenConsumptionWhileBurning;
-        this.coProductionWhileBurning = coProductionWhileBurning;
+        this.oxygenConsumptionOnBurning = oxygenConsumptionWhileBurning;
+        this.coProductionOnBurning = coProductionWhileBurning;
     }
 
     /// <summary>
@@ -918,13 +920,18 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     /// <summary>
     /// 点燃
     /// </summary>
-    public void Ignite()
+    public void Ignite(CardEvent e = null)
     {
+        if (isBurning) return;
+
         isBurning = true;
 
         var env = BelongedCard.Bag as EnvironmentBag;
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -oxygenConsumptionWhileBurning);
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, coProductionWhileBurning);
+        // 氧气减少，一氧化碳增加
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, -oxygenConsumptionOnBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, coProductionOnBurning);
+
+        onIgnite?.Invoke();
 
         RefreshSlot();
     }
@@ -932,13 +939,17 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     /// <summary>
     /// 熄灭
     /// </summary>
-    public void Extinguish()
+    public void Extinguish(CardEvent e = null)
     {
+        if (!isBurning) return;
+
         isBurning = false;
 
         var env = BelongedCard.Bag as EnvironmentBag;
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, oxygenConsumptionWhileBurning);
-        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, -coProductionWhileBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.Oxygen, oxygenConsumptionOnBurning);
+        env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, -coProductionOnBurning);
+
+        onExtinguish?.Invoke();
 
         RefreshSlot();
     }
@@ -972,12 +983,12 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         if (!isBurning)
         {
             // 非燃烧时每回合处理
-            whileNotBurning?.Invoke();
+            onNotBurning?.Invoke();
             return;
         }
 
         // 燃烧时每回合处理
-        whileBurning?.Invoke();
+        onBurning?.Invoke();
 
         // 燃料减少
         AddValue(-fuelConsumptionSnapshot);
@@ -1201,11 +1212,15 @@ public class PowerConsumptionComponent : CardComponent
 
     public void ConnectPower(CardEvent e = null)
     {
+        if (Connected) return;
+
         ElectricPowerManager.Instance.ConnectPower(BelongedCard.Uuid, consumptionRate);
     }
 
     public void DisconnectPower(CardEvent e = null)
     {
+        if (!Connected) return;
+
         ElectricPowerManager.Instance.DisconnectPower(BelongedCard.Uuid);
     }
 

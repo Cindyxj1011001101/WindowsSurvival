@@ -9,8 +9,8 @@ public class Campfire : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("点燃", "点燃营火。可以对部分食物进行简单的烧烤。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", Ignite, fuelStorage.CanIgnite);
-        AddCardEvent("熄灭", "", Extinguish, fuelStorage.CanExtinguish);
+        AddCardEvent("点燃", "点燃营火。可以对部分食物进行简单的烧烤。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite);
+        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish);
         base.RegisterCardEvents(); // 拆毁
     }
 
@@ -38,8 +38,6 @@ public class Campfire : ConstructionCard
 
     protected override void OnInit()
     {
-        fuelStorage.whileBurning = WhileBurning;
-
         // 放入内容物时，暂停卡牌每回合更新
         innerContents.onAddCard = (c) =>
         {
@@ -70,7 +68,7 @@ public class Campfire : ConstructionCard
     /// <summary>
     /// 点燃时触发
     /// </summary>
-    private void Ignite(CardEvent e)
+    private void OnIgnite()
     {
         // 音效
         PlaySound("点火_02");
@@ -78,8 +76,6 @@ public class Campfire : ConstructionCard
         // 只有玩家在同一地点且点燃时才播放循环音效
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 0.3f);
-
-        fuelStorage.Ignite();
 
         // 点燃后暂停所有卡牌每回合更新
         innerContents.FreezeUpdate();
@@ -105,13 +101,11 @@ public class Campfire : ConstructionCard
     /// <summary>
     /// 熄灭时触发
     /// </summary>
-    private void Extinguish(CardEvent e)
+    private void OnExtinguish()
     {
         // 只有玩家在同一地点时才停止音效
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
-
-        fuelStorage.Extinguish();
 
         // 熄灭后恢复所有卡牌每回合更新
         innerContents.UnfreezeUpdate();
@@ -129,7 +123,7 @@ public class Campfire : ConstructionCard
     /// <summary>
     /// 点燃时每回合触发
     /// </summary>
-    private void WhileBurning()
+    private void OnBurning()
     {
         // 内容物增加烹饪进度
         foreach (var card in innerContents.GetAllCards())
