@@ -62,11 +62,6 @@ public class GlobalDataManager : IManager
 
         return null;
     }
-
-    public bool ExistsEntity(IEntity entity)
-    {
-        return allEntities.ContainsKey(entity.Uuid);
-    }
     #endregion
 
     #region 卡牌记录
@@ -94,11 +89,6 @@ public class GlobalDataManager : IManager
             return allCards[uuid];
 
         return null;
-    }
-
-    public bool ExistsCard(string uuid)
-    {
-        return allCards.ContainsKey(uuid);
     }
     #endregion
 

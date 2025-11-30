@@ -16,7 +16,7 @@ public abstract class EntityIntention
     [JsonIgnore] public int ExecutionCountdown => executionCountdown;
     [JsonIgnore] public bool IsReady => executionCountdown <= 0;
     [JsonIgnore] public bool ExeSucceed { get; private set; } = false;
-    [JsonIgnore] public bool IsValid => GlobalDataManager.Instance.ExistsEntity(belongedEntity); // 当所属实体不存在时，意图失效
+    [JsonIgnore] public bool IsValid => !belongedEntity.Destroyed; // 当所属实体不存在时，意图失效
 
     public EntityIntention(int preparationMinutes)
     {

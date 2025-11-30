@@ -63,7 +63,7 @@ public class EntityAggroCollection
         foreach (var item in sortedSet.ToList())
         {
             // 如果仇恨目标已不存在
-            if (!GlobalDataManager.Instance.ExistsEntity(item.Target))
+            if (item.Target == null)
             {
                 // 将目标移出集合，继续寻找
                 RemoveByUuid(item.TargetUuid);
