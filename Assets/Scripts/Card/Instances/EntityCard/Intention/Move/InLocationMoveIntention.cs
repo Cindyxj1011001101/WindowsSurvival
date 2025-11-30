@@ -22,14 +22,14 @@ public class InLocationMoveIntention : EntityIntention
         return "移动";
     }
 
-    public override bool CanExecute()
+    protected override bool CanExecute()
     {
         var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 目标丢失
         return target != null && belongedEntity.IsInSameLocation(target);
     }
 
-    public override void Execute()
+    public override void OnExecute()
     {
         var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
 

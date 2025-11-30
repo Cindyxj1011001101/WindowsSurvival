@@ -12,7 +12,7 @@ public class AcupunctureAttackIntention : RangedAttackIntention
         this.playerItchinessIncrease = playerItchinessIncrease;
     }
 
-    public override void Execute()
+    public override void OnExecute()
     {
         var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         belongedEntity.SingleAttack(target, dmg);

@@ -20,14 +20,14 @@ public class EscapeIntention : EntityIntention
         return "逃跑";
     }
 
-    public override bool CanExecute()
+    protected override bool CanExecute()
     {
         var threat = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 威胁丢失
         return threat != null && belongedEntity.IsInSameLocation(threat);
     }
 
-    public override void Execute()
+    public override void OnExecute()
     {
         var threat = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 向远离威胁来源的距离逃跑

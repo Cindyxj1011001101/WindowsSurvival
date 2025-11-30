@@ -19,7 +19,7 @@ public abstract class AttackIntention : EntityIntention
         this.atkRange = atkRange;
     }
 
-    public override bool CanExecute()
+    protected override bool CanExecute()
     {
         var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
 
@@ -33,7 +33,7 @@ public abstract class AttackIntention : EntityIntention
         return true;
     }
 
-    public override void Execute()
+    public override void OnExecute()
     {
         var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 执行攻击

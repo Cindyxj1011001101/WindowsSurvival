@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -10,8 +11,12 @@ public abstract class EntityIntention
     [JsonProperty] protected int preparationMinutes;    // 意图执行准备时间
     [JsonIgnore] protected EntityCard belongedEntity;   // 所属实体
 
+    private bool isExecuting; // 意图正在执行中
+
     [JsonIgnore] public int ExecutionCountdown => executionCountdown;
     [JsonIgnore] public bool IsReady => executionCountdown <= 0;
+    [JsonIgnore] public bool ExeSucceed { get; private set; } = false;
+    [JsonIgnore] public bool IsValid => GlobalDataManager.Instance.ExistsEntity(belongedEntity); // 当所属实体不存在时，意图失效
 
     public EntityIntention(int preparationMinutes)
     {
@@ -28,17 +33,38 @@ public abstract class EntityIntention
         executionCountdown = preparationMinutes;
     }
 
-    /// <summary>
-    /// 更新意图执行倒计时，返回true时代表准备结束
-    /// </summary>
-    /// <returns></returns>
     public void UpdateExecutionCountdown()
     {
         executionCountdown = Mathf.Max(executionCountdown - 1, 0);
     }
 
+    public void ExecuteOver()
+    {
+        isExecuting = false;
+    }
+
     public abstract string GiveName();
-    public abstract bool CanExecute();
-    public abstract void Execute();
+    protected abstract bool CanExecute();
+    public abstract void OnExecute();
     public abstract string GetDescription();
+    public void TryExecute()
+    {
+        PublicMono.Instance.StartCoroutine(TryExecuteCo());
+    }
+    private IEnumerator TryExecuteCo()
+    {
+        isExecuting = true;
+        if (CanExecute())
+        {
+            ExeSucceed = true;
+            OnExecute();
+        }
+        ExecuteOver();
+        while (isExecuting)
+        {
+            yield return null;
+        }
+        // 刷新实体意图
+        belongedEntity.RefreshIntention();
+    }
 }

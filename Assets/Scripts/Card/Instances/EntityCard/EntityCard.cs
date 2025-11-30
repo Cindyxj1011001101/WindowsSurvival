@@ -68,7 +68,7 @@ public abstract class EntityCard : Card, IEntity
         if (aiRefreshCooldown == 0 && currentIntention == null)
         {
             // 第一次生成时获取一下意图
-            TryGetNewIntention();
+            RefreshIntention();
         }
 
         // 监听每分钟的实体更新
@@ -163,15 +163,23 @@ public abstract class EntityCard : Card, IEntity
         {
             aiRefreshCooldown = 0;
             // 重新获取意图
-            TryGetNewIntention();
+            RefreshIntention();
         }
     }
 
     /// <summary>
-    /// 尝试获取新意图
+    /// 刷新意图
     /// </summary>
-    private void TryGetNewIntention()
+    public void RefreshIntention()
     {
+        var prev = currentIntention;
+        void CompleteIntention()
+        {
+            if (prev != null)
+                // 意图执行结束，移除执行队列
+                TimeManager.Instance.DequeueIntention();
+        }
+
         // 获取最高优先级意图
         currentIntention = GetHighestPriorityIntention();
 
@@ -189,7 +197,17 @@ public abstract class EntityCard : Card, IEntity
             currentIntention.SetBelongedEntity(this);
         }
 
-        RefreshSlot();
+        // 意图切换动画
+        if (Slot != null)
+        {
+            Slot.SwitchIntention(prev, currentIntention, CompleteIntention);
+            if (transform != null && transform.TryGetComponent<CardSlot>(out var slot))
+                slot.SwitchIntention(prev, currentIntention, CompleteIntention);
+        }
+        else
+        {
+            CompleteIntention();
+        }
     }
 
     /// <summary>
@@ -202,14 +220,8 @@ public abstract class EntityCard : Card, IEntity
 
         if (!currentIntention.IsReady) return;
 
-        // 倒计时完成，尝试执行意图
-        if (currentIntention.CanExecute())
-        {
-            currentIntention.Execute();
-        }
-
-        // 无论执行是否成功，都刷新意图
-        TryGetNewIntention();
+        // 加入待执行队列中
+        TimeManager.Instance.EnqueueIntention(currentIntention);
     }
     #endregion
 
@@ -273,8 +285,11 @@ public abstract class EntityCard : Card, IEntity
 
     #region 辅助方法
     public float DistanceTo(IEntity other) => coordinate.DistanceTo(other);
+
     public bool IsInSameLocation(IEntity other) => coordinate.IsInSameLocation(other);
+
     public void Move(float dist) => coordinate.Move(dist);
+
     /// <summary>
     /// 估计移动结束位置
     /// </summary>

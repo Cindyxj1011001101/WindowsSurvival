@@ -18,14 +18,14 @@ public class EatIntention : EntityIntention
         return "进食";
     }
 
-    public override bool CanExecute()
+    protected override bool CanExecute()
     {
         var toEat = GlobalDataManager.Instance.GetCardByUuid(targetUuid);
         // 食物已不存在，意图执行失败
         return toEat != null && belongedEntity.IsInSameBag(toEat);
     }
 
-    public override void Execute()
+    public override void OnExecute()
     {
         var toEat = GlobalDataManager.Instance.GetCardByUuid(targetUuid);
 

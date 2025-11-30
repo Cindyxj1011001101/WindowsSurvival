@@ -1,8 +1,10 @@
 ﻿using DG.Tweening;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 /// <summary>
@@ -10,20 +12,20 @@ using UnityEngine.UI;
 /// </summary>
 public class CardSlot : MonoBehaviour
 {
-    private const int BIG_ICON_IMAGE_SIZE = 92;
-    private const int SMALL_ICON_SIZE = 64;
-    private const int BIG_ICON_ANCHOR_POS = 16;
-    private const int SMALL_ICON_ANCHOR_POS = 30;
-    private const int BIG_ICON_MIDDLE_COMPONENT_LAYOUT_POSY = 57;
-    private const int SMALL_ICON_MIDDLE_COMPONENT_LAYOUT_POSY = 65;
+    private const int BIG_ICON_IMAGE_SIZE = 92;                     // 卡牌大图尺寸
+    private const int SMALL_ICON_SIZE = 64;                         // 卡牌小图尺寸
+    private const int BIG_ICON_ANCHOR_POS = 16;                     // 大图锚点位置
+    private const int SMALL_ICON_ANCHOR_POS = 30;                   // 小图锚点位置
+    private const int BIG_ICON_MIDDLE_COMPONENT_LAYOUT_POSY = 57;   // 大图的组件摆放位置Y
+    private const int SMALL_ICON_MIDDLE_COMPONENT_LAYOUT_POSY = 65; // 小图的组件摆放位置Y
 
-    [SerializeField] private Image iconImage;
-    [SerializeField] private Text nameText;
+    [SerializeField] private Image iconImage;                       // 卡牌图
+    [SerializeField] private Text nameText;                         // 卡牌名称
     [SerializeField] private GameObject stackObject;                // 控制是否显示堆叠
     [SerializeField] private Text stackNumText;                     // 显示数量
     [SerializeField] private Image maxStackNumImage;                // 显示最大堆叠数量的图标
-    [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField] private CanvasGroup cardCanvasGroup;
+    [SerializeField] private CanvasGroup canvasGroup;               // 整体的canvasGroup
+    [SerializeField] private CanvasGroup cardCanvasGroup;           // 卡面的canvasGroup
     [SerializeField] private Text moreInfoText;                     // 额外信息
     [SerializeField] private RectTransform particleDisplayRect;     // 显示粒子的区域
     [SerializeField] private GameObject mask;
@@ -38,11 +40,12 @@ public class CardSlot : MonoBehaviour
     [SerializeField] private Image flashIcon;                       // 图标上的闪电
     [SerializeField] private Image intentionIcon;                   // 实体意图图标
     [SerializeField] private List<Sprite> intentionSprites;         // 实体意图图标列表
-    [SerializeField] private List<Sprite> intentionSpritesReversedInColor;       // 反色实体意图图标列表
+    [SerializeField] private List<Sprite> intentionSpritesReversedColor;    // 反色实体意图图标列表
 
-    [SerializeField] private Animator cardAnimator;
+    [SerializeField] private Animator cardAnimator;                 // 卡图动画机
+    [SerializeField] private Animator intentionAnimator;            // 意图动画机
 
-    [SerializeField] private HoverTipController tipController;
+    [SerializeField] private HoverTipController tipController;      // 显示快捷交互内容
 
     [SerializeField] private bool onlyDisplay = false;
 
@@ -50,6 +53,8 @@ public class CardSlot : MonoBehaviour
     private Dictionary<Type, UIStateSlider> componentSliders = new();   // 用于存储组件的滑动条
     private Dictionary<string, Sprite> intentionSpriteLookup = new();   // 实体意图图标对照表
     private Dictionary<string, Sprite> intentionSpriteReversedInColorLookup = new();   // 反色实体意图图标对照表
+
+    private Coroutine switchIntentionCo;
 
     public SlotCards Cards { get; protected set; }
     public bool IsEmpty => Cards.IsEmpty;
@@ -72,12 +77,15 @@ public class CardSlot : MonoBehaviour
 
     private void Awake()
     {
+        if (!onlyDisplay)
+            Clear();
+
         foreach (var sprite in intentionSprites)
         {
             intentionSpriteLookup[sprite.name.Replace("Intention_", "")] = sprite;
         }
 
-        foreach (var sprite in intentionSpritesReversedInColor)
+        foreach (var sprite in intentionSpritesReversedColor)
         {
             intentionSpriteReversedInColorLookup[sprite.name.Replace("Intention_r_", "")] = sprite;
         }
@@ -87,7 +95,7 @@ public class CardSlot : MonoBehaviour
     {
         if (onlyDisplay) return;
 
-        Clear();
+        //Clear();
         EventManager.Instance.AddListener(EventType.StartChangeTime, OnChangeTimeStarted);
         EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
         EventManager.Instance.AddListener<Card>(EventType.PickUpCard, OnCardPickedUp);
@@ -440,13 +448,92 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
-    /// 显示实体意图
+    /// 切换意图
     /// </summary>
-    /// <param name="intention"></param>
-    private void DisplayEntityIntention(EntityCard entity)
+    /// <param name="previous">上一个意图</param>
+    /// <param name="target">切换的目标意图</param>
+    /// <param name="onSwitchOver">意图切换动画完成后执行</param>
+    public void SwitchIntention(EntityIntention previous, EntityIntention target, UnityAction onSwitchOver)
     {
-        var intention = entity.CurrentIntention;
+        switchIntentionCo = PublicMono.Instance.StartCoroutine(SwitchIntentionCo(previous, target, onSwitchOver));
+    }
 
+    private IEnumerator SwitchIntentionCo(EntityIntention previous, EntityIntention target, UnityAction onSwitchOver)
+    {
+        string animName;
+        // 原意图的结束动画
+        if (previous != null)
+        {
+            if (previous.ExeSucceed)
+            {
+                // 原意图执行成功
+                // 播放成功结束动画
+                intentionAnimator.enabled = true;
+                animName = previous.GiveName() + "_End";
+                intentionAnimator.Play(animName);
+
+                // 等待一帧确保动画切换完成
+                yield return null;
+
+                // 获取动画片段的长度并等待
+                var duration = intentionAnimator.GetCurrentAnimatorStateInfo(0).length;
+                MouseManager.Instance.Wait(duration);
+                yield return new WaitForSeconds(duration);
+            }
+            else
+            {
+                // 原意图执行失败
+                // 播放执行失败动画
+                var seq = DOTween.Sequence();
+                seq.Join(intentionIcon.transform.DOPunchPosition(Vector3.one * 1.5f, 0.6f, 20));
+                seq.Join(intentionIcon.DOColor(ColorManager.Red, 0.5f));
+                seq.Join(intentionIcon.DOFade(0, 0.2f).SetDelay(0.4f));
+                seq.Join(intentionIcon.rectTransform.DOAnchorPosY(-10f, 0.2f));
+                seq.OnComplete(() =>
+                {
+                    intentionIcon.transform.localPosition = Vector3.zero;
+                    intentionIcon.color = new Color(1, 1, 1, 1);
+                });
+                seq.Play();
+                MouseManager.Instance.Wait(seq.Duration());
+                while (seq.active)
+                {
+                    yield return null;
+                }
+            }
+        }
+
+        // 新意图的开始动画
+        if (target != null)
+        {
+            DisplayEntityIntention(target);
+
+            intentionAnimator.enabled = true;
+            animName = target.GiveName() + "_Start";
+            intentionAnimator.Play(animName);
+
+            // 等待一帧确保动画切换完成
+            yield return null;
+
+            // 获取动画片段的长度并等待
+            var duration = intentionAnimator.GetCurrentAnimatorStateInfo(0).length;
+            MouseManager.Instance.Wait(duration);
+            yield return new WaitForSeconds(duration);
+        }
+        else
+        {
+            iconLayout.SetActive(false);
+            intentionIcon.gameObject.SetActive(false);
+        }
+
+        intentionAnimator.enabled = false;
+
+        // 执行切换结束逻辑
+        onSwitchOver?.Invoke();
+    }
+
+    public void DisplayEntityIntention(EntityIntention intention)
+    {
         if (intention == null)
         {
             iconLayout.SetActive(false);
@@ -454,8 +541,12 @@ public class CardSlot : MonoBehaviour
             return;
         }
 
+        intentionAnimator.enabled = false;
+
         iconLayout.SetActive(true);
         intentionIcon.gameObject.SetActive(true);
+
+        // 设置新的意图图标和悬浮效果
         var tipController = intentionIcon.GetComponent<HoverTipController>();
 
         var intentionName = intention.GiveName();
@@ -569,7 +660,7 @@ public class CardSlot : MonoBehaviour
             DisplayContinuousValueComponent(ec, middle);
         // 显示实体意图
         if (card is EntityCard en)
-            DisplayEntityIntention(en);
+            DisplayEntityIntention(en.CurrentIntention);
         // 显示电力消耗
         if (card.TryGetComponent<PowerConsumptionComponent>(out var pc) && pc.consumptionRate > 0)
             DisplayElectricPowerIcon(pc.Connected, pc.consumptionRate);
@@ -581,6 +672,7 @@ public class CardSlot : MonoBehaviour
     public void Clear()
     {
         cardAnimator.enabled = false;
+        intentionAnimator.enabled = false;
 
         cardCanvasGroup.alpha = 0;
         cardCanvasGroup.blocksRaycasts = false;
@@ -603,6 +695,12 @@ public class CardSlot : MonoBehaviour
         lastComponentValues.Clear();
 
         tipController.enabled = false;
+
+        if (switchIntentionCo != null)
+        {
+            PublicMono.Instance.StopCoroutine(switchIntentionCo);
+            switchIntentionCo = null;
+        }
     }
 
     /// <summary>
