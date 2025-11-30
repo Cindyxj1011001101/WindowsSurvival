@@ -6,11 +6,11 @@ public class EventTipWindow : WindowBase
     [SerializeField] private Text contentText;
     [SerializeField] private Text titleText;
     [SerializeField] private Image iconImage;
-    [SerializeField] private HoverableButton closeButton;
+    [SerializeField] private HoverableButton cancelButton;
 
     protected override void Init()
     {
-        closeButton.onClick.AddListener(() =>
+        cancelButton.onClick.AddListener(() =>
         {
             WindowsManager.Instance.CloseWindow(AppName);
         });

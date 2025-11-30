@@ -258,7 +258,7 @@ MonoBehaviour:
   contentText: {fileID: 9157738529497827836}
   titleText: {fileID: 5127432691512394215}
   iconImage: {fileID: 6080900922497116443}
-  closeButton: {fileID: 7335370822788041658}
+  cancelButton: {fileID: 7335370822788041658}
 --- !u!1 &5317325169508944079
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,14 +430,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bde70f08f0d3fa345aeb6f80cb668d83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalImage: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
-  fadeDuration: 0.1
+  fadeTransition: 0.1
   textsNeedToReverseColor:
   - {fileID: 285622012592216725}
   imagseNeedToReverseColor: []
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
+  rectTransform: {fileID: 0}
 --- !u!114 &5810108605898801232
 MonoBehaviour:
   m_ObjectHideFlags: 0
