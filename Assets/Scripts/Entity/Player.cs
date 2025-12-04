@@ -50,6 +50,8 @@ public class Player : IEntity, IManager
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -damage);
         // 中断休息行为
         StateManager.Instance.StopResting();
+        // 中断制作行为
+        CraftManager.Instance.StopCrafting();
     }
 
     public void DealDamage(IEntity target)

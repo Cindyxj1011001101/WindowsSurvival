@@ -396,4 +396,14 @@ public static class CardFactory
 
         return card;
     }
+
+    public static List<Card> CreateCards(string cardId, int num)
+    {
+        List<Card> cards = new();
+        for (int i = 0; i < num; i++)
+        {
+            cards.Add(CreateCard(cardId));
+        }
+        return cards;
+    }
 }

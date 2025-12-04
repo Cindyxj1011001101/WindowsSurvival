@@ -12,6 +12,8 @@ public class CraftManager : IManager
 
     public Dictionary<RecipeType, ScriptableRecipeLibrary> LibraryDict => libraryDict;
 
+    private bool craftStopped;
+
     private CraftManager() { }
 
     public void Init()
@@ -42,6 +44,7 @@ public class CraftManager : IManager
 
     public void Reset()
     {
+        craftStopped = false;
         unlockedRecipes.Clear();
     }
 
@@ -195,25 +198,53 @@ public class CraftManager : IManager
     /// 合成卡牌 (调用前请务必先判断能否合成)
     /// </summary>
     /// <param name="recipe"></param>
-    public void Craft(ScriptableRecipe recipe, UnityAction<Card> dropCraftedCard)
+    public void Craft(ScriptableRecipe recipe, UnityAction<Card> dropCraftedCard, UnityAction<List<Card>> returnMaterials)
     {
+        craftStopped = false;
+
         // 消耗合成材料
         PlayerBag playerBag = GameManager.Instance.PlayerBag;
-        foreach (var material in GetMaterials(recipe))
+        var materials = GetMaterials(recipe);
+        foreach (var material in materials)
         {
             playerBag.DestroyCardsByCardId(material.cardId, material.requiredNum);
         }
 
-        // 创建一个新的卡牌
-        var craftedCard = CardFactory.CreateCard(recipe.cardId);
-        
         // 消耗时间
         TimeManager.Instance.AddTime(GetCraftTime(recipe), () =>
         {
-            dropCraftedCard?.Invoke(craftedCard);
-        });
+            if (craftStopped)
+            {
+                // 此处返回表示制作失败了
+                var toReturn = new List<Card>();
+                // 返还材料
+                foreach (var material in materials)
+                {
+                    toReturn.AddRange(CardFactory.CreateCards(material.cardId, material.requiredNum));
+                }
+                returnMaterials?.Invoke(toReturn);
+                return;
+            }
 
-        // 触发制作事件
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", craftedCard.CardName));
+            // 制作成功
+            // 创建一个新的卡牌
+            var craftedCard = CardFactory.CreateCard(recipe.cardId);
+            dropCraftedCard?.Invoke(craftedCard);
+
+            // 触发制作事件
+            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", craftedCard.CardName));
+        });
+    }
+
+    /// <summary>
+    /// 外部调用停止合成（如麦麦被攻击时）
+    /// </summary>
+    public void StopCrafting()
+    {
+        if (craftStopped) return;
+
+        craftStopped = true;
+        // 停止时间流逝
+        TimeManager.Instance.ShutTimePass();
     }
 }

@@ -289,8 +289,8 @@ public class CraftWindow : WindowBase
     {
         if (currentSelectedRecipe == null) return;
 
-        // 合成卡牌
-        CraftManager.Instance.Craft(currentSelectedRecipe, (outcomeCard) =>
+        // 制作成功，掉落卡牌
+        void CraftSucceeded(Card outcomeCard)
         {
             var tween = slot.transform.PunchAndBounce(() =>
             {
@@ -305,7 +305,20 @@ public class CraftWindow : WindowBase
                 RefreshDisplay();
             });
             MouseManager.Instance.Wait(tween.Duration());
-        });
+        }
+
+        // 制作失败，返还材料
+        void CraftFailed(List<Card> toReturn)
+        {
+            slot.transform.ShowTip("制作中断了！");
+            SoundManager.Instance.PlaySound("错误提示");
+            GameManager.Instance.AddCardsWithTween(toReturn, true, slot.transform.position);
+            // 刷新显示
+            RefreshDisplay();
+        }
+        
+        // 合成卡牌
+        CraftManager.Instance.Craft(currentSelectedRecipe, CraftSucceeded, CraftFailed);
     }
 
     public void DisplayRecipe(string cardId)
