@@ -310,9 +310,9 @@ public abstract class Card : IComparable<Card>
         // 注册卡牌事件
         RegisterCardEvents();
 
-        // 如果玩家当前就在该卡牌所在的环境，则触发进入环境回调。
-        // 这样在存档/读档或场景初始化时，处于玩家当前地点的卡牌能够恢复其在进入时应有的行为（例如循环音播放）。
-        if (Bag != null && GameManager.Instance != null && GameManager.Instance.IsCurrentEnvironment(Bag))
+        // 如果玩家当前就在该卡牌所在的环境，并且该卡牌声明有循环音效，则触发进入环境回调
+        // 仅在 HasLoopSound 为 true 时调用可避免在大量无声卡牌上触发不必要的逻辑（减少加载峰值开销）
+        if (this.HasLoopSound && Bag != null && GameManager.Instance != null && GameManager.Instance.IsCurrentEnvironment(Bag))
             OnEnterEnvironment();
     }
 

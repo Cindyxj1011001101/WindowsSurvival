@@ -172,6 +172,12 @@ public class SoundManager : MonoBehaviour
     public void PlayHeartbeat(string clipName = "心跳_01", float volume = 1f, float pitch = 1f)
     {
         var clip = GetClip(clipName, "Music");
+        // 如果没有找到心跳音频资源，则确保心跳停止并返回
+        if (clip == null)
+        {
+            StopHeartbeat();
+            return;
+        }
         if (heartbeatSource.isPlaying && heartbeatSource.clip == clip)
         {
             heartbeatSource.volume = volume;
@@ -200,6 +206,8 @@ public class SoundManager : MonoBehaviour
     public void PlayBGM(string clipName, bool loop = true, float fadeDuration = 1f, float volumeMultiplier = 1f)
     {
         var clip = GetClip(clipName, "Music");
+        // 防护：未找到BGM则不尝试播放
+        if (clip == null) return;
         if (fadeCoroutine != null)
             StopCoroutine(fadeCoroutine);
         fadeCoroutine = StartCoroutine(FadeSwitchBGM(clip, loop, fadeDuration, volumeMultiplier));
@@ -391,17 +399,50 @@ public class SoundManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 在考虑上一个地点的情况下播放当前环境的背景音乐
+    /// <summary>
+    /// 播放指定地点的环境音乐/环境音。如果传入 null，则使用当前环境或回退到上次地点。
+    /// 这是合并后的统一入口，替代原有的 PlayPlaceMusic/PlayCurEnvironmentMusic。
     /// </summary>
-    public void PlayPlaceMusic(EnvironmentBag nextEnvironmentBag)
+    public void PlayEnvironmentMusic(EnvironmentBag nextEnvironmentBag = null)
     {
-        switch (nextEnvironmentBag.PlaceData.placeType)
+        // 选择实际要播放的环境音
+        EnvironmentBag env = nextEnvironmentBag;
+        if (env == null)
+        {
+            if (GameManager.Instance != null && GameManager.Instance.CurEnvironmentBag != null)
+                env = GameManager.Instance.CurEnvironmentBag;
+            else
+            {
+                // 回退到上次地点
+                switch (GameDataManager.Instance.LastPlace)
+                {
+                    case PlaceEnum.PowerCabin:
+                    case PlaceEnum.Cockpit:
+                    case PlaceEnum.LifeSupportCabin:
+                        PlayBGM("飞船内_01", true);
+                        return;
+                    case PlaceEnum.CoralCoast:
+                    case PlaceEnum.PhosphorTomb:
+                    case PlaceEnum.SpaceshipOuterHull:
+                        PlayBGM("珊瑚礁海域_01", true);
+                        return;
+                    case PlaceEnum.ShallowGrotto:
+                    case PlaceEnum.VictimsHall:
+                    case PlaceEnum.LastSanctuary:
+                        PlayBGM("洞穴环境音", true);
+                        return;
+                    default:
+                        return;
+                }
+            }
+        }
+
+        // 根据目标地点直接播放对应的环境音/BGM
+        switch (env.PlaceData.placeType)
         {
             case PlaceEnum.PowerCabin:
             case PlaceEnum.Cockpit:
             case PlaceEnum.LifeSupportCabin:
-                if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInSpacecraft)
-                    break;
                 StopBGM();
                 PlayBGM("飞船内_01", true);
                 break;
@@ -411,26 +452,17 @@ public class SoundManager : MonoBehaviour
                 StopBGM();
                 PlayBGM("珊瑚礁海域_01", true);
                 break;
+            case PlaceEnum.ShallowGrotto:
+            case PlaceEnum.VictimsHall:
+            case PlaceEnum.LastSanctuary:
+                StopBGM();
+                PlayBGM("洞穴环境音", true);
+                break;
+            default:
+                break;
         }
+        return;
     }
 
-    /// <summary>
-    /// 不考虑上一个场景，直接播当前地点音乐
-    /// </summary>
-    public void PlayCurEnvironmentMusic()
-    {
-        switch (GameDataManager.Instance.LastPlace)
-        {
-            case PlaceEnum.PowerCabin:
-            case PlaceEnum.Cockpit:
-            case PlaceEnum.LifeSupportCabin:
-                PlayBGM("飞船内_01", true);
-                break;
-            case PlaceEnum.CoralCoast:
-            case PlaceEnum.PhosphorTomb:
-            case PlaceEnum.SpaceshipOuterHull:
-                PlayBGM("珊瑚礁海域_01", true);
-                break;
-        }
-    }
+
 }

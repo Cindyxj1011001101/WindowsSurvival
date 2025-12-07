@@ -175,6 +175,22 @@ public class TechnologyManager : IManager
     }
 
     /// <summary>
+    /// 开发用：立即解锁所有科技（会同时解锁配方）
+    /// </summary>
+    public void UnlockAllTechnologies()
+    {
+        if (allTechNodes.IsNullOrEmpty()) return;
+
+        foreach (var node in allTechNodes.Values)
+        {
+            UnlockTechNode(node);
+        }
+
+        // 触发界面/进度刷新
+        EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
+    }
+
+    /// <summary>
     /// 判断一个科技节点是否锁定
     /// </summary>
     /// <param name="techNode"></param>

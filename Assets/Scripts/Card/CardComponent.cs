@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -934,7 +934,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
 
         onIgnite?.Invoke();
         
-        SoundManager.Instance.PlaySound("点火_01", true);
+        //SoundManager.Instance.PlaySound("点火_01", true);
 
         RefreshSlot();
     }
@@ -954,7 +954,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
 
         onExtinguish?.Invoke();
         
-        SoundManager.Instance.PlaySound("熄灭", true);
+        //SoundManager.Instance.PlaySound("熄灭", true);
 
         RefreshSlot();
     }

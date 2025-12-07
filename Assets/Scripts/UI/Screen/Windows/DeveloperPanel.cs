@@ -20,12 +20,23 @@ public class DeveloperPanel : MonoBehaviour
     public Dropdown opDropdown;         // + 或 -
     public InputField inputStateValue;  // 数值
     public Button btnApplyState;        // 应用按钮
+    [Header("第三行，开发者移动相关UI")] 
+    public Dropdown placeDropdown;      // 用于选择目的地点
+    public Button btnMoveToPlace;       // 开发者面板直接移动（不创建回程卡）
 
     [Header("其他控制UI")]
     public Button btnAddStudyProcess;   // 研究进度增加按钮
+    
+    public Button btnUnlockAllTechnologies; // 研究全解锁按钮
+    
+    
+
+    
 
     private float lastShiftTime = 0f;
     private const float doubleClickInterval = 0.3f;
+    // 下拉索引到 PlaceEnum 的映射，避免依赖下拉文本解析
+    private List<PlaceEnum> placeOptions = new();
 
     private void Awake()
     {
@@ -37,6 +48,7 @@ public class DeveloperPanel : MonoBehaviour
         InitCardAddUI();
         InitPlayerStateUI();
         InitOtherUI();
+        InitDevMoveUI();
 
         if (panelRoot != null) panelRoot.SetActive(false);
     }
@@ -84,6 +96,82 @@ public class DeveloperPanel : MonoBehaviour
     private void InitOtherUI()
     {
         if (btnAddStudyProcess != null) btnAddStudyProcess.onClick.AddListener(OnApplyAddStudyProcess);
+    }
+
+    /// <summary>
+    /// 初始化开发者移动与快捷操作UI
+    /// </summary>
+    private void InitDevMoveUI()
+    {
+        if (placeDropdown != null)
+        {
+            placeDropdown.ClearOptions();
+            placeOptions.Clear();
+            var names = new List<string>();
+
+            if (GameManager.Instance != null && GameManager.Instance.PlaceDataDict != null && GameManager.Instance.PlaceDataDict.Count > 0)
+            {
+                foreach (var kv in GameManager.Instance.PlaceDataDict)
+                {
+                    placeOptions.Add(kv.Key);
+
+                    names.Add(kv.Key.ToString());
+                }
+            }
+            else
+            {
+                // 作为后备，使用枚举名
+                foreach (var n in Enum.GetNames(typeof(PlaceEnum)))
+                {
+                    if (Enum.TryParse<PlaceEnum>(n, out var e))
+                    {
+                        placeOptions.Add(e);
+                        names.Add(n);
+                    }
+                }
+            }
+
+            placeDropdown.AddOptions(names);
+            placeDropdown.value = 0;
+        }
+
+        if (btnMoveToPlace != null)
+        {
+            btnMoveToPlace.onClick.AddListener(OnDevMoveToPlaceClicked);
+        }
+
+        if (btnUnlockAllTechnologies != null)
+        {
+            // 绑定“研究全解锁”按钮，在 Inspector 中确保已关联该按钮
+            btnUnlockAllTechnologies.onClick.AddListener(OnUnlockAllTechnologiesClicked);
+        }
+    }
+
+    
+
+    private void OnDevMoveToPlaceClicked()
+    {
+        // 确认在 Inspector 中已绑定 `placeDropdown`
+        if (placeDropdown == null) return;
+
+        // 使用 placeOptions 映射获取枚举值，避免依赖显示文本解析
+        if (placeOptions != null && placeOptions.Count > placeDropdown.value)
+        {
+            var target = placeOptions[placeDropdown.value];
+            GameManager.Instance.ChangeEnv(target, false);
+            return;
+        }
+
+        // 后备：尝试解析下拉文本为枚举（保持向后兼容）
+        var name = placeDropdown.options[placeDropdown.value].text;
+        if (!Enum.TryParse<PlaceEnum>(name, true, out var parsedTarget)) return;
+        GameManager.Instance.ChangeEnv(parsedTarget, false);
+    }
+
+    private void OnUnlockAllTechnologiesClicked()
+    {
+        // 调用 TechnologyManager 的开发者方法，立即解锁所有科技及其配方
+        TechnologyManager.Instance.UnlockAllTechnologies();
     }
 
     private void Update()

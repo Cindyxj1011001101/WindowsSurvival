@@ -44,6 +44,10 @@ public class GameManager : IManager
 
         // 将玩家实体加入当前地点
         CurEnvironmentBag.AddEntity(Player.Instance);
+
+        // 加载/初始化完成后播放当前地点的环境音乐/环境音，确保读档后环境声音正确恢复
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayEnvironmentMusic(CurEnvironmentBag);
     }
 
     public void Reset()
@@ -58,7 +62,8 @@ public class GameManager : IManager
     /// 切换地点
     /// </summary>
     /// <param name="targetEnv">目标地点</param>
-    public void ChangeEnv(PlaceEnum targetEnv)
+    /// <param name="createReturnPassage">是否在目标地点创建回到原地点的通道卡（开发者面板跳转无需创建）</param>
+    public void ChangeEnv(PlaceEnum targetEnv, bool createReturnPassage = true)
     {
         var lastEnv = CurEnvironmentBag;
         // 玩家实体从原地点移除
@@ -93,29 +98,32 @@ public class GameManager : IManager
 
         var env = CurEnvironmentBag;
 
-        // 从切换后的场景单次探索列表中拿出回到原先场景的牌，加入当前场景背包
-        var passageCardId = $"从{env.PlaceName}到{lastEnv.PlaceName}";
-        Card passageCard = env.FindCardOfId(passageCardId);
-        // 先尝试从探索列表里面取出
-        if (passageCard == null)
+        if (createReturnPassage)
         {
-            var droppedCards = env.DisposableDropList.CertainDrop(passageCardId);
-            if (!droppedCards.IsNullOrEmpty())
+            // 从切换后的场景单次探索列表中拿出回到原先场景的牌，加入当前场景背包
+            var passageCardId = $"从{env.PlaceName}到{lastEnv.PlaceName}";
+            Card passageCard = env.FindCardOfId(passageCardId);
+            // 先尝试从探索列表里面取出
+            if (passageCard == null)
             {
-                passageCard = droppedCards[0];
+                var droppedCards = env.DisposableDropList.CertainDrop(passageCardId);
+                if (!droppedCards.IsNullOrEmpty())
+                {
+                    passageCard = droppedCards[0];
+                }
+                // 探索列表里面没有就直接创建
+                passageCard ??= CardFactory.CreateCard(passageCardId);
+                // 加入当前场景背包
+                AddCard(passageCard, env);
             }
-            // 探索列表里面没有就直接创建
-            passageCard ??= CardFactory.CreateCard(passageCardId);
-            // 加入当前场景背包
-            AddCard(passageCard, env);
+
+            // 玩家坐标设置在通道位置
+            passageCard.TryGetComponent<CoordinateComponent>(out var coordinate);
+            Player.Instance.MoveTo(coordinate.coordinate.Position);
         }
 
-        // 玩家坐标设置在通道位置
-        passageCard.TryGetComponent<CoordinateComponent>(out var coordinate);
-        Player.Instance.MoveTo(coordinate.coordinate.Position);
-
-        // 播放新地点环境音
-        SoundManager.Instance.PlayPlaceMusic(CurEnvironmentBag);
+        // 播放新地点环境音（使用统一的播放入口）
+        SoundManager.Instance.PlayEnvironmentMusic(CurEnvironmentBag);
 
         // 触发事件
         EventManager.Instance.TriggerEvent(EventType.ChangeCurrentEnvironment, CurEnvironmentBag);
