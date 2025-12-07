@@ -7,8 +7,8 @@ public class FuelDistiller : ConstructionCard
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("点燃", "点燃蒸馏器。将盐水蒸馏成淡水。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite);
-        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish);
+        AddCardEvent("点燃", "点燃蒸馏器。将盐水蒸馏成淡水。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite, sound: "点火_02");
+        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish,sound: "熄灭");
         AddCardEvent("倒入盐水", "消耗盐水，使蒸馏器的盐水储量+12\n！可能会造成浪费！", Event_AddSalineWater, Judge_AddSalineWater);
         base.RegisterCardEvents(); // 拆毁
     }
@@ -51,8 +51,6 @@ public class FuelDistiller : ConstructionCard
 
     private void OnIgnite()
     {
-        PlaySound("点火_02");
-
         // 点燃后暂停所有卡牌每回合更新
         innerContents.FreezeUpdate();
 

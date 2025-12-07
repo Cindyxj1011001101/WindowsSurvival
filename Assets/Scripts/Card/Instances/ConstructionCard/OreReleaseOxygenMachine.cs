@@ -7,6 +7,8 @@ using UnityEngine;
 /// </summary>
 public class OreReleaseOxygenMachine : ConstructionCard
 {
+    public override bool HasLoopSound => true;
+
     private const int MAX_ORE_CONSUMPTION_PROCESS = 120;    // 白爆矿消耗进度
     private const float OXYGEN_PRODUCTION_RATE = 22.5f;     // 氧气产出率
     private const int ORE_CONSUMPTION_NUM = 1;              // 白爆矿消耗量
@@ -56,25 +58,50 @@ public class OreReleaseOxygenMachine : ConstructionCard
 
     private void PowerOn()
     {
-		var timer = new TimerComponent(oreConsumptionProgress, MAX_ORE_CONSUMPTION_PROCESS)
-		{
-			tipText = "消耗矿石"
-		};
-		AddComponent(timer);
+        var timer = new TimerComponent(oreConsumptionProgress, MAX_ORE_CONSUMPTION_PROCESS)
+        {
+            tipText = "消耗矿石"
+        };
+        AddComponent(timer);
 
-		stateMachine.ChangeState("已接电");
+        stateMachine.ChangeState("已接电");
 
         innerContents.allowRemove = false;
         innerContents.notAllowRemoveReason = "矿石消耗中，不可取出";
-	}
 
+        // 播放循环音（仅当玩家在同一地点时）
+        if (GameManager.Instance.IsCurrentEnvironment(Bag))
+            SoundManager.Instance.PlayCardLoopSound(CardId, "矿石释氧机循环音", 0.3f);
+    }
     private void PowerOff()
 	{
 		RemoveComponent<TimerComponent>();
 		stateMachine.ChangeState("未接电");
 
-        innerContents.allowRemove = true;
+		innerContents.allowRemove = true;
+
+		// 停止循环音（仅当玩家在同一地点时）
+		if (GameManager.Instance.IsCurrentEnvironment(Bag))
+			SoundManager.Instance.StopCardLoopSound(CardId);
 	}
+
+    public override void OnEnterEnvironment()
+    {
+        if (powerConsumption != null && powerConsumption.Connected)
+            SoundManager.Instance.PlayCardLoopSound(CardId, "矿石释氧机循环音", 0.3f);
+    }
+    public override void OnLeaveEnvironment()
+    {
+        SoundManager.Instance.StopCardLoopSound(CardId);
+    }
+    public override void OnDetailOpen()
+    {
+        SoundManager.Instance.SetCardLoopVolume(CardId, 1.0f);
+    }
+    public override void OnDetailClose()
+    {
+        SoundManager.Instance.SetCardLoopVolume(CardId, 0.3f);
+    }
 
     private bool ContentFilter(Card c, out string s)
     {

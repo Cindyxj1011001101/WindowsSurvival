@@ -9,8 +9,8 @@ public class FuelGenerator : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("点燃", $"点燃{CardName}。点然后每15分钟产生{POWER_PRODUCTION_RATE}单位电力。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, CanIgnite);
-        AddCardEvent("熄灭", "", fuelStorage.Extinguish, CanExtinguish);
+        AddCardEvent("点燃", $"点燃{CardName}。点然后每15分钟产生{POWER_PRODUCTION_RATE}单位电力。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, CanIgnite, sound: "点火_02");
+        AddCardEvent("熄灭", "", fuelStorage.Extinguish, CanExtinguish,sound: "熄灭");
         base.RegisterCardEvents(); // 拆毁
     }
 
@@ -44,8 +44,6 @@ public class FuelGenerator : ConstructionCard
 
     private void OnIgnite()
     {
-        PlaySound("点火_02");
-
         powerConsumption.ConnectPower();
 
         stateMachine.ChangeState("已点燃");

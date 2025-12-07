@@ -9,8 +9,8 @@ public class Campfire : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("点燃", "点燃营火。可以对部分食物进行简单的烧烤。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite);
-        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish);
+        AddCardEvent("点燃", "点燃营火。可以对部分食物进行简单的烧烤。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite, sound: "点火_02");
+        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish,sound: "熄灭");
         base.RegisterCardEvents(); // 拆毁
     }
 
@@ -70,9 +70,6 @@ public class Campfire : ConstructionCard
     /// </summary>
     private void OnIgnite()
     {
-        // 音效
-        PlaySound("点火_02");
-
         // 只有玩家在同一地点且点燃时才播放循环音效
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "野炊营火音效", 0.3f);

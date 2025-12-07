@@ -380,6 +380,7 @@ public class InnerContentsComponent : CardComponent
             var toAdd = slot.RemoveCard();
             bag.AddCard(toAdd);
             toAdd.RefreshSlot();
+
         }
         ShowTip(tip);
     }
@@ -932,6 +933,8 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, coProductionOnBurning);
 
         onIgnite?.Invoke();
+        
+        SoundManager.Instance.PlaySound("点火_01", true);
 
         RefreshSlot();
     }
@@ -950,6 +953,8 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, -coProductionOnBurning);
 
         onExtinguish?.Invoke();
+        
+        SoundManager.Instance.PlaySound("熄灭", true);
 
         RefreshSlot();
     }
@@ -968,6 +973,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
             card.TryGetComponent<FuelComponent>(out var burnableComponent);
             card.DestroyThis();
             AddValue(burnableComponent.fuelValue);
+            SoundManager.Instance.PlaySound("添燃料", true);
         }
     }
 

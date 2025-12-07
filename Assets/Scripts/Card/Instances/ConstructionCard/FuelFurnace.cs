@@ -27,8 +27,8 @@ public class FuelFurnace : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("点燃", "点燃燃料炉。点燃后可以使燃料炉快速升温。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite);
-        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish);
+        AddCardEvent("点燃", "点燃燃料炉。点燃后可以使燃料炉快速升温。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite, sound: "点火_02");
+        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish,sound: "熄灭");
         AddCardEvent("开始加工", "", Event_Process, Judge_Process);
         base.RegisterCardEvents(); // 拆毁
     }
@@ -74,8 +74,6 @@ public class FuelFurnace : ConstructionCard
 
     private void OnIgnite()
     {
-        PlaySound("点火_02");
-
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "燃料炉音效", 1f);
     }
