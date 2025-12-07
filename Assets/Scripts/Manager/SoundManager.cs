@@ -316,6 +316,18 @@ public class SoundManager : MonoBehaviour
     public void PlayCardLoopSound(string cardId, string clipName, float volume = 0.3f)
     {
         if (cardLoopSources.ContainsKey(cardId)) return;
+
+        // 如果详情窗口当前正在显示此卡牌，则将初始循环音量设置为更高的值（详情界面打开时应该听到更大的循环音）
+        float initialVolume = volume;
+        if (WindowsManager.Instance != null && WindowsManager.Instance.IsWindowOpen("Details"))
+        {
+            var opened = WindowsManager.Instance.GetOpenedWindows(true);
+            if (opened != null && opened.TryGetValue("Details", out var window) && window is DetailsWindow dw && dw.CurrentDisplayedCard != null && dw.CurrentDisplayedCard.CardId == cardId)
+            {
+                initialVolume = 1.0f;
+            }
+        }
+
         var cardObj = new GameObject($"CardLoop_{cardId}");
         cardObj.transform.parent = this.transform;
         var source = cardObj.AddComponent<AudioSource>();
@@ -328,7 +340,7 @@ public class SoundManager : MonoBehaviour
         }
         source.clip = clip;
         source.loop = true;
-        source.volume = volume;
+        source.volume = initialVolume;
         // 独立添加效果组件
         var lp = cardObj.AddComponent<AudioLowPassFilter>();
         lp.cutoffFrequency = _defaultCutoffFrequency;

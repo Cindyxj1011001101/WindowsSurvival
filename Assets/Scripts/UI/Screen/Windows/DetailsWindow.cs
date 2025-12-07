@@ -28,6 +28,8 @@ public class DetailsWindow : BagWindow
     private string currentDisplay;
 
     private Card currentDisplayedCard;
+    // 公开当前正在显示的卡牌，供其他系统（如音效管理）查询
+    public Card CurrentDisplayedCard => currentDisplayedCard;
     private Bag innerBag;
     private DisplayType displayType = DisplayType.All;
 

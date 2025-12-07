@@ -309,6 +309,11 @@ public abstract class Card : IComparable<Card>
 
         // 注册卡牌事件
         RegisterCardEvents();
+
+        // 如果玩家当前就在该卡牌所在的环境，则触发进入环境回调。
+        // 这样在存档/读档或场景初始化时，处于玩家当前地点的卡牌能够恢复其在进入时应有的行为（例如循环音播放）。
+        if (Bag != null && GameManager.Instance != null && GameManager.Instance.IsCurrentEnvironment(Bag))
+            OnEnterEnvironment();
     }
 
     private void InitCoordinate()
