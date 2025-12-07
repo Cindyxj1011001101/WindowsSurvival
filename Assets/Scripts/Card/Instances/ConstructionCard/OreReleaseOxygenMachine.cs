@@ -8,7 +8,7 @@ using UnityEngine;
 public class OreReleaseOxygenMachine : ConstructionCard
 {
     private const int MAX_ORE_CONSUMPTION_PROCESS = 120;    // 白爆矿消耗进度
-    private const float OXYGEN_PRODUCTION_RATE = 1.5f;      // 氧气产出率
+    private const float OXYGEN_PRODUCTION_RATE = 22.5f;     // 氧气产出率
     private const int ORE_CONSUMPTION_NUM = 1;              // 白爆矿消耗量
     private const float POWER_CONSUMPTION_RATE = 0.1f;      // 电力消耗量
     private const int MAX_OXYGEN_STORAGE = 360;             // 最大氧气储量
