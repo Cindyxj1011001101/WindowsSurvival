@@ -323,7 +323,6 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     public void PlayCardLoopSound(string cardId, string clipName, float volume = 0.3f)
     {
-        if (cardLoopSources.ContainsKey(cardId)) return;
 
         // 如果详情窗口当前正在显示此卡牌，则将初始循环音量设置为更高的值（详情界面打开时应该听到更大的循环音）
         float initialVolume = volume;
@@ -405,6 +404,8 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     public void PlayEnvironmentMusic(EnvironmentBag nextEnvironmentBag = null)
     {
+        //获取当前正在播放的 环境音 的名称，用于判断是否需要中断
+        string currentClipName = bgmSource.clip != null ? bgmSource.clip.name : string.Empty;
         // 选择实际要播放的环境音
         EnvironmentBag env = nextEnvironmentBag;
         if (env == null)
@@ -423,7 +424,7 @@ public class SoundManager : MonoBehaviour
                         return;
                     case PlaceEnum.CoralCoast:
                     case PlaceEnum.PhosphorTomb:
-                    case PlaceEnum.SpaceshipOuterHull:
+                    case PlaceEnum.SpaceshipOuterHull:                        
                         PlayBGM("珊瑚礁海域_01", true);
                         return;
                     case PlaceEnum.ShallowGrotto:
@@ -443,18 +444,27 @@ public class SoundManager : MonoBehaviour
             case PlaceEnum.PowerCabin:
             case PlaceEnum.Cockpit:
             case PlaceEnum.LifeSupportCabin:
+                const string spaceshipBGM = "飞船内_01";
+                if (currentClipName == spaceshipBGM) return;// 已经在播放，无需切换
+
                 StopBGM();
                 PlayBGM("飞船内_01", true);
                 break;
             case PlaceEnum.CoralCoast:
             case PlaceEnum.PhosphorTomb:
             case PlaceEnum.SpaceshipOuterHull:
+                const string coralBGM = "珊瑚礁海域_01";
+                if (currentClipName == coralBGM) return;// 已经在播放，无需切换
+
                 StopBGM();
                 PlayBGM("珊瑚礁海域_01", true);
                 break;
             case PlaceEnum.ShallowGrotto:
             case PlaceEnum.VictimsHall:
             case PlaceEnum.LastSanctuary:
+                const string caveBGM = "洞穴环境音";
+                if (currentClipName == caveBGM) return;// 已经在播放，无需切换
+                
                 StopBGM();
                 PlayBGM("洞穴环境音", true);
                 break;
