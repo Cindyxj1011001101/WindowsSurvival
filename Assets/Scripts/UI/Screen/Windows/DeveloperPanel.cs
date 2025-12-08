@@ -8,6 +8,35 @@ public class DeveloperPanel : MonoBehaviour
 {
     public static DeveloperPanel Instance { get; private set; }
 
+    // 显示用的中文映射
+    private static readonly Dictionary<PlaceEnum, string> PlaceDisplayNames = new()
+    {
+        { PlaceEnum.PowerCabin, "动力舱" },
+        { PlaceEnum.Cockpit, "驾驶室" },
+        { PlaceEnum.LifeSupportCabin, "维生舱" },
+        { PlaceEnum.CoralCoast, "珊瑚礁海域" },
+        { PlaceEnum.PhosphorTomb, "织光藻墓园" },
+        { PlaceEnum.SpaceshipOuterHull, "飞船外壳" },
+        { PlaceEnum.ShallowGrotto, "浅层岩穴" },
+        { PlaceEnum.VictimsHall, "遇难者大厅" },
+        { PlaceEnum.LastSanctuary, "最后庇护所" },
+    };
+
+    private static readonly Dictionary<PlayerStateEnum, string> StateDisplayNames = new()
+    {
+        { PlayerStateEnum.Health, "健康" },
+        { PlayerStateEnum.Hunger, "饱食" },
+        { PlayerStateEnum.Hydration, "水分" },
+        { PlayerStateEnum.Sanity, "精神" },
+        { PlayerStateEnum.Oxygen, "氧气" },
+        { PlayerStateEnum.Sobriety, "清醒度" },
+        { PlayerStateEnum.Load, "负重" },
+        { PlayerStateEnum.COPoisoning, "一氧化碳中毒" },
+        { PlayerStateEnum.Itchiness, "瘙痒" },
+        { PlayerStateEnum.PainLevel, "疼痛" },
+        { PlayerStateEnum.BodyTemperature, "体温" },
+    };
+
     [Header("第一行，卡牌添加相关UI")]
     public GameObject panelRoot;
     public InputField inputCardAmount;
@@ -37,6 +66,8 @@ public class DeveloperPanel : MonoBehaviour
     private const float doubleClickInterval = 0.3f;
     // 下拉索引到 PlaceEnum 的映射，避免依赖下拉文本解析
     private List<PlaceEnum> placeOptions = new();
+    // 下拉索引到 PlayerStateEnum 的映射
+    private List<PlayerStateEnum> stateOptions = new();
 
     private void Awake()
     {
@@ -83,9 +114,17 @@ public class DeveloperPanel : MonoBehaviour
         if (stateDropdown != null)
         {
             stateDropdown.ClearOptions();
-            var names = Enum.GetNames(typeof(PlayerStateEnum));
-            stateDropdown.AddOptions(new List<string>(names));
-            stateDropdown.value = Array.IndexOf(names, "Fullness");
+            stateOptions.Clear();
+
+            var options = new List<string>();
+            foreach (PlayerStateEnum state in Enum.GetValues(typeof(PlayerStateEnum)))
+            {
+                stateOptions.Add(state);
+                options.Add(GetStateDisplayName(state));
+            }
+
+            stateDropdown.AddOptions(options);
+            stateDropdown.value = stateOptions.IndexOf(PlayerStateEnum.Hunger); // 默认选饱食
         }
         if (inputStateValue != null) inputStateValue.text = "10";
         if (btnApplyState != null) btnApplyState.onClick.AddListener(OnApplyStateClicked);
@@ -115,7 +154,7 @@ public class DeveloperPanel : MonoBehaviour
                 {
                     placeOptions.Add(kv.Key);
 
-                    names.Add(kv.Key.ToString());
+                    names.Add(GetPlaceDisplayName(kv.Key));
                 }
             }
             else
@@ -126,7 +165,7 @@ public class DeveloperPanel : MonoBehaviour
                     if (Enum.TryParse<PlaceEnum>(n, out var e))
                     {
                         placeOptions.Add(e);
-                        names.Add(n);
+                        names.Add(GetPlaceDisplayName(e));
                     }
                 }
             }
@@ -239,8 +278,9 @@ public class DeveloperPanel : MonoBehaviour
     {
         if (stateDropdown == null || inputStateValue == null || opDropdown == null) return;
 
-        string stateName = stateDropdown.options[stateDropdown.value].text;
-        if (!Enum.TryParse<PlayerStateEnum>(stateName, out var stateEnum)) return;
+        // 使用预缓存的枚举列表，显示名可中文，逻辑依旧基于枚举值
+        if (stateOptions == null || stateDropdown.value < 0 || stateDropdown.value >= stateOptions.Count) return;
+        var stateEnum = stateOptions[stateDropdown.value];
 
         float value = 10;
         float.TryParse(inputStateValue.text, out value);
@@ -255,6 +295,16 @@ public class DeveloperPanel : MonoBehaviour
             TechnologyManager.Instance.AddStudyProcess(99999999); // 研究进度增加
         }
         
+    }
+
+    private string GetPlaceDisplayName(PlaceEnum place)
+    {
+        return PlaceDisplayNames.TryGetValue(place, out var name) ? name : place.ToString();
+    }
+
+    private string GetStateDisplayName(PlayerStateEnum state)
+    {
+        return StateDisplayNames.TryGetValue(state, out var name) ? name : state.ToString();
     }
     
 }

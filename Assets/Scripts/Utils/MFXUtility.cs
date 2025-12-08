@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using DG.Tweening;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -97,7 +97,7 @@ public static class MFXUtility
         {
             onComplete?.Invoke();
             ObjectBufferPool.Instance.Restore(slot.gameObject);
-            SoundManager.Instance.PlaySound("放置卡牌", true);
+            SoundManager.Instance.PlaySound(GetPlaceSoundName(card.TextureType), true);
         });
 
         return seq;
@@ -202,7 +202,7 @@ public static class MFXUtility
         {
             onComplete?.Invoke();
             ObjectBufferPool.Instance.Restore(slot.gameObject);
-            SoundManager.Instance.PlaySound("放置卡牌", true);
+            SoundManager.Instance.PlaySound(GetPlaceSoundName(sourceCard.TextureType), true);
         });
 
         return mainSeq;
@@ -227,6 +227,22 @@ public static class MFXUtility
         var tween = TurnTo(sourceCard, targetCard, onComplete: () => { targetCard.RefreshSlot(); });
         TimeManager.Instance.FreezeTimePass(tween.Duration());
         return tween;
+    }
+
+    private static string GetPlaceSoundName(CardTextureType textureType)
+    {
+        switch (textureType)
+        {
+            case CardTextureType.Flesh:
+                return "肉质感卡牌放置";
+            case CardTextureType.Metal:
+                return "金属质感卡牌放置";
+            case CardTextureType.Liquid:
+                return "液体质感卡牌放置";
+            case CardTextureType.Default:
+            default:
+                return "默认质感卡牌放置";
+        }
     }
 
     public static void ShowTip(string tip, Vector3 position, float duration = 2f)

@@ -71,4 +71,5 @@ public class CardConfig
     public BehavioralTendency BehavioralTendency; // 行为倾向
     public int AIRefreshInterval; // AI刷新间隔
     public string DeadDrops; // 死亡掉落
+    public CardTextureType TextureType = CardTextureType.Default; // 质感（用于音效）
 }

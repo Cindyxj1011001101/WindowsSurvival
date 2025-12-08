@@ -1,4 +1,4 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -72,7 +72,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // 让sourceSlot暂时不要刷新显示
         sourceSlot.DontRefresh = true;
 
-        SoundManager.Instance.PlaySound("拿起卡牌", true);
+        SoundManager.Instance.PlaySound(GetPickSoundName(card.TextureType), true);
 
         EventManager.Instance.TriggerEvent(EventType.PickUpCard, card);
     }
@@ -446,5 +446,21 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnPointerDown(PointerEventData eventData)
     {
         transform.DOScale(scaleOnPointerDown, scaleTransition).SetEase(Ease.OutBack);
+    }
+
+    private string GetPickSoundName(CardTextureType textureType)
+    {
+        switch (textureType)
+        {
+            case CardTextureType.Flesh:
+                return "肉质感卡牌拿起";
+            case CardTextureType.Metal:
+                return "金属质感卡牌拿起";
+            case CardTextureType.Liquid:
+                return "液体质感卡牌拿起";
+            case CardTextureType.Default:
+            default:
+                return "默认质感卡牌拿起";
+        }
     }
 }

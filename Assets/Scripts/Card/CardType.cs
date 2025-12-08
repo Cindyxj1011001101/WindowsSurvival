@@ -16,3 +16,12 @@
     Equipment,     // 装备
     Other,         // 其他
 }
+
+// 卡牌质感（用于拾取/放置音效选择）
+public enum CardTextureType
+{
+    Default,
+    Flesh,  // 肉质感
+    Metal,  // 金属质感
+    Liquid, // 液体质感
+}

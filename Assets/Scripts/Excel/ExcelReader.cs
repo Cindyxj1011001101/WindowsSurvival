@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -162,6 +162,8 @@ public static class ExcelReader
                 cardConfig.AIRefreshInterval = ParseInt(row[70].ToString());
                 cardConfig.DeadDrops = row[71].ToString();
             }
+            // 质感（可选列，空或“默认”走默认音效）
+            cardConfig.TextureType = ParseTextureType(row[72].ToString());
             cardConfigs.Add(cardConfig.CardId, cardConfig);
         }
 
@@ -222,6 +224,31 @@ public static class ExcelReader
         }
 
         return result;
+    }
+
+    private static CardTextureType ParseTextureType(string textureStr)
+    {
+        if (string.IsNullOrWhiteSpace(textureStr)) return CardTextureType.Default;
+
+        textureStr = textureStr.Trim();
+        switch (textureStr.ToLower())
+        {
+            case "默认质感":
+            case "default":
+                return CardTextureType.Default;
+            case "肉质感":
+            case "flesh":
+                return CardTextureType.Flesh;
+            case "金属质感":
+            case "metal":
+                return CardTextureType.Metal;
+            case "液体质感":
+            case "liquid":
+                return CardTextureType.Liquid;
+            default:
+                Debug.LogWarning($"未知的卡牌质感: {textureStr}，使用默认质感");
+                return CardTextureType.Default;
+        }
     }
 
     #region 掉落列表

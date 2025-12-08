@@ -46,6 +46,8 @@ public abstract class Card : IComparable<Card>
 
     [JsonIgnore] public bool Moveable => CardFactory.GetMoveable(CardId);
 
+    [JsonIgnore] public CardTextureType TextureType => CardFactory.GetCardTextureType(CardId);
+
     [JsonIgnore]
     public float Weight
     {

@@ -260,6 +260,15 @@ public static class CardFactory
         throw new ArgumentException($"不存在ID为{cardId}的卡牌");
     }
 
+    public static CardTextureType GetCardTextureType(string cardId)
+    {
+        if (configCache.TryGetValue(cardId, out var config))
+        {
+            return config.TextureType;
+        }
+        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
+    }
+
     public static CardType GetCardType(string cardId)
     {
         if (configCache.TryGetValue(cardId, out var config))
