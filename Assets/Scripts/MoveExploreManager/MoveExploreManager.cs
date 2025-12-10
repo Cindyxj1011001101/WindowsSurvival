@@ -33,8 +33,6 @@ public class MoveExploreManager : IManager
     {
         lastLoadLevel = StateManager.Instance.PlayerStateDict[PlayerStateEnum.Load].StateLevel;
         InitBehaviourExtraEffects();
-        // 播放环境音乐（使用统一的播放入口）
-        SoundManager.Instance.PlayEnvironmentMusic();
         // 监听负重变化
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChange);
     }
