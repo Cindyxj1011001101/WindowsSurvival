@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 /// <summary>
 /// 燃料发电机
 /// </summary>
+[CardId("燃料发电机")]
 public class FuelGenerator : ConstructionCard
 {
     private const float POWER_PRODUCTION_RATE = 0.8f;

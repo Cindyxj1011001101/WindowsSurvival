@@ -1,6 +1,7 @@
 /// <summary>
 /// 海爬虫
 /// </summary>
+[CardId("海爬虫")]
 public class SeaLizard : CookableCard
 {
     protected override void RegisterCardEvents()

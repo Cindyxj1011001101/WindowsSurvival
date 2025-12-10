@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 立鳞烧
 /// </summary>
+[CardId("立鳞烧")]
 public class Tatsuage : Card
 {
     protected override void RegisterCardEvents()

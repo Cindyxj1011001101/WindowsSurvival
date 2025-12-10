@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 凝胶装瓶器
 /// </summary>
+[CardId("凝胶装瓶器")]
 public class GelBottler : Card
 {
     protected override void RegisterCardEvents()

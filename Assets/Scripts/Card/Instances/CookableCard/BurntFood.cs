@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 烧焦的食物
 /// </summary>
+[CardId("烧焦的食物")]
 public class BurntFood : CookableCard
 {
     protected override void RegisterCardEvents()

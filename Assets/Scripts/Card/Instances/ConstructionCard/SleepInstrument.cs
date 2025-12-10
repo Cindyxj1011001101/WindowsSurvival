@@ -3,6 +3,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 睡眠脉冲仪
 /// </summary>
+[CardId("睡眠脉冲仪")]
 public class SleepInstrument : ConstructionCard
 {
     private const float POWER_CONSUMPTION_RATE = 0.6f;          // 每回合耗电量

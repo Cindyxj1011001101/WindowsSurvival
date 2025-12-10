@@ -4,6 +4,7 @@ using System.Linq;
 /// <summary>
 /// 有产物的爱情贝
 /// </summary>
+[CardId("有产物的爱情贝")]
 public class LoveBeadWithProduct : Card
 {
     private static DropList dropList = new(

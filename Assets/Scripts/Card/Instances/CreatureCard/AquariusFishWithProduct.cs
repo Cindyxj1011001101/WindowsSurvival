@@ -3,6 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 有产物的水瓶鱼
 /// </summary>
+[CardId("有产物的水瓶鱼")]
 public class AquariusFishWithProduct : Card
 {
     protected override void RegisterCardEvents()

@@ -5,6 +5,7 @@ using UnityEngine;
 /// <summary>
 /// 矿石释氧机
 /// </summary>
+[CardId("矿石释氧机")]
 public class OreReleaseOxygenMachine : ConstructionCard
 {
     public override bool HasLoopSound => true;

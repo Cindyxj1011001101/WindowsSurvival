@@ -1,6 +1,7 @@
 /// <summary>
 /// 虹吸海葵
 /// </summary>
+[CardId("虹吸海葵")]
 public class Siphonophyllum : Card
 {
     protected override void RegisterCardEvents()

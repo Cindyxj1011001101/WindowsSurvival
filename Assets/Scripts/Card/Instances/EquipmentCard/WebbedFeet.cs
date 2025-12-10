@@ -1,6 +1,7 @@
 /// <summary>
 /// 脚蹼
 /// </summary>
+[CardId("脚蹼")]
 public class WebbedFeet : EquipmentCard
 {
     protected override void OnInit()

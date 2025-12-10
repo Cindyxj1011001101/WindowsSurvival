@@ -1,6 +1,7 @@
 /// <summary>
 /// 白爆矿
 /// </summary>
+[CardId("白爆矿")]
 public class WhiteBlastOre : Card
 {
     protected override void RegisterCardEvents()

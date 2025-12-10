@@ -1,6 +1,7 @@
 /// <summary>
 /// 瓶装水
 /// </summary>
+[CardId("瓶装水")]
 public class BottledWater : Card
 {
     protected override void RegisterCardEvents()

@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 老鼠
 /// </summary>
+[CardId("老鼠")]
 public class Rat : EntityCard
 {
     public override void TakeDamage(float damage, IEntity damageDealer)

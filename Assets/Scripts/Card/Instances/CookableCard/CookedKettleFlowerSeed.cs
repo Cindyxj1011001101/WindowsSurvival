@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 熟水壶兰种
 /// </summary>
+[CardId("熟水壶兰种")]
 public class CookedKettleFlowerSeed : CookableCard
 {
     protected override void RegisterCardEvents()

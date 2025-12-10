@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 保险柜
 /// </summary>
+[CardId("被撬开的保险柜")]
 public class OpenedInsurance : ConstructionCard
 {
     public override bool CanQuickInteract(Card card, out string tip)

@@ -1,6 +1,7 @@
 /// <summary>
 /// 被捉住的水瓶鱼
 /// </summary>
+[CardId("被捉住的有产物的水瓶鱼")]
 public class CaughtAquariusFishWithProduct : Card
 {
     protected override void RegisterCardEvents()

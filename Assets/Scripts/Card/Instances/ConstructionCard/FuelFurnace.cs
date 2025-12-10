@@ -4,6 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 燃料炉
 /// </summary>
+[CardId("燃料炉")]
 public class FuelFurnace : ConstructionCard
 {
     public override string ExtraInfo

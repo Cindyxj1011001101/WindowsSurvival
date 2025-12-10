@@ -1,6 +1,7 @@
 /// <summary>
 /// 人力发电机
 /// </summary>
+[CardId("人力发电机")]
 public class HumanPoweredGenerator : ConstructionCard
 {
     protected override void RegisterCardEvents()

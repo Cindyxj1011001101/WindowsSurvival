@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 /// <summary>
 /// 板床
 /// </summary>
+[CardId("板床")]
 public class PlankBed : ConstructionCard
 {
     private const float SOBRIETY_CHANGE_RATE = +3.5f;

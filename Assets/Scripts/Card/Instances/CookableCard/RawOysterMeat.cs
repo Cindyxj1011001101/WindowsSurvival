@@ -1,6 +1,7 @@
 /// <summary>
 /// 生贝肉
 /// </summary>
+[CardId("生贝肉")]
 public class RawOysterMeat : CookableCard
 {
     protected override void RegisterCardEvents()

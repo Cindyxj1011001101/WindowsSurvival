@@ -1,6 +1,7 @@
 /// <summary>
 /// 珊瑚礁
 /// </summary>
+[CardId("珊瑚礁")]
 public class CoralReef : Card
 {
     private static DropList dropList = new(

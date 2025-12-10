@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 /// <summary>
 /// 狮子水母
 /// </summary>
+[CardId("狮子水母")]
 public class LionJellyfish : EntityCard
 {
     // 潜在仇恨目标

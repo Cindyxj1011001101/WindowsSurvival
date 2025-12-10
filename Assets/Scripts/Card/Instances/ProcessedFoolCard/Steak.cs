@@ -1,6 +1,7 @@
 /// <summary>
 /// 肉排
 /// </summary>
+[CardId("肉排")]
 public class Steak : Card
 {
     protected override void RegisterCardEvents()

@@ -1,6 +1,7 @@
 /// <summary>
 /// 爱情贝
 /// </summary>
+[CardId("爱情贝")]
 public class LoveBead : Card
 {
     protected override void RegisterCardEvents()

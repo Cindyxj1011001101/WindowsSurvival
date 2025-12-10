@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 腌渍中的海蜇皮
 /// </summary>
+[CardId("腌渍中的海蜇皮")]
 public class PickledJellyfishSkin : Card
 {
     private TimerComponent timer;

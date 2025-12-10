@@ -1,6 +1,7 @@
 /// <summary>
 /// 蠕动盛宴
 /// </summary>
+[CardId("蠕动盛宴")]
 public class CreepFeast: Card
 {
     protected override void RegisterCardEvents()

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 /// <summary>
 /// 冰箱
 /// </summary>
+[CardId("冰箱")]
 public class Refrigerator : ConstructionCard
 {
     private const float POWER_CONSUMPTION_RATE = 0.3f; // 每回合电力消耗

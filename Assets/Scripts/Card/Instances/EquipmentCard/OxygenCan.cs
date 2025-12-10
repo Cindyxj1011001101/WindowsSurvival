@@ -1,6 +1,7 @@
 /// <summary>
 /// 氧气罐
 /// </summary>
+[CardId("氧气罐")]
 public class OxygenCan : EquipmentCard
 {
     public override void OnEquipped()

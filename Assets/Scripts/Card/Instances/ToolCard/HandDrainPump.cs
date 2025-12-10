@@ -1,6 +1,7 @@
 /// <summary>
 /// 手压排水泵
 /// </summary>
+[CardId("手压排水泵")]
 public class HandDrainPump : Card
 {
     protected override void RegisterCardEvents()

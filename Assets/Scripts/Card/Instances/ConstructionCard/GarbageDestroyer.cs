@@ -1,6 +1,7 @@
 /// <summary>
 /// 垃圾销毁器
 /// </summary>
+[CardId("垃圾销毁器")]
 public class GarbageDestroyer : ConstructionCard
 {
     protected override void RegisterCardEvents()

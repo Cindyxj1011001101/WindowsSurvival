@@ -1,6 +1,7 @@
 /// <summary>
 /// 鱼汤
 /// </summary>
+[CardId("鱼汤")]
 public class FishSoup : Card
 {
     protected override void RegisterCardEvents()

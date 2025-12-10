@@ -1,6 +1,7 @@
 /// <summary>
 /// 坚果酥
 /// </summary>
+[CardId("坚果酥")]
 public class NutCrisp: Card
 {
     protected override void RegisterCardEvents()

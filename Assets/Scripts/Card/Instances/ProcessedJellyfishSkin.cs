@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 已处理的海蜇皮
 /// </summary>
+[CardId("已处理的海蜇皮")]
 public class ProcessedJellyfishSkin : Card
 {
     protected override void RegisterCardEvents()

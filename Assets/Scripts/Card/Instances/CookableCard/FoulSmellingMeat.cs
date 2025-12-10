@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 恶臭肉
 /// </summary>
+[CardId("恶臭肉")]
 public class FoulSmellingMeat : CookableCard
 {
     protected override void RegisterCardEvents()

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-public class PlantCard : Card
+public abstract class PlantCard : Card
 {
     [JsonIgnore] public bool IsRipe => plantGrowth.IsRipe;
 

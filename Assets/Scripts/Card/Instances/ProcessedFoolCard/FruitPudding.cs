@@ -1,6 +1,7 @@
 /// <summary>
 /// 铁齿铜牙餐
 /// </summary>
+[CardId("水果布丁")]
 public class FruitPudding: Card
 {
     protected override void RegisterCardEvents()

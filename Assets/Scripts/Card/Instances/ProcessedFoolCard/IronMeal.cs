@@ -1,6 +1,7 @@
 /// <summary>
 /// 铁齿铜牙餐
 /// </summary>
+[CardId("铁齿铜牙餐")]
 public class IronMeal : Card
 {
     protected override void RegisterCardEvents()

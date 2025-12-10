@@ -1,6 +1,7 @@
 /// <summary>
 /// 磁性触手
 /// </summary>
+[CardId("磁性触手")]
 public class MagneticTentacle : CookableCard
 {
     protected override void RegisterCardEvents()

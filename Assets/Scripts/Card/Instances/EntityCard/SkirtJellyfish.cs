@@ -4,6 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 裙水母
 /// </summary>
+[CardId("裙水母")]
 public class SkirtJellyfish : EntityCard
 {
     protected override void RegisterCardEvents()

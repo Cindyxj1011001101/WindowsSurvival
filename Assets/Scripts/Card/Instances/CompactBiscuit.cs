@@ -1,6 +1,7 @@
 /// <summary>
 /// 压缩饼干
 /// </summary>
+[CardId("压缩饼干")]
 public class CompactBiscuit : Card
 {
     protected override void RegisterCardEvents()

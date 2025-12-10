@@ -1,6 +1,7 @@
 /// <summary>
 /// 鱼皮
 /// </summary>
+[CardId("鱼皮")]
 public class FishSkin : Card
 {
     protected override void RegisterCardEvents()

@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 小型气穴
 /// </summary>
+[CardId("小型气穴")]
 public class SmallAirFilledCave : Card
 {
     protected override void RegisterCardEvents()

@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 自热烹饪袋
 /// </summary>
+[CardId("自热烹饪袋")]
 public class SelfHeatingCookingBag : Card
 {
     public override bool CanQuickInteract(Card card, out string tip)

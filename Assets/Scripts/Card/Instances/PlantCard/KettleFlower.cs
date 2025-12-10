@@ -1,10 +1,11 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// 水壶兰
 /// </summary>
+[CardId("水壶兰")]
 public class KettleFlower : PlantCard
 {
     [JsonProperty] private bool hasWound = false;

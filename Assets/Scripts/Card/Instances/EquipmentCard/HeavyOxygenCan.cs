@@ -1,6 +1,7 @@
 /// <summary>
 /// 重型氧气罐
 /// </summary>
+[CardId("重型氧气罐")]
 public class HeavyOxygenCan : EquipmentCard
 {
     public override void OnEquipped()

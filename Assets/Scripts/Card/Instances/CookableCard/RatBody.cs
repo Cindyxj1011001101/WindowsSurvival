@@ -1,6 +1,7 @@
 /// <summary>
 /// 老鼠尸体
 /// </summary>
+[CardId("老鼠尸体")]
 public class RatBody : CookableCard
 {
     private static DropList dropList = new(

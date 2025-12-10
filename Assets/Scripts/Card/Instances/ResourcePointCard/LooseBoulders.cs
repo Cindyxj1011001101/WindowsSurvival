@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 松动巨石
 /// </summary>
+[CardId("松动巨石")]
 public class LooseBoulders : Card
 {
     private static DropList dropList = new(

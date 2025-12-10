@@ -1,6 +1,7 @@
 /// <summary>
 /// 炸虫串
 /// </summary>
+[CardId("炸虫串")]
 public class FriedInsectStick : Card
 {
     protected override void RegisterCardEvents()

@@ -1,6 +1,7 @@
 /// <summary>
 /// 海麻线丛
 /// </summary>
+[CardId("海麻线丛")]
 public class SeaGrassBed : Card
 {
     private static DropList dropListHand = new(

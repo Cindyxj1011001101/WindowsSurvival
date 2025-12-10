@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 /// <summary>
 /// 食物残渣
 /// </summary>
+[CardId("食物残渣")]
 public class FoodScrap : Card
 {
     [JsonProperty] private int disappearCountdown = 4;

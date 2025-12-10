@@ -1,6 +1,7 @@
 ﻿/// <summary>
 /// 育卵液
 /// </summary>
+[CardId("育卵液")]
 public class EggRearingFluid : Card
 {
     protected override void RegisterCardEvents()

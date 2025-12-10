@@ -1,6 +1,7 @@
 /// <summary>
 /// 止痛药
 /// </summary>
+[CardId("止痛药")]
 public class Painkillers : Card
 {
     protected override void RegisterCardEvents()

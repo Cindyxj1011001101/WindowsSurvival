@@ -1,6 +1,7 @@
 /// <summary>
 /// 白爆矿堆
 /// </summary>
+[CardId("白爆矿堆")]
 public class WhiteBlastOreStack : Card
 {
     private static DropList dropList = new(

@@ -1,6 +1,7 @@
 /// <summary>
 /// 海麻线
 /// </summary>
+[CardId("海麻线")]
 public class SeaGrass : Card
 {
     protected override void RegisterCardEvents()

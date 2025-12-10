@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 /// <summary>
 /// 四角菱
 /// </summary>
+[CardId("四角菱")]
 public class WaterChestnut : PlantCard
 {
     protected override void RegisterCardEvents()

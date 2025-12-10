@@ -3,6 +3,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 数据传输台
 /// </summary>
+[CardId("数据传输台")]
 public class DataTransmissionStation : ConstructionCard
 {
     // 表示该卡牌具有循环音效

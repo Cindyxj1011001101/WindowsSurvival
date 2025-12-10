@@ -1,6 +1,7 @@
 /// <summary>
 /// 腐烂物
 /// </summary>
+[CardId("腐烂物")]
 public class SpoiledFood : CookableCard
 {
     protected override void RegisterCardEvents()

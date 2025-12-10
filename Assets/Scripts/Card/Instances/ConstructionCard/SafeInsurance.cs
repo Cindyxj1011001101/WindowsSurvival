@@ -1,6 +1,7 @@
 /// <summary>
 /// 变形的保险柜
 /// </summary>
+[CardId("变形的保险柜")]
 public class SafeInsurance : ConstructionCard
 {
     protected override void RegisterCardEvents()

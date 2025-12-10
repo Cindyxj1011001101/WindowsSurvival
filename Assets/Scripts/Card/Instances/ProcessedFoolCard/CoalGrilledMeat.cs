@@ -1,6 +1,7 @@
 /// <summary>
 /// 黑金炭烤肉
 /// </summary>
+[CardId("黑金炭烤肉")]
 public class CoalGrilledMeat : Card
 {
     protected override void RegisterCardEvents()

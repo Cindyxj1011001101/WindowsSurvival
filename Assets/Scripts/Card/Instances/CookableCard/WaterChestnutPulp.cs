@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 四角菱果肉
 /// </summary>
+[CardId("菱果肉")]
 public class WaterChestnutPulp : CookableCard
 {
     protected override void RegisterCardEvents()

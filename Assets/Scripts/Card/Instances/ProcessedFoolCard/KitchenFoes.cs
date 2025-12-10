@@ -1,6 +1,7 @@
 /// <summary>
 /// 厨房恶物
 /// </summary>
+[CardId("厨房恶物")]
 public class KitchenFoes : Card
 {
     protected override void RegisterCardEvents()

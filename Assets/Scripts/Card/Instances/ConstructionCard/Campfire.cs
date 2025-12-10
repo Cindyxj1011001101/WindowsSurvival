@@ -3,6 +3,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 野炊营火
 /// </summary>
+[CardId("野炊营火")]
 public class Campfire : ConstructionCard
 {
     public override bool HasLoopSound => true;

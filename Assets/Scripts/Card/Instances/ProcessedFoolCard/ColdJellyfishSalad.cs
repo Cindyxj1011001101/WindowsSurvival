@@ -1,6 +1,7 @@
 /// <summary>
 /// 凉拌海蜇
 /// </summary>
+[CardId("凉拌海蜇")]
 public class ColdJellyfishSalad : Card
 {
     protected override void RegisterCardEvents()

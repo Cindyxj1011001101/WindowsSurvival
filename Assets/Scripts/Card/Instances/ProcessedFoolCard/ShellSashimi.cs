@@ -1,6 +1,7 @@
 /// <summary>
 /// 贝类刺身
 /// </summary>
+[CardId("贝类刺身")]
 public class ShellSashimi : Card
 {
     protected override void RegisterCardEvents()

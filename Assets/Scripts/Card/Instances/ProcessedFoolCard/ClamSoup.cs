@@ -1,6 +1,7 @@
 /// <summary>
 /// 蛤蜊浓汤
 /// </summary>
+[CardId("蛤蜊浓汤")]
 public class ClamSoup : Card
 {
     protected override void RegisterCardEvents()

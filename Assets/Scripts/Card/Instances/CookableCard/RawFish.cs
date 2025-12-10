@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 大块生鱼肉
 /// </summary>
+[CardId("大块生鱼肉")]
 public class RawFish : CookableCard
 {
     protected override void RegisterCardEvents()

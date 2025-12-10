@@ -3,6 +3,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 电动排水机
 /// </summary>
+[CardId("电动排水机")]
 public class ElectricDrainageMachine : ConstructionCard
 {
     // 表示该卡牌具有循环音效

@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 /// <summary>
 /// 吸盘蠕虫
 /// </summary>
+[CardId("吸盘蠕虫")]
 public class SuckerWorm : EntityCard
 {
     // 潜在仇恨目标

@@ -1,6 +1,7 @@
 /// <summary>
 /// 塑料袋
 /// </summary>
+[CardId("塑料袋")]
 public class PlasticBag : EquipmentCard
 {
     protected override void RegisterCardEvents()

@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 狮子水母尸体
 /// </summary>
+[CardId("狮子水母尸体")]
 public class LionJellyfishCorpse : Card
 {
     private static DropList dropList = new(

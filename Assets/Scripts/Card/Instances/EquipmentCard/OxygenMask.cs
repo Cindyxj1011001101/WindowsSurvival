@@ -1,6 +1,7 @@
 /// <summary>
 /// 氧气面罩
 /// </summary>
+[CardId("氧气面罩")]
 public class OxygenMask : EquipmentCard
 {
     public override void OnEquipped()

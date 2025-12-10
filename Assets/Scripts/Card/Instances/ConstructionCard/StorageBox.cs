@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 储物箱
 /// </summary>
+[CardId("储物箱")]
 public class StorageBox : ConstructionCard
 {
     public override bool CanQuickInteract(Card card, out string tip)

@@ -1,6 +1,7 @@
 /// <summary>
 /// 渔获袋
 /// </summary>
+[CardId("渔获袋")]
 public class FishingNetBag : EquipmentCard
 {
     protected override void RegisterCardEvents()

@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 /// <summary>
 /// 飞船驾驶座
 /// </summary>
+[CardId("损坏的飞船驾驶座")]
 public class SpaceshipSeat : ConstructionCard
 {
     private const float SOBRIETY_CHANGE_RATE_REST = +2.7f;

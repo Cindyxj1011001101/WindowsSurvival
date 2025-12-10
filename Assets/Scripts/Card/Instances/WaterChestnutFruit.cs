@@ -1,6 +1,7 @@
-﻿/// <summary>
+/// <summary>
 /// 四角菱果实
 /// </summary>
+[CardId("菱果")]
 public class WaterChestnutFruit : Card
 {
     protected override void RegisterCardEvents()

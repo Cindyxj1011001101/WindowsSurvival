@@ -1,6 +1,7 @@
 /// <summary>
 /// 白灼触手
 /// </summary>
+[CardId("白灼触手")]
 public class ScaldedClaw : Card
 {
     protected override void RegisterCardEvents()

@@ -5,6 +5,7 @@ using Random = UnityEngine.Random;
 /// <summary>
 /// 诱捕陷阱
 /// </summary>
+[CardId("诱捕陷阱")]
 public class Trap : ConstructionCard
 {
     public override string ExtraInfo

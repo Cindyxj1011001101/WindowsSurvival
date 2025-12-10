@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 /// <summary>
 /// 食果鲀
 /// </summary>
+[CardId("食果鲀")]
 public class Fruitfish : EntityCard
 {
     protected override void RegisterCardEvents()

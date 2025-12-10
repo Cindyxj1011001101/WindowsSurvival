@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 /// <summary>
 /// 燃料蒸馏器
 /// </summary>
+[CardId("燃料蒸馏器")]
 public class FuelDistiller : ConstructionCard
 {
     protected override void RegisterCardEvents()

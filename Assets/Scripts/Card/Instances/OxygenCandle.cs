@@ -1,6 +1,7 @@
 /// <summary>
 /// 氧烛
 /// </summary>
+[CardId("氧烛")]
 public class OxygenCandle : Card
 {
     protected override void RegisterCardEvents()

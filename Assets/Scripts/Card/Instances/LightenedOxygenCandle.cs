@@ -1,6 +1,7 @@
 /// <summary>
 /// 点燃的氧烛
 /// </summary>
+[CardId("点燃的氧烛")]
 public class LightenedOxygenCandle : Card
 {
     public override void OnAdd(Bag bag)

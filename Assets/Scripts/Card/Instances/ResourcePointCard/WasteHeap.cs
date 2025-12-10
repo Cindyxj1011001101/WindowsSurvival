@@ -1,6 +1,7 @@
 /// <summary>
 /// 被安全泡沫覆盖的废料堆
 /// </summary>
+[CardId("废料堆")]
 public class WasteHeap : Card
 {
     private static DropList dropList = new(

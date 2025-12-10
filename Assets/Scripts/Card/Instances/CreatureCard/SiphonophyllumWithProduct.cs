@@ -1,6 +1,7 @@
 /// <summary>
 /// 有产物的虹吸海葵
 /// </summary>
+[CardId("有产物的虹吸海葵")]
 public class SiphonophyllumWithProduct : Card
 {
     private static DropList dropList = new(

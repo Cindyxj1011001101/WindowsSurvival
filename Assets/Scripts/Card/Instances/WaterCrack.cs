@@ -1,6 +1,7 @@
 /// <summary>
 /// 渗水裂缝
 /// </summary>
+[CardId("渗水裂缝")]
 public class WaterCrack : Card
 {
     public override bool HasLoopSound => true;
