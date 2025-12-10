@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 149274c5cb9c7a9478e6b902ccfc9979, type: 3}
+  m_Name: HealthConfig
+  m_EditorClassIdentifier: 
+  stateType: 0
+  initialValue: 100
+  maxValue: 150
+  basicChangeRate: 0.5
+  higherIsBetter: 1
+  lowerIsBetter: 0
+  isDecreaseNatural: 0
+  isIncreaseNatural: 0
+  normParam: 0
+  thresholds:
+  - minValueExclude: -1
+    maxValueInclude: 0
+    levelName: "\u6B7B\u4EA1"
+    effect:
+      healthRate: 0
+      sanityRate: 0
+      fulnessRate: 0
+      thirstRate: 0
+      sorbrietyRate: 0
+      bodyTemperatureRate: 0
+      coPoisoningRate: 0
+      oxygenMax: 0
+      painLevelConst: 0
+  - minValueExclude: 0
+    maxValueInclude: 10
+    levelName: "\u6FD2\u6B7B"
+    effect:
+      healthRate: 0
+      sanityRate: 0
+      fulnessRate: 0
+      thirstRate: 0
+      sorbrietyRate: 0
+      bodyTemperatureRate: 0
+      coPoisoningRate: 0
+      oxygenMax: 0
+      painLevelConst: 0
+  - minValueExclude: 10
+    maxValueInclude: 40
+    levelName: "\u91CD\u4F24"
+    effect:
+      healthRate: 0
+      sanityRate: 0
+      fulnessRate: 0
+      thirstRate: 0
+      sorbrietyRate: 0
+      bodyTemperatureRate: 0
+      coPoisoningRate: 0
+      oxygenMax: 0
+      painLevelConst: 0
+  - minValueExclude: 40
+    maxValueInclude: 2.1474836e+9
+    levelName: "\u8FD8\u7B97\u5065\u5EB7"
+    effect:
+      healthRate: 0
+      sanityRate: 0
+      fulnessRate: 0
+      thirstRate: 0
+      sorbrietyRate: 0
+      bodyTemperatureRate: 0
+      coPoisoningRate: 0
+      oxygenMax: 0
+      painLevelConst: 0
+  lowDangerLevels: 02000000
+  highDangerLevels: 0000000001000000

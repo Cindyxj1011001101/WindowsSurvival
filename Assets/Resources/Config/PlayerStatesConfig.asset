@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05342dba65a17eb4ba75e4cd24b65e5b, type: 3}
+  m_Name: PlayerStatesConfig
+  m_EditorClassIdentifier: 
+  stateConfigs:
+  - {fileID: 11400000, guid: 6256d88f4cbccb34480549016f925f0a, type: 2}
+  - {fileID: 11400000, guid: f8ee457c50524ec46a844382d6e7374f, type: 2}
+  - {fileID: 11400000, guid: 395de27c5b54fab4fb832b5c3dba291a, type: 2}
+  - {fileID: 11400000, guid: 91ccdca0569ee4747bbcab650bc03d94, type: 2}
+  - {fileID: 11400000, guid: 0a92e448a17fbb243a94a835da916d1c, type: 2}
+  - {fileID: 11400000, guid: f6edeb6d25e17404e978ce87dc5932ba, type: 2}
+  - {fileID: 11400000, guid: fe48492089611504eb1c5a2b9dcf7045, type: 2}
+  - {fileID: 11400000, guid: 47b06d584de68ac4283e276dafc249ca, type: 2}
+  - {fileID: 11400000, guid: df40bcc225597124ebe172dd44fea629, type: 2}
+  - {fileID: 11400000, guid: 203944ba260597e4cb15945dc0b72501, type: 2}
+  - {fileID: 11400000, guid: 0a8aeb9325c26594387947eade6eb89b, type: 2}
+  waterLevelInitialValue: 0
+  waterLevelMaxValue: 100

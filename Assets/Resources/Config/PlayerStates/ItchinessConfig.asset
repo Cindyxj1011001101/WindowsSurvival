@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 149274c5cb9c7a9478e6b902ccfc9979, type: 3}
+  m_Name: ItchinessConfig
+  m_EditorClassIdentifier: 
+  stateType: 8
+  initialValue: 0
+  maxValue: 100
+  basicChangeRate: -1
+  higherIsBetter: 0
+  lowerIsBetter: 1
+  isDecreaseNatural: 0
+  isIncreaseNatural: 0
+  normParam: 0
+  thresholds:
+  - minValueExclude: -1
+    maxValueInclude: 50
+    levelName: "\u6709\u70B9\u75D2"
+    effect:
+      healthRate: 0
+      sanityRate: 0
+      fulnessRate: 0
+      thirstRate: 0
+      sorbrietyRate: 0
+      bodyTemperatureRate: 0
+      coPoisoningRate: 0
+      oxygenMax: 0
+      painLevelConst: 0
+  - minValueExclude: 50
+    maxValueInclude: 75
+    levelName: "\u5F88\u75D2"
+    effect:
+      healthRate: 0
+      sanityRate: -0.1
+      fulnessRate: 0
+      thirstRate: 0
+      sorbrietyRate: 0
+      bodyTemperatureRate: 0
+      coPoisoningRate: 0
+      oxygenMax: 0
+      painLevelConst: 20
+  - minValueExclude: 75
+    maxValueInclude: 2.1474836e+9
+    levelName: "\u6781\u5EA6\u7619\u75D2"
+    effect:
+      healthRate: 0
+      sanityRate: -0.3
+      fulnessRate: 0
+      thirstRate: 0
+      sorbrietyRate: 0
+      bodyTemperatureRate: 0
+      coPoisoningRate: 0
+      oxygenMax: 0
+      painLevelConst: 75
+  lowDangerLevels: 01000000
+  highDangerLevels: 02000000
