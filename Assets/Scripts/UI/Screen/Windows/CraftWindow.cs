@@ -190,9 +190,8 @@ public class CraftWindow : WindowBase
 
         Vector2 targetPos = new(recipeLibrarySelectRect.anchoredPosition.x, recipeLibraryItemTransforms[type].anchoredPosition.y);
 
-        // 创建动画序列
-        recipeLibrarySelectRect.DOKill();
-        recipeLibrarySelectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad);
+        // 播放高亮框移动动画
+        AnimationManager.Instance.PlayAnchorMove(recipeLibrarySelectRect, targetPos);
     }
 
     /// <summary>
@@ -285,6 +284,14 @@ public class CraftWindow : WindowBase
         SelectRecipeWithTween(recipe.cardId);
     }
 
+    private void SelectRecipeWithTween(string cardId)
+    {
+        Vector2 targetPos = recipeItemTransforms[cardId].anchoredPosition;
+
+        // 播放高亮框移动动画
+        AnimationManager.Instance.PlayAnchorMove(recipeItemSelectRect, targetPos);
+    }
+
     private void CraftCard()
     {
         if (currentSelectedRecipe == null) return;
@@ -292,7 +299,7 @@ public class CraftWindow : WindowBase
         // 制作成功，掉落卡牌
         void CraftSucceeded(Card outcomeCard)
         {
-            var tween = slot.transform.PunchAndBounce(() =>
+            var tween = AnimationManager.Instance.PlayPunchAndBounce(slot.transform, () =>
             {
                 SoundManager.Instance.PlaySound("制作_03", true);
 
@@ -310,9 +317,10 @@ public class CraftWindow : WindowBase
         // 制作失败，返还材料
         void CraftFailed(List<Card> toReturn)
         {
-            slot.transform.ShowTip("制作中断了！");
+            AnimationManager.Instance.ShowFloatingTipAbove(slot.transform, "制作中断了！");
             SoundManager.Instance.PlaySound("错误提示");
             GameManager.Instance.AddCardsWithTween(toReturn, true, slot.transform.position);
+
             // 刷新显示
             RefreshDisplay();
         }
@@ -336,14 +344,5 @@ public class CraftWindow : WindowBase
                 }
             }
         }
-    }
-
-    private void SelectRecipeWithTween(string cardId)
-    {
-        Vector2 targetPos = recipeItemTransforms[cardId].anchoredPosition;
-
-        // 创建动画序列
-        recipeItemSelectRect.DOKill();
-        recipeItemSelectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutBack);
     }
 }

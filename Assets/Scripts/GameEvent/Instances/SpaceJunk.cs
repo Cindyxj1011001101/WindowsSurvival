@@ -60,6 +60,6 @@ public class SpaceJunk : GameEvent
         }
 
         // 掉落到地点
-        GameManager.Instance.AddCardsToTargetEnv(env, junkPackage);
+        GameManager.Instance.AddCardToTargetEnv(junkPackage, env);
     }
 }

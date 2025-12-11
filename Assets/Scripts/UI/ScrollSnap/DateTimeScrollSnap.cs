@@ -99,8 +99,7 @@ public class DateTimeScrollSnap : MonoBehaviour
         // 实现无限滚动日月图标
         float totalMinutes = (float)(curTime - lastDateTime).TotalMinutes;
         var newAnchoredPos = new Vector2(timePeriodRectTransform.anchoredPosition.x, timePeriodRectTransform.anchoredPosition.y - totalMinutes * speed);
-        //timePeriodRectTransform.anchoredPosition = newAnchoredPos;
-        timePeriodRectTransform.DOAnchorPos(newAnchoredPos, totalMinutes / 100).OnComplete(() =>
+        AnimationManager.Instance.PlayAnchorMove(timePeriodRectTransform, newAnchoredPos, totalMinutes / 100).OnComplete(() =>
         {
             foreach (RectTransform child in timePeriodRectTransform)
             {

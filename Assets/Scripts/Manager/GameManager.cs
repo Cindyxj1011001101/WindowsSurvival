@@ -1,6 +1,5 @@
 using DG.Tweening;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class GameManager : IManager
@@ -159,46 +158,29 @@ public class GameManager : IManager
     {
         AddCard(card, targetBag);
 
-        return sourcePosition.MoveCardAndFreezeTime(card);
+        return AnimationManager.Instance.PlayCardMoveAndFreezeTime(card, sourcePosition);
     }
 
-    public Tween AddCardsWithTween(bool toPlayerBag, Vector3 sourcePosition, params Card[] cards)
+    public Tween AddCardWithTween(Card card, bool toPlayerBag, Vector3 sourcePosition)
+    {
+        AddCard(card, toPlayerBag);
+
+        return AnimationManager.Instance.PlayCardMoveAndFreezeTime(card, sourcePosition);
+    }
+
+    public Tween AddCardsWithTween(List<Card> cards, bool toPlayerBag, Vector3 sourcePosition)
     {
         foreach (var card in cards)
         {
             AddCard(card, toPlayerBag);
         }
 
-        return sourcePosition.MoveCardsAndFreezeTime(cards);
+        return AnimationManager.Instance.PlayCardMoveMultipleAndFreezeTime(cards.ToArray(), sourcePosition);
     }
 
-    public Tween AddCardWithTween(string cardId, bool toPlayerBag, Vector3 sourcePosition, out Card card)
+    public void AddCardToTargetEnv(Card card, EnvironmentBag targetEnv)
     {
-        card = CardFactory.CreateCard(cardId);
-
-        return AddCardWithTween(card, toPlayerBag, sourcePosition);
-    }
-
-    public Tween AddCardWithTween(Card card, bool toPlayerBag, Vector3 sourcePosition)
-    {
-        return AddCardsWithTween(toPlayerBag, sourcePosition, card);
-    }
-
-    public Tween AddCardsWithTween(List<Card> cards, bool toPlayerBag, Vector3 sourcePosition)
-    {
-        return AddCardsWithTween(toPlayerBag, sourcePosition, cards.ToArray());
-    }
-
-    public Tween AddCardsWithTween(string cardId, int count, bool toPlayerBag, Vector3 sourcePosition, out List<Card> cards)
-    {
-        cards = new();
-
-        for (int i = 0; i < count; i++)
-        {
-            cards.Add(CardFactory.CreateCard(cardId));
-        }
-
-        return AddCardsWithTween(cards, toPlayerBag, sourcePosition);
+        AddCardsToTargetEnv(new List<Card> { card }, targetEnv);
     }
 
     public void AddCardsToTargetEnv(List<Card> cards, EnvironmentBag targetEnv)
@@ -214,11 +196,6 @@ public class GameManager : IManager
                 AddCard(card, targetEnv);
             }
         }
-    }
-
-    public void AddCardsToTargetEnv(EnvironmentBag targetEnv, params Card[] cards)
-    {
-        AddCardsToTargetEnv(cards.ToList(), targetEnv);
     }
     #endregion
 

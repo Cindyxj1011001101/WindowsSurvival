@@ -22,9 +22,10 @@ public class CaughtAquariusFish : Card
         tip = string.Empty;
         // 地点中增加一个水瓶鱼
         // 继承产物进度
-        TurnTo("水瓶鱼", GameManager.Instance.CurEnvironmentBag, out var card);
+        var card = CardFactory.CreateCard("水瓶鱼");
         card.InheritComponent<ProgressComponent>(this, out var progress);
         progress.updateRate = 1;
+        TurnTo(card, GameManager.Instance.CurEnvironmentBag);
     }
 
     private bool Judge_Release(out string hint)

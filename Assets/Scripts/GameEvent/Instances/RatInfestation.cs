@@ -55,7 +55,7 @@ public class RatInfestation : GameEvent
         // 50%概率生成一张老鼠卡牌
         if (Random.value < 0.5f)
         {
-            GameManager.Instance.AddCardsToTargetEnv(GameManager.Instance.CurEnvironmentBag, CardFactory.CreateCard("老鼠"));
+            GameManager.Instance.AddCardToTargetEnv(CardFactory.CreateCard("老鼠"), GameManager.Instance.CurEnvironmentBag);
         }
     }
 }

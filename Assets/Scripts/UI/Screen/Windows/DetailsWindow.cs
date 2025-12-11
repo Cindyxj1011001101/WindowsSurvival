@@ -389,8 +389,7 @@ public class DetailsWindow : BagWindow
 
         Vector2 targetPos = new(target.anchoredPosition.x, selectRect.anchoredPosition.y);
 
-        selectRect.DOKill();
-        selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad);
+        AnimationManager.Instance.PlayAnchorMove(selectRect, targetPos);
     }
 
     public override void Hide(ShowMode showMode = ShowMode.Fade, UnityEngine.Events.UnityAction onFinished = null)
@@ -446,43 +445,6 @@ public class DetailsWindow : BagWindow
     /// <param name="delta"></param>
     public void ShowStateChange(Image icon, float stateMaxValue, float delta, Vector3 center)
     {
-        var stateWindow = WindowsManager.Instance.OpenWindow("State") as StateWindow;
-
-        float halfLength = 85f;
-        float xMax = center.x + halfLength;
-        float xMin = center.x - halfLength;
-        float yMax = center.y + halfLength;
-        float yMin = center.y - halfLength;
-
-        Vector3 randomPos;
-        Vector3 targetPos;
-
-        var count = 2 + Mathf.CeilToInt(Mathf.Abs(delta) * 10 / stateMaxValue);
-
-        for (int i = 0; i < count; i++)
-        {
-            randomPos = new(Random.Range(xMin, xMax), Random.Range(yMin, yMax));
-            var transform = ObjectBufferPool.Instance.Get("Prefabs/UI/Controls/State", "StateIcon", WindowsManager.Instance.FloatingTipLayer).transform;
-
-            transform.GetComponent<Image>().sprite = icon.sprite;
-
-            var seq = DOTween.Sequence();
-
-            transform.position = randomPos;
-            transform.localScale = Vector3.one * .8f;
-            seq.Append(transform.DOScale(1.2f, .3f));
-
-            seq.AppendInterval(.4f);
-
-            targetPos = icon.transform.position;
-            seq.Join(transform.DOMove(targetPos, .6f));
-            seq.Join(transform.DOScale(.8f, .6f));
-
-            seq.OnComplete(() =>
-            {
-                ObjectBufferPool.Instance.Restore(transform.gameObject);
-                icon.transform.DOScale(1.3f, .15f).SetLoops(2, LoopType.Yoyo);
-            }); // 总时长1.3s
-        }
+        AnimationManager.Instance.PlayStateIconFly(icon, icon.sprite, center, stateMaxValue, delta);
     }
 }

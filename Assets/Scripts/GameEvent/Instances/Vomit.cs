@@ -28,7 +28,7 @@ public class Vomit : GameEvent
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hunger, fullnessChange);
 
         // 掉落腐烂物
-        GameManager.Instance.AddCardsToTargetEnv(GameManager.Instance.CurEnvironmentBag, CardFactory.CreateCard("腐烂物"));
+        GameManager.Instance.AddCardToTargetEnv(CardFactory.CreateCard("腐烂物"), GameManager.Instance.CurEnvironmentBag);
 
         // 中断休息行为
         StateManager.Instance.StopResting();

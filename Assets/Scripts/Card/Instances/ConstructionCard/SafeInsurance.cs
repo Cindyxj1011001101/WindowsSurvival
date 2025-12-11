@@ -117,10 +117,11 @@ public class SafeInsurance : ConstructionCard
     {
         // 播放音效
         PlaySound("摧毁_01", true);
-        TurnTo("被撬开的保险柜", Bag, out var card);
+        var card = CardFactory.CreateCard("被撬开的保险柜");
         // 继承内容物
         card.InheritComponent<InnerContentsComponent>(this, out var newComponent);
         newComponent.allowAdd = newComponent.allowRemove = newComponent.display = true;
+        TurnTo(card, Bag);
     }
 
     public override bool CanQuickInteract(Card card, out string tip)

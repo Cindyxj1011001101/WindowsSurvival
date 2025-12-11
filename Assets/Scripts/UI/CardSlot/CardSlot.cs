@@ -484,17 +484,7 @@ public class CardSlot : MonoBehaviour
             {
                 // 原意图执行失败
                 // 播放执行失败动画
-                var seq = DOTween.Sequence();
-                seq.Join(intentionIcon.transform.DOPunchPosition(Vector3.one * 1.5f, 0.6f, 20));
-                seq.Join(intentionIcon.DOColor(ColorManager.Red, 0.5f));
-                seq.Join(intentionIcon.DOFade(0, 0.2f).SetDelay(0.4f));
-                seq.Join(intentionIcon.rectTransform.DOAnchorPosY(-10f, 0.2f));
-                seq.OnComplete(() =>
-                {
-                    intentionIcon.transform.localPosition = Vector3.zero;
-                    intentionIcon.color = new Color(1, 1, 1, 1);
-                });
-                seq.Play();
+                var seq = AnimationManager.Instance.PlayIntentionFailed(intentionIcon);
                 MouseManager.Instance.Wait(seq.Duration());
                 while (seq.active)
                 {
@@ -728,13 +718,13 @@ public class CardSlot : MonoBehaviour
                 groups.Add((deltaValue > 0, CalcLevel(deltaValue), color));
         }
 
-        MFXUtility.ShowArrows(particleDisplayRect, groups);
+        AnimationManager.Instance.ShowArrows(particleDisplayRect, groups);
     }
 
     public void DisplayComponentValueChange(Type componentType, float value)
     {
         if (ColorManager.CardComponentColors.TryGetValue(componentType, out var color))
-            MFXUtility.ShowArrows(particleDisplayRect, value > 0, CalcLevel(value), color);
+            AnimationManager.Instance.ShowArrows(particleDisplayRect, value > 0, CalcLevel(value), color);
     }
 
     private int CalcLevel(float value)

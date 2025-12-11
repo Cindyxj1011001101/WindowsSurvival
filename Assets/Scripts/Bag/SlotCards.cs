@@ -121,7 +121,8 @@ public class SlotCards : IComparable<SlotCards>
         for (int i = 0; i < count; i++)
             PeekCard().DestroyThis();
 
-        if (StackNum > 0 && CardSlot != null) CardSlot.transform.Bounce();
+        if (StackNum > 0 && CardSlot != null)
+            AnimationManager.Instance.PlayBounce(CardSlot.transform);
     }
 
     /// <summary>

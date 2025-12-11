@@ -232,7 +232,7 @@ public class FuelFurnace : ConstructionCard
             innerContents.notAllowAddReason = "请先取出加工产物";
             
             // 添加产物
-            AddCard(CardFactory.CreateCard(outcomeCardId), innerContents.bag);
+            AddCard(outcomeCardId, innerContents.bag);
             ShowTip("燃料炉加工完成");
 
             // 移除计时器

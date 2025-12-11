@@ -613,7 +613,8 @@ public abstract class Card : IComparable<Card>
 
     public void ShowTip(string tip)
     {
-        if (Transform != null) Transform.ShowTip(tip);
+        if (Transform != null)
+            AnimationManager.Instance.ShowFloatingTipAbove(Transform, tip);
     }
 
     #endregion
@@ -639,24 +640,14 @@ public abstract class Card : IComparable<Card>
     #endregion
 
     #region AddCard
-    public Tween AddCard(string cardId, bool toPlayerBag, out Card card)
-    {
-        return GameManager.Instance.AddCardWithTween(cardId, toPlayerBag, Transform.position, out card);
-    }
-
     public Tween AddCard(string cardId, bool toPlayerBag)
     {
-        return GameManager.Instance.AddCardWithTween(cardId, toPlayerBag, Transform.position, out _);
+        return GameManager.Instance.AddCardWithTween(CardFactory.CreateCard(cardId), toPlayerBag, Transform.position);
     }
 
-    public Tween AddCards(string cardId, int count, bool toPlayerBag, out List<Card> cards)
+    public Tween AddCards(string cardId, int num, bool toPlayerBag)
     {
-        return GameManager.Instance.AddCardsWithTween(cardId, count, toPlayerBag, Transform.position, out cards);
-    }
-
-    public Tween AddCards(string cardId, int count, bool toPlayerBag)
-    {
-        return GameManager.Instance.AddCardsWithTween(cardId, count, toPlayerBag, Transform.position, out _);
+        return GameManager.Instance.AddCardsWithTween(CardFactory.CreateCards(cardId, num), toPlayerBag, Transform.position);
     }
 
     public Tween AddCards(List<Card> cards, bool toPlayerBag)
@@ -678,7 +669,7 @@ public abstract class Card : IComparable<Card>
         }
         else
         {
-            var tween = Transform.PunchAndBounce(() =>
+            var tween = AnimationManager.Instance.PlayPunchAndBounce(Transform, () =>
             {
                 onDrop?.Invoke();
                 AddCards(cards, true);
@@ -717,7 +708,7 @@ public abstract class Card : IComparable<Card>
             var trans = Transform;
             if (!playAnim || trans == null || card.SlotTransform == null) return;
 
-            trans.position.MoveCardAndFreezeTime(card);
+            AnimationManager.Instance.PlayCardMoveAndFreezeTime(card, trans.position);
         }
         // 放不下看targetBag是不是内容物背包
         else if (preferredBag is InnerBag innerBag)
@@ -734,13 +725,7 @@ public abstract class Card : IComparable<Card>
 
     public void AddCard(string cardId, Bag preferredBag)
     {
-        AddCard(cardId, preferredBag, out _);
-    }
-
-    public void AddCard(string cardId, Bag preferredBag, out Card card)
-    {
-        card = CardFactory.CreateCard(cardId);
-        AddCard(card, preferredBag);
+        AddCard(CardFactory.CreateCard(cardId), preferredBag);
     }
 
     /// <summary>
@@ -760,20 +745,14 @@ public abstract class Card : IComparable<Card>
 
         // 动效
         if (trans == ParentTransform)
-            trans.position.MoveCardAndFreezeTime(targetCard);
+            AnimationManager.Instance.PlayCardMoveAndFreezeTime(targetCard, trans.position);
         else
-            this.TurnToAndFreezeTime(targetCard);
-    }
-
-    public void TurnTo(string cardId, Bag targetBag, out Card card)
-    {
-        card = CardFactory.CreateCard(cardId);
-        TurnTo(card, targetBag);
+            AnimationManager.Instance.PlayCardTransformAndFreezeTime(this, targetCard);
     }
 
     public void TurnTo(string cardId, Bag targetBag)
     {
-        TurnTo(cardId, targetBag, out _);
+        TurnTo(CardFactory.CreateCard(cardId), targetBag);
     }
 
     /// <summary>

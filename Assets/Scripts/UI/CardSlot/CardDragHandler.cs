@@ -2,18 +2,13 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler,
                                 IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    // 动画参数配置
-    private float moveDuration = 0.3f;
-    private float hoverTransition = .1f;
-    private float scaleOnHover = 1.05f;
-    private float scaleOnPointerDown = 1f;
-    private float scaleTransition = .15f;
+    // 动画管理器引用
+    private AnimationManager Anim => AnimationManager.Instance;
 
     // 拖拽移动插值系数
     private float followSpeed = 30f;
@@ -41,8 +36,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         MouseManager.Instance.StartDragging();
 
         // 创建临时卡牌槽
-        cursorSlot = MFXUtility.CreateSlot(sourceSlot.transform.position);
-        dragPosOffset = (Vector2)cursorSlot.transform.position - MFXUtility.ScreenPointToLocalPointInRectangle(eventData.position);
+        cursorSlot = Anim.CreateTempSlot(sourceSlot.transform.position);
+        dragPosOffset = (Vector2)cursorSlot.transform.position - Anim.ScreenToCanvasPosition(eventData.position);
 
         // 计算拖动数量
         if (IsLeftButtonPressed(eventData))
@@ -72,7 +67,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         // 让sourceSlot暂时不要刷新显示
         sourceSlot.DontRefresh = true;
 
-        SoundManager.Instance.PlaySound(GetPickSoundName(card.TextureType), true);
+        SoundManager.Instance.PlaySound(Anim.GetCardPickSoundName(card.TextureType), true);
 
         EventManager.Instance.TriggerEvent(EventType.PickUpCard, card);
     }
@@ -87,7 +82,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         if (isDragging)
         {
-            mousePosition = MFXUtility.ScreenPointToLocalPointInRectangle(Input.mousePosition);
+            mousePosition = Anim.ScreenToCanvasPosition(Input.mousePosition);
 
             cursorSlot.transform.position = Vector3.Lerp(
                 cursorSlot.transform.position,
@@ -200,7 +195,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 打开详情
             else
             {
-                transform.Bounce(duration: 0.05f); // 卡牌的 bounce 效果
+                Anim.PlayBounce(transform, duration: 0.05f); // 卡牌的 bounce 效果
                 (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(sourceSlot.Cards);
             }
 
@@ -224,7 +219,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         var card = sourceSlot.PeekCard();
         if (!card.Moveable)
         {
-            sourceSlot.transform.ShowTip("不能移动该卡牌");
+            Anim.ShowFloatingTipAbove(sourceSlot.transform, "不能移动该卡牌");
             return;
         }
 
@@ -238,7 +233,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             else if (GameManager.Instance.CanEquip(card, out string tip))
                 GameManager.Instance.Equip(card, card.Slot.transform.position);
             else
-                sourceSlot.transform.ShowTip(tip);
+                Anim.ShowFloatingTipAbove(sourceSlot.transform, tip);
         }
         // 从内容物中快速移出
         else if (sourceBag is InnerBag innerBag)
@@ -246,7 +241,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             // 不允许取出内容物的情况
             if (!innerBag.AllowRemove)
             {
-                sourceSlot.transform.ShowTip(string.IsNullOrEmpty(innerBag.NotAllowRemoveReason) ? "不能取出卡牌" : innerBag.NotAllowRemoveReason);
+                Anim.ShowFloatingTipAbove(sourceSlot.transform, string.IsNullOrEmpty(innerBag.NotAllowRemoveReason) ? "不能取出卡牌" : innerBag.NotAllowRemoveReason);
                 return;
             }
 
@@ -320,12 +315,10 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         var targetSlot = card.Slot;
         targetSlot.DontRefresh = true;
-        MFXUtility.MoveCard(
+        Anim.PlayCardMove(
             card,
             count,
             startPos,
-            moveDuration,
-            onStart: null,
             onComplete: () =>
             {
                 sourceSlot.DontRefresh = false;
@@ -339,20 +332,19 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// </summary>
     private void AnimateCardReturn(int count, string tip = "")
     {
-        MFXUtility.MoveCard(
-                sourceSlot.PeekCard(),
-                count,
-                dragEndPosition,
-                moveDuration,
-                onStart: null,
-                onComplete: () =>
-                {
-                    // 刷新源卡槽显示
-                    sourceSlot.DontRefresh = false;
-                    // 显示提示
-                    sourceSlot.transform.ShowTip(tip);
-                }
-            );
+        Anim.PlayCardMove(
+            sourceSlot.PeekCard(),
+            count,
+            dragEndPosition,
+            onComplete: () =>
+            {
+                // 刷新源卡槽显示
+                sourceSlot.DontRefresh = false;
+                // 显示提示
+                if (!string.IsNullOrEmpty(tip))
+                    Anim.ShowFloatingTipAbove(sourceSlot.transform, tip);
+            }
+        );
     }
 
     /// <summary>
@@ -427,40 +419,22 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        transform.DOScale(scaleOnHover, hoverTransition)
-            .OnComplete(() => transform.localScale = Vector3.one * scaleOnHover);
+        Anim.PlayHoverEnter(transform);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        transform.DOKill();
-        transform.DOScale(1, hoverTransition).OnComplete(() => transform.localScale = Vector3.one);
+        Anim.PlayHoverExit(transform);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
         if (!isDragging)
-            transform.DOScale(scaleOnHover, scaleTransition).SetEase(Ease.OutBack);
+            Anim.PlayPointerUp(transform);
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        transform.DOScale(scaleOnPointerDown, scaleTransition).SetEase(Ease.OutBack);
-    }
-
-    private string GetPickSoundName(CardTextureType textureType)
-    {
-        switch (textureType)
-        {
-            case CardTextureType.Flesh:
-                return "肉质感卡牌拿起";
-            case CardTextureType.Metal:
-                return "金属质感卡牌拿起";
-            case CardTextureType.Liquid:
-                return "液体质感卡牌拿起";
-            case CardTextureType.Default:
-            default:
-                return "默认质感卡牌拿起";
-        }
+        Anim.PlayPointerDown(transform);
     }
 }

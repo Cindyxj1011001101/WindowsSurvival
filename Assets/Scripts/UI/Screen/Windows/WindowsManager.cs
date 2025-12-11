@@ -54,7 +54,7 @@ public class WindowsManager : MonoBehaviour
         {
             MouseManager.Instance.Wait();
             GameDataManager.Instance.SaveAllData();
-            saveButton.transform.ShowTip("保存成功！", -1.4f);
+            AnimationManager.Instance.ShowFloatingTipAbove(saveButton.transform, "保存成功！", -1.4f);
         });
 
         quitButton.onClick.AddListener(() =>

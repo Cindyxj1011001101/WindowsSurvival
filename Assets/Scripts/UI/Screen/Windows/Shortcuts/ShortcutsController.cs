@@ -92,9 +92,8 @@ public class ShortcutsController : MonoBehaviour
         // 显示选中框
         selectRect.gameObject.SetActive(true);
 
-        // 创建动画序列
-        selectRect.DOKill();
-        selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutBack);
+        // 播放选中框移动动画
+        AnimationManager.Instance.PlayAnchorMove(selectRect, targetPos, ease: Ease.OutBack);
     }
 
     public void ClearSelection()

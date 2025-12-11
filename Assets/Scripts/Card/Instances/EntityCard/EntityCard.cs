@@ -327,7 +327,7 @@ public abstract class EntityCard : Card, IEntity
         if (Random.value > successProb) return;
 
         SlotCards.RemoveCard(this);
-        GameManager.Instance.AddCardsToTargetEnv(target.Coordinate.Location, this);
+        GameManager.Instance.AddCardToTargetEnv(this, target.Coordinate.Location);
     }
 
     public void MoveTowards(IEntity other, float dist, bool stopAfterReach = true) => coordinate.MoveTowards(other, dist, stopAfterReach);

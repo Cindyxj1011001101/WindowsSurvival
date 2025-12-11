@@ -85,7 +85,7 @@ public class StudyWindow : WindowBase
 
         DisplayStudyState(0, techNode);
 
-        studyStateButton.transform.ShowTip($"\"{techNode.techName}\"研究完成！", 1.4f);
+        AnimationManager.Instance.ShowFloatingTipAbove(studyStateButton.transform, $"\"{techNode.techName}\"研究完成！", 1.4f);
     }
 
     private void OnStudyStopped()
@@ -99,7 +99,7 @@ public class StudyWindow : WindowBase
     {
         if (string.IsNullOrEmpty(reason)) return;
 
-        studyStateButton.transform.ShowTip($"{reason}，研究中止！", 1.4f);
+        AnimationManager.Instance.ShowFloatingTipAbove(studyStateButton.transform, $"{reason}，研究中止！", 1.4f);
         SoundManager.Instance.PlaySound("错误提示");
     }
 
@@ -176,8 +176,7 @@ public class StudyWindow : WindowBase
     {
         Vector2 targetPos = new(menuItemTransforms[type].anchoredPosition.x, selectRect.anchoredPosition.y);
 
-        selectRect.DOKill();
-        selectRect.DOAnchorPos(targetPos, 0.2f).SetEase(Ease.OutQuad);
+        AnimationManager.Instance.PlayAnchorMove(selectRect, targetPos);
     }
 
     public void RefreshDisplay()

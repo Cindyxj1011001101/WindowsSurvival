@@ -18,7 +18,8 @@ public abstract class WindowBase : PanelBase
 
     [SerializeField] private bool destroyAfterClosed = false;
 
-    [SerializeField] private float animDuration = 0.2f;
+    // 动画管理器引用
+    private AnimationManager Anim => AnimationManager.Instance;
 
     public string AppName => GetType().Name.Replace("Window", "");
 
@@ -233,11 +234,7 @@ public abstract class WindowBase : PanelBase
         if (IsPlayingAnim)
             anim.Kill();
 
-        anim = DOTween.Sequence();
-
-        anim.Join(transform.DOMove(lastPosition, animDuration));
-        anim.Join(transform.DOScale(Vector3.one, animDuration));
-        anim.Join(RectTransform.DOSizeDelta(lastSizeDelta, animDuration));
+        anim = Anim.PlayWindowRestore(RectTransform, canvasGroup, lastPosition, lastSizeDelta) as Sequence;
 
         anim.OnComplete(() =>
         {
@@ -272,25 +269,10 @@ public abstract class WindowBase : PanelBase
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = true;
 
-        // 使用DOTween创建动画序列
         if (IsPlayingAnim)
             anim.Kill();
 
-        anim = DOTween.Sequence();
-
-        // 同时执行缩小和移动动画
-        anim.Join(transform.DOScale(Vector3.one * .01f, animDuration));
-        anim.Join(transform.DOMove(shortcut.position, animDuration));
-
-        anim.OnComplete(() =>
-        {
-            canvasGroup.alpha = 0;
-            canvasGroup.blocksRaycasts = false;
-        });
-
-        // 播放动画
-        anim.Play();
-        
+        anim = Anim.PlayWindowMinimize(transform, canvasGroup, shortcut) as Sequence;
     }
 
     public void Maximize()
@@ -320,23 +302,10 @@ public abstract class WindowBase : PanelBase
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = true;
 
-        // 使用DOTween创建动画序列
         if (IsPlayingAnim)
             anim.Kill();
 
-        anim = DOTween.Sequence();
-
-        // 同时执行移动和缩放动画
-        anim.Join(transform.DOMove(targetRect.position, animDuration));
-        anim.Join(transform.DOScale(Vector3.one, animDuration));
-        anim.Join(RectTransform.DOSizeDelta(targetRect.rect.size, animDuration));
-        anim.OnComplete(() =>
-        {
-            canvasGroup.interactable = true;
-        });
-
-        // 播放动画
-        anim.Play();
+        anim = Anim.PlayWindowMaximize(RectTransform, canvasGroup, targetRect) as Sequence;
         SoundManager.Instance.PlaySound("低沉泡泡音", true);
     }
 
