@@ -36,10 +36,6 @@ public class FuelFurnace : ConstructionCard
 
     protected override void OnLateConstructor()
     {
-        // 添加燃料存储组件
-        fuelStorage = new FuelStorageComponent(96);
-        AddComponent(fuelStorage);
-
         // 添加温度组件
         temperature = new TemperatureComponent(0, 300);
         AddComponent(temperature);
@@ -49,14 +45,6 @@ public class FuelFurnace : ConstructionCard
         {
             slot.SetMaxStackNum(1);
         }
-
-        var states = new List<CardState>()
-        {
-            new ("未加工", "5"),
-            new ("加工中", "6"),
-        };
-        stateMachine = new StateMachineComponent("未加工", states);
-        AddComponent(stateMachine);
     }
 
     protected override void OnInit()
@@ -238,7 +226,7 @@ public class FuelFurnace : ConstructionCard
             // 移除计时器
             RemoveComponent<TimerComponent>();
 
-            stateMachine.ChangeState("未加工");
+            stateMachine.ChangeState("待加工");
         }
     }
 

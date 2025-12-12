@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 数据传输台
 /// </summary>
@@ -24,17 +22,6 @@ public class DataTransmissionStation : ConstructionCard
                 { EnvironmentStateEnum.Electricity, -5f }
             });
         base.RegisterCardEvents(); // 拆毁
-    }
-
-    protected override void OnLateConstructor()
-    {
-        var states = new List<CardState>()
-        {
-            new ("待机中", "20", false),
-            new ("运行中", "20", true),
-        };
-        stateMachine = new StateMachineComponent("待机中", states);
-        AddComponent(stateMachine);
     }
 
     protected override void OnInit()

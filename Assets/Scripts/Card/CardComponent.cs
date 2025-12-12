@@ -579,20 +579,19 @@ public class CookComponent : CardComponent
 #region 状态机组件
 public class CardState
 {
-    public string name;         // 状态名称
-    public string displayName;  // 对外显示的名称
+    public string stateName;    // 状态名称
+    public string extraInfo;    // 对外显示的名称
     public string imagePath;    // 图片路径
-    public bool isAnim;         // 是否为动画
     public bool isBigIcon;      // 是否是大图
 
     public CardState() { }
 
-    public CardState(string name, string imagePath, bool isAnim = false, bool isBig = false)
+    public CardState(string stateName, string extraInfo, string imagePath, bool isBigIcon)
     {
-        this.name = displayName = name;
+        this.stateName = stateName;
+        this.extraInfo = extraInfo;
         this.imagePath = imagePath;
-        this.isAnim = isAnim;
-        this.isBigIcon = isBig;
+        this.isBigIcon = isBigIcon;
     }
 }
 
@@ -611,11 +610,14 @@ public class StateMachineComponent : CardComponent
         currentStateName = initialStateName;
         foreach (var state in states)
         {
-            stateDict.Add(state.name, state);
+            stateDict.Add(state.stateName, state);
         }
     }
 
-    public StateMachineComponent(List<CardState> states) : this(string.Empty, states) { }
+    public StateMachineComponent(List<CardState> states) : this(string.Empty, states)
+    {
+        currentStateName = states[0].stateName;
+    }
 
     public void ChangeState(string newStateName)
     {

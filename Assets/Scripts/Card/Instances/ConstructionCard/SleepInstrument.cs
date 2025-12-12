@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 睡眠脉冲仪
 /// </summary>
@@ -20,14 +18,6 @@ public class SleepInstrument : ConstructionCard
 
     protected override void OnLateConstructor()
     {
-        var states = new List<CardState>()
-        {
-            new ("已开启", "11", true),
-            new ("未开启", "12", false),
-        };
-        stateMachine = new StateMachineComponent("未开启", states);
-        AddComponent(stateMachine);
-
         powerConsumption = new(POWER_CONSUMPTION_RATE);
         AddComponent(powerConsumption);
     }

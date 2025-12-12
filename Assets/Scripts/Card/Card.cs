@@ -29,7 +29,7 @@ public abstract class Card : IComparable<Card>
         {
             if (stateMachine != null)
             {
-                return stateMachine.CurrentState.displayName;
+                return stateMachine.CurrentState.extraInfo;
             }
             else
             {
@@ -493,14 +493,8 @@ public abstract class Card : IComparable<Card>
     protected WeaponComponent weapon;
     protected PowerConsumptionComponent powerConsumption;
 
-    private bool assigned = false;
-
     public void AssignComponentValues()
     {
-        if (assigned) return;
-
-        assigned = true;
-
         TryGetComponent(out freshness);
         TryGetComponent(out growth);
         TryGetComponent(out progress);

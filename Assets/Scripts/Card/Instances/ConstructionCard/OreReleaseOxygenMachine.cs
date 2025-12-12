@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -34,14 +33,6 @@ public class OreReleaseOxygenMachine : ConstructionCard
         oxygenStorage = new OxygenStorageComponent(MAX_OXYGEN_STORAGE);
         AddComponent(oxygenStorage);
 
-        var states = new List<CardState>()
-        {
-            new ("未接电", "0", false),
-            new ("已接电", "1", true),
-        };
-        stateMachine = new StateMachineComponent("未接电", states);
-        AddComponent(stateMachine);
-
         powerConsumption = new(POWER_CONSUMPTION_RATE);
         AddComponent(powerConsumption);
     }
@@ -65,7 +56,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
         };
         AddComponent(timer);
 
-        stateMachine.ChangeState("已接电");
+        stateMachine.ChangeState("接电");
 
         innerContents.allowRemove = false;
         innerContents.notAllowRemoveReason = "矿石消耗中，不可取出";
@@ -77,7 +68,7 @@ public class OreReleaseOxygenMachine : ConstructionCard
     private void PowerOff()
 	{
 		RemoveComponent<TimerComponent>();
-		stateMachine.ChangeState("未接电");
+		stateMachine.ChangeState("断电");
 
 		innerContents.allowRemove = true;
 

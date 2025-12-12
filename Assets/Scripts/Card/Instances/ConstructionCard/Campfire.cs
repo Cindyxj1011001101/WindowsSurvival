@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 野炊营火
 /// </summary>
@@ -17,24 +15,11 @@ public class Campfire : ConstructionCard
 
     protected override void OnLateConstructor()
     {
-        // 手动添加燃料存储组件
-        fuelStorage = new FuelStorageComponent(96);
-        AddComponent(fuelStorage);
-
         // 每个卡牌槽的最大堆叠数都为1
         foreach (var slot in innerContents.bag.Slots)
         {
             slot.SetMaxStackNum(1);
         }
-
-        // 添加状态机组件
-        var states = new List<CardState>()
-        {
-            new ("未点燃", "18"),
-            new ("已点燃", "18", true),
-        };
-        stateMachine = new StateMachineComponent("未点燃", states);
-        AddComponent(stateMachine);
     }
 
     protected override void OnInit()

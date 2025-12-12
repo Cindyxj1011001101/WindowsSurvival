@@ -21,14 +21,6 @@ public class ElectricDrainageMachine : ConstructionCard
 
     protected override void OnLateConstructor()
     {
-        var states = new List<CardState>()
-        {
-            new ("已接电", "7", true),
-            new ("未接电", "8", false),
-        };
-        stateMachine = new StateMachineComponent("未接电", states);
-        AddComponent(stateMachine);
-
         powerConsumption = new(POWER_CONSUMPTION_RATE);
         AddComponent(powerConsumption);
     }
@@ -61,7 +53,7 @@ public class ElectricDrainageMachine : ConstructionCard
     {
         // 接电后水平面每回合下降
         StateManager.Instance.ChangeWaterLevelChangeRate(-WATER_LEVEL_REDUCTION_RATE);
-        stateMachine.ChangeState("已接电");
+        stateMachine.ChangeState("接电");
         // 播放循环音（仅当玩家在同一地点时）
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "电动排水机循环音", 0.3f);
@@ -73,7 +65,7 @@ public class ElectricDrainageMachine : ConstructionCard
     private void PowerOff()
     {
         StateManager.Instance.ChangeWaterLevelChangeRate(+WATER_LEVEL_REDUCTION_RATE);
-        stateMachine.ChangeState("未接电");
+        stateMachine.ChangeState("断电");
         // 停止循环音（仅当玩家在同一地点时）
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);

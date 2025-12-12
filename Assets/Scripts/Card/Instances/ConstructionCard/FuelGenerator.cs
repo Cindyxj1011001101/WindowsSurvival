@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 燃料发电机
 /// </summary>
@@ -17,18 +15,6 @@ public class FuelGenerator : ConstructionCard
 
     protected override void OnLateConstructor()
     {
-        // 手动添加燃料存储组件
-        fuelStorage = new FuelStorageComponent(144);
-        AddComponent(fuelStorage);
-
-        var states = new List<CardState>()
-        {
-            new ("未点燃", "26"),
-            new ("已点燃", "26", true, true),
-        };
-        stateMachine = new StateMachineComponent("未点燃", states);
-        AddComponent(stateMachine);
-
         powerConsumption = new(-POWER_PRODUCTION_RATE);
         AddComponent(powerConsumption);
     }

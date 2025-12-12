@@ -7,11 +7,15 @@ public class CardConfig
     public string CardExtraInfo; // 额外信息
     public string CardDesc; // 卡牌描述
     public string CardImagePath; // 卡牌图片路径
+    public bool IsBigIcon; // 是否是大图标
     public CardType CardType; // 卡牌类型
     public int MaxStackNum; // 最大堆叠数
     public bool Moveable; // 是否可移动
     public float Weight; // 重量
     public List<CardTag> Tags = new(); // 标签
+    public CardTextureType TextureType; // 质感（用于音效）
+    public bool HasMultipleStates; // 是否有多种状态
+    public List<CardState> States = new(); // 卡牌状态列表
     public bool HasFreshness; // 是否有新鲜度
     public int MaxFreshness; // 新鲜度最大值
     public bool HasDurability; // 是否有耐久度
@@ -24,13 +28,14 @@ public class CardConfig
     public EquipmentType EquipmentType; // 装备类型
     public bool IsTool; // 是否是工具
     public List<ToolType> ToolTypes; // 工具类型
-    public bool IsBigIcon; // 是否是大图标
     public bool HasInnerContents; // 是否有内部内容（如生物、建筑等）
     public int InnerContentSlotCount; // 内部内容槽位数量
-    public bool IsFlammable; // 是否有可燃烧组件
+    public bool IsFuel; // 是否有可燃烧组件
     public int FuelValue; // 可燃烧时间
+    public bool HasFuelStorage; // 是否有燃料存储组件
+    public int FuelStorageCapacity; // 燃料存储容量
     public bool HasFoodProperty; // 是否有食物属性
-    public Dictionary<FoodProperty, int> FoodPropertyDict; // 食物属性
+    public Dictionary<FoodProperty, int> FoodPropertyDict = new(); // 食物属性
     public bool IsPassage; // 是否是通道
     public int MoveTime; // 移动时间
     public PlaceEnum TargetPlace; // 目标地点
@@ -71,5 +76,4 @@ public class CardConfig
     public BehavioralTendency BehavioralTendency; // 行为倾向
     public int AIRefreshInterval; // AI刷新间隔
     public string DeadDrops; // 死亡掉落
-    public CardTextureType TextureType = CardTextureType.Default; // 质感（用于音效）
 }

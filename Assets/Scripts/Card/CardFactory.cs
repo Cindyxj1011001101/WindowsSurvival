@@ -108,28 +108,16 @@ public static class CardFactory
         return configCache.ContainsKey(cardId);
     }
 
-    public static Sprite GetCardImage(string cardId)
+    public static Sprite GetCardImage(string cardId, string imagePath = null)
     {
         if (configCache.TryGetValue(cardId, out var config))
         {
             // 获取图集的所有图片
             var sprites = Resources.LoadAll<Sprite>("Sprites/" + config.CardType.ToString());
-            // 找到图片的索引
-            if (int.TryParse(config.CardImagePath, out var index) && index < sprites.Length)
-            {
-                return sprites[index];
-            }
-            return null;
-        }
-        throw new ArgumentException($"不存在ID为{cardId}的卡牌");
-    }
 
-    public static Sprite GetCardImage(string cardId, string imagePath)
-    {
-        if (configCache.TryGetValue(cardId, out var config))
-        {
-            // 获取图集的所有图片
-            var sprites = Resources.LoadAll<Sprite>("Sprites/" + config.CardType.ToString());
+            if (string.IsNullOrEmpty(imagePath))
+                imagePath = config.CardImagePath;
+
             // 找到图片的索引
             if (int.TryParse(imagePath, out var index) && index < sprites.Length)
             {
@@ -278,9 +266,13 @@ public static class CardFactory
         {
             card.AddComponent(new InnerContentsComponent(config.InnerContentSlotCount));
         }
-        if (config.IsFlammable)
+        if (config.IsFuel)
         {
             card.AddComponent(new FuelComponent(config.FuelValue));
+        }
+        if (config.HasFuelStorage)
+        {
+            card.AddComponent(new FuelStorageComponent(config.FuelStorageCapacity));
         }
         if (config.IsPassage)
         {
@@ -313,6 +305,10 @@ public static class CardFactory
         if (config.IsEntity)
         {
             card.AddComponent(new EntityComponent(config.MaxHealth, config.EntityAtk, config.MoveDistPerMin, config.AIRefreshInterval, config.BehavioralTendency, config.DeadDrops));
+        }
+        if (config.HasMultipleStates)
+        {
+            card.AddComponent(new StateMachineComponent(config.States));
         }
 
         card.LateConstrcutor();

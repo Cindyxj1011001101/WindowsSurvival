@@ -400,17 +400,29 @@ public class CardSlot : MonoBehaviour
     /// <param name="state"></param>
     private void DisplayCardState(Card card, CardState state)
     {
+        var animName = card.CardId + state.stateName;
+        bool IsAnim()
+        {
+            for (int i = 0; i < cardAnimator.runtimeAnimatorController.animationClips.Length; i++)
+            {
+                if (cardAnimator.runtimeAnimatorController.animationClips[i].name == animName)
+                    return true;
+            }
+            return false;
+        }
+
         // 有动画的播放动画
-        if (state.isAnim)
+        if (IsAnim())
         {
             cardAnimator.enabled = true;
-            cardAnimator.Play(card.CardId + state.name);
+            cardAnimator.Play(animName);
         }
         else if (cardAnimator.enabled)
         {
             cardAnimator.Play("");
             cardAnimator.enabled = false;
         }
+
         // 组件摆放的位置同小图
         middle.anchoredPosition = new Vector2(middle.anchoredPosition.x, SMALL_ICON_MIDDLE_COMPONENT_LAYOUT_POSY);
     }

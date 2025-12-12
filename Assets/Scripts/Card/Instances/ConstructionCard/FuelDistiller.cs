@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 燃料蒸馏器
 /// </summary>
@@ -16,21 +14,9 @@ public class FuelDistiller : ConstructionCard
 
     protected override void OnLateConstructor()
     {
-        // 手动添加燃料存储组件
-        fuelStorage = new FuelStorageComponent(96);
-        AddComponent(fuelStorage);
-
         // 内容物不允许放入
         innerContents.allowAdd = false;
         innerContents.notAllowAddReason = "该槽位仅用于放置蒸馏产出的瓶装水";
-
-        var states = new List<CardState>()
-        {
-            new ("未点燃", "22"),
-            new ("已点燃", "22", true),
-        };
-        stateMachine = new StateMachineComponent("未点燃", states);
-        AddComponent(stateMachine);
 
         // 淡水存储组件
         freshWaterStorage = new(12);

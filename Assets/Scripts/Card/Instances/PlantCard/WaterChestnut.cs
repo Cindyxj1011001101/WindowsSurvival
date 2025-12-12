@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 四角菱
 /// </summary>
@@ -10,21 +8,6 @@ public class WaterChestnut : PlantCard
     {
         AddCardEvent("采集", "采集四角菱结出的菱果", Event_Collect, Judge_Collect, () => 15, sound: "采摘植物或采摘果子的音效");
         AddCardEvent("铲起", "将四角菱连根铲起。将会获得一颗菱果", Event_DigUp, Judge_DigUp, () => 15, sound: "挖掘废料_01");
-    }
-
-    protected override void OnLateConstructor()
-    {
-        var states = new List<CardState>()
-        {
-            new ("幼苗期", "6"),
-            new ("生长期1", "7") { displayName = "生长期"},
-            new ("生长期2", "8") { displayName = "生长期"},
-            new ("成熟期", "9"),
-        };
-        stateMachine = new StateMachineComponent(states);
-        AddComponent(stateMachine);
-
-        UpdatePlantState();
     }
 
     protected override void UpdatePlantState()

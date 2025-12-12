@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 冰箱
 /// </summary>
@@ -17,14 +15,6 @@ public class Refrigerator : ConstructionCard
 
     protected override void OnLateConstructor()
     {
-        var states = new List<CardState>()
-        {
-            new ("未接电", "16", false),
-            new ("已接电", "17", false),
-        };
-        stateMachine = new StateMachineComponent("未接电", states);
-        AddComponent(stateMachine);
-
         powerConsumption = new(POWER_CONSUMPTION_RATE);
         AddComponent(powerConsumption);
     }
@@ -33,7 +23,7 @@ public class Refrigerator : ConstructionCard
     {
         innerContents.onAddCard = (c) =>
         {
-            if (c.TryGetComponent(out FreshnessComponent f) && stateMachine.currentStateName == "已接电")
+            if (c.TryGetComponent(out FreshnessComponent f) && stateMachine.currentStateName == "接电")
             {
                 f.updateRate *= .5f;
             }
@@ -56,7 +46,7 @@ public class Refrigerator : ConstructionCard
 				f.updateRate *= .5f;
 			}
 		});
-		stateMachine.ChangeState("已接电");
+		stateMachine.ChangeState("接电");
 	}
 
     private void PowerOff()
@@ -68,7 +58,7 @@ public class Refrigerator : ConstructionCard
 				f.updateRate /= .5f;
 			}
 		});
-		stateMachine.ChangeState("未接电");
+		stateMachine.ChangeState("断电");
 	}
 
     private bool ContentFilter(Card c, out string s)

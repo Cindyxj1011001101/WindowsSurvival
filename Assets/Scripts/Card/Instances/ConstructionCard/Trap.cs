@@ -27,15 +27,6 @@ public class Trap : ConstructionCard
 
     protected override void OnLateConstructor()
     {
-        // 未布置和已布置两种状态
-        var states = new List<CardState>()
-        {
-            new ("未布置", "3"),
-            new ("已布置", "4"),
-        };
-        stateMachine = new StateMachineComponent("未布置", states);
-        AddComponent(stateMachine);
-
         // 每个内容物槽的最大堆叠数为1
         foreach (var slot in innerContents.bag.Slots)
         {
