@@ -35,6 +35,13 @@ public class UIStateSlider : MonoBehaviour
     private float highDangerTransition = 0.3f;
     private float lowDangerTransition = 0.4f;
 
+    private float GetArrowTweenPhase()
+    {
+        var cycle = arrowMoveTransition * 2f;
+        if (cycle <= 0f) return 0f;
+        return Mathf.Repeat(Time.time, cycle);
+    }
+
     private void OnDisable()
     {
         init = false;
@@ -184,10 +191,13 @@ public class UIStateSlider : MonoBehaviour
         // 设置箭头方向
         arrow.transform.localEulerAngles = new Vector3(changeRate > 0 ? 0 : 180, 0, 0);
 
+        Tween tween;
         if (changeRate > 0)
-            arrow.rectTransform.DOAnchorPos(ceil.anchoredPosition, arrowMoveTransition).From(floor.anchoredPosition).SetLoops(-1, LoopType.Yoyo);
+            tween = arrow.rectTransform.DOAnchorPos(ceil.anchoredPosition, arrowMoveTransition).From(floor.anchoredPosition).SetLoops(-1, LoopType.Yoyo);
         else
-            arrow.rectTransform.DOAnchorPos(floor.anchoredPosition, arrowMoveTransition).From(ceil.anchoredPosition).SetLoops(-1, LoopType.Yoyo);
+            tween = arrow.rectTransform.DOAnchorPos(floor.anchoredPosition, arrowMoveTransition).From(ceil.anchoredPosition).SetLoops(-1, LoopType.Yoyo);
+
+        tween.Goto(GetArrowTweenPhase(), true);
     }
 
     private void DisableArrow()
