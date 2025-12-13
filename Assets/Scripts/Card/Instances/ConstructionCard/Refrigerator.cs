@@ -4,41 +4,41 @@
 [CardId("冰箱")]
 public class Refrigerator : ConstructionCard
 {
-    private const float POWER_CONSUMPTION_RATE = 0.3f; // 每回合电力消耗
+	private const float POWER_CONSUMPTION_RATE = 0.3f; // 每回合电力消耗
 
-    protected override void RegisterCardEvents()
-    {
-        AddCardEvent("接电", $"将其接入电网。接电后内容物的腐烂速度减半，并且每15分钟消耗{POWER_CONSUMPTION_RATE}电力", powerConsumption.ConnectPower, powerConsumption.CanConnectPower);
-        AddCardEvent("断电", "", powerConsumption.DisconnectPower, powerConsumption.CanDisconnectPower);
-        base.RegisterCardEvents(); // 拆毁
-    }
+	protected override void RegisterCardEvents()
+	{
+		AddCardEvent("开启", $"将其接入电网。接电后内容物的腐烂速度减半，并且每15分钟消耗{POWER_CONSUMPTION_RATE}电力", powerConsumption.ConnectPower, powerConsumption.CanConnectPower);
+		AddCardEvent("关闭", "", powerConsumption.DisconnectPower, powerConsumption.CanDisconnectPower);
+		base.RegisterCardEvents(); // 拆毁
+	}
 
-    protected override void OnLateConstructor()
-    {
-        powerConsumption = new(POWER_CONSUMPTION_RATE);
-        AddComponent(powerConsumption);
-    }
+	protected override void OnLateConstructor()
+	{
+		powerConsumption = new(POWER_CONSUMPTION_RATE);
+		AddComponent(powerConsumption);
+	}
 
-    protected override void OnInit()
-    {
-        innerContents.onAddCard = (c) =>
-        {
-            if (c.TryGetComponent(out FreshnessComponent f) && stateMachine.currentStateName == "接电")
-            {
-                f.updateRate *= .5f;
-            }
-        };
-        innerContents.onRemoveCard = (c) =>
-        {
-            if (c.TryGetComponent(out FreshnessComponent f))
-            {
-                f.updateRate /= .5f;
-            }
-        };
-    }
+	protected override void OnInit()
+	{
+		innerContents.onAddCard = (c) =>
+		{
+			if (c.TryGetComponent(out FreshnessComponent f) && stateMachine.currentStateName == "开启")
+			{
+				f.updateRate *= .5f;
+			}
+		};
+		innerContents.onRemoveCard = (c) =>
+		{
+			if (c.TryGetComponent(out FreshnessComponent f))
+			{
+				f.updateRate /= .5f;
+			}
+		};
+	}
 
-    private void PowerOn()
-    {
+	private void PowerOn()
+	{
 		innerContents.ForEachCard(c =>
 		{
 			if (c.TryGetComponent<FreshnessComponent>(out var f))
@@ -46,11 +46,11 @@ public class Refrigerator : ConstructionCard
 				f.updateRate *= .5f;
 			}
 		});
-		stateMachine.ChangeState("接电");
+		stateMachine.ChangeState("开启");
 	}
 
-    private void PowerOff()
-    {
+	private void PowerOff()
+	{
 		innerContents.ForEachCard(c =>
 		{
 			if (c.TryGetComponent<FreshnessComponent>(out var f))
@@ -58,35 +58,35 @@ public class Refrigerator : ConstructionCard
 				f.updateRate /= .5f;
 			}
 		});
-		stateMachine.ChangeState("断电");
+		stateMachine.ChangeState("关闭");
 	}
 
-    private bool ContentFilter(Card c, out string s)
-    {
-        s = string.Empty;
-        if (!c.TryGetComponent<FreshnessComponent>(out _))
-        {
-            s = "只能放入有新鲜度的食物";
-            return false;
-        }
-        return true;
-    }
+	private bool ContentFilter(Card c, out string s)
+	{
+		s = string.Empty;
+		if (!c.TryGetComponent<FreshnessComponent>(out _))
+		{
+			s = "只能放入有新鲜度的食物";
+			return false;
+		}
+		return true;
+	}
 
-    public override bool CanQuickInteract(Card card, out string tip)
-    {
-        if (base.CanQuickInteract(card, out tip)) return true;
+	public override bool CanQuickInteract(Card card, out string tip)
+	{
+		if (base.CanQuickInteract(card, out tip)) return true;
 
-        return innerContents.CanQuickInteract(card, out tip);
-    }
+		return innerContents.CanQuickInteract(card, out tip);
+	}
 
-    public override void QuickIneract(SlotCards slot, int count)
-    {
-        if (base.CanQuickInteract(slot.PeekCard(), out _))
-        {
-            base.QuickIneract(slot, count);
-            return;
-        }
+	public override void QuickIneract(SlotCards slot, int count)
+	{
+		if (base.CanQuickInteract(slot.PeekCard(), out _))
+		{
+			base.QuickIneract(slot, count);
+			return;
+		}
 
-        innerContents.QuickIneract(slot, count);
-    }
+		innerContents.QuickIneract(slot, count);
+	}
 }

@@ -53,9 +53,9 @@ public class DataTransmissionStation : ConstructionCard
     {
         if (techNode.techLevel != TechLevl.Intermediate) return;
 
-        if (stateMachine.currentStateName == "运行中") return;
+        if (stateMachine.currentStateName == "运行") return;
 
-        stateMachine.ChangeState("运行中");
+        stateMachine.ChangeState("运行");
         // 开始运行时播放循环音（仅当玩家在同一地点时）
         // 这样可以让玩家听到持续的工作声，进入/退出地点或打开详情会由其他回调控制音量与停止
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
@@ -64,9 +64,9 @@ public class DataTransmissionStation : ConstructionCard
 
     private void StopWorking()
     {
-        if (stateMachine.currentStateName == "待机中") return;
+        if (stateMachine.currentStateName == "待机") return;
 
-        stateMachine.ChangeState("待机中");
+        stateMachine.ChangeState("待机");
         // 停止运行时停止循环音（仅当玩家在同一地点时）
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
@@ -74,8 +74,8 @@ public class DataTransmissionStation : ConstructionCard
 
     public override void OnEnterEnvironment()
     {
-        // 玩家进入卡牌所在地点时调用：若当前处于运行中则播放循环音
-        if (stateMachine != null && stateMachine.currentStateName == "运行中")
+        // 玩家进入卡牌所在地点时调用：若当前处于运行则播放循环音
+        if (stateMachine != null && stateMachine.currentStateName == "运行")
             SoundManager.Instance.PlayCardLoopSound(CardId, "数据传输台循环音", 0.3f);
     }
     public override void OnLeaveEnvironment()

@@ -29,7 +29,7 @@ public class FuelFurnace : ConstructionCard
     protected override void RegisterCardEvents()
     {
         AddCardEvent("点燃", "点燃燃料炉。点燃后可以使燃料炉快速升温。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite, sound: "点火_02");
-        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish,sound: "熄灭");
+        AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish, sound: "熄灭");
         AddCardEvent("开始加工", "", Event_Process, Judge_Process);
         base.RegisterCardEvents(); // 拆毁
     }
@@ -207,7 +207,7 @@ public class FuelFurnace : ConstructionCard
                 innerContents.bag.Slots[2].PeekCard(),
             };
             var outcomeCardId = ProcessManager.Instance.GetProcessOutcomeID(processedCards, temperatureRecord);
-            
+
             leftProcessRounds = 0;
             isProcessing = false;
             temperatureRecord.Clear();
@@ -218,7 +218,7 @@ public class FuelFurnace : ConstructionCard
             // 可拖出卡牌
             innerContents.allowRemove = true;
             innerContents.notAllowAddReason = "请先取出加工产物";
-            
+
             // 添加产物
             AddCard(outcomeCardId, innerContents.bag);
             ShowTip("燃料炉加工完成");
@@ -236,8 +236,8 @@ public class FuelFurnace : ConstructionCard
         if (fuelStorage.CanQuickInteract(card))
         {
             tip = "添加燃料";
-			return true;
-		}
+            return true;
+        }
         // 放入内容物
         if (innerContents.CanQuickInteract(card, out tip)) return true;
         // 拆毁

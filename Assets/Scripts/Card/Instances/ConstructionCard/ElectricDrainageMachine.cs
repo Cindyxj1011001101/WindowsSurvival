@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 /// <summary>
 /// 电动排水机
 /// </summary>
@@ -14,8 +12,8 @@ public class ElectricDrainageMachine : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("接电", $"将其接入电网。接电后每15分钟降低{WATER_LEVEL_REDUCTION_RATE}单位水平面高度，并消耗{POWER_CONSUMPTION_RATE}单位电力", powerConsumption.ConnectPower, CanConnectPower);
-        AddCardEvent("断电", "", powerConsumption.DisconnectPower, powerConsumption.CanDisconnectPower);
+        AddCardEvent("开启", $"将其接入电网。接电后每15分钟降低{WATER_LEVEL_REDUCTION_RATE}单位水平面高度，并消耗{POWER_CONSUMPTION_RATE}单位电力", powerConsumption.ConnectPower, CanConnectPower);
+        AddCardEvent("关闭", "", powerConsumption.DisconnectPower, powerConsumption.CanDisconnectPower);
         base.RegisterCardEvents(); // 拆毁
     }
 
@@ -53,7 +51,7 @@ public class ElectricDrainageMachine : ConstructionCard
     {
         // 接电后水平面每回合下降
         StateManager.Instance.ChangeWaterLevelChangeRate(-WATER_LEVEL_REDUCTION_RATE);
-        stateMachine.ChangeState("接电");
+        stateMachine.ChangeState("开启");
         // 播放循环音（仅当玩家在同一地点时）
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.PlayCardLoopSound(CardId, "电动排水机循环音", 0.3f);
@@ -65,7 +63,7 @@ public class ElectricDrainageMachine : ConstructionCard
     private void PowerOff()
     {
         StateManager.Instance.ChangeWaterLevelChangeRate(+WATER_LEVEL_REDUCTION_RATE);
-        stateMachine.ChangeState("断电");
+        stateMachine.ChangeState("关闭");
         // 停止循环音（仅当玩家在同一地点时）
         if (GameManager.Instance.IsCurrentEnvironment(Bag))
             SoundManager.Instance.StopCardLoopSound(CardId);
