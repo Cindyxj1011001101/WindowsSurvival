@@ -10,58 +10,63 @@ using System.Collections.Generic;
 public static class AnimationConfig
 {
     // 卡牌移动动效
-    public const float CardMoveDuration = 0.3f;
-    public const float CardMoveInterval = 0.1f;
-    public static readonly Ease CardMoveEase = Ease.OutQuad;
+    public const float CARD_MOVE_DURATION = 0.3f;
+    public const float CARD_MOVE_INTERVAL = 0.1f;
+    public static readonly Ease CARD_MOVE_EASE = Ease.OutQuad;
 
     // 卡牌转变动效
-    public const float CardTurnScaleUp = 1.15f;
-    public const float CardTurnDuration = 0.8f;
+    public const float CARD_TURN_SCALE_UP = 1.15f;
+    public const float CARD_TURN_DURATION = 0.8f;
 
     // 悬停动效
-    public const float HoverScale = 1.05f;
-    public const float HoverTransition = 0.1f;
+    public const float HOVER_SCALE = 1.05f;
+    public const float HOVER_TRANSITION = 0.1f;
 
     // 按下动效
-    public const float PointerDownScale = 1.0f;
-    public const float PointerDownTransition = 0.15f;
+    public const float POINTER_DOWN_SCALE = 1.0f;
+    public const float POINTER_DOWN_TRANSITION = 0.15f;
 
     // 弹跳动效
-    public const float BounceMaxScale = 1.09f;
-    public const float BounceDuration = 0.15f;
+    public const float BOUNCE_MAX_SCALE = 1.09f;
+    public const float BOUNCE_DURATION = 0.15f;
 
     // 抖动动效
-    public const float PunchDuration = 0.6f;
-    public const float PunchPosStrengthX = 4f;
-    public const float PunchPosStrengthY = 2.5f;
-    public const float PunchPosStrengthZ = 0f;
-    public const int PunchPosVibrato = 18;
-    public const float PunchRotStrengthX = 0f;
-    public const float PunchRotStrengthY = 0f;
-    public const float PunchRotStrengthZ = 1.5f;
-    public const int PunchRotVibrato = 15;
+    public const float PUNCH_DURATION = 0.6f;
+    public const float PUNCH_POS_STRENGTH_X = 4f;
+    public const float PUNCH_POS_STRENGTH_Y = 2.5f;
+    public const float PUNCH_POS_STRENGTH_Z = 0f;
+    public const int PUNCH_POS_VIBRATO = 18;
+    public const float PUNCH_ROT_STRENGTH_X = 0f;
+    public const float PUNCH_ROT_STRENGTH_Y = 0f;
+    public const float PUNCH_ROT_STRENGTH_Z = 1.5f;
+    public const int PUNCH_ROT_VIBRATO = 15;
 
     // 浮动提示动效
-    public const float TipFadeInDuration = 0.2f;
-    public const float TipFadeOutDuration = 0.2f;
-    public const float TipDefaultShowDuration = 2f;
-    public const float TipVerticalOffset = 100f;
+    public const float TIP_FADE_IN_DURATION = 0.2f;
+    public const float TIP_FADE_OUT_DURATION = 0.2f;
+    public const float TIP_DEFAULT_SHOW_DURATION = 2f;
+    public const float TIP_VERTICAL_OFFSET = 100f;
 
     // 箭头粒子动效
-    public const float ArrowDuration = 0.66f;
-    public const float ArrowMoveDistance = 70f;
-    public const int ArrowDefaultCount = 6;
+    public const float ARROW_DURATION = 0.66f;
+    public const float ARROW_MOVE_DISTANCE = 70f;
+    public const int ARROW_DEFAULT_COUNT = 6;
 
     // 窗口动效
-    public const float WindowAnimDuration = 0.2f;
+    public const float WINDOW_ANIM_DURATION = 0.2f;
 
     // 状态图标动效
-    public const float StateIconScaleStart = 0.8f;
-    public const float StateIconScaleMax = 1.2f;
-    public const float StateIconScaleDuration = 0.3f;
-    public const float StateIconMoveDuration = 0.6f;
-    public const float StateIconBounceScale = 1.3f;
-    public const float StateIconBounceDuration = 0.15f;
+    public const float STATE_ICON_SCALE_START = 0.8f;
+    public const float STATE_ICON_SCALE_MAX = 1.2f;
+    public const float STATE_ICON_SCALE_DURATION = 0.3f;
+    public const float STATE_ICON_MOVE_DURATION = 0.6f;
+    public const float STATE_ICON_BOUNCE_SCALE = 1.3f;
+    public const float STATE_ICON_BOUNCE_DURATION = 0.15f;
+
+    // 玩家受击屏幕闪红动效
+    public const float PLAYER_DAMAGED_FLASH_MAX_ALPHA = 0.15f;
+    public const float PLAYER_DAMAGED_FLASH_FADE_IN = 0.05f;
+    public const float PLAYER_DAMAGED_FLASH_FADE_OUT = 0.25f;
 }
 
 /// <summary>
@@ -73,6 +78,10 @@ public class AnimationManager
     public static AnimationManager Instance { get; } = new();
 
     private Canvas _canvas;
+
+    private CanvasGroup _screenFlashCanvasGroup;
+    private Image _screenFlashImage;
+    private Tween _screenFlashTween;
 
     public Canvas Canvas
     {
@@ -91,6 +100,64 @@ public class AnimationManager
     }
 
     private AnimationManager() { }
+
+    private void EnsureScreenFlash()
+    {
+        if (_screenFlashCanvasGroup != null && _screenFlashImage != null) return;
+        if (Canvas == null) return;
+
+        var go = new GameObject("ScreenFlash", typeof(RectTransform), typeof(Image), typeof(CanvasGroup));
+        var rect = go.GetComponent<RectTransform>();
+        rect.SetParent(Canvas.transform, false);
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.anchoredPosition = Vector2.zero;
+        rect.sizeDelta = Vector2.zero;
+        rect.SetAsLastSibling();
+
+        _screenFlashImage = go.GetComponent<Image>();
+        _screenFlashImage.raycastTarget = false;
+        _screenFlashImage.color = Color.red;
+
+        _screenFlashCanvasGroup = go.GetComponent<CanvasGroup>();
+        _screenFlashCanvasGroup.alpha = 0f;
+        _screenFlashCanvasGroup.interactable = false;
+        _screenFlashCanvasGroup.blocksRaycasts = false;
+
+        go.SetActive(false);
+    }
+
+    public Tween PlayPlayerDamagedScreenFlash(float maxAlpha = -1f, float fadeIn = -1f, float fadeOut = -1f)
+    {
+        if (maxAlpha < 0) maxAlpha = AnimationConfig.PLAYER_DAMAGED_FLASH_MAX_ALPHA;
+        if (fadeIn < 0) fadeIn = AnimationConfig.PLAYER_DAMAGED_FLASH_FADE_IN;
+        if (fadeOut < 0) fadeOut = AnimationConfig.PLAYER_DAMAGED_FLASH_FADE_OUT;
+
+        if (WindowsManager.Instance == null) return null;
+
+        EnsureScreenFlash();
+        if (_screenFlashCanvasGroup == null || _screenFlashImage == null) return null;
+
+        _screenFlashTween?.Kill();
+
+        var go = _screenFlashCanvasGroup.gameObject;
+        go.SetActive(true);
+        _screenFlashCanvasGroup.alpha = 0f;
+        _screenFlashImage.color = ColorManager.Red;
+        _screenFlashImage.enabled = true;
+
+        var seq = DOTween.Sequence();
+        seq.Append(_screenFlashCanvasGroup.DOFade(maxAlpha, fadeIn));
+        seq.Append(_screenFlashCanvasGroup.DOFade(0f, fadeOut));
+        seq.OnComplete(() =>
+        {
+            if (_screenFlashCanvasGroup != null)
+                _screenFlashCanvasGroup.gameObject.SetActive(false);
+        });
+
+        _screenFlashTween = seq;
+        return seq;
+    }
 
     #region 坐标转换工具
     /// <summary>
@@ -154,8 +221,8 @@ public class AnimationManager
         UnityAction onComplete = null,
         Ease ease = Ease.Unset)
     {
-        if (duration < 0) duration = AnimationConfig.CardMoveDuration;
-        if (ease == Ease.Unset) ease = AnimationConfig.CardMoveEase;
+        if (duration < 0) duration = AnimationConfig.CARD_MOVE_DURATION;
+        if (ease == Ease.Unset) ease = AnimationConfig.CARD_MOVE_EASE;
 
         var slot = CreateTempSlot(sourcePosition);
         slot.DisplayCard(card, count);
@@ -192,9 +259,9 @@ public class AnimationManager
         UnityAction<Card> onComplete = null,
         Ease ease = Ease.Unset)
     {
-        if (duration < 0) duration = AnimationConfig.CardMoveDuration;
-        if (interval < 0) interval = AnimationConfig.CardMoveInterval;
-        if (ease == Ease.Unset) ease = AnimationConfig.CardMoveEase;
+        if (duration < 0) duration = AnimationConfig.CARD_MOVE_DURATION;
+        if (interval < 0) interval = AnimationConfig.CARD_MOVE_INTERVAL;
+        if (ease == Ease.Unset) ease = AnimationConfig.CARD_MOVE_EASE;
 
         var seq = DOTween.Sequence();
 
@@ -256,7 +323,7 @@ public class AnimationManager
 
         // 缩放动画
         var scaleSeq = DOTween.Sequence();
-        scaleSeq.Append(transform.DOScale(AnimationConfig.CardTurnScaleUp, 0.2f));
+        scaleSeq.Append(transform.DOScale(AnimationConfig.CARD_TURN_SCALE_UP, 0.2f));
         scaleSeq.AppendInterval(0.4f);
         scaleSeq.Append(transform.DOScale(1f, 0.2f));
         mainSeq.Join(scaleSeq);
@@ -273,7 +340,7 @@ public class AnimationManager
             slot.Clear();
             slot.DisplayCard(targetCard, 1, false);
         }));
-        rotateSeq.Append(transform.DOScaleX(AnimationConfig.CardTurnScaleUp, 0.25f));
+        rotateSeq.Append(transform.DOScaleX(AnimationConfig.CARD_TURN_SCALE_UP, 0.25f));
         mainSeq.Join(rotateSeq);
 
         mainSeq.OnStart(() => onStart?.Invoke());
@@ -304,8 +371,8 @@ public class AnimationManager
     /// </summary>
     public Tween PlayBounce(Transform target, float maxScale = -1, float duration = -1)
     {
-        if (maxScale < 0) maxScale = AnimationConfig.BounceMaxScale;
-        if (duration < 0) duration = AnimationConfig.BounceDuration;
+        if (maxScale < 0) maxScale = AnimationConfig.BOUNCE_MAX_SCALE;
+        if (duration < 0) duration = AnimationConfig.BOUNCE_DURATION;
 
         var originalScale = target.localScale;
         return target.DOScale(maxScale, duration)
@@ -318,8 +385,8 @@ public class AnimationManager
     /// </summary>
     public Tween PlayHoverEnter(Transform target, float scale = -1, float duration = -1)
     {
-        if (scale < 0) scale = AnimationConfig.HoverScale;
-        if (duration < 0) duration = AnimationConfig.HoverTransition;
+        if (scale < 0) scale = AnimationConfig.HOVER_SCALE;
+        if (duration < 0) duration = AnimationConfig.HOVER_TRANSITION;
 
         return target.DOScale(scale, duration)
             .OnComplete(() => target.localScale = Vector3.one * scale);
@@ -330,7 +397,7 @@ public class AnimationManager
     /// </summary>
     public Tween PlayHoverExit(Transform target, float duration = -1)
     {
-        if (duration < 0) duration = AnimationConfig.HoverTransition;
+        if (duration < 0) duration = AnimationConfig.HOVER_TRANSITION;
 
         target.DOKill();
         return target.DOScale(1f, duration)
@@ -342,8 +409,8 @@ public class AnimationManager
     /// </summary>
     public Tween PlayPointerDown(Transform target, float scale = -1, float duration = -1)
     {
-        if (scale < 0) scale = AnimationConfig.PointerDownScale;
-        if (duration < 0) duration = AnimationConfig.PointerDownTransition;
+        if (scale < 0) scale = AnimationConfig.POINTER_DOWN_SCALE;
+        if (duration < 0) duration = AnimationConfig.POINTER_DOWN_TRANSITION;
 
         return target.DOScale(scale, duration).SetEase(Ease.OutBack);
     }
@@ -353,8 +420,8 @@ public class AnimationManager
     /// </summary>
     public Tween PlayPointerUp(Transform target, float scale = -1, float duration = -1)
     {
-        if (scale < 0) scale = AnimationConfig.HoverScale;
-        if (duration < 0) duration = AnimationConfig.PointerDownTransition;
+        if (scale < 0) scale = AnimationConfig.HOVER_SCALE;
+        if (duration < 0) duration = AnimationConfig.POINTER_DOWN_TRANSITION;
 
         return target.DOScale(scale, duration).SetEase(Ease.OutBack);
     }
@@ -378,15 +445,15 @@ public class AnimationManager
         float pStrengthX = -1, float pStrengthY = -1, float pStrengthZ = -1, int pVibrato = -1,
         float rStrengthX = -1, float rStrengthY = -1, float rStrengthZ = -1, int rVibrato = -1)
     {
-        if (duration < 0) duration = AnimationConfig.PunchDuration;
-        if (pStrengthX < 0) pStrengthX = AnimationConfig.PunchPosStrengthX;
-        if (pStrengthY < 0) pStrengthY = AnimationConfig.PunchPosStrengthY;
-        if (pStrengthZ < 0) pStrengthZ = AnimationConfig.PunchPosStrengthZ;
-        if (pVibrato < 0) pVibrato = AnimationConfig.PunchPosVibrato;
-        if (rStrengthX < 0) rStrengthX = AnimationConfig.PunchRotStrengthX;
-        if (rStrengthY < 0) rStrengthY = AnimationConfig.PunchRotStrengthY;
-        if (rStrengthZ < 0) rStrengthZ = AnimationConfig.PunchRotStrengthZ;
-        if (rVibrato < 0) rVibrato = AnimationConfig.PunchRotVibrato;
+        if (duration < 0) duration = AnimationConfig.PUNCH_DURATION;
+        if (pStrengthX < 0) pStrengthX = AnimationConfig.PUNCH_POS_STRENGTH_X;
+        if (pStrengthY < 0) pStrengthY = AnimationConfig.PUNCH_POS_STRENGTH_Y;
+        if (pStrengthZ < 0) pStrengthZ = AnimationConfig.PUNCH_POS_STRENGTH_Z;
+        if (pVibrato < 0) pVibrato = AnimationConfig.PUNCH_POS_VIBRATO;
+        if (rStrengthX < 0) rStrengthX = AnimationConfig.PUNCH_ROT_STRENGTH_X;
+        if (rStrengthY < 0) rStrengthY = AnimationConfig.PUNCH_ROT_STRENGTH_Y;
+        if (rStrengthZ < 0) rStrengthZ = AnimationConfig.PUNCH_ROT_STRENGTH_Z;
+        if (rVibrato < 0) rVibrato = AnimationConfig.PUNCH_ROT_VIBRATO;
 
         target.GetPositionAndRotation(out var originalPos, out var originalRotation);
 
@@ -410,9 +477,9 @@ public class AnimationManager
         float bounceDuration = -1,
         float punchDuration = -1)
     {
-        if (bounceMaxScale < 0) bounceMaxScale = AnimationConfig.BounceMaxScale;
-        if (bounceDuration < 0) bounceDuration = AnimationConfig.BounceDuration;
-        if (punchDuration < 0) punchDuration = AnimationConfig.PunchDuration;
+        if (bounceMaxScale < 0) bounceMaxScale = AnimationConfig.BOUNCE_MAX_SCALE;
+        if (bounceDuration < 0) bounceDuration = AnimationConfig.BOUNCE_DURATION;
+        if (punchDuration < 0) punchDuration = AnimationConfig.PUNCH_DURATION;
 
         var seq = DOTween.Sequence();
         seq.Join(PlayPunch(target, punchDuration).OnComplete(onPunchComplete));
@@ -439,7 +506,7 @@ public class AnimationManager
     public void ShowFloatingTip(string tip, Vector3 position, Color textColor, float duration = -1)
     {
         if (string.IsNullOrEmpty(tip)) return;
-        if (duration < 0) duration = AnimationConfig.TipDefaultShowDuration;
+        if (duration < 0) duration = AnimationConfig.TIP_DEFAULT_SHOW_DURATION;
 
         var floatingTip = ObjectBufferPool.Instance
             .Get("Prefabs/UI/Controls/Tips", "FloatingTip", WindowsManager.Instance.FloatingTipLayer)
@@ -465,7 +532,7 @@ public class AnimationManager
     public void ShowArrows(RectTransform rectTransform, bool up, int level, Color color, int arrowCount = -1)
     {
         if (!rectTransform.gameObject.activeInHierarchy) return;
-        if (arrowCount < 0) arrowCount = AnimationConfig.ArrowDefaultCount;
+        if (arrowCount < 0) arrowCount = AnimationConfig.ARROW_DEFAULT_COUNT;
 
         float xMin = rectTransform.position.x + rectTransform.rect.xMin;
         float xMax = rectTransform.position.x + rectTransform.rect.xMax;
@@ -488,14 +555,14 @@ public class AnimationManager
             obj.transform.position = randomPos;
             obj.GetComponentInChildren<Image>().color = color;
 
-            float moveDistance = up ? AnimationConfig.ArrowMoveDistance : -AnimationConfig.ArrowMoveDistance;
+            float moveDistance = up ? AnimationConfig.ARROW_MOVE_DISTANCE : -AnimationConfig.ARROW_MOVE_DISTANCE;
 
             seq.Join(obj.transform.DOMove(
                 new Vector3(obj.transform.position.x, obj.transform.position.y + moveDistance, obj.transform.position.z),
-                AnimationConfig.ArrowDuration).SetEase(Ease.OutQuad));
+                AnimationConfig.ARROW_DURATION).SetEase(Ease.OutQuad));
 
             seq.Join(obj.transform.GetComponent<CanvasGroup>()
-                .DOFade(1, AnimationConfig.ArrowDuration / 2)
+                .DOFade(1, AnimationConfig.ARROW_DURATION / 2)
                 .From(0)
                 .SetLoops(2, LoopType.Yoyo));
 
@@ -508,7 +575,7 @@ public class AnimationManager
     /// </summary>
     public void ShowArrows(RectTransform rectTransform, List<(bool up, int level, Color color)> groups, int totalArrowCount = -1)
     {
-        if (totalArrowCount < 0) totalArrowCount = AnimationConfig.ArrowDefaultCount;
+        if (totalArrowCount < 0) totalArrowCount = AnimationConfig.ARROW_DEFAULT_COUNT;
 
         foreach (var (up, level, color) in groups)
         {
@@ -523,7 +590,7 @@ public class AnimationManager
     /// </summary>
     public Tween PlayWindowMinimize(Transform window, CanvasGroup canvasGroup, Transform shortcut, float duration = -1)
     {
-        if (duration < 0) duration = AnimationConfig.WindowAnimDuration;
+        if (duration < 0) duration = AnimationConfig.WINDOW_ANIM_DURATION;
 
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = true;
@@ -545,7 +612,7 @@ public class AnimationManager
     /// </summary>
     public Tween PlayWindowRestore(RectTransform window, CanvasGroup canvasGroup, Vector3 targetPosition, Vector2 targetSize, float duration = -1)
     {
-        if (duration < 0) duration = AnimationConfig.WindowAnimDuration;
+        if (duration < 0) duration = AnimationConfig.WINDOW_ANIM_DURATION;
 
         canvasGroup.alpha = 1;
         canvasGroup.interactable = false;
@@ -565,7 +632,7 @@ public class AnimationManager
     /// </summary>
     public Tween PlayWindowMaximize(RectTransform window, CanvasGroup canvasGroup, RectTransform targetRect, float duration = -1)
     {
-        if (duration < 0) duration = AnimationConfig.WindowAnimDuration;
+        if (duration < 0) duration = AnimationConfig.WINDOW_ANIM_DURATION;
 
         canvasGroup.alpha = 1;
         canvasGroup.interactable = false;
@@ -604,17 +671,17 @@ public class AnimationManager
 
             iconTransform.GetComponent<Image>().sprite = iconSprite;
             iconTransform.position = randomPos;
-            iconTransform.localScale = Vector3.one * AnimationConfig.StateIconScaleStart;
+            iconTransform.localScale = Vector3.one * AnimationConfig.STATE_ICON_SCALE_START;
 
             var seq = DOTween.Sequence();
-            seq.Append(iconTransform.DOScale(AnimationConfig.StateIconScaleMax, AnimationConfig.StateIconScaleDuration));
+            seq.Append(iconTransform.DOScale(AnimationConfig.STATE_ICON_SCALE_MAX, AnimationConfig.STATE_ICON_SCALE_DURATION));
             seq.AppendInterval(0.4f);
-            seq.Join(iconTransform.DOMove(targetIcon.transform.position, AnimationConfig.StateIconMoveDuration));
-            seq.Join(iconTransform.DOScale(AnimationConfig.StateIconScaleStart, AnimationConfig.StateIconMoveDuration));
+            seq.Join(iconTransform.DOMove(targetIcon.transform.position, AnimationConfig.STATE_ICON_MOVE_DURATION));
+            seq.Join(iconTransform.DOScale(AnimationConfig.STATE_ICON_SCALE_START, AnimationConfig.STATE_ICON_MOVE_DURATION));
             seq.OnComplete(() =>
             {
                 ObjectBufferPool.Instance.Restore(iconTransform.gameObject);
-                targetIcon.transform.DOScale(AnimationConfig.StateIconBounceScale, AnimationConfig.StateIconBounceDuration)
+                targetIcon.transform.DOScale(AnimationConfig.STATE_ICON_BOUNCE_SCALE, AnimationConfig.STATE_ICON_BOUNCE_DURATION)
                     .SetLoops(2, LoopType.Yoyo);
             });
         }

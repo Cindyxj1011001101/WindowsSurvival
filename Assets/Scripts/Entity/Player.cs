@@ -48,6 +48,7 @@ public class Player : IEntity, IManager
     public void TakeDamage(float damage, IEntity damageDealer)
     {
         StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, -damage);
+        AnimationManager.Instance.PlayPlayerDamagedScreenFlash();
         // 中断休息行为
         StateManager.Instance.StopResting();
         // 中断制作行为

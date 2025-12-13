@@ -47,6 +47,17 @@ public class Main : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            Debug.Log("玩家受伤10点");
+            Player.Instance.TakeDamage(10, null);
+        }
+    }
+#endif
+
     private void InitManagers()
     {
         foreach (var m in orderedManagers)
