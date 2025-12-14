@@ -370,6 +370,18 @@ public class WindowsManager : MonoBehaviour
         return result;
     }
 
+    public bool TryGetOpenedWindow(string appName, out WindowBase window, bool excludeMinimized = false)
+    {
+        if (!openedWindows.TryGetValue(appName, out window)) return false;
+
+        if (excludeMinimized && window.State == WindowState.Minimized)
+        {
+            window = null;
+            return false;
+        }
+
+        return true;
+    }
 
     PointerEventData pointerData;
     List<RaycastResult> results;

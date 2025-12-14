@@ -323,13 +323,12 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     public void PlayCardLoopSound(string cardId, string clipName, float volume = 0.3f)
     {
-
         // 如果详情窗口当前正在显示此卡牌，则将初始循环音量设置为更高的值（详情界面打开时应该听到更大的循环音）
         float initialVolume = volume;
-        if (WindowsManager.Instance != null && WindowsManager.Instance.IsWindowOpen("Details"))
+        if (WindowsManager.Instance.TryGetOpenedWindow("Details", out var window, true))
         {
-            var opened = WindowsManager.Instance.GetOpenedWindows(true);
-            if (opened != null && opened.TryGetValue("Details", out var window) && window is DetailsWindow dw && dw.CurrentDisplayedCard != null && dw.CurrentDisplayedCard.CardId == cardId)
+            var dw = window as DetailsWindow;
+            if (dw.CurrentDisplayedCard != null && dw.CurrentDisplayedCard.CardId == cardId)
             {
                 initialVolume = 1.0f;
             }
