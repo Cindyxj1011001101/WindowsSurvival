@@ -25,10 +25,165 @@ public class DragScaleHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     private bool isDragging = false;
     private bool isDirty = false;
 
+    private float snapThreshold = 12f;
+    private float constBorder = 2f;
+
     public void Awake()
     {
         targetRect = transform.parent.parent.GetComponent<RectTransform>();
         canvasRect = FindObjectOfType<Canvas>().GetComponent<RectTransform>();
+    }
+
+    private void SnapDraggedEdgesAfterResize()
+    {
+        if (targetRect == null) return;
+        if (WindowsManager.Instance == null) return;
+        if (WindowsManager.Instance.Desktop == null) return;
+
+        var parent = targetRect.parent as RectTransform;
+        if (parent == null) return;
+
+        var thisWindow = targetRect.GetComponent<WindowBase>();
+
+        bool shouldSnapLeft = direction == ScaleDirection.Left || direction == ScaleDirection.TopLeft || direction == ScaleDirection.BottomLeft;
+        bool shouldSnapRight = direction == ScaleDirection.Right || direction == ScaleDirection.TopRight || direction == ScaleDirection.BottomRight;
+        bool shouldSnapTop = direction == ScaleDirection.Top || direction == ScaleDirection.TopLeft || direction == ScaleDirection.TopRight;
+        bool shouldSnapBottom = direction == ScaleDirection.Bottom || direction == ScaleDirection.BottomLeft || direction == ScaleDirection.BottomRight;
+
+        var (thisLeft, thisTop, thisRight, thisBottom) = MonoUtility.GetFourBorders(targetRect);
+        var (screenLeft, screenTop, screenRight, screenBottom) = MonoUtility.GetFourBorders(WindowsManager.Instance.Desktop);
+
+        float bestLeftTarget = thisLeft;
+        float bestLeftDist = float.MaxValue;
+        float bestRightTarget = thisRight;
+        float bestRightDist = float.MaxValue;
+        float bestTopTarget = thisTop;
+        float bestTopDist = float.MaxValue;
+        float bestBottomTarget = thisBottom;
+        float bestBottomDist = float.MaxValue;
+
+        if (shouldSnapLeft)
+        {
+            bestLeftTarget = screenLeft + constBorder;
+            bestLeftDist = Mathf.Abs(bestLeftTarget - thisLeft);
+        }
+
+        if (shouldSnapRight)
+        {
+            bestRightTarget = screenRight - constBorder;
+            bestRightDist = Mathf.Abs(bestRightTarget - thisRight);
+        }
+
+        if (shouldSnapTop)
+        {
+            bestTopTarget = screenTop - constBorder;
+            bestTopDist = Mathf.Abs(bestTopTarget - thisTop);
+        }
+
+        if (shouldSnapBottom)
+        {
+            bestBottomTarget = screenBottom + constBorder;
+            bestBottomDist = Mathf.Abs(bestBottomTarget - thisBottom);
+        }
+
+        foreach (var window in WindowsManager.Instance.GetOpenedWindows(true).Values)
+        {
+            if (window == null) continue;
+            if (thisWindow != null && window == thisWindow) continue;
+
+            var otherRect = window.transform as RectTransform;
+            if (otherRect == null) continue;
+
+            var (otherLeft, otherTop, otherRight, otherBottom) = MonoUtility.GetFourBorders(otherRect);
+
+            if (shouldSnapLeft)
+            {
+                var dist = Mathf.Abs(otherRight - thisLeft);
+                if (dist < bestLeftDist)
+                {
+                    bestLeftDist = dist;
+                    bestLeftTarget = otherRight;
+                }
+            }
+
+            if (shouldSnapRight)
+            {
+                var dist = Mathf.Abs(otherLeft - thisRight);
+                if (dist < bestRightDist)
+                {
+                    bestRightDist = dist;
+                    bestRightTarget = otherLeft;
+                }
+            }
+
+            if (shouldSnapTop)
+            {
+                var dist = Mathf.Abs(otherBottom - thisTop);
+                if (dist < bestTopDist)
+                {
+                    bestTopDist = dist;
+                    bestTopTarget = otherBottom;
+                }
+            }
+
+            if (shouldSnapBottom)
+            {
+                var dist = Mathf.Abs(otherTop - thisBottom);
+                if (dist < bestBottomDist)
+                {
+                    bestBottomDist = dist;
+                    bestBottomTarget = otherTop;
+                }
+            }
+        }
+
+        var offsetMin = targetRect.offsetMin;
+        var offsetMax = targetRect.offsetMax;
+
+        if (shouldSnapLeft && bestLeftDist < snapThreshold)
+        {
+            var deltaWorld = bestLeftTarget - thisLeft;
+            var deltaLocal = parent.InverseTransformVector(new Vector3(deltaWorld, 0f, 0f)).x;
+            offsetMin.x += deltaLocal;
+            offsetMin.x = Mathf.Min(offsetMin.x, offsetMax.x - minWidth);
+            offsetMin.x = Mathf.Max(offsetMin.x, offsetMax.x - maxWidth);
+        }
+
+        if (shouldSnapRight && bestRightDist < snapThreshold)
+        {
+            var deltaWorld = bestRightTarget - thisRight;
+            var deltaLocal = parent.InverseTransformVector(new Vector3(deltaWorld, 0f, 0f)).x;
+            offsetMax.x += deltaLocal;
+            offsetMax.x = Mathf.Max(offsetMax.x, offsetMin.x + minWidth);
+            offsetMax.x = Mathf.Min(offsetMax.x, offsetMin.x + maxWidth);
+        }
+
+        if (shouldSnapTop && bestTopDist < snapThreshold)
+        {
+            var deltaWorld = bestTopTarget - thisTop;
+            var deltaLocal = parent.InverseTransformVector(new Vector3(0f, deltaWorld, 0f)).y;
+            offsetMax.y += deltaLocal;
+            offsetMax.y = Mathf.Max(offsetMax.y, offsetMin.y + minHeight);
+            offsetMax.y = Mathf.Min(offsetMax.y, offsetMin.y + maxHeight);
+        }
+
+        if (shouldSnapBottom && bestBottomDist < snapThreshold)
+        {
+            var deltaWorld = bestBottomTarget - thisBottom;
+            var deltaLocal = parent.InverseTransformVector(new Vector3(0f, deltaWorld, 0f)).y;
+            offsetMin.y += deltaLocal;
+            offsetMin.y = Mathf.Min(offsetMin.y, offsetMax.y - minHeight);
+            offsetMin.y = Mathf.Max(offsetMin.y, offsetMax.y - maxHeight);
+        }
+
+        targetRect.offsetMin = offsetMin;
+        targetRect.offsetMax = offsetMax;
+
+        // 限制顶边栏不能拉出屏幕外
+        targetRect.offsetMax = new Vector2(
+            targetRect.offsetMax.x,
+            Mathf.Clamp(targetRect.offsetMax.y, WindowsManager.Instance.Desktop.rect.yMin + 60, WindowsManager.Instance.Desktop.rect.yMax)
+        );
     }
 
     public void ChangeMouseByDirection()
@@ -159,6 +314,9 @@ public class DragScaleHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, 
     public void OnEndDrag(PointerEventData eventData)
     {
         isDragging = false;
+
+        // 缩放结束后：仅对拖动的边/角进行吸附，保持未拖动边不变
+        SnapDraggedEdgesAfterResize();
     }
 
     private void OnRectTransformDimensionsChange()
