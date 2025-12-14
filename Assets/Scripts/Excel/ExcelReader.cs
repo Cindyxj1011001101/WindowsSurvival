@@ -62,16 +62,16 @@ public static class ExcelReader
                 IsEquipment = ParseBool(row[21].ToString()),
                 IsTool = ParseBool(row[23].ToString()),
                 HasInnerContents = ParseBool(row[25].ToString()),
-                IsFuel = ParseBool(row[27].ToString()),
-                HasFuelStorage = ParseBool(row[29].ToString()),
-                HasFoodProperty = ParseBool(row[31].ToString()),
-                IsPassage = ParseBool(row[41].ToString()),
-                CanCook = ParseBool(row[45].ToString()),
-                IsConstruction = ParseBool(row[48].ToString()),
-                IsPlant = ParseBool(row[56].ToString()),
-                HasCoordinate = ParseBool(row[61].ToString()),
-                IsWeapon = ParseBool(row[63].ToString()),
-                IsEntity = ParseBool(row[69].ToString()),
+                IsFuel = ParseBool(row[28].ToString()),
+                HasFuelStorage = ParseBool(row[30].ToString()),
+                HasFoodProperty = ParseBool(row[32].ToString()),
+                IsPassage = ParseBool(row[42].ToString()),
+                CanCook = ParseBool(row[46].ToString()),
+                IsConstruction = ParseBool(row[49].ToString()),
+                IsPlant = ParseBool(row[57].ToString()),
+                HasCoordinate = ParseBool(row[62].ToString()),
+                IsWeapon = ParseBool(row[64].ToString()),
+                IsEntity = ParseBool(row[70].ToString()),
             };
             // 可选字段
             if (currentConfig.HasMultipleStates)
@@ -105,84 +105,85 @@ public static class ExcelReader
             if (currentConfig.HasInnerContents)
             {
                 currentConfig.InnerContentSlotCount = ParseInt(row[26].ToString());
+                currentConfig.IsCraftMaterialSource = ParseBool(row[27].ToString());
             }
             if (currentConfig.IsFuel)
             {
-                currentConfig.FuelValue = ParseInt(row[28].ToString());
+                currentConfig.FuelValue = ParseInt(row[29].ToString());
             }
             if (currentConfig.HasFuelStorage)
             {
-                currentConfig.FuelStorageCapacity = ParseInt(row[30].ToString());
+                currentConfig.FuelStorageCapacity = ParseInt(row[31].ToString());
             }
             if (currentConfig.HasFoodProperty)
             {
                 currentConfig.FoodPropertyDict = new Dictionary<FoodProperty, int>
                 {
-                    { FoodProperty.EatableDegree, ParseInt(row[32].ToString()) },     // 可食用度
-                    { FoodProperty.UneatableDegree, ParseInt(row[33].ToString()) },   // 不可食用度   
-                    { FoodProperty.Meatiness, ParseInt(row[34].ToString()) },         // 肉度
-                    { FoodProperty.Fishiness, ParseInt(row[35].ToString()) },         // 鱼度
-                    { FoodProperty.Shellfishiness, ParseInt(row[36].ToString()) },    // 贝度
-                    { FoodProperty.Wateriness, ParseInt(row[37].ToString()) },        // 水度
-                    { FoodProperty.Vegetableness, ParseInt(row[38].ToString()) },     // 菜度
-                    { FoodProperty.Fruitiness, ParseInt(row[39].ToString()) },        // 果度
-                    { FoodProperty.FoulSmellingDegree, ParseInt(row[40].ToString()) } // 恶臭度
+                    { FoodProperty.EatableDegree, ParseInt(row[33].ToString()) },     // 可食用度
+                    { FoodProperty.UneatableDegree, ParseInt(row[34].ToString()) },   // 不可食用度   
+                    { FoodProperty.Meatiness, ParseInt(row[35].ToString()) },         // 肉度
+                    { FoodProperty.Fishiness, ParseInt(row[36].ToString()) },         // 鱼度
+                    { FoodProperty.Shellfishiness, ParseInt(row[37].ToString()) },    // 贝度
+                    { FoodProperty.Wateriness, ParseInt(row[38].ToString()) },        // 水度
+                    { FoodProperty.Vegetableness, ParseInt(row[39].ToString()) },     // 菜度
+                    { FoodProperty.Fruitiness, ParseInt(row[40].ToString()) },        // 果度
+                    { FoodProperty.FoulSmellingDegree, ParseInt(row[41].ToString()) } // 恶臭度
                 };
             }
             if (currentConfig.IsPassage)
             {
-                currentConfig.MoveTime = ParseInt(row[42].ToString());
-                currentConfig.TargetPlace = Enum.Parse<PlaceEnum>(row[43].ToString());
-                currentConfig.InteractAudio = row[44].ToString();
+                currentConfig.MoveTime = ParseInt(row[43].ToString());
+                currentConfig.TargetPlace = Enum.Parse<PlaceEnum>(row[44].ToString());
+                currentConfig.InteractAudio = row[45].ToString();
             }
             if (currentConfig.CanCook)
             {
-                currentConfig.CookTime = ParseInt(row[46].ToString());
-                currentConfig.OutcomeCardId = row[47].ToString();
+                currentConfig.CookTime = ParseInt(row[47].ToString());
+                currentConfig.OutcomeCardId = row[48].ToString();
             }
             if (currentConfig.IsConstruction)
             {
-                currentConfig.OnlyInWater = ParseBool(row[49].ToString());
-                currentConfig.OnlyOutWater = ParseBool(row[50].ToString());
-                currentConfig.OnlyInDoor = ParseBool(row[51].ToString());
-                currentConfig.OnlyOutDoor = ParseBool(row[52].ToString());
-                currentConfig.NeedCable = ParseBool(row[53].ToString());
-                currentConfig.CanBeDemolished = ParseBool(row[54].ToString());
-                currentConfig.DemolitionDebris = row[55].ToString();
+                currentConfig.OnlyInWater = ParseBool(row[50].ToString());
+                currentConfig.OnlyOutWater = ParseBool(row[51].ToString());
+                currentConfig.OnlyInDoor = ParseBool(row[52].ToString());
+                currentConfig.OnlyOutDoor = ParseBool(row[53].ToString());
+                currentConfig.NeedCable = ParseBool(row[54].ToString());
+                currentConfig.CanBeDemolished = ParseBool(row[55].ToString());
+                currentConfig.DemolitionDebris = row[56].ToString();
             }
             if (currentConfig.IsPlant)
             {
-                currentConfig.GrowthRate = ParseFloat(row[57].ToString());
-                string[] tempretures = row[58].ToString().Split('_');
+                currentConfig.GrowthRate = ParseFloat(row[58].ToString());
+                string[] tempretures = row[59].ToString().Split('_');
                 currentConfig.MinConfortTempreture = ParseFloat(tempretures[0]);
                 currentConfig.MaxConfortTempreture = ParseFloat(tempretures[1]);
                 currentConfig.MinGrowTempture = ParseFloat(tempretures[2]);
                 currentConfig.MaxGrowTempture = ParseFloat(tempretures[3]);
                 currentConfig.MinLiveTempture = ParseFloat(tempretures[4]);
                 currentConfig.MaxLiveTempture = ParseFloat(tempretures[5]);
-                currentConfig.DeadcardName = row[59].ToString();
-                currentConfig.Pressures = ParsePressureLevels(row[60].ToString());
+                currentConfig.DeadcardName = row[60].ToString();
+                currentConfig.Pressures = ParsePressureLevels(row[61].ToString());
             }
             if (currentConfig.HasCoordinate)
             {
-                currentConfig.Position = ParseFloat(row[62].ToString());
+                currentConfig.Position = ParseFloat(row[63].ToString());
             }
             if (currentConfig.IsWeapon)
             {
-                currentConfig.WeaponAtk = ParseFloat(row[64].ToString());
-                currentConfig.MinAtkDist = ParseFloat(row[65].ToString());
-                currentConfig.MaxAtkDist = ParseFloat(row[66].ToString());
-                currentConfig.AtkForm = Enum.Parse<AttackForm>(row[67].ToString());
-                currentConfig.AtkTime = ParseInt(row[68].ToString());
+                currentConfig.WeaponAtk = ParseFloat(row[65].ToString());
+                currentConfig.MinAtkDist = ParseFloat(row[66].ToString());
+                currentConfig.MaxAtkDist = ParseFloat(row[67].ToString());
+                currentConfig.AtkForm = Enum.Parse<AttackForm>(row[68].ToString());
+                currentConfig.AtkTime = ParseInt(row[69].ToString());
             }
             if (currentConfig.IsEntity)
             {
-                currentConfig.MaxHealth = ParseFloat(row[70].ToString());
-                currentConfig.EntityAtk = ParseFloat(row[71].ToString());
-                currentConfig.MoveDistPerMin = ParseFloat(row[72].ToString());
-                currentConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[73].ToString());
-                currentConfig.AIRefreshInterval = ParseInt(row[74].ToString());
-                currentConfig.DeadDrops = row[75].ToString();
+                currentConfig.MaxHealth = ParseFloat(row[71].ToString());
+                currentConfig.EntityAtk = ParseFloat(row[72].ToString());
+                currentConfig.MoveDistPerMin = ParseFloat(row[73].ToString());
+                currentConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[74].ToString());
+                currentConfig.AIRefreshInterval = ParseInt(row[75].ToString());
+                currentConfig.DeadDrops = row[76].ToString();
             }
             configs.Add(currentConfig.CardId, currentConfig);
         }

@@ -30,6 +30,7 @@ public class CardConfig
     public List<ToolType> ToolTypes; // 工具类型
     public bool HasInnerContents; // 是否有内部内容（如生物、建筑等）
     public int InnerContentSlotCount; // 内部内容槽位数量
+    public bool IsCraftMaterialSource; // 是否作为配方材料来源
     public bool IsFuel; // 是否有可燃烧组件
     public int FuelValue; // 可燃烧时间
     public bool HasFuelStorage; // 是否有燃料存储组件

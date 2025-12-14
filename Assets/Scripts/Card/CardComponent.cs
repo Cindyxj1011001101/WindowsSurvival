@@ -322,25 +322,26 @@ public delegate bool CardFilterDelegate(Card card, out string s);
 
 public class InnerContentsComponent : CardComponent
 {
-    public float weightLossRate = 1f; // 减重率
-    public bool isCraftMaterialSource; // 是否作为配方材料来源
+    public float weightLossRate = 1f;           // 减重率
+    public bool isCraftMaterialSource = false;  // 是否作为配方材料来源
     public InnerBag bag = new();
+
+    public bool display = true;                 // 是否显示内容物
+    public bool allowAdd = true;                // 是否允许添加内容物
+    public bool allowRemove = true;             // 是否允许移除内容物
+
+    public string notAllowRemoveReason = "";    // 不允许移除内容物的原因
+    public string notAllowAddReason = "";       // 不允许放入内容物的原因
 
     [JsonIgnore] public CardFilterDelegate contentFilter;
     [JsonIgnore] public UnityAction<Card> onAddCard;
     [JsonIgnore] public UnityAction<Card> onRemoveCard;
 
-    public bool display = true; // 是否显示内容物
-    public bool allowAdd = true; // 是否允许添加内容物
-    public bool allowRemove = true; // 是否允许移除内容物
-
-    public string notAllowRemoveReason = ""; // 不允许移除内容物的原因
-    public string notAllowAddReason = ""; // 不允许放入内容物的原因
-
     public InnerContentsComponent() { }
 
-    public InnerContentsComponent(int slotCount)
+    public InnerContentsComponent(int slotCount, bool isCraftMaterialSource)
     {
+        this.isCraftMaterialSource = isCraftMaterialSource;
         bag.AddSlot(slotCount);
     }
 

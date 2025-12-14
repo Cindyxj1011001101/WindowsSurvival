@@ -264,7 +264,7 @@ public static class CardFactory
         }
         if (config.HasInnerContents)
         {
-            card.AddComponent(new InnerContentsComponent(config.InnerContentSlotCount));
+            card.AddComponent(new InnerContentsComponent(config.InnerContentSlotCount, config.IsCraftMaterialSource));
         }
         if (config.IsFuel)
         {
