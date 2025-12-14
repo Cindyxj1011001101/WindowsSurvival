@@ -37,7 +37,6 @@ public class CraftWindow : WindowBase
         EventManager.Instance.AddListener(EventType.ChangeDisplayedCard, RefreshDisplay);
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, RefreshDisplay);
         EventManager.Instance.AddListener(EventType.UnlockRecipe, RefreshDisplay);
-        EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
         // 触发或结束制作激励事件时，刷新显示
         EventManager.Instance.AddListener<GameEvent>(EventType.GameEventBegin, OnCraftIncentiveBeginEnd);
         EventManager.Instance.AddListener<GameEvent>(EventType.GameEventEnd, OnCraftIncentiveBeginEnd);
@@ -65,7 +64,6 @@ public class CraftWindow : WindowBase
         EventManager.Instance.RemoveListener(EventType.ChangeDisplayedCard, RefreshDisplay); // 详情窗口显示的卡牌改变时触发
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, RefreshDisplay);
         EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshDisplay);
-        EventManager.Instance.RemoveListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
         EventManager.Instance.RemoveListener<GameEvent>(EventType.GameEventBegin, OnCraftIncentiveBeginEnd);
         EventManager.Instance.RemoveListener<GameEvent>(EventType.GameEventEnd, OnCraftIncentiveBeginEnd);
     }
@@ -95,9 +93,6 @@ public class CraftWindow : WindowBase
     }
 
     private void RefreshDisplay(EnvironmentBag env) => RefreshDisplay();
-
-    // 卡牌数量变化时刷新显示，用于那些有制作数量限制的配方，例如数据传输台
-    private void RefreshDisplay((string, int) args) => RefreshDisplay();
 
     private void RefreshDisplay() => DisplayRecipesByType(currentRecipeType, true); // 传递true表示是刷新操作
 

@@ -99,13 +99,6 @@ public class CraftManager : IManager
             return false;
         }
 
-        // 数量达到上限，无法合成
-        if (GlobalDataManager.Instance.GetCardNum(recipe.cardId) >= recipe.craftLimit)
-        {
-            hint = "已达上限";
-            return false;
-        }
-
         // 配方已解锁，看材料是否充足
         foreach (var material in GetMaterials(recipe))
         {
