@@ -19,8 +19,7 @@ public class ChatConditionManager : MonoBehaviour
     
         Instance = this;
         EventManager.Instance.AddListener<SubscribeActionArgs>(EventType.DialogueCondition, TriggerAction);
-        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards,
-            ChangeCardCondition);
+        EventManager.Instance.AddListener<AddRemoveCardArgs>(EventType.AddRemoveCard, ChangeCardCondition);
         if (!GameDataManager.Instance.GeneratedChatData.init)
         {
             StartDetectAllParagraph();
@@ -34,8 +33,7 @@ public class ChatConditionManager : MonoBehaviour
     private void OnDestroy()
     {
         EventManager.Instance.RemoveListener<SubscribeActionArgs>(EventType.DialogueCondition, TriggerAction);
-        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards,
-            ChangeCardCondition);
+        EventManager.Instance.RemoveListener<AddRemoveCardArgs>(EventType.AddRemoveCard, ChangeCardCondition);
     }
     
     #region 开始与结束检测
@@ -110,7 +108,7 @@ public class ChatConditionManager : MonoBehaviour
         
     }
     
-    public void ChangeCardCondition(ChangePlayerBagCardsArgs args)
+    public void ChangeCardCondition(AddRemoveCardArgs args)
     {
         Dictionary<string, ParagraphCondition> tmpParagraphDic = new Dictionary<string, ParagraphCondition>(DetectedParagraphConditions);
         foreach (var condition in tmpParagraphDic.Values)

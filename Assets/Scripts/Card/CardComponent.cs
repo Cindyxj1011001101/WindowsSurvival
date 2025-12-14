@@ -323,7 +323,7 @@ public delegate bool CardFilterDelegate(Card card, out string s);
 public class InnerContentsComponent : CardComponent
 {
     public float weightLossRate = 1f; // 减重率
-
+    public bool isCraftMaterialSource; // 是否作为配方材料来源
     public InnerBag bag = new();
 
     [JsonIgnore] public CardFilterDelegate contentFilter;

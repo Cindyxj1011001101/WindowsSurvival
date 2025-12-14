@@ -1,4 +1,3 @@
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,7 +24,7 @@ public class DetailsWindow : BagWindow
 
     [SerializeField] private RectTransform selectRect; // 选择框
 
-    private string currentDisplay;
+    private string currentDisplayedPart;
 
     private Card currentDisplayedCard;
     // 公开当前正在显示的卡牌，供其他系统（如音效管理）查询
@@ -38,7 +37,7 @@ public class DetailsWindow : BagWindow
         base.Awake();
         EventManager.Instance.AddListener<Card>(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
-        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
+        EventManager.Instance.AddListener<AddRemoveCardArgs>(EventType.AddRemoveCard, OnPlayerCardsChanged);
         EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChange);
     }
 
@@ -47,7 +46,7 @@ public class DetailsWindow : BagWindow
         Clear();
         EventManager.Instance.RemoveListener<Card>(EventType.ChangeCardProperty, RefreshCard);
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
-        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, OnPlayerCardsChanged);
+        EventManager.Instance.RemoveListener<AddRemoveCardArgs>(EventType.AddRemoveCard, OnPlayerCardsChanged);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChange);
     }
 
@@ -55,12 +54,12 @@ public class DetailsWindow : BagWindow
     {
         if (currentDisplayedCard == null)
         {
-            Clear();
+            ResetDisplay();
         }
 
         detailsButton.onClick.AddListener(() =>
         {
-            if (currentDisplayedCard != null && currentDisplay != "详情")
+            if (currentDisplayedCard != null && currentDisplayedPart != "详情")
             {
                 DisplayDetails();
             }
@@ -68,7 +67,7 @@ public class DetailsWindow : BagWindow
 
         innerContentsButton.onClick.AddListener(() =>
         {
-            if (currentDisplayedCard != null && currentDisplay != "内容物")
+            if (currentDisplayedCard != null && currentDisplayedPart != "内容物")
             {
                 DisplayInnerContents();
             }
@@ -79,9 +78,11 @@ public class DetailsWindow : BagWindow
     /// 当玩家背包物品变化时触发，这是为了刷新卡牌事件的触发条件
     /// </summary>
     /// <param name="args"></param>
-    private void OnPlayerCardsChanged(ChangePlayerBagCardsArgs args)
+    private void OnPlayerCardsChanged(AddRemoveCardArgs args)
     {
         if (currentDisplayedCard == null) return;
+
+        if (args.AffectedBag is not PlayerBag) return;
 
         DisplayEventButtons();
     }
@@ -136,8 +137,7 @@ public class DetailsWindow : BagWindow
 
     public void Display(SlotCards slotCards, DisplayType displayType = DisplayType.All)
     {
-        // 清除原数据
-        Clear();
+        ResetDisplay();
 
         if (slotCards.IsEmpty) return;
 
@@ -151,8 +151,7 @@ public class DetailsWindow : BagWindow
 
     public void Display(Card card, DisplayType displayType = DisplayType.All)
     {
-        // 清除原数据
-        Clear();
+        ResetDisplay();
 
         if (card == null) return;
 
@@ -170,8 +169,6 @@ public class DetailsWindow : BagWindow
 
         // 显示卡牌
         slot.DisplayCard(currentDisplayedCard, 1, false);
-
-        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
 
         // 显示可交互按钮
         DisplayEventButtons();
@@ -218,22 +215,14 @@ public class DetailsWindow : BagWindow
             // 则居左显示
             rectTransform.anchoredPosition = new(rectTransform.anchoredPosition.x + widthDiff / 2, rectTransform.anchoredPosition.y);
         }
-    }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            print(currentDisplayedCard);
-        }
+        EventManager.Instance.TriggerEvent(EventType.ChangeDisplayedCard);
+        EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Detail", currentDisplayedCard.CardName));
     }
 
     private void DisplayDetails()
     {
-        currentDisplay = "详情";
-
-        // 清除内容物卡牌的显示
-        ClearBag();
+        currentDisplayedPart = "详情";
 
         detailsScrollView.SetActive(true);
         contentsView.gameObject.SetActive(false);
@@ -246,7 +235,7 @@ public class DetailsWindow : BagWindow
 
     private void DisplayInnerContents()
     {
-        currentDisplay = "内容物";
+        currentDisplayedPart = "内容物";
 
         detailsScrollView.SetActive(false);
         contentsView.gameObject.SetActive(true);
@@ -358,12 +347,11 @@ public class DetailsWindow : BagWindow
         MonoUtility.UpdateLayoutSize(buttonLayout.GetComponent<ILayoutGroup>());
     }
 
-    public void Clear()
+    public void ResetDisplay()
     {
-        currentDisplay = null;
-
         ClearBag();
 
+        currentDisplayedPart = null;
         envChanged = false;
         slot.Clear();
 
@@ -381,6 +369,12 @@ public class DetailsWindow : BagWindow
         contentsView.gameObject.SetActive(false);
         innerContentsButton.gameObject.SetActive(false);
         ObjectBufferPool.Instance.RestoreAllChildren(buttonLayout);
+    }
+
+    public void Clear()
+    {
+        ResetDisplay();
+        EventManager.Instance.TriggerEvent(EventType.ChangeDisplayedCard);
     }
 
     private void SelectWithTween(RectTransform target)

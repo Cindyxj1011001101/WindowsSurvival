@@ -107,11 +107,10 @@ public class CraftManager : IManager
         }
 
         // 配方已解锁，看材料是否充足
-        PlayerBag playerBag = GameManager.Instance.PlayerBag;
         foreach (var material in GetMaterials(recipe))
         {
             // 任何一项材料不满足数量需求，不能合成
-            if (playerBag.GetTotalCountByCardId(material.cardId) < material.requiredNum)
+            if (GetTotalCraftMaterialCount(material.cardId) < material.requiredNum)
             {
                 hint = "材料不足";
                 return false;
@@ -120,6 +119,37 @@ public class CraftManager : IManager
 
         hint = string.Empty;
         return true;
+    }
+
+    public List<Bag> GetCraftMaterialSourceBags()
+    {
+        var sourceBags = new List<Bag>() // 可以作为配方材料来源的背包
+        {
+            GameManager.Instance.CurEnvironmentBag,
+            GameManager.Instance.PlayerBag,
+        };
+
+        if (WindowsManager.Instance.TryGetOpenedWindow("Details", out var window))
+        {
+            var detailsWindow = window as DetailsWindow;
+            if (detailsWindow.Bag != null && (detailsWindow.Bag as InnerBag).IsCraftMaterialSource)
+            {
+                sourceBags.Insert(1, detailsWindow.Bag); // 插入到玩家背包前面，优先使用该背包的材料
+            }
+        }
+
+        return sourceBags;
+    }
+
+    public int GetTotalCraftMaterialCount(string cardId)
+    {
+        int total = 0;
+        foreach (var bag in GetCraftMaterialSourceBags())
+        {
+            total += bag.GetTotalCountByCardId(cardId);
+        }
+
+        return total;
     }
 
     /// <summary>
@@ -203,11 +233,22 @@ public class CraftManager : IManager
         craftStopped = false;
 
         // 消耗合成材料
-        PlayerBag playerBag = GameManager.Instance.PlayerBag;
         var materials = GetMaterials(recipe);
         foreach (var material in materials)
         {
-            playerBag.DestroyCardsByCardId(material.cardId, material.requiredNum);
+            var leftToConsume = material.requiredNum;
+
+            foreach (var bag in GetCraftMaterialSourceBags())
+            {
+                var bagCount = bag.GetTotalCountByCardId(material.cardId);
+                var bagConsume = Mathf.Min(bagCount, leftToConsume);
+                if (bagConsume > 0)
+                {
+                    bag.DestroyCardsByCardId(material.cardId, bagConsume);
+                    leftToConsume -= bagConsume;
+                }
+                if (leftToConsume <= 0) break;
+            }
         }
 
         // 消耗时间

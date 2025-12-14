@@ -8,7 +8,7 @@
     ChangeCurrentEnvironment,           // 改变当前地点
     RefreshPlayerState,                 // 更新玩家状态数据
     RefreshEnvironmentState,            // 更新环境状态数据
-    ChangePlayerBagCards,               // 玩家背包卡牌变化
+    AddRemoveCard,                      // 向添加/移除卡牌
     ChangeStudyProgress,                // 研究进度变化
     UnlockRecipe,                       // 解锁合成配方
     GameOver,                           // 游戏结束
@@ -31,12 +31,23 @@
     GameEventEnd,                       // 全局效果结束
     UpdateSunlight,                     // 恒星光照更新
     RefreshAnimator,                    // 更新动画器
+    ChangeDisplayedCard,                // 切换详情窗口显示的卡牌
 }
 
-public class ChangePlayerBagCardsArgs
+public class AddRemoveCardArgs
 {
     public Card card;
     public int add;
+    public Bag fromBag;
+    public Bag toBag;
+
+    public Bag AffectedBag
+    {
+        get
+        {
+            return add > 0 ? toBag : fromBag;
+        }
+    }
 }
 
 public class RefreshEnvironmentStateArgs

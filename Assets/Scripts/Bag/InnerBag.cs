@@ -4,23 +4,13 @@ public class InnerBag : Bag
 {
     private InnerContentsComponent component;
 
-    [JsonIgnore]
-    public Card BelongedCard => component.BelongedCard;
-
-    [JsonIgnore]
-    public float WeightLossRate => component.weightLossRate;
-
-    [JsonIgnore]
-    public bool AllowAdd => component.allowAdd;
-
-    [JsonIgnore]
-    public bool AllowRemove => component.allowRemove;
-
-    [JsonIgnore]
-    public string NotAllowRemoveReason => component.notAllowRemoveReason;
-
-    [JsonIgnore]
-    public string NotAllowAddReason => component.notAllowAddReason;
+    [JsonIgnore] public Card BelongedCard => component.BelongedCard;
+    [JsonIgnore] public float WeightLossRate => component.weightLossRate;
+    [JsonIgnore] public bool AllowAdd => component.allowAdd;
+    [JsonIgnore] public bool AllowRemove => component.allowRemove;
+    [JsonIgnore] public string NotAllowRemoveReason => component.notAllowRemoveReason;
+    [JsonIgnore] public string NotAllowAddReason => component.notAllowAddReason;
+    [JsonIgnore] public bool IsCraftMaterialSource => component.isCraftMaterialSource; // 是否作为配方材料来源
 
     public void SetComponent(InnerContentsComponent component)
     {

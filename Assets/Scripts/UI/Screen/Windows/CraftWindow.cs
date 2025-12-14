@@ -33,7 +33,8 @@ public class CraftWindow : WindowBase
         base.Awake();
 
         // 注册背包变化事件
-        EventManager.Instance.AddListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshDisplay);
+        EventManager.Instance.AddListener<AddRemoveCardArgs>(EventType.AddRemoveCard, RefreshDisplay);
+        EventManager.Instance.AddListener(EventType.ChangeDisplayedCard, RefreshDisplay);
         EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, RefreshDisplay);
         EventManager.Instance.AddListener(EventType.UnlockRecipe, RefreshDisplay);
         EventManager.Instance.AddListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
@@ -60,7 +61,8 @@ public class CraftWindow : WindowBase
 
     private void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<ChangePlayerBagCardsArgs>(EventType.ChangePlayerBagCards, RefreshDisplay);
+        EventManager.Instance.RemoveListener<AddRemoveCardArgs>(EventType.AddRemoveCard, RefreshDisplay);
+        EventManager.Instance.RemoveListener(EventType.ChangeDisplayedCard, RefreshDisplay); // 详情窗口显示的卡牌改变时触发
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, RefreshDisplay);
         EventManager.Instance.RemoveListener(EventType.UnlockRecipe, RefreshDisplay);
         EventManager.Instance.RemoveListener<(string, int)>(EventType.CardNumChange, RefreshDisplay);
@@ -73,10 +75,28 @@ public class CraftWindow : WindowBase
         DisplayRecipesByType(currentRecipeType);
     }
 
-    private void RefreshDisplay(ChangePlayerBagCardsArgs args) => RefreshDisplay();
+    private void RefreshDisplay(AddRemoveCardArgs args)
+    {
+        var sourceBags = CraftManager.Instance.GetCraftMaterialSourceBags();
+
+        if (!sourceBags.Contains(args.AffectedBag))
+        {
+            // 不是来自可作为材料来源的背包，不刷新显示
+            return;
+        }
+
+        if (sourceBags.Contains(args.fromBag) && sourceBags.Contains(args.toBag))
+        {
+            // 在可作为材料来源的背包之间转移卡牌，不刷新显示
+            return;
+        }
+
+        RefreshDisplay();
+    }
 
     private void RefreshDisplay(EnvironmentBag env) => RefreshDisplay();
 
+    // 卡牌数量变化时刷新显示，用于那些有制作数量限制的配方，例如数据传输台
     private void RefreshDisplay((string, int) args) => RefreshDisplay();
 
     private void RefreshDisplay() => DisplayRecipesByType(currentRecipeType, true); // 传递true表示是刷新操作
@@ -222,7 +242,7 @@ public class CraftWindow : WindowBase
             recipeMaterial.DisplayMaterial(
                 material.CardImage,
                 material.requiredNum,
-                GameManager.Instance.PlayerBag.GetTotalCountByCardId(material.cardId)
+                CraftManager.Instance.GetTotalCraftMaterialCount(material.cardId)
                 );
 
             recipeMaterial.tipController.SetTip(material.CardInstance.CardName);

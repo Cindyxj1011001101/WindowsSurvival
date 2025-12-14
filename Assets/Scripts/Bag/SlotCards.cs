@@ -47,7 +47,7 @@ public class SlotCards : IComparable<SlotCards>
     public virtual void AddCard(Card card)
     {
         // 记录卡牌原来的背包
-        var oBag = card.Bag;
+        var fromBag = card.Bag;
 
         Cards.Add(card);
         Cards.Sort((a, b) => a.CompareTo(b));
@@ -55,17 +55,23 @@ public class SlotCards : IComparable<SlotCards>
         card.SetSlotCards(this);
         
         // 如果卡牌从不同的背包添加而来
-        if (oBag != Bag)
+        if (fromBag != Bag)
         {
-            // oBag为空说明卡牌是第一次创建
-            if (oBag != null)
+            // fromBag为空说明卡牌是第一次创建
+            if (fromBag != null)
             {
-                oBag.OnRemoveCard(card); // 先执行原背包的OnRemoveCard
-                card.OnRemove(oBag); // 不必担心卡牌被销毁时执行不到这里的OnRemove方法，它会转而在RemoveCard中执行
+                fromBag.OnRemoveCard(card); // 先执行原背包的OnRemoveCard
+                card.OnRemove(fromBag); // 不必担心卡牌被销毁时执行不到这里的OnRemove方法，它会转而在RemoveCard中执行
+
+                EventManager.Instance.TriggerEvent(EventType.AddRemoveCard,
+                    new AddRemoveCardArgs { card = card, add = -1, fromBag = fromBag, toBag = Bag });
             }
 
             Bag.OnAddCard(card);
             card.OnAdd(Bag);
+
+            EventManager.Instance.TriggerEvent(EventType.AddRemoveCard,
+                new AddRemoveCardArgs { card = card, add = 1, fromBag = fromBag, toBag = Bag });
         }
     }
 
@@ -84,6 +90,9 @@ public class SlotCards : IComparable<SlotCards>
         {
             Bag.OnRemoveCard(card);
             card.OnRemove(Bag);
+
+            EventManager.Instance.TriggerEvent(EventType.AddRemoveCard,
+                new AddRemoveCardArgs { card = card, add = -1, fromBag = Bag, toBag = null });
         }
 
         card.RefreshSlot();
