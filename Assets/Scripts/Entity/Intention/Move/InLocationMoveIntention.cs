@@ -60,7 +60,7 @@ public class InLocationMoveIntention : EntityIntention
         if (!targetLoss)
         {
             var dist = belongedEntity.DistanceTo(target);
-            sb.AppendLine($"目标位置:  {target.Coordinate.Location:0.0}");
+            sb.AppendLine($"目标位置:  {target.Coordinate.Position:0.0}");
             sb.AppendLine($"目标距离:  {dist:0.0}");
             sb.AppendLine($"移动方向:  {(moveClose ? "靠近" : "远离")}");
             sb.AppendLine($"预计到达位置:  {belongedEntity.EstimateMoveEndPosition(target, moveDist, moveClose):0.0}");
