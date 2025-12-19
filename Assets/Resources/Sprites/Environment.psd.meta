@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: dfb79e2b17493b64d8dad3f2386513d8
+guid: 9f614e083527baf49a17768eec860702
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ResourcePoint_0
+      name: Environment_0
       rect:
         serializedVersion: 2
         x: 0
@@ -105,20 +105,20 @@ TextureImporter:
         width: 46
         height: 46
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9b27129c06548cc468d2690d41eaf37e
-      internalID: -951351153
+      spriteID: c462b933e9fe68c44b323b75f9df4b85
+      internalID: -489823351
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ResourcePoint_1
+      name: Environment_1
       rect:
         serializedVersion: 2
         x: 46
@@ -126,20 +126,20 @@ TextureImporter:
         width: 46
         height: 46
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9cc2341fedd08744b86b61572ebd1e83
-      internalID: 1212837878
+      spriteID: 34d236a803bdd3d46a0d4b1b18e5525b
+      internalID: 253290344
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ResourcePoint_2
+      name: Environment_2
       rect:
         serializedVersion: 2
         x: 92
@@ -147,23 +147,65 @@ TextureImporter:
         width: 46
         height: 46
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 22a3295aba0ee8a438db3ec2d221b7c8
-      internalID: -1686275221
+      spriteID: 754bb9f1ed791d6438e1851539529fde
+      internalID: 1928536217
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ResourcePoint_3
+      name: Environment_3
       rect:
         serializedVersion: 2
         x: 138
+        y: 230
+        width: 46
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f65307ecf95d1524d817551ed1bdd8fc
+      internalID: -1427281776
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Environment_4
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 230
+        width: 46
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f2f0f1e89cf14844a71fe2e5786fe7a
+      internalID: -238612151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Environment_5
+      rect:
+        serializedVersion: 2
+        x: 230
         y: 230
         width: 46
         height: 46
@@ -174,29 +216,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6751cd6bbfa8e80499f9c5b129306a1a
-      internalID: -69031702
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ResourcePoint_4
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 184
-        width: 46
-        height: 46
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ec7a1c32582a41b489a33a16c9848b1f
-      internalID: -1061112801
+      spriteID: 1f34e3ea748e90d41af35f82f49a35fe
+      internalID: -164529096
       vertices: []
       indices: 
       edges: []
@@ -212,13 +233,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ResourcePoint_0: -951351153
-      ResourcePoint_1: 1212837878
-      ResourcePoint_2: -1686275221
-      ResourcePoint_3: -69031702
-      ResourcePoint_4: -1061112801
+      Environment_0: -489823351
+      Environment_1: 253290344
+      Environment_2: 1928536217
+      Environment_3: -1427281776
+      Environment_4: -238612151
+      Environment_5: -164529096
   mipmapLimitGroupName: 
-  pSDRemoveMatte: 1
+  pSDRemoveMatte: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
