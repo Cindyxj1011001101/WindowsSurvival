@@ -40,7 +40,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -928, y: -572}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3237894273093696923
@@ -95,6 +95,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   image: {fileID: 6918878457431914790}
   text: {fileID: 0}
+  minWidth: 0
+  reservedWidth: 0
   hoveredGraphics: []
   fadeTransition: 0.1
   textsNeedToReverseColor: []
@@ -102,6 +104,7 @@ MonoBehaviour:
   - {fileID: 6918878457431914790}
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
+  rectTransform: {fileID: 0}
 --- !u!114 &-2618037891490429271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,9 +145,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: {x: 10, y: 0}
-  onPointerEnter:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &5946990542256765882
 GameObject:
   m_ObjectHideFlags: 0

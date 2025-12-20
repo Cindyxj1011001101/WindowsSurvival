@@ -1462,7 +1462,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ignoreThisWhenSave: 0
   destroyAfterClosed: 0
-  animDuration: 0.2
   maximize_default: {fileID: -836057702, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: 154959178, guid: 463677557ce92964a8482ac800b7428d, type: 3}
@@ -4013,11 +4012,16 @@ MonoBehaviour:
   middle: {fileID: 0}
   left: {fileID: 0}
   right: {fileID: 0}
+  top: {fileID: 0}
   innerContentsComponent: {fileID: 0}
   iconLayout: {fileID: 0}
   fireIcon: {fileID: 0}
   flashIcon: {fileID: 0}
+  intentionIcon: {fileID: 0}
+  intentionSprites: []
+  intentionSpritesReversedColor: []
   cardAnimator: {fileID: 0}
+  intentionAnimator: {fileID: 0}
   tipController: {fileID: 0}
   onlyDisplay: 1
 --- !u!1 &7136409829427316031

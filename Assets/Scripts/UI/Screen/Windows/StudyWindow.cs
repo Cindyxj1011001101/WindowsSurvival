@@ -1,4 +1,3 @@
-using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +7,7 @@ using UnityEngine.UI;
 
 public class StudyWindow : WindowBase
 {
+    [SerializeField] private UITechNode uiTechNode;
     [SerializeField] private Text techName;
     [SerializeField] private Text techDescription;
 
@@ -45,9 +45,37 @@ public class StudyWindow : WindowBase
         EventManager.Instance.AddListener(EventType.StudyStopped, OnStudyStopped);
         EventManager.Instance.AddListener(EventType.LockUnlockIntermediateTechnologies, RefreshDisplay);
         EventManager.Instance.AddListener<string>(EventType.StudyInterrupted, OnStudyInterrupted);
+    }
 
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener(EventType.ChangeStudyProgress, RefreshDisplay);
+        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
+        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
+        EventManager.Instance.RemoveListener(EventType.StudyStopped, OnStudyStopped);
+        EventManager.Instance.RemoveListener(EventType.LockUnlockIntermediateTechnologies, RefreshDisplay);
+        EventManager.Instance.RemoveListener<string>(EventType.StudyInterrupted, OnStudyInterrupted);
+    }
+
+    protected override void Init()
+    {
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
 
+        // 初始化所有科技节点的UI
+        var uiTechNodes = content.GetComponentsInChildren<UITechNode>();
+        foreach (var uiNode in uiTechNodes)
+        {
+            var node = TechnologyManager.Instance.GetTechNodeByName(uiNode.name);
+            uiNode.Init(node);
+            uiNode.onClick.RemoveAllListeners();
+            uiNode.onClick.AddListener(() =>
+            {
+                curSelectedTechNode = node;
+                DisplayTechNodeDetails(node);
+            });
+        }
+
+        // 初始化菜单按钮
         menuItemTransforms.Clear();
         for (int i = 0; i < menuLayout.childCount; i++)
         {
@@ -61,16 +89,29 @@ public class StudyWindow : WindowBase
             });
             menuItemTransforms.Add(type, child as RectTransform);
         }
+
+        // 初始化研究状态按钮
+        if (GameDataManager.Instance.CurLoad.skipGuide || GameDataManager.Instance.WindowsData.unlockedShortcuts.Contains(AppName))
+            DisplayStudyState(2, null);
+        else
+            studyStateButton.SetVisiable(false);
     }
 
-    private void OnDestroy()
+    public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
     {
-        EventManager.Instance.RemoveListener(EventType.ChangeStudyProgress, RefreshDisplay);
-        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyComplished, OnStudiedComplished);
-        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, OnStudyStarted);
-        EventManager.Instance.RemoveListener(EventType.StudyStopped, OnStudyStopped);
-        EventManager.Instance.RemoveListener(EventType.LockUnlockIntermediateTechnologies, RefreshDisplay);
-        EventManager.Instance.RemoveListener<string>(EventType.StudyInterrupted, OnStudyInterrupted);
+        base.Show(showMode, onFinished);
+
+        // 如果没有当前选择的节点，则尝试选择正在研究的节点
+        if (curSelectedTechNode == null)
+            curSelectedTechNode = TechnologyManager.Instance.CurStudiedTechNode;
+
+        DisplayTechTree(curSelectedTechNode == null ? 0 : curSelectedTechNode.techType);
+    }
+
+    public override void Hide(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
+    {
+        base.Hide(showMode, onFinished);
+        curSelectedTechNode = null;
     }
 
     private void OnStudyStarted(ScriptableTechnologyNode techNode)
@@ -103,33 +144,6 @@ public class StudyWindow : WindowBase
         SoundManager.Instance.PlaySound("错误提示");
     }
 
-    protected override void Init()
-    {
-        if (GameDataManager.Instance.CurLoad.skipGuide || GameDataManager.Instance.WindowsData.unlockedShortcuts.Contains(AppName))
-            DisplayStudyState(2, null);
-        else
-            studyStateButton.SetVisiable(false);
-
-        //TechnologyManager.Instance.InitFromGameData();
-    }
-
-    public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
-    {
-        base.Show(showMode, onFinished);
-
-        // 如果没有当前选择的节点，则尝试选择正在研究的节点
-        if (curSelectedTechNode == null)
-            curSelectedTechNode = TechnologyManager.Instance.CurStudiedTechNode;
-
-        DisplayTechTree(curSelectedTechNode == null ? 0 : curSelectedTechNode.techType);
-    }
-
-    public override void Hide(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
-    {
-        base.Hide(showMode, onFinished);
-        curSelectedTechNode = null;
-    }
-
     private void DisplayTechTree(TechType type)
     {
         // 只显示对应类型的科技节点
@@ -152,19 +166,13 @@ public class StudyWindow : WindowBase
         var techNodes = targetChild.GetComponentsInChildren<UITechNode>();
         foreach (var node in techNodes)
         {
-            var data = Resources.Load<ScriptableTechnologyNode>($"ScriptableObject/Technology/{type}/{node.name}");
-            node.DisplayTechNode(data);
-            node.onClick.RemoveAllListeners();
-            node.onClick.AddListener(() =>
-            {
-                curSelectedTechNode = data;
-                DisplayTechNodeDetails(data);
-            });
+            node.RefreshDisplay();
         }
 
+        // 默认选择第一个科技节点
         if (curSelectedTechNode == null)
         {
-            curSelectedTechNode = Resources.Load<ScriptableTechnologyNode>($"ScriptableObject/Technology/{type}/{techNodes[0].name}");
+            curSelectedTechNode = TechnologyManager.Instance.GetTechNodeByName(techNodes[0].name);
         }
 
         DisplayTechNodeDetails(curSelectedTechNode);
@@ -192,12 +200,12 @@ public class StudyWindow : WindowBase
         // 销毁前置研究和解锁配方对应的预制体
         foreach (var obj in temp)
         {
-            //DestroyImmediate(obj);
             ObjectBufferPool.Instance.Restore(obj);
         }
         temp.Clear();
 
         // 显示科技的名称和描述
+        uiTechNode.Display(techNode);
         techName.text = techNode.techName;
         techDescription.text = techNode.techDescription;
 
@@ -212,8 +220,6 @@ public class StudyWindow : WindowBase
             toggle.SetStateName(prerequisite.techName);
             toggle.SetValue(TechnologyManager.Instance.IsTechNodeComplished(prerequisite));
             temp.Add(toggle.gameObject);
-
-            //toggle.transform.SetAsLastSibling();
         }
 
         HoverableButton button;
@@ -231,8 +237,6 @@ public class StudyWindow : WindowBase
             });
 
             temp.Add(button.gameObject);
-
-            //button.transform.SetAsLastSibling();
         }
 
         // 显示研究按钮
@@ -328,15 +332,13 @@ public class StudyWindow : WindowBase
             case 0:
                 text = "研究完成";
                 color = ColorManager.Cyan;
-                studyStateButtonAnimator.ResetTrigger("Play");
-                studyStateButtonAnimator.SetTrigger("Stop");
+                studyStateButtonAnimator.Play("Default");
                 break;
             // 开始研究
             case 1:
                 text = "正在研究";
                 color = ColorManager.White;
-                studyStateButtonAnimator.ResetTrigger("Stop");
-                studyStateButtonAnimator.SetTrigger("Play");
+                studyStateButtonAnimator.Play("StudyingGif");
                 studyStateButton.onClick.AddListener(() =>
                 {
                     curSelectedTechNode = techNode;

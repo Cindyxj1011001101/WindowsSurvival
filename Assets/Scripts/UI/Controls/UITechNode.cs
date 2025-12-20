@@ -1,110 +1,213 @@
-﻿using System.Collections.Generic;
+﻿using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UITechNode : HoverableButton
 {
-    public Text techName;
-    public Transform recipeLayout;
-    public UIStateSlider progressSlider;
-    public GameObject background;
-    public GameObject foreground_inProgress;
-    public GameObject foreground_complished;
-    public Text costText;
-    public GameObject gifObject;
-
-    public GameObject recipeItemPrefab;
-
-    private List<HoverableButton> recipeButtons = new();
-
-    public void DisplayTechNode(ScriptableTechnologyNode techNode)
+    enum TechNodeState
     {
-        bool complished = TechnologyManager.Instance.IsTechNodeComplished(techNode);
-        bool beingStudied = TechnologyManager.Instance.IsTechNodeBeingStudied(techNode);
-        bool locked = TechnologyManager.Instance.IsTechNodeLocked(techNode, out _);
+        Locked,
+        ToStudy,
+        BeingStudied,
+        Complished,
+        Queued
+    }
 
-        // 显示必要信息
-        techName.text = techNode.techName;
-        costText.text = $"{techNode.cost}科技点";
-        progressSlider.displayPercentage = false;
-        progressSlider.SetValue(TechnologyManager.Instance.GetStudyProgress(techNode), techNode.cost);
+    public Text techName;
+    public Text progressText;
+    public GameObject checkIcon;
+    public GameObject lockIcon;
+    public RectTransform recipeLayout;
+    public GameObject recipeIconPrefab;
+    public GameObject baseLayer;
+    public RectTransform fillMask;
+    public RectTransform queueInfo;
+    public Animator gifAnimator;
+    public Text orderText;
+    public HoverableButton dequeueButton;
 
-        // 显示解锁配方
+    private GameObject fillLayer;
+    private ScriptableTechnologyNode techNode;
+    private TechNodeState currentState;
+
+    private float originalFillMaskWidth;
+    private float originalQueueInfoAnchorPosX;
+    private float animTransition = 0.5f;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        originalFillMaskWidth = fillMask.sizeDelta.x;
+    }
+
+    public void Init(ScriptableTechnologyNode techNode)
+    {
+        this.techNode = techNode;
+
         ObjectBufferPool.Instance.RestoreAllChildren(recipeLayout);
-        recipeButtons.Clear();
+        if (fillLayer != null)
+        {
+            Destroy(fillLayer);
+            fillLayer = null;
+        }
 
-        HoverableButton button;
-        HoverTipController tipController;
+        if (queueInfo != null)
+        {
+            originalQueueInfoAnchorPosX = queueInfo.anchoredPosition.x;
+            queueInfo.gameObject.SetActive(false);
+            queueInfo.anchoredPosition = Vector2.zero;
+
+            // 点击取消排队按钮，取消当前科技的研究
+            dequeueButton.onClick.AddListener(() =>
+            {
+                TechnologyManager.Instance.StopStudy();
+            });
+        }
+
         foreach (var recipe in techNode.recipes)
         {
-            button = ObjectBufferPool.Instance.Get(recipeItemPrefab, recipeLayout).GetComponent<HoverableButton>();
-            button.image.sprite = recipe.CardImage;
-
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(() =>
-            {
-                (WindowsManager.Instance.OpenWindow("Details") as DetailsWindow).Display(recipe.CardInstance, DisplayType.DetailsAndCraftButton);
-            });
-
-            tipController = button.GetComponent<HoverTipController>();
-            tipController.SetTip(recipe.CardInstance.CardName);
-            recipeButtons.Add(button);
+            var image = ObjectBufferPool.Instance.Get(recipeIconPrefab, recipeLayout).GetComponent<Image>();
+            image.sprite = recipe.CardImage;
         }
 
-        // 已完成
-        if (complished)
+        techName.text = techNode.techName;
+
+        // 克隆 baseLayer 得到 fillLayer
+        fillLayer = Instantiate(baseLayer, fillMask);
+        (fillLayer.transform as RectTransform).anchoredPosition = new(1, 0);
+        SetColor(fillLayer.transform, ColorManager.Cyan);
+
+        currentState = GetCurrentState();
+        Display();
+    }
+
+    private void SetColor(Transform layer, Color color)
+    {
+        foreach (var img in layer.GetComponentsInChildren<Image>(true))
         {
-            background.SetActive(false);
-            foreground_inProgress.SetActive(false);
-            foreground_complished.SetActive(true);
-            // 设置颜色
-            foreach (var btn in recipeButtons)
-            {
-                btn.hoveredColor = btn.currentColor = btn.image.color = ColorManager.Cyan;
-            }
+            img.color = color;
         }
-        // 未解锁
-        else if (locked)
+    }
+
+    public void RefreshDisplay()
+    {
+        if (techNode == null) return;
+
+        var newState = GetCurrentState();
+
+        if (currentState == newState && currentState != TechNodeState.BeingStudied) return;
+
+        currentState = newState;
+        Display();
+    }
+
+    private TechNodeState GetCurrentState()
+    {
+        if (TechnologyManager.Instance.IsTechNodeComplished(techNode))
+            return TechNodeState.Complished;
+
+        if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
+            return TechNodeState.BeingStudied;
+
+        if (TechnologyManager.Instance.IsTechNodeLocked(techNode, out _))
+            return TechNodeState.Locked;
+
+        return TechNodeState.ToStudy;
+    }
+
+    private void Display()
+    {
+        SetColor(baseLayer.transform, ColorManager.White);
+
+        var progress = TechnologyManager.Instance.GetStudyProgress(techNode);
+        //progressText.gameObject.SetActive(true);
+        //progressText.text = $"{progress}/{techNode.cost}";
+        fillMask.gameObject.SetActive(true);
+        fillMask.sizeDelta = new(originalFillMaskWidth * progress / techNode.cost, fillMask.sizeDelta.y);
+
+        lockIcon.SetActive(false);
+        checkIcon.SetActive(false);
+
+        switch (currentState)
         {
-            background.SetActive(true);
-            foreground_inProgress.SetActive(false);
-            foreground_complished.SetActive(false);
-            // 设置颜色
-            foreach (var btn in recipeButtons)
-            {
-                btn.currentColor = btn.image.color = ColorManager.DarkGrey;
-            }
-            techName.color = ColorManager.DarkGrey;
+            case TechNodeState.Locked:
+                Locked();
+                break;
+            case TechNodeState.ToStudy:
+                ToStudy();
+                break;
+            case TechNodeState.BeingStudied:
+                BeingStudied();
+                break;
+            case TechNodeState.Complished:
+                Complished();
+                break;
+            case TechNodeState.Queued:
+                Queued();
+                break;
         }
-        // 正在研究
-        else if (beingStudied)
-        {
-            background.SetActive(false);
-            foreground_inProgress.SetActive(true);
-            foreground_complished.SetActive(false);
-            // 设置颜色
-            foreach (var btn in recipeButtons)
-            {
-                btn.currentColor = btn.image.color = ColorManager.White;
-            }
-            foreground_inProgress.GetComponent<Image>().color = ColorManager.White;
-            gifObject.SetActive(true);
-            gifObject.GetComponent<Animator>().SetTrigger("Play");
-        }
-        // 待研究
+    }
+
+    public void Display(ScriptableTechnologyNode techNode)
+    {
+        Init(techNode);
+        Display();
+    }
+
+    private void Locked()
+    {
+        lockIcon.SetActive(true);
+        SetColor(baseLayer.transform, ColorManager.DarkGrey);
+        fillMask.gameObject.SetActive(false);
+        progressText.gameObject.SetActive(false);
+        Dequeue();
+    }
+
+    private void Complished()
+    {
+        checkIcon.SetActive(true);
+        progressText.gameObject.SetActive(false);
+        Dequeue();
+    }
+
+    private void BeingStudied()
+    {
+        Enqueue(true);
+    }
+
+    private void ToStudy()
+    {
+        Dequeue();
+    }
+
+    private void Queued()
+    {
+        Enqueue(false);
+    }
+
+    private void Enqueue(bool playGif)
+    {
+        if (queueInfo == null) return;
+
+        queueInfo.DOKill();
+        queueInfo.gameObject.SetActive(true);
+        queueInfo.DOAnchorPosX(originalQueueInfoAnchorPosX, animTransition);
+
+        if (playGif)
+            gifAnimator.Play("StudyingGif");
         else
+            gifAnimator.Play("Default");
+    }
+
+    private void Dequeue()
+    {
+        if (queueInfo == null) return;
+
+        queueInfo.DOKill();
+        queueInfo.DOAnchorPosX(0, animTransition).OnComplete(() =>
         {
-            background.SetActive(false);
-            foreground_inProgress.SetActive(true);
-            foreground_complished.SetActive(false);
-            // 设置颜色
-            foreach (var btn in recipeButtons)
-            {
-                btn.currentColor = btn.image.color = ColorManager.LightGrey;
-            }
-            foreground_inProgress.GetComponent<Image>().color = ColorManager.LightGrey;
-            gifObject.SetActive(false);
-            techName.color = ColorManager.Black;
-        }
+            queueInfo.gameObject.SetActive(false);
+        });
     }
 }
