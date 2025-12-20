@@ -29,7 +29,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public UnityEvent onPointerEnter { get; set; } = new UnityEvent();
     public UnityEvent onPointerExit { get; set; } = new UnityEvent();
 
-    public RectTransform rectTransform;
+    [HideInInspector] public RectTransform rectTransform;
 
     public bool Interactable
     {
@@ -51,12 +51,13 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
                 ChangeColor(currentColor);
             }
 
-            var changeMouse = GetComponentInChildren<ChangeMouse>();
-            if (changeMouse != null) changeMouse.enabled = value;
+            //var changeMouse = GetComponentInChildren<ChangeMouse>();
+            //if (changeMouse != null) changeMouse.enabled = value;
+            canvasGroup.interactable = canvasGroup.blocksRaycasts = value;
         }
     }
 
-    private bool interactable = true;
+    [SerializeField] private bool interactable = true;
 
     protected virtual void Awake()
     {
@@ -74,6 +75,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         canvasGroup = GetComponent<CanvasGroup>();
         if (canvasGroup == null)
             canvasGroup = gameObject.AddComponent<CanvasGroup>();
+
+        Interactable = interactable;
     }
 
     protected virtual void OnEnable()

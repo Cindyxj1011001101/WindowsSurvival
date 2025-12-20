@@ -76,6 +76,13 @@ public class TechnologyManager : IManager
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricPowerChange);
     }
 
+    public ScriptableTechnologyNode GetTechNodeByName(string techName)
+    {
+        if (allTechNodes.TryGetValue(techName, out var node))
+            return node;
+        return null;
+    }
+
     /// <summary>
     /// 研究一个科技节点
     /// </summary>
@@ -95,9 +102,11 @@ public class TechnologyManager : IManager
     /// <summary>
     /// 停止研究
     /// </summary>
-    public void StopStudy()
+    public void StopStudy(bool complished = false)
     {
         if (CurStudiedTechNode == null) return;
+
+        var curStudiedTechNode = CurStudiedTechNode;
 
         // 恢复中级科技研究的电力消耗
         if (CurStudiedTechNode.techLevel == TechLevl.Intermediate)
@@ -106,8 +115,17 @@ public class TechnologyManager : IManager
         // 设置正在研究的科技节点为空
         techData.curStudiedTechNodeName = "";
 
-        // 触发研究完成事件
-        EventManager.Instance.TriggerEvent(EventType.StudyStopped);
+        if (complished)
+        {
+            // 触发研究完成事件
+            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("FinishResearch", curStudiedTechNode.techName));
+            EventManager.Instance.TriggerEvent(EventType.StudyComplished, curStudiedTechNode);
+        }
+        else
+        {
+            // 触发研究暂停事件
+            EventManager.Instance.TriggerEvent(EventType.StudyStopped);
+        }
     }
 
     /// <summary>
@@ -135,11 +153,8 @@ public class TechnologyManager : IManager
             techData.CurStudiedTechNodeData.progress = CurStudiedTechNode.cost;
             // 解锁该科技
             UnlockTechNode(CurStudiedTechNode);
-            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("FinishResearch", techData.CurStudiedTechNodeData.name));
-            // 触发研究完成事件
-            EventManager.Instance.TriggerEvent(EventType.StudyComplished, CurStudiedTechNode);
             // 停止研究
-            StopStudy();
+            StopStudy(true);
             return;
         }
 
@@ -240,6 +255,7 @@ public class TechnologyManager : IManager
     {
         return techData.curStudiedTechNodeName == techNode.techName;
     }
+
     public bool IsTechNodeBeingStudied(string techName)
     {
         return techData.curStudiedTechNodeName == techName;

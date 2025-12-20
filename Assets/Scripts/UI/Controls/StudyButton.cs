@@ -113,13 +113,12 @@ public class StudyButton : HoverableButton
 
     private void PlayAnim()
     {
-        studyingAnim.ResetTrigger("Stop");
-        studyingAnim.SetTrigger("Play");
+        studyingAnim.Play("StudyingGif");
     }
 
     private void KillAnim()
     {
-        studyingAnim.ResetTrigger("Play");
-        studyingAnim.SetTrigger("Stop");
+        if (studyingAnim.gameObject.activeSelf)
+            studyingAnim.Play("Default");
     }
 }
