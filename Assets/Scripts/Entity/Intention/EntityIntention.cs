@@ -64,10 +64,15 @@ public abstract class EntityIntention
             // 执行失败，调用OnExecute让子类可以显示失败提示
             OnExecute();
         }
-        ExecuteOver();
-        while (isExecuting)
+        // 如果OnExecute()没有调用ExecuteOver()（比如启动了异步协程），则等待协程完成
+        // 如果OnExecute()已经调用了ExecuteOver()（比如执行失败），则isExecuting已经是false，会立即继续
+        if (isExecuting)
         {
-            yield return null;
+            // OnExecute()启动了异步操作，等待完成
+            while (isExecuting)
+            {
+                yield return null;
+            }
         }
         // 刷新实体意图
         belongedEntity.RefreshIntention();

@@ -35,7 +35,7 @@ public class EatIntention : EntityIntention
         // 2. 必须是环境背包中的卡牌
         if (!(toEat.Bag is EnvironmentBag)) return false;
         
-        // 3. 如果是植物，必须已成熟
+        // 3. 如果是作物，必须已成熟
         if (toEat is PlantCard plant)
         {
             if (plant.TryGetComponent<PlantGrowthComponent>(out var plantGrowth))
@@ -56,12 +56,15 @@ public class EatIntention : EntityIntention
         {
             // 执行失败，显示失败提示（从实体处弹出）
             ShowExecutionFailedTip(toEat);
+            // 失败时立即标记执行完成，让基类可以刷新意图
+            ExecuteOver();
             return;
         }
 
         bool isPlant = toEat is PlantCard;
         
-        // 如果是植物，先执行采摘动效
+        // 如果是作物，先执行采摘动效
+        // 注意：不在这里调用ExecuteOver()，让协程在完成时调用，确保卡牌销毁后再刷新意图
         if (isPlant)
         {
             PublicMono.Instance.StartCoroutine(PlayPickAndEatAnimation(toEat));
@@ -96,7 +99,7 @@ public class EatIntention : EntityIntention
         {
             if (plant.TryGetComponent<PlantGrowthComponent>(out var plantGrowth) && !plantGrowth.IsRipe)
             {
-                tip = "植物未成熟";
+                tip = "作物未成熟";
             }
         }
 
@@ -104,7 +107,7 @@ public class EatIntention : EntityIntention
     }
 
     /// <summary>
-    /// 播放动效（植物）
+    /// 播放动效（作物）
     /// </summary>
     private IEnumerator PlayPickAndEatAnimation(Card toEat)
     {
@@ -118,6 +121,8 @@ public class EatIntention : EntityIntention
             plant.AddPlantGrowth(-100);
             SoundManager.Instance.PlaySound("采摘植物或采摘果子的音效", true);
             SoundManager.Instance.PlaySound("吃_01", true);
+            // 标记执行完成，让基类可以刷新意图（此时卡牌已销毁）
+            ExecuteOver();
             yield break;
         }
 
@@ -151,6 +156,9 @@ public class EatIntention : EntityIntention
         
         // 8. 执行实际逻辑：减少植物生长度（不播放销毁动效，避免影响卡槽）
         plant.AddPlantGrowth(-100);
+        
+        // 9. 标记执行完成，让基类可以刷新意图（此时卡牌已销毁）
+        ExecuteOver();
     }
 
     /// <summary>
@@ -166,6 +174,8 @@ public class EatIntention : EntityIntention
             // 如果卡牌没有SlotTransform，直接执行逻辑
             toEat.DestroyThis();
             SoundManager.Instance.PlaySound("吃_01", true);
+            // 标记执行完成，让基类可以刷新意图（此时卡牌已销毁）
+            ExecuteOver();
             yield break;
         }
 
@@ -189,6 +199,9 @@ public class EatIntention : EntityIntention
         
         // 5. 执行实际逻辑：销毁卡牌（不播放销毁动效，避免影响卡槽）
         toEat.DestroyThis();
+        
+        // 6. 标记执行完成，让基类可以刷新意图（此时卡牌已销毁）
+        ExecuteOver();
     }
 
     /// <summary>
