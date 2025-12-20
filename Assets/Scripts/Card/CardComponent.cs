@@ -99,9 +99,6 @@ public class FreshnessComponent : ContinuousValueComponent, IUpdate
 
         if (value <= 0)
         {
-            // 腐烂音效
-            SoundManager.Instance?.PlaySound("腐烂", true);
-
             if (BelongedCard.CardType == CardType.Food)
                 ShowTip($"{BelongedCard.CardName}腐烂了");
             else if (BelongedCard.CardType == CardType.Medicine)

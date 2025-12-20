@@ -59,11 +59,6 @@ public abstract class EntityIntention
             ExeSucceed = true;
             OnExecute();
         }
-        else
-        {
-            // 执行失败，调用OnExecute让子类可以显示失败提示
-            OnExecute();
-        }
         ExecuteOver();
         while (isExecuting)
         {

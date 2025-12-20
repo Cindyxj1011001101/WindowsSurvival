@@ -607,11 +607,8 @@ public abstract class Card : IComparable<Card>
 
     public void ShowTip(string tip)
     {
-        // 优先使用SlotTransform获取卡牌在背包中的真实位置，不受详情窗口影响
-        // 如果没有SlotTransform，再使用Transform（可能是临时位置如详情窗口）
-        var targetTransform = SlotTransform ?? Transform;
-        if (targetTransform != null)
-            AnimationManager.Instance.ShowFloatingTipAbove(targetTransform, tip);
+        if (Transform != null)
+            AnimationManager.Instance.ShowFloatingTipAbove(Transform, tip);
     }
 
     #endregion
