@@ -67,6 +67,12 @@ public static class AnimationConfig
     public const float PLAYER_DAMAGED_FLASH_MAX_ALPHA = 0.15f;
     public const float PLAYER_DAMAGED_FLASH_FADE_IN = 0.05f;
     public const float PLAYER_DAMAGED_FLASH_FADE_OUT = 0.25f;
+
+    // 实体意图动效
+    public const float ENTITY_MOVE_TO_TARGET_DURATION = 0.3f;
+    public const float ENTITY_RETURN_DURATION = 0.3f;
+    public static readonly Ease ENTITY_MOVE_TO_TARGET_EASE = Ease.OutQuad;
+    public static readonly Ease ENTITY_RETURN_EASE = Ease.InQuad;
 }
 
 /// <summary>
@@ -744,6 +750,99 @@ public class AnimationManager
         });
 
         return seq;
+    }
+    #endregion
+
+    #region 实体意图动效
+    /// <summary>
+    /// 播放实体移动到目标位置的动效（仅视觉效果，不影响实际位置）
+    /// 使用临时卡槽来显示动效，参考CardDragHandler的实现方式
+    /// </summary>
+    /// <param name="entityCard">实体卡牌</param>
+    /// <param name="targetPosition">目标位置</param>
+    /// <param name="duration">动画时长</param>
+    /// <param name="ease">缓动类型</param>
+    /// <returns>临时卡槽引用、Tween和原卡槽引用，用于后续返回动效</returns>
+    public (CardSlot tempSlot, Tween tween, CardSlot originalSlot) PlayEntityMoveToTarget(Card entityCard, Vector3 targetPosition, float duration = -1, Ease ease = Ease.Unset)
+    {
+        if (duration < 0) duration = AnimationConfig.ENTITY_MOVE_TO_TARGET_DURATION;
+        if (ease == Ease.Unset) ease = AnimationConfig.ENTITY_MOVE_TO_TARGET_EASE;
+
+        // 获取原始位置（从SlotTransform获取，确保是真实位置）
+        var originalPosition = entityCard.SlotTransform != null 
+            ? entityCard.SlotTransform.position 
+            : entityCard.Transform.position;
+
+        // 获取原卡槽并隐藏显示（参考CardDragHandler的实现）
+        var originalSlot = entityCard.Slot;
+        if (originalSlot != null)
+        {
+            // 设置不刷新，防止卡槽更新显示
+            originalSlot.DontRefresh = true;
+            // 隐藏原卡槽的卡面显示（通过GetComponentsInChildren找到卡面的CanvasGroup）
+            var canvasGroups = originalSlot.GetComponentsInChildren<CanvasGroup>();
+            // cardCanvasGroup 通常是第二个（第一个是整体的canvasGroup）
+            // 或者找到非根节点的CanvasGroup
+            foreach (var cg in canvasGroups)
+            {
+                if (cg.transform != originalSlot.transform)
+                {
+                    cg.alpha = 0f;
+                    break;
+                }
+            }
+        }
+
+        // 创建临时卡槽来显示移动动效
+        var tempSlot = CreateTempSlot(originalPosition);
+        tempSlot.DisplayCard(entityCard, 1);
+
+        // 移动到目标位置
+        var tween = tempSlot.transform.DOMove(targetPosition, duration).SetEase(ease);
+
+        return (tempSlot, tween, originalSlot);
+    }
+
+    /// <summary>
+    /// 播放实体返回原位的动效（仅视觉效果，不影响实际位置）
+    /// </summary>
+    /// <param name="tempSlot">临时卡槽（由PlayEntityMoveToTarget返回）</param>
+    /// <param name="originalPosition">原始位置</param>
+    /// <param name="originalSlot">原卡槽（由PlayEntityMoveToTarget返回）</param>
+    /// <param name="duration">动画时长</param>
+    /// <param name="ease">缓动类型</param>
+    /// <param name="onComplete">完成回调</param>
+    public Tween PlayEntityReturnToOriginal(CardSlot tempSlot, Vector3 originalPosition, CardSlot originalSlot = null, float duration = -1, Ease ease = Ease.Unset, UnityAction onComplete = null)
+    {
+        if (tempSlot == null) return null;
+        if (duration < 0) duration = AnimationConfig.ENTITY_RETURN_DURATION;
+        if (ease == Ease.Unset) ease = AnimationConfig.ENTITY_RETURN_EASE;
+
+        // 返回原始位置
+        return tempSlot.transform.DOMove(originalPosition, duration)
+            .SetEase(ease)
+            .OnComplete(() =>
+            {
+                // 恢复原卡槽的显示
+                if (originalSlot != null)
+                {
+                    originalSlot.DontRefresh = false;
+                    // 恢复原卡槽的卡面显示
+                    var canvasGroups = originalSlot.GetComponentsInChildren<CanvasGroup>();
+                    foreach (var cg in canvasGroups)
+                    {
+                        if (cg.transform != originalSlot.transform)
+                        {
+                            cg.alpha = 1f;
+                            break;
+                        }
+                    }
+                }
+
+                // 恢复临时卡槽
+                ObjectBufferPool.Instance.Restore(tempSlot.gameObject);
+                onComplete?.Invoke();
+            });
     }
     #endregion
 
