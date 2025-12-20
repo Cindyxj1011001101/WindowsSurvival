@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
-using UnityEngine;
 
 /// <summary>
 /// 攻击意图
@@ -37,15 +36,6 @@ public abstract class AttackIntention : EntityIntention
     public override void OnExecute()
     {
         var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
-        
-        // 再次检查执行条件（可能在准备期间状态改变）
-        if (!CanExecute())
-        {
-            // 执行失败，显示失败提示（从实体处弹出）
-            ShowExecutionFailedTip(target);
-            return;
-        }
-        
         // 执行攻击
         belongedEntity.SingleAttack(target, dmg);
         
@@ -53,42 +43,6 @@ public abstract class AttackIntention : EntityIntention
         
         // TODO: 范围攻击
 
-    }
-
-    /// <summary>
-    /// 显示意图执行失败的提示
-    /// </summary>
-    private void ShowExecutionFailedTip(IEntity target)
-    {
-        // 优先使用SlotTransform获取实体在背包中的真实位置，不受详情窗口影响
-        var entityTransform = belongedEntity.SlotTransform ?? belongedEntity.Transform;
-        if (entityTransform == null) return;
-
-        string tip = "执行失败";
-        
-        if (target == null || !belongedEntity.IsInSameLocation(target))
-        {
-            tip = "目标已丢失";
-        }
-        else
-        {
-            // 检查是否在攻击范围内
-            var dist = belongedEntity.DistanceTo(target);
-            if (dist < atkRange.Item1)
-            {
-                tip = "目标过近";
-            }
-            else if (dist > atkRange.Item2)
-            {
-                tip = "目标过远";
-            }
-            else
-            {
-                tip = "目标不在攻击范围内";
-            }
-        }
-
-        AnimationManager.Instance.ShowFloatingTipAbove(entityTransform, tip, 0.5f);
     }
 
     public override string GetDescription()

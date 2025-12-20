@@ -12,7 +12,6 @@ public static class AfterChatFactory
         //时间：时间_数值
         //解锁：解锁_目标窗口名称
         //添加：添加_玩家（玩家/场景）_压缩饼干（物品名称）
-        //计数：计数_计数名_数值
         //其他：其他_其他名
         if(EventName=="")return;
         List<string> eventList = new List<string>(EventName.Split(';'));
