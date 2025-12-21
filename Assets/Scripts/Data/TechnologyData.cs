@@ -27,7 +27,7 @@ public class StudyProgressData
 
 public class TechnologyData
 {
-    public bool studying;
+    public bool isStudying;
     public List<string> studyQueue = new(); // 待研究节点队列
     public Dictionary<string, StudyProgressData> studyProgressDict = new();
 }

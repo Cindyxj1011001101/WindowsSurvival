@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class StudyWindow : WindowBase
 {
-    [SerializeField] private UITechNode uiTechNode;
+    [SerializeField] private UITechNode detailsUINode;
     [SerializeField] private Text techName;
     [SerializeField] private Text techDescription;
 
@@ -27,6 +28,10 @@ public class StudyWindow : WindowBase
 
     [SerializeField] private GameObject recipeItem;
     [SerializeField] private GameObject prerequisitePrefab;
+
+    [SerializeField] private Text currentStudiedText;
+    [SerializeField] private Text leftTimeText;
+    [SerializeField] private UITechNode[] studyQueueNodePlaceHolders;
 
     private int studyState;
     [SerializeField] private HoverableButton studyStateButton; // 显示研究状态的按钮
@@ -108,6 +113,8 @@ public class StudyWindow : WindowBase
             DisplayStudyState(TechnologyManager.Instance.IsStudying ? 1 : 2, null);
         else
             studyStateButton.gameObject.SetActive(false);
+
+        DisplayStudyQueue();
     }
 
     public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
@@ -161,11 +168,62 @@ public class StudyWindow : WindowBase
         if (curSelectedTechNode != null)
             DisplayTechTree(curSelectedTechNode.techType);
 
-        // TODO: 刷新队列ui
+        // 刷新队列ui
+        DisplayStudyQueue();
 
         // TODO: 刷新中级科技ui
     }
     #endregion
+
+    private void DisplayStudyQueue()
+    {
+        var studyQueue = TechnologyManager.Instance.StudyQueue;
+
+        for (int i = 0; i < studyQueueNodePlaceHolders.Length; i++)
+        {
+            var uiNode = studyQueueNodePlaceHolders[i];
+
+            if (i >= studyQueue.Count)
+            {
+                uiNode.gameObject.SetActive(false);
+                continue;
+            }
+
+            uiNode.gameObject.SetActive(true);
+            var techNode = TechnologyManager.Instance.GetTechNodeByName(studyQueue[i]);
+            uiNode.Display(techNode);
+            uiNode.onClick.RemoveAllListeners();
+            uiNode.onClick.AddListener(() =>
+            {
+                if (curSelectedTechNode == techNode) return;
+
+                curSelectedTechNode = techNode;
+                DisplayTechTree(techNode.techType);
+            });
+        }
+
+        // 显示剩余研究时间
+        if (studyQueue.Count > 0)
+        {
+            leftTimeText.transform.parent.gameObject.SetActive(true);
+            leftTimeText.text = GetLeftStudyTimeString(TechnologyManager.Instance.GetTechNodeByName(studyQueue[0]));
+        }
+        else
+        {
+            leftTimeText.transform.parent.gameObject.SetActive(false);
+        }
+
+        if (TechnologyManager.Instance.IsStudying)
+        {
+            currentStudiedText.text = "正在研究";
+            currentStudiedText.color = ColorManager.White;
+        }
+        else
+        {
+            currentStudiedText.text = "未在研究";
+            currentStudiedText.color = ColorManager.Red;
+        }
+    }
 
     private void DisplayTechTree(TechType type)
     {
@@ -215,7 +273,7 @@ public class StudyWindow : WindowBase
         temp.Clear();
 
         // 显示科技的名称和描述
-        uiTechNode.Display(techNode);
+        detailsUINode.Display(techNode);
         techName.text = techNode.techName;
         techDescription.text = techNode.techDescription;
 
@@ -256,9 +314,17 @@ public class StudyWindow : WindowBase
         // 显示研究按钮
         studyButton.Display(techNode, techNodeState);
 
+        // 显示研究进度
+        progressSlider.gameObject.SetActive(true);
+        var progress = TechnologyManager.Instance.GetStudyProgress(techNode);
+        progressSlider.SetValue(progress, techNode.cost);
+
+        // 显示剩余研究时间
+        studyTime.transform.parent.gameObject.SetActive(true);
+        studyTime.text = GetLeftStudyTimeString(techNode);
+
         // 显示研究进度与其他信息
         studyInfo.gameObject.SetActive(true);
-        DisplayStudyProgress(techNode);
         switch (techNodeState)
         {
             case TechNodeState.Locked:
@@ -281,22 +347,18 @@ public class StudyWindow : WindowBase
         }
     }
 
-    private void DisplayStudyProgress(ScriptableTechnologyNode node)
+    private string GetLeftStudyTimeString(ScriptableTechnologyNode node)
     {
-        progressSlider.gameObject.SetActive(true);
-        var progress = TechnologyManager.Instance.GetStudyProgress(node);
-        progressSlider.SetValue(progress, node.cost);
-
-        // 显示研究时间
-        studyTime.transform.parent.gameObject.SetActive(true);
         var leftProgress = node.cost - TechnologyManager.Instance.GetStudyProgress(node);
         var time = Mathf.CeilToInt(leftProgress * 15f / TechnologyManager.BASIC_STUDY_RATE);
         int hour = time / 60;
         int minute = time % 60;
         StringBuilder sb = new();
-        sb.Append(hour > 0 ? $"{hour}h" : "");
-        sb.Append(minute > 0 ? $"{minute}min" : "");
-        studyTime.text = sb.ToString();
+        if (hour > 0)
+            sb.Append(hour + "h");
+        if (minute > 0)
+            sb.Append(minute + "min");
+        return sb.ToString();
     }
 
     private void DisplayStudyState(int state, ScriptableTechnologyNode techNode)

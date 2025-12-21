@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using UnityEngine;
 
 public enum TechNodeState
@@ -56,7 +58,7 @@ public class TechnologyManager : IManager
 
         var techData = GameDataManager.Instance.TechnologyData;
 
-        IsStudying = techData.studying;
+        IsStudying = techData.isStudying;
         StudyQueue = techData.studyQueue;
 
         // 初始化存档
@@ -216,9 +218,13 @@ public class TechnologyManager : IManager
 
             // 否则停止当前研究
             StopStudy();
-            // 将当前研究的节点添加到队尾
+            // 将当前研究的节点添加到目标节点的顺位
             StudyQueue.Remove(current.techName);
-            StudyQueue.Add(current.techName);
+            var order = GetStudyOrder(node);
+            if (order < 0)
+                StudyQueue.Add(current.techName);
+            else
+                StudyQueue.Insert(order, current.techName);
         }
 
         // 将目标节点移至研究队列首位

@@ -786,6 +786,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
   rectTransform: {fileID: 0}
+  interactable: 1
 --- !u!114 &8531555213856186557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1736,8 +1737,8 @@ RectTransform:
   - {fileID: 2748322238287105661}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 228, y: 118}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1764,6 +1765,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
   rectTransform: {fileID: 0}
+  interactable: 1
   techName: {fileID: 4516604877460181561}
   progressText: {fileID: 4065983074233098406}
   checkIcon: {fileID: 3084503658230956646}

@@ -282,7 +282,7 @@ public class GameDataManager
     {
         technologyData = new()
         {
-            studying = TechnologyManager.Instance.IsStudying,
+            isStudying = TechnologyManager.Instance.IsStudying,
             studyQueue = TechnologyManager.Instance.StudyQueue,
             studyProgressDict = TechnologyManager.Instance.StudyProgressDict
         };

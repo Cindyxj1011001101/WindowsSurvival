@@ -24,7 +24,7 @@ public class UITechNode : HoverableButton
 
     private float originalFillMaskWidth;
     private float originalQueueInfoAnchorPosX;
-    private float animTransition = 0.5f;
+    private float animTransition = 0.4f;
 
     protected override void Awake()
     {
@@ -51,6 +51,7 @@ public class UITechNode : HoverableButton
             queueInfo.anchoredPosition = Vector2.zero;
 
             // 点击取消排队按钮，从研究队列中移除该科技
+            dequeueButton.onClick.RemoveAllListeners();
             dequeueButton.onClick.AddListener(() =>
             {
                 TechnologyManager.Instance.RemoveFromStudyQueue(techNode);
@@ -70,7 +71,7 @@ public class UITechNode : HoverableButton
         (fillLayer.transform as RectTransform).anchoredPosition = new(1, 0);
         SetColor(fillLayer.transform, ColorManager.Cyan);
 
-        currentState = TechnologyManager.Instance.GetTechNodeState(techNode);
+        currentState = TechnologyManager.Instance.GetTechNodeState(techNode, out studyOrder);
         Display();
     }
 
@@ -131,8 +132,13 @@ public class UITechNode : HoverableButton
 
     public void Display(ScriptableTechnologyNode techNode)
     {
+        if (this.techNode == techNode)
+        {
+            RefreshDisplay();
+            return;
+        }
+
         Init(techNode);
-        Display();
     }
 
     private void Locked()
