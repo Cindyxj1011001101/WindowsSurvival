@@ -280,6 +280,12 @@ public class GameDataManager
 
     public void SaveTechnologyData()
     {
+        technologyData = new()
+        {
+            studying = TechnologyManager.Instance.IsStudying,
+            studyQueue = TechnologyManager.Instance.StudyQueue,
+            studyProgressDict = TechnologyManager.Instance.StudyProgressDict
+        };
         JsonManager.SaveData(technologyData, CurLoadName, "Technology");
     }
 

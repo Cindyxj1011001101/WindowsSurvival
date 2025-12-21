@@ -30,8 +30,8 @@ public class DataTransmissionStation : ConstructionCard
         GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2, .5f));
 
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天时刷新
-        EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StudyStarted, StartWorking);
-        EventManager.Instance.AddListener(EventType.StudyStopped, StopWorking);
+        EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StartStudy, StartWorking);
+        EventManager.Instance.AddListener(EventType.StopStudy, StopWorking);
 
         // 当前有科技在研究
         if (TechnologyManager.Instance.CurStudiedTechNode != null)
@@ -45,8 +45,8 @@ public class DataTransmissionStation : ConstructionCard
         StopWorking();
 
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
-        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StudyStarted, StartWorking);
-        EventManager.Instance.RemoveListener(EventType.StudyStopped, StopWorking);
+        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StartStudy, StartWorking);
+        EventManager.Instance.RemoveListener(EventType.StopStudy, StopWorking);
     }
 
     private void StartWorking(ScriptableTechnologyNode techNode)
@@ -100,7 +100,7 @@ public class DataTransmissionStation : ConstructionCard
     /// <param name="tip"></param>
     private void Event_Transmit(CardEvent e)
     {
-        TechnologyManager.Instance.AddStudyProcess(28); // 研究进度增加
+        TechnologyManager.Instance.AddStudyProgress(28); // 研究进度增加
         GlobalDataManager.Instance.GlobalData.AddReduceCount(CardId); // 使用次数增加
         ApplyEventEffects(e);
     }

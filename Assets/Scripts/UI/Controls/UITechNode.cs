@@ -4,15 +4,6 @@ using UnityEngine.UI;
 
 public class UITechNode : HoverableButton
 {
-    enum TechNodeState
-    {
-        Locked,
-        ToStudy,
-        BeingStudied,
-        Complished,
-        Queued
-    }
-
     public Text techName;
     public Text progressText;
     public GameObject checkIcon;
@@ -29,6 +20,7 @@ public class UITechNode : HoverableButton
     private GameObject fillLayer;
     private ScriptableTechnologyNode techNode;
     private TechNodeState currentState;
+    private int studyOrder;
 
     private float originalFillMaskWidth;
     private float originalQueueInfoAnchorPosX;
@@ -58,10 +50,10 @@ public class UITechNode : HoverableButton
             queueInfo.gameObject.SetActive(false);
             queueInfo.anchoredPosition = Vector2.zero;
 
-            // 点击取消排队按钮，取消当前科技的研究
+            // 点击取消排队按钮，从研究队列中移除该科技
             dequeueButton.onClick.AddListener(() =>
             {
-                TechnologyManager.Instance.StopStudy();
+                TechnologyManager.Instance.RemoveFromStudyQueue(techNode);
             });
         }
 
@@ -78,7 +70,7 @@ public class UITechNode : HoverableButton
         (fillLayer.transform as RectTransform).anchoredPosition = new(1, 0);
         SetColor(fillLayer.transform, ColorManager.Cyan);
 
-        currentState = GetCurrentState();
+        currentState = TechnologyManager.Instance.GetTechNodeState(techNode);
         Display();
     }
 
@@ -94,26 +86,14 @@ public class UITechNode : HoverableButton
     {
         if (techNode == null) return;
 
-        var newState = GetCurrentState();
+        var newState = TechnologyManager.Instance.GetTechNodeState(techNode, out studyOrder);
 
-        if (currentState == newState && currentState != TechNodeState.BeingStudied) return;
+        // 前后状态相同时，不刷新显示
+        // 排除排队和正在学习状态
+        if (currentState == newState && currentState != TechNodeState.BeingStudied && currentState != TechNodeState.Queued) return;
 
         currentState = newState;
         Display();
-    }
-
-    private TechNodeState GetCurrentState()
-    {
-        if (TechnologyManager.Instance.IsTechNodeComplished(techNode))
-            return TechNodeState.Complished;
-
-        if (TechnologyManager.Instance.IsTechNodeBeingStudied(techNode))
-            return TechNodeState.BeingStudied;
-
-        if (TechnologyManager.Instance.IsTechNodeLocked(techNode, out _))
-            return TechNodeState.Locked;
-
-        return TechNodeState.ToStudy;
     }
 
     private void Display()
@@ -198,6 +178,8 @@ public class UITechNode : HoverableButton
             gifAnimator.Play("StudyingGif");
         else
             gifAnimator.Play("Default");
+
+        orderText.text = (studyOrder + 1).ToString();
     }
 
     private void Dequeue()

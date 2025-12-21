@@ -74,6 +74,9 @@ public class ShortcutsController : MonoBehaviour
 
         if (!shortcuts.ContainsKey(appName)) return;
 
+        // 快捷方式未解锁
+        if (!shortcuts[appName].gameObject.activeSelf) return;
+
         SelectWithTween(appName);
 
         selectedAppName = appName;
@@ -132,9 +135,7 @@ public class ShortcutsController : MonoBehaviour
         (transform as RectTransform).sizeDelta = new Vector2(layoutTransform.sizeDelta.x, (transform as RectTransform).sizeDelta.y);
 
         if (!string.IsNullOrEmpty(selectedAppName))
-        {
             SelectWithTween(selectedAppName);
-        }
 
         if (!value && blink)
             // 按钮闪烁

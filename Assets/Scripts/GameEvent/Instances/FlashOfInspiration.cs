@@ -33,6 +33,6 @@ public class FlashOfInspiration : GameEvent
     {
         // 立刻完成当前科技
         techName = TechnologyManager.Instance.CurStudiedTechNode.techName;
-        TechnologyManager.Instance.AddStudyProcess(9999); // 研究进度增加
+        TechnologyManager.Instance.AddStudyProgress(9999); // 研究进度增加
     }
 }

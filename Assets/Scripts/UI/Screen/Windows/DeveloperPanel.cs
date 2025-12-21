@@ -292,7 +292,7 @@ public class DeveloperPanel : MonoBehaviour
     {
         if (TechnologyManager.Instance.CurStudiedTechNode != null)
         {
-            TechnologyManager.Instance.AddStudyProcess(99999999); // 研究进度增加
+            TechnologyManager.Instance.AddStudyProgress(99999999); // 研究进度增加
         }
         
     }

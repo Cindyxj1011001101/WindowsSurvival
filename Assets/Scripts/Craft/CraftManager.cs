@@ -26,20 +26,6 @@ public class CraftManager : IManager
                 libraryDict.Add(library.craftType, library);
             }
         }
-
-        var techData = GameDataManager.Instance.TechnologyData;
-
-        // 解锁一遍物品配方
-        foreach (var techNode in Resources.LoadAll<ScriptableTechnologyNode>($"ScriptableObject/Technology"))
-        {
-            if (techData.studiedTechNodes.Contains(techNode.techName))
-            {
-                foreach (var recipe in techNode.recipes)
-                {
-                    UnlockRecipe(recipe.cardId);
-                }
-            }
-        }
     }
 
     public void Reset()

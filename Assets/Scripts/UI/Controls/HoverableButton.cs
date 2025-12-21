@@ -53,7 +53,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
 
             //var changeMouse = GetComponentInChildren<ChangeMouse>();
             //if (changeMouse != null) changeMouse.enabled = value;
-            canvasGroup.interactable = canvasGroup.blocksRaycasts = value;
+            if (canvasGroup != null)
+                canvasGroup.interactable = canvasGroup.blocksRaycasts = value;
         }
     }
 
@@ -167,20 +168,6 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
         foreach (var image in imagseNeedToReverseColor)
         {
             image.color = color;
-        }
-    }
-
-    public void SetVisiable(bool visiable)
-    {
-        if (visiable)
-        {
-            canvasGroup.alpha = 1f;
-            canvasGroup.blocksRaycasts = canvasGroup.interactable = true;
-        }
-        else
-        {
-            canvasGroup.alpha = 0f;
-            canvasGroup.blocksRaycasts = canvasGroup.interactable = false;
         }
     }
 

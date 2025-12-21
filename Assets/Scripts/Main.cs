@@ -16,7 +16,6 @@ public class Main : MonoBehaviour
         GlobalDataManager.Instance,
         TimeManager.Instance,
         SunlightManager.Instance,
-        TechnologyManager.Instance,
         CraftManager.Instance,
         GameEventManager.Instance,
         ElectricPowerManager.Instance,
@@ -24,6 +23,7 @@ public class Main : MonoBehaviour
         StateManager.Instance,
         GameManager.Instance,
         MoveExploreManager.Instance,
+        TechnologyManager.Instance,
     };
 
     private void Awake()
@@ -52,8 +52,7 @@ public class Main : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            Debug.Log("玩家受伤10点");
-            Player.Instance.TakeDamage(10, null);
+
         }
     }
 #endif
@@ -63,6 +62,7 @@ public class Main : MonoBehaviour
         foreach (var m in orderedManagers)
         {
             m.Init();
+            //Debug.Log(m.GetType().Name + "初始化完成");
         }
     }
 
