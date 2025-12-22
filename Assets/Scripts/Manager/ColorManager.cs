@@ -11,7 +11,7 @@ public static class ColorManager
     public static Color32 Blue { get; private set; } = new(77, 154, 255, 255);
     public static Color32 DarkBlue { get; private set; } = new(0, 128, 255, 255);
     public static Color32 SkyBlue { get; private set; } = new(1, 255, 249, 255);
-    public static Color32 Cyan { get; private set; } = new(10, 229, 176, 255);
+    public static Color32 Cyan { get; private set; } = new(0, 255, 195, 255);
     public static Color32 Green { get; private set; } = new(0, 209, 63, 255);
     public static Color32 Yellow { get; private set; } = new(255, 232, 13, 255);
     public static Color32 Orange { get; private set; } = new(255, 128, 11, 255);

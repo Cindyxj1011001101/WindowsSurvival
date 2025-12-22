@@ -120,7 +120,6 @@ public class StudyWindow : WindowBase
         var locked = TechnologyManager.Instance.IsIntermediateTechLocked;
         foreach (var mask in intermediateTechLockMasks)
         {
-            print(locked);
             mask.SetActive(locked);
         }
     }
