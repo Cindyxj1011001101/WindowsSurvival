@@ -52,7 +52,7 @@ public class Main : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-
+            GameEventManager.Instance.TestFunc();
         }
     }
 #endif

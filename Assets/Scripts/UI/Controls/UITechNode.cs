@@ -71,6 +71,9 @@ public class UITechNode : HoverableButton
         (fillLayer.transform as RectTransform).anchoredPosition = new(1, 0);
         SetColor(fillLayer.transform, ColorManager.Cyan);
 
+        fillMask.DOKill();
+        fillMask.sizeDelta = new(0, fillMask.sizeDelta.y);
+
         currentState = TechnologyManager.Instance.GetTechNodeState(techNode, out studyOrder);
         Display();
     }
@@ -105,7 +108,9 @@ public class UITechNode : HoverableButton
         //progressText.gameObject.SetActive(true);
         //progressText.text = $"{progress}/{techNode.cost}";
         fillMask.gameObject.SetActive(true);
-        fillMask.sizeDelta = new(originalFillMaskWidth * progress / techNode.cost, fillMask.sizeDelta.y);
+        fillMask.DOKill();
+        fillMask.DOSizeDelta(new(originalFillMaskWidth * progress / techNode.cost, fillMask.sizeDelta.y), animTransition);
+        //fillMask.sizeDelta = new(originalFillMaskWidth * progress / techNode.cost, fillMask.sizeDelta.y);
 
         lockIcon.SetActive(false);
         checkIcon.SetActive(false);

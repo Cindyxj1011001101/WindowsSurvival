@@ -1042,7 +1042,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_2
+      name: UI_tech_node_connector_polyline
       rect:
         serializedVersion: 2
         x: 210
@@ -1051,7 +1051,7 @@ TextureImporter:
         height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 6, z: 0, w: 6}
+      border: {x: 50, y: 6, z: 7, w: 6}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1063,7 +1063,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: UI_3
+      name: UI_tech_node_connector_line
       rect:
         serializedVersion: 2
         x: 210
@@ -1072,7 +1072,7 @@ TextureImporter:
         height: 3
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 4, y: 0, z: 4, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
@@ -1708,7 +1708,6 @@ TextureImporter:
       UI_10: -1300053351
       UI_12: 1138885455
       UI_13: 973356370
-      UI_2: 1505840638
       UI_20: 1605050901
       UI_22: -561198943
       UI_24: 305704581
@@ -1717,7 +1716,6 @@ TextureImporter:
       UI_27: 1579222815
       UI_28: -819797999
       UI_29: -150795827
-      UI_3: 488781603
       UI_30: -704582210
       UI_5: 1048413523
       UI_6: 956610979
@@ -1789,6 +1787,8 @@ TextureImporter:
       UI_coord_target: 1433316489
       UI_half_tech_node_frame: 1054400024
       UI_study_bg: -1730895238
+      UI_tech_node_connector_line: 488781603
+      UI_tech_node_connector_polyline: 1505840638
   mipmapLimitGroupName: 
   pSDRemoveMatte: 1
   userData: 

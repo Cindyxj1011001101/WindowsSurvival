@@ -21,12 +21,12 @@ public class TechnologyManager : IManager
     public const float BASIC_STUDY_RATE = 2.0f;     // 基础研究速率
     private const int MAX_STUDY_QUEUE_COUNT = 5;    // 最大研究队列长度
 
-    public bool IsStudying { get; private set; } = false;
+    public bool IsStudying { get; private set; }
     public List<string> StudyQueue { get; private set; } = new();                                   // 待研究科技节点队列
     public Dictionary<string, StudyProgressData> StudyProgressDict { get; private set; } = new();   // 科技节点进度字典
 
     private Dictionary<string, ScriptableTechnologyNode> allTechNodes = new();                      // 所有科技节点
-    private bool isIntermediateTechLocked;
+    public bool IsIntermediateTechLocked { get; private set; }
     private string intermediateTechLockedReason;
 
     public ScriptableTechnologyNode CurStudiedTechNode
@@ -362,7 +362,7 @@ public class TechnologyManager : IManager
         }
 
         // 中级科技
-        if (techNode.techLevel == TechLevl.Intermediate && isIntermediateTechLocked)
+        if (techNode.techLevel == TechLevl.Intermediate && IsIntermediateTechLocked)
         {
             reason = intermediateTechLockedReason;
             return true;
@@ -406,7 +406,7 @@ public class TechnologyManager : IManager
     /// 中级科技是否锁定
     /// </summary>
     /// <returns></returns>
-    private bool IsIntermediateTechLocked(out string reason)
+    private bool GetIsIntermediateTechLocked(out string reason)
     {
         reason = string.Empty;
         if (GlobalDataManager.Instance.GetCardNum("数据传输台") < 1)
@@ -453,14 +453,14 @@ public class TechnologyManager : IManager
     private void CheckIntermediateTechUnlockCondition()
     {
         // 原来是否锁定
-        var preLocked = isIntermediateTechLocked;
+        var preLocked = IsIntermediateTechLocked;
         // 当前是否锁定
-        isIntermediateTechLocked = IsIntermediateTechLocked(out intermediateTechLockedReason);
+        IsIntermediateTechLocked = GetIsIntermediateTechLocked(out intermediateTechLockedReason);
 
-        if (preLocked == isIntermediateTechLocked) return;
+        if (preLocked == IsIntermediateTechLocked) return;
 
         // 解锁 -> 锁定
-        if (isIntermediateTechLocked)
+        if (IsIntermediateTechLocked)
             LockIntermediateTechnologies();
         // 锁定 -> 解锁
         else

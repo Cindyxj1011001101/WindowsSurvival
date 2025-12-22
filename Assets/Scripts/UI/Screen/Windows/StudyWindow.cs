@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -20,6 +19,7 @@ public class StudyWindow : WindowBase
     [SerializeField] private Transform detailLayout;
     [SerializeField] private Transform menuLayout;
     [SerializeField] private Transform content;
+    [SerializeField] private GameObject[] intermediateTechLockMasks;
 
     [SerializeField] private GameObject prerequisite;
     [SerializeField] private GameObject unlockRecipe;
@@ -115,6 +115,14 @@ public class StudyWindow : WindowBase
             studyStateButton.gameObject.SetActive(false);
 
         DisplayStudyQueue();
+
+        // 刷新中级科技ui
+        var locked = TechnologyManager.Instance.IsIntermediateTechLocked;
+        foreach (var mask in intermediateTechLockMasks)
+        {
+            print(locked);
+            mask.SetActive(locked);
+        }
     }
 
     public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
@@ -171,7 +179,12 @@ public class StudyWindow : WindowBase
         // 刷新队列ui
         DisplayStudyQueue();
 
-        // TODO: 刷新中级科技ui
+        // 刷新中级科技ui
+        var locked = TechnologyManager.Instance.IsIntermediateTechLocked;
+        foreach (var mask in intermediateTechLockMasks)
+        {
+            mask.SetActive(locked);
+        }
     }
     #endregion
 
