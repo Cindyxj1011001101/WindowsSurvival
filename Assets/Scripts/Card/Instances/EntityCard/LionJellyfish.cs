@@ -19,7 +19,7 @@ public class LionJellyfish : EntityCard
     protected override void TryAddAggro(IEntity entity)
     {
         // 狮子水母会将距离其[0,10]的部分实体单位加入仇恨列表，优先级8，持续时间15分钟。
-        // 包括以下单位：麦麦、食果鲀、裙水母、狮子水母、老鼠
+        // 包括以下单位：麦麦、食果豚、裙水母、狮子水母、老鼠
         if (potentialAggroEntityTypes.Contains(entity.GetType()) && DistanceTo(entity) <= 10)
         {
             AddAggro(entity, 8, 15);

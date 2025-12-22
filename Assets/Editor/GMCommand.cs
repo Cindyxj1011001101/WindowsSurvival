@@ -50,10 +50,10 @@ public class GMCommand
     {
         AddCard("冰箱");
     }
-    [MenuItem("Command/添加/食果鲀")]
+    [MenuItem("Command/添加/食果豚")]
     public static void SGT()
     {
-        AddCard("食果鲀");
+        AddCard("食果豚");
     }
     [MenuItem("Command/添加/珊瑚礁")]
     public static void Coral()

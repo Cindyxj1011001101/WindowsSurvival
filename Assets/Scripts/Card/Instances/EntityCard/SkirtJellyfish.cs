@@ -23,7 +23,7 @@ public class SkirtJellyfish : EntityCard
     protected override void TryAddAggro(IEntity entity)
     {
         // 裙水母会将距离其[0,7]的部分实体单位加入仇恨列表，优先级5，持续时间15分钟。
-        // 包括以下单位：食果鲀、老鼠
+        // 包括以下单位：食果豚、老鼠
         if (potentialAggroEntityTypes.Contains(entity.GetType()) && DistanceTo(entity) <= 7)
         {
             AddAggro(entity, 5, 15);

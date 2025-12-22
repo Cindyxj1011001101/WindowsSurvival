@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// 食果鲀
+/// 食果豚
 /// </summary>
-[CardId("食果鲀")]
+[CardId("食果豚")]
 public class Fruitfish : EntityCard
 {
     protected override void RegisterCardEvents()
@@ -58,7 +58,7 @@ public class Fruitfish : EntityCard
             closetDist = dist;
             closetPredator = entity;
         }
-        // 如果玩家和食果鲀在同一地点
+        // 如果玩家和食果豚在同一地点
         if (IsInSameLocation(Player.Instance))
         {
             // 将玩家也加入判断

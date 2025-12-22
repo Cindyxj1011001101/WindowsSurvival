@@ -419,12 +419,12 @@ public class SoundManager : MonoBehaviour
                     case PlaceEnum.PowerCabin:
                     case PlaceEnum.Cockpit:
                     case PlaceEnum.LifeSupportCabin:
-                        PlayBGM("飞船内_01", true);
+                        PlayBGM("飞船内环境音", true);
                         return;
                     case PlaceEnum.CoralCoast:
                     case PlaceEnum.PhosphorTomb:
                     case PlaceEnum.SpaceshipOuterHull:                        
-                        PlayBGM("珊瑚礁海域_01", true);
+                        PlayBGM("珊瑚礁海域环境音", true);
                         return;
                     case PlaceEnum.ShallowGrotto:
                     case PlaceEnum.VictimsHall:
@@ -443,20 +443,20 @@ public class SoundManager : MonoBehaviour
             case PlaceEnum.PowerCabin:
             case PlaceEnum.Cockpit:
             case PlaceEnum.LifeSupportCabin:
-                const string spaceshipBGM = "飞船内_01";
+                const string spaceshipBGM = "飞船内环境音";
                 if (currentClipName == spaceshipBGM) return;// 已经在播放，无需切换
 
                 StopBGM();
-                PlayBGM("飞船内_01", true);
+                PlayBGM("飞船内环境音", true);
                 break;
             case PlaceEnum.CoralCoast:
             case PlaceEnum.PhosphorTomb:
             case PlaceEnum.SpaceshipOuterHull:
-                const string coralBGM = "珊瑚礁海域_01";
+                const string coralBGM = "珊瑚礁海域环境音";
                 if (currentClipName == coralBGM) return;// 已经在播放，无需切换
 
                 StopBGM();
-                PlayBGM("珊瑚礁海域_01", true);
+                PlayBGM("珊瑚礁海域环境音", true);
                 break;
             case PlaceEnum.ShallowGrotto:
             case PlaceEnum.VictimsHall:
