@@ -6,24 +6,25 @@ public class TechnologyManager : IManager
 {
     public static TechnologyManager Instance { get; } = new();
 
-    private const float POWER_CONSUMPTION_RATE_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES = 0.5f; // 研究中级科技时每回合的电力消耗
-    private const float BASIC_STUDY_RATE = 2.0f; // 基础研究速率
+    private const float POWER_CONSUMPTION_RATE_WHEN_STUDYING_INTERMEDIATE_TECHNOLOGIES = 0.5f;
 
-    //private TechnologyData techData;
+    private TechnologyData techData;
 
-    private List<string> studyQueue = new();                                            // 待研究科技节点队列
-    private Dictionary<string, ScriptableTechnologyNode> allTechNodes = new();          // 所有科技节点
-    private Dictionary<string, TechNodeProgressData> techNodeProgressDict = new();      // 科技节点进度字典
+    private Dictionary<string, ScriptableTechnologyNode> allTechNodes = new();
+    
+    public float CurStudyRate { get; private set; }
 
     public ScriptableTechnologyNode CurStudiedTechNode
     {
         get
         {
-            if (studyQueue.IsNullOrEmpty())
+            if (string.IsNullOrEmpty(techData.curStudiedTechNodeName) || !allTechNodes.TryGetValue(techData.curStudiedTechNodeName, out var value))
                 return null;
-            return allTechNodes[studyQueue[0]];
+            return value;
         }
     }
+
+    public bool AllTechnologiesStudied => techData.studiedTechNodes.Count == techData.techNodeProgressDict.Count;
 
     private TechnologyManager() { }
 
@@ -38,7 +39,7 @@ public class TechnologyManager : IManager
             }
         }
 
-        var techData = GameDataManager.Instance.TechnologyData;
+        techData = GameDataManager.Instance.TechnologyData;
 
         // 初始化存档
         if (techData.techNodeProgressDict.IsNullOrEmpty())
@@ -46,16 +47,12 @@ public class TechnologyManager : IManager
             techData.techNodeProgressDict = new();
             foreach (var node in allTechNodes.Values)
             {
-                techData.techNodeProgressDict.Add(node.techName, new TechNodeProgressData(node.name, node.cost));
+                techData.techNodeProgressDict.Add(node.techName, new TechNodeData { name = node.techName, progress = 0 });
             }
             techData.basicStudyRate = 2.0f;
             techData.isIntermediateTechLocked = true;
             techData.intermediateTechLockedReason = "缺少\"数据传输台\"";
         }
-
-        techNodeProgressDict = techData.techNodeProgressDict;
-        studiedTechNodes = techData.studiedTechNodes;
-        studyQueue = techData.studyQueue;
 
         CurStudyRate = CalcStudyRate();
 
@@ -73,6 +70,7 @@ public class TechnologyManager : IManager
 
     public void Reset()
     {
+        techData = null;
         UpdateManager.Instance.TechnologyUpdate.RemoveListener(OnStudy);
         EventManager.Instance.RemoveListener<(string, int)>(EventType.CardNumChange, OnCardNumChanged);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnElectricPowerChange);
@@ -83,34 +81,6 @@ public class TechnologyManager : IManager
         if (allTechNodes.TryGetValue(techName, out var node))
             return node;
         return null;
-    }
-
-    /// <summary>
-    /// 将指定节点加入研究队列
-    /// </summary>
-    public void StudyInQueue(ScriptableTechnologyNode node)
-    {
-        if (studyQueue.Contains(node.techName)) return;
-
-
-    }
-
-    /// <summary>
-    /// 从研究队列中移除指定节点
-    /// </summary>
-    public void RemoveFromQueue(ScriptableTechnologyNode node)
-    {
-        if (!studyQueue.Contains(node.techName)) return;
-
-    }
-
-    /// <summary>
-    /// 立刻开始研究指定科技
-    /// </summary>
-    public void StudyImmediately(ScriptableTechnologyNode node)
-    {
-
-
     }
 
     /// <summary>
@@ -189,6 +159,11 @@ public class TechnologyManager : IManager
         }
 
         EventManager.Instance.TriggerEvent(EventType.ChangeStudyProgress);
+    }
+
+    private float CalcStudyRate()
+    {
+        return techData.basicStudyRate;
     }
 
     public float GetStudyProgress(ScriptableTechnologyNode techNode)

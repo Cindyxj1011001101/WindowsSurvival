@@ -3,25 +3,26 @@ using System;
 using System.Collections.Generic;
 
 [Serializable]
-public class TechNodeProgressData
+public class TechNodeData
 {
     public string name;
     public float progress;
-    public float cost;
-    public bool Studied => progress >= cost;
-
-    public TechNodeProgressData() { }
-
-    public TechNodeProgressData(string name, float cost)
-    {
-        this.name = name;
-        this.cost = cost;
-        this.progress = 0f;
-    }
 }
 
 public class TechnologyData
 {
-    public List<string> studyQueue = new(); // 待研究节点队列
-    public Dictionary<string, TechNodeProgressData> techNodeProgressDict = new();
+    public float basicStudyRate;                    // 基础研究速率，即每15分钟增长多少科技点
+
+    public List<string> studiedTechNodes = new();   // 学习过的科技节点
+
+    public string curStudiedTechNodeName;           // 当前正在学习的科技节点
+
+    public bool isIntermediateTechLocked;           // 中级科技是否锁定
+
+    public string intermediateTechLockedReason;     // 中级科技锁定的原因
+
+    public Dictionary<string, TechNodeData> techNodeProgressDict = new();
+
+    [JsonIgnore]
+    public TechNodeData CurStudiedTechNodeData => techNodeProgressDict[curStudiedTechNodeName];
 }
