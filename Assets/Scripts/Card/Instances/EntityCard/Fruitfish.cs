@@ -16,7 +16,7 @@ public class Fruitfish : EntityCard
     {
         var env = Bag as EnvironmentBag;
         
-        // 地上有素食卡牌
+        // 地上有素食卡牌（执行"食用"意图）
         var vegeCards = env.FindCardsOfTag(CardTag.Vege);
         if (!vegeCards.IsNullOrEmpty())
         {
@@ -30,7 +30,7 @@ public class Fruitfish : EntityCard
             return new EscapeIntention(5, closestPredator.Uuid, 5 * moveDistPerMin);
         }
 
-        // 地点有成熟的果实作物
+        // 地点有成熟的果实作物（执行"采摘并食用"意图，只选择成熟的）
         var fruitCards = GetRipeFruitCrops();
         if (!fruitCards.IsNullOrEmpty())
         {
@@ -72,10 +72,18 @@ public class Fruitfish : EntityCard
         return closetPredator;
     }
 
+    /// <summary>
+    /// 获取成熟的果实作物（采摘并食用目标，只选择成熟的）
+    /// </summary>
     private List<Card> GetRipeFruitCrops()
     {
         var env = Bag as EnvironmentBag;
-        return env.FindCards(c => c.Tags.Contains(CardTag.FruitCrop) && c is PlantCard p && p.IsRipe);
+        // 只返回已成熟的果实作物（采摘并食用目标）
+        return env.FindCards(c => 
+            c.Tags.Contains(CardTag.FruitCrop) && 
+            c is PlantCard plant && 
+            plant.TryGetComponent<PlantGrowthComponent>(out var plantGrowth) && 
+            plantGrowth.IsRipe);
     }
 
     private void Catch(Card tool, CardEvent e)
