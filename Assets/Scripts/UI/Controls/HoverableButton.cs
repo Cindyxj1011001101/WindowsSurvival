@@ -91,6 +91,8 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             graphic.gameObject.SetActive(false); // 确保初始状态下图像不可见
             graphic.color = new Color(graphic.color.r, graphic.color.g, graphic.color.b, 0f); // 设置透明度为0
         }
+
+        ChangeColor(currentColor);
     }
 
     protected virtual void OnDisable()
