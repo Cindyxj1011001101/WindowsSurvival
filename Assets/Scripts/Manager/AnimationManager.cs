@@ -63,6 +63,8 @@ public static class AnimationConfig
     public const float WINDOW_CLOSE_OFFSET_Y = -8f;
     public static readonly Ease WINDOW_OPEN_EASE = Ease.OutCubic;
     public static readonly Ease WINDOW_CLOSE_EASE = Ease.InCubic;
+    public static readonly Ease WINDOW_MAXIMIZE_RESTORE_EASE = Ease.OutCubic;
+    public static readonly Ease WINDOW_MINIMIZE_EASE = Ease.InCubic;
 
     // 状态图标动效
     public const float STATE_ICON_SCALE_START = 0.8f;
@@ -661,8 +663,8 @@ public class AnimationManager
         canvasGroup.blocksRaycasts = true;
 
         var seq = DOTween.Sequence();
-        seq.Join(window.DOScale(Vector3.one * 0.01f, duration));
-        seq.Join(window.DOMove(shortcut.position, duration));
+        seq.Join(window.DOScale(Vector3.one * 0.01f, duration).SetEase(AnimationConfig.WINDOW_MINIMIZE_EASE));
+        seq.Join(window.DOMove(shortcut.position, duration).SetEase(AnimationConfig.WINDOW_MINIMIZE_EASE));
         seq.OnComplete(() =>
         {
             canvasGroup.alpha = 0;
@@ -684,9 +686,9 @@ public class AnimationManager
         canvasGroup.blocksRaycasts = true;
 
         var seq = DOTween.Sequence();
-        seq.Join(window.DOMove(targetPosition, duration));
-        seq.Join(window.DOScale(Vector3.one, duration));
-        seq.Join(window.DOSizeDelta(targetSize, duration));
+        seq.Join(window.DOMove(targetPosition, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
+        seq.Join(window.DOScale(Vector3.one, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
+        seq.Join(window.DOSizeDelta(targetSize, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
         seq.OnComplete(() => canvasGroup.interactable = true);
 
         return seq;
@@ -704,9 +706,9 @@ public class AnimationManager
         canvasGroup.blocksRaycasts = true;
 
         var seq = DOTween.Sequence();
-        seq.Join(window.DOMove(targetRect.position, duration));
-        seq.Join(window.DOScale(Vector3.one, duration));
-        seq.Join(window.DOSizeDelta(targetRect.rect.size, duration));
+        seq.Join(window.DOMove(targetRect.position, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
+        seq.Join(window.DOScale(Vector3.one, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
+        seq.Join(window.DOSizeDelta(targetRect.rect.size, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
         seq.OnComplete(() => canvasGroup.interactable = true);
 
         return seq;
