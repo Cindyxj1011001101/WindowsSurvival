@@ -10,6 +10,7 @@ public abstract class PanelBase : MonoBehaviour
     /// </summary>
     public enum ShowMode
     {
+        None,      // 无效果
         Fade,      // 淡入效果
         Animator   // 使用Animator控制
     }
@@ -83,6 +84,11 @@ public abstract class PanelBase : MonoBehaviour
         // 根据模式启动协程
         switch (showMode)
         {
+            case ShowMode.None:
+                canvasGroup.alpha = 1;
+                onShown?.Invoke();
+                onShown.RemoveAllListeners();
+                break;
             case ShowMode.Fade:
                 //PublicMonoBehaviour.Instance.StartCoroutine(FadeIn());
                 FadeIn();
@@ -113,6 +119,11 @@ public abstract class PanelBase : MonoBehaviour
 
         switch (showMode)
         {
+            case ShowMode.None:
+                canvasGroup.alpha = 0;
+                onHidden?.Invoke();
+                onHidden.RemoveAllListeners();
+                break;
             case ShowMode.Fade:
                 //PublicMonoBehaviour.Instance.StartCoroutine(FadeOut());
                 FadeOut();

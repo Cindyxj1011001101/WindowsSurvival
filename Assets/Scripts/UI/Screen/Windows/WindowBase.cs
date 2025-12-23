@@ -62,6 +62,36 @@ public abstract class WindowBase : PanelBase
 
     public bool IsPlayingAnim => anim != null && anim.IsActive();
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // 添加拖拽支持
+        Transform topBar = transform.Find("TopBar");
+        //if (topBar.TryGetComponent(out dragMoveHandler))
+        //{
+        //    //dragMoveHandler.targetToMove = RectTransform;
+        //    dragMoveHandler.onPointerDown.AddListener(Focus);
+        //}
+        dragMoveHandler = topBar.GetComponent<DragMoveHandler>();
+
+        // 添加双击支持
+        if (topBar.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
+            doubleClickHandler.onDoubleClick.AddListener(MaximizeOrRestore);
+
+        closeButton = transform.Find("TopBar/CloseButton").GetComponent<HoverableButton>();
+        maximizeButton = transform.Find("TopBar/MaximizeButton").GetComponent<HoverableButton>();
+        minimizeButton = transform.Find("TopBar/MinimizeButton").GetComponent<HoverableButton>();
+
+        closeButton.onClick.AddListener(OnCloseButtonClicked);
+        maximizeButton.onClick.AddListener(OnMaximizeButtonClicked);
+        minimizeButton.onClick.AddListener(OnMinimizeButtonClicked);
+
+        // 将聚焦框设置为不可见
+        focusFrameImage = transform.Find("Frame").GetComponent<Image>();
+        focusFrameImage.gameObject.SetActive(false);
+    }
+
     public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
     {
         if (showMode != ShowMode.Fade)
@@ -145,44 +175,30 @@ public abstract class WindowBase : PanelBase
         anim.Play();
     }
 
-    public void SetModal(bool isModal)
+    public void InitFromWindowData(WindowData data)
     {
-        this.isModal = isModal;
-        if (isModal)
+        SetState(data.state);
+
+        SetModal(data.isModal);
+
+        RectTransform.anchoredPosition = data.position;
+        RectTransform.sizeDelta = data.sizeDelta;
+        RectTransform.localScale = data.scale;
+
+        lastState = data.lastState;
+        lastPosition = data.lastPosition;
+        lastSizeDelta = data.lastSizeDelta;
+
+
+        if (state == WindowState.Minimized || state == WindowState.Closed)
         {
-            // 禁用最小化和关闭
-            closeButton.Interactable = minimizeButton.Interactable = false;
+            canvasGroup.alpha = 0;
+            canvasGroup.interactable = canvasGroup.blocksRaycasts = false;
         }
-    }
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        // 添加拖拽支持
-        Transform topBar = transform.Find("TopBar");
-        //if (topBar.TryGetComponent(out dragMoveHandler))
-        //{
-        //    //dragMoveHandler.targetToMove = RectTransform;
-        //    dragMoveHandler.onPointerDown.AddListener(Focus);
-        //}
-        dragMoveHandler = topBar.GetComponent<DragMoveHandler>();
-
-        // 添加双击支持
-        if (topBar.TryGetComponent<DoubleClickHandler>(out var doubleClickHandler))
-            doubleClickHandler.onDoubleClick.AddListener(MaximizeOrRestore);
-
-        closeButton = transform.Find("TopBar/CloseButton").GetComponent<HoverableButton>();
-        maximizeButton = transform.Find("TopBar/MaximizeButton").GetComponent<HoverableButton>();
-        minimizeButton = transform.Find("TopBar/MinimizeButton").GetComponent<HoverableButton>();
-
-        closeButton.onClick.AddListener(OnCloseButtonClicked);
-        maximizeButton.onClick.AddListener(OnMaximizeButtonClicked);
-        minimizeButton.onClick.AddListener(OnMinimizeButtonClicked);
-
-        // 将聚焦框设置为不可见
-        focusFrameImage = transform.Find("Frame").GetComponent<Image>();
-        focusFrameImage.gameObject.SetActive(false);
+        else
+        {
+            Show(ShowMode.None);
+        }
     }
 
     private void OnCloseButtonClicked()
@@ -201,6 +217,16 @@ public abstract class WindowBase : PanelBase
     {
         Focus();
         WindowsManager.Instance.MinimizeWindow(AppName);
+    }
+
+    public void SetModal(bool isModal)
+    {
+        this.isModal = isModal;
+        if (isModal)
+        {
+            // 禁用最小化和关闭
+            closeButton.Interactable = minimizeButton.Interactable = false;
+        }
     }
 
     private void SetState(WindowState state)
@@ -263,29 +289,6 @@ public abstract class WindowBase : PanelBase
                 Create();
                 break;
         }
-    }
-
-    public void InitFromWindowData(WindowData data)
-    {
-        Create();
-
-        SetState(data.state);
-
-        SetModal(data.isModal);
-
-        if (state == WindowState.Minimized || state == WindowState.Closed)
-        {
-            canvasGroup.alpha = 0;
-            canvasGroup.interactable = canvasGroup.blocksRaycasts = false;
-        }
-
-        RectTransform.anchoredPosition = data.position;
-        RectTransform.sizeDelta = data.sizeDelta;
-        RectTransform.localScale = data.scale;
-
-        lastState = data.lastState;
-        lastPosition = data.lastPosition;
-        lastSizeDelta = data.lastSizeDelta;
     }
 
     public void Create()

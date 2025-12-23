@@ -403,7 +403,9 @@ public class WindowsManager : MonoBehaviour
                 foreach (var result in results)
                 {
                     if (result.gameObject.name == "Modal") return;
-                    if (result.gameObject.TryGetComponent<WindowBase>(out var window))
+                    if (result.gameObject.TryGetComponent<WindowBase>(out var window)
+                        && window.State != WindowState.Closed
+                        && window.State != WindowState.Minimized)
                     {
                         FocusWindow(window);
                         return;
