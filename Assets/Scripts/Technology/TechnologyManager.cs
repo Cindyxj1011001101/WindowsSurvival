@@ -124,12 +124,14 @@ public class TechnologyManager : IManager
 
     public TechNodeState GetTechNodeState(ScriptableTechnologyNode node, out string lockedReason, out int studyOrder)
     {
+        lockedReason = string.Empty;
         studyOrder = GetStudyOrder(node);
-        if (IsTechNodeLocked(node, out lockedReason))
-            return TechNodeState.Locked;
 
         if (IsTechNodeComplished(node))
             return TechNodeState.Complished;
+        
+        if (IsTechNodeLocked(node, out lockedReason))
+            return TechNodeState.Locked;
 
         if (IsTechNodeBeingStudied(node))
             return TechNodeState.BeingStudied;

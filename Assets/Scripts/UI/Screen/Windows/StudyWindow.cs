@@ -19,7 +19,8 @@ public class StudyWindow : WindowBase
     [SerializeField] private Transform detailLayout;
     [SerializeField] private Transform menuLayout;
     [SerializeField] private Transform content;
-    [SerializeField] private GameObject[] intermediateTechLockMasks;
+    [SerializeField] private Transform[] intermediateTechLocks;
+    private Color lockedColor;
 
     [SerializeField] private GameObject prerequisite;
     [SerializeField] private GameObject unlockRecipe;
@@ -42,9 +43,12 @@ public class StudyWindow : WindowBase
     private Dictionary<TechType, RectTransform> menuItemTransforms = new();
     private Dictionary<TechType, (UITechNode[] uiNodes, Transform root)> uiNodesRoot = new();
 
+    #region Init
     protected override void Awake()
     {
         base.Awake();
+
+        lockedColor = intermediateTechLocks[0].GetComponentInChildren<Image>().color;
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(menuLayout as RectTransform);
 
@@ -115,13 +119,7 @@ public class StudyWindow : WindowBase
             studyStateButton.gameObject.SetActive(false);
 
         DisplayStudyQueue();
-
-        // 刷新中级科技ui
-        var locked = TechnologyManager.Instance.IsIntermediateTechLocked;
-        foreach (var mask in intermediateTechLockMasks)
-        {
-            mask.SetActive(locked);
-        }
+        DisplayIntermediateTechLock();
     }
 
     public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
@@ -140,6 +138,7 @@ public class StudyWindow : WindowBase
         base.Hide(showMode, onFinished);
         curSelectedTechNode = null;
     }
+    #endregion
 
     #region 事件监听
     private void OnStartStudy(ScriptableTechnologyNode techNode)
@@ -179,13 +178,21 @@ public class StudyWindow : WindowBase
         DisplayStudyQueue();
 
         // 刷新中级科技ui
-        var locked = TechnologyManager.Instance.IsIntermediateTechLocked;
-        foreach (var mask in intermediateTechLockMasks)
-        {
-            mask.SetActive(locked);
-        }
+        DisplayIntermediateTechLock();
     }
     #endregion
+
+    private void DisplayIntermediateTechLock()
+    {
+        var locked = TechnologyManager.Instance.IsIntermediateTechLocked;
+        foreach (var mask in intermediateTechLocks)
+        {
+            foreach (var img in mask.GetComponentsInChildren<Image>())
+            {
+                img.color = locked ? lockedColor : ColorManager.White;
+            }
+        }
+    }
 
     private void DisplayStudyQueue()
     {
@@ -277,7 +284,7 @@ public class StudyWindow : WindowBase
 
     private void DisplayTechNodeDetails(ScriptableTechnologyNode techNode)
     {
-        // 销毁前置研究和解锁配方对应的预制体
+        // 回收前置研究和解锁配方对应的预制体
         foreach (var obj in temp)
         {
             ObjectBufferPool.Instance.Restore(obj);
@@ -390,7 +397,6 @@ public class StudyWindow : WindowBase
         {
             WindowsManager.Instance.OpenWindow("Study");
         });
-
 
         studyStateButton.transform.GetChild(2).gameObject.SetActive(state == 2);
         studyStateButton.transform.GetChild(1).gameObject.SetActive(state != 2);

@@ -16,6 +16,7 @@ public class UITechNode : HoverableButton
     public Animator gifAnimator;
     public Text orderText;
     public HoverableButton dequeueButton;
+    public UITechNodeConnectionLine[] lines;
 
     private GameObject fillLayer;
     private ScriptableTechnologyNode techNode;
@@ -30,7 +31,14 @@ public class UITechNode : HoverableButton
     {
         base.Awake();
 
+        lines = GetComponentsInChildren<UITechNodeConnectionLine>(true);
+        foreach (var line in lines)
+        {
+            line.Init();
+        }
+
         originalFillMaskWidth = fillMask.sizeDelta.x;
+
     }
 
     public void Init(ScriptableTechnologyNode techNode)
@@ -46,8 +54,9 @@ public class UITechNode : HoverableButton
 
         if (queueInfo != null)
         {
-            originalQueueInfoAnchorPosX = queueInfo.anchoredPosition.x;
             queueInfo.gameObject.SetActive(false);
+            if (originalQueueInfoAnchorPosX == 0)
+                originalQueueInfoAnchorPosX =  queueInfo.anchoredPosition.x;
             queueInfo.anchoredPosition = Vector2.zero;
 
             // 点击取消排队按钮，从研究队列中移除该科技
@@ -75,7 +84,7 @@ public class UITechNode : HoverableButton
         fillMask.sizeDelta = new(0, fillMask.sizeDelta.y);
 
         currentState = TechnologyManager.Instance.GetTechNodeState(techNode, out studyOrder);
-        Display();
+        Display(false);
     }
 
     private void SetColor(Transform layer, Color color)
@@ -90,6 +99,12 @@ public class UITechNode : HoverableButton
     {
         if (techNode == null) return;
 
+        // 刷新连接线显示
+        foreach (var line in lines)
+        {
+            line.RefreshDisplay();
+        }
+
         var newState = TechnologyManager.Instance.GetTechNodeState(techNode, out studyOrder);
 
         // 前后状态相同时，不刷新显示
@@ -97,20 +112,24 @@ public class UITechNode : HoverableButton
         if (currentState == newState && currentState != TechNodeState.BeingStudied && currentState != TechNodeState.Queued) return;
 
         currentState = newState;
-        Display();
+        Display(true);
     }
 
-    private void Display()
+    private void Display(bool playAnim)
     {
         SetColor(baseLayer.transform, ColorManager.White);
 
+        // 显示研究进度
         var progress = TechnologyManager.Instance.GetStudyProgress(techNode);
         //progressText.gameObject.SetActive(true);
         //progressText.text = $"{progress}/{techNode.cost}";
         fillMask.gameObject.SetActive(true);
         fillMask.DOKill();
-        fillMask.DOSizeDelta(new(originalFillMaskWidth * progress / techNode.cost, fillMask.sizeDelta.y), animTransition);
-        //fillMask.sizeDelta = new(originalFillMaskWidth * progress / techNode.cost, fillMask.sizeDelta.y);
+        var targetWidth = originalFillMaskWidth * progress / techNode.cost;
+        if (playAnim)
+            fillMask.DOSizeDelta(new(targetWidth, fillMask.sizeDelta.y), animTransition);
+        else
+            fillMask.sizeDelta = new(targetWidth, fillMask.sizeDelta.y);
 
         lockIcon.SetActive(false);
         checkIcon.SetActive(false);
