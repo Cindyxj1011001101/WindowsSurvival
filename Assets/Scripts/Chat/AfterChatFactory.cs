@@ -12,6 +12,7 @@ public static class AfterChatFactory
         //时间：时间_数值
         //解锁：解锁_目标窗口名称
         //添加：添加_玩家（玩家/场景）_压缩饼干（物品名称）
+        //计数：计数_计数名_+1/-1/=1(_后面填的是变化或等于的值，如+1表示使该计数增加1，-1表示使该计数减少1，=1表示使该计数等于1)
         //其他：其他_其他名
         if(EventName=="")return;
         List<string> eventList = new List<string>(EventName.Split(';'));
@@ -42,6 +43,9 @@ public static class AfterChatFactory
                     break;
                 case "添加":
                     AddCardEvent(eventItemList[1], eventItemList[2]); 
+                    break;
+                case "计数":
+                    ChangeCount(eventItemList);
                     break;
                 case "其他":
                     OtherEvent(eventItemList);
@@ -152,6 +156,64 @@ public static class AfterChatFactory
         }
     }
 
+    private static void ChangeCount(List<string> eventItemList)
+    {
+        if (eventItemList.Count < 3)
+        {
+            UnityEngine.Debug.LogError($"[计数效果格式错误] 参数不足，需要3个参数：计数_计数名_操作值");
+            return;
+        }
+
+        string countName = eventItemList[1];
+        string operation = eventItemList[2];
+
+        // 验证计数是否已定义（即使未定义也继续执行，但会报错）
+        if (!CountDefinition.IsCountDefined(countName))
+        {
+            UnityEngine.Debug.LogError($"[计数效果错误] 计数 \"{countName}\" 未在 CountDefinition.cs 中定义！请在 CountDefinition.DefinedCounts 中添加该计数。");
+            // 继续执行，不return，让计数操作能够执行
+        }
+
+        // 验证操作格式
+        if (!operation.StartsWith("+") && !operation.StartsWith("-") && !operation.StartsWith("="))
+        {
+            UnityEngine.Debug.LogError($"[计数效果格式错误] 操作值格式不正确：\"{operation}\"。应使用 +数字、-数字 或 =数字 格式。");
+            return;
+        }
+
+        try
+        {
+            if (operation.StartsWith("+"))
+            {
+                // 增加计数，格式：+1, +2 等
+                int delta = int.Parse(operation.Substring(1));
+                CountManager.Instance.ChangeCount(countName, delta);
+                // 触发计数变化事件，用于检查段落条件
+                CheckCountParagraphConditions(countName);
+            }
+            else if (operation.StartsWith("-"))
+            {
+                // 减少计数，格式：-1, -2 等
+                int delta = int.Parse(operation);
+                CountManager.Instance.ChangeCount(countName, delta);
+                // 触发计数变化事件，用于检查段落条件
+                CheckCountParagraphConditions(countName);
+            }
+            else if (operation.StartsWith("="))
+            {
+                // 设置计数，格式：=1, =2 等
+                int value = int.Parse(operation.Substring(1));
+                CountManager.Instance.SetCount(countName, value);
+                // 触发计数变化事件，用于检查段落条件
+                CheckCountParagraphConditions(countName);
+            }
+        }
+        catch (System.FormatException)
+        {
+            UnityEngine.Debug.LogError($"[计数效果格式错误] 操作值 \"{operation}\" 无法解析为数字。应使用 +数字、-数字 或 =数字 格式。");
+        }
+    }
+
     public static void OtherEvent(List<string> eventItemList)
     {
         switch (eventItemList[1])
@@ -161,6 +223,21 @@ public static class AfterChatFactory
                 break;
         }
     }
+    private static void CheckCountParagraphConditions(string countName)
+    {
+        // 检查所有计数相关的段落条件
+        if (ChatConditionManager.Instance != null)
+        {
+            foreach (var condition in ChatConditionManager.Instance.DetectedParagraphConditions.Values)
+            {
+                if (condition is CountParagraphCondition countCondition)
+                {
+                    countCondition.UpdateCountCheck();
+                }
+            }
+        }
+    }
+
     public static void Die()
     {
         ChatManager.Instance.ParagraphToTriggeer.Clear();

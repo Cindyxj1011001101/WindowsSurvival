@@ -251,8 +251,8 @@ public class CraftManager : IManager
             var craftedCard = CardFactory.CreateCard(recipe.cardId);
             dropCraftedCard?.Invoke(craftedCard);
 
-            // 触发制作事件
-            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", craftedCard.CardName));
+            // 触发制作事件（使用CardId而不是CardName，因为条件检测使用的是CardId）
+            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Craft", craftedCard.CardId));
         });
     }
 

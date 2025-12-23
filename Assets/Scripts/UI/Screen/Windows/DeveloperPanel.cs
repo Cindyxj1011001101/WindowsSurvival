@@ -36,9 +36,10 @@ public class DeveloperPanel : MonoBehaviour
         { PlayerStateEnum.PainLevel, "疼痛" },
         { PlayerStateEnum.BodyTemperature, "体温" },
     };
+    public GameObject panelRoot;//,panelRoot2;
 
     [Header("第一行，卡牌添加相关UI")]
-    public GameObject panelRoot;
+    
     public InputField inputCardAmount;
     public InputField inputCardId;
     public Dropdown targetBag;
@@ -58,8 +59,10 @@ public class DeveloperPanel : MonoBehaviour
     
     public Button btnUnlockAllTechnologies; // 研究全解锁按钮
     
-    
-
+    [Header("计数显示相关UI")]
+    public RectTransform countDisplayContainer; // 计数显示容器（ScrollView的Content）
+    public Text countItemPrefab; // 单个计数项的Text预制体（可选，如果为空则动态创建）
+    public Button btnRefreshCounts; // 刷新计数按钮（可选）
     
 
     private float lastShiftTime = 0f;
@@ -68,10 +71,25 @@ public class DeveloperPanel : MonoBehaviour
     private List<PlaceEnum> placeOptions = new();
     // 下拉索引到 PlayerStateEnum 的映射
     private List<PlayerStateEnum> stateOptions = new();
+    
+    // 计数显示相关
+    private List<Text> countDisplayItems = new List<Text>(); // 当前显示的计数项列表
 
     private void Awake()
     {
         Instance = this;
+    }
+
+    private void OnEnable()
+    {
+        // 订阅计数变化事件
+        EventManager.Instance.AddListener(EventType.CountChanged, RefreshCountDisplay);
+    }
+
+    private void OnDisable()
+    {
+        // 取消订阅计数变化事件
+        EventManager.Instance.RemoveListener(EventType.CountChanged, RefreshCountDisplay);
     }
 
     private void Start()
@@ -80,6 +98,7 @@ public class DeveloperPanel : MonoBehaviour
         InitPlayerStateUI();
         InitOtherUI();
         InitDevMoveUI();
+        InitCountDisplayUI();
 
         if (panelRoot != null) panelRoot.SetActive(false);
     }
@@ -181,9 +200,42 @@ public class DeveloperPanel : MonoBehaviour
 
         if (btnUnlockAllTechnologies != null)
         {
-            // 绑定“研究全解锁”按钮，在 Inspector 中确保已关联该按钮
+            // 绑定"研究全解锁"按钮，在 Inspector 中确保已关联该按钮
             btnUnlockAllTechnologies.onClick.AddListener(OnUnlockAllTechnologiesClicked);
         }
+    }
+
+    /// <summary>
+    /// 初始化计数显示相关UI
+    /// </summary>
+    private void InitCountDisplayUI()
+    {
+        if (btnRefreshCounts != null)
+        {
+            btnRefreshCounts.onClick.AddListener(RefreshCountDisplay);
+        }
+        
+        // 延迟刷新，确保CountManager已初始化
+        StartCoroutine(DelayedRefreshCounts());
+    }
+    
+    /// <summary>
+    /// 延迟刷新计数显示，确保CountManager已初始化
+    /// </summary>
+    private IEnumerator DelayedRefreshCounts()
+    {
+        // 等待一帧，确保所有Manager都已初始化
+        yield return null;
+        
+        // 如果CountManager还没初始化，再等待
+        int waitCount = 0;
+        while (CountManager.Instance == null && waitCount < 10)
+        {
+            yield return new WaitForSeconds(0.1f);
+            waitCount++;
+        }
+        
+        RefreshCountDisplay();
     }
 
     
@@ -222,6 +274,11 @@ public class DeveloperPanel : MonoBehaviour
             if (now - lastShiftTime < doubleClickInterval)
             {
                 if (panelRoot != null) panelRoot.SetActive(!panelRoot.activeSelf);
+                // 面板打开时刷新计数显示
+                if (panelRoot.activeSelf)
+                {
+                    RefreshCountDisplay();
+                }
             }
             lastShiftTime = now;
         }
@@ -305,6 +362,136 @@ public class DeveloperPanel : MonoBehaviour
     private string GetStateDisplayName(PlayerStateEnum state)
     {
         return StateDisplayNames.TryGetValue(state, out var name) ? name : state.ToString();
+    }
+
+    /// <summary>
+    /// 刷新计数显示
+    /// </summary>
+    private void RefreshCountDisplay()
+    {
+        if (countDisplayContainer == null)
+        {
+            Debug.LogError("[DeveloperPanel] countDisplayContainer 未设置！");
+            return;
+        }
+        
+        // 检查CountManager是否已初始化
+        if (CountManager.Instance == null)
+        {
+            Debug.LogError("[DeveloperPanel] CountManager.Instance 为 null！");
+            return;
+        }
+        
+        // 获取所有已定义的计数名称
+        var definedCounts = CountDefinition.GetAllDefinedCounts();
+        Debug.Log($"[DeveloperPanel] 已定义的计数数量: {definedCounts.Count}");
+        
+        // 构建显示列表：包含所有已定义的计数，未设置的显示为0
+        var displayCounts = new List<KeyValuePair<string, int>>();
+        foreach (var countName in definedCounts)
+        {
+            int value = CountManager.Instance.GetCount(countName);
+            displayCounts.Add(new KeyValuePair<string, int>(countName, value));
+            Debug.Log($"[DeveloperPanel] 准备显示: {countName} = {value}");
+        }
+        
+        // 按名称排序
+        displayCounts.Sort((a, b) => string.Compare(a.Key, b.Key, StringComparison.Ordinal));
+        
+        Debug.Log($"[DeveloperPanel] 准备显示 {displayCounts.Count} 个计数项");
+        
+        // 如果没有已定义的计数，隐藏所有显示项
+        if (displayCounts.Count == 0)
+        {
+            foreach (var item in countDisplayItems)
+            {
+                if (item != null)
+                {
+                    item.gameObject.SetActive(false);
+                }
+            }
+            return;
+        }
+        
+        // 确保有足够的Text组件
+        while (countDisplayItems.Count < displayCounts.Count)
+        {
+            Text countText;
+            if (countItemPrefab != null)
+            {
+                // 使用预制体
+                countText = Instantiate(countItemPrefab, countDisplayContainer);
+            }
+            else
+            {
+                // 动态创建Text组件
+                GameObject textObj = new GameObject("CountItem");
+                textObj.transform.SetParent(countDisplayContainer, false);
+                countText = textObj.AddComponent<Text>();
+                countText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                countText.fontSize = 14;
+                countText.color = Color.white;
+                
+                // 设置RectTransform
+                RectTransform rectTransform = textObj.GetComponent<RectTransform>();
+                rectTransform.anchorMin = new Vector2(0, 1);
+                rectTransform.anchorMax = new Vector2(1, 1);
+                rectTransform.pivot = new Vector2(0, 1);
+                rectTransform.sizeDelta = new Vector2(0, 20);
+            }
+            
+            countDisplayItems.Add(countText);
+        }
+        
+        // 隐藏多余的Text组件
+        for (int i = displayCounts.Count; i < countDisplayItems.Count; i++)
+        {
+            if (countDisplayItems[i] != null)
+            {
+                countDisplayItems[i].gameObject.SetActive(false);
+            }
+        }
+        
+        // 更新显示的计数
+        for (int i = 0; i < displayCounts.Count; i++)
+        {
+            if (countDisplayItems[i] != null)
+            {
+                countDisplayItems[i].gameObject.SetActive(true);
+                countDisplayItems[i].text = $"{displayCounts[i].Key} = {displayCounts[i].Value}";
+                Debug.Log($"[DeveloperPanel] 设置文本: {countDisplayItems[i].text}, 位置: {i}");
+                
+                // 设置位置（垂直排列）
+                RectTransform rectTransform = countDisplayItems[i].GetComponent<RectTransform>();
+                if (rectTransform != null)
+                {
+                    // 设置锚点和轴心点（从顶部开始）
+                    rectTransform.anchorMin = new Vector2(0, 1);
+                    rectTransform.anchorMax = new Vector2(1, 1);
+                    rectTransform.pivot = new Vector2(0, 1);
+                    // 设置位置（从顶部向下排列）
+                    rectTransform.anchoredPosition = new Vector2(0, -i * 20);
+                    // 设置大小
+                    rectTransform.sizeDelta = new Vector2(0, 20);
+                }
+            }
+            else
+            {
+                Debug.LogError($"[DeveloperPanel] countDisplayItems[{i}] 为 null！");
+            }
+        }
+        
+        // 更新容器高度（如果需要）
+        if (countDisplayContainer != null)
+        {
+            float totalHeight = displayCounts.Count * 20;
+            countDisplayContainer.sizeDelta = new Vector2(countDisplayContainer.sizeDelta.x, totalHeight);
+            Debug.Log($"[DeveloperPanel] 设置容器高度: {totalHeight}");
+        }
+        
+        // 强制更新Canvas
+        Canvas.ForceUpdateCanvases();
+        Debug.Log($"[DeveloperPanel] 刷新完成，共显示 {displayCounts.Count} 个计数项");
     }
     
 }

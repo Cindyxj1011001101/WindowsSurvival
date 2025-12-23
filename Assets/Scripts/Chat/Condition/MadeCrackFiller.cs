@@ -11,7 +11,7 @@ public class MadeCrackFiller:ParagraphCondition
     {
         if (type == "Craft" && value == "裂缝填充物")
         {
-            return true ;
+            return true;
         }
         return false;
     }

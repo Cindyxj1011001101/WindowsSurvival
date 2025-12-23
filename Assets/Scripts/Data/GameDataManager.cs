@@ -66,6 +66,8 @@ public class GameDataManager
         gameEventData = JsonManager.LoadData<GameEventData>(CurLoadName, "GameEventData");
         // 电力数据
         electricPowerData = JsonManager.LoadData<ElectricPowerData>(CurLoadName, "ElectricPowerData");
+        // 计数数据
+        countData = JsonManager.LoadData<CountData>(CurLoadName, "CountData");
     }
 
     public void SaveAllData()
@@ -100,6 +102,8 @@ public class GameDataManager
         SaveGameEventData();
         // 保存电力数据
         SaveElectricPowerData();
+        // 保存计数数据
+        SaveCountData();
 
         if (loadData == null)
         {
@@ -513,6 +517,29 @@ public class GameDataManager
             power = ElectricPowerManager.Instance.Power
         };
         JsonManager.SaveData(electricPowerData, CurLoadName, "ElectricPowerData");
+    }
+    #endregion
+
+    #region 计数数据
+    private CountData countData;
+
+    public CountData CountData => countData;
+
+    public void SaveCountData()
+    {
+        if (CountManager.Instance == null) return;
+        
+        countData = new()
+        {
+            init = true,
+            counts = new Dictionary<string, int>(CountManager.Instance.Counts)
+        };
+        JsonManager.SaveData(countData, CurLoadName, "CountData");
+    }
+
+    public void LoadCountData()
+    {
+        countData = JsonManager.LoadData<CountData>(CurLoadName, "CountData");
     }
     #endregion
 }

@@ -77,7 +77,17 @@ public class ChatConditionManager : MonoBehaviour
             ParagraphConditionsToTrigger.Remove(data);
         }
         //通过对话条件检测时判断该对话是否会打断
-        ChatManager.Instance.AddTriggerParagraph(paragraphData[Random.Range(0, paragraphData.Count)]);
+        // 过滤掉段落名为空的段落数据
+        var validParagraphs = paragraphData.FindAll(p => !string.IsNullOrEmpty(p.ParagraphName));
+        if (validParagraphs.Count > 0)
+        {
+            ChatManager.Instance.AddTriggerParagraph(validParagraphs[Random.Range(0, validParagraphs.Count)]);
+        }
+        else
+        {
+            string conditionName = paragraphData.Count > 0 ? paragraphData[0].ParagraphCondition : "未知";
+            UnityEngine.Debug.LogWarning($"[段落条件错误] 条件触发的段落列表中所有段落的段落名为空！条件：{conditionName}");
+        }
     }
     
     
@@ -151,11 +161,11 @@ public class ChatConditionManager : MonoBehaviour
                         new FinishResearchFix(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
-                // case "制作裂缝填充物":
-                //     DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
-                //         new MadeCrackFiller(paragraphData.ParagraphCondition, true, false,
-                //             PassParagraphCondition,paragraphData));
-                //     break;
+                case "制作裂缝填充物":
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new MadeCrackFiller(paragraphData.ParagraphCondition, true, false,
+                            PassParagraphCondition,paragraphData));
+                    break;
                 case "首次点开气密舱门":
                     DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
                         new FirstOpenAirtightDoor(paragraphData.ParagraphCondition, true, false,
@@ -195,6 +205,15 @@ public class ChatConditionManager : MonoBehaviour
                     DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
                         new WaterLevel100(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
+                    break;
+                default:
+                    // 尝试解析计数条件，格式：计数_计数名_==值、计数_计数名_>=值 等
+                    if (paragraphData.ParagraphCondition.StartsWith("计数_"))
+                    {
+                        DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                            new CountParagraphCondition(paragraphData.ParagraphCondition, true, false,
+                                PassParagraphCondition, paragraphData));
+                    }
                     break;
             }
         }
@@ -266,6 +285,83 @@ public class ChatConditionManager : MonoBehaviour
                 return GameManager.Instance.EquipmentBag.FindCardOfName("氧气面罩") == null;
             case "已装备氧气面罩":
                 return GameManager.Instance.EquipmentBag.FindCardOfName("氧气面罩") != null;
+            default:
+                // 尝试解析计数条件，格式：计数_计数名_==值、计数_计数名_>=值、计数_计数名_<=值、计数_计数名_>值、计数_计数名_<值
+                if (TryParseCountCondition(name, out string countName, out string op, out int value))
+                {
+                    // 验证计数是否已定义
+                    if (!CountDefinition.IsCountDefined(countName))
+                    {
+                        UnityEngine.Debug.LogError($"[分支条件错误] 计数 \"{countName}\" 未在 CountDefinition.cs 中定义！条件：\"{name}\"。请在 CountDefinition.DefinedCounts 中添加该计数。");
+                        return false;
+                    }
+                    int currentCount = CountManager.Instance.GetCount(countName);
+                    return EvaluateCountCondition(currentCount, op, value);
+                }
+                return false;
+        }
+    }
+
+    private bool TryParseCountCondition(string condition, out string countName, out string op, out int value)
+    {
+        countName = null;
+        op = null;
+        value = 0;
+
+        // 检查是否以 "计数_" 开头
+        if (!condition.StartsWith("计数_"))
+        {
+            return false;
+        }
+
+        // 找到第二个下划线的位置
+        int firstUnderscore = 2; // "计数_" 的长度是3，索引2是下划线
+        int secondUnderscore = condition.IndexOf('_', firstUnderscore + 1);
+        
+        if (secondUnderscore == -1)
+        {
+            return false;
+        }
+
+        // 提取计数名（第一个下划线和第二个下划线之间的内容）
+        countName = condition.Substring(firstUnderscore + 1, secondUnderscore - firstUnderscore - 1);
+        
+        // 从第二个下划线之后开始查找操作符
+        string remaining = condition.Substring(secondUnderscore + 1);
+        
+        // 支持的比较操作符
+        string[] operators = { ">=", "<=", "==", ">", "<" };
+        
+        foreach (string opStr in operators)
+        {
+            if (remaining.StartsWith(opStr))
+            {
+                op = opStr;
+                string valueStr = remaining.Substring(opStr.Length);
+                if (int.TryParse(valueStr, out value))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private bool EvaluateCountCondition(int currentCount, string op, int targetValue)
+    {
+        switch (op)
+        {
+            case "==":
+                return currentCount == targetValue;
+            case ">=":
+                return currentCount >= targetValue;
+            case "<=":
+                return currentCount <= targetValue;
+            case ">":
+                return currentCount > targetValue;
+            case "<":
+                return currentCount < targetValue;
             default:
                 return false;
         }

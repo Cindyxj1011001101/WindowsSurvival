@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -87,6 +88,44 @@ namespace ChatPlugIn
             dropdown.value = value.ToString();
             //设置当前显示值
 
+            if (onValueChanged != null)
+            {
+                dropdown.RegisterValueChangedCallback(onValueChanged);
+            }
+            return dropdown;
+        }
+
+        /// <summary>
+        /// 创建普通下拉列表
+        /// </summary>
+        public static DropdownField CreateDropdownField(List<string> choices, string defaultValue = null, string label = null, EventCallback<ChangeEvent<string>> onValueChanged = null)
+        {
+            if (choices == null || choices.Count == 0)
+            {
+                choices = new List<string> { "无可用图表" };
+            }
+            
+            int defaultIndex = 0;
+            if (defaultValue != null && choices.Contains(defaultValue))
+            {
+                defaultIndex = choices.IndexOf(defaultValue);
+            }
+            
+            DropdownField dropdown;
+            if (!string.IsNullOrEmpty(label))
+            {
+                dropdown = new DropdownField(label, choices, defaultIndex);
+            }
+            else
+            {
+                dropdown = new DropdownField(choices, defaultIndex);
+            }
+            
+            if (defaultValue != null && choices.Contains(defaultValue))
+            {
+                dropdown.value = defaultValue;
+            }
+            
             if (onValueChanged != null)
             {
                 dropdown.RegisterValueChangedCallback(onValueChanged);

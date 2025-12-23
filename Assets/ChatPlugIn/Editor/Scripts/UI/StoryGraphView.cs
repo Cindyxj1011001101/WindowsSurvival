@@ -163,7 +163,26 @@ namespace ChatPlugIn
         }
         public void SaveGraph(string fileName)
         {
-            var graph = ScriptableObject.CreateInstance<GraphData>();
+            GraphData graph;
+            string assetPath = $"Assets/Resources/DialogueGraphs/{fileName}.asset";
+            
+            // 确保目录存在
+            if (!Directory.Exists("Assets/Resources/DialogueGraphs"))
+                Directory.CreateDirectory("Assets/Resources/DialogueGraphs");
+            
+            // 检查资源是否已存在，如果存在就加载并更新，否则创建新的
+            var existingGraph = AssetDatabase.LoadAssetAtPath<GraphData>(assetPath);
+            if (existingGraph != null)
+            {
+                // 资源已存在，更新现有资源而不是创建新的，这样可以保持引用
+                graph = existingGraph;
+            }
+            else
+            {
+                // 资源不存在，创建新的
+                graph = ScriptableObject.CreateInstance<GraphData>();
+                AssetDatabase.CreateAsset(graph, assetPath);
+            }
             
             // 保存连接数据
             var connectedPorts = Edges.Where(x => x.input.node != null).ToArray();
@@ -229,14 +248,11 @@ namespace ChatPlugIn
 
                 graph.nodes.Add(nodeData);
             }
-            Debug.Log("保存成功");
-            // 确保目录存在
-            if (!Directory.Exists("Assets/Resources/DialogueGraphs"))
-                Directory.CreateDirectory("Assets/Resources/DialogueGraphs");
             
-            // 保存Asset
-            AssetDatabase.CreateAsset(graph, $"Assets/Resources/DialogueGraphs/{fileName}.asset");
+            // 标记资源为已修改，需要保存
+            EditorUtility.SetDirty(graph);
             AssetDatabase.SaveAssets();
+            Debug.Log($"保存成功：{fileName}");
         }
 
         public void LoadGraph(string fileName)
@@ -248,7 +264,11 @@ namespace ChatPlugIn
                 return;
             }
             
-            ClearGraph(fileName);
+            // ClearGraph(fileName); // 已注释：清空功能已禁用，改为手动清空现有节点
+            // 手动清空现有节点和连线
+            List<GraphElement> elementsToDelete = graphElements.ToList();
+            DeleteElements(elementsToDelete);
+            
             CreateNodes();
             ConnectNodes();
         }

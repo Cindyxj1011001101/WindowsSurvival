@@ -31,6 +31,7 @@
     UpdateSunlight,                     // 恒星光照更新
     RefreshAnimator,                    // 更新动画器
     ChangeDisplayedCard,                // 切换详情窗口显示的卡牌
+    CountChanged,                       // 计数变化
 }
 
 public class AddRemoveCardArgs
