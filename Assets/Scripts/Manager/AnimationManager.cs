@@ -55,6 +55,15 @@ public static class AnimationConfig
     // 窗口动效
     public const float WINDOW_ANIM_DURATION = 0.2f;
 
+    public const float WINDOW_OPEN_DURATION = 0.16f;
+    public const float WINDOW_CLOSE_DURATION = 0.12f;
+    public const float WINDOW_OPEN_START_SCALE = 0.96f;
+    public const float WINDOW_CLOSE_END_SCALE = 0.97f;
+    public const float WINDOW_OPEN_OFFSET_Y = -12f;
+    public const float WINDOW_CLOSE_OFFSET_Y = -8f;
+    public static readonly Ease WINDOW_OPEN_EASE = Ease.OutCubic;
+    public static readonly Ease WINDOW_CLOSE_EASE = Ease.InCubic;
+
     // 状态图标动效
     public const float STATE_ICON_SCALE_START = 0.8f;
     public const float STATE_ICON_SCALE_MAX = 1.2f;
@@ -585,6 +594,62 @@ public class AnimationManager
     #endregion
 
     #region 窗口动效
+    /// <summary>
+    /// 播放窗口打开动效（更贴近 Windows：淡入 + 轻微缩放 + 轻微位移）
+    /// </summary>
+    public Tween PlayWindowOpen(RectTransform window, CanvasGroup canvasGroup, Vector3 targetPosition,
+        float duration = -1, float startScale = -1, float offsetY = float.NaN)
+    {
+        if (duration < 0) duration = AnimationConfig.WINDOW_OPEN_DURATION;
+        if (startScale < 0) startScale = AnimationConfig.WINDOW_OPEN_START_SCALE;
+        if (float.IsNaN(offsetY)) offsetY = AnimationConfig.WINDOW_OPEN_OFFSET_Y;
+
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = true;
+
+        window.position = targetPosition + Vector3.up * offsetY;
+        window.localScale = Vector3.one * startScale;
+
+        var seq = DOTween.Sequence();
+        seq.Join(canvasGroup.DOFade(1f, duration));
+        seq.Join(window.DOMove(targetPosition, duration).SetEase(AnimationConfig.WINDOW_OPEN_EASE));
+        seq.Join(window.DOScale(Vector3.one, duration).SetEase(AnimationConfig.WINDOW_OPEN_EASE));
+        seq.OnComplete(() => canvasGroup.interactable = true);
+
+        return seq;
+    }
+
+    /// <summary>
+    /// 播放窗口关闭动效（更贴近 Windows：淡出 + 轻微缩小 + 轻微位移）
+    /// </summary>
+    public Tween PlayWindowClose(RectTransform window, CanvasGroup canvasGroup, Vector3 targetPosition,
+        float duration = -1, float endScale = -1, float offsetY = float.NaN)
+    {
+        if (duration < 0) duration = AnimationConfig.WINDOW_CLOSE_DURATION;
+        if (endScale < 0) endScale = AnimationConfig.WINDOW_CLOSE_END_SCALE;
+        if (float.IsNaN(offsetY)) offsetY = AnimationConfig.WINDOW_CLOSE_OFFSET_Y;
+
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = true;
+
+        var endPosition = targetPosition + Vector3.up * offsetY;
+
+        var seq = DOTween.Sequence();
+        seq.Join(canvasGroup.DOFade(0f, duration));
+        seq.Join(window.DOMove(endPosition, duration).SetEase(AnimationConfig.WINDOW_CLOSE_EASE));
+        seq.Join(window.DOScale(Vector3.one * endScale, duration).SetEase(AnimationConfig.WINDOW_CLOSE_EASE));
+        seq.OnComplete(() =>
+        {
+            canvasGroup.alpha = 0f;
+            canvasGroup.blocksRaycasts = false;
+            window.position = targetPosition;
+            window.localScale = Vector3.one;
+        });
+
+        return seq;
+    }
+
     /// <summary>
     /// 播放窗口最小化动效
     /// </summary>

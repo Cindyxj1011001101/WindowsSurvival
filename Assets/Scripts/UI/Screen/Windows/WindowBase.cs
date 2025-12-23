@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public enum WindowState
 {
@@ -60,6 +61,89 @@ public abstract class WindowBase : PanelBase
     private Sequence anim;
 
     public bool IsPlayingAnim => anim != null && anim.IsActive();
+
+    public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
+    {
+        if (showMode != ShowMode.Fade)
+        {
+            base.Show(showMode, onFinished);
+            return;
+        }
+
+        if (onFinished != null)
+            onShown.AddListener(onFinished);
+
+        canvasGroup.DOKill();
+        RectTransform.DOKill();
+
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = true;
+
+        if (IsPlayingAnim)
+            anim.Kill();
+
+        var targetPosition = RectTransform.position;
+        anim = Anim.PlayWindowOpen(RectTransform, canvasGroup, targetPosition) as Sequence;
+        if (anim == null)
+        {
+            // fallback：至少保证可见
+            canvasGroup.alpha = 1f;
+            canvasGroup.interactable = true;
+            onShown?.Invoke();
+            onShown.RemoveAllListeners();
+            return;
+        }
+
+        anim.OnComplete(() =>
+        {
+            canvasGroup.interactable = true;
+            onShown?.Invoke();
+            onShown.RemoveAllListeners();
+        });
+
+        anim.Play();
+    }
+
+    public override void Hide(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
+    {
+        if (showMode != ShowMode.Fade)
+        {
+            base.Hide(showMode, onFinished);
+            return;
+        }
+
+        if (onFinished != null)
+            onHidden.AddListener(onFinished);
+
+        canvasGroup.DOKill();
+        RectTransform.DOKill();
+
+        canvasGroup.interactable = false;
+        canvasGroup.blocksRaycasts = true;
+
+        if (IsPlayingAnim)
+            anim.Kill();
+
+        var targetPosition = RectTransform.position;
+        anim = Anim.PlayWindowClose(RectTransform, canvasGroup, targetPosition) as Sequence;
+        if (anim == null)
+        {
+            canvasGroup.alpha = 0f;
+            canvasGroup.blocksRaycasts = false;
+            onHidden?.Invoke();
+            onHidden.RemoveAllListeners();
+            return;
+        }
+
+        anim.OnComplete(() =>
+        {
+            canvasGroup.blocksRaycasts = false;
+            onHidden?.Invoke();
+            onHidden.RemoveAllListeners();
+        });
+
+        anim.Play();
+    }
 
     public void SetModal(bool isModal)
     {
