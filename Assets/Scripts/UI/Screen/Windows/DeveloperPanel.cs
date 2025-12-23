@@ -369,22 +369,13 @@ public class DeveloperPanel : MonoBehaviour
     /// </summary>
     private void RefreshCountDisplay()
     {
-        if (countDisplayContainer == null)
-        {
-            Debug.LogError("[DeveloperPanel] countDisplayContainer 未设置！");
-            return;
-        }
+        if (countDisplayContainer == null) return;
         
         // 检查CountManager是否已初始化
-        if (CountManager.Instance == null)
-        {
-            Debug.LogError("[DeveloperPanel] CountManager.Instance 为 null！");
-            return;
-        }
+        if (CountManager.Instance == null) return;
         
         // 获取所有已定义的计数名称
         var definedCounts = CountDefinition.GetAllDefinedCounts();
-        Debug.Log($"[DeveloperPanel] 已定义的计数数量: {definedCounts.Count}");
         
         // 构建显示列表：包含所有已定义的计数，未设置的显示为0
         var displayCounts = new List<KeyValuePair<string, int>>();
@@ -392,13 +383,10 @@ public class DeveloperPanel : MonoBehaviour
         {
             int value = CountManager.Instance.GetCount(countName);
             displayCounts.Add(new KeyValuePair<string, int>(countName, value));
-            Debug.Log($"[DeveloperPanel] 准备显示: {countName} = {value}");
         }
         
         // 按名称排序
         displayCounts.Sort((a, b) => string.Compare(a.Key, b.Key, StringComparison.Ordinal));
-        
-        Debug.Log($"[DeveloperPanel] 准备显示 {displayCounts.Count} 个计数项");
         
         // 如果没有已定义的计数，隐藏所有显示项
         if (displayCounts.Count == 0)
@@ -459,7 +447,6 @@ public class DeveloperPanel : MonoBehaviour
             {
                 countDisplayItems[i].gameObject.SetActive(true);
                 countDisplayItems[i].text = $"{displayCounts[i].Key} = {displayCounts[i].Value}";
-                Debug.Log($"[DeveloperPanel] 设置文本: {countDisplayItems[i].text}, 位置: {i}");
                 
                 // 设置位置（垂直排列）
                 RectTransform rectTransform = countDisplayItems[i].GetComponent<RectTransform>();
@@ -475,10 +462,6 @@ public class DeveloperPanel : MonoBehaviour
                     rectTransform.sizeDelta = new Vector2(0, 20);
                 }
             }
-            else
-            {
-                Debug.LogError($"[DeveloperPanel] countDisplayItems[{i}] 为 null！");
-            }
         }
         
         // 更新容器高度（如果需要）
@@ -486,12 +469,10 @@ public class DeveloperPanel : MonoBehaviour
         {
             float totalHeight = displayCounts.Count * 20;
             countDisplayContainer.sizeDelta = new Vector2(countDisplayContainer.sizeDelta.x, totalHeight);
-            Debug.Log($"[DeveloperPanel] 设置容器高度: {totalHeight}");
         }
         
         // 强制更新Canvas
         Canvas.ForceUpdateCanvases();
-        Debug.Log($"[DeveloperPanel] 刷新完成，共显示 {displayCounts.Count} 个计数项");
     }
     
 }

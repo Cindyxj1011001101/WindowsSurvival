@@ -8,7 +8,7 @@ using System.Collections.Generic;
 public static class CountDefinition
 {
     /// <summary>
-    /// 所有已定义的计数名称集合
+    /// 所有已定义的计数名称集合，默认初始化计数为0
     /// </summary>
     public static readonly HashSet<string> DefinedCounts = new HashSet<string>
     {

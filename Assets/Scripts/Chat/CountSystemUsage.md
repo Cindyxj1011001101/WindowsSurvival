@@ -12,8 +12,7 @@
 public static readonly HashSet<string> DefinedCounts = new HashSet<string>
 {
     "噩梦次数",      // 示例：噩梦次数
-    "对话次数",      // 示例：对话次数
-    "探索次数",      // 示例：探索次数
+
     // 在此添加更多计数...
 };
 ```
