@@ -148,7 +148,7 @@ public class ElectricPowerManager : IManager
         reason = string.Empty;
         if (GameEventManager.Instance.IsEventOngoing<MagneticStorm>())
         {
-            reason = "受磁暴影响，无法使用";
+            reason = "受磁暴影响，设备失灵";
             return false;
         }
 
@@ -198,7 +198,7 @@ public class ElectricPowerManager : IManager
         while (SortedConnectedAppliances.Count > 0 &&
                (disconnectAll || Power.CurValue + Power.ChangeRate < 0))
         {
-            UnityEngine.Debug.Log(SortedConnectedAppliances.Max.key + "断电了");
+            UnityEngine.Debug.Log(SortedConnectedAppliances.Max.key + " 断电了");
             DisconnectPower(SortedConnectedAppliances.Max.key);
         }
     }

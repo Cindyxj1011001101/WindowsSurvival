@@ -184,7 +184,7 @@ public class StudyWindow : WindowBase
 
     private void DisplayIntermediateTechLock()
     {
-        var locked = TechnologyManager.Instance.IsIntermediateTechLocked;
+        var locked = GlobalDataManager.Instance.GetCardNum("数据传输台") <= 0;
         foreach (var mask in intermediateTechLocks)
         {
             foreach (var img in mask.GetComponentsInChildren<Image>())
@@ -327,8 +327,6 @@ public class StudyWindow : WindowBase
 
         // 研究状态
         var techNodeState = TechnologyManager.Instance.GetTechNodeState(techNode, out string lockedReason, out int order);
-
-        //print($"当前显示: {techNode.techName}, 节点状态: {techNodeState}");
 
         // 显示研究按钮
         studyButton.Display(techNode, techNodeState);
