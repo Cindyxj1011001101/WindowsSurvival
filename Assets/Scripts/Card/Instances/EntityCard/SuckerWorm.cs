@@ -36,9 +36,9 @@ public class SuckerWorm : EntityCard
 
     public override void TakeDamage(float damage, IEntity damageDealer)
     {
-        base.TakeDamage(damage, damageDealer);
         // 吸盘蠕虫被攻击后会将攻击来源目标加入仇恨列表，优先度9，持续时间60分钟。
         AddAggro(damageDealer, 9, 60);
+        base.TakeDamage(damage, damageDealer);
     }
 
     protected override EntityIntention GetHighestPriorityIntention()

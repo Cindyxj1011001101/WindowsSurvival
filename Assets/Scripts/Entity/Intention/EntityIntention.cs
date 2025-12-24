@@ -59,11 +59,16 @@ public abstract class EntityIntention
             ExeSucceed = true;
             OnExecute();
         }
+
+        // 这里的 ExecuteOver 只是暂时让代码逻辑跑通，具体的执行时机是在子类的 OnExecute 方法执行完调用（对于有动效的方法，应当在动效完全结束以后调用）
         ExecuteOver();
+
+        // 等待意图执行完，动效播完
         while (isExecuting)
         {
             yield return null;
         }
+
         // 刷新实体意图
         belongedEntity.RefreshIntention();
     }

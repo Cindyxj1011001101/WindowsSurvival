@@ -6,9 +6,9 @@ public class Rat : EntityCard
 {
     public override void TakeDamage(float damage, IEntity damageDealer)
     {
-        base.TakeDamage(damage, damageDealer);
         // 老鼠被攻击后会将攻击来源目标加入仇恨列表，优先度9，持续时间15分钟。
         AddAggro(damageDealer, 9, 15);
+        base.TakeDamage(damage, damageDealer);
     }
 
     protected override EntityIntention GetHighestPriorityIntention()
