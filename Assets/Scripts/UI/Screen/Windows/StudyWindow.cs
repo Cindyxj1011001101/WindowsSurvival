@@ -71,7 +71,7 @@ public class StudyWindow : WindowBase
                     if (curSelectedTechNode == node) return;
 
                     curSelectedTechNode = node;
-                    DisplayTechNodeDetails(node);
+                    DisplayTechNodeDetails(node, false);
                 });
             }
         }
@@ -86,7 +86,7 @@ public class StudyWindow : WindowBase
             button.onClick.AddListener(() =>
             {
                 curSelectedTechNode = null;
-                DisplayTechTree(type);
+                DisplayTechTree(type, false);
             });
             menuItemTransforms.Add(type, child as RectTransform);
         }
@@ -130,7 +130,7 @@ public class StudyWindow : WindowBase
         if (curSelectedTechNode == null)
             curSelectedTechNode = TechnologyManager.Instance.CurStudiedTechNode;
 
-        DisplayTechTree(curSelectedTechNode == null ? 0 : curSelectedTechNode.techType);
+        DisplayTechTree(curSelectedTechNode == null ? 0 : curSelectedTechNode.techType, false);
     }
 
     public override void Hide(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
@@ -172,7 +172,7 @@ public class StudyWindow : WindowBase
     public void RefreshDisplay()
     {
         if (curSelectedTechNode != null)
-            DisplayTechTree(curSelectedTechNode.techType);
+            DisplayTechTree(curSelectedTechNode.techType, true);
 
         // 刷新队列ui
         DisplayStudyQueue();
@@ -217,7 +217,7 @@ public class StudyWindow : WindowBase
                 if (curSelectedTechNode == techNode) return;
 
                 curSelectedTechNode = techNode;
-                DisplayTechTree(techNode.techType);
+                DisplayTechTree(techNode.techType, false);
             });
         }
 
@@ -244,7 +244,7 @@ public class StudyWindow : WindowBase
         }
     }
 
-    private void DisplayTechTree(TechType type)
+    private void DisplayTechTree(TechType type, bool playAnim)
     {
         // 只显示对应类型的科技节点
         foreach (var (techType, uiNodesRoot) in uiNodesRoot)
@@ -268,7 +268,7 @@ public class StudyWindow : WindowBase
                 curSelectedTechNode = TechnologyManager.Instance.GetTechNodeByName(uiNodesRoot.uiNodes[0].name);
         }
 
-        DisplayTechNodeDetails(curSelectedTechNode);
+        DisplayTechNodeDetails(curSelectedTechNode, playAnim);
 
         SelectTechTreeWithTween(type);
     }
@@ -282,7 +282,7 @@ public class StudyWindow : WindowBase
 
     private List<GameObject> temp = new();
 
-    private void DisplayTechNodeDetails(ScriptableTechnologyNode techNode)
+    private void DisplayTechNodeDetails(ScriptableTechnologyNode techNode, bool playAnim)
     {
         // 回收前置研究和解锁配方对应的预制体
         foreach (var obj in temp)
@@ -334,7 +334,7 @@ public class StudyWindow : WindowBase
         // 显示研究进度
         progressSlider.gameObject.SetActive(true);
         var progress = TechnologyManager.Instance.GetStudyProgress(techNode);
-        progressSlider.SetValue(progress, techNode.cost);
+        progressSlider.SetValue(progress, techNode.cost, playAnim);
 
         // 显示剩余研究时间
         studyTime.transform.parent.gameObject.SetActive(true);
@@ -352,7 +352,7 @@ public class StudyWindow : WindowBase
                 break;
             case TechNodeState.Complished:
                 studyInfo.gameObject.SetActive(false);
-                progressSlider.gameObject.SetActive(false);
+                //progressSlider.gameObject.SetActive(false);
                 studyTime.transform.parent.gameObject.SetActive(false);
                 break;
             case TechNodeState.Queued:

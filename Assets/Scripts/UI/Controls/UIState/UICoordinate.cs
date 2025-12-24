@@ -1,14 +1,28 @@
-﻿using UnityEngine.UI;
+﻿using DG.Tweening;
+using UnityEngine.UI;
 
 public class UICoordinate : UIStateSlider
 {
     public Slider playerCoordSlider;
 
-    public override void SetValue(float value, float maxValue)
+    public override void SetValue(float curValue, float maxValue, bool playAnim)
     {
-        slider.value = value / maxValue;
-        playerCoordSlider.value = Player.Instance.Coordinate.Position / maxValue;
+        UpdateSliderValue(curValue,  maxValue, playAnim);
+        // 显示玩家位置
+        var playerPos = Player.Instance.Coordinate.Position / maxValue;
+        if (playAnim)
+        {
+            playerCoordSlider.DOKill();
+            playerCoordSlider.DOValue(playerPos, valueTransition);
+        }
+        else
+        {
+            playerCoordSlider.value = playerPos;
+        }
+    }
 
-        valueText.text = $"{value:0.0}";
+    protected override void DisplayValueText(float curValue, float maxValue)
+    {
+        valueText.text = $"{curValue:0.0}";
     }
 }

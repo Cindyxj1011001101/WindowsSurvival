@@ -77,7 +77,6 @@ public abstract class BagWindow : WindowBase
     {
         Bag?.SetBagWindow(null);
         Bag = null;
-        //MonoUtility.DestroyAllChildren(slotLayout);
         ObjectBufferPool.Instance.RestoreAllChildren(slotLayout);
     }
 }

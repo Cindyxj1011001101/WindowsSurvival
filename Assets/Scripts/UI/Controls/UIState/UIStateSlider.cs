@@ -27,13 +27,15 @@ public class UIStateSlider : MonoBehaviour
 
     public Color fillColor = ColorManager.White;
 
-    public float value => slider.value;
+    public float endValue { get; private set; }
 
+    // 动效参数
     private float arrowMoveTransition = 0.35f;
     private float highDangerScale = 1.25f;
     private float lowDangerScale = 1.1f;
     private float highDangerTransition = 0.3f;
     private float lowDangerTransition = 0.4f;
+    protected float valueTransition = 0.3f;
 
     private float GetArrowTweenPhase()
     {
@@ -52,12 +54,27 @@ public class UIStateSlider : MonoBehaviour
         fillColor = ColorManager.White;
     }
 
-    public void SetStateName(string name)
+    protected void UpdateSliderValue(float curValue, float maxValue, bool playAnim)
     {
-        stateNameText.text = name;
+        var endValue = curValue / maxValue;
+        if (playAnim)
+        {
+            slider.DOKill();
+            slider.DOValue(endValue, valueTransition).OnUpdate(() =>
+            {
+                if (valueText != null)
+                    DisplayValueText(slider.value * maxValue, maxValue);
+            });
+        }
+        else
+        {
+            slider.value = endValue;
+            if (valueText != null)
+                DisplayValueText(curValue, maxValue);
+        }
     }
 
-    public virtual void SetValue(float curValue, float maxValue)
+    public virtual void SetValue(float curValue, float maxValue, bool playAnim)
     {
         if (slider.fillRect.TryGetComponent<Image>(out var fill))
         {
@@ -73,19 +90,22 @@ public class UIStateSlider : MonoBehaviour
             }
         }
 
-        slider.value = curValue / maxValue;
+        endValue = curValue / maxValue;
 
-        if (valueText == null) return;
+        UpdateSliderValue(curValue, maxValue, playAnim);
+    }
 
+    protected virtual void DisplayValueText(float curValue, float maxValue)
+    {
         if (displayPercentage)
             valueText.text = $"{curValue * 100 / maxValue: 0.0}%";
         else
             valueText.text = $"{curValue.ToString($"F{displayDigits}")}/{maxValue}";
     }
 
-    public void SetValue(State state)
+    public void SetValue(State state, bool playAnim)
     {
-        SetValue(state.CurValue, state.MaxValue);
+        SetValue(state.CurValue, state.MaxValue, playAnim);
 
         // 显示变化率
         DisplayChangeRate(state.ChangeRate, state.CurValue, state.MaxValue, state.HigherIsBetter, state.LowerIsBetter, state.IsDecreaseNatural, state.IsIncreaseNatural);
@@ -123,9 +143,14 @@ public class UIStateSlider : MonoBehaviour
             .SetEase(Ease.InOutSine);    // 设置缓动效果
     }
 
-    private void DisplayChangeRate(float changeRate, float curValue, float maxValue,
-        bool higherIsBetter, bool lowerIsBetter,
-        bool isDecreaseNatural, bool isIncreaseNatural)
+    private void DisplayChangeRate(
+        float changeRate,
+        float curValue,
+        float maxValue,
+        bool higherIsBetter,
+        bool lowerIsBetter,
+        bool isDecreaseNatural,
+        bool isIncreaseNatural)
     {
         if (changeRate == 0)
         {
@@ -154,9 +179,14 @@ public class UIStateSlider : MonoBehaviour
         DisplayChangeRateArrow(changeRate, curValue, maxValue, higherIsBetter, lowerIsBetter, isDecreaseNatural, isIncreaseNatural);
     }
 
-    private void DisplayChangeRateArrow(float changeRate, float curValue, float maxValue,
-        bool higherIsBetter, bool lowerIsBetter,
-        bool isDecreaseNatural, bool isIncreaseNatural)
+    private void DisplayChangeRateArrow(
+        float changeRate,
+        float curValue,
+        float maxValue,
+        bool higherIsBetter,
+        bool lowerIsBetter,
+        bool isDecreaseNatural,
+        bool isIncreaseNatural)
     {
         // 箭头显示
         var lastLevel = curChangeLavel;

@@ -20,12 +20,12 @@ public class StateWindow : WindowBase
             PlayerStateEnum stateType = (PlayerStateEnum)Enum.Parse(typeof(PlayerStateEnum), child.name);
             stateSliders.Add(stateType, child.GetComponentInChildren<UIStateSlider>());
         }
-        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshState);
+        EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshStateValue);
     }
 
     public void OnDestroy()
     {
-        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshState);
+        EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, RefreshStateValue);
     }
 
     //初始化显示数据
@@ -34,15 +34,20 @@ public class StateWindow : WindowBase
         foreach (PlayerStateEnum stateEnum in Enum.GetValues(typeof(PlayerStateEnum)))
         {
             if (!StateManager.Instance.PlayerStateDict.ContainsKey(stateEnum)) continue;
-            RefreshState(stateEnum);
+            DisplayStateValue(stateEnum, false);
         }
         // 刷新布局大小
         MonoUtility.UpdateLayoutSize(stateLayout.GetComponent<ILayoutGroup>());
     }
 
     //更新显示数据
-    public void RefreshState(PlayerStateEnum stateEnum)
+    private void DisplayStateValue(PlayerStateEnum stateEnum, bool playAnim)
     {
-        stateSliders[stateEnum].SetValue(StateManager.Instance.PlayerStateDict[stateEnum]);
+        stateSliders[stateEnum].SetValue(StateManager.Instance.PlayerStateDict[stateEnum], playAnim);
+    }
+
+    private void RefreshStateValue(PlayerStateEnum stateEnum)
+    {
+        DisplayStateValue(stateEnum, true);
     }
 }

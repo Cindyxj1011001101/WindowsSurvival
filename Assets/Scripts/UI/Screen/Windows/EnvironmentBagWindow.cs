@@ -6,15 +6,15 @@ using UnityEngine.UI;
 
 public class EnvironmentBagWindow : BagWindow
 {
-    [SerializeField] private UIStateSlider discoveryDegreeSlider; // 探索度显示
-    [SerializeField] private Text placeNameText; // 环境名称
-    [SerializeField] private Image environmentImage; // 环境图片
-    [SerializeField] private HoverableButton exploreButton; // 探索按钮
+    [SerializeField] private UIStateSlider discoveryDegreeSlider;   // 探索度显示
+    [SerializeField] private Text placeNameText;                    // 环境名称
+    [SerializeField] private Image environmentImage;                // 环境图片
+    [SerializeField] private HoverableButton exploreButton;         // 探索按钮
     [SerializeField] private RectTransform stateLayout;
     [SerializeField] private RectTransform envCardTransform;
 
-    [SerializeField] private UIStateToggle hasCabble; // 是否铺设电缆
-    [SerializeField] private UIPressureLevel pressureLevel; // 压强等级
+    [SerializeField] private UIStateToggle hasCabble;               // 是否铺设电缆
+    [SerializeField] private UIPressureLevel pressureLevel;         // 压强等级
     [HideInInspector] public Dictionary<EnvironmentStateEnum, UIStateSlider> continuousValueStates = new(); // 环境状态显示
 
     [SerializeField] private Slider currentCoordSlider;
@@ -27,13 +27,14 @@ public class EnvironmentBagWindow : BagWindow
     [SerializeField] private Text deltaPosition;
     [SerializeField] private Image fillBetween;
 
-    private const float MoveDistResolution = .5f; // 移动距离分辨率
+    private const float MOVE_DIST_RESOLUTION = 0.5f; // 移动距离分辨率
+    private float valueTransition = 0.3f;
 
     private HoverTipController exploreTipController;
     private HoverTipController moveTipController;
 
     private EnvironmentBag CurEnv => GameManager.Instance.CurEnvironmentBag;
-    private float TargetPosition => targetCoordSlider.value * MoveDistResolution;
+    private float TargetPosition => targetCoordSlider.value * MOVE_DIST_RESOLUTION;
     private float DeltaPosition => TargetPosition - Player.Instance.Coordinate.Position;
 
     protected override void Awake()
@@ -112,7 +113,7 @@ public class EnvironmentBagWindow : BagWindow
         // 注册负重变化事件
         EventManager.Instance.AddListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
         // 玩家移动
-        EventManager.Instance.AddListener(EventType.PlayerMove, DisplayPlayerPosition);
+        EventManager.Instance.AddListener(EventType.PlayerMove, RefreshPlayerPosition);
     }
 
     private void OnDestroy()
@@ -120,7 +121,7 @@ public class EnvironmentBagWindow : BagWindow
         EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, DisplayBag);
         EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnEnvironmentStateChanged);
         EventManager.Instance.RemoveListener<PlayerStateEnum>(EventType.RefreshPlayerState, OnLoadChanged);
-        EventManager.Instance.RemoveListener(EventType.PlayerMove, DisplayPlayerPosition);
+        EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshPlayerPosition);
     }
 
     /// <summary>
@@ -130,7 +131,7 @@ public class EnvironmentBagWindow : BagWindow
     {
         if (state != PlayerStateEnum.Load) return;
 
-        DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
+        DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted, true);
         executeMoveButton.Interactable = MoveExploreManager.Instance.CanMoveExplore();
     }
 
@@ -157,7 +158,7 @@ public class EnvironmentBagWindow : BagWindow
 
                 SoundManager.Instance.PlaySound("抽卡", true);
                 AnimationManager.Instance.ShowFloatingTipAbove(exploreButton.transform, tip, 1.4f);
-                DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted);
+                DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted, true);
                 GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
             });
 
@@ -186,14 +187,14 @@ public class EnvironmentBagWindow : BagWindow
         if (env.HasCable)
         {
             continuousValueStates[EnvironmentStateEnum.Electricity].gameObject.SetActive(true);
-            continuousValueStates[EnvironmentStateEnum.Electricity].SetValue(ElectricPowerManager.Instance.Power);
+            continuousValueStates[EnvironmentStateEnum.Electricity].SetValue(ElectricPowerManager.Instance.Power, false);
         }
 
         // 在飞船内显示水平面高度
         if (env.PlaceData.isInSpacecraft)
         {
             continuousValueStates[EnvironmentStateEnum.WaterLevel].gameObject.SetActive(true);
-            continuousValueStates[EnvironmentStateEnum.WaterLevel].SetValue(StateManager.Instance.WaterLevel);
+            continuousValueStates[EnvironmentStateEnum.WaterLevel].SetValue(StateManager.Instance.WaterLevel, false);
         }
 
         // 其他状态显示
@@ -201,7 +202,7 @@ public class EnvironmentBagWindow : BagWindow
         {
             if (!continuousValueStates.ContainsKey(state)) continue;
             continuousValueStates[state].gameObject.SetActive(true);
-            continuousValueStates[state].SetValue(value);
+            continuousValueStates[state].SetValue(value, false);
         }
 
         MonoUtility.UpdateLayoutSize(stateLayout.GetComponent<VerticalLayoutGroup>());
@@ -210,7 +211,7 @@ public class EnvironmentBagWindow : BagWindow
         placeNameText.text = $"{env.PlaceData.placeName}";
 
         // 探索事件
-        DisplayDiscoveryDegree(env.DiscoveryDegree, env.ExploreCompleted);
+        DisplayDiscoveryDegree(env.DiscoveryDegree, env.ExploreCompleted, false);
 
         // 显示图片
         environmentImage.sprite = env.PlaceData.placeImage;
@@ -220,7 +221,7 @@ public class EnvironmentBagWindow : BagWindow
         DisplayCoordinateSystem();
 
         // 显示玩家位置
-        DisplayPlayerPosition();
+        DisplayPlayerPosition(false);
     }
 
     /// <summary>
@@ -242,15 +243,15 @@ public class EnvironmentBagWindow : BagWindow
             default:
                 // 不存在这个状态不显示
                 if (!continuousValueStates.ContainsKey(args.stateEnum)) return;
-                continuousValueStates[args.stateEnum].GetComponent<UIStateSlider>().SetValue(args.stateValue);
+                continuousValueStates[args.stateEnum].GetComponent<UIStateSlider>().SetValue(args.stateValue, true);
                 break;
         }
     }
 
-    private void DisplayDiscoveryDegree(float degree, bool completed)
+    private void DisplayDiscoveryDegree(float degree, bool completed, bool playAnim)
     {
         // 显示探索度
-        discoveryDegreeSlider.SetValue(degree, 1);
+        discoveryDegreeSlider.SetValue(degree, 1, playAnim);
 
         var text = exploreButton.text;
         if (completed)
@@ -292,7 +293,7 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void DisplayCoordinateSystem()
     {
-        currentCoordSlider.maxValue = targetCoordSlider.maxValue = CurEnv.PlaceData.maxCoord / MoveDistResolution;
+        currentCoordSlider.maxValue = targetCoordSlider.maxValue = CurEnv.PlaceData.maxCoord / MOVE_DIST_RESOLUTION;
     }
 
     /// <summary>
@@ -307,13 +308,36 @@ public class EnvironmentBagWindow : BagWindow
     /// <summary>
     /// 显示玩家位置
     /// </summary>
-    private void DisplayPlayerPosition()
+    private void DisplayPlayerPosition(bool playAnim)
     {
-        currentCoordSlider.value = targetCoordSlider.value = Player.Instance.Coordinate.Position / MoveDistResolution;
+        var position = Player.Instance.Coordinate.Position;
+        var endValue = position / MOVE_DIST_RESOLUTION;
+        targetCoordSlider.value = endValue;
+        targetPosition.text = position.ToString("0.0");
 
-        currentPosition.text = targetPosition.text = Player.Instance.Coordinate.Position.ToString("0.0");
-        deltaPosition.text = "0.0";
-        FillBetween();
+        if (playAnim)
+        {
+            currentCoordSlider.DOKill();
+            currentCoordSlider.DOValue(endValue, valueTransition).OnUpdate(() =>
+            {
+                var curPos = currentCoordSlider.value * MOVE_DIST_RESOLUTION;
+                currentPosition.text = curPos.ToString("0.0");
+                deltaPosition.text = (position - curPos).ToString("0.0");
+                FillBetween();
+            });
+        }
+        else
+        {
+            currentCoordSlider.value = endValue;
+            currentPosition.text = position.ToString("0.0");
+            deltaPosition.text = "0.0";
+            FillBetween();
+        }
+    }
+
+    private void RefreshPlayerPosition()
+    {
+        DisplayPlayerPosition(true);
     }
 
     /// <summary>
@@ -321,20 +345,7 @@ public class EnvironmentBagWindow : BagWindow
     /// </summary>
     private void ExecuteMove()
     {
-        if (Mathf.Abs(TargetPosition - Player.Instance.Coordinate.Position) < MoveDistResolution) return;
+        if (Mathf.Abs(TargetPosition - Player.Instance.Coordinate.Position) < MOVE_DIST_RESOLUTION) return;
         MoveExploreManager.Instance.Move(TargetPosition);
-        
-        // 根据当前地点是否为水域播放不同的移动音效
-        if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
-        {
-            // 水域环境：播放游动
-            SoundManager.Instance.PlaySound("游动音效", true);
-        }
-        else
-        {
-            // 非水域环境：播放走路
-            SoundManager.Instance.PlaySound("走路音效", true);
-        }
-        
     }
 }

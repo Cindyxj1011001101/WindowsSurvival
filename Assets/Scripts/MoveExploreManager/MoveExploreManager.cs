@@ -6,17 +6,10 @@ public class MoveExploreManager : IManager
 {
     public static MoveExploreManager Instance { get; } = new();
 
-    // 探索额外消耗
-    public MoveExploreExtraEffects ExploreExtraEffects { get; private set; } = new();
-
-    // 探索水域额外消耗
-    public MoveExploreExtraEffects ExploreInWaterExtraEffects { get; private set; } = new();
-
-    // 移动额外消耗
-    public MoveExploreExtraEffects MoveExtraEffects { get; private set; } = new();
-
-    // 移动到水域额外消耗
-    public MoveExploreExtraEffects MoveToWaterExtraEffects { get; private set; } = new();
+    public MoveExploreExtraEffects ExploreExtraEffects { get; private set; } = new();           // 探索额外消耗
+    public MoveExploreExtraEffects ExploreInWaterExtraEffects { get; private set; } = new();    // 探索水域额外消耗
+    public MoveExploreExtraEffects MoveExtraEffects { get; private set; } = new();              // 移动额外消耗
+    public MoveExploreExtraEffects MoveToWaterExtraEffects { get; private set; } = new();       // 移动到水域额外消耗
 
     // 上次负重
     private int lastLoadLevel;
@@ -290,6 +283,14 @@ public class MoveExploreManager : IManager
         Player.Instance.MoveTo(targetPosition);
         StateManager.Instance.ApplyPlayerStateChanges(playerStateChanges);
         TimeManager.Instance.AddTime(time);
+
+        // 根据当前地点是否为水域播放不同的移动音效
+        if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
+            // 水域环境：播放游动
+            SoundManager.Instance.PlaySound("游动音效", true);
+        else
+            // 非水域环境：播放走路
+            SoundManager.Instance.PlaySound("走路音效", true);
     }
     #endregion
 }

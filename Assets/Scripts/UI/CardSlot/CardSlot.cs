@@ -96,8 +96,8 @@ public class CardSlot : MonoBehaviour
         if (onlyDisplay) return;
 
         //Clear();
-        EventManager.Instance.AddListener(EventType.StartChangeTime, OnChangeTimeStarted);
-        EventManager.Instance.AddListener(EventType.EndChangeTime, OnChangeTimeEnded);
+        EventManager.Instance.AddListener(EventType.StartChangeTime, OnStartChangeTime);
+        EventManager.Instance.AddListener(EventType.EndChangeTime, OnEndChangeTime);
         EventManager.Instance.AddListener<Card>(EventType.PickUpCard, OnCardPickedUp);
         EventManager.Instance.AddListener(EventType.PutDownCard, OnCardPutDown);
     }
@@ -112,8 +112,8 @@ public class CardSlot : MonoBehaviour
         transform.DOKill();
         transform.localScale = Vector3.one;
 
-        EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnChangeTimeStarted);
-        EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnChangeTimeEnded);
+        EventManager.Instance.RemoveListener(EventType.StartChangeTime, OnStartChangeTime);
+        EventManager.Instance.RemoveListener(EventType.EndChangeTime, OnEndChangeTime);
         EventManager.Instance.RemoveListener<Card>(EventType.PickUpCard, OnCardPickedUp);
         EventManager.Instance.RemoveListener(EventType.PutDownCard, OnCardPutDown);
     }
@@ -161,17 +161,17 @@ public class CardSlot : MonoBehaviour
         tipController.enabled = false;
     }
 
-    private void OnChangeTimeStarted()
+    private void OnStartChangeTime()
     {
         // 记录组件的初始值
         lastComponentValues.Clear();
         foreach (var (type, slider) in componentSliders)
         {
-            lastComponentValues.Add(type, slider.value);
+            lastComponentValues.Add(type, slider.endValue);
         }
     }
 
-    private void OnChangeTimeEnded()
+    private void OnEndChangeTime()
     {
         // 计算组件的变化值
         Dictionary<Type, float> deltaValues = new();
@@ -179,8 +179,8 @@ public class CardSlot : MonoBehaviour
         {
             if (componentSliders.TryGetValue(type, out var slider))
             {
-                if (slider.value != lastValue)
-                    deltaValues.Add(type, slider.value - lastValue);
+                if (slider.endValue != lastValue)
+                    deltaValues.Add(type, slider.endValue - lastValue);
             }
         }
 
@@ -267,6 +267,7 @@ public class CardSlot : MonoBehaviour
     /// <param name="component"></param>
     private void DisplayContinuousValueComponent(CardComponent component, RectTransform parent, bool vertical = false)
     {
+        bool playAnim = true;
         if (!componentSliders.TryGetValue(component.GetType(), out UIStateSlider slider))
         {
             if (component is TemperatureComponent ||
@@ -282,6 +283,8 @@ public class CardSlot : MonoBehaviour
             (slider.transform as RectTransform).anchoredPosition = Vector3.zero;
             slider.transform.localRotation = Quaternion.identity;
             componentSliders.Add(component.GetType(), slider);
+
+            playAnim = false; // 对于新创建的组件不播放动画
         }
 
         if (ColorManager.CardComponentColors.TryGetValue(component.GetType(), out var fillColor))
@@ -290,27 +293,27 @@ public class CardSlot : MonoBehaviour
         switch (component)
         {
             case DurabilityComponent durabilityComponent:
-                slider.SetValue(durabilityComponent.value, durabilityComponent.maxValue);
-                slider.tipController.SetTip($"耐久度:  {slider.value * 100:0.0}%", slider.fillColor);
+                slider.SetValue(durabilityComponent.value, durabilityComponent.maxValue, playAnim);
+                slider.tipController.SetTip($"耐久度:  {slider.endValue * 100:0.0}%", slider.fillColor);
                 break;
             case FreshnessComponent freshnessComponent:
-                slider.SetValue(freshnessComponent.value, freshnessComponent.maxValue);
-                slider.tipController.SetTip($"新鲜度:  {slider.value * 100:0.0}%", slider.fillColor);
+                slider.SetValue(freshnessComponent.value, freshnessComponent.maxValue, playAnim);
+                slider.tipController.SetTip($"新鲜度:  {slider.endValue * 100:0.0}%", slider.fillColor);
                 break;
             case GrowthComponent growthComponent:
-                slider.SetValue(growthComponent.value, growthComponent.maxValue);
-                slider.tipController.SetTip($"生长度:  {slider.value * 100:0.0}%", slider.fillColor);
+                slider.SetValue(growthComponent.value, growthComponent.maxValue, playAnim);
+                slider.tipController.SetTip($"生长度:  {slider.endValue * 100:0.0}%", slider.fillColor);
                 break;
             case PlantGrowthComponent plantGrowthComponent:
-                slider.SetValue(plantGrowthComponent.value, plantGrowthComponent.maxValue);
-                slider.tipController.SetTip($"生长度:  {slider.value * 100:0.0}%", slider.fillColor);
+                slider.SetValue(plantGrowthComponent.value, plantGrowthComponent.maxValue, playAnim);
+                slider.tipController.SetTip($"生长度:  {slider.endValue * 100:0.0}%", slider.fillColor);
                 break;
             case ProgressComponent progressComponent:
-                slider.SetValue(progressComponent.value, progressComponent.maxValue);
-                slider.tipController.SetTip($"产物进度:  {slider.value * 100:0.0}%", slider.fillColor);
+                slider.SetValue(progressComponent.value, progressComponent.maxValue, playAnim);
+                slider.tipController.SetTip($"产物进度:  {slider.endValue * 100:0.0}%", slider.fillColor);
                 break;
             case FuelStorageComponent fuelStorageComponent:
-                slider.SetValue(fuelStorageComponent.value, fuelStorageComponent.maxValue);
+                slider.SetValue(fuelStorageComponent.value, fuelStorageComponent.maxValue, playAnim);
                 string tip = $"剩余燃料:  {fuelStorageComponent.value}/{fuelStorageComponent.maxValue}";
                 // 显示燃料消耗
                 tip += $"\n自然消耗:  -{fuelStorageComponent.basicFuelConsumption:0.0}/15min";
@@ -337,23 +340,23 @@ public class CardSlot : MonoBehaviour
                 {
                     slider.fillColor = ColorManager.Red;
                 }
-                slider.SetValue(temperatureComponent.value, temperatureComponent.maxValue);
+                slider.SetValue(temperatureComponent.value, temperatureComponent.maxValue, playAnim);
                 slider.tipController.SetTip($"当前温度:  {temperatureComponent.value}/{temperatureComponent.maxValue}", slider.fillColor);
                 break;
             case OxygenStorageComponent oxygenStorageComponent:
-                slider.SetValue(oxygenStorageComponent.value, oxygenStorageComponent.maxValue);
+                slider.SetValue(oxygenStorageComponent.value, oxygenStorageComponent.maxValue, playAnim);
                 slider.tipController.SetTip($"剩余氧气:  {oxygenStorageComponent.value}/{oxygenStorageComponent.maxValue}", slider.fillColor);
                 break;
             case FreshWaterStorageComponent freshWaterStorageComponent:
-                slider.SetValue(freshWaterStorageComponent.value, freshWaterStorageComponent.maxValue);
+                slider.SetValue(freshWaterStorageComponent.value, freshWaterStorageComponent.maxValue, playAnim);
                 slider.tipController.SetTip($"淡水储量:  {freshWaterStorageComponent.value}/{freshWaterStorageComponent.maxValue}", slider.fillColor);
                 break;
             case SalineWaterStorageComponent salineWaterStorageComponent:
-                slider.SetValue(salineWaterStorageComponent.value, salineWaterStorageComponent.maxValue);
+                slider.SetValue(salineWaterStorageComponent.value, salineWaterStorageComponent.maxValue, playAnim);
                 slider.tipController.SetTip($"盐水储量:  {salineWaterStorageComponent.value}/{salineWaterStorageComponent.maxValue}", slider.fillColor);
                 break;
             case TimerComponent timerComponent:
-                slider.SetValue(timerComponent.value, timerComponent.maxValue);
+                slider.SetValue(timerComponent.value, timerComponent.maxValue, playAnim);
                 var hour = Mathf.FloorToInt(timerComponent.value / 60);
                 var minute = timerComponent.value % 60;
                 string leftTime = "";
@@ -367,11 +370,11 @@ public class CardSlot : MonoBehaviour
                 slider.tipController.SetTip($"{ColorManager.Colorize(timerComponent.tipText, ColorManager.Yellow)}剩余:  {leftTime}", slider.fillColor);
                 break;
             case CoordinateComponent coordinateComponent:
-                slider.SetValue(coordinateComponent.coordinate.Position, GameManager.Instance.CurEnvironmentBag.PlaceData.maxCoord);
+                slider.SetValue(coordinateComponent.coordinate.Position, GameManager.Instance.CurEnvironmentBag.PlaceData.maxCoord, playAnim);
                 slider.tipController.SetTip($"当前坐标:  {coordinateComponent.coordinate.Position:0.0}\n距离麦麦:  {coordinateComponent.coordinate.DistanceTo(Player.Instance.Coordinate):0.0}");
                 break;
             case EntityComponent entityComponent:
-                slider.SetValue(entityComponent.value, entityComponent.maxValue);
+                slider.SetValue(entityComponent.value, entityComponent.maxValue, playAnim);
                 slider.tipController.SetTip($"生命值:  {entityComponent.value}/{entityComponent.maxValue}", slider.fillColor);
                 break;
             default:
@@ -717,7 +720,7 @@ public class CardSlot : MonoBehaviour
     }
 
     /// <summary>
-    /// 显示卡牌如耐久度变化、
+    /// 显示卡牌组件值的变化（如耐久度变化、新鲜度变化）
     /// </summary>
     /// <param name="minute"></param>
     public void DisplayComponentValuesChange(Dictionary<Type, float> deltaValues)
@@ -726,6 +729,9 @@ public class CardSlot : MonoBehaviour
 
         foreach (var (type, deltaValue) in deltaValues)
         {
+            // 更新最后记录的值，避免重复显示变化
+            lastComponentValues.Remove(type);
+
             if (ColorManager.CardComponentColors.TryGetValue(type, out var color))
                 groups.Add((deltaValue > 0, CalcLevel(deltaValue), color));
         }
@@ -733,15 +739,18 @@ public class CardSlot : MonoBehaviour
         AnimationManager.Instance.ShowArrows(particleDisplayRect, groups);
     }
 
-    public void DisplayComponentValueChange(Type componentType, float value)
+    public void DisplayComponentValueChange(Type componentType, float delta)
     {
+        // 更新最后记录的值，避免重复显示变化
+        lastComponentValues.Remove(componentType);
+
         if (ColorManager.CardComponentColors.TryGetValue(componentType, out var color))
-            AnimationManager.Instance.ShowArrows(particleDisplayRect, value > 0, CalcLevel(value), color);
+            AnimationManager.Instance.ShowArrows(particleDisplayRect, delta > 0, CalcLevel(delta), color);
     }
 
-    private int CalcLevel(float value)
+    private int CalcLevel(float delta)
     {
-        var absValue = Mathf.Abs(value);
+        var absValue = Mathf.Abs(delta);
         if (absValue <= 0.1)
             return 1;
         else if (absValue <= 0.3)

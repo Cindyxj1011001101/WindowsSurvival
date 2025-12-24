@@ -598,11 +598,11 @@ public abstract class Card : IComparable<Card>
         EventManager.Instance.TriggerEvent(EventType.ChangeCardProperty, this);
     }
 
-    public void DisplayComponentValueChange(Type componentType, float value)
+    public void DisplayComponentValueChange(Type componentType, float delta)
     {
-        if (Slot != null) Slot.DisplayComponentValueChange(componentType, value);
+        if (Slot != null) Slot.DisplayComponentValueChange(componentType, delta);
         if (transform != null && transform.TryGetComponent<CardSlot>(out var slot))
-            slot.DisplayComponentValueChange(componentType, value);
+            slot.DisplayComponentValueChange(componentType, delta);
     }
 
     public void ShowTip(string tip)
