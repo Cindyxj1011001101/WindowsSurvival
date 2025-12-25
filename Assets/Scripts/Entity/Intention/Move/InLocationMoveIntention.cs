@@ -1,5 +1,4 @@
-﻿using DG.Tweening;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Text;
 
 /// <summary>
@@ -33,14 +32,7 @@ public class InLocationMoveIntention : SingleTargetIntention
     public override void OnExecute()
     {
         var sourceSlot = belongedEntity.Slot;
-        CardSlot tempSlot = null;
-        if (sourceSlot != null)
-        {
-            tempSlot = AnimationManager.Instance.CreateTempSlot(sourceSlot.transform.position);
-            sourceSlot.Clear();
-            sourceSlot.DontRefresh = true;
-            tempSlot.DisplayCard(belongedEntity, 1, false);
-        }
+        CardSlot tempSlot = AnimationManager.Instance.CreateSlotCopy(belongedEntity);
 
         if (moveClose)
             belongedEntity.MoveTowards(EntityTarget, moveDist);
@@ -49,16 +41,18 @@ public class InLocationMoveIntention : SingleTargetIntention
 
         if (tempSlot != null)
         {
-            AnimationManager.Instance.PlayMoveIntentionEffect(belongedEntity, tempSlot, () =>
-            {
-                sourceSlot.DontRefresh = false;
-                if (escape)
-                    belongedEntity.TryEscape();
-                ExecuteOver();
-            });
+            AnimationManager.Instance.PlayMoveIntentionEffect(belongedEntity, tempSlot, OnComplete);
         }
         else
         {
+            OnComplete();
+        }
+
+        void OnComplete()
+        {
+            if (sourceSlot != null)
+                sourceSlot.DontRefresh = false;
+
             if (escape)
                 belongedEntity.TryEscape();
             ExecuteOver();

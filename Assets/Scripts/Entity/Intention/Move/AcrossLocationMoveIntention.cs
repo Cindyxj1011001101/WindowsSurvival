@@ -26,15 +26,14 @@ public class AcrossLocationMoveIntention : SingleTargetIntention
     public override void OnExecute()
     {
         // 跨地点追击
-        if (!belongedEntity.ChaseAcrossLocation(EntityTarget, out var tween)  // 追击失败
-            || tween == null)                                           // 或追击目标不在玩家所在地点
+        if (!belongedEntity.ChaseAcrossLocation(EntityTarget, out var tween)    // 追击失败
+            || tween == null)                                                   // 或追击目标不在玩家所在地点
         {
             ExecuteOver();
             return;
         }
 
         tween.OnComplete(ExecuteOver);
-        tween.OnKill(ExecuteOver);
     }
 
     public override string GetDescription()

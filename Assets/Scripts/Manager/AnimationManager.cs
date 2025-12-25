@@ -85,6 +85,20 @@ public static class AnimationConfig
     public const float MOVE_INTENTION_SCALE = 1.03f;
     public const float MOVE_INTENTION_SWAY_OFFSET_X = 6f;
     public const float MOVE_INTENTION_ROT_Z = 4f;
+
+    // 进食意图动效
+    public const float EAT_INTENTION_GO_DURATION = 0.3f;
+    public const float EAT_INTENTION_RETURN_DURATION = 0.2f;
+    public const float EAT_INTENTION_ARC_HEIGHT = 55f;
+    public const float EAT_INTENTION_EATER_SCALE = 1.06f;
+    public const float EAT_INTENTION_EATER_ROT_Z = 10f;
+
+    public const float EAT_INTENTION_CONTACT_PAUSE = 0.08f;
+    public const int EAT_INTENTION_CHEW_CYCLES = 2;
+    public const float EAT_INTENTION_CHEW_HALF_DURATION = 0.08f;
+    public const float EAT_INTENTION_CHEW_SCALE_X = 1.06f;
+    public const float EAT_INTENTION_CHEW_SCALE_Y = 0.92f;
+    public const float EAT_INTENTION_CHEW_ROT_Z = -6f;
 }
 
 /// <summary>
@@ -174,6 +188,77 @@ public class AnimationManager
         });
 
         _screenFlashTween = seq;
+        return seq;
+    }
+
+    public Tween PlayEatIntentionEffect(
+        Card food,
+        CardSlot eaterTempSlot,
+        UnityAction onBite,
+        UnityAction onComplete,
+        float goDuration = -1f,
+        float returnDuration = -1f,
+        float arcHeight = -1f)
+    {
+        if (goDuration < 0) goDuration = AnimationConfig.EAT_INTENTION_GO_DURATION;
+        if (returnDuration < 0) returnDuration = AnimationConfig.EAT_INTENTION_RETURN_DURATION;
+        if (arcHeight < 0) arcHeight = AnimationConfig.EAT_INTENTION_ARC_HEIGHT;
+
+        var eaterTransform = eaterTempSlot.transform;
+
+        var eaterStartPos = eaterTransform.position;
+        var eaterStartLocalScale = eaterTransform.localScale;
+        var eaterStartLocalEuler = eaterTransform.localEulerAngles;
+
+        var eatRot = AnimationConfig.EAT_INTENTION_EATER_ROT_Z;
+        var eatScale = AnimationConfig.EAT_INTENTION_EATER_SCALE;
+
+        var mouthScale = eaterStartLocalScale * eatScale;
+        var mouthEuler = new Vector3(0f, 0f, eaterStartLocalEuler.z + eatRot);
+
+        var seq = DOTween.Sequence();
+
+        var targetPos = food.SlotTransform.position;
+        var mid = (eaterStartPos + targetPos) * 0.5f + Vector3.up * arcHeight;
+        seq.Append(eaterTransform.DOPath(new Vector3[] { eaterStartPos, mid, targetPos }, goDuration, PathType.CatmullRom)
+            .SetEase(Ease.OutQuad));
+        seq.Join(eaterTransform.DOScale(eaterStartLocalScale * eatScale, goDuration).SetEase(Ease.OutBack));
+        seq.Join(eaterTransform.DOLocalRotate(new Vector3(0f, 0f, eaterStartLocalEuler.z + eatRot), goDuration).SetEase(Ease.OutSine));
+
+        seq.AppendCallback(() =>
+        {
+            onBite?.Invoke();
+        });
+
+        seq.AppendInterval(AnimationConfig.EAT_INTENTION_CONTACT_PAUSE);
+
+        for (int i = 0; i < AnimationConfig.EAT_INTENTION_CHEW_CYCLES; i++)
+        {
+            var squashScale = new Vector3(
+                mouthScale.x * AnimationConfig.EAT_INTENTION_CHEW_SCALE_X,
+                mouthScale.y * AnimationConfig.EAT_INTENTION_CHEW_SCALE_Y,
+                mouthScale.z);
+            var squashEuler = new Vector3(0f, 0f, mouthEuler.z + AnimationConfig.EAT_INTENTION_CHEW_ROT_Z);
+
+            seq.Append(eaterTransform.DOScale(squashScale, AnimationConfig.EAT_INTENTION_CHEW_HALF_DURATION).SetEase(Ease.OutQuad));
+            seq.Join(eaterTransform.DOLocalRotate(squashEuler, AnimationConfig.EAT_INTENTION_CHEW_HALF_DURATION).SetEase(Ease.OutSine));
+
+            seq.Append(eaterTransform.DOScale(mouthScale, AnimationConfig.EAT_INTENTION_CHEW_HALF_DURATION).SetEase(Ease.OutBack));
+            seq.Join(eaterTransform.DOLocalRotate(mouthEuler, AnimationConfig.EAT_INTENTION_CHEW_HALF_DURATION).SetEase(Ease.OutSine));
+        }
+
+        var backMid = (targetPos + eaterStartPos) * 0.5f + Vector3.up * (arcHeight * 0.6f);
+        seq.Append(eaterTransform.DOPath(new Vector3[] { targetPos, backMid, eaterStartPos }, returnDuration, PathType.CatmullRom)
+            .SetEase(Ease.InOutSine));
+        seq.Join(eaterTransform.DOScale(eaterStartLocalScale, returnDuration).SetEase(Ease.InOutSine));
+        seq.Join(eaterTransform.DOLocalRotate(eaterStartLocalEuler, returnDuration).SetEase(Ease.InOutSine));
+
+        seq.OnComplete(() =>
+        {
+            onComplete?.Invoke();
+            ObjectBufferPool.Instance.Restore(eaterTempSlot.gameObject);
+        });
+
         return seq;
     }
 
@@ -273,6 +358,22 @@ public class AnimationManager
         slot.GetComponent<CanvasGroup>().blocksRaycasts = false;
         slot.GetComponentInChildren<ChangeMouse>().changeMouseType = ChangeMouseType.Drag;
 
+        return slot;
+    }
+
+    /// <summary>
+    /// 创建临时卡槽，并将 templeteCard 的内容转移到临时卡槽上
+    /// </summary>
+    /// <param name="templeteCard"></param>
+    /// <returns></returns>
+    public CardSlot CreateSlotCopy(Card templeteCard)
+    {
+        if (templeteCard == null || templeteCard.Slot == null) return null;
+
+        var slot = CreateTempSlot(templeteCard.Slot.transform.position);
+        templeteCard.Slot.Clear();
+        templeteCard.Slot.DontRefresh = true;
+        slot.DisplayCard(templeteCard, 1, false);
         return slot;
     }
     #endregion

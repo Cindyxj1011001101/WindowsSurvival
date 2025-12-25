@@ -5,6 +5,8 @@
 /// </summary>
 public class EatIntention : SingleTargetIntention
 {
+    protected override bool AutoExecuteOver => false;
+
     public EatIntention(int preparationMinutes, string targetUuid) : base(preparationMinutes, targetUuid)
     {
     }
@@ -22,18 +24,41 @@ public class EatIntention : SingleTargetIntention
 
     public override void OnExecute()
     {
-        if (CardTarget is PlantCard plant)
+        var sourceSlot = belongedEntity.Slot;
+        var tempSlot = AnimationManager.Instance.CreateSlotCopy(belongedEntity);
+        if (tempSlot != null)
         {
-            plant.AddPlantGrowth(-100);
-            SoundManager.Instance.PlaySound("采摘植物或采摘果子的音效", true);
-        }  
+            AnimationManager.Instance.PlayEatIntentionEffect(
+                CardTarget,
+                tempSlot,
+                OnBite,
+                OnComplete);
+        }
         else
         {
-            CardTarget.DestroyThis();
+            OnComplete();
         }
-        SoundManager.Instance.PlaySound("吃_01", true);  
 
-        // TODO: 吃掉动效
+        void OnBite()
+        {
+            if (CardTarget is PlantCard plant)
+            {
+                plant.AddPlantGrowth(-100);
+                SoundManager.Instance.PlaySound("采摘植物或采摘果子的音效", true);
+            }
+            else
+            {
+                CardTarget.DestroyThis();
+                SoundManager.Instance.PlaySound("吃_01", true);
+            }
+        }
+
+        void OnComplete()
+        {
+            if (sourceSlot != null)
+                sourceSlot.DontRefresh = false;
+            ExecuteOver();
+        }
     }
 
     public override string GetDescription()
