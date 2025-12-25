@@ -1,16 +1,12 @@
-﻿using Newtonsoft.Json;
-using System.Text;
+﻿using System.Text;
 
 /// <summary>
 /// 进食意图
 /// </summary>
-public class EatIntention : EntityIntention
+public class EatIntention : SingleTargetIntention
 {
-    [JsonProperty] private string targetUuid;
-
-    public EatIntention(int preparationMinutes, string targetUuid) : base(preparationMinutes)
+    public EatIntention(int preparationMinutes, string targetUuid) : base(preparationMinutes, targetUuid)
     {
-        this.targetUuid = targetUuid;
     }
 
     public override string GiveName()
@@ -20,23 +16,20 @@ public class EatIntention : EntityIntention
 
     protected override bool CanExecute()
     {
-        var toEat = GlobalDataManager.Instance.GetCardByUuid(targetUuid);
         // 食物已不存在，意图执行失败
-        return toEat != null && belongedEntity.IsInSameBag(toEat);
+        return CardTarget != null && belongedEntity.IsInSameBag(CardTarget);
     }
 
     public override void OnExecute()
     {
-        var toEat = GlobalDataManager.Instance.GetCardByUuid(targetUuid);
-
-        if (toEat is PlantCard plant)
+        if (CardTarget is PlantCard plant)
         {
             plant.AddPlantGrowth(-100);
             SoundManager.Instance.PlaySound("采摘植物或采摘果子的音效", true);
         }  
         else
         {
-            toEat.DestroyThis();
+            CardTarget.DestroyThis();
         }
         SoundManager.Instance.PlaySound("吃_01", true);  
 
@@ -45,16 +38,14 @@ public class EatIntention : EntityIntention
 
     public override string GetDescription()
     {
-        var toEat = GlobalDataManager.Instance.GetCardByUuid(targetUuid);
-
         // 食物已不存在，意图执行失败
-        var targetLoss = toEat == null || !belongedEntity.IsInSameBag(toEat);
+        var targetLoss = CardTarget == null || !belongedEntity.IsInSameBag(CardTarget);
 
         var sb = new StringBuilder();
         if (targetLoss)
             sb.AppendLine($"食用目标:  已丢失");
         else
-            sb.AppendLine($"食用目标:  {toEat.CardName}");
+            sb.AppendLine($"食用目标:  {CardTarget.CardName}");
 
         // TODO: 策划配置的描述文本
 

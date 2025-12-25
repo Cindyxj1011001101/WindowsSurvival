@@ -9,10 +9,9 @@ public class Player : IEntity, IManager
     public float AttackRange { get; set; } = 1;
 
     public float BasicMoveDistPerMin { get; private set; } = 0.5f;
-
     public List<float> MoveSpeedMultiplier { get; private set; } = new();
-
     public Coordinate Coordinate { get; private set; } = new();
+    public string Name => "麦麦"; 
 
     public float MoveSpeed
     {

@@ -71,7 +71,7 @@ public class CardSlot : MonoBehaviour
         {
             dontRefresh = value;
             if (!value) RefreshDisplay();
-            else GetComponent<CanvasGroup>().blocksRaycasts = false;
+            else canvasGroup.blocksRaycasts = false;
         }
     }
 
@@ -108,6 +108,7 @@ public class CardSlot : MonoBehaviour
 
         Clear();
         Cards?.SetCardSlot(null);
+        Cards = null;
 
         transform.DOKill();
         transform.localScale = Vector3.one;
@@ -199,7 +200,7 @@ public class CardSlot : MonoBehaviour
 
         mask.SetActive(false);
         Interactable = false;
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
+        canvasGroup.blocksRaycasts = true;
 
         if (IsEmpty)
         {

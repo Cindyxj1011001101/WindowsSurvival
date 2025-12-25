@@ -4,16 +4,14 @@ using System.Text;
 /// <summary>
 /// 攻击意图
 /// </summary>
-public abstract class AttackIntention : EntityIntention
+public abstract class AttackIntention : SingleTargetIntention
 {
-    [JsonProperty] protected string targetUuid;       // 攻击目标uuid
     [JsonProperty] protected float dmg;               // 攻击伤害
     [JsonProperty] protected AttackForm atkForm;      // 攻击类型
     [JsonProperty] protected (float, float) atkRange; // 攻击范围
 
-    public AttackIntention(int preparationMinutes, string targetUuid, float dmg, AttackForm atkForm, (float, float) atkRange) : base(preparationMinutes)
+    public AttackIntention(int preparationMinutes, string targetUuid, float dmg, AttackForm atkForm, (float, float) atkRange) : base(preparationMinutes, targetUuid)
     {
-        this.targetUuid = targetUuid;
         this.dmg = dmg;
         this.atkForm = atkForm;
         this.atkRange = atkRange;
@@ -21,13 +19,11 @@ public abstract class AttackIntention : EntityIntention
 
     protected override bool CanExecute()
     {
-        var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
-
         // 攻击目标丢失
-        if (target == null || !belongedEntity.IsInSameLocation(target)) return false;
+        if (EntityTarget == null || !belongedEntity.IsInSameLocation(EntityTarget)) return false;
 
         // 攻击目标不在距离内
-        var dist = belongedEntity.DistanceTo(target);
+        var dist = belongedEntity.DistanceTo(EntityTarget);
         if (dist < atkRange.Item1 || dist > atkRange.Item2) return false;
 
         return true;
@@ -35,9 +31,8 @@ public abstract class AttackIntention : EntityIntention
 
     public override void OnExecute()
     {
-        var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 执行攻击
-        belongedEntity.SingleAttack(target, dmg);
+        belongedEntity.SingleAttack(EntityTarget, dmg);
         
         // TODO: 攻击动效
         
@@ -47,10 +42,8 @@ public abstract class AttackIntention : EntityIntention
 
     public override string GetDescription()
     {
-        var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
-
         // 攻击目标是否丢失
-        var targetLoss = target == null || !belongedEntity.IsInSameLocation(target);
+        var targetLoss = EntityTarget == null || !belongedEntity.IsInSameLocation(EntityTarget);
 
         var sb = new StringBuilder();
         // 攻击伤害
@@ -59,10 +52,8 @@ public abstract class AttackIntention : EntityIntention
         // 攻击目标
         if (targetLoss)
             sb.AppendLine($"攻击目标:  已丢失");
-        else if (target is Player)
-            sb.AppendLine($"攻击目标:  麦麦");
         else
-            sb.AppendLine($"攻击目标:  {(target as EntityCard).CardName}");
+            sb.AppendLine($"攻击目标:  {EntityTarget.Name}");
 
         // 攻击类型
         switch (atkForm)
@@ -81,7 +72,7 @@ public abstract class AttackIntention : EntityIntention
         // 能否攻击到
         if (!targetLoss)
         {
-            var dist = belongedEntity.DistanceTo(target);
+            var dist = belongedEntity.DistanceTo(EntityTarget);
             sb.AppendLine($"目标距离:  {dist:0.0}");
 
             if (dist >= atkRange.Item1 && dist <= atkRange.Item2)

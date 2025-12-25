@@ -14,10 +14,9 @@ public class AcupunctureAttackIntention : RangedAttackIntention
 
     public override void OnExecute()
     {
-        var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
-        belongedEntity.SingleAttack(target, dmg);
+        base.OnExecute();
         // 玩家瘙痒值增加
-        if (target is Player)
+        if (EntityTarget is Player)
         {
             StateManager.Instance.ChangePlayerState(PlayerStateEnum.Itchiness, playerItchinessIncrease);
         }

@@ -99,7 +99,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         MouseManager.Instance.EndDragging();
 
         dragEndPosition = cursorSlot.transform.position;
-        ObjectBufferPool.Instance.Restore(cursorSlot.gameObject);
+        //ObjectBufferPool.Instance.Restore(cursorSlot.gameObject);
 
         var currentObject = eventData.pointerCurrentRaycast.gameObject;
         if (currentObject == null)
@@ -175,10 +175,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         var left = sourceSlot.StackNum - pickedCount;
         targetSlot.PeekCard().QuickIneract(sourceSlot.Cards, pickedCount);
         var toReturn = sourceSlot.StackNum - left; // toReturn一定>=0
-        if (toReturn > 0)
-            AnimateCardReturn(toReturn);
-        else
-            sourceSlot.DontRefresh = false;
+        AnimateCardReturn(toReturn);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -319,6 +316,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             card,
             count,
             startPos,
+            tempSlot: cursorSlot,
             onComplete: () =>
             {
                 sourceSlot.DontRefresh = false;
@@ -332,10 +330,19 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     /// </summary>
     private void AnimateCardReturn(int count, string tip = "")
     {
+        if (count <= 0)
+        {
+            if (cursorSlot != null)
+                ObjectBufferPool.Instance.Restore(cursorSlot.gameObject);
+            sourceSlot.DontRefresh = false;
+            return;
+        }
+
         Anim.PlayCardMove(
             sourceSlot.PeekCard(),
             count,
             dragEndPosition,
+            tempSlot: cursorSlot,
             onComplete: () =>
             {
                 // 刷新源卡槽显示

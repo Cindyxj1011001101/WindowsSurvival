@@ -702,7 +702,7 @@ public abstract class Card : IComparable<Card>
             var trans = Transform;
             if (!playAnim || trans == null || card.SlotTransform == null) return;
 
-            AnimationManager.Instance.PlayCardMoveAndFreezeTime(card, trans.position);
+            AnimationManager.Instance.PlayAddCard(card, trans.position);
         }
         // 放不下看targetBag是不是内容物背包
         else if (preferredBag is InnerBag innerBag)
@@ -739,7 +739,7 @@ public abstract class Card : IComparable<Card>
 
         // 动效
         if (trans == ParentTransform)
-            AnimationManager.Instance.PlayCardMoveAndFreezeTime(targetCard, trans.position);
+            AnimationManager.Instance.PlayAddCard(targetCard, trans.position);
         else
             AnimationManager.Instance.PlayCardTransformAndFreezeTime(this, targetCard);
     }

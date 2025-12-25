@@ -10,13 +10,14 @@ public abstract class EntityIntention
     [JsonProperty] protected int executionCountdown;    // 意图执行倒计时
     [JsonProperty] protected int preparationMinutes;    // 意图执行准备时间
     [JsonIgnore] protected EntityCard belongedEntity;   // 所属实体
-
-    private bool isExecuting; // 意图正在执行中
+    [JsonIgnore] private bool isExecuting; // 意图是否在执行中
 
     [JsonIgnore] public int ExecutionCountdown => executionCountdown;
     [JsonIgnore] public bool IsReady => executionCountdown <= 0;
     [JsonIgnore] public bool ExeSucceed { get; private set; } = false;
     [JsonIgnore] public bool IsValid => !belongedEntity.Destroyed; // 当所属实体不存在时，意图失效
+
+    protected virtual bool AutoExecuteOver => true;
 
     public EntityIntention(int preparationMinutes)
     {
@@ -58,10 +59,18 @@ public abstract class EntityIntention
         {
             ExeSucceed = true;
             OnExecute();
-        }
 
-        // 这里的 ExecuteOver 只是暂时让代码逻辑跑通，具体的执行时机是在子类的 OnExecute 方法执行完调用（对于有动效的方法，应当在动效完全结束以后调用）
-        ExecuteOver();
+            if (AutoExecuteOver)
+            {
+                // 对于有动效的意图，应当在动效完全结束以后调用 ExecuteOver
+                ExecuteOver();
+            }
+        }
+        else
+        {
+            // 无法执行时必须立即结束，否则会卡住等待
+            ExecuteOver();
+        }
 
         // 等待意图执行完，动效播完
         while (isExecuting)

@@ -54,7 +54,6 @@ public static class AnimationConfig
 
     // 窗口动效
     public const float WINDOW_ANIM_DURATION = 0.2f;
-
     public const float WINDOW_OPEN_DURATION = 0.16f;
     public const float WINDOW_CLOSE_DURATION = 0.12f;
     public const float WINDOW_OPEN_START_SCALE = 0.96f;
@@ -78,6 +77,14 @@ public static class AnimationConfig
     public const float PLAYER_DAMAGED_FLASH_MAX_ALPHA = 0.15f;
     public const float PLAYER_DAMAGED_FLASH_FADE_IN = 0.05f;
     public const float PLAYER_DAMAGED_FLASH_FADE_OUT = 0.25f;
+
+    // 移动意图动效（卡牌在原地上下浮动，可带缩放）
+    public const float MOVE_INTENTION_BOB_OFFSET_Y = 10f;
+    public const float MOVE_INTENTION_BOB_HALF_DURATION = 0.12f;
+    public const int MOVE_INTENTION_BOB_CYCLES = 3;
+    public const float MOVE_INTENTION_SCALE = 1.03f;
+    public const float MOVE_INTENTION_SWAY_OFFSET_X = 6f;
+    public const float MOVE_INTENTION_ROT_Z = 4f;
 }
 
 /// <summary>
@@ -170,6 +177,64 @@ public class AnimationManager
         return seq;
     }
 
+    public Tween PlayMoveIntentionEffect(
+        Card target,
+        CardSlot tempSlot,
+        UnityAction onComplete,
+        float offsetY = float.NaN,
+        float halfDuration = -1f,
+        int cycles = -1,
+        float maxScale = -1f)
+    {
+        if (float.IsNaN(offsetY)) offsetY = AnimationConfig.MOVE_INTENTION_BOB_OFFSET_Y;
+        if (halfDuration < 0) halfDuration = AnimationConfig.MOVE_INTENTION_BOB_HALF_DURATION;
+        if (cycles < 0) cycles = AnimationConfig.MOVE_INTENTION_BOB_CYCLES;
+        if (maxScale < 0) maxScale = AnimationConfig.MOVE_INTENTION_SCALE;
+
+        // 刷新临时卡槽的显示
+        tempSlot.DisplayCard(target, 1, false);
+
+        var transform = tempSlot.transform;
+
+        var originalLocalPos = transform.localPosition;
+        var originalLocalScale = transform.localScale;
+        var originalLocalEulerAngles = transform.localEulerAngles;
+
+        var seq = DOTween.Sequence();
+
+        var swayX = AnimationConfig.MOVE_INTENTION_SWAY_OFFSET_X;
+        var rotZ = AnimationConfig.MOVE_INTENTION_ROT_Z;
+
+        for (int i = 0; i < cycles; i++)
+        {
+            var dir = (i % 2 == 0) ? 1f : -1f;
+
+            seq.Append(transform.DOLocalMoveY(originalLocalPos.y + offsetY, halfDuration).SetEase(Ease.OutBack));
+            seq.Join(transform.DOLocalMoveX(originalLocalPos.x + swayX * dir, halfDuration).SetEase(Ease.OutSine));
+            seq.Join(transform.DOScale(originalLocalScale * maxScale, halfDuration).SetEase(Ease.OutBack));
+            seq.Join(transform.DOLocalRotate(new Vector3(0f, 0f, originalLocalEulerAngles.z + rotZ * dir), halfDuration)
+                .SetEase(Ease.OutSine));
+
+            seq.Append(transform.DOLocalMoveY(originalLocalPos.y, halfDuration).SetEase(Ease.InOutSine));
+            seq.Join(transform.DOLocalMoveX(originalLocalPos.x - swayX * dir * 0.6f, halfDuration).SetEase(Ease.InOutSine));
+            seq.Join(transform.DOScale(originalLocalScale, halfDuration).SetEase(Ease.InOutSine));
+            seq.Join(transform.DOLocalRotate(new Vector3(0f, 0f, originalLocalEulerAngles.z - rotZ * dir * 0.6f), halfDuration)
+                .SetEase(Ease.InOutSine));
+        }
+
+        seq.Append(transform.DOLocalMove(originalLocalPos, 0.05f).SetEase(Ease.OutQuad));
+        seq.Join(transform.DOScale(originalLocalScale, 0.05f).SetEase(Ease.OutQuad));
+        seq.Join(transform.DOLocalRotate(originalLocalEulerAngles, 0.05f).SetEase(Ease.OutQuad));
+
+        seq.OnComplete(() =>
+        {
+            onComplete?.Invoke();
+            ObjectBufferPool.Instance.Restore(tempSlot.gameObject);
+        });
+
+        return seq;
+    }
+
     #region 坐标转换工具
     /// <summary>
     /// 将屏幕坐标转换为Canvas本地坐标
@@ -228,6 +293,7 @@ public class AnimationManager
         int count,
         Vector3 sourcePosition,
         float duration = -1,
+        CardSlot tempSlot = null,
         UnityAction onStart = null,
         UnityAction onComplete = null,
         Ease ease = Ease.Unset)
@@ -235,7 +301,7 @@ public class AnimationManager
         if (duration < 0) duration = AnimationConfig.CARD_MOVE_DURATION;
         if (ease == Ease.Unset) ease = AnimationConfig.CARD_MOVE_EASE;
 
-        var slot = CreateTempSlot(sourcePosition);
+        var slot = tempSlot == null ? CreateTempSlot(sourcePosition) : tempSlot;
         slot.DisplayCard(card, count);
 
         // 打开卡牌目标背包所属的窗口
@@ -280,7 +346,7 @@ public class AnimationManager
         {
             Card card = cards[i];
             seq.Join(PlayCardMove(
-                card, 1, sourcePosition, duration,
+                card, 1, sourcePosition, duration, null,
                 onStart,
                 () => onComplete?.Invoke(card),
                 ease
@@ -291,9 +357,9 @@ public class AnimationManager
     }
 
     /// <summary>
-    /// 播放卡牌移动动效并冻结时间
+    /// 添加单个卡牌动效
     /// </summary>
-    public Tween PlayCardMoveAndFreezeTime(Card card, Vector3 sourcePosition)
+    public Tween PlayAddCard(Card card, Vector3 sourcePosition)
     {
         var tween = PlayCardMove(card, 1, sourcePosition, 0.4f, onComplete: () => card.RefreshSlot());
         TimeManager.Instance.FreezeTimePass(tween.Duration());
@@ -301,9 +367,9 @@ public class AnimationManager
     }
 
     /// <summary>
-    /// 批量播放卡牌移动动效并冻结时间
+    /// 批量添加卡牌动效
     /// </summary>
-    public Tween PlayCardMoveMultipleAndFreezeTime(Card[] cards, Vector3 sourcePosition)
+    public Tween PlayAddCards(Card[] cards, Vector3 sourcePosition)
     {
         var tween = PlayCardMoveMultiple(cards, sourcePosition, 0.4f, onComplete: card => card.RefreshSlot());
         TimeManager.Instance.FreezeTimePass(tween.Duration());

@@ -1,18 +1,20 @@
-﻿using Newtonsoft.Json;
+﻿using DG.Tweening;
+using Newtonsoft.Json;
 using System.Text;
 
 /// <summary>
 /// 地点内移动
 /// </summary>
-public class InLocationMoveIntention : EntityIntention
+public class InLocationMoveIntention : SingleTargetIntention
 {
-    [JsonProperty] private string targetUuid;   // 靠近或远离的目标
-    [JsonProperty] private float moveDist;      // 移动距离
-    [JsonProperty] private bool moveClose;      // 是否靠近目标移动
+    [JsonProperty] protected float moveDist;      // 移动距离
+    [JsonProperty] protected bool moveClose;      // 是否靠近目标移动
+    [JsonProperty] protected bool escape;         // 是否逃跑
 
-    public InLocationMoveIntention(int preparationMinutes, string targetUuid, float moveDist, bool moveClose) : base(preparationMinutes)
+    protected override bool AutoExecuteOver => false;
+
+    public InLocationMoveIntention(int preparationMinutes, string targetUuid, float moveDist, bool moveClose) : base(preparationMinutes, targetUuid)
     {
-        this.targetUuid = targetUuid;
         this.moveDist = moveDist;
         this.moveClose = moveClose;
     }
@@ -24,46 +26,66 @@ public class InLocationMoveIntention : EntityIntention
 
     protected override bool CanExecute()
     {
-        var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 目标丢失
-        return target != null && belongedEntity.IsInSameLocation(target);
+        return EntityTarget != null && belongedEntity.IsInSameLocation(EntityTarget);
     }
 
     public override void OnExecute()
     {
-        var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
+        var sourceSlot = belongedEntity.Slot;
+        CardSlot tempSlot = null;
+        if (sourceSlot != null)
+        {
+            tempSlot = AnimationManager.Instance.CreateTempSlot(sourceSlot.transform.position);
+            sourceSlot.Clear();
+            sourceSlot.DontRefresh = true;
+            tempSlot.DisplayCard(belongedEntity, 1, false);
+        }
 
         if (moveClose)
-            belongedEntity.MoveTowards(target, moveDist);
+            belongedEntity.MoveTowards(EntityTarget, moveDist);
         else
-            belongedEntity.MoveAwayFrom(target, moveDist);
+            belongedEntity.MoveAwayFrom(EntityTarget, moveDist);
+
+        if (tempSlot != null)
+        {
+            AnimationManager.Instance.PlayMoveIntentionEffect(belongedEntity, tempSlot, () =>
+            {
+                sourceSlot.DontRefresh = false;
+                if (escape)
+                    belongedEntity.TryEscape();
+                ExecuteOver();
+            });
+        }
+        else
+        {
+            if (escape)
+                belongedEntity.TryEscape();
+            ExecuteOver();
+        }
     }
 
     public override string GetDescription()
     {
-        var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
-
         // 目标是否丢失
-        var targetLoss = target == null || !belongedEntity.IsInSameLocation(target);
+        var targetLoss = EntityTarget == null || !belongedEntity.IsInSameLocation(EntityTarget);
 
         var sb = new StringBuilder();
 
         // 目标
         if (targetLoss)
             sb.AppendLine($"目标:  已丢失");
-        else if (target is Player)
-            sb.AppendLine($"目标:  麦麦");
         else
-            sb.AppendLine($"目标:  {(target as EntityCard).CardName}");
+            sb.AppendLine($"目标:  {EntityTarget.Name}");
 
         // 与目标的距离
         if (!targetLoss)
         {
-            var dist = belongedEntity.DistanceTo(target);
-            sb.AppendLine($"目标位置:  {target.Coordinate.Position:0.0}");
+            var dist = belongedEntity.DistanceTo(EntityTarget);
+            sb.AppendLine($"目标位置:  {EntityTarget.Coordinate.Position:0.0}");
             sb.AppendLine($"目标距离:  {dist:0.0}");
             sb.AppendLine($"移动方向:  {(moveClose ? "靠近" : "远离")}");
-            sb.AppendLine($"预计到达位置:  {belongedEntity.EstimateMoveEndPosition(target, moveDist, moveClose):0.0}");
+            sb.AppendLine($"预计到达位置:  {belongedEntity.EstimateMoveEndPosition(EntityTarget, moveDist, moveClose):0.0}");
         }
 
         // TODO: 策划配置的描述文本

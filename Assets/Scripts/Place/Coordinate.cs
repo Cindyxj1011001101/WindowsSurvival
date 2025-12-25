@@ -42,11 +42,12 @@ public class Coordinate
         // 中间位置
         var middle = (Location.PlaceData.maxCoord - Location.PlaceData.minCoord) / 2;
 
-        // 在中间位置或中间靠右，则向左
-        if (Position >= middle) return -1;
+        // 在中间位置或中间靠右，则向右
+        if (Position >= middle) return 1;
 
-        // 在中间位置靠左，则向右
-        else return 1;
+        // 在中间位置靠左，则向左
+        // 这样设计是为了在远离目标时方向能够指向空间更多的地方
+        else return -1;
     }
 
     public void Move(float dist)

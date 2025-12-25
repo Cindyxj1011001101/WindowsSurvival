@@ -1,16 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using DG.Tweening;
 using System.Text;
 
 /// <summary>
 /// 跨地点移动意图
 /// </summary>
-public class AcrossLocationMoveIntention : EntityIntention
+public class AcrossLocationMoveIntention : SingleTargetIntention
 {
-    [JsonProperty] private string targetUuid; // 目标uuid
+    protected override bool AutoExecuteOver => false;
 
-    public AcrossLocationMoveIntention(int preparationMinutes, string targetUuid) : base(preparationMinutes)
+    public AcrossLocationMoveIntention(int preparationMinutes, string targetUuid) : base(preparationMinutes, targetUuid)
     {
-        this.targetUuid = targetUuid;
     }
 
     public override string GiveName()
@@ -20,40 +19,42 @@ public class AcrossLocationMoveIntention : EntityIntention
 
     protected override bool CanExecute()
     {
-        var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 目标消失或者目标在当前地点
-        return target != null && !belongedEntity.IsInSameLocation(target);
+        return EntityTarget != null && !belongedEntity.IsInSameLocation(EntityTarget);
     }
 
     public override void OnExecute()
     {
-        var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
         // 跨地点追击
-        belongedEntity.ChaseAcrossLocation(target);
+        if (!belongedEntity.ChaseAcrossLocation(EntityTarget, out var tween)  // 追击失败
+            || tween == null)                                           // 或追击目标不在玩家所在地点
+        {
+            ExecuteOver();
+            return;
+        }
+
+        tween.OnComplete(ExecuteOver);
+        tween.OnKill(ExecuteOver);
     }
 
     public override string GetDescription()
     {
-        var target = GlobalDataManager.Instance.GetEntityByUuid(targetUuid);
-
         // 目标是否丢失
-        var targetLoss = target == null;
+        var targetLoss = EntityTarget == null;
 
         var sb = new StringBuilder();
 
         // 目标
         if (targetLoss)
             sb.AppendLine($"目标:  已丢失");
-        else if (target is Player)
-            sb.AppendLine($"目标:  麦麦");
         else
-            sb.AppendLine($"目标:  {(target as EntityCard).CardName}");
+            sb.AppendLine($"目标:  {EntityTarget.Name}");
 
         // 与目标的距离
         if (!targetLoss)
         {
-            sb.AppendLine($"目标所在地:  {target.Coordinate.Location.PlaceName}");
-            sb.AppendLine($"预计到达地点:  {target.Coordinate.Location.PlaceName}");
+            sb.AppendLine($"目标所在地:  {EntityTarget.Coordinate.Location.PlaceName}");
+            sb.AppendLine($"预计到达地点:  {EntityTarget.Coordinate.Location.PlaceName}");
         }
 
         // TODO: 策划配置的描述文本

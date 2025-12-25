@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DG.Tweening;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public abstract class EntityCard : Card, IEntity
@@ -14,6 +15,7 @@ public abstract class EntityCard : Card, IEntity
     [JsonProperty] private int aiRefreshCooldown = 0;                           // ai刷新冷却
     [JsonProperty] private EntityAggroCollection aggroCollection = new();       // 仇恨列表
 
+    [JsonIgnore] public string Name => CardName;
     [JsonIgnore] public Coordinate Coordinate => coordinate.coordinate;         // 坐标
     [JsonIgnore] public EntityIntention CurrentIntention => currentIntention;   // 当前意图
     [JsonIgnore] public int AIRefreshCooldown => aiRefreshCooldown;             // AI刷新冷却
@@ -322,22 +324,25 @@ public abstract class EntityCard : Card, IEntity
         target.TakeDamage(dmg, this);
     }
 
-    public void ChaseAcrossLocation(IEntity target, float successProb = 0.1f)
+    public bool ChaseAcrossLocation(IEntity target, out Tween tween, float successProb = 0.1f)
     {
-        if (Random.value > successProb) return;
+        if (Random.value > successProb)
+        {
+            tween = null;
+            return false;
+        }
 
         SlotCards.RemoveCard(this);
-        GameManager.Instance.AddCardToTargetEnv(this, target.Coordinate.Location);
+        tween = GameManager.Instance.AddCardToTargetEnv(this, target.Coordinate.Location);
+        return true;
     }
 
     public void MoveTowards(IEntity other, float dist, bool stopAfterReach = true) => coordinate.MoveTowards(other, dist, stopAfterReach);
 
     public void MoveAwayFrom(IEntity other, float dist) => coordinate.MoveAwayFrom(other, dist);
 
-    public void EscapeFrom(IEntity entity, float dist)
+    public void TryEscape()
     {
-        // 向远离entity的方向移动
-        MoveAwayFrom(entity, dist);
         // 如果移动到了边界，且不在室内
         if (Coordinate.IsAtBoundary && !(Bag as EnvironmentBag).PlaceData.isIndoor)
         {

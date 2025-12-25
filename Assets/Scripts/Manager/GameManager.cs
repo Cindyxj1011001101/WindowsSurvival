@@ -158,14 +158,14 @@ public class GameManager : IManager
     {
         AddCard(card, targetBag);
 
-        return AnimationManager.Instance.PlayCardMoveAndFreezeTime(card, sourcePosition);
+        return AnimationManager.Instance.PlayAddCard(card, sourcePosition);
     }
 
     public Tween AddCardWithTween(Card card, bool toPlayerBag, Vector3 sourcePosition)
     {
         AddCard(card, toPlayerBag);
 
-        return AnimationManager.Instance.PlayCardMoveAndFreezeTime(card, sourcePosition);
+        return AnimationManager.Instance.PlayAddCard(card, sourcePosition);
     }
 
     public Tween AddCardsWithTween(List<Card> cards, bool toPlayerBag, Vector3 sourcePosition)
@@ -175,27 +175,26 @@ public class GameManager : IManager
             AddCard(card, toPlayerBag);
         }
 
-        return AnimationManager.Instance.PlayCardMoveMultipleAndFreezeTime(cards.ToArray(), sourcePosition);
+        return AnimationManager.Instance.PlayAddCards(cards.ToArray(), sourcePosition);
     }
 
-    public void AddCardToTargetEnv(Card card, EnvironmentBag targetEnv)
+    public Tween AddCardToTargetEnv(Card card, EnvironmentBag targetEnv)
     {
-        AddCardsToTargetEnv(new List<Card> { card }, targetEnv);
+        return AddCardsToTargetEnv(new List<Card> { card }, targetEnv);
     }
 
-    public void AddCardsToTargetEnv(List<Card> cards, EnvironmentBag targetEnv)
+    public Tween AddCardsToTargetEnv(List<Card> cards, EnvironmentBag targetEnv)
     {
         if (targetEnv == CurEnvironmentBag)
         {
-            AddCardsWithTween(cards, false, Vector3.up * 600);
+            return AddCardsWithTween(cards, false, Vector3.up * 600);
         }
-        else
+
+        foreach (var card in cards)
         {
-            foreach (var card in cards)
-            {
-                AddCard(card, targetEnv);
-            }
+            AddCard(card, targetEnv);
         }
+        return null;
     }
     #endregion
 
