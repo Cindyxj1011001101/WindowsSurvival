@@ -82,6 +82,7 @@ public class TimeManager : IManager
             // 等待所有意图执行完毕
             while (intentionQueue.Count > 0)
             {
+                MouseManager.Instance.Wait(0.1f);
                 yield return null;
             }
             // 处理十五分钟更新
