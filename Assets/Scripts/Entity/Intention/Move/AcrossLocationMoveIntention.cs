@@ -6,7 +6,7 @@ using System.Text;
 /// </summary>
 public class AcrossLocationMoveIntention : SingleTargetIntention
 {
-    protected override bool AutoExecuteOver => false;
+    protected override bool WithoutAnim => false;
 
     public AcrossLocationMoveIntention(int preparationMinutes, string targetUuid) : base(preparationMinutes, targetUuid)
     {

@@ -486,7 +486,8 @@ public class CardSlot : MonoBehaviour
                 // 播放成功结束动画
                 intentionAnimator.enabled = true;
                 animName = previous.GiveName() + "_End";
-                intentionAnimator.Play(animName);
+                intentionAnimator.ResetTrigger(animName);
+                intentionAnimator.SetTrigger(animName);
 
                 // 等待一帧确保动画切换完成
                 yield return null;
@@ -512,11 +513,12 @@ public class CardSlot : MonoBehaviour
         // 新意图的开始动画
         if (target != null)
         {
-            DisplayEntityIntention(target);
-
             intentionAnimator.enabled = true;
+            iconLayout.SetActive(true);
+            intentionIcon.gameObject.SetActive(true);
             animName = target.GiveName() + "_Start";
-            intentionAnimator.Play(animName);
+            intentionAnimator.ResetTrigger(animName);
+            intentionAnimator.SetTrigger(animName);
 
             // 等待一帧确保动画切换完成
             yield return null;
@@ -525,6 +527,8 @@ public class CardSlot : MonoBehaviour
             var duration = intentionAnimator.GetCurrentAnimatorStateInfo(0).length;
             MouseManager.Instance.Wait(duration);
             yield return new WaitForSeconds(duration);
+
+            DisplayEntityIntention(target);
         }
         else
         {

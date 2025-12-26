@@ -67,8 +67,15 @@ public class TimeManager : IManager
         // 以一分钟为粒度流逝时间
         while (!timePassShut && timespan > 0)
         {
+            bool triggered = false;
             while (Time.time < unfreezeTime)
             {
+                if (!triggered)
+                {
+                    EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
+                    triggered = true;
+                }
+                MouseManager.Instance.Wait(0.1f);
                 yield return null;
             }
 
@@ -82,6 +89,11 @@ public class TimeManager : IManager
             // 等待所有意图执行完毕
             while (intentionQueue.Count > 0)
             {
+                if (!triggered)
+                {
+                    EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
+                    triggered = true;
+                }
                 MouseManager.Instance.Wait(0.1f);
                 yield return null;
             }
@@ -145,6 +157,8 @@ public class TimeManager : IManager
             }
 
             intention.TryExecute();
+
+            // 意图执行完毕后会在内部自动调用 DequeueIntention 方法
         }
     }
 

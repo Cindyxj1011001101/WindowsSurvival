@@ -10,7 +10,7 @@ public class InLocationMoveIntention : SingleTargetIntention
     [JsonProperty] protected bool moveClose;      // 是否靠近目标移动
     [JsonProperty] protected bool escape;         // 是否逃跑
 
-    protected override bool AutoExecuteOver => false;
+    protected override bool WithoutAnim => false;
 
     public InLocationMoveIntention(int preparationMinutes, string targetUuid, float moveDist, bool moveClose) : base(preparationMinutes, targetUuid)
     {
@@ -55,6 +55,7 @@ public class InLocationMoveIntention : SingleTargetIntention
 
             if (escape)
                 belongedEntity.TryEscape();
+
             ExecuteOver();
         }
     }

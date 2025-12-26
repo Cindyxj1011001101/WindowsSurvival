@@ -5,7 +5,7 @@
 /// </summary>
 public class EatIntention : SingleTargetIntention
 {
-    protected override bool AutoExecuteOver => false;
+    protected override bool WithoutAnim => false;
 
     public EatIntention(int preparationMinutes, string targetUuid) : base(preparationMinutes, targetUuid)
     {

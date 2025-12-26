@@ -70,7 +70,7 @@ public abstract class EntityCard : Card, IEntity
         if (aiRefreshCooldown == 0 && currentIntention == null)
         {
             // 第一次生成时获取一下意图
-            RefreshIntention();
+            RefreshIntention(false);
         }
 
         // 监听每分钟的实体更新
@@ -172,10 +172,11 @@ public abstract class EntityCard : Card, IEntity
     /// <summary>
     /// 刷新意图
     /// </summary>
-    public void RefreshIntention()
+    public void RefreshIntention(bool playAnim = true)
     {
-        var prev = currentIntention;
-        void CompleteIntention()
+        var prev = currentIntention; // 原来的意图
+
+        void ExecuteOver()
         {
             if (prev != null)
                 // 意图执行结束，移除执行队列
@@ -200,15 +201,15 @@ public abstract class EntityCard : Card, IEntity
         }
 
         // 意图切换动画
-        if (Slot != null)
+        if (playAnim && Slot != null)
         {
-            Slot.SwitchIntention(prev, currentIntention, CompleteIntention);
+            Slot.SwitchIntention(prev, currentIntention, ExecuteOver);
             if (transform != null && transform.TryGetComponent<CardSlot>(out var slot))
-                slot.SwitchIntention(prev, currentIntention, CompleteIntention);
+                slot.SwitchIntention(prev, currentIntention, ExecuteOver);
         }
         else
         {
-            CompleteIntention();
+            ExecuteOver();
         }
     }
 

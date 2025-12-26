@@ -325,7 +325,7 @@ public class DeveloperPanel : MonoBehaviour
                 card.RefreshSlot();
             }
         }
-        if (bag?.Window != null) bag.Window.RefreshDisplay();
+        //if (bag?.Window != null) bag.Window.RefreshDisplay();
     }
 
     /// <summary>

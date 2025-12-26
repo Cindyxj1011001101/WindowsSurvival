@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -10,14 +9,13 @@ public abstract class EntityIntention
     [JsonProperty] protected int executionCountdown;    // 意图执行倒计时
     [JsonProperty] protected int preparationMinutes;    // 意图执行准备时间
     [JsonIgnore] protected EntityCard belongedEntity;   // 所属实体
-    [JsonIgnore] private bool isExecuting; // 意图是否在执行中
 
     [JsonIgnore] public int ExecutionCountdown => executionCountdown;
     [JsonIgnore] public bool IsReady => executionCountdown <= 0;
-    [JsonIgnore] public bool ExeSucceed { get; private set; } = false;
+    [JsonIgnore] public bool ExeSucceed { get; private set; }
     [JsonIgnore] public bool IsValid => !belongedEntity.Destroyed; // 当所属实体不存在时，意图失效
 
-    protected virtual bool AutoExecuteOver => true;
+    protected virtual bool WithoutAnim => true;
 
     public EntityIntention(int preparationMinutes)
     {
@@ -39,9 +37,13 @@ public abstract class EntityIntention
         executionCountdown = Mathf.Max(executionCountdown - 1, 0);
     }
 
-    public void ExecuteOver()
+    /// <summary>
+    /// 动效结束后调用
+    /// </summary>
+    protected void ExecuteOver()
     {
-        isExecuting = false;
+        // 刷新实体意图
+        belongedEntity.RefreshIntention(); // 意图切换动画在此处，切换完毕后会调用 TimeManager.Instance.DequeueIntention
     }
 
     public abstract string GiveName();
@@ -50,35 +52,20 @@ public abstract class EntityIntention
     public abstract string GetDescription();
     public void TryExecute()
     {
-        PublicMono.Instance.StartCoroutine(TryExecuteCo());
-    }
-    private IEnumerator TryExecuteCo()
-    {
-        isExecuting = true;
-        if (CanExecute())
+        ExeSucceed = CanExecute();
+        if (!ExeSucceed)
         {
-            ExeSucceed = true;
-            OnExecute();
-
-            if (AutoExecuteOver)
-            {
-                // 对于有动效的意图，应当在动效完全结束以后调用 ExecuteOver
-                ExecuteOver();
-            }
+            // 意图执行失败，立即结束
+            ExecuteOver();
+            return;
         }
-        else
+
+        OnExecute();
+
+        if (WithoutAnim)
         {
-            // 无法执行时必须立即结束，否则会卡住等待
+            // 对于有动效的意图，应当在动效完全结束以后调用 ExecuteOver
             ExecuteOver();
         }
-
-        // 等待意图执行完，动效播完
-        while (isExecuting)
-        {
-            yield return null;
-        }
-
-        // 刷新实体意图
-        belongedEntity.RefreshIntention();
     }
 }
