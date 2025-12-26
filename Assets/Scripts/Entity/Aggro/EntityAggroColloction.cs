@@ -100,7 +100,7 @@ public class EntityAggroCollection
     {
         if (sortedSet.IsNullOrEmpty()) return null;
 
-        return sortedSet.Max;
+        return sortedSet.Min;
     }
 
     public void Clear()
