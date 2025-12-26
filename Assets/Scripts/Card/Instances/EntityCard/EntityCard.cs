@@ -20,7 +20,15 @@ public abstract class EntityCard : Card, IEntity
     [JsonIgnore] public EntityIntention CurrentIntention => currentIntention;   // 当前意图
     [JsonIgnore] public int AIRefreshCooldown => aiRefreshCooldown;             // AI刷新冷却
 
-    public virtual void TakeDamage(float damage, IEntity damageDealer) => entity.TakeDamage(damage, damageDealer);
+    public virtual void TakeDamage(float damage, IEntity damageDealer)
+    {
+        entity.TakeDamage(damage, damageDealer);
+
+        // 受击动效
+        if (Slot != null)
+            AnimationManager.Instance.PlayPunch(SlotTransform);
+    }
+
 
     protected override void RegisterCardEvents()
     {
@@ -69,7 +77,10 @@ public abstract class EntityCard : Card, IEntity
         // 刷新冷却为0，且当前意图为空，说明是第一次生成
         if (aiRefreshCooldown == 0 && currentIntention == null)
         {
-            // 第一次生成时获取一下意图
+            // 第一次生成时
+            // 更新仇恨
+            UpdateAggro();
+            // 刷新意图
             RefreshIntention(false);
         }
 

@@ -551,11 +551,6 @@ public class CardSlot : MonoBehaviour
             return;
         }
 
-        intentionAnimator.enabled = false;
-
-        iconLayout.SetActive(true);
-        intentionIcon.gameObject.SetActive(true);
-
         // 设置新的意图图标和悬浮效果
         var tipController = intentionIcon.GetComponent<HoverTipController>();
 
@@ -579,6 +574,11 @@ public class CardSlot : MonoBehaviour
         {
             intentionIcon.sprite = normalSprite;
         };
+
+        intentionAnimator.enabled = false;
+
+        iconLayout.SetActive(true);
+        intentionIcon.gameObject.SetActive(true);
     }
 
     /// <summary>

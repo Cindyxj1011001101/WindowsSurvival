@@ -99,6 +99,32 @@ public static class AnimationConfig
     public const float EAT_INTENTION_CHEW_SCALE_X = 1.06f;
     public const float EAT_INTENTION_CHEW_SCALE_Y = 0.92f;
     public const float EAT_INTENTION_CHEW_ROT_Z = -6f;
+
+    public const float MELEE_ATTACK_GO_DURATION = 0.3f;
+    public const float MELEE_ATTACK_RETURN_DURATION = 0.2f;
+    public const float MELEE_ATTACK_ARC_HEIGHT = 45f;
+    public const float MELEE_ATTACK_LUNGE_SCALE = 1.08f;
+    public const float MELEE_ATTACK_LUNGE_ROT_Z = 12f;
+    public const float MELEE_ATTACK_CHARGE_DURATION = 0.08f;
+    public const float MELEE_ATTACK_CHARGE_BACK_DISTANCE = 22f;
+    public const float MELEE_ATTACK_CHARGE_SCALE = 0.96f;
+    public const float MELEE_ATTACK_CHARGE_ROT_Z = 8f;
+    public const float MELEE_ATTACK_CHARGE_PAUSE = 0.02f;
+    public const float MELEE_ATTACK_CONTACT_PAUSE = 0.07f;
+    public const float MELEE_ATTACK_RECOIL_DISTANCE = 18f;
+    public const float MELEE_ATTACK_RECOIL_BACK_DURATION = 0.045f;
+    public const float MELEE_ATTACK_RECOIL_RETURN_DURATION = 0.065f;
+    public const float MELEE_ATTACK_RECOIL_SCALE = 0.98f;
+    public const float MELEE_ATTACK_RECOIL_ROT_Z = 10f;
+
+    public const float MELEE_ATTACK_STRIKE_OVERSHOOT_DISTANCE = 18f;
+    public const float MELEE_ATTACK_STRIKE_DURATION = 0.05f;
+    public const float MELEE_ATTACK_STRIKE_SCALE = 1.03f;
+    public const float MELEE_ATTACK_STRIKE_ROT_Z = 6f;
+
+    public const float MELEE_ATTACK_PLAYER_FACE_SCALE = 1.32f;
+    public const float MELEE_ATTACK_PLAYER_FACE_ARC_HEIGHT = 110f;
+    public const float MELEE_ATTACK_PLAYER_FACE_OFFSET_Y = 20f;
 }
 
 /// <summary>
@@ -188,6 +214,108 @@ public class AnimationManager
         });
 
         _screenFlashTween = seq;
+        return seq;
+    }
+
+    public Tween PlayMeleeAttackPlayerEffect(
+        CardSlot attackerTempSlot,
+        UnityAction onHit,
+        UnityAction onComplete)
+    {
+        var canvasRect = Canvas.transform as RectTransform;
+
+        var center = canvasRect.TransformPoint(canvasRect.rect.center);
+        center += new Vector3(0f, AnimationConfig.MELEE_ATTACK_PLAYER_FACE_OFFSET_Y, 0f);
+
+        return PlayMeleeAttackToPositionEffect(
+            attackerTempSlot,
+            center,
+            onHit,
+            onComplete,
+            arcHeight: AnimationConfig.MELEE_ATTACK_PLAYER_FACE_ARC_HEIGHT,
+            lungeScale: AnimationConfig.MELEE_ATTACK_PLAYER_FACE_SCALE);
+    }
+
+    public Tween PlayMeleeAttackToPositionEffect(
+        CardSlot attackerTempSlot,
+        Vector3 targetPos,
+        UnityAction onHit,
+        UnityAction onComplete,
+        float goDuration = -1f,
+        float returnDuration = -1f,
+        float arcHeight = -1f,
+        float lungeScale = -1f,
+        float lungeRotZ = -1f)
+    {
+        if (goDuration < 0) goDuration = AnimationConfig.MELEE_ATTACK_GO_DURATION;
+        if (returnDuration < 0) returnDuration = AnimationConfig.MELEE_ATTACK_RETURN_DURATION;
+        if (arcHeight < 0) arcHeight = AnimationConfig.MELEE_ATTACK_ARC_HEIGHT;
+        if (lungeScale < 0) lungeScale = AnimationConfig.MELEE_ATTACK_LUNGE_SCALE;
+        if (lungeRotZ < 0) lungeRotZ = AnimationConfig.MELEE_ATTACK_LUNGE_ROT_Z;
+
+        var t = attackerTempSlot.transform;
+        t.GetPositionAndRotation(out var startPos, out var startRot);
+        var startScale = t.localScale;
+
+        var startLocalEuler = t.localEulerAngles;
+        var lungeLocalEuler = new Vector3(0f, 0f, startLocalEuler.z + lungeRotZ);
+
+        var seq = DOTween.Sequence();
+
+        var dir = (targetPos - startPos);
+        if (dir.sqrMagnitude > 0.0001f)
+            dir.Normalize();
+        else
+            dir = Vector3.right;
+
+        var chargePos = startPos - dir * AnimationConfig.MELEE_ATTACK_CHARGE_BACK_DISTANCE;
+        var chargeEuler = new Vector3(0f, 0f, startLocalEuler.z - AnimationConfig.MELEE_ATTACK_CHARGE_ROT_Z);
+        seq.Append(t.DOMove(chargePos, AnimationConfig.MELEE_ATTACK_CHARGE_DURATION).SetEase(Ease.OutSine));
+        seq.Join(t.DOScale(startScale * AnimationConfig.MELEE_ATTACK_CHARGE_SCALE, AnimationConfig.MELEE_ATTACK_CHARGE_DURATION).SetEase(Ease.OutSine));
+        seq.Join(t.DOLocalRotate(chargeEuler, AnimationConfig.MELEE_ATTACK_CHARGE_DURATION).SetEase(Ease.OutSine));
+        seq.AppendInterval(AnimationConfig.MELEE_ATTACK_CHARGE_PAUSE);
+
+        var mid = (chargePos + targetPos) * 0.5f + Vector3.up * arcHeight;
+        seq.Append(t.DOPath(new Vector3[] { chargePos, mid, targetPos }, goDuration, PathType.CatmullRom)
+            .SetEase(Ease.OutQuad));
+        seq.Join(t.DOScale(startScale * lungeScale, goDuration).SetEase(Ease.OutBack));
+        seq.Join(t.DOLocalRotate(lungeLocalEuler, goDuration).SetEase(Ease.OutSine));
+
+        var mouthScale = startScale * lungeScale;
+        var mouthEuler = lungeLocalEuler;
+
+        var strikePos = targetPos + dir * AnimationConfig.MELEE_ATTACK_STRIKE_OVERSHOOT_DISTANCE;
+        var strikeScale = mouthScale * AnimationConfig.MELEE_ATTACK_STRIKE_SCALE;
+        var strikeEuler = new Vector3(0f, 0f, mouthEuler.z + AnimationConfig.MELEE_ATTACK_STRIKE_ROT_Z);
+        seq.Append(t.DOMove(strikePos, AnimationConfig.MELEE_ATTACK_STRIKE_DURATION).SetEase(Ease.InQuad));
+        seq.Join(t.DOScale(strikeScale, AnimationConfig.MELEE_ATTACK_STRIKE_DURATION).SetEase(Ease.InQuad));
+        seq.Join(t.DOLocalRotate(strikeEuler, AnimationConfig.MELEE_ATTACK_STRIKE_DURATION).SetEase(Ease.InQuad));
+        seq.AppendCallback(() => onHit?.Invoke());
+
+        var recoilPos = strikePos - dir * AnimationConfig.MELEE_ATTACK_RECOIL_DISTANCE;
+        var recoilEuler = new Vector3(0f, 0f, mouthEuler.z - AnimationConfig.MELEE_ATTACK_RECOIL_ROT_Z);
+        seq.Append(t.DOMove(recoilPos, AnimationConfig.MELEE_ATTACK_RECOIL_BACK_DURATION).SetEase(Ease.OutQuad));
+        seq.Join(t.DOScale(mouthScale * AnimationConfig.MELEE_ATTACK_RECOIL_SCALE, AnimationConfig.MELEE_ATTACK_RECOIL_BACK_DURATION).SetEase(Ease.OutQuad));
+        seq.Join(t.DOLocalRotate(recoilEuler, AnimationConfig.MELEE_ATTACK_RECOIL_BACK_DURATION).SetEase(Ease.OutSine));
+
+        seq.Append(t.DOMove(targetPos, AnimationConfig.MELEE_ATTACK_RECOIL_RETURN_DURATION).SetEase(Ease.OutBack));
+        seq.Join(t.DOScale(mouthScale, AnimationConfig.MELEE_ATTACK_RECOIL_RETURN_DURATION).SetEase(Ease.OutBack));
+        seq.Join(t.DOLocalRotate(mouthEuler, AnimationConfig.MELEE_ATTACK_RECOIL_RETURN_DURATION).SetEase(Ease.OutSine));
+
+        seq.AppendInterval(AnimationConfig.MELEE_ATTACK_CONTACT_PAUSE);
+
+        var backMid = (targetPos + startPos) * 0.5f + Vector3.up * (arcHeight * 0.6f);
+        seq.Append(t.DOPath(new Vector3[] { targetPos, backMid, startPos }, returnDuration, PathType.CatmullRom)
+            .SetEase(Ease.InOutSine));
+        seq.Join(t.DOScale(startScale, returnDuration).SetEase(Ease.InOutSine));
+        seq.Join(t.DOLocalRotate(startLocalEuler, returnDuration).SetEase(Ease.InOutSine));
+
+        seq.OnComplete(() =>
+        {
+            onComplete?.Invoke();
+            ObjectBufferPool.Instance.Restore(attackerTempSlot.gameObject);
+        });
+
         return seq;
     }
 

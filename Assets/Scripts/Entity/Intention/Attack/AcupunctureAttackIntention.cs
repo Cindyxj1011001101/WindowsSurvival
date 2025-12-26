@@ -12,9 +12,9 @@ public class AcupunctureAttackIntention : RangedAttackIntention
         this.playerItchinessIncrease = playerItchinessIncrease;
     }
 
-    public override void OnExecute()
+    protected override void PerformAttack()
     {
-        base.OnExecute();
+        base.PerformAttack();
         // 玩家瘙痒值增加
         if (EntityTarget is Player)
         {

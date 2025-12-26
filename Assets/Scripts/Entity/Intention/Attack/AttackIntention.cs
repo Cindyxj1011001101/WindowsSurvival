@@ -32,12 +32,20 @@ public abstract class AttackIntention : SingleTargetIntention
     public override void OnExecute()
     {
         // 执行攻击
-        belongedEntity.SingleAttack(EntityTarget, dmg);
-        
+        PerformAttack();
+
         // TODO: 攻击动效
         
         // TODO: 范围攻击
 
+    }
+
+    /// <summary>
+    /// 执行攻击
+    /// </summary>
+    protected virtual void PerformAttack()
+    {
+        belongedEntity.SingleAttack(EntityTarget, dmg);
     }
 
     public override string GetDescription()
