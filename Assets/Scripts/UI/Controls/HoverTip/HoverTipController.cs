@@ -33,13 +33,6 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
     public void OnDisable()
     {
         HideTip();
-        textTip = "";
-        time = 0;
-        textColor = ColorManager.White;
-        envStateChanges = null;
-        playerStateChanges = null;
-        onPointerEnter = null;
-        onPointerExit = null;
     }
 
     public void SetTip(

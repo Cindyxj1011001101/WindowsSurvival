@@ -505,6 +505,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
   rectTransform: {fileID: 0}
+  interactable: 1
   tipCanvas: {fileID: 823240056640379965}
 --- !u!1 &841146745484708750
 GameObject:
@@ -1325,6 +1326,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
   rectTransform: {fileID: 0}
+  interactable: 1
   tipCanvas: {fileID: 343728045217434969}
 --- !u!1 &2375664664073154394
 GameObject:
@@ -1627,6 +1629,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
   rectTransform: {fileID: 0}
+  interactable: 1
 --- !u!1 &2616535066746446821
 GameObject:
   m_ObjectHideFlags: 0
@@ -1895,6 +1898,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
   rectTransform: {fileID: 0}
+  interactable: 1
   tipCanvas: {fileID: 2298819861957847044}
 --- !u!1 &3031629072316667749
 GameObject:
@@ -1992,7 +1996,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ignoreThisWhenSave: 0
   destroyAfterClosed: 0
-  animDuration: 0.2
   maximize_default: {fileID: -836057702, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   maximize_hovered: {fileID: 1210181592, guid: 463677557ce92964a8482ac800b7428d, type: 3}
   restore_default: {fileID: 154959178, guid: 463677557ce92964a8482ac800b7428d, type: 3}
@@ -2232,6 +2235,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
   rectTransform: {fileID: 0}
+  interactable: 1
 --- !u!1 &3391072776198142626
 GameObject:
   m_ObjectHideFlags: 0
@@ -3200,6 +3204,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
   rectTransform: {fileID: 0}
+  interactable: 1
   iconObject: {fileID: 8513981697147569867}
 --- !u!1 &4002902008960745136
 GameObject:
@@ -3273,6 +3278,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
   rectTransform: {fileID: 0}
+  interactable: 1
 --- !u!1 &4435411705972357866
 GameObject:
   m_ObjectHideFlags: 0
@@ -3391,6 +3397,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
   rectTransform: {fileID: 0}
+  interactable: 1
   tipCanvas: {fileID: 2738554535550046467}
 --- !u!1 &4470468549654318164
 GameObject:
@@ -4445,6 +4452,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
   rectTransform: {fileID: 0}
+  interactable: 1
   tipCanvas: {fileID: 5202733685202339785}
 --- !u!1 &6595680485812093529
 GameObject:
@@ -4518,6 +4526,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
   rectTransform: {fileID: 0}
+  interactable: 1
 --- !u!1 &6632938758425048130
 GameObject:
   m_ObjectHideFlags: 0
@@ -4786,6 +4795,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
   rectTransform: {fileID: 0}
+  interactable: 1
   tipCanvas: {fileID: 1828352911822766183}
 --- !u!1 &6917426324017518403
 GameObject:
@@ -5088,6 +5098,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
   rectTransform: {fileID: 0}
+  interactable: 1
 --- !u!1 &7340233678428436523
 GameObject:
   m_ObjectHideFlags: 0
@@ -5374,6 +5385,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
   rectTransform: {fileID: 0}
+  interactable: 1
   tipCanvas: {fileID: 9100137391893972520}
 --- !u!1 &7803521719260360653
 GameObject:
@@ -5807,6 +5819,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 1
   rectTransform: {fileID: 0}
+  interactable: 1
   tipCanvas: {fileID: 211425940329738078}
 --- !u!1 &8513981697147569867
 GameObject:
@@ -6247,6 +6260,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
   rectTransform: {fileID: 0}
+  interactable: 1
 --- !u!1 &9039498970618551707
 GameObject:
   m_ObjectHideFlags: 0
@@ -6325,7 +6339,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u4E0D\u53EF\u5728\u5730\u70B9\u548C\u80CC\u5305\u95F4\u79FB\u52A8"
+  m_Text: "\u5EFA\u9020\u540E\u4E0D\u53EF\u79FB\u52A8"
 --- !u!1 &9048808103098273658
 GameObject:
   m_ObjectHideFlags: 0
@@ -6912,6 +6926,7 @@ MonoBehaviour:
   hoveredAudio: "\u4E34\u65F6\u60AC\u6D6E"
   playHoverSound: 0
   rectTransform: {fileID: 0}
+  interactable: 1
 --- !u!1 &9093713364368387000 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9000680339865631324, guid: 2ef1e837d0bd83540963d82c0915600f, type: 3}
