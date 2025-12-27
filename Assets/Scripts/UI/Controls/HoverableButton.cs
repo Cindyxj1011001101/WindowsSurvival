@@ -54,7 +54,7 @@ public class HoverableButton : MonoBehaviour, IPointerClickHandler, IPointerEnte
             //var changeMouse = GetComponentInChildren<ChangeMouse>();
             //if (changeMouse != null) changeMouse.enabled = value;
             if (canvasGroup != null)
-                canvasGroup.interactable = canvasGroup.blocksRaycasts = value;
+                canvasGroup.interactable = value;
         }
     }
 
