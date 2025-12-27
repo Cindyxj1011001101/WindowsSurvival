@@ -33,6 +33,8 @@ public class WindowsManager : MonoBehaviour
     [SerializeField] private HoverableButton restButton;
     [SerializeField] private HoverableButton quitButton;
 
+    private HoverTipController restButtonTipController;
+
     [SerializeField] private List<HoverableButton> presetButtons = new(); // 预设按钮
     [SerializeField] private List<WindowsLayoutPreset> presets = new(); // 预设配置
 
@@ -75,7 +77,8 @@ public class WindowsManager : MonoBehaviour
             window.AddButton("取消", null);
         });
 
-        restButton.onClick.AddListener(HandleRestOnTheGround);
+        // 初始化休息按钮
+        InitRestButton();
 
         // 初始化预设按钮
         InitPresetButtons();
@@ -86,12 +89,42 @@ public class WindowsManager : MonoBehaviour
         // 应用预设
         currentPresetIndex = GameDataManager.Instance.WindowsData.currentPresetIndex;
         ApplyPreset(currentPresetIndex);
+
+        EventManager.Instance.AddListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
+        EventManager.Instance.AddListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnChangeWaterLevel);
+    }
+
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveListener<EnvironmentBag>(EventType.ChangeCurrentEnvironment, OnChangeEnv);
+        EventManager.Instance.RemoveListener<RefreshEnvironmentStateArgs>(EventType.RefreshEnvironmentState, OnChangeWaterLevel);
+    }
+
+    private void OnChangeEnv(EnvironmentBag env) => DisplayRestButton();
+
+    private void OnChangeWaterLevel(RefreshEnvironmentStateArgs args)
+    {
+        if (args.stateEnum != EnvironmentStateEnum.WaterLevel) return;
+
+        DisplayRestButton();
+    }
+
+    private void InitRestButton()
+    {
+        restButton.onClick.AddListener(HandleRestOnTheGround);
+
+        restButtonTipController = restButton.GetComponent<HoverTipController>();
+        if (restButtonTipController == null)
+            restButtonTipController = restButton.gameObject.AddComponent<HoverTipController>();
+
+        DisplayRestButton();
     }
 
     private void HandleRestOnTheGround()
     {
         var window = (OpenWindow("TimeSelect", true) as TimeSelectWindow);
-        window.canConfirm = StateManager.Instance.CanRestOnTheGround;
+        window.SetTimeRange(1, 24 * 60); // 休息 1 分钟到 24 小时
+        //window.canConfirm = StateManager.Instance.CanRestOnTheGround;
         window.onConfirm = StateManager.Instance.RestOnTheGround;
         window.getConfirmEffects = (t) =>
         {
@@ -104,8 +137,24 @@ public class WindowsManager : MonoBehaviour
                         { PlayerStateEnum.Sobriety, sobrietyChange }
                     };
             }
-            return ($"在地上休息 {t} 分钟", t, p, null);
+            return ($"休息 {t} 分钟", t, p, null);
         };
+    }
+
+    private void DisplayRestButton()
+    {
+        restButton.Interactable = StateManager.Instance.CanRestOnTheGround(out var reason);
+
+        if (restButton.Interactable)
+        {
+            restButton.text.color = ColorManager.White;
+            restButtonTipController.SetTip("在地上休息");
+        }
+        else
+        {
+            restButton.text.color = ColorManager.DarkGrey;
+            restButtonTipController.SetTip(reason);
+        }
     }
 
     private void InitPresetButtons()

@@ -71,7 +71,7 @@ public class SpaceshipSeat : ConstructionCard
                         { PlayerStateEnum.Sanity, sanChange }
                     };
             }
-            return ($"靠在驾驶座上休息 {t} 分钟", t, p, null);
+            return ($"休息 {t} 分钟", t, p, null);
         };
     }
 
@@ -80,7 +80,7 @@ public class SpaceshipSeat : ConstructionCard
         hint = string.Empty;
         if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
         {
-            hint = "无法在水域地点休息";
+            hint = "无法在水域地点休息或睡觉";
             return false;
         }
         return true;
@@ -106,7 +106,7 @@ public class SpaceshipSeat : ConstructionCard
                         { PlayerStateEnum.Sobriety, sobrietyChange },
                     };
             }
-            return ($"靠在驾驶座上睡觉 {t} 分钟", t, p, null);
+            return ($"睡觉 {t} 分钟", t, p, null);
         };
     }
 }
