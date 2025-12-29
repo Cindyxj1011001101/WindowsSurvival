@@ -517,63 +517,6 @@ MonoBehaviour:
     - name: "\u8F93\u51FA"
       direction: 1
       PortCondition: "\u6761\u4EF6"
-  - guid: df402359d4ebb0a499cb910766f574c1
-    Title: "\u5BF9\u8BDD"
-    typeName: Dialogue
-    NodePos: {x: 3634, y: 1186.6666}
-    chatData:
-      MessageSender: 1
-      MessageCondition: 
-      Message: "emmm,\u8FD9\u5E94\u8BE5\u53EA\u662F\u4E2A\u6E38\u620F\u5427"
-      preWaitTime: 0
-      lateWaitTime: 0
-      TriggerMessageEffect: 
-    inputport:
-      name: "\u8F93\u5165"
-      direction: 0
-      PortCondition: "\u6761\u4EF6"
-    outputports:
-    - name: "\u8F93\u51FA"
-      direction: 1
-      PortCondition: "\u6761\u4EF6"
-  - guid: 1fd94d616db5097409a2503d6e03a0f6
-    Title: "\u5BF9\u8BDD"
-    typeName: Dialogue
-    NodePos: {x: 3982, y: 1181.3333}
-    chatData:
-      MessageSender: 1
-      MessageCondition: 
-      Message: "\u867D\u7136\u88C5\u5F97\u50CF\u6A21\u50CF\u6837\u7684,\u4F46\u53CD\u6B63\u80AF\u5B9A\u4E0D\u662F\u771F\u4EBA\u3002"
-      preWaitTime: 0
-      lateWaitTime: 0
-      TriggerMessageEffect: 
-    inputport:
-      name: "\u8F93\u5165"
-      direction: 0
-      PortCondition: "\u6761\u4EF6"
-    outputports:
-    - name: "\u8F93\u51FA"
-      direction: 1
-      PortCondition: "\u6761\u4EF6"
-  - guid: 50b7e19b2aecafa4593b14765d1c0c08
-    Title: "\u5BF9\u8BDD"
-    typeName: Dialogue
-    NodePos: {x: 4341.3335, y: 1195.3333}
-    chatData:
-      MessageSender: 1
-      MessageCondition: 
-      Message: "\u55EF,\u4E00\u5B9A\u662F\u8FD9\u6837\u7684"
-      preWaitTime: 0
-      lateWaitTime: 0
-      TriggerMessageEffect: 
-    inputport:
-      name: "\u8F93\u5165"
-      direction: 0
-      PortCondition: "\u6761\u4EF6"
-    outputports:
-    - name: "\u8F93\u51FA"
-      direction: 1
-      PortCondition: "\u6761\u4EF6"
   - guid: 86cc890ab9aa92c46a4cad6fae3db8f8
     Title: "\u9009\u9879"
     typeName: Choose
@@ -631,29 +574,10 @@ MonoBehaviour:
     - name: "\u5BF9\u4E0D\u8D77,\u6211\u4E0D\u662F\u6545\u610F\u7684"
       direction: 1
       PortCondition: "\u6761\u4EF6"
-    - name: "\u4E0D\u77E5\u9053\u4E3A\u4EC0\u4E48,\u6709\u70B9\u83AB\u540D\u5730\u4E0D\u5B89"
+    - name: "emmm,\u8FD9\u5E94\u8BE5\u53EA\u662F\u4E2A\u6E38\u620F\u5427"
       direction: 1
       PortCondition: "\u6761\u4EF6"
     - name: "\u8FD9\u4E48\u8FDE\u4E2A\u6B7B\u4EA1CG\u90FD\u6CA1\u6709"
-      direction: 1
-      PortCondition: "\u6761\u4EF6"
-  - guid: af800dd4934153346925f5161faf979a
-    Title: "\u5BF9\u8BDD"
-    typeName: Dialogue
-    NodePos: {x: 3200.6667, y: 1064}
-    chatData:
-      MessageSender: 0
-      MessageCondition: 
-      Message: "\u4E0D\u77E5\u9053\u4E3A\u4EC0\u4E48,\u6709\u70B9\u83AB\u540D\u5730\u4E0D\u5B89"
-      preWaitTime: 0
-      lateWaitTime: 0
-      TriggerMessageEffect: 
-    inputport:
-      name: "\u8F93\u5165"
-      direction: 0
-      PortCondition: "\u6761\u4EF6"
-    outputports:
-    - name: "\u8F93\u51FA"
       direction: 1
       PortCondition: "\u6761\u4EF6"
   - guid: 065494dcab8f92146b044c461031d204
@@ -680,7 +604,7 @@ MonoBehaviour:
     typeName: Dialogue
     NodePos: {x: 3250.6667, y: 808.6667}
     chatData:
-      MessageSender: 0
+      MessageSender: 1
       MessageCondition: 
       Message: "\u5BF9\u4E0D\u8D77,\u6211\u4E0D\u662F\u6545\u610F\u7684"
       preWaitTime: 0
@@ -702,6 +626,139 @@ MonoBehaviour:
       MessageSender: 0
       MessageCondition: 
       Message: "\u6211\u6068\u4F60"
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: "\u8F93\u5165"
+      direction: 0
+      PortCondition: "\u6761\u4EF6"
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
+  - guid: df402359d4ebb0a499cb910766f574c1
+    Title: "\u5BF9\u8BDD"
+    typeName: Dialogue
+    NodePos: {x: 3264.6667, y: 1134.6666}
+    chatData:
+      MessageSender: 1
+      MessageCondition: 
+      Message: "emmm,\u8FD9\u5E94\u8BE5\u53EA\u662F\u4E2A\u6E38\u620F\u5427"
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: "\u8F93\u5165"
+      direction: 0
+      PortCondition: "\u6761\u4EF6"
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
+  - guid: 1fd94d616db5097409a2503d6e03a0f6
+    Title: "\u5BF9\u8BDD"
+    typeName: Dialogue
+    NodePos: {x: 3631.3333, y: 1134.6666}
+    chatData:
+      MessageSender: 1
+      MessageCondition: 
+      Message: "\u867D\u7136\u88C5\u5F97\u50CF\u6A21\u50CF\u6837\u7684,\u4F46\u53CD\u6B63\u80AF\u5B9A\u4E0D\u662F\u771F\u4EBA\u3002"
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: "\u8F93\u5165"
+      direction: 0
+      PortCondition: "\u6761\u4EF6"
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
+  - guid: 50b7e19b2aecafa4593b14765d1c0c08
+    Title: "\u5BF9\u8BDD"
+    typeName: Dialogue
+    NodePos: {x: 4003.3333, y: 1134.6666}
+    chatData:
+      MessageSender: 1
+      MessageCondition: 
+      Message: "\u55EF,\u4E00\u5B9A\u662F\u8FD9\u6837\u7684"
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: "\u8F93\u5165"
+      direction: 0
+      PortCondition: "\u6761\u4EF6"
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
+  - guid: e5ae34890a14c8642b2c1304e3e256c4
+    Title: "\u5BF9\u8BDD"
+    typeName: Dialogue
+    NodePos: {x: 4402, y: 765.3334}
+    chatData:
+      MessageSender: 2
+      MessageCondition: 
+      Message: "\u4F3C\u4E4E\u6709\u4EBA\u8BB0\u4E0B\u4E86\u4EC0\u4E48\u4E1C\u897F"
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: "\u8F93\u5165"
+      direction: 0
+      PortCondition: "\u6761\u4EF6"
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
+  - guid: c9121bd7627a11046bed443e3920e9a3
+    Title: "\u9009\u9879"
+    typeName: Choose
+    NodePos: {x: 4524.6665, y: 1074.6666}
+    chatData:
+      MessageSender: 0
+      MessageCondition: 
+      Message: 
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: "\u8F93\u5165"
+      direction: 0
+      PortCondition: "\u6761\u4EF6"
+    outputports:
+    - name: "\u662F\u5E7B\u89C9\u5417?"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
+  - guid: 080e82733a9b0cf44aac3abed1a59fd0
+    Title: "\u5BF9\u8BDD"
+    typeName: Dialogue
+    NodePos: {x: 4533.3335, y: 1280}
+    chatData:
+      MessageSender: 1
+      MessageCondition: 
+      Message: "\u662F\u5E7B\u89C9\u5417?"
+      preWaitTime: 0
+      lateWaitTime: 0
+      TriggerMessageEffect: 
+    inputport:
+      name: "\u8F93\u5165"
+      direction: 0
+      PortCondition: "\u6761\u4EF6"
+    outputports:
+    - name: "\u8F93\u51FA"
+      direction: 1
+      PortCondition: "\u6761\u4EF6"
+  - guid: 1724fcf2c3c81934d96ffd905722f654
+    Title: "\u5BF9\u8BDD"
+    typeName: Dialogue
+    NodePos: {x: 4544, y: 1556}
+    chatData:
+      MessageSender: 1
+      MessageCondition: 
+      Message: "\u2026\u2026"
       preWaitTime: 0
       lateWaitTime: 0
       TriggerMessageEffect: 
@@ -794,9 +851,9 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: bcbdee8fcf451ea47a8d12223564869b
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 33a8a46400390954e8752c88c8680d16
+  - outputNodeGUID: bcbdee8fcf451ea47a8d12223564869b
     outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: b01c40f54df3c4e46a3eb670a1babf0b
+    inputNodeGUID: 33a8a46400390954e8752c88c8680d16
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: a21ed9b832f436b418a1fbb1d9f1e2dc
     outputPortName: "\u9EA6\u9EA6?\u4F60\u8FD8\u5728\u5417?"
@@ -818,14 +875,6 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 0f25b8bd9b2c2f1488a899098252a6b7
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 065494dcab8f92146b044c461031d204
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 87dd8f083e2ab3f45a0f3f054c8d0ad7
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 87dd8f083e2ab3f45a0f3f054c8d0ad7
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 0f25b8bd9b2c2f1488a899098252a6b7
-    inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 0f25b8bd9b2c2f1488a899098252a6b7
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 86cc890ab9aa92c46a4cad6fae3db8f8
@@ -838,10 +887,6 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 50b7e19b2aecafa4593b14765d1c0c08
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 50b7e19b2aecafa4593b14765d1c0c08
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 0f25b8bd9b2c2f1488a899098252a6b7
-    inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 86cc890ab9aa92c46a4cad6fae3db8f8
     outputPortName: "\u91CD\u542F"
     inputNodeGUID: 03e224f4643f46e429764c4e8ef87825
@@ -851,26 +896,50 @@ MonoBehaviour:
     inputNodeGUID: a23a000107ab56246a1e4908bcff03e3
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 3247cbc5414fda04aa27757d75b562cc
-    outputPortName: "\u8FD9\u5C31\u6B7B\u6389\u4E86?"
+    outputPortName: "\u5BF9\u4E0D\u8D77,\u6211\u4E0D\u662F\u6545\u610F\u7684"
+    inputNodeGUID: 88fdd84854c74da4d9a7fcc63265cf17
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 065494dcab8f92146b044c461031d204
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 87dd8f083e2ab3f45a0f3f054c8d0ad7
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 33a8a46400390954e8752c88c8680d16
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: b01c40f54df3c4e46a3eb670a1babf0b
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 3247cbc5414fda04aa27757d75b562cc
+    outputPortName: "\u8FD9\u4E48\u8FDE\u4E2A\u6B7B\u4EA1CG\u90FD\u6CA1\u6709"
     inputNodeGUID: 065494dcab8f92146b044c461031d204
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 3247cbc5414fda04aa27757d75b562cc
     outputPortName: "\u4E0D\u77E5\u9053\u4E3A\u4EC0\u4E48,\u6709\u70B9\u83AB\u540D\u5730\u4E0D\u5B89"
-    inputNodeGUID: af800dd4934153346925f5161faf979a
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: af800dd4934153346925f5161faf979a
-    outputPortName: "\u8F93\u51FA"
     inputNodeGUID: df402359d4ebb0a499cb910766f574c1
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 3247cbc5414fda04aa27757d75b562cc
-    outputPortName: "\u5BF9\u4E0D\u8D77,\u6211\u4E0D\u662F\u6545\u610F\u7684"
-    inputNodeGUID: 88fdd84854c74da4d9a7fcc63265cf17
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 88fdd84854c74da4d9a7fcc63265cf17
     outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 0f25b8bd9b2c2f1488a899098252a6b7
+    inputNodeGUID: e5ae34890a14c8642b2c1304e3e256c4
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: bcbdee8fcf451ea47a8d12223564869b
+  - outputNodeGUID: 50b7e19b2aecafa4593b14765d1c0c08
     outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: 33a8a46400390954e8752c88c8680d16
+    inputNodeGUID: e5ae34890a14c8642b2c1304e3e256c4
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 87dd8f083e2ab3f45a0f3f054c8d0ad7
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: e5ae34890a14c8642b2c1304e3e256c4
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: e5ae34890a14c8642b2c1304e3e256c4
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: c9121bd7627a11046bed443e3920e9a3
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: c9121bd7627a11046bed443e3920e9a3
+    outputPortName: "\u662F\u5E7B\u89C9\u5417?"
+    inputNodeGUID: 080e82733a9b0cf44aac3abed1a59fd0
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 080e82733a9b0cf44aac3abed1a59fd0
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 1724fcf2c3c81934d96ffd905722f654
+    inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: 1724fcf2c3c81934d96ffd905722f654
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: 0f25b8bd9b2c2f1488a899098252a6b7
     inputPortName: "\u8F93\u5165"

@@ -16,7 +16,16 @@ public static class AfterChatFactory
         //科技：科技_科技名（直接完成指定科技的研究，解锁该科技及其配方）
         //其他：其他_其他名
         if(EventName=="")return;
-        List<string> eventList = new List<string>(EventName.Split(';'));
+        // 使用 StringSplitOptions.RemoveEmptyEntries 移除空条目，并 Trim 每个事件项以支持换行
+        List<string> eventList = new List<string>();
+        foreach (string item in EventName.Split(';'))
+        {
+            string trimmedItem = item.Trim(); // 移除前后空白字符（包括换行符）
+            if (!string.IsNullOrEmpty(trimmedItem))
+            {
+                eventList.Add(trimmedItem);
+            }
+        }
         List<List<string>> eventListList = new List<List<string>>();
         foreach (string eventItem in eventList)
         {
@@ -111,53 +120,75 @@ public static class AfterChatFactory
 
     private static void ChangePlayerStateByString(string stateName, float delta)
     {
-        switch (stateName)
+        // 状态名到枚举的映射
+        var stateMap = new Dictionary<string, PlayerStateEnum>
         {
-            case "健康":
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Health, delta);
-                break;
-            case "饱食":
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hunger, delta);
-                break;
-            case "口渴":
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Hydration, delta);
-                break;
-            case "精神":
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sanity, delta);
-                break;
-            case "氧气":
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Oxygen, delta);
-                break;
-            case "清醒":
-                StateManager.Instance.ChangePlayerState(PlayerStateEnum.Sobriety, delta);
-                break;
-        }
+            { "健康", PlayerStateEnum.Health },
+            { "饱食", PlayerStateEnum.Hunger },
+            { "口渴", PlayerStateEnum.Hydration },
+            { "精神", PlayerStateEnum.Sanity },
+            { "氧气", PlayerStateEnum.Oxygen },
+            { "清醒", PlayerStateEnum.Sobriety }
+        };
+        
+        if (!stateMap.TryGetValue(stateName, out var stateEnum)) return;
+        
+        var state = StateManager.Instance.PlayerStateDict[stateEnum];
+        float oldValue = state.CurValue;
+        StateManager.Instance.ChangePlayerState(stateEnum, delta);
+        float newValue = state.CurValue;
+        
+        UnityEngine.Debug.Log($"[状态变化] 玩家-{stateName}: {oldValue:F1} → {newValue:F1} (变化: {(delta >= 0 ? "+" : "")}{delta:F1})");
     }
 
     private static void ChangeEnvironmentStateByString(PlaceEnum placeType, string stateName, float delta)
     {
         var env = GameManager.Instance.EnvironmentBags[placeType];
+        string placeName = GetPlaceName(placeType);
+        float oldValue = 0;
+        float newValue = 0;
+        string displayName = placeName;
+        
         switch (stateName)
         {
             case "电力":
+                oldValue = ElectricPowerManager.Instance.Power.CurValue;
                 ElectricPowerManager.Instance.ChangePower(delta);
+                newValue = ElectricPowerManager.Instance.Power.CurValue;
                 break;
             case "氧气":
+                oldValue = env.StateDict[EnvironmentStateEnum.Oxygen].CurValue;
                 env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, delta);
+                newValue = env.StateDict[EnvironmentStateEnum.Oxygen].CurValue;
                 break;
             case "压力":
+                oldValue = env.StateDict[EnvironmentStateEnum.Oxygen].CurValue;
                 env.ChangeEnvironmentState(EnvironmentStateEnum.Oxygen, delta);
+                newValue = env.StateDict[EnvironmentStateEnum.Oxygen].CurValue;
                 break;
             case "高度":
+                oldValue = StateManager.Instance.WaterLevel.CurValue;
                 StateManager.Instance.ChangeWaterLevel(delta);
+                newValue = StateManager.Instance.WaterLevel.CurValue;
+                displayName = "水平面";
                 break;
-            //case "电缆":
-            //    OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.HasCable, delta));
-            //    break;
-            //case "水域":
-            //    OnEnvironmentChangeState(new ChangeEnvironmentStateArgs(placeType, EnvironmentStateEnum.InWater, delta));
-            //    break;
+            default:
+                return;
         }
+        
+        UnityEngine.Debug.Log($"[状态变化] {displayName}-{stateName}: {oldValue:F1} → {newValue:F1} (变化: {(delta >= 0 ? "+" : "")}{delta:F1})");
+    }
+    
+    private static string GetPlaceName(PlaceEnum placeType)
+    {
+        return placeType switch
+        {
+            PlaceEnum.LifeSupportCabin => "维生舱",
+            PlaceEnum.Cockpit => "驾驶室",
+            PlaceEnum.PowerCabin => "动力舱",
+            PlaceEnum.CoralCoast => "珊瑚礁海域",
+            _ => "当前环境"
+        };
     }
 
     private static void ChangeCount(List<string> eventItemList)
@@ -187,11 +218,15 @@ public static class AfterChatFactory
 
         try
         {
+            int oldValue = CountManager.Instance.GetCount(countName);
+            int newValue = oldValue;
+            
             if (operation.StartsWith("+"))
             {
                 // 增加计数，格式：+1, +2 等
                 int delta = int.Parse(operation.Substring(1));
                 CountManager.Instance.ChangeCount(countName, delta);
+                newValue = CountManager.Instance.GetCount(countName);
                 // 触发计数变化事件，用于检查段落条件
                 CheckCountParagraphConditions(countName);
             }
@@ -200,6 +235,7 @@ public static class AfterChatFactory
                 // 减少计数，格式：-1, -2 等
                 int delta = int.Parse(operation);
                 CountManager.Instance.ChangeCount(countName, delta);
+                newValue = CountManager.Instance.GetCount(countName);
                 // 触发计数变化事件，用于检查段落条件
                 CheckCountParagraphConditions(countName);
             }
@@ -208,8 +244,15 @@ public static class AfterChatFactory
                 // 设置计数，格式：=1, =2 等
                 int value = int.Parse(operation.Substring(1));
                 CountManager.Instance.SetCount(countName, value);
+                newValue = value;
                 // 触发计数变化事件，用于检查段落条件
                 CheckCountParagraphConditions(countName);
+            }
+            
+            // 输出计数变化调试信息
+            if (oldValue != newValue)
+            {
+                UnityEngine.Debug.Log($"[计数变化] {countName}: {oldValue} → {newValue}");
             }
         }
         catch (System.FormatException)
@@ -242,7 +285,7 @@ public static class AfterChatFactory
             return;
         }
 
-        // 如果该科技正在研究中，直接完成研究
+        // 如果该科技正在研究中，直接完成研究（会自动播放音效和触发事件）
         if (TechnologyManager.Instance.IsTechNodeBeingStudied(techName))
         {
             TechnologyManager.Instance.AddStudyProgress(9999);
@@ -253,15 +296,21 @@ public static class AfterChatFactory
             var progress = TechnologyManager.Instance.StudyProgressDict[techName];
             progress.AddProgress(9999);
             
-            // 解锁该科技的配方
-            foreach (var recipe in techNode.recipes)
+            // 如果科技在待研究队列中，需要从队列中移除
+            if (TechnologyManager.Instance.GetStudyOrder(techNode) >= 0)
             {
-                CraftManager.Instance.UnlockRecipe(recipe.cardId);
+                TechnologyManager.Instance.RemoveFromStudyQueue(techNode, true);
             }
             
-            // 触发界面刷新
+            // 复用科技解锁流程：播放音效、解锁配方、触发事件
+            SoundManager.Instance.PlaySound("研究完成", true);
+            TechnologyManager.Instance.UnlockTechNode(techNode);
+            EventManager.Instance.TriggerEvent(EventType.ComplishStudy, techNode);
             EventManager.Instance.TriggerEvent(EventType.RefreshStudyWindow);
         }
+        
+        // 输出科技解锁调试信息
+        UnityEngine.Debug.Log($"[科技解锁] 已解锁科技：{techName}");
     }
 
     public static void OtherEvent(List<string> eventItemList)

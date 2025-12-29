@@ -122,6 +122,12 @@ public class TimeManager : IManager
     private void HandleFineUpdate()
     {
         EventManager.Instance.TriggerEvent(EventType.FineUpdate);
+        
+        // 检查剧情触发条件
+        if (ChatConditionManager.Instance != null)
+        {
+            ChatConditionManager.Instance.TrackCurrentStatus();
+        }
     }
 
     /// <summary>

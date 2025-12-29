@@ -373,29 +373,62 @@ public class ChatConditionManager : MonoBehaviour
     }
 
     #endregion
+    
+    // 记录已触发的时间点，避免重复触发
+    private static int lastTriggeredHour = -1;
+    private static int lastTriggeredDay = -1;
+    
     public void TrackCurrentStatus()
     {
         TimeSpan difference = TimeManager.Instance.CurTime - TimeManager.Instance.StartDateTime;
-        if(difference.Days==0&&TimeManager.Instance.CurTime.Hour==5)
+        int currentDay = difference.Days;
+        int currentHour = TimeManager.Instance.CurTime.Hour;
+        
+        // 如果日期改变，重置触发记录
+        if (currentDay != lastTriggeredDay)
+        {
+            lastTriggeredHour = -1;
+            lastTriggeredDay = currentDay;
+        }
+        
+        // 第一天5点时，修复未完成时触发
+        if (currentDay == 0 && currentHour == 5 && lastTriggeredHour != 5)
         {
             //判断
-            if (!TechnologyManager.Instance.IsTechNodeComplished("修理")&&!TechnologyManager.Instance.IsTechNodeBeingStudied("修理"))
+            if (!TechnologyManager.Instance.IsTechNodeComplished("修理") && !TechnologyManager.Instance.IsTechNodeBeingStudied("修理"))
             {
-                EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour5","FixUnConplished"));
+                EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour5", "FixUnConplished"));
+                lastTriggeredHour = 5;
             }
         }
-        if(difference.Days==0&&TimeManager.Instance.CurTime.Hour==11)
+        
+        // 第一天11点时，修复未完成时触发
+        if (currentDay == 0 && currentHour == 11 && lastTriggeredHour != 11)
         {
             //判断
-            if (!TechnologyManager.Instance.IsTechNodeComplished("修理")&&!TechnologyManager.Instance.IsTechNodeBeingStudied("修理"))
+            if (!TechnologyManager.Instance.IsTechNodeComplished("修理") && !TechnologyManager.Instance.IsTechNodeBeingStudied("修理"))
             {
-                EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour11","FixUnConplished"));
+                EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour11", "FixUnConplished"));
+                lastTriggeredHour = 11;
             }
         }
-        // 第一天12点后，检查"麦麦自己研究修理"计数条件
-        if(difference.Days==0&&TimeManager.Instance.CurTime.Hour>=12)
+        
+        // 第一天12点及之后，检查"麦麦自己研究修理"计数条件
+        // 只在第一次进入12点时触发一次，之后每分钟检查一次（由条件类内部处理）
+        if (currentDay == 0 && currentHour >= 12)
         {
-            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour12After","CheckCount"));
+            // 只在第一次进入12点时触发，或者每分钟检查一次（条件类会自己判断是否满足）
+            if (lastTriggeredHour < 12)
+            {
+                // 第一次进入12点，触发检查
+                EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour12After", "CheckCount"));
+                lastTriggeredHour = 12;
+            }
+            else if (currentHour == 12 && TimeManager.Instance.CurTime.Minute == 0)
+            {
+                // 在12点整点每分钟检查一次（避免重复触发，只在整点检查）
+                EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour12After", "CheckCount"));
+            }
         }
     }
 }

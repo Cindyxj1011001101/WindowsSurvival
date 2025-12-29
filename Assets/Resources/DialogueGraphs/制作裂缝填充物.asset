@@ -368,25 +368,6 @@ MonoBehaviour:
     - name: "\u8F93\u51FA"
       direction: 1
       PortCondition: "\u6761\u4EF6"
-  - guid: aba99ec401345aa489e15cf3a31f1f52
-    Title: "\u5BF9\u8BDD"
-    typeName: Dialogue
-    NodePos: {x: 5662.6665, y: 1521.3333}
-    chatData:
-      MessageSender: 1
-      MessageCondition: 
-      Message: "\u5BF9\u4E0D\u4F4F\u4E86,\u8001\u59B9\u554A"
-      preWaitTime: 0
-      lateWaitTime: 0
-      TriggerMessageEffect: 
-    inputport:
-      name: "\u8F93\u5165"
-      direction: 0
-      PortCondition: "\u6761\u4EF6"
-    outputports:
-    - name: "\u8F93\u51FA"
-      direction: 1
-      PortCondition: "\u6761\u4EF6"
   - guid: b0ddf7d24f0363649898a9bbf377d23d
     Title: "\u5BF9\u8BDD"
     typeName: Dialogue
@@ -1030,7 +1011,7 @@ MonoBehaviour:
       Message: "\u4F60\u8BE5\u4E0D\u8BA4\u5B57\u5427?"
       preWaitTime: 0
       lateWaitTime: 0
-      TriggerMessageEffect: "\u8BA1\u6570_\u4FFA\u662F\u6587\u76F2_1"
+      TriggerMessageEffect: "\u8BA1\u6570_\u4FFA\u662F\u6587\u76F2_=1"
     inputport:
       name: "\u8F93\u5165"
       direction: 0
@@ -1119,14 +1100,6 @@ MonoBehaviour:
   - outputNodeGUID: 6ae06602b74ac6f49be3852b73e581b8
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 1d2d7b71e03c0ed4fbd3e0f0f649e914
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: 1d2d7b71e03c0ed4fbd3e0f0f649e914
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: aba99ec401345aa489e15cf3a31f1f52
-    inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: aba99ec401345aa489e15cf3a31f1f52
-    outputPortName: "\u8F93\u51FA"
-    inputNodeGUID: b0ddf7d24f0363649898a9bbf377d23d
     inputPortName: "\u8F93\u5165"
   - outputNodeGUID: b0ddf7d24f0363649898a9bbf377d23d
     outputPortName: "\u8F93\u51FA"
@@ -1252,6 +1225,10 @@ MonoBehaviour:
     outputPortName: "\u8BA1\u6570_\u9EA6\u9EA6\u81EA\u5DF1\u7814\u7A76\u4FEE\u7406_==0"
     inputNodeGUID: 528de9cbc52a2094793e50bec88d9df5
     inputPortName: "\u8F93\u5165"
+  - outputNodeGUID: ddf7a85f5871dd045a2956e96483be23
+    outputPortName: "\u8BA1\u6570_\u9EA6\u9EA6\u81EA\u5DF1\u7814\u7A76\u4FEE\u7406_==1"
+    inputNodeGUID: 1a4cc1553573cd7429d7e366c749e0fc
+    inputPortName: "\u8F93\u5165"
   - outputNodeGUID: 1a4cc1553573cd7429d7e366c749e0fc
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: c5557153432d2204e99abd5b68693eac
@@ -1268,7 +1245,7 @@ MonoBehaviour:
     outputPortName: "\u8F93\u51FA"
     inputNodeGUID: 1df8ed506aa27044882af9cfae0668f4
     inputPortName: "\u8F93\u5165"
-  - outputNodeGUID: ddf7a85f5871dd045a2956e96483be23
-    outputPortName: "\u8BA1\u6570_\u9EA6\u9EA6\u81EA\u5DF1\u7814\u7A76\u4FEE\u7406_==1"
-    inputNodeGUID: 1a4cc1553573cd7429d7e366c749e0fc
+  - outputNodeGUID: 1d2d7b71e03c0ed4fbd3e0f0f649e914
+    outputPortName: "\u8F93\u51FA"
+    inputNodeGUID: b0ddf7d24f0363649898a9bbf377d23d
     inputPortName: "\u8F93\u5165"

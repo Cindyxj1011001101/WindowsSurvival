@@ -320,7 +320,7 @@ public class TechnologyManager : IManager
     /// <summary>
     /// 解锁一个科技
     /// </summary>
-    private void UnlockTechNode(ScriptableTechnologyNode techNode)
+    public void UnlockTechNode(ScriptableTechnologyNode techNode)
     {
         // 解锁相应配方
         foreach (var recipe in techNode.recipes)
