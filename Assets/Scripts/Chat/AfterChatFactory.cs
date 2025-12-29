@@ -13,6 +13,7 @@ public static class AfterChatFactory
         //解锁：解锁_目标窗口名称
         //添加：添加_玩家（玩家/场景）_压缩饼干（物品名称）
         //计数：计数_计数名_+1/-1/=1(_后面填的是变化或等于的值，如+1表示使该计数增加1，-1表示使该计数减少1，=1表示使该计数等于1)
+        //科技：科技_科技名（直接完成指定科技的研究，解锁该科技及其配方）
         //其他：其他_其他名
         if(EventName=="")return;
         List<string> eventList = new List<string>(EventName.Split(';'));
@@ -46,6 +47,9 @@ public static class AfterChatFactory
                     break;
                 case "计数":
                     ChangeCount(eventItemList);
+                    break;
+                case "科技":
+                    CompleteTechnology(eventItemList);
                     break;
                 case "其他":
                     OtherEvent(eventItemList);
@@ -211,6 +215,52 @@ public static class AfterChatFactory
         catch (System.FormatException)
         {
             UnityEngine.Debug.LogError($"[计数效果格式错误] 操作值 \"{operation}\" 无法解析为数字。应使用 +数字、-数字 或 =数字 格式。");
+        }
+    }
+
+    private static void CompleteTechnology(List<string> eventItemList)
+    {
+        if (eventItemList.Count < 2)
+        {
+            UnityEngine.Debug.LogError($"[科技效果格式错误] 参数不足，需要2个参数：科技_科技名");
+            return;
+        }
+
+        string techName = eventItemList[1];
+        
+        // 获取科技节点
+        var techNode = TechnologyManager.Instance.GetTechNodeByName(techName);
+        if (techNode == null)
+        {
+            UnityEngine.Debug.LogError($"[科技效果错误] 科技 \"{techName}\" 不存在！");
+            return;
+        }
+
+        // 如果科技已经完成，直接返回
+        if (TechnologyManager.Instance.IsTechNodeComplished(techName))
+        {
+            return;
+        }
+
+        // 如果该科技正在研究中，直接完成研究
+        if (TechnologyManager.Instance.IsTechNodeBeingStudied(techName))
+        {
+            TechnologyManager.Instance.AddStudyProgress(9999);
+        }
+        else
+        {
+            // 如果科技不在研究中，直接设置进度为完成
+            var progress = TechnologyManager.Instance.StudyProgressDict[techName];
+            progress.AddProgress(9999);
+            
+            // 解锁该科技的配方
+            foreach (var recipe in techNode.recipes)
+            {
+                CraftManager.Instance.UnlockRecipe(recipe.cardId);
+            }
+            
+            // 触发界面刷新
+            EventManager.Instance.TriggerEvent(EventType.RefreshStudyWindow);
         }
     }
 

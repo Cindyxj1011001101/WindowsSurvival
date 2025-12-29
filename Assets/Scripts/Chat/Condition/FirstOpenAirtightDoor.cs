@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// 段落触发条件：首次打开气密舱门时触发（仅触发一次）
+/// 检测事件类型："Detail"，值："气密舱门"
+/// 使用静态变量确保只触发一次
+/// </summary>
 public class FirstOpenAirtightDoor:ParagraphCondition
 {    
     public static bool triggered=false;

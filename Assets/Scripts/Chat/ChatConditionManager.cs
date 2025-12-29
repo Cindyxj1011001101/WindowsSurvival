@@ -191,6 +191,11 @@ public class ChatConditionManager : MonoBehaviour
                         new Day1Hour11FixUnConplished(paragraphData.ParagraphCondition, true, false,
                             PassParagraphCondition,paragraphData));
                     break;
+                case "第一天12点后,麦麦自己研究修理=1":
+                    DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
+                        new Day1Hour12AfterCountMaiMaiSelfResearchFix(paragraphData.ParagraphCondition, true, false,
+                            PassParagraphCondition, paragraphData));
+                    break;
                 case "第一次堵住渗水裂缝":
                     DetectedParagraphConditions.Add(paragraphData.ParagraphCondition,
                         new SealCracks(paragraphData.ParagraphCondition, true, false,
@@ -386,6 +391,11 @@ public class ChatConditionManager : MonoBehaviour
             {
                 EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour11","FixUnConplished"));
             }
+        }
+        // 第一天12点后，检查"麦麦自己研究修理"计数条件
+        if(difference.Days==0&&TimeManager.Instance.CurTime.Hour>=12)
+        {
+            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Day1Hour12After","CheckCount"));
         }
     }
 }

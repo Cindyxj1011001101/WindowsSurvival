@@ -1,6 +1,11 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// 段落触发条件的基类
+/// 所有段落相关的触发条件都应继承此类
+/// 子类需要实现 Detect() 或 OnCardChanges() 方法来定义具体的触发逻辑
+/// </summary>
 [Serializable]
 public class ParagraphCondition
 {

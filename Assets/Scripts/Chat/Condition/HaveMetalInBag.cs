@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 对话触发条件：背包中有金属（废金属）时触发
+/// 通过检测卡牌变化事件，当"废金属"卡牌被添加到背包时触发
+/// </summary>
 public class HaveMetalInBag : ChatCondition
 {
     private bool triggered;

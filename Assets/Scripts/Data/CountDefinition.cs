@@ -18,6 +18,7 @@ public static class CountDefinition
         // "对话次数",
         // "探索次数",
         "麦麦自己研究修理",
+        "骗麦麦自己在研究修理",
     };
 
     /// <summary>
@@ -39,4 +40,3 @@ public static class CountDefinition
         return new List<string>(DefinedCounts);
     }
 }
-

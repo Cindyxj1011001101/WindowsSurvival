@@ -1,6 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// 段落触发条件：首次进入珊瑚岛时触发（仅触发一次）
+/// 检测事件类型："EnterEnvironment"，值："CoralCoast"
+/// 使用静态变量确保只触发一次
+/// </summary>
 public class FirstEnterCoralIsland:ParagraphCondition
 {
     public static bool triggered=false;

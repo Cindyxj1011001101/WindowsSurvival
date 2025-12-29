@@ -2,6 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// 对话触发条件的基类
+/// 所有对话相关的触发条件都应继承此类
+/// 子类需要实现 Detect() 或 OnCardChanges() 方法来定义具体的触发逻辑
+/// </summary>
 [Serializable]
 public class ChatCondition
 {
