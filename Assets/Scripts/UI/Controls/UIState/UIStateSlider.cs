@@ -44,13 +44,14 @@ public class UIStateSlider : MonoBehaviour
         return Mathf.Repeat(Time.time, cycle);
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         init = false;
         curChangeLavel = 0;
         if (button != null) button.transform.DOKill();
         if (arrow != null) arrow.transform.DOKill();
         if (icon != null) icon.transform.DOKill();
+        if (slider != null) slider.DOKill();
         fillColor = ColorManager.White;
     }
 
