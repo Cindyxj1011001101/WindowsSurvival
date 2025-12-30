@@ -53,7 +53,7 @@ public class Main : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            GameEventManager.Instance.TestFunc();
+            TechnologyManager.Instance.AddStudyProgress("燃料发电", 9999);
         }
     }
 #endif

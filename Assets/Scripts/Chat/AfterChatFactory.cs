@@ -279,35 +279,7 @@ public static class AfterChatFactory
             return;
         }
 
-        // 如果科技已经完成，直接返回
-        if (TechnologyManager.Instance.IsTechNodeComplished(techName))
-        {
-            return;
-        }
-
-        // 如果该科技正在研究中，直接完成研究（会自动播放音效和触发事件）
-        if (TechnologyManager.Instance.IsTechNodeBeingStudied(techName))
-        {
-            TechnologyManager.Instance.AddStudyProgress(9999);
-        }
-        else
-        {
-            // 如果科技不在研究中，直接设置进度为完成
-            var progress = TechnologyManager.Instance.StudyProgressDict[techName];
-            progress.AddProgress(9999);
-            
-            // 如果科技在待研究队列中，需要从队列中移除
-            if (TechnologyManager.Instance.GetStudyOrder(techNode) >= 0)
-            {
-                TechnologyManager.Instance.RemoveFromStudyQueue(techNode, true);
-            }
-            
-            // 复用科技解锁流程：播放音效、解锁配方、触发事件
-            SoundManager.Instance.PlaySound("研究完成", true);
-            TechnologyManager.Instance.UnlockTechNode(techNode);
-            EventManager.Instance.TriggerEvent(EventType.ComplishStudy, techNode);
-            EventManager.Instance.TriggerEvent(EventType.RefreshStudyWindow);
-        }
+        TechnologyManager.Instance.AddStudyProgress(techNode, 9999);
         
         // 输出科技解锁调试信息
         UnityEngine.Debug.Log($"[科技解锁] 已解锁科技：{techName}");

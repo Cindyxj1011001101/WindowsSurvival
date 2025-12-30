@@ -85,11 +85,6 @@ public class GameEventManager : IManager
         }
     }
 
-    public void TestFunc()
-    {
-        AllEvents[nameof(MagneticStorm)].Trigger();
-    }
-
     /// <summary>
     /// 尝试触发事件
     /// </summary>

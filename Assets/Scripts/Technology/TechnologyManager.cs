@@ -260,21 +260,13 @@ public class TechnologyManager : IManager
     {
         if (CurStudiedTechNode == null) return;
 
-        var current = CurStudiedTechNode;
-
         // 恢复中级科技研究的电力消耗
         if (CurStudiedTechNode.techLevel == TechLevl.Intermediate)
             ElectricPowerManager.Instance.DisconnectPower(nameof(TechnologyManager));
 
         IsStudying = false;
 
-        if (complished)
-        {
-            // 触发研究完成事件
-            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("FinishResearch", current.techName));
-            EventManager.Instance.TriggerEvent(EventType.ComplishStudy, current);
-        }
-        else
+        if (!complished)
         {
             // 触发研究暂停事件
             EventManager.Instance.TriggerEvent(EventType.StopStudy);
@@ -292,24 +284,47 @@ public class TechnologyManager : IManager
         AddStudyProgress(BASIC_STUDY_RATE);
     }
 
-    public void AddStudyProgress(float value)
+    public void AddStudyProgress(ScriptableTechnologyNode techNode, float value)
     {
+        if (techNode == null) return;
+
+        if (!StudyProgressDict.TryGetValue(techNode.techName, out var progress)) return;
+
+        if (progress.Complished) return;
+
         // 进度增长
-        var techNodeProgress = StudyProgressDict[CurStudiedTechNode.techName];
-        techNodeProgress.AddProgress(value);
+        progress.AddProgress(value);
 
         // 研究完成
-        if (techNodeProgress.Complished)
+        if (progress.Complished)
         {
-            SoundManager.Instance.PlaySound("研究完成", true);
             // 解锁该科技
-            UnlockTechNode(CurStudiedTechNode);
+            UnlockTechNode(techNode);
             // 从研究队列中移除该节点
-            RemoveFromStudyQueue(CurStudiedTechNode, true);
+            RemoveFromStudyQueue(techNode, true);
+
+            // 触发研究完成事件
+            SoundManager.Instance.PlaySound("研究完成", true);
+            EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("FinishResearch", techNode.techName));
+            EventManager.Instance.TriggerEvent(EventType.ComplishStudy, techNode);
             return;
         }
 
         EventManager.Instance.TriggerEvent(EventType.RefreshStudyWindow);
+    }
+
+    public void AddStudyProgress(float value)
+    {
+        AddStudyProgress(CurStudiedTechNode, value);
+    }
+
+    public void AddStudyProgress(string techName, float value)
+    {
+        if (string.IsNullOrEmpty(techName)) return;
+
+        if (!allTechNodes.TryGetValue(techName, out var node)) return;
+
+        AddStudyProgress(node, value);
     }
 
     public float GetStudyProgress(ScriptableTechnologyNode techNode)
@@ -320,7 +335,7 @@ public class TechnologyManager : IManager
     /// <summary>
     /// 解锁一个科技
     /// </summary>
-    public void UnlockTechNode(ScriptableTechnologyNode techNode)
+    private void UnlockTechNode(ScriptableTechnologyNode techNode)
     {
         // 解锁相应配方
         foreach (var recipe in techNode.recipes)
