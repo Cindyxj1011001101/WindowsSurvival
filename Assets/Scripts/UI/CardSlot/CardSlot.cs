@@ -53,6 +53,7 @@ public class CardSlot : MonoBehaviour
     private Dictionary<Type, UIStateSlider> componentSliders = new();   // 用于存储组件的滑动条
     private Dictionary<string, Sprite> intentionSpriteLookup = new();   // 实体意图图标对照表
     private Dictionary<string, Sprite> intentionSpriteReversedInColorLookup = new();   // 反色实体意图图标对照表
+    private bool? originalMaskRaycastTarget;                         // 保存 mask 的原始 raycastTarget 值
 
     private Coroutine switchIntentionCo;
 
@@ -143,6 +144,8 @@ public class CardSlot : MonoBehaviour
 
         if (PeekCard().CanQuickInteract(card, out var tip))
         {
+            // 恢复 mask 的原始 raycastTarget 值
+            RestoreMaskRaycastTarget();
             mask.SetActive(false);
             Interactable = true;
             tipController.enabled = true;
@@ -150,16 +153,53 @@ public class CardSlot : MonoBehaviour
         }
         else
         {
-            mask.SetActive(true);
             Interactable = false;
+            // 即使不能交互，如果有提示信息也显示（比如攻击范围不够的提示）
+            // 只针对有武器组件的情况，让 mask 不阻挡鼠标事件
+            if (!string.IsNullOrEmpty(tip) && card.TryGetComponent<WeaponComponent>(out _))
+            {
+                // 保存并修改 mask 的 raycastTarget，使其不阻挡鼠标事件
+                if (mask != null && mask.TryGetComponent<UnityEngine.UI.Image>(out var maskImage))
+                {
+                    if (!originalMaskRaycastTarget.HasValue)
+                    {
+                        originalMaskRaycastTarget = maskImage.raycastTarget;
+                    }
+                    maskImage.raycastTarget = false; // mask 不阻挡鼠标事件
+                }
+                mask.SetActive(true);
+                tipController.enabled = true;
+                tipController.SetTip(tip);
+            }
+            else
+            {
+                // 恢复 mask 的原始 raycastTarget 值
+                RestoreMaskRaycastTarget();
+                mask.SetActive(true);
+                tipController.enabled = false;
+            }
         }
     }
 
     private void OnCardPutDown()
     {
+        // 恢复 mask 的原始 raycastTarget 值
+        RestoreMaskRaycastTarget();
         mask.SetActive(false);
         Interactable = false;
         tipController.enabled = false;
+    }
+
+    /// <summary>
+    /// 恢复 mask 的原始 raycastTarget 值
+    /// </summary>
+    private void RestoreMaskRaycastTarget()
+    {
+        if (originalMaskRaycastTarget.HasValue && mask != null && mask.TryGetComponent<UnityEngine.UI.Image>(out var maskImage))
+        {
+            maskImage.raycastTarget = originalMaskRaycastTarget.Value;
+            originalMaskRaycastTarget = null;
+        }
     }
 
     private void OnStartChangeTime()

@@ -127,10 +127,32 @@ public abstract class EntityCard : Card, IEntity
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
-        if (card.TryGetComponent<WeaponComponent>(out var weapon) && weapon.WithinAttackRange(this))
+        if (card.TryGetComponent<WeaponComponent>(out var weapon))
         {
-            tip = $"攻击该单位\n耗时:  {weapon.attackTime}分钟\n造成伤害:  {weapon.atk}";
-            return true;
+            // 计算当前距离
+            var dist = DistanceTo(Player.Instance);
+            // 构建提示信息，始终显示攻击距离
+            var distanceInfo = $"攻击距离: {weapon.minAtkDist:0.0} - {weapon.maxAtkDist:0.0}\n当前距离: {dist:0.0}";
+            
+            if (weapon.WithinAttackRange(this))
+            {
+                tip = $"攻击该单位\n耗时:  {weapon.attackTime}分钟\n造成伤害:  {weapon.atk}\n{distanceInfo}";
+                return true;
+            }
+            else
+            {
+                // 不在攻击范围内，显示原因和攻击距离
+                if (weapon.CanAttack(this, out string reason))
+                {
+                    tip = $"攻击该单位\n耗时:  {weapon.attackTime}分钟\n造成伤害:  {weapon.atk}\n{distanceInfo}";
+                    return true;
+                }
+                else
+                {
+                    tip = $"无法攻击：{reason}\n{distanceInfo}";
+                    return false;
+                }
+            }
         }
         return false;
     }
@@ -327,12 +349,23 @@ public abstract class EntityCard : Card, IEntity
 
     #region 行为
     /// <summary>
+    /// 获取攻击音效名称，子类可以重写以使用不同的音效
+    /// </summary>
+    protected virtual string GetAttackSound()
+    {
+        return "默认攻击声";
+    }
+
+    /// <summary>
     /// 普通攻击
     /// </summary>
     /// <param name="target">目标</param>
     /// <param name="dmg">伤害值</param>
     public void SingleAttack(IEntity target, float dmg)
     {
+        // 播放攻击音效
+        SoundManager.Instance.PlaySound(GetAttackSound(), true);
+        // 造成伤害
         target.TakeDamage(dmg, this);
     }
 

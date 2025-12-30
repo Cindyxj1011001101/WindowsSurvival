@@ -56,6 +56,8 @@ public class Player : IEntity, IManager
 
     public void DealDamage(IEntity target)
     {
+        // 播放攻击音效
+        SoundManager.Instance.PlaySound("默认攻击声", true);
         // 造成伤害
         target.TakeDamage(Atk, this);
         // 消耗时间

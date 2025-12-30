@@ -748,6 +748,24 @@ public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
     {
         if (deadProgress <= 0)
         {
+            // 输出死亡调试信息
+            var env = BelongedCard.Bag as EnvironmentBag;
+            string reason = "未知原因";
+            if (env != null)
+            {
+                if (!pressureList.Contains(env.PressureLevel))
+                    reason = $"压强不合适（当前压强：{env.PressureLevel}，需要压强：{string.Join("、", pressureList)}）";
+                else
+                {
+                    float temp = GetEnvTempreture(env);
+                    if (temp > maxLiveTempture)
+                        reason = $"温度过高（当前温度：{temp:F1}°C，最高存活温度：{maxLiveTempture:F1}°C）";
+                    else if (temp <= minLiveTempture)
+                        reason = $"温度过低（当前温度：{temp:F1}°C，最低存活温度：{minLiveTempture:F1}°C）";
+                }
+            }
+            UnityEngine.Debug.Log($"[作物死亡] {BelongedCard.CardName} 死亡了。死亡原因：{reason}");
+            
             ShowTip($"{BelongedCard.CardName}死亡了");
             deadProgress = 0;
             BelongedCard.DestroyThis();
@@ -1133,6 +1151,7 @@ public class WeaponComponent : CardComponent
     public float maxAtkDist;      // 最大攻击距离
     public AttackForm attackForm; // 攻击方式
     public int attackTime;        // 攻击时间(分钟)
+    public string attackSound = "默认攻击声"; // 攻击音效名称，默认为"默认攻击声"
 
     public WeaponComponent() { }
 
@@ -1148,6 +1167,8 @@ public class WeaponComponent : CardComponent
     public void DealDamage(IEntity target)
     {
         // TODO: 范围伤害武器
+        // 播放攻击音效
+        SoundManager.Instance.PlaySound(attackSound, true);
         // 消耗武器耐久
         BelongedCard.Use();
         // 造成伤害

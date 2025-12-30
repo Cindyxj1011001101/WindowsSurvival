@@ -11,6 +11,11 @@ public class Rat : EntityCard
         base.TakeDamage(damage, damageDealer);
     }
 
+    protected override string GetAttackSound()
+    {
+        return "老鼠攻击声";
+    }
+
     protected override EntityIntention GetHighestPriorityIntention()
     {
         var target = GetAggroTarget();

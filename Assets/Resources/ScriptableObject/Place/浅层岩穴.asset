@@ -24,7 +24,10 @@ MonoBehaviour:
   minCoord: 0
   maxCoord: 15
   connectedOutdoorPlace: 0
+  sunlightInfluenceFactor: 0
   initialBagStateConfig:
-    hasCable: 0
     containedCards: []
+    hasCable: 0
     pressureLevel: 3
+    brightness: 0
+    roomTemperature: 180
