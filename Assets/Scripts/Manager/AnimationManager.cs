@@ -87,8 +87,8 @@ public static class AnimationConfig
     public const float MOVE_INTENTION_ROT_Z = 4f;
 
     // 进食意图动效
-    public const float EAT_INTENTION_GO_DURATION = 0.3f;
-    public const float EAT_INTENTION_RETURN_DURATION = 0.2f;
+    public const float EAT_INTENTION_GO_DURATION = 0.25f;
+    public const float EAT_INTENTION_RETURN_DURATION = 0.15f;
     public const float EAT_INTENTION_ARC_HEIGHT = 55f;
     public const float EAT_INTENTION_EATER_SCALE = 1.06f;
     public const float EAT_INTENTION_EATER_ROT_Z = 10f;
@@ -100,8 +100,9 @@ public static class AnimationConfig
     public const float EAT_INTENTION_CHEW_SCALE_Y = 0.92f;
     public const float EAT_INTENTION_CHEW_ROT_Z = -6f;
 
-    public const float MELEE_ATTACK_GO_DURATION = 0.3f;
-    public const float MELEE_ATTACK_RETURN_DURATION = 0.2f;
+    // 近战攻击动效
+    public const float MELEE_ATTACK_GO_DURATION = 0.25f;
+    public const float MELEE_ATTACK_RETURN_DURATION = 0.15f;
     public const float MELEE_ATTACK_ARC_HEIGHT = 45f;
     public const float MELEE_ATTACK_LUNGE_SCALE = 1.08f;
     public const float MELEE_ATTACK_LUNGE_ROT_Z = 12f;
