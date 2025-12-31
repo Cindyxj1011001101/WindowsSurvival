@@ -300,7 +300,7 @@ public static class CardFactory
         }
         if (config.IsWeapon)
         {
-            card.AddComponent(new WeaponComponent(config.WeaponAtk, config.MinAtkDist, config.MaxAtkDist, config.AtkForm, config.AtkTime));
+            card.AddComponent(new WeaponComponent(config.WeaponAtk, config.MinAtkDist, config.MaxAtkDist, config.AtkForm, config.AtkTime, config.AtkSound));
         }
         if (config.IsEntity)
         {
