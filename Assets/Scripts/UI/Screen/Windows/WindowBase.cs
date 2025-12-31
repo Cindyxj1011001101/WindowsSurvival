@@ -43,6 +43,7 @@ public abstract class WindowBase : PanelBase
 
     private Vector3 lastPosition;
     private Vector3 lastSizeDelta;
+    private bool hasSavedPosition = false; // 标记是否保存过位置
 
     protected bool focused = false;
 
@@ -295,9 +296,18 @@ public abstract class WindowBase : PanelBase
     {
         SetState(WindowState.Default);
 
-        // 设置默认位置
-        lastPosition = RectTransform.anchoredPosition;
-        lastSizeDelta = RectTransform.sizeDelta;
+        // 如果之前保存过位置（通过 Close() 保存的 anchoredPosition），则恢复它；否则使用当前位置
+        if (hasSavedPosition)
+        {
+            RectTransform.anchoredPosition = new Vector2(lastPosition.x, lastPosition.y);
+            RectTransform.sizeDelta = lastSizeDelta;
+        }
+        else
+        {
+            // 设置默认位置
+            lastPosition = RectTransform.anchoredPosition;
+            lastSizeDelta = RectTransform.sizeDelta;
+        }
 
         Show();
     }
@@ -334,6 +344,14 @@ public abstract class WindowBase : PanelBase
     public void Close()
     {
         if (state == WindowState.Closed) return;
+
+        // 在关闭前保存当前位置，以便下次打开时恢复（与 Create() 方法保持一致，使用 anchoredPosition）
+        if (state == WindowState.Default)
+        {
+            lastPosition = RectTransform.anchoredPosition;
+            lastSizeDelta = RectTransform.sizeDelta;
+            hasSavedPosition = true;
+        }
 
         SetState(WindowState.Closed);
 
