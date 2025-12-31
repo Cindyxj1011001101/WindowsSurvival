@@ -625,7 +625,7 @@ public class StateMachineComponent : CardComponent
         if (!stateDict.ContainsKey(newStateName)) return;
 
         if (currentStateName == newStateName) return;
-        
+
         currentStateName = newStateName;
         RefreshSlot();
     }
@@ -638,17 +638,17 @@ public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
     private const int INITIAL_DEATH_PROGRESS = 5; // 初始死亡进度
     private const int MAX_GROWTH = 100; // 最大生长度
 
-    public float growthRate; // 生长速率
-    public int deadProgress; // 死亡进度
-    public float minConfortTempreture; // 最低舒适温度
-    public float maxConfortTempreture; // 最高舒适温度
-    public float minGrowTempture; // 最低生长温度
-    public float maxGrowTempture; // 最高生长温度
-    public float minLiveTempture; // 最低存活温度
-    public float maxLiveTempture; // 最高存活温度
-    public string deadCardId; // 死亡后变成的卡牌ID 
-    public List<PressureLevel> pressureList = new();
-    public bool growStopped = false;
+    public float growthRate;            // 生长速率
+    public int deadProgress;            // 死亡进度
+    public float minConfortTempreture;  // 最低舒适温度
+    public float maxConfortTempreture;  // 最高舒适温度
+    public float minGrowTempture;       // 最低生长温度
+    public float maxGrowTempture;       // 最高生长温度
+    public float minLiveTempture;       // 最低存活温度
+    public float maxLiveTempture;       // 最高存活温度
+    public string deadCardId;           // 死亡后变成的卡牌ID 
+    public List<PressureLevel> pressureList = new();    // 适合生长的压强
+    public bool growStopped = false;    // 是否停止生长
 
     [JsonIgnore] public UnityAction onDead;
     [JsonIgnore] public bool IsRipe => value >= maxValue; // 是否成熟
@@ -765,7 +765,7 @@ public class PlantGrowthComponent : ContinuousValueComponent, IUpdate
                 }
             }
             UnityEngine.Debug.Log($"[作物死亡] {BelongedCard.CardName} 死亡了。死亡原因：{reason}");
-            
+
             ShowTip($"{BelongedCard.CardName}死亡了");
             deadProgress = 0;
             BelongedCard.DestroyThis();
@@ -875,7 +875,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
     [JsonIgnore] public UnityAction onNotBurning;       // 非燃烧时每回合处理
     [JsonIgnore] public UnityAction onIgnite;           // 点燃时触发
     [JsonIgnore] public UnityAction onExtinguish;       // 熄灭时触发
-    
+
     [JsonIgnore]
     public int FuelConsumption
     {
@@ -895,7 +895,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         int basicFuelConsumption = 1,
         int extraFuelConsumptionWhenWaterLevelHigh = 2,
         int extraFuelConsumptionWhenWinter = 4,
-        int autoExtinguishWaterLevelThreshold = 30, 
+        int autoExtinguishWaterLevelThreshold = 30,
         float oxygenConsumptionWhileBurning = 4,
         float coProductionWhileBurning = 2) : base(0, maxValue)
     {
@@ -954,7 +954,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, coProductionOnBurning);
 
         onIgnite?.Invoke();
-        
+
         //SoundManager.Instance.PlaySound("点火_01", true);
 
         RefreshSlot();
@@ -974,7 +974,7 @@ public class FuelStorageComponent : ContinuousValueComponent, IUpdate
         env.ChangeEnvironmentStateChangeRate(EnvironmentStateEnum.COLevel, -coProductionOnBurning);
 
         onExtinguish?.Invoke();
-        
+
         //SoundManager.Instance.PlaySound("熄灭", true);
 
         RefreshSlot();
@@ -1100,7 +1100,7 @@ public class CoordinateComponent : CardComponent
     public Coordinate coordinate = new();
 
     public float initialPosition;
-    
+
     [JsonIgnore] public float Position => coordinate.Position;
     [JsonIgnore] public EnvironmentBag Location => coordinate.Location;
 
@@ -1146,22 +1146,25 @@ public enum AttackForm
 
 public class WeaponComponent : CardComponent
 {
+    private const string DEFAULT_ATTACK_SOUND = "默认攻击声";
+
     public float atk;             // 攻击力
     public float minAtkDist;      // 最小攻击距离
     public float maxAtkDist;      // 最大攻击距离
     public AttackForm attackForm; // 攻击方式
     public int attackTime;        // 攻击时间(分钟)
-    public string attackSound = "默认攻击声"; // 攻击音效名称，默认为"默认攻击声"
+    public string attackSound;    // 攻击音效
 
     public WeaponComponent() { }
 
-    public WeaponComponent(float atk, float minAtkDist, float maxAtkDist, AttackForm attackForm, int attackTime)
+    public WeaponComponent(float atk, float minAtkDist, float maxAtkDist, AttackForm attackForm, int attackTime, string attackSound)
     {
         this.atk = atk;
         this.minAtkDist = minAtkDist;
         this.maxAtkDist = maxAtkDist;
         this.attackForm = attackForm;
         this.attackTime = attackTime;
+        this.attackSound = string.IsNullOrEmpty(attackSound) ? DEFAULT_ATTACK_SOUND : attackSound;
     }
 
     public void DealDamage(IEntity target)
