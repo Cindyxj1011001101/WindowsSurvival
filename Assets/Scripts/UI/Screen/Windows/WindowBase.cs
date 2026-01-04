@@ -43,7 +43,6 @@ public abstract class WindowBase : PanelBase
 
     private Vector3 lastPosition;
     private Vector3 lastSizeDelta;
-    private bool hasSavedPosition = false; // 标记是否保存过位置
 
     protected bool focused = false;
 
