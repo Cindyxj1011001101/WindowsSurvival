@@ -329,14 +329,6 @@ public abstract class WindowBase : PanelBase
     {
         if (state == WindowState.Closed) return;
 
-        // 在关闭前保存当前位置，以便下次打开时恢复（与 Create() 方法保持一致，使用 anchoredPosition）
-        if (state == WindowState.Default)
-        {
-            lastPosition = RectTransform.anchoredPosition;
-            lastSizeDelta = RectTransform.sizeDelta;
-            hasSavedPosition = true;
-        }
-
         SetState(WindowState.Closed);
 
         if (destroyAfterClosed)
