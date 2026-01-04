@@ -78,6 +78,13 @@ public static class AnimationConfig
     public const float PLAYER_DAMAGED_FLASH_FADE_IN = 0.05f;
     public const float PLAYER_DAMAGED_FLASH_FADE_OUT = 0.25f;
 
+    // 休息时的息屏和呼吸动效
+    public const float SLEEP_SCREEN_OFF_DURATION = 0.5f;
+    public const float SLEEP_SCREEN_ON_DURATION = 0.5f;
+    public const float SLEEP_BREATH_MIN_ALPHA = 0.9f;
+    public const float SLEEP_BREATH_MAX_ALPHA = 1f;
+    public const float SLEEP_BREATH_HALF_DURATION = 0.9f;
+
     // 移动意图动效（卡牌在原地上下浮动，可带缩放）
     public const float MOVE_INTENTION_BOB_OFFSET_Y = 10f;
     public const float MOVE_INTENTION_BOB_HALF_DURATION = 0.12f;
@@ -142,6 +149,11 @@ public class AnimationManager
     private Image _screenFlashImage;
     private Tween _screenFlashTween;
 
+    private CanvasGroup _sleepCanvasGroup;
+    private Image _sleepImage;
+    private Tween _sleepTween;
+    private Tween _sleepBreathTween;
+
     public Canvas Canvas
     {
         get
@@ -184,6 +196,98 @@ public class AnimationManager
         _screenFlashCanvasGroup.blocksRaycasts = false;
 
         go.SetActive(false);
+    }
+
+    private void EnsureSleepOverlay()
+    {
+        if (_sleepCanvasGroup != null && _sleepImage != null) return;
+        if (Canvas == null) return;
+
+        var go = new GameObject("SleepOverlay", typeof(RectTransform), typeof(Image), typeof(CanvasGroup));
+        var rect = go.GetComponent<RectTransform>();
+        rect.SetParent(Canvas.transform, false);
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.anchoredPosition = Vector2.zero;
+        rect.sizeDelta = Vector2.zero;
+        rect.SetAsLastSibling();
+
+        _sleepImage = go.GetComponent<Image>();
+        _sleepImage.raycastTarget = true;
+        _sleepImage.color = Color.black;
+
+        _sleepCanvasGroup = go.GetComponent<CanvasGroup>();
+        _sleepCanvasGroup.alpha = 0f;
+        _sleepCanvasGroup.interactable = false;
+        _sleepCanvasGroup.blocksRaycasts = true;
+
+        go.SetActive(false);
+    }
+
+    public Tween PlaySleepStartEffect(UnityAction onScreenOff)
+    {
+        if (WindowsManager.Instance == null) return null;
+
+        EnsureSleepOverlay();
+        if (_sleepCanvasGroup == null || _sleepImage == null) return null;
+
+        _sleepTween?.Kill();
+        _sleepBreathTween?.Kill();
+
+        var go = _sleepCanvasGroup.gameObject;
+        go.SetActive(true);
+        _sleepCanvasGroup.alpha = 0f;
+        _sleepImage.color = Color.black;
+
+        var seq = DOTween.Sequence();
+
+        void OnComplete()
+        {
+            if (_sleepCanvasGroup != null)
+                _sleepCanvasGroup.alpha = AnimationConfig.SLEEP_BREATH_MAX_ALPHA;
+
+            onScreenOff?.Invoke();
+
+            if (_sleepCanvasGroup != null)
+            {
+                _sleepBreathTween?.Kill();
+                _sleepBreathTween = _sleepCanvasGroup
+                    .DOFade(AnimationConfig.SLEEP_BREATH_MIN_ALPHA, AnimationConfig.SLEEP_BREATH_HALF_DURATION)
+                    .SetEase(Ease.InOutSine)
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetDelay(AnimationConfig.SLEEP_BREATH_HALF_DURATION - AnimationConfig.SLEEP_SCREEN_OFF_DURATION);
+            }
+        }
+
+        seq.Append(_sleepCanvasGroup.DOFade(AnimationConfig.SLEEP_BREATH_MAX_ALPHA, AnimationConfig.SLEEP_SCREEN_OFF_DURATION)
+            .SetEase(Ease.InOutSine));
+        seq.OnComplete(OnComplete);
+
+        _sleepTween = seq;
+        return seq;
+    }
+
+    public Tween PlaySleepEndEffect(UnityAction onComplete = null)
+    {
+        if (_sleepCanvasGroup == null || _sleepImage == null) return null;
+
+        _sleepTween?.Kill();
+        _sleepBreathTween?.Kill();
+
+        var go = _sleepCanvasGroup.gameObject;
+        go.SetActive(true);
+
+        var seq = DOTween.Sequence();
+        seq.Append(_sleepCanvasGroup.DOFade(0f, AnimationConfig.SLEEP_SCREEN_ON_DURATION).SetEase(Ease.InOutSine));
+        seq.OnComplete(() =>
+        {
+            if (_sleepCanvasGroup != null)
+                _sleepCanvasGroup.gameObject.SetActive(false);
+            onComplete?.Invoke();
+        });
+
+        _sleepTween = seq;
+        return seq;
     }
 
     public Tween PlayPlayerDamagedScreenFlash(float maxAlpha = -1f, float fadeIn = -1f, float fadeOut = -1f)

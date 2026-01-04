@@ -525,36 +525,36 @@ public class StateManager : IManager
 
     public void Rest(int time, Dictionary<PlayerStateEnum, float> playerStateTempChangeRates)
     {
-        this.playerStateTempChangeRates = playerStateTempChangeRates.Keys.ToList();
-
-        // 应用临时变化率
-        foreach (var (state, tempChangeRate) in playerStateTempChangeRates)
+        void StartRestLogic()
         {
-            SetPlayerStateTempBasicChangeRate(state, tempChangeRate);
+            this.playerStateTempChangeRates = playerStateTempChangeRates.Keys.ToList();
+
+            // 应用临时变化率
+            foreach (var (state, tempChangeRate) in playerStateTempChangeRates)
+            {
+                SetPlayerStateTempBasicChangeRate(state, tempChangeRate);
+            }
+
+            IsResting = true;
+
+            // 触发开始睡觉事件
+            EventManager.Instance.TriggerEvent(EventType.StartSleeping);
+
+            // 时间增加
+            TimeManager.Instance.AddTime(time, StopResting);
         }
 
-        IsResting = true;
-
-        // 触发开始睡觉事件
-        EventManager.Instance.TriggerEvent(EventType.StartSleeping);
-
-        // 时间增加
-        TimeManager.Instance.AddTime(time, StopResting);
+        var tween = AnimationManager.Instance.PlaySleepStartEffect(StartRestLogic);
+        if (tween == null)
+            StartRestLogic();
     }
 
     public void StopResting()
     {
         if (!IsResting) return;
 
-        IsResting = false;
-
-        if (isRestingOnTheGround) isRestingOnTheGround = false;
-
         // 停止时间增加
         TimeManager.Instance.ShutTimePass();
-
-        // 触发结束睡觉事件
-        EventManager.Instance.TriggerEvent(EventType.StopSleeping);
 
         // 恢复原来的变化率
         foreach (var state in playerStateTempChangeRates)
@@ -563,6 +563,15 @@ public class StateManager : IManager
         }
 
         playerStateTempChangeRates.Clear();
+
+        IsResting = false;
+
+        if (isRestingOnTheGround) isRestingOnTheGround = false;
+
+        // 触发结束睡觉事件
+        EventManager.Instance.TriggerEvent(EventType.StopSleeping);
+
+        AnimationManager.Instance.PlaySleepEndEffect();
     }
 
     #endregion
