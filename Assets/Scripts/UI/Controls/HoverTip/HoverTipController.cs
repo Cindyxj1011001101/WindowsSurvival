@@ -120,11 +120,11 @@ public class HoverTipController : MonoBehaviour, IPointerEnterHandler, IPointerE
         }
         if (worldPos.y > top)
         {
-            Debug.Log("超过上边界");
+            //Debug.Log("超过上边界");
         }
         if (worldPos.x < left)
         {
-            Debug.Log("超过左边界");
+            //Debug.Log("超过左边界");
         }
 
         return worldPos;

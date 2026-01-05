@@ -11,7 +11,8 @@ public class Player : IEntity, IManager
     public float BasicMoveDistPerMin { get; private set; } = 0.5f;
     public List<float> MoveSpeedMultiplier { get; private set; } = new();
     public Coordinate Coordinate { get; private set; } = new();
-    public string Name => "麦麦"; 
+    public string Name => "麦麦";
+    public bool IsDead => StateManager.Instance.PlayerStateDict[PlayerStateEnum.Health].CurValue <= 0;
 
     public float MoveSpeed
     {
@@ -89,5 +90,10 @@ public class Player : IEntity, IManager
     {
         Coordinate.SetPosition(targetPosition);
         EventManager.Instance.TriggerEvent(EventType.PlayerMove);
+    }
+
+    public void Move(float dist)
+    {
+        MoveTo(Coordinate.Position + dist);
     }
 }

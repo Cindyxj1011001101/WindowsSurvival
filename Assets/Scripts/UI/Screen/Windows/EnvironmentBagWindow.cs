@@ -312,8 +312,6 @@ public class EnvironmentBagWindow : BagWindow
     {
         var position = Player.Instance.Coordinate.Position;
         var endValue = position / MOVE_DIST_RESOLUTION;
-        targetCoordSlider.value = endValue;
-        targetPosition.text = position.ToString("0.0");
 
         if (playAnim)
         {
@@ -328,6 +326,10 @@ public class EnvironmentBagWindow : BagWindow
         }
         else
         {
+            // 只有在非刷新的情况下需要更新 targetCoordSlider.value
+            targetCoordSlider.value = endValue;
+            targetPosition.text = position.ToString("0.0");
+
             currentCoordSlider.value = endValue;
             currentPosition.text = position.ToString("0.0");
             deltaPosition.text = "0.0";

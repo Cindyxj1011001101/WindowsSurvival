@@ -214,7 +214,7 @@ public class MoveExploreManager : IManager
         {
             dropExploredCards?.Invoke(droppedCards, tip);
         });
-        
+
         EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("Click", "Explore"));
     }
 
@@ -279,18 +279,25 @@ public class MoveExploreManager : IManager
         (_, int time, Dictionary<PlayerStateEnum, float> playerStateChanges) =
             GetMoveEffects(targetPosition);
 
-        // 执行移动
-        Player.Instance.MoveTo(targetPosition);
+        var dist = targetPosition - Player.Instance.Coordinate.Position; // 移动距离
+        var distPerMin = dist / time;
+
+        void ExecuteMove()
+        {
+            if (Player.Instance.IsDead) return;
+            if (Mathf.Abs(Player.Instance.Coordinate.Position - targetPosition) < 1e-5) return;
+
+            Player.Instance.Move(distPerMin);
+            TimeManager.Instance.AddTime(1, ExecuteMove);
+        }
+
+        // 执行移动，每分钟移动一段距离
         StateManager.Instance.ApplyPlayerStateChanges(playerStateChanges);
-        TimeManager.Instance.AddTime(time);
+        ExecuteMove();
 
         // 根据当前地点是否为水域播放不同的移动音效
-        if (GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater)
-            // 水域环境：播放游动
-            SoundManager.Instance.PlaySound("游动音效", true);
-        else
-            // 非水域环境：播放走路
-            SoundManager.Instance.PlaySound("走路音效", true);
+        string sound = GameManager.Instance.CurEnvironmentBag.PlaceData.isInWater ? "游动音效" : "走路音效";
+        SoundManager.Instance.PlaySound(sound, true);
     }
     #endregion
 }

@@ -58,7 +58,7 @@ public abstract class WindowBase : PanelBase
 
     public RectTransform RectTransform => transform as RectTransform;
 
-    private Sequence anim;
+    private Tween anim;
 
     public bool IsPlayingAnim => anim != null && anim.IsActive();
 
@@ -112,8 +112,7 @@ public abstract class WindowBase : PanelBase
         if (IsPlayingAnim)
             anim.Kill();
 
-        var targetPosition = RectTransform.position;
-        anim = Anim.PlayWindowOpen(RectTransform, canvasGroup, targetPosition) as Sequence;
+        anim = Anim.PlayWindowOpen(RectTransform, canvasGroup, OnComplete);
         if (anim == null)
         {
             // fallback：至少保证可见
@@ -124,12 +123,12 @@ public abstract class WindowBase : PanelBase
             return;
         }
 
-        anim.OnComplete(() =>
+        void OnComplete()
         {
             canvasGroup.interactable = true;
             onShown?.Invoke();
             onShown.RemoveAllListeners();
-        });
+        }
 
         anim.Play();
     }
@@ -154,8 +153,7 @@ public abstract class WindowBase : PanelBase
         if (IsPlayingAnim)
             anim.Kill();
 
-        var targetPosition = RectTransform.position;
-        anim = Anim.PlayWindowClose(RectTransform, canvasGroup, targetPosition) as Sequence;
+        anim = Anim.PlayWindowClose(RectTransform, canvasGroup, OnComplete);
         if (anim == null)
         {
             canvasGroup.alpha = 0f;
@@ -165,12 +163,12 @@ public abstract class WindowBase : PanelBase
             return;
         }
 
-        anim.OnComplete(() =>
+        void OnComplete()
         {
             canvasGroup.blocksRaycasts = false;
             onHidden?.Invoke();
             onHidden.RemoveAllListeners();
-        });
+        }
 
         anim.Play();
     }
@@ -321,12 +319,8 @@ public abstract class WindowBase : PanelBase
         if (IsPlayingAnim)
             anim.Kill();
 
-        anim = Anim.PlayWindowRestore(RectTransform, canvasGroup, lastPosition, lastSizeDelta) as Sequence;
-
-        anim.OnComplete(() =>
-        {
-            canvasGroup.interactable = true;
-        });
+        anim = Anim.PlayWindowRestore(RectTransform, canvasGroup, lastPosition, lastSizeDelta,
+            () => canvasGroup.interactable = true);
 
         anim.Play();
     }
@@ -359,7 +353,7 @@ public abstract class WindowBase : PanelBase
         if (IsPlayingAnim)
             anim.Kill();
 
-        anim = Anim.PlayWindowMinimize(transform, canvasGroup, shortcut) as Sequence;
+        anim = Anim.PlayWindowMinimize(transform, canvasGroup, shortcut);
     }
 
     public void Maximize()
@@ -392,8 +386,8 @@ public abstract class WindowBase : PanelBase
         if (IsPlayingAnim)
             anim.Kill();
 
-        anim = Anim.PlayWindowMaximize(RectTransform, canvasGroup, targetRect) as Sequence;
-        SoundManager.Instance.PlaySound("低沉泡泡音", true);
+        anim = Anim.PlayWindowMaximize(RectTransform, canvasGroup, targetRect,
+            () => canvasGroup.interactable = true);
     }
 
     private void MaximizeOrRestore()

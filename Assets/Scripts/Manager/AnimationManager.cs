@@ -78,6 +78,13 @@ public static class AnimationConfig
     public const float PLAYER_DAMAGED_FLASH_FADE_IN = 0.05f;
     public const float PLAYER_DAMAGED_FLASH_FADE_OUT = 0.25f;
 
+    // 休息时的息屏和呼吸动效
+    public const float SLEEP_SCREEN_OFF_DURATION = 0.5f;
+    public const float SLEEP_SCREEN_ON_DURATION = 0.5f;
+    public const float SLEEP_BREATH_MIN_ALPHA = 0.9f;
+    public const float SLEEP_BREATH_MAX_ALPHA = 1f;
+    public const float SLEEP_BREATH_HALF_DURATION = 0.9f;
+
     // 移动意图动效（卡牌在原地上下浮动，可带缩放）
     public const float MOVE_INTENTION_BOB_OFFSET_Y = 10f;
     public const float MOVE_INTENTION_BOB_HALF_DURATION = 0.12f;
@@ -87,8 +94,8 @@ public static class AnimationConfig
     public const float MOVE_INTENTION_ROT_Z = 4f;
 
     // 进食意图动效
-    public const float EAT_INTENTION_GO_DURATION = 0.3f;
-    public const float EAT_INTENTION_RETURN_DURATION = 0.2f;
+    public const float EAT_INTENTION_GO_DURATION = 0.25f;
+    public const float EAT_INTENTION_RETURN_DURATION = 0.15f;
     public const float EAT_INTENTION_ARC_HEIGHT = 55f;
     public const float EAT_INTENTION_EATER_SCALE = 1.06f;
     public const float EAT_INTENTION_EATER_ROT_Z = 10f;
@@ -100,8 +107,9 @@ public static class AnimationConfig
     public const float EAT_INTENTION_CHEW_SCALE_Y = 0.92f;
     public const float EAT_INTENTION_CHEW_ROT_Z = -6f;
 
-    public const float MELEE_ATTACK_GO_DURATION = 0.3f;
-    public const float MELEE_ATTACK_RETURN_DURATION = 0.2f;
+    // 近战攻击动效
+    public const float MELEE_ATTACK_GO_DURATION = 0.25f;
+    public const float MELEE_ATTACK_RETURN_DURATION = 0.15f;
     public const float MELEE_ATTACK_ARC_HEIGHT = 45f;
     public const float MELEE_ATTACK_LUNGE_SCALE = 1.08f;
     public const float MELEE_ATTACK_LUNGE_ROT_Z = 12f;
@@ -140,6 +148,11 @@ public class AnimationManager
     private CanvasGroup _screenFlashCanvasGroup;
     private Image _screenFlashImage;
     private Tween _screenFlashTween;
+
+    private CanvasGroup _sleepCanvasGroup;
+    private Image _sleepImage;
+    private Tween _sleepTween;
+    private Tween _sleepBreathTween;
 
     public Canvas Canvas
     {
@@ -183,6 +196,98 @@ public class AnimationManager
         _screenFlashCanvasGroup.blocksRaycasts = false;
 
         go.SetActive(false);
+    }
+
+    private void EnsureSleepOverlay()
+    {
+        if (_sleepCanvasGroup != null && _sleepImage != null) return;
+        if (Canvas == null) return;
+
+        var go = new GameObject("SleepOverlay", typeof(RectTransform), typeof(Image), typeof(CanvasGroup));
+        var rect = go.GetComponent<RectTransform>();
+        rect.SetParent(Canvas.transform, false);
+        rect.anchorMin = Vector2.zero;
+        rect.anchorMax = Vector2.one;
+        rect.anchoredPosition = Vector2.zero;
+        rect.sizeDelta = Vector2.zero;
+        rect.SetAsLastSibling();
+
+        _sleepImage = go.GetComponent<Image>();
+        _sleepImage.raycastTarget = true;
+        _sleepImage.color = Color.black;
+
+        _sleepCanvasGroup = go.GetComponent<CanvasGroup>();
+        _sleepCanvasGroup.alpha = 0f;
+        _sleepCanvasGroup.interactable = false;
+        _sleepCanvasGroup.blocksRaycasts = true;
+
+        go.SetActive(false);
+    }
+
+    public Tween PlaySleepStartEffect(UnityAction onScreenOff)
+    {
+        if (WindowsManager.Instance == null) return null;
+
+        EnsureSleepOverlay();
+        if (_sleepCanvasGroup == null || _sleepImage == null) return null;
+
+        _sleepTween?.Kill();
+        _sleepBreathTween?.Kill();
+
+        var go = _sleepCanvasGroup.gameObject;
+        go.SetActive(true);
+        _sleepCanvasGroup.alpha = 0f;
+        _sleepImage.color = Color.black;
+
+        var seq = DOTween.Sequence();
+
+        void OnComplete()
+        {
+            if (_sleepCanvasGroup != null)
+                _sleepCanvasGroup.alpha = AnimationConfig.SLEEP_BREATH_MAX_ALPHA;
+
+            onScreenOff?.Invoke();
+
+            if (_sleepCanvasGroup != null)
+            {
+                _sleepBreathTween?.Kill();
+                _sleepBreathTween = _sleepCanvasGroup
+                    .DOFade(AnimationConfig.SLEEP_BREATH_MIN_ALPHA, AnimationConfig.SLEEP_BREATH_HALF_DURATION)
+                    .SetEase(Ease.InOutSine)
+                    .SetLoops(-1, LoopType.Yoyo)
+                    .SetDelay(AnimationConfig.SLEEP_BREATH_HALF_DURATION - AnimationConfig.SLEEP_SCREEN_OFF_DURATION);
+            }
+        }
+
+        seq.Append(_sleepCanvasGroup.DOFade(AnimationConfig.SLEEP_BREATH_MAX_ALPHA, AnimationConfig.SLEEP_SCREEN_OFF_DURATION)
+            .SetEase(Ease.InOutSine));
+        seq.OnComplete(OnComplete);
+
+        _sleepTween = seq;
+        return seq;
+    }
+
+    public Tween PlaySleepEndEffect(UnityAction onComplete = null)
+    {
+        if (_sleepCanvasGroup == null || _sleepImage == null) return null;
+
+        _sleepTween?.Kill();
+        _sleepBreathTween?.Kill();
+
+        var go = _sleepCanvasGroup.gameObject;
+        go.SetActive(true);
+
+        var seq = DOTween.Sequence();
+        seq.Append(_sleepCanvasGroup.DOFade(0f, AnimationConfig.SLEEP_SCREEN_ON_DURATION).SetEase(Ease.InOutSine));
+        seq.OnComplete(() =>
+        {
+            if (_sleepCanvasGroup != null)
+                _sleepCanvasGroup.gameObject.SetActive(false);
+            onComplete?.Invoke();
+        });
+
+        _sleepTween = seq;
+        return seq;
     }
 
     public Tween PlayPlayerDamagedScreenFlash(float maxAlpha = -1f, float fadeIn = -1f, float fadeOut = -1f)
@@ -894,25 +999,27 @@ public class AnimationManager
     /// <summary>
     /// 播放窗口打开动效（更贴近 Windows：淡入 + 轻微缩放 + 轻微位移）
     /// </summary>
-    public Tween PlayWindowOpen(RectTransform window, CanvasGroup canvasGroup, Vector3 targetPosition,
+    public Tween PlayWindowOpen(RectTransform window, CanvasGroup canvasGroup, TweenCallback onComplete,
         float duration = -1, float startScale = -1, float offsetY = float.NaN)
     {
         if (duration < 0) duration = AnimationConfig.WINDOW_OPEN_DURATION;
         if (startScale < 0) startScale = AnimationConfig.WINDOW_OPEN_START_SCALE;
         if (float.IsNaN(offsetY)) offsetY = AnimationConfig.WINDOW_OPEN_OFFSET_Y;
 
+        var originalPosition = window.position;
+
         canvasGroup.alpha = 0f;
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = true;
 
-        window.position = targetPosition + Vector3.up * offsetY;
+        window.position = originalPosition + Vector3.up * offsetY;
         window.localScale = Vector3.one * startScale;
 
         var seq = DOTween.Sequence();
         seq.Join(canvasGroup.DOFade(1f, duration));
-        seq.Join(window.DOMove(targetPosition, duration).SetEase(AnimationConfig.WINDOW_OPEN_EASE));
+        seq.Join(window.DOMove(originalPosition, duration).SetEase(AnimationConfig.WINDOW_OPEN_EASE));
         seq.Join(window.DOScale(Vector3.one, duration).SetEase(AnimationConfig.WINDOW_OPEN_EASE));
-        seq.OnComplete(() => canvasGroup.interactable = true);
+        seq.OnComplete(onComplete);
 
         return seq;
     }
@@ -920,17 +1027,19 @@ public class AnimationManager
     /// <summary>
     /// 播放窗口关闭动效（更贴近 Windows：淡出 + 轻微缩小 + 轻微位移）
     /// </summary>
-    public Tween PlayWindowClose(RectTransform window, CanvasGroup canvasGroup, Vector3 targetPosition,
+    public Tween PlayWindowClose(RectTransform window, CanvasGroup canvasGroup, TweenCallback onComplete,
         float duration = -1, float endScale = -1, float offsetY = float.NaN)
     {
         if (duration < 0) duration = AnimationConfig.WINDOW_CLOSE_DURATION;
         if (endScale < 0) endScale = AnimationConfig.WINDOW_CLOSE_END_SCALE;
         if (float.IsNaN(offsetY)) offsetY = AnimationConfig.WINDOW_CLOSE_OFFSET_Y;
 
+        var originalPosition = window.position;
+
         canvasGroup.interactable = false;
         canvasGroup.blocksRaycasts = true;
 
-        var endPosition = targetPosition + Vector3.up * offsetY;
+        var endPosition = originalPosition + Vector3.up * offsetY;
 
         var seq = DOTween.Sequence();
         seq.Join(canvasGroup.DOFade(0f, duration));
@@ -938,10 +1047,9 @@ public class AnimationManager
         seq.Join(window.DOScale(Vector3.one * endScale, duration).SetEase(AnimationConfig.WINDOW_CLOSE_EASE));
         seq.OnComplete(() =>
         {
-            canvasGroup.alpha = 0f;
-            canvasGroup.blocksRaycasts = false;
-            window.position = targetPosition;
+            window.position = originalPosition;
             window.localScale = Vector3.one;
+            onComplete?.Invoke();
         });
 
         return seq;
@@ -972,7 +1080,9 @@ public class AnimationManager
     /// <summary>
     /// 播放窗口恢复动效
     /// </summary>
-    public Tween PlayWindowRestore(RectTransform window, CanvasGroup canvasGroup, Vector3 targetPosition, Vector2 targetSize, float duration = -1)
+    public Tween PlayWindowRestore(RectTransform window, CanvasGroup canvasGroup,
+        Vector3 targetPosition, Vector2 targetSize, TweenCallback onComplete,
+        float duration = -1)
     {
         if (duration < 0) duration = AnimationConfig.WINDOW_ANIM_DURATION;
 
@@ -984,7 +1094,7 @@ public class AnimationManager
         seq.Join(window.DOMove(targetPosition, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
         seq.Join(window.DOScale(Vector3.one, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
         seq.Join(window.DOSizeDelta(targetSize, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
-        seq.OnComplete(() => canvasGroup.interactable = true);
+        seq.OnComplete(onComplete);
 
         return seq;
     }
@@ -992,7 +1102,7 @@ public class AnimationManager
     /// <summary>
     /// 播放窗口最大化动效
     /// </summary>
-    public Tween PlayWindowMaximize(RectTransform window, CanvasGroup canvasGroup, RectTransform targetRect, float duration = -1)
+    public Tween PlayWindowMaximize(RectTransform window, CanvasGroup canvasGroup, RectTransform targetRect, TweenCallback onComplete, float duration = -1)
     {
         if (duration < 0) duration = AnimationConfig.WINDOW_ANIM_DURATION;
 
@@ -1004,7 +1114,7 @@ public class AnimationManager
         seq.Join(window.DOMove(targetRect.position, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
         seq.Join(window.DOScale(Vector3.one, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
         seq.Join(window.DOSizeDelta(targetRect.rect.size, duration).SetEase(AnimationConfig.WINDOW_MAXIMIZE_RESTORE_EASE));
-        seq.OnComplete(() => canvasGroup.interactable = true);
+        seq.OnComplete(onComplete);
 
         return seq;
     }
@@ -1047,25 +1157,6 @@ public class AnimationManager
                     .SetLoops(2, LoopType.Yoyo);
             });
         }
-    }
-    #endregion
-
-    #region 淡入淡出动效
-    /// <summary>
-    /// 播放淡入动效
-    /// </summary>
-    public Tween PlayFadeIn(CanvasGroup canvasGroup, float duration = 0.2f, UnityAction onComplete = null)
-    {
-        canvasGroup.alpha = 0;
-        return canvasGroup.DOFade(1, duration).OnComplete(() => onComplete?.Invoke());
-    }
-
-    /// <summary>
-    /// 播放淡出动效
-    /// </summary>
-    public Tween PlayFadeOut(CanvasGroup canvasGroup, float duration = 0.2f, UnityAction onComplete = null)
-    {
-        return canvasGroup.DOFade(0, duration).OnComplete(() => onComplete?.Invoke());
     }
     #endregion
 

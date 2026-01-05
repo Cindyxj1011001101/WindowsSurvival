@@ -71,7 +71,7 @@ public static class ExcelReader
                 IsPlant = ParseBool(row[57].ToString()),
                 HasCoordinate = ParseBool(row[62].ToString()),
                 IsWeapon = ParseBool(row[64].ToString()),
-                IsEntity = ParseBool(row[70].ToString()),
+                IsEntity = ParseBool(row[71].ToString()),
             };
             // 可选字段
             if (currentConfig.HasMultipleStates)
@@ -175,15 +175,16 @@ public static class ExcelReader
                 currentConfig.MaxAtkDist = ParseFloat(row[67].ToString());
                 currentConfig.AtkForm = Enum.Parse<AttackForm>(row[68].ToString());
                 currentConfig.AtkTime = ParseInt(row[69].ToString());
+                currentConfig.AtkSound = row[70].ToString();
             }
             if (currentConfig.IsEntity)
             {
-                currentConfig.MaxHealth = ParseFloat(row[71].ToString());
-                currentConfig.EntityAtk = ParseFloat(row[72].ToString());
-                currentConfig.MoveDistPerMin = ParseFloat(row[73].ToString());
-                currentConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[74].ToString());
-                currentConfig.AIRefreshInterval = ParseInt(row[75].ToString());
-                currentConfig.DeadDrops = row[76].ToString();
+                currentConfig.MaxHealth = ParseFloat(row[72].ToString());
+                currentConfig.EntityAtk = ParseFloat(row[73].ToString());
+                currentConfig.MoveDistPerMin = ParseFloat(row[74].ToString());
+                currentConfig.BehavioralTendency = Enum.Parse<BehavioralTendency>(row[75].ToString());
+                currentConfig.AIRefreshInterval = ParseInt(row[76].ToString());
+                currentConfig.DeadDrops = row[77].ToString();
             }
             configs.Add(currentConfig.CardId, currentConfig);
         }
