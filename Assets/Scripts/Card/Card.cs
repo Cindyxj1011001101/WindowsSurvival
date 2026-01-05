@@ -663,13 +663,11 @@ public abstract class Card : IComparable<Card>
         }
         else
         {
-            var tween = AnimationManager.Instance.PlayPunchAndBounce(Transform, () =>
+            AnimationManager.Instance.PlayDropCards(Transform, () =>
             {
                 onDrop?.Invoke();
                 AddCards(cards, true);
             });
-
-            MouseManager.Instance.Wait(tween.Duration());
         }
     }
 
@@ -741,7 +739,7 @@ public abstract class Card : IComparable<Card>
         if (trans == ParentTransform)
             AnimationManager.Instance.PlayAddCard(targetCard, trans.position);
         else
-            AnimationManager.Instance.PlayCardTransformAndFreezeTime(this, targetCard);
+            AnimationManager.Instance.PlayTurnTo(this, targetCard);
     }
 
     public void TurnTo(string cardId, Bag targetBag)

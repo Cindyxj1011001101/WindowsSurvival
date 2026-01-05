@@ -16,7 +16,6 @@ public class GarbageDestroyer : ConstructionCard
         window.SetContent($"{ColorManager.Alert("内容物将被全部销毁！！")}\n确认这样做吗？");
         window.ConfirmAndCancel(() =>
         {
-            MouseManager.Instance.Wait();
             PlaySound("挖掘废料_01", true);
             innerContents.Clear();
             ShowTip("内容物已完全销毁");

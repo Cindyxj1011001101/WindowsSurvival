@@ -65,15 +65,13 @@ public class WindowsManager : MonoBehaviour
             window.SetContent($"退出到开始界面。\n{ColorManager.Alert("未保存的内容将会丢失！！")}\n确认退出吗？");
             window.AddButton("保存并退出", () =>
             {
-                MouseManager.Instance.Wait();
                 GameDataManager.Instance.SaveAllData();
                 MySceneManager.LoadScene(0);
-            });
+            }, true);
             window.AddButton("直接退出", () =>
             {
-                MouseManager.Instance.Wait();
                 MySceneManager.LoadScene(0);
-            });
+            }, true);
             window.AddButton("取消", null);
         });
 

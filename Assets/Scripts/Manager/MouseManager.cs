@@ -153,8 +153,9 @@ public class MouseManager : MonoBehaviour
     }
 
     #region 等待
-    private float _endTime;  // 等待结束时间
-    private bool _isWaiting; // 当前是否在等待
+    private float _startTime;   // 等待开始时间
+    private float _endTime;     // 等待结束时间
+    private bool _isWaiting;    // 当前是否在等待
 
     private void StartWaiting()
     {
@@ -204,9 +205,17 @@ public class MouseManager : MonoBehaviour
     /// <param name="waitTime">等待时间（秒）</param>
     public void Wait(float waitTime = DEFAULT_WAIT_TIME)
     {
-        _endTime = Mathf.Max(_endTime, Time.time + waitTime + 0.1f);
+        var currentTime = Time.time;
+        if (!_isWaiting)
+            _startTime = currentTime;
 
-        // 如果当前不在等待，或者新的等待时间比剩余时间更长，则更新结束时间
+        // 保证等待时间是动画时长的 周期 或 半周期
+        var deltaTime = currentTime + waitTime - _startTime;
+        deltaTime = Mathf.CeilToInt(deltaTime * 2 / DEFAULT_WAIT_TIME) * DEFAULT_WAIT_TIME / 2;
+        // 更新等待结束时间
+        _endTime = Mathf.Max(_endTime, _startTime + deltaTime);
+
+        // 开始等待
         if (!_isWaiting)
             StartWaiting();
     }

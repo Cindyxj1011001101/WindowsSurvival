@@ -532,9 +532,8 @@ public class CardSlot : MonoBehaviour
                 // 等待一帧确保动画切换完成
                 yield return null;
 
-                // 获取动画片段的长度并等待
+                // 等待动画播放完成
                 var duration = intentionAnimator.GetCurrentAnimatorStateInfo(0).length;
-                MouseManager.Instance.Wait(duration);
                 yield return new WaitForSeconds(duration);
             }
             else
@@ -542,7 +541,6 @@ public class CardSlot : MonoBehaviour
                 // 原意图执行失败
                 // 播放执行失败动画
                 var seq = AnimationManager.Instance.PlayIntentionFailed(intentionIcon);
-                MouseManager.Instance.Wait(seq.Duration());
                 while (seq.active)
                 {
                     yield return null;
@@ -563,9 +561,8 @@ public class CardSlot : MonoBehaviour
             // 等待一帧确保动画切换完成
             yield return null;
 
-            // 获取动画片段的长度并等待
+            // 等待动画播放完成
             var duration = intentionAnimator.GetCurrentAnimatorStateInfo(0).length;
-            MouseManager.Instance.Wait(duration);
             yield return new WaitForSeconds(duration);
 
             DisplayEntityIntention(target);

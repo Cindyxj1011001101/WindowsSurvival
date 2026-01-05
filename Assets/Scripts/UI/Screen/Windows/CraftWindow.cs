@@ -314,7 +314,7 @@ public class CraftWindow : WindowBase
         // 制作成功，掉落卡牌
         void CraftSucceeded(Card outcomeCard)
         {
-            var tween = AnimationManager.Instance.PlayPunchAndBounce(slot.transform, () =>
+            AnimationManager.Instance.PlayDropCards(slot.transform, () =>
             {
                 SoundManager.Instance.PlaySound("制作_03", true);
 
@@ -326,7 +326,6 @@ public class CraftWindow : WindowBase
                 // 刷新显示
                 RefreshDisplay();
             });
-            MouseManager.Instance.Wait(tween.Duration());
         }
 
         // 制作失败，返还材料

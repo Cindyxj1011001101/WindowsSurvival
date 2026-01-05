@@ -766,9 +766,9 @@ public class AnimationManager
     }
 
     /// <summary>
-    /// 播放卡牌转变动效并冻结时间
+    /// 播放卡牌转变动效
     /// </summary>
-    public Tween PlayCardTransformAndFreezeTime(Card sourceCard, Card targetCard)
+    public Tween PlayTurnTo(Card sourceCard, Card targetCard)
     {
         var tween = PlayCardTransform(sourceCard, targetCard, onComplete: () => targetCard.RefreshSlot());
         TimeManager.Instance.FreezeTimePass(tween.Duration());
@@ -899,6 +899,16 @@ public class AnimationManager
             .OnComplete(onBounceComplete));
 
         return seq;
+    }
+
+    /// <summary>
+    /// 播放掉落卡牌动效
+    /// </summary>
+    public Tween PlayDropCards(Transform target, TweenCallback dropCards)
+    {
+        var tween = PlayPunchAndBounce(target, dropCards);
+        TimeManager.Instance.FreezeTimePass(tween.Duration());
+        return tween;
     }
     #endregion
 

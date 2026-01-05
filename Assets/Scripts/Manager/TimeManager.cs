@@ -59,8 +59,7 @@ public class TimeManager : IManager
 
         EventManager.Instance.TriggerEvent(EventType.StartChangeTime);
 
-        // 等待动画
-        MouseManager.Instance.Wait();
+        WaitForTimePass(minutes);
 
         int timespan = minutes;
 
@@ -75,7 +74,7 @@ public class TimeManager : IManager
                     EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
                     triggered = true;
                 }
-                MouseManager.Instance.Wait(0.1f);
+                MouseManager.Instance.Wait(Time.deltaTime);
                 yield return null;
             }
 
@@ -94,7 +93,7 @@ public class TimeManager : IManager
                     EventManager.Instance.TriggerEvent(EventType.EndChangeTime);
                     triggered = true;
                 }
-                MouseManager.Instance.Wait(0.1f);
+                MouseManager.Instance.Wait(Time.deltaTime);
                 yield return null;
             }
             // 处理十五分钟更新
@@ -107,6 +106,28 @@ public class TimeManager : IManager
 
         // 一次完整的时间流逝结束
         onEnd?.Invoke();
+    }
+
+    private void WaitForTimePass(int minutes)
+    {
+        float multiplier;
+
+        if (minutes <= 15)
+            multiplier = 1;
+        else if (minutes <= 30)
+            multiplier = 1.5f;
+        else if (minutes <= 60)
+            multiplier = 2;
+        else if (minutes <= 120)
+            multiplier = 4;
+        else if (minutes <= 240)
+            multiplier = 6;
+        else
+            multiplier = 9;
+
+        var minWaitTime = MouseManager.DEFAULT_WAIT_TIME * multiplier;
+
+        MouseManager.Instance.Wait(minWaitTime);
     }
 
     private void HandleUpdate()
@@ -191,6 +212,6 @@ public class TimeManager : IManager
     public void FreezeTimePass(float duration)
     {
         MouseManager.Instance.Wait(duration);
-        unfreezeTime = Mathf.Max(unfreezeTime, Time.time + duration + 0.1f);
+        unfreezeTime = Mathf.Max(unfreezeTime, Time.time + duration);
     }
 }

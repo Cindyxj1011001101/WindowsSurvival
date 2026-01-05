@@ -22,13 +22,15 @@ public class CustomWindow : WindowBase
         this.content.text = content;
     }
 
-    public void AddButton(string text, UnityAction onClick, bool closeWindowAfterClick = true)
+    public void AddButton(string text, UnityAction onClick, bool closeWindowAfterClick = true, bool mouseWait = false)
     {
         var button = ObjectBufferPool.Instance.Get(buttonPrefab, buttonLayout).GetComponent<HoverableButton>();
         button.text.text = text;
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() =>
         {
+            if (mouseWait)
+                MouseManager.Instance.Wait();
             onClick?.Invoke();
             if (closeWindowAfterClick)
                 WindowsManager.Instance.CloseWindow(AppName);
@@ -39,7 +41,7 @@ public class CustomWindow : WindowBase
 
     public void ConfirmAndCancel(UnityAction onConfirm, UnityAction onCancel = null)
     {
-        AddButton("确认", onConfirm, true);
+        AddButton("确认", onConfirm, true, true);
         AddButton("取消", onCancel, true);
     }
 }

@@ -147,7 +147,7 @@ public class EnvironmentBagWindow : BagWindow
     {
         MoveExploreManager.Instance.HandleExplore((droppedCards, tip) =>
         {
-            var tween = AnimationManager.Instance.PlayPunchAndBounce(envCardTransform, () =>
+            AnimationManager.Instance.PlayDropCards(envCardTransform, () =>
             {
                 if (droppedCards.IsNullOrEmpty())
                 {
@@ -161,8 +161,6 @@ public class EnvironmentBagWindow : BagWindow
                 DisplayDiscoveryDegree(CurEnv.DiscoveryDegree, CurEnv.ExploreCompleted, true);
                 GameManager.Instance.AddCardsWithTween(droppedCards, false, envCardTransform.position);
             });
-
-            MouseManager.Instance.Wait(tween.Duration());
         });
     }
 
