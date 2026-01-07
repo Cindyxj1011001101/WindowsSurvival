@@ -285,7 +285,11 @@ public class MoveExploreManager : IManager
         void ExecuteMove()
         {
             if (Player.Instance.IsDead) return;
-            if (Mathf.Abs(Player.Instance.Coordinate.Position - targetPosition) < 1e-5) return;
+            if (Mathf.Abs(Player.Instance.Coordinate.Position - targetPosition) < 1e-5)
+            {
+                Player.Instance.MoveTo(targetPosition); // 保证最终位置准确
+                return;
+            }
 
             Player.Instance.Move(distPerMin);
             TimeManager.Instance.AddTime(1, ExecuteMove);

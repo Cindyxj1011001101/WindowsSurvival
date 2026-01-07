@@ -53,7 +53,7 @@ public class Main : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.W))
         {
-            TechnologyManager.Instance.AddStudyProgress("燃料发电", 9999);
+            print("当前玩家坐标: " + Player.Instance.Coordinate.Position);
         }
     }
 #endif
