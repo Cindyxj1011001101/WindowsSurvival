@@ -9,7 +9,13 @@ public class PublicMono : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     private event UnityAction update;
