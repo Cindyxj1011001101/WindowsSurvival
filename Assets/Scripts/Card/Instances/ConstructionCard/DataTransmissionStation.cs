@@ -33,27 +33,29 @@ public class DataTransmissionStation : ConstructionCard
         GlobalDataManager.Instance.GlobalData.AddReduceAction(CardId, new Reduce(2, .5f));
 
         EventManager.Instance.AddListener(EventType.AnotherDay, RefreshSlot); // 隔天时刷新
-        EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StartStudy, StartWorking);
-        EventManager.Instance.AddListener(EventType.StopStudy, StopWorking);
+        EventManager.Instance.AddListener<ScriptableTechnologyNode>(EventType.StartStudy, OnStartStudy);
+        EventManager.Instance.AddListener(EventType.StopStudy, OnStopStudy);
 
         // 当前有科技在研究
         if (TechnologyManager.Instance.CurStudiedTechNode != null)
         {
-            StartWorking(TechnologyManager.Instance.CurStudiedTechNode);
+            OnStartStudy(TechnologyManager.Instance.CurStudiedTechNode);
         }
     }
 
     protected override void OnDestroy()
     {
-        StopWorking();
+        OnStopStudy();
 
         EventManager.Instance.RemoveListener(EventType.AnotherDay, RefreshSlot);
-        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StartStudy, StartWorking);
-        EventManager.Instance.RemoveListener(EventType.StopStudy, StopWorking);
+        EventManager.Instance.RemoveListener<ScriptableTechnologyNode>(EventType.StartStudy, OnStartStudy);
+        EventManager.Instance.RemoveListener(EventType.StopStudy, OnStopStudy);
     }
 
-    private void StartWorking(ScriptableTechnologyNode techNode)
+    private void OnStartStudy(ScriptableTechnologyNode techNode)
     {
+        RefreshSlot();
+
         if (techNode.techLevel != TechLevl.Intermediate) return;
 
         if (stateMachine.currentStateName == "运行") return;
@@ -65,8 +67,10 @@ public class DataTransmissionStation : ConstructionCard
             SoundManager.Instance.PlayCardLoopSound(CardId, "数据传输台循环音", 0.3f);
     }
 
-    private void StopWorking()
+    private void OnStopStudy()
     {
+        RefreshSlot();
+
         if (stateMachine.currentStateName == "待机") return;
 
         stateMachine.ChangeState("待机");
