@@ -33,8 +33,8 @@ public class UIStateSlider : MonoBehaviour
     private float arrowMoveTransition = 0.35f;
     private float highDangerScale = 1.25f;
     private float lowDangerScale = 1.1f;
-    private float highDangerTransition = 0.3f;
-    private float lowDangerTransition = 0.4f;
+    private float highDangerTransition = 0.35f;
+    private float lowDangerTransition = 0.35f;
     protected float valueTransition = 0.3f;
 
     private float GetArrowTweenPhase()
@@ -50,9 +50,15 @@ public class UIStateSlider : MonoBehaviour
         curChangeLavel = 0;
         if (button != null) button.transform.DOKill();
         if (arrow != null) arrow.transform.DOKill();
-        if (icon != null) icon.transform.DOKill();
+        if (icon != null)
+        {
+            icon.transform.DOKill();
+            icon.color = ColorManager.White;
+        }
         if (slider != null) slider.DOKill();
         fillColor = ColorManager.White;
+        if (button != null)
+            button.currentColor = button.hoveredColor = ColorManager.White;
     }
 
     protected void UpdateSliderValue(float curValue, float maxValue, bool playAnim)
@@ -124,24 +130,48 @@ public class UIStateSlider : MonoBehaviour
 
         button.transform.DOKill();
         button.transform.localScale = Vector3.one;
+
+        var iconColor = ColorManager.White;
+
         switch (dangerLevel)
         {
             case DangerLevelEnum.High:
                 IconSizeYoloTween(highDangerScale, highDangerTransition);
+                iconColor = ColorManager.Red;       // 高危 -> 红色
                 break;
             case DangerLevelEnum.Low:
                 IconSizeYoloTween(lowDangerScale, lowDangerTransition);
+                iconColor = ColorManager.Yellow;    // 低危 -> 黄色
                 break;
             case DangerLevelEnum.None:
+                iconColor = ColorManager.White;     // 无危险 -> 白色
                 break;
         }
+
+        // 根据危险状态，图标显示不同颜色
+        if (icon != null && button != null && GetType() == typeof(UIStateSlider))
+            icon.color = button.currentColor = button.hoveredColor = iconColor;
     }
 
     private void IconSizeYoloTween(float scaleSize, float duration)
     {
-        button.transform.DOScale(scaleSize, duration)
+        var amplitude = Mathf.Max(0f, scaleSize - 1f);
+        var minScale = Mathf.Max(0.01f, 1f - amplitude * 0.5f);
+        var maxScale = Mathf.Max(minScale, scaleSize);
+
+        button.transform.localScale = Vector3.one * minScale;
+        var tween = button.transform.DOScale(maxScale, duration)
             .SetLoops(-1, LoopType.Yoyo) // 无限循环，来回播放
             .SetEase(Ease.InOutSine);    // 设置缓动效果
+
+        tween.Goto(GetIconTweenPhase(duration), true);
+    }
+
+    private float GetIconTweenPhase(float duration)
+    {
+        var cycle = duration * 2f;
+        if (cycle <= 0f) return 0f;
+        return Mathf.Repeat(Time.time, cycle);
     }
 
     private void DisplayChangeRate(
