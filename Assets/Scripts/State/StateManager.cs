@@ -608,8 +608,11 @@ public class StateManager : IManager
     #endregion
 
     #region 死亡逻辑
+    private bool gameOver = false;
     private void Die()
     {
+        if (gameOver) return;
+        gameOver = true;
         // 停止休息
         StopResting();
         // 停止时间流逝
