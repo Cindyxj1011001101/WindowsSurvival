@@ -85,7 +85,8 @@ public class EnvironmentBagWindow : BagWindow
             targetPosition.text = TargetPosition.ToString("0.0");
             deltaPosition.text = DeltaPosition.ToString("0.0");
             FillBetween();
-            SoundManager.Instance.PlaySound("简单点击_01", true);
+            if (playSound)
+                SoundManager.Instance.PlaySound("简单点击_01", true);
         });
         moveLeftButton.onClick.AddListener(() =>
         {
@@ -303,6 +304,7 @@ public class EnvironmentBagWindow : BagWindow
         fillBetween.rectTransform.sizeDelta = new(Mathf.Abs(currentCoordSlider.handleRect.position.x - targetCoordSlider.handleRect.position.x), fillBetween.rectTransform.sizeDelta.y);
     }
 
+    private bool playSound;
     /// <summary>
     /// 显示玩家位置
     /// </summary>
@@ -310,6 +312,10 @@ public class EnvironmentBagWindow : BagWindow
     {
         var position = Player.Instance.Coordinate.Position;
         var endValue = position / MOVE_DIST_RESOLUTION;
+        playSound = false;
+        targetCoordSlider.value = endValue;
+        targetPosition.text = position.ToString("0.0");
+        playSound = true;
 
         if (playAnim)
         {
@@ -324,9 +330,6 @@ public class EnvironmentBagWindow : BagWindow
         }
         else
         {
-            // 只有在非刷新的情况下需要更新 targetCoordSlider.value
-            targetCoordSlider.value = endValue;
-            targetPosition.text = position.ToString("0.0");
 
             currentCoordSlider.value = endValue;
             currentPosition.text = position.ToString("0.0");
