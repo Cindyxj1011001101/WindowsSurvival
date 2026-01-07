@@ -120,12 +120,19 @@ public class StudyWindow : WindowBase
 
         DisplayStudyQueue();
         DisplayIntermediateTechLock();
+
+        ShowSelected();
     }
 
     public override void Show(ShowMode showMode = ShowMode.Fade, UnityAction onFinished = null)
     {
         base.Show(showMode, onFinished);
 
+        ShowSelected();
+    }
+
+    private void ShowSelected()
+    {
         // 如果没有当前选择的节点，则尝试选择正在研究的节点
         if (curSelectedTechNode == null)
             curSelectedTechNode = TechnologyManager.Instance.CurStudiedTechNode;
