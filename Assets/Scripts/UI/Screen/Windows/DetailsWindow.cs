@@ -31,6 +31,7 @@ public class DetailsWindow : BagWindow
     public Card CurrentDisplayedCard => currentDisplayedCard;
     private Bag innerBag;
     private DisplayType displayType = DisplayType.All;
+    public string CurrentDisplayPart => currentDisplayedPart;
 
     protected override void Awake()
     {

@@ -156,6 +156,10 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 AnimateCardReturn(pickedCount, string.IsNullOrEmpty(t.NotAllowAddReason) ? "不能放入卡牌" : t.NotAllowAddReason);
             }
+            else if (targetWindow is DetailsWindow dw && dw.CurrentDisplayPart != "内容物")
+            {
+                AnimateCardReturn(pickedCount);
+            }
             else
             {
                 PlaceCardInDifferentBag(targetWindow.Bag, ref pickedCount, dragEndPosition);
