@@ -6,8 +6,11 @@ public class WaterChestnut : PlantCard
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("采集", "采集四角菱结出的菱果", Event_Collect, Judge_Collect, () => 15, sound: "采摘植物或采摘果子的音效");
-        AddCardEvent("铲起", "将四角菱连根铲起。将会获得一颗菱果", Event_DigUp, Judge_DigUp, () => 15, sound: "挖掘废料_01");
+        var s = ColorManager.Colorize(plantGrowth.deadCardId, ColorManager.Blue);
+        AddCardEvent("采集", $"采集四角菱结出的{s}",
+            Event_Collect, Judge_Collect, () => 15, sound: "采摘植物或采摘果子的音效");
+        AddCardEvent("铲起", $"将四角菱连根铲起\n将会获得一颗{s}",
+            Event_DigUp, Judge_DigUp, () => 15, sound: "挖掘废料_01");
     }
 
     protected override void UpdatePlantState()

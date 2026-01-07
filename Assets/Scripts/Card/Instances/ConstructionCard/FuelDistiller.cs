@@ -4,11 +4,21 @@
 [CardId("燃料蒸馏器")]
 public class FuelDistiller : ConstructionCard
 {
+	private const int SALINE_WATER_CONSUMPTION_RATE = 1;
+	private const int FRESH_WATER_PRODUCTION_RATE = 1;
+
 	protected override void RegisterCardEvents()
 	{
-		AddCardEvent("点燃", "点燃蒸馏器。将盐水蒸馏成淡水。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite, sound: "点火_02");
+		AddCardEvent("点燃", $"点燃{CardName}\n点燃后每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟" +
+			$"消耗{ColorManager.ColorizeNumber(SALINE_WATER_CONSUMPTION_RATE, ColorManager.Red, "0")}盐水" +
+			$"并产生{ColorManager.ColorizeNumber(FRESH_WATER_PRODUCTION_RATE, ColorManager.Green, "0")}淡水。" +
+			$"当淡水储量达到上限时，将清空淡水存储并在内容物中生成一瓶{ColorManager.Colorize("瓶装水", ColorManager.Blue)}\n" +
+			$"{ColorManager.Warning("会导致室内氧气加速消耗与一氧化碳增加")}",
+			fuelStorage.Ignite, fuelStorage.CanIgnite, sound: "点火_02");
 		AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish, sound: "熄灭");
-		AddCardEvent("倒入盐水", "消耗盐水，使蒸馏器的盐水储量+12\n！可能会造成浪费！", Event_AddSalineWater, Judge_AddSalineWater);
+		AddCardEvent("倒入盐水",
+			$"消耗盐水，使蒸馏器的盐水储量增加{ColorManager.ColorizeNumber(12f, ColorManager.Green, "0")}\n{ColorManager.Warning("超出盐水储量上限的部分会被浪费")}",
+			Event_AddSalineWater, Judge_AddSalineWater);
 		base.RegisterCardEvents(); // 拆毁
 	}
 
@@ -98,8 +108,8 @@ public class FuelDistiller : ConstructionCard
 	{
 		if (salineWaterStorage.value < 1 || freshWaterStorage.value >= freshWaterStorage.maxValue) return;
 
-		salineWaterStorage.AddValue(-1); // 盐水储量-1
-		freshWaterStorage.AddValue(1); // 淡水储量+1
+		salineWaterStorage.AddValue(-SALINE_WATER_CONSUMPTION_RATE); // 盐水储量-1
+		freshWaterStorage.AddValue(FRESH_WATER_PRODUCTION_RATE);	 // 淡水储量+1
 
 		TryGetBottledWater();
 	}

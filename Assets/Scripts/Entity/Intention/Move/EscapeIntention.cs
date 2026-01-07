@@ -25,17 +25,17 @@ public class EscapeIntention : InLocationMoveIntention
 
         // 威胁来源
         if (threatLoss)
-            sb.AppendLine($"威胁来源:  已丢失");
+            sb.AppendLine($"威胁来源:  {ColorManager.Colorize("已丢失", ColorManager.LightGrey)}");
         else
-            sb.AppendLine($"威胁来源:  {EntityTarget.Name}");
+            sb.AppendLine($"威胁来源:  {ColorManager.Colorize(EntityTarget.Name, ColorManager.Yellow)}");
 
         // 与威胁来源的距离
         if (!threatLoss)
         {
             var dist = belongedEntity.DistanceTo(EntityTarget);
-            sb.AppendLine($"威胁来源位置:  {EntityTarget.Coordinate.Position:0.0}");
-            sb.AppendLine($"威胁来源距离:  {dist:0.0}");
-            sb.AppendLine($"预计到达位置:  {belongedEntity.EstimateMoveEndPosition(EntityTarget, moveDist, false):0.0}");
+            sb.AppendLine($"威胁来源位置:  {ColorManager.ColorizeNumber(EntityTarget.Coordinate.Position, ColorManager.Cyan)}");
+            sb.AppendLine($"威胁来源距离:  {ColorManager.ColorizeNumber(dist, ColorManager.Cyan)}");
+            sb.AppendLine($"预计到达位置:  {ColorManager.ColorizeNumber(belongedEntity.EstimateMoveEndPosition(EntityTarget, moveDist, false), ColorManager.Cyan)}");
         }
 
         // TODO: 策划配置的描述文本

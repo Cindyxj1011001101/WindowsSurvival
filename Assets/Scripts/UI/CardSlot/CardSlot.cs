@@ -61,7 +61,7 @@ public class CardSlot : MonoBehaviour
     public bool IsEmpty => Cards.IsEmpty;
     public int StackNum => Cards.StackNum;
 
-    public bool Interactable {  get; protected set; }
+    public bool Interactable { get; protected set; }
 
     private bool dontRefresh;
 
@@ -412,7 +412,9 @@ public class CardSlot : MonoBehaviour
                 break;
             case CoordinateComponent coordinateComponent:
                 slider.SetValue(coordinateComponent.coordinate.Position, GameManager.Instance.CurEnvironmentBag.PlaceData.maxCoord, playAnim);
-                slider.tipController.SetTip($"当前坐标:  {coordinateComponent.coordinate.Position:0.0}\n距离麦麦:  {coordinateComponent.coordinate.DistanceTo(Player.Instance.Coordinate):0.0}");
+                var position = coordinateComponent.coordinate.Position;
+                var dist = coordinateComponent.coordinate.DistanceTo(Player.Instance.Coordinate);
+                slider.tipController.SetTip($"当前坐标:  {ColorManager.ColorizeNumber(position, ColorManager.Cyan)}\n距离麦麦:  {ColorManager.ColorizeNumber(dist, ColorManager.Cyan)}");
                 break;
             case EntityComponent entityComponent:
                 slider.SetValue(entityComponent.value, entityComponent.maxValue, playAnim);
@@ -482,8 +484,8 @@ public class CardSlot : MonoBehaviour
 
         if (flashIcon.TryGetComponent<HoverTipController>(out var controller))
         {
-            controller.enabled = connected;
-            controller.SetTip($"电力: -{consumptionRate:0.0}/15min", ColorManager.Yellow);
+            string tip = connected ? $"电力: -{consumptionRate:0.0}/15min" : "未接电";
+            controller.SetTip(tip, ColorManager.Yellow);
         }
     }
 
@@ -498,8 +500,8 @@ public class CardSlot : MonoBehaviour
 
         if (fireIcon.TryGetComponent<HoverTipController>(out var controller))
         {
-            controller.enabled = isBurning;
-            controller.SetTip($"氧气:  -{oxygenConsumptionRate:0.0}/15min\nCO浓度:  +{coProductionRate:0.0}/15min", ColorManager.BurntOrange);
+            string tip = isBurning ? $"氧气:  -{oxygenConsumptionRate:0.0}/15min\nCO浓度:  +{coProductionRate:0.0}/15min" : "未点燃";
+            controller.SetTip(tip, ColorManager.BurntOrange);
         }
     }
 
@@ -601,8 +603,8 @@ public class CardSlot : MonoBehaviour
         {
             intentionIcon.sprite = reversedColorSprite;
             var tip = new StringBuilder();
-            tip.AppendLine("意图:  " + intentionName);
-            tip.AppendLine("执行倒计时:  " + intention.ExecutionCountdown + "min");
+            tip.AppendLine("意图:  " + ColorManager.Colorize(intentionName, ColorManager.Yellow));
+            tip.AppendLine("执行倒计时:  " + ColorManager.Colorize(intention.ExecutionCountdown.ToString(), ColorManager.Cyan) + "min");
             tip.Append(intention.GetDescription());
             tipController.SetTip(tip.ToString().TrimEnd('\n'));
         };

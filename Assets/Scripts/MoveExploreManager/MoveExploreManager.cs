@@ -80,10 +80,10 @@ public class MoveExploreManager : IManager
     public void RemoveExploreInWaterExtraEffect(string reason)
         => ExploreInWaterExtraEffects.RemoveEffect(reason);
 
-    public void AddMoveToWaterExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerStateChanges)
+    public void AddMoveInWaterExtraEffect(string reason, float timeMultiplier, Dictionary<PlayerStateEnum, float> playerStateChanges)
         => MoveToWaterExtraEffects.AddEffect(reason, timeMultiplier, playerStateChanges);
 
-    public void RemoveMoveToWaterExtraEffect(string reason)
+    public void RemoveMoveInWaterExtraEffect(string reason)
         => MoveToWaterExtraEffects.RemoveEffect(reason);
 
     /// <summary>

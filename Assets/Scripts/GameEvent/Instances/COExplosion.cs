@@ -16,7 +16,7 @@ public class COExplosion : GameEvent
         return "麦麦在有着高浓度一氧化碳的室内点火，真是勇敢。\n\n" +
                "总之，地点中的火源爆炸了，麦麦以及该地点内的所有生物都被炸得体无完肤。\n\n" +
                "地点里的一氧化碳和氧气减少了。\n\n" +
-               "这些东西被炸毁了: " + destroyedCardsStr;
+               "这些东西被炸毁了: " + ColorManager.Warning(destroyedCardsStr);
     }
 
     protected override bool CanTriggerThisEvent()
@@ -53,8 +53,9 @@ public class COExplosion : GameEvent
             }
             entity.TakeDamage(-60f, null);
         }
+
+        var destroyedCards = new Dictionary<string, int>();
         // 删除所有火源的内容物
-        destroyedCardsStr = "";
         foreach (var fireSource in fireSources)
         {
             if (fireSource.TryGetComponent<InnerContentsComponent>(out var inn))
@@ -66,8 +67,19 @@ public class COExplosion : GameEvent
             {
                 con.DemolishThis(null);
             }
-            destroyedCardsStr += $"{fireSource.CardName}、";
+
+            // 记录被破坏的卡牌数量
+            if (!destroyedCards.ContainsKey(fireSource.CardName))
+                destroyedCards.Add(fireSource.CardName, 1);
+            else
+                destroyedCards[fireSource.CardName]++;
         }
+
+        destroyedCardsStr = "";
+        foreach (var kvp in destroyedCards)
+        {
+            destroyedCardsStr += $"{kvp.Key} x {kvp.Value}、";
+    }
         destroyedCardsStr = destroyedCardsStr.TrimEnd('、');
         fireSources.Clear();
     }

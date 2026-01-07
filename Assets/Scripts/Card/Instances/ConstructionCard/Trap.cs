@@ -21,7 +21,7 @@ public class Trap : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("布置", "布置诱捕陷阱，对当前地点内的生物进行诱捕", Event_Arrange, Judge_Arrange, () => 15);
+        AddCardEvent("布置", $"布置{CardName}\n布置后可以对所在地点内的生物进行诱捕", Event_Arrange, Judge_Arrange, () => 15);
         base.RegisterCardEvents(); // 拆毁
     }
 

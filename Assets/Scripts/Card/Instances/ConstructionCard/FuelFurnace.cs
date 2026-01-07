@@ -28,7 +28,8 @@ public class FuelFurnace : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("点燃", "点燃燃料炉。点燃后可以使燃料炉快速升温。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite, sound: "点火_02");
+        AddCardEvent("点燃", $"点燃{CardName}\n点燃后可使{CardName}快速升温\n{ColorManager.Warning("会导致室内氧气加速消耗与一氧化碳增加")}",
+            fuelStorage.Ignite, fuelStorage.CanIgnite, sound: "点火_02");
         AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish, sound: "熄灭");
         AddCardEvent("开始加工", "", Event_Process, Judge_Process);
         base.RegisterCardEvents(); // 拆毁
@@ -156,7 +157,7 @@ public class FuelFurnace : ConstructionCard
 
         if (!innerContents.bag.IsFull)
         {
-            hint = "燃料炉内必须放满待加工物才能加工";
+            hint = $"{CardName}的内容物中内必须放满待加工物";
             return false;
         }
 

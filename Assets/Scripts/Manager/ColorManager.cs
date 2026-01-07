@@ -72,15 +72,28 @@ public static class ColorManager
         return $"<color=#{hexColor}>{text}</color>";
     }
 
-    public static string Colorize(double number, Color color, bool saveSign = true)
+    public static string ColorizeNumber(float number, Color color, string format = "0.0", bool keepSign = false)
     {
-        string hexColor = ColorUtility.ToHtmlStringRGB(color);
-        var text = number.ToString("0.0");
-
-        if (saveSign)
+        var text = number.ToString(format);
+        if (keepSign)
             text = (number > 0 ? "+" : "") + text;
+        return Colorize(text, color);
+    }
 
-        return $"<color=#{hexColor}>{text}</color>";
+    public static string ColorizePercent(float ratio, Color color, string format = "0.0", bool keepSign = false)
+    {
+        var percent = ratio * 100f;
+        var text = percent.ToString(format) + "%";
+        if (keepSign)
+            text = (percent > 0 ? "+" : "") + text;
+        return Colorize(text, color);
+    }
+
+    public static string ColorizeRange(float min, float max, Color color, string format = "0.0")
+    {
+        var a = Colorize(min.ToString(format), color);
+        var b = Colorize(max.ToString(format), color);
+        return $"[{a}, {b}]";
     }
 
     public static string Alert(string text) => Colorize(text, Red);

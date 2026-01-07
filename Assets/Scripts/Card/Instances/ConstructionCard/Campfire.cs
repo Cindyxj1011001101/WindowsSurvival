@@ -8,7 +8,8 @@ public class Campfire : ConstructionCard
 
 	protected override void RegisterCardEvents()
 	{
-		AddCardEvent("点燃", "点燃营火。可以对部分食物进行简单的烧烤。\n点燃状态下会导致室内氧气加速消耗与一氧化碳增加", fuelStorage.Ignite, fuelStorage.CanIgnite, sound: "点火_02");
+		AddCardEvent("点燃", $"点燃{CardName}\n点燃后可以对部分食物进行简单的烧烤\n{ColorManager.Warning("会导致室内氧气加速消耗与一氧化碳增加")}",
+			fuelStorage.Ignite, fuelStorage.CanIgnite, sound: "点火_02");
 		AddCardEvent("熄灭", "", fuelStorage.Extinguish, fuelStorage.CanExtinguish, sound: "熄灭");
 		base.RegisterCardEvents(); // 拆毁
 	}

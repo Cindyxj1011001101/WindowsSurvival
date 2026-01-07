@@ -14,7 +14,7 @@ public class RatInfestation : GameEvent
     {
         return $"一道黑影闪过，地上的食物就不见了。\n\n" +
                $"也许别把食物放在地上会比较好。\n\n" +
-               $"损失了这些东西: " + lostCardsStr;
+               $"损失了这些东西: " + ColorManager.Warning(lostCardsStr);
     }
 
     protected override bool CanTriggerThisEvent()
@@ -38,7 +38,7 @@ public class RatInfestation : GameEvent
 
             // 记录被破坏的卡牌数量
             if (!destroyedCards.ContainsKey(cardToDestroy.CardName))
-                destroyedCards.Add(cardToDestroy.CardName, 0);
+                destroyedCards.Add(cardToDestroy.CardName, 1);
             else
                 destroyedCards[cardToDestroy.CardName]++;
         }
@@ -46,7 +46,7 @@ public class RatInfestation : GameEvent
         lostCardsStr = "";
         foreach (var kvp in destroyedCards)
         {
-            lostCardsStr += $"{kvp.Key} x {kvp.Value + 1}、";
+            lostCardsStr += $"{kvp.Key} x {kvp.Value}、";
         }
 
         lostCardsStr = lostCardsStr.TrimEnd('、');

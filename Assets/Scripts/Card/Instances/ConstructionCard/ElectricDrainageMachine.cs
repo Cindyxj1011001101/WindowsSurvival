@@ -12,7 +12,10 @@ public class ElectricDrainageMachine : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("开启", $"将其接入电网。接电后每15分钟降低{WATER_LEVEL_REDUCTION_RATE}单位水平面高度，并消耗{POWER_CONSUMPTION_RATE}单位电力", powerConsumption.ConnectPower, CanConnectPower);
+        var waterLevelReductionRateText = ColorManager.ColorizeNumber(WATER_LEVEL_REDUCTION_RATE, ColorManager.Green);
+        var powerConsumptionRateText = ColorManager.ColorizeNumber(POWER_CONSUMPTION_RATE, ColorManager.Red);
+        AddCardEvent("开启", $"开启{CardName}\n开启后每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟使水平面降低{waterLevelReductionRateText}，" +
+            $"并消耗{powerConsumptionRateText}电力", powerConsumption.ConnectPower, CanConnectPower);
         AddCardEvent("关闭", "", powerConsumption.DisconnectPower, powerConsumption.CanDisconnectPower);
         base.RegisterCardEvents(); // 拆毁
     }
@@ -49,7 +52,7 @@ public class ElectricDrainageMachine : ConstructionCard
     /// </summary>
     private void PowerOn()
     {
-        // 接电后水平面每回合下降
+        // 开启后水平面每回合下降
         StateManager.Instance.ChangeWaterLevelChangeRate(-WATER_LEVEL_REDUCTION_RATE);
         stateMachine.ChangeState("开启");
         // 播放循环音（仅当玩家在同一地点时）

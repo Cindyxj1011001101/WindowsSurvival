@@ -10,8 +10,15 @@ public class SleepInstrument : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("开启", $"开启机器。开启后当麦麦在安装了{CardName}的地点休息时，机器会自动接电，使麦麦每15分钟额外回复{EXTRA_SOBRIETY_INCREASE_RATE}清醒度和{EXTRA_HEALTH_INCREASE_RATE}健康，" +
-                            $"并消耗{POWER_CONSUMPTION_RATE}单位电力", Event_TurnOn, Judge_TurnOn);
+        var extraSobrietyIncreaseRateText = ColorManager.ColorizeNumber(EXTRA_SOBRIETY_INCREASE_RATE, ColorManager.Green);
+        var extraHealthIncreaseRateText = ColorManager.ColorizeNumber(EXTRA_HEALTH_INCREASE_RATE, ColorManager.Green);
+        var powerConsumptionRateText = ColorManager.ColorizeNumber(POWER_CONSUMPTION_RATE, ColorManager.Red);
+        AddCardEvent("开启", $"开启{CardName}\n开启后当麦麦在建造有{ColorManager.Colorize(CardName, ColorManager.Blue)}的地点休息时，" +
+                            $"机器会自动接电，使麦麦每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟" +
+                            $"额外回复{extraSobrietyIncreaseRateText}清醒度与{extraHealthIncreaseRateText}健康值，" +
+                            $"并消耗{powerConsumptionRateText}电力\n" +
+                            $"{ColorManager.Warning($"在同一地点建造多个{CardName}无法叠加效果")}",
+                            Event_TurnOn, Judge_TurnOn);
         AddCardEvent("关闭", "", Event_TurnOff, Judge_TurnOff);
         base.RegisterCardEvents(); // 拆毁
     }

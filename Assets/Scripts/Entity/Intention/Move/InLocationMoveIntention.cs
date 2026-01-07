@@ -69,18 +69,18 @@ public class InLocationMoveIntention : SingleTargetIntention
 
         // 目标
         if (targetLoss)
-            sb.AppendLine($"目标:  已丢失");
+            sb.AppendLine($"目标:  {ColorManager.Colorize("已丢失", ColorManager.LightGrey)}");
         else
-            sb.AppendLine($"目标:  {EntityTarget.Name}");
+            sb.AppendLine($"目标:  {ColorManager.Colorize(EntityTarget.Name, ColorManager.Yellow)}");
 
         // 与目标的距离
         if (!targetLoss)
         {
             var dist = belongedEntity.DistanceTo(EntityTarget);
-            sb.AppendLine($"目标位置:  {EntityTarget.Coordinate.Position:0.0}");
-            sb.AppendLine($"目标距离:  {dist:0.0}");
-            sb.AppendLine($"移动方向:  {(moveClose ? "靠近" : "远离")}");
-            sb.AppendLine($"预计到达位置:  {belongedEntity.EstimateMoveEndPosition(EntityTarget, moveDist, moveClose):0.0}");
+            sb.AppendLine($"目标位置:  {ColorManager.ColorizeNumber(EntityTarget.Coordinate.Position, ColorManager.Cyan)}");
+            sb.AppendLine($"目标距离:  {ColorManager.ColorizeNumber(dist, ColorManager.Cyan)}");
+            sb.AppendLine($"移动方向:  {ColorManager.Colorize(moveClose ? "靠近" : "远离", ColorManager.Yellow)}");
+            sb.AppendLine($"预计到达位置:  {ColorManager.ColorizeNumber(belongedEntity.EstimateMoveEndPosition(EntityTarget, moveDist, moveClose), ColorManager.Cyan)}");
         }
 
         // TODO: 策划配置的描述文本

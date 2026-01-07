@@ -68,9 +68,9 @@ public class EatIntention : SingleTargetIntention
 
         var sb = new StringBuilder();
         if (targetLoss)
-            sb.AppendLine($"食用目标:  已丢失");
+            sb.AppendLine($"食用目标:  {ColorManager.Colorize("已丢失", ColorManager.LightGrey)}");
         else
-            sb.AppendLine($"食用目标:  {CardTarget.CardName}");
+            sb.AppendLine($"食用目标:  {ColorManager.Colorize(CardTarget.CardName, ColorManager.Yellow)}");
 
         // TODO: 策划配置的描述文本
 

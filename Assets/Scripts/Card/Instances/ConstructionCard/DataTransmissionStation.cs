@@ -11,7 +11,10 @@ public class DataTransmissionStation : ConstructionCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("数据传输", $"使正在研究科的技的进度{ColorManager.Colorize(STUDY_PROGRESS_ADD, ColorManager.Green)}\n（数据传输1天内最多可以进行2次）", Event_Transmit, Judge_Transmit,
+        AddCardEvent("数据传输",
+            $"进行远程数据传输，使正在研究的科技的进度增加{ColorManager.ColorizeNumber(STUDY_PROGRESS_ADD, ColorManager.Green, "0")}\n" +
+            $"{ColorManager.Warning("数据传输1天内最多可以进行2次")}",
+            Event_Transmit, Judge_Transmit,
             () => 60,
             () => new()
             {
@@ -117,7 +120,7 @@ public class DataTransmissionStation : ConstructionCard
 
         if (TechnologyManager.Instance.CurStudiedTechNode == null)
         {
-            hint = "当前没有科技在研究中，无法进行数据传输";
+            hint = "当前没有科技在研究中";
             return false;
         }
 

@@ -2,7 +2,11 @@
 {
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("装备", "", Event_Equip, Judge_Equip);
+        var desc = GetEquipDesc();
+        if (!string.IsNullOrEmpty(desc))
+            desc = "\n装备后" + desc;
+        desc = "装备" + CardName + desc;
+        AddCardEvent("装备", desc, Event_Equip, Judge_Equip);
         AddCardEvent("卸下", "", Event_UnEquip, Judge_UnEquip);
     }
 
@@ -24,6 +28,7 @@
 
     public abstract void OnEquipped();
     public abstract void OnUnEquipped();
+    public virtual string GetEquipDesc() => "";
 
     protected void Event_Equip(CardEvent e)
     {

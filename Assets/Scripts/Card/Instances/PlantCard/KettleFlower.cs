@@ -13,8 +13,13 @@ public class KettleFlower : PlantCard
 
     protected override void RegisterCardEvents()
     {
-        AddCardEvent("划一个口", "在水壶兰的茎部划一个口，从而可以饮用其中的汁液，并且有概率获得一颗种子。\n伤口需要一段时间愈合，愈合前水壶兰不会生长", Event_Hurt, Judge_Hurt, () => 15, sound: "切割声");
-        AddCardEvent("铲起", "将水壶兰连根铲起。将会获得一颗种子", Event_DigUp, Judge_DigUp, () => 15, sound: "挖掘废料_01");
+        var s = ColorManager.Colorize(plantGrowth.deadCardId, ColorManager.Blue);
+        AddCardEvent("划一个口", $"在水壶兰的茎部划一个口，从而可以饮用其中的汁液，" +
+            $"并且有概率获得一颗{s}\n" +
+            ColorManager.Warning("伤口需要一段时间愈合，愈合前水壶兰不会生长"),
+            Event_Hurt, Judge_Hurt, () => 15, sound: "切割声");
+        AddCardEvent("铲起", $"将水壶兰连根铲起\n将会获得一颗{s}",
+            Event_DigUp, Judge_DigUp, () => 15, sound: "挖掘废料_01");
         AddCardEvent("饮用汁液", "", Event_Drink, Judge_Drink,
             () => 15,
             () => new()
@@ -81,7 +86,7 @@ public class KettleFlower : PlantCard
         }
         if (plantGrowth.value < 30)
         {
-            hint = "需要生长度大于等于30%";
+            hint = "需要生长度大于等于30";
             return false;
         }
         if (GameManager.Instance.PlayerBag.FindCardOfToolType(ToolType.Cut) == null)
@@ -134,7 +139,7 @@ public class KettleFlower : PlantCard
         }
         if (plantGrowth.value < 20)
         {
-            hint = "需要生长度大于等于20%";
+            hint = "需要生长度大于等于20";
             return false;
         }
         return true;

@@ -39,7 +39,7 @@ public abstract class EntityCard : Card, IEntity
             var weaponName = c.CardName;
             var weaponAtk = weapon.atk;
             var weaponAtkTime = weapon.attackTime;
-            AddCardEvent($"用{weaponName}攻击", $"用{weaponName}攻击{CardName}\n造成伤害:  {weaponAtk}",
+            AddCardEvent($"用{weaponName}攻击", $"用{weaponName}攻击{CardName}\n造成伤害:  {ColorManager.ColorizeNumber(weaponAtk, ColorManager.Red)}",
                 e => BeAttacked(GameManager.Instance.PlayerBag.FindCardOfName(weaponName)),
                 (out string s) => CanBeAttacked(weaponName, out s),
                 () => weaponAtkTime,
@@ -47,7 +47,7 @@ public abstract class EntityCard : Card, IEntity
         }
 
         // 注册空手攻击
-        AddCardEvent($"空手攻击", $"用双手攻击{CardName}\n造成伤害:  {Player.Instance.Atk}",
+        AddCardEvent($"空手攻击", $"用双手攻击{CardName}\n造成伤害:  {ColorManager.ColorizeNumber(Player.Instance.Atk, ColorManager.Red)}",
                 e => Player.Instance.DealDamage(this),
                 (out string s) => Player.Instance.CanAttack(this, out s),
                 () => Player.Instance.AttackTime);
@@ -132,11 +132,15 @@ public abstract class EntityCard : Card, IEntity
             // 计算当前距离
             var dist = DistanceTo(Player.Instance);
             // 构建提示信息，始终显示攻击距离
-            var distanceInfo = $"攻击距离: {weapon.minAtkDist:0.0} - {weapon.maxAtkDist:0.0}\n当前距离: {dist:0.0}";
+            var distanceInfo = $"攻击距离: {ColorManager.ColorizeNumber(weapon.minAtkDist, ColorManager.Cyan)} - {ColorManager.ColorizeNumber(weapon.maxAtkDist, ColorManager.Cyan)}\n" +
+                               $"当前距离: {ColorManager.ColorizeNumber(dist, ColorManager.Cyan)}";
             
             if (weapon.WithinAttackRange(this))
             {
-                tip = $"攻击该单位\n耗时:  {weapon.attackTime}分钟\n造成伤害:  {weapon.atk}\n{distanceInfo}";
+                tip = $"攻击该单位\n" +
+                      $"耗时:  {ColorManager.Colorize(weapon.attackTime.ToString(), ColorManager.Yellow)}分钟\n" +
+                      $"造成伤害:  {ColorManager.ColorizeNumber(weapon.atk, ColorManager.Red)}\n" +
+                      $"{distanceInfo}";
                 return true;
             }
             else
@@ -144,7 +148,10 @@ public abstract class EntityCard : Card, IEntity
                 // 不在攻击范围内，显示原因和攻击距离
                 if (weapon.CanAttack(this, out string reason))
                 {
-                    tip = $"攻击该单位\n耗时:  {weapon.attackTime}分钟\n造成伤害:  {weapon.atk}\n{distanceInfo}";
+                    tip = $"攻击该单位\n" +
+                          $"耗时:  {ColorManager.Colorize(weapon.attackTime.ToString(), ColorManager.Yellow)}分钟\n" +
+                          $"造成伤害:  {ColorManager.ColorizeNumber(weapon.atk, ColorManager.Red)}\n" +
+                          $"{distanceInfo}";
                     return true;
                 }
                 else

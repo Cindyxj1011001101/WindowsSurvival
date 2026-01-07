@@ -65,7 +65,7 @@ public class EnvironmentBagWindow : BagWindow
             if (MoveExploreManager.Instance.CanMoveExplore())
             {
                 var (desc, time, playerStateChanges) = MoveExploreManager.Instance.GetMoveEffects(TargetPosition);
-                desc = $"前往坐标 {TargetPosition:0.0} 处" + desc;
+                desc = $"前往坐标 {ColorManager.ColorizeNumber(TargetPosition, ColorManager.Cyan)} 处" + desc;
                 moveTipController.SetTip(desc, time, playerStateChanges, null);
             }
             else

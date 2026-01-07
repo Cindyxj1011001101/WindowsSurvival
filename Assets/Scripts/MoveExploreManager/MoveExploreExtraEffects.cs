@@ -62,7 +62,7 @@ public class MoveExploreExtraEffects
 
             foreach (var (state, delta) in playerStateChanges)
             {
-                str = ColorManager.Colorize(delta, delta < 0 ? ColorManager.Red : ColorManager.Green);
+                str = ColorManager.ColorizeNumber(delta, delta < 0 ? ColorManager.Red : ColorManager.Green);
                 desc.AppendLine($"  - {StateManager.ParsePlayerState(state)} {str}");
             }
         }

@@ -55,38 +55,38 @@ public abstract class AttackIntention : SingleTargetIntention
 
         var sb = new StringBuilder();
         // 攻击伤害
-        sb.AppendLine($"攻击伤害:  {dmg:0.0}");
+        sb.AppendLine($"攻击伤害:  {ColorManager.ColorizeNumber(dmg, ColorManager.Red)}");
 
         // 攻击目标
         if (targetLoss)
-            sb.AppendLine($"攻击目标:  已丢失");
+            sb.AppendLine($"攻击目标:  {ColorManager.Colorize("已丢失", ColorManager.LightGrey)}");
         else
-            sb.AppendLine($"攻击目标:  {EntityTarget.Name}");
+            sb.AppendLine($"攻击目标:  {ColorManager.Colorize(EntityTarget.Name, ColorManager.Yellow)}");
 
         // 攻击类型
         switch (atkForm)
         {
             case AttackForm.Single:
-                sb.AppendLine($"攻击类型:  单体");
+                sb.AppendLine($"攻击类型:  {ColorManager.Colorize("单体", ColorManager.Yellow)}");
                 break;
             case AttackForm.AOE:
-                sb.AppendLine($"攻击类型:  群体");
+                sb.AppendLine($"攻击类型:  {ColorManager.Colorize("群体", ColorManager.Yellow)}");
                 break;
         }
         
         // 攻击距离
-        sb.AppendLine($"攻击距离:  [{atkRange.Item1}, {atkRange.Item2}]");
+        sb.AppendLine($"攻击距离:  {ColorManager.ColorizeRange(atkRange.Item1, atkRange.Item2, ColorManager.Cyan)}");
 
         // 能否攻击到
         if (!targetLoss)
         {
             var dist = belongedEntity.DistanceTo(EntityTarget);
-            sb.AppendLine($"目标距离:  {dist:0.0}");
+            sb.AppendLine($"目标距离:  {ColorManager.ColorizeNumber(dist, ColorManager.Cyan)}");
 
             if (dist >= atkRange.Item1 && dist <= atkRange.Item2)
-                sb.AppendLine($"目标在攻击距离内:  是");
+                sb.AppendLine($"目标在攻击距离内:  {ColorManager.Colorize("是", ColorManager.Green)}");
             else
-                sb.AppendLine($"目标在攻击距离内:  否");
+                sb.AppendLine($"目标在攻击距离内:  {ColorManager.Colorize("否", ColorManager.Red)}");
         }
 
         // TODO: 策划配置的描述文本

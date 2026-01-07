@@ -45,15 +45,15 @@ public class AcrossLocationMoveIntention : SingleTargetIntention
 
         // 目标
         if (targetLoss)
-            sb.AppendLine($"目标:  已丢失");
+            sb.AppendLine($"目标:  {ColorManager.Colorize("已丢失", ColorManager.LightGrey)}");
         else
-            sb.AppendLine($"目标:  {EntityTarget.Name}");
+            sb.AppendLine($"目标:  {ColorManager.Colorize(EntityTarget.Name, ColorManager.Yellow)}");
 
         // 与目标的距离
         if (!targetLoss)
         {
-            sb.AppendLine($"目标所在地:  {EntityTarget.Coordinate.Location.PlaceName}");
-            sb.AppendLine($"预计到达地点:  {EntityTarget.Coordinate.Location.PlaceName}");
+            sb.AppendLine($"目标所在地:  {ColorManager.Colorize(EntityTarget.Coordinate.Location.PlaceName, ColorManager.Yellow)}");
+            sb.AppendLine($"预计到达地点:  {ColorManager.Colorize(EntityTarget.Coordinate.Location.PlaceName, ColorManager.Yellow)}");
         }
 
         // TODO: 策划配置的描述文本
