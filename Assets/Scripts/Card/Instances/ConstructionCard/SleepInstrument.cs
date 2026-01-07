@@ -8,6 +8,8 @@ public class SleepInstrument : ConstructionCard
     private const float EXTRA_SOBRIETY_INCREASE_RATE = 1.2f;    // 额外清醒度增加
     private const float EXTRA_HEALTH_INCREASE_RATE = 1.2f;      // 额外精神值增加
 
+    private static bool isAnyWorking = false;   // 是否任意一个睡眠脉冲仪在工作中
+
     protected override void RegisterCardEvents()
     {
         var extraSobrietyIncreaseRateText = ColorManager.ColorizeNumber(EXTRA_SOBRIETY_INCREASE_RATE, ColorManager.Green);
@@ -43,6 +45,7 @@ public class SleepInstrument : ConstructionCard
 
     private void PowerOn()
     {
+        isAnyWorking = true;
         // 额外恢复清醒度和精神值
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, EXTRA_SOBRIETY_INCREASE_RATE);
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, EXTRA_HEALTH_INCREASE_RATE);
@@ -50,23 +53,26 @@ public class SleepInstrument : ConstructionCard
 
     private void PowerOff()
     {
+        isAnyWorking = false;
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Sobriety, -EXTRA_SOBRIETY_INCREASE_RATE);
         StateManager.Instance.ChangePlayerStateChangeRate(PlayerStateEnum.Health, -EXTRA_HEALTH_INCREASE_RATE);
     }
 
     private void OnStartSleeping()
     {
+        // 任意一个睡眠脉冲仪在工作中
+        if (isAnyWorking) return;
+
         // 未开启机器
         if (stateMachine.currentStateName == "关闭") return;
 
         // 玩家不在机器所在地点休息
         if (!GameManager.Instance.IsCurrentEnvironment(Bag)) return;
 
-        // 可以接电，则接电
-        if (powerConsumption.CanConnectPower(out _))
-        {
-            powerConsumption.ConnectPower();
-        }
+        // 不可接电
+        if (!powerConsumption.CanConnectPower(out _)) return;
+
+        powerConsumption.ConnectPower();
     }
 
     private void OnStopSleeping()
