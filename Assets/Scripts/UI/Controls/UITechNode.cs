@@ -23,7 +23,7 @@ public class UITechNode : HoverableButton
     private TechNodeState currentState;
     private int studyOrder;
 
-    private float originalFillMaskWidth;
+    private float originalFillMaskWidth = -1;
     private float originalQueueInfoAnchorPosX;
     private float animTransition = 0.4f;
 
@@ -36,9 +36,6 @@ public class UITechNode : HoverableButton
         {
             line.Init();
         }
-
-        originalFillMaskWidth = fillMask.sizeDelta.x;
-
     }
 
     public void Init(ScriptableTechnologyNode techNode)
@@ -80,6 +77,8 @@ public class UITechNode : HoverableButton
         (fillLayer.transform as RectTransform).anchoredPosition = new(1, 0);
         SetColor(fillLayer.transform, ColorManager.Cyan);
 
+        if (originalFillMaskWidth < 0)
+            originalFillMaskWidth = fillMask.sizeDelta.x;
         fillMask.DOKill();
         fillMask.sizeDelta = new(0, fillMask.sizeDelta.y);
 
