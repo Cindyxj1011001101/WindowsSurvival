@@ -33,7 +33,6 @@ public class ShortcutsController : MonoBehaviour
             if (layoutTransform.GetChild(i).TryGetComponent<CustomMenuItem>(out var shortcut))
             {
                 shortcuts.Add(shortcut.name, shortcut);
-                SetOpened(shortcut, false);
                 shortcut.onClick.AddListener(() =>
                 {
                     if (shortcut.name != selectedAppName)
@@ -50,6 +49,11 @@ public class ShortcutsController : MonoBehaviour
 
     private void Start()
     {
+        foreach (var shortcut in shortcuts.Values)
+        {
+            SetOpened(shortcut, false);
+        }
+
         #region 新手教程
         var unlockedShortcuts = GameDataManager.Instance.WindowsData.unlockedShortcuts;
         if (!GameDataManager.Instance.CurLoad.skipGuide) // 如果新手教程未跳过
