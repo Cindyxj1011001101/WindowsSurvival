@@ -26,13 +26,14 @@ public class ShortcutsController : MonoBehaviour
         }
     }
 
-    private void Awake()
+    private void Start()
     {
         for (int i = 0; i < layoutTransform.childCount; i++)
         {
             if (layoutTransform.GetChild(i).TryGetComponent<CustomMenuItem>(out var shortcut))
             {
                 shortcuts.Add(shortcut.name, shortcut);
+                SetOpened(shortcut, false);
                 shortcut.onClick.AddListener(() =>
                 {
                     if (shortcut.name != selectedAppName)
@@ -45,14 +46,6 @@ public class ShortcutsController : MonoBehaviour
         selectRect.gameObject.SetActive(false);
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(layoutTransform);
-    }
-
-    private void Start()
-    {
-        foreach (var shortcut in shortcuts.Values)
-        {
-            SetOpened(shortcut, false);
-        }
 
         #region 新手教程
         var unlockedShortcuts = GameDataManager.Instance.WindowsData.unlockedShortcuts;
