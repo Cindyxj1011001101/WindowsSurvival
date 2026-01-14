@@ -15,19 +15,25 @@ public class HoverTip : MonoBehaviour
 
     private float maxWidth;
     private RectTransform rectTransform;
+    private Sequence anim;
+    private Vector3 showTargetWorldPos;
 
     private void Awake()
     {
         rectTransform = transform as RectTransform;
         canvasGroup.alpha = 0;
+
         canvasGroup.interactable = canvasGroup.blocksRaycasts = false;
         maxWidth = rectTransform.sizeDelta.x;
     }
 
     private void OnDisable()
     {
+        anim?.Kill();
+        rectTransform.DOKill();
         canvasGroup.DOKill();
         canvasGroup.alpha = 0;
+        rectTransform.localScale = Vector3.one;
     }
 
     public void SetTip(
@@ -132,7 +138,6 @@ public class HoverTip : MonoBehaviour
             }
         }
 
-
         // 如果仅显示文本
         if (textTipOnly)
         {
@@ -150,13 +155,48 @@ public class HoverTip : MonoBehaviour
 
     public void Show()
     {
+        anim?.Kill();
+        rectTransform.DOKill();
         canvasGroup.DOKill();
-        canvasGroup.DOFade(1, 0.1f).SetEase(Ease.OutQuad);
+
+        showTargetWorldPos = rectTransform.position;
+
+        const float fadeDuration = 0.12f;
+        const float moveDuration = 0.14f;
+        const float scaleDuration = 0.14f;
+
+        const float fromScale = 0.98f;
+        const float moveOffsetY = -8f;
+
+        canvasGroup.alpha = 0f;
+        rectTransform.localScale = Vector3.one * fromScale;
+        rectTransform.position = showTargetWorldPos + new Vector3(0f, moveOffsetY, 0f);
+
+        anim = DOTween.Sequence();
+        anim.Join(canvasGroup.DOFade(1f, fadeDuration).SetEase(Ease.OutCubic));
+        anim.Join(rectTransform.DOMove(showTargetWorldPos, moveDuration).SetEase(Ease.OutCubic));
+        anim.Join(rectTransform.DOScale(1f, scaleDuration).SetEase(Ease.OutCubic));
     }
 
     public void Hide()
     {
+        anim?.Kill();
+        rectTransform.DOKill();
         canvasGroup.DOKill();
-        canvasGroup.DOFade(0, 0.1f).SetEase(Ease.OutQuad).OnComplete(() => ObjectBufferPool.Instance.Restore(gameObject));
+
+        const float fadeDuration = 0.10f;
+        const float moveDuration = 0.10f;
+        const float scaleDuration = 0.10f;
+
+        const float toScale = 0.985f;
+        const float moveOffsetY = -6f;
+
+        var curPos = rectTransform.position;
+
+        anim = DOTween.Sequence();
+        anim.Join(canvasGroup.DOFade(0f, fadeDuration).SetEase(Ease.InCubic));
+        anim.Join(rectTransform.DOMove(curPos + new Vector3(0f, moveOffsetY, 0f), moveDuration).SetEase(Ease.InCubic));
+        anim.Join(rectTransform.DOScale(toScale, scaleDuration).SetEase(Ease.InCubic));
+        anim.OnComplete(() => ObjectBufferPool.Instance.Restore(gameObject));
     }
 }
