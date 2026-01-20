@@ -29,7 +29,6 @@ public abstract class EntityCard : Card, IEntity
             AnimationManager.Instance.PlayPunch(SlotTransform);
     }
 
-
     protected override void RegisterCardEvents()
     {
         // 注册所有武器的攻击

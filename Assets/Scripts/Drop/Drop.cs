@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 public class DropConfig
 {
     public string cardId;
+    public Card cardTemplate;
     public int dropNum;
     public bool randomDropNum;
     public int minRandomDropNum;
@@ -29,22 +31,51 @@ public class DropConfig
         this.maxRandomDropNum = maxRandomDropNum;
     }
 
+    public DropConfig(Card cardTemplate, int dropNum)
+    {
+        this.cardTemplate = cardTemplate;
+        this.dropNum = dropNum;
+        this.randomDropNum = false;
+        this.minRandomDropNum = 0;
+        this.maxRandomDropNum = 0;
+    }
+
+    public DropConfig(Card cardTemplate, int minRandomDropNum, int maxRandomDropNum)
+    {
+        this.cardTemplate = cardTemplate;
+        this.dropNum = 0;
+        this.randomDropNum = true;
+        this.minRandomDropNum = minRandomDropNum;
+        this.maxRandomDropNum = maxRandomDropNum;
+    }
+
     public List<Card> GetDroppedCards()
     {
-        List<Card> droppedCards = new();
+        if (cardTemplate == null && string.IsNullOrEmpty(cardId)) return new();
 
-        if (string.IsNullOrEmpty(cardId)) return droppedCards;
+        var dropCards = new List<Card>();
 
-        int actualDropNum = dropNum;
-        if (randomDropNum)
+        // 实际掉落数量
+        int actualDropNum = randomDropNum ? UnityEngine.Random.Range(minRandomDropNum, maxRandomDropNum + 1) : dropNum;
+
+        if (cardTemplate != null)
         {
-            actualDropNum = UnityEngine.Random.Range(minRandomDropNum, maxRandomDropNum + 1);
+            for (int i = 0; i < actualDropNum; i++)
+            {
+                dropCards.Add(CardFactory.DeepCopyCard(cardTemplate));
+            }
         }
-        for (int i = 0; i < actualDropNum; i++)
+        else
         {
-            droppedCards.Add(CardFactory.CreateCard(cardId));
+            dropCards = CardFactory.CreateCards(cardId, actualDropNum);
         }
-        return droppedCards;
+
+        return dropCards;
+    }
+
+    public bool ContainsCard(string cardId)
+    {
+        return this.cardId == cardId || cardTemplate?.CardId == cardId;
     }
 }
 
@@ -53,8 +84,6 @@ public class Drop
 {
     public List<DropConfig> dropConfig = new(); // 掉落配置(卡牌id，数量)
     public int dropWeight; // 掉落权重
-
-    public List<Card> droppedCards = new(); // 直接配置要掉落的卡牌
 
     [JsonIgnore] public OutStringAction onDrop;
 
@@ -74,6 +103,12 @@ public class Drop
         this.dropWeight = dropWeight;
     }
 
+    public Drop(int dropWeight, Card cardTemplate, int dropNum)
+    {
+        dropConfig.Add(new(cardTemplate, dropNum));
+        this.dropWeight = dropWeight;
+    }
+
     public Drop(int dropWeight, string cardId, int minRandomDropNum, int maxRandomDropNum)
     {
         dropConfig.Add(new(cardId, minRandomDropNum, maxRandomDropNum));
@@ -86,18 +121,6 @@ public class Drop
         this.dropWeight = dropWeight;
     }
 
-    public Drop(int dropWeight, params DropConfig[] dropConfig)
-    {
-        this.dropConfig = new(dropConfig);
-        this.dropWeight = dropWeight;
-    }
-
-    public Drop(int dropWeight, List<Card> droppedCards)
-    {
-        this.dropWeight = dropWeight;
-        this.droppedCards = droppedCards;
-    }
-
     public Drop(int dropWeight, OutStringAction onDrop)
     {
         this.dropWeight = dropWeight;
@@ -108,9 +131,7 @@ public class Drop
     {
         tip = string.Empty;
 
-        if (!droppedCards.IsNullOrEmpty()) return droppedCards;
-
-        droppedCards = new();
+        var droppedCards = new List<Card>();
         foreach (var config in dropConfig)
         {
             droppedCards.AddRange(config.GetDroppedCards());
@@ -119,5 +140,10 @@ public class Drop
         onDrop?.Invoke(out tip);
 
         return droppedCards;
+    }
+
+    public bool ContainsCard(string cardId)
+    {
+        return dropConfig.Any(d => d.ContainsCard(cardId));
     }
 }

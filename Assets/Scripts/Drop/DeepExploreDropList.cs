@@ -8,16 +8,16 @@ using UnityEngine;
 [System.Serializable]
 public class Population
 {
-    public Card card; // 卡牌
-    public int dropNum; // 掉落数量
+    public Card cardTemplate;       // 卡牌模板
+    public int dropNum;             // 掉落数量
 
-    public int curSize; // 当前数量
-    public int maxSize; // 最大数量
+    public int curSize;             // 当前数量
+    public int maxSize;             // 最大数量
 
-    public int sizeChangePerRound; // 每回合数量变化
-    public int sizeChangeOnCaught; // 捕捞后的数量变化
+    public int sizeChangePerRound;  // 每回合数量变化
+    public int sizeChangeOnCaught;  // 捕捞后的数量变化
 
-    public bool trappable;//是否可诱捕
+    public bool trappable;          //是否可诱捕
 
     public int Proportion => Mathf.Clamp(curSize, 0, maxSize);
 
@@ -107,6 +107,7 @@ public class DeepExploreDropList
 
         return null;
     }
+
     /// <summary>
     /// 抽取可诱捕卡牌
     /// </summary>
@@ -150,17 +151,17 @@ public class DeepExploreDropList
 
     private List<Card> DropCards(Population population)
     {
-        List<Card> droppedCards = new List<Card>();
+        if (population.cardTemplate == null) return new();
+
+        List<Card> droppedCards = new();
         // 创建卡牌
         for (int j = 0; j < population.dropNum; j++)
         {
+            // 深拷贝卡牌模板
             // 添加到返回列表
-            if (population.card != null)
-            {
-                // 深拷贝
-                droppedCards.Add(JsonManager.DeepCopy(population.card));
-            }
+            droppedCards.Add(CardFactory.DeepCopyCard(population.cardTemplate));
         }
+
         return droppedCards;
     }
 }

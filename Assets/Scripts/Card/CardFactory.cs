@@ -325,4 +325,11 @@ public static class CardFactory
         }
         return cards;
     }
+
+    public static Card DeepCopyCard(Card card)
+    {
+        var copied = JsonManager.DeepCopy(card);
+        copied.AssignComponentValues();
+        return copied;
+    }
 }

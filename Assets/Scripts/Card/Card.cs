@@ -261,8 +261,6 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     public void LateConstrcutor()
     {
-        // 设置uuid
-        Uuid = CardId + "_" + Guid.NewGuid().ToString();
         // 分配组件值
         AssignComponentValues();
         // 派生类的构造逻辑
@@ -276,6 +274,14 @@ public abstract class Card : IComparable<Card>
     /// </summary>
     protected virtual void RegisterCardEvents() { }
 
+    private void GenerateUuid()
+    {
+        if (!string.IsNullOrEmpty(Uuid)) return;
+
+        // 设置uuid
+        Uuid = CardId + "_" + Guid.NewGuid().ToString();
+    }
+
     /// <summary>
     /// 卡牌创建完成并加入背包后调用，或者背包初始化时调用。
     /// 主要用于处理组件的事件监听 和 游戏内事件的监听等 无法序列化的部分
@@ -286,6 +292,8 @@ public abstract class Card : IComparable<Card>
 
         init = true;
 
+        GenerateUuid();
+
         // 分配组件值，方便后续调用
         AssignComponentValues();
 
@@ -294,7 +302,6 @@ public abstract class Card : IComparable<Card>
 
         // 监听事件
         EventManager.Instance.AddListener(EventType.UpdateBegin, OnUpdateBegin);
-        //UpdateManager.Instance.CardUpdate.AddListener(Update);
         UpdateManager.Instance.AddCardUpdateListener(ref updateOrder, Update);
 
         // 初始化坐标
@@ -314,7 +321,7 @@ public abstract class Card : IComparable<Card>
 
         // 如果玩家当前就在该卡牌所在的环境，并且该卡牌声明有循环音效，则触发进入环境回调
         // 仅在 HasLoopSound 为 true 时调用可避免在大量无声卡牌上触发不必要的逻辑（减少加载峰值开销）
-        if (this.HasLoopSound && Bag != null && GameManager.Instance != null && GameManager.Instance.IsCurrentEnvironment(Bag))
+        if (HasLoopSound && Bag != null && GameManager.Instance != null && GameManager.Instance.IsCurrentEnvironment(Bag))
             OnEnterEnvironment();
     }
 
@@ -441,7 +448,6 @@ public abstract class Card : IComparable<Card>
         OnLeaveEnvironment();
 
         EventManager.Instance.RemoveListener(EventType.UpdateBegin, OnUpdateBegin);
-        //UpdateManager.Instance.CardUpdate.RemoveListener(Update);
         UpdateManager.Instance.RemoveCardUpdateListener(updateOrder);
         EventManager.Instance.RemoveListener(EventType.PlayerMove, RefreshSlot);
     }
@@ -574,15 +580,12 @@ public abstract class Card : IComparable<Card>
     /// <param name="other"></param>
     public bool InheritComponent<T>(Card other, out T newComponent) where T : CardComponent
     {
-        // 如果other有该组件，并且当前卡牌也有该组件，则复制一份
-        if (other.TryGetComponent<T>(out var component) && TryGetComponent<T>(out _))
+        if (other.TryGetComponent(out newComponent) && TryGetComponent<T>(out _))
         {
-            newComponent = JsonManager.DeepCopy(component);
-            components[typeof(T)] = newComponent;
+            other.RemoveComponent<T>();
+            RemoveComponent<T>();
+            AddComponent(newComponent);
             newComponent.SetBelongedCard(this);
-
-            if (newComponent is InnerContentsComponent innerContents) innerContents.Init();
-
             return true;
         }
         newComponent = null;

@@ -65,7 +65,7 @@ public class DropList
                 if (disposable)
                     // 从剩余列表中移除（一次性掉落）
                     dropList.RemoveAt(i);
-
+                
                 return drop.GetDroppedCards(out tip);
             }
         }
@@ -82,22 +82,14 @@ public class DropList
     /// <returns></returns>
     public List<Card> CertainDrop(string cardId)
     {
-        for (int i = 0; i < dropList.Count; i++)
-        {
-            Drop drop = dropList[i];
-            foreach (var c in drop.droppedCards)
-            {
-                if (c.CardId == cardId)
-                {
-                    if (disposable)
-                        // 从剩余列表中移除（一次性掉落）
-                        dropList.RemoveAt(i);
+        var certainDrop = dropList.Find(d => d.ContainsCard(cardId));
 
-                    return drop.GetDroppedCards(out _);
-                }
-            }
-        }
+        if (certainDrop == null) return new();
 
-        return null;
+        if (disposable)
+            // 从剩余列表中移除（一次性掉落）
+            dropList.Remove(certainDrop);
+
+        return certainDrop.GetDroppedCards(out _);
     }
 }

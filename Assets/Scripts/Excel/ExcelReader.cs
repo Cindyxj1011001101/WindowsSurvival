@@ -315,45 +315,39 @@ public static class ExcelReader
                 OverwriteInnerContents = ParseBool(row[11].ToString())
             };
 
-            List<Card> droppedCards = new();
-
-            for (int j = 0; j < config.DropNum; j++)
+            var cardTemplate = CardFactory.CreateCard(config.CardId);
+            // 覆写卡牌属性
+            if (config.OverwriteFreshness && cardTemplate.TryGetComponent<FreshnessComponent>(out var f))
             {
-                var card = CardFactory.CreateCard(config.CardId);
-                // 覆写卡牌属性
-                if (config.OverwriteFreshness && card.TryGetComponent<FreshnessComponent>(out var f))
+                f.SetValue(ParseInt(row[4].ToString())); // 覆写新鲜度
+            }
+            if (config.OverwriteDurability && cardTemplate.TryGetComponent<DurabilityComponent>(out var d))
+            {
+                d.SetValue(ParseInt(row[6].ToString())); // 覆写耐久度
+            }
+            if (config.OverwriteGrowth && cardTemplate.TryGetComponent<GrowthComponent>(out var g))
+            {
+                g.SetValue(ParseInt(row[8].ToString())); // 覆写生长进度
+            }
+            if (config.OverwriteProgress && cardTemplate.TryGetComponent<ProgressComponent>(out var p))
+            {
+                p.SetValue(ParseInt(row[10].ToString())); // 覆写产物进度
+            }
+            if (config.OverwriteInnerContents && cardTemplate.TryGetComponent<InnerContentsComponent>(out var inn))
+            {
+                var startRowIndex = ParseInt(row[12].ToString()); // 覆写内容物
+                var endRowIndex = ParseInt(row[13].ToString());
+                foreach (var c in ReadInnerContents(table, startRowIndex, endRowIndex))
                 {
-                    f.SetValue(ParseInt(row[4].ToString())); // 覆写新鲜度
+                    inn.AddCard(c);
                 }
-                if (config.OverwriteDurability && card.TryGetComponent<DurabilityComponent>(out var d))
-                {
-                    d.SetValue(ParseInt(row[6].ToString())); // 覆写耐久度
-                }
-                if (config.OverwriteGrowth && card.TryGetComponent<GrowthComponent>(out var g))
-                {
-                    g.SetValue(ParseInt(row[8].ToString())); // 覆写生长进度
-                }
-                if (config.OverwriteProgress && card.TryGetComponent<ProgressComponent>(out var p))
-                {
-                    p.SetValue(ParseInt(row[10].ToString())); // 覆写产物进度
-                }
-                if (config.OverwriteInnerContents && card.TryGetComponent<InnerContentsComponent>(out var inn))
-                {
-                    var startRowIndex = ParseInt(row[12].ToString()); // 覆写内容物
-                    var endRowIndex = ParseInt(row[13].ToString());
-                    foreach (var c in ReadInnerContents(table, startRowIndex, endRowIndex))
-                    {
-                        inn.AddCard(c);
-                    }
-                }
-                droppedCards.Add(card);
             }
 
             // 添加到掉落列表
-            dropList.Add(new Drop(config.DropWeight, droppedCards));
+            dropList.Add(new Drop(config.DropWeight, cardTemplate, config.DropNum));
         }
 
-        return new(dropList, true);
+        return new DropList(dropList, true);
     }
 
     private static List<Card> ReadInnerContents(DataTable table, int startRowIndex, int endRowIndex)
@@ -475,7 +469,7 @@ public static class ExcelReader
             // 添加到掉落列表
             populationList.Add(new Population()
             {
-                card = card,
+                cardTemplate = card,
                 dropNum = config.DropNum,
                 curSize = config.Size,
                 maxSize = config.MaxSize,

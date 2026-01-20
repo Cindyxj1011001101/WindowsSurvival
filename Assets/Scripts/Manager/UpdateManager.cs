@@ -28,6 +28,7 @@ public class UpdateManager : IManager
     public void Reset()
     {
         Clear();
+        currentOrder = 0;
         EventManager.Instance.RemoveListener(EventType.Update, Update);
         EventManager.Instance.RemoveListener(EventType.FineUpdate, FineUpdate);
     }
