@@ -300,13 +300,14 @@ public class TechnologyManager : IManager
         {
             // 解锁该科技
             UnlockTechNode(techNode);
-            // 从研究队列中移除该节点
-            RemoveFromStudyQueue(techNode, true);
 
             // 触发研究完成事件
             SoundManager.Instance.PlaySound("研究完成", true);
             EventManager.Instance.TriggerEvent(EventType.DialogueCondition, new SubscribeActionArgs("FinishResearch", techNode.techName));
             EventManager.Instance.TriggerEvent(EventType.ComplishStudy, techNode);
+
+            // 从研究队列中移除该节点
+            RemoveFromStudyQueue(techNode, true);
             return;
         }
 
