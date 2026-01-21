@@ -167,6 +167,8 @@ public class ElectricPowerManager : IManager
     /// <returns></returns>
     public bool IsAlreadyConnected(string key)
     {
+        if (string.IsNullOrEmpty(key)) return false;
+
         return connectedApplianceLookup.ContainsKey(key);
     }
 
