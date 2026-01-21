@@ -6,7 +6,7 @@ public class CaughtAquariusFish : Card
 {
     protected override void RegisterCardEvents()
     {
-        // AddEvent("放生", "放生水瓶鱼", Event_Release, Judge_Release);
+         AddCardEvent("放生", "放生水瓶鱼", Event_Release, Judge_Release);
     }
 
     protected override void OnLateConstructor()
@@ -15,11 +15,10 @@ public class CaughtAquariusFish : Card
         progress.updateRate = 0;
     }
 
-    private void Event_Release(out string tip)
+    private void Event_Release(CardEvent e)
     {
         DestroyThis();
 
-        tip = string.Empty;
         // 地点中增加一个水瓶鱼
         // 继承产物进度
         var card = CardFactory.CreateCard("水瓶鱼");

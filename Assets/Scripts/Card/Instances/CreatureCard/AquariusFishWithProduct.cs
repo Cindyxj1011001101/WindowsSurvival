@@ -19,7 +19,7 @@ public class AquariusFishWithProduct : Card
         ApplyEventEffects(e, () =>
         {
             DestroyThis();
-            AddCard("有产物的被捉住的水瓶鱼", GameManager.Instance.PlayerBag);
+            AddCard("被捉住的有产物的水瓶鱼", GameManager.Instance.PlayerBag);
         });
     }
 
@@ -54,10 +54,10 @@ public class AquariusFishWithProduct : Card
                 return;
             }
 
-            // 获得一张“有产物的被捉住的水瓶鱼”
+            // 获得一张“被捉住的有产物的水瓶鱼”
             // 继承产物进度
             // 添加到玩家背包
-            var card = CardFactory.CreateCard("有产物的被捉住的水瓶鱼");
+            var card = CardFactory.CreateCard("被捉住的有产物的水瓶鱼");
             card.InheritComponent<ProgressComponent>(this, out _);
             AddCard(card, GameManager.Instance.PlayerBag);
         });
