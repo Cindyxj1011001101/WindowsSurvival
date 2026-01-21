@@ -9,7 +9,7 @@ public class FuelDistiller : ConstructionCard
 
 	protected override void RegisterCardEvents()
 	{
-		AddCardEvent("点燃", $"点燃{CardName}\n点燃后每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟" +
+		AddCardEvent("点燃", $"点燃{CardName}\n点燃后每{ColorManager.Colorize(15 + "分钟", ColorManager.Cyan)}" +
 			$"消耗{ColorManager.ColorizeNumber(SALINE_WATER_CONSUMPTION_RATE, ColorManager.Red, "0")}盐水" +
 			$"并产生{ColorManager.ColorizeNumber(FRESH_WATER_PRODUCTION_RATE, ColorManager.Green, "0")}淡水。" +
 			$"当淡水储量达到上限时，将清空淡水存储并在内容物中生成一瓶{ColorManager.Colorize("瓶装水", ColorManager.Blue)}\n" +

@@ -21,12 +21,12 @@ public class OreReleaseOxygenMachine : ConstructionCard
 	{
 		var oxygenProductionRateText = ColorManager.ColorizeNumber(OXYGEN_PRODUCTION_RATE, ColorManager.Green);
 		var powerConsumptionRateText = ColorManager.ColorizeNumber(POWER_CONSUMPTION_RATE, ColorManager.Red);
-		var oreConsumptionCycleText = ColorManager.ColorizeNumber(MAX_ORE_CONSUMPTION_PROCESS, ColorManager.Cyan, "0");
+		var oreConsumptionCycleText = ColorManager.Colorize(MAX_ORE_CONSUMPTION_PROCESS + "分钟", ColorManager.Cyan);
 		var oreConsumptionNumText = ColorManager.ColorizeNumber(ORE_CONSUMPTION_NUM, ColorManager.Red, "0");
 
-		AddCardEvent("开启", $"开启{CardName}\n开启后每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟" +
+		AddCardEvent("开启", $"开启{CardName}\n开启后每{ColorManager.Colorize(15 + "分钟", ColorManager.Cyan)}" +
 						$"可产生{oxygenProductionRateText}氧气（优先释放到当前地点，其次储存），并消耗{powerConsumptionRateText}电力\n" +
-						$"每{oreConsumptionCycleText}分钟消耗{oreConsumptionNumText}{ColorManager.Colorize("白爆矿", ColorManager.Blue)}",
+						$"每{oreConsumptionCycleText}消耗{oreConsumptionNumText}{ColorManager.Colorize("白爆矿", ColorManager.Blue)}",
 						powerConsumption.ConnectPower, CanConnectPower);
 		AddCardEvent("关闭", "", powerConsumption.DisconnectPower, powerConsumption.CanDisconnectPower);
 		AddCardEvent("获取氧气", $"消耗{CardName}的氧气储存，补充麦麦的氧气", oxygenStorage.Event_GetOxygen, oxygenStorage.Judge_GetOxygen);

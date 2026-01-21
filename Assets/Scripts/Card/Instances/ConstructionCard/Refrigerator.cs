@@ -11,7 +11,7 @@ public class Refrigerator : ConstructionCard
 	{
 		var powerConsumptionRateText = ColorManager.ColorizeNumber(POWER_CONSUMPTION_RATE, ColorManager.Red);
 		AddCardEvent("开启", $"开启{CardName}\n开启后内容物的腐烂速度变为原来的{ColorManager.ColorizePercent(DECAY_RATEE, ColorManager.Green, "0")}，" +
-			$"且每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟消耗{powerConsumptionRateText}电力",
+			$"且每{ColorManager.Colorize(15 + "分钟", ColorManager.Cyan)}消耗{powerConsumptionRateText}电力",
 			powerConsumption.ConnectPower, powerConsumption.CanConnectPower);
 		AddCardEvent("关闭", "", powerConsumption.DisconnectPower, powerConsumption.CanDisconnectPower);
 		base.RegisterCardEvents(); // 拆毁

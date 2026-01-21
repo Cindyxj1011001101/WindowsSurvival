@@ -604,7 +604,7 @@ public class CardSlot : MonoBehaviour
             intentionIcon.sprite = reversedColorSprite;
             var tip = new StringBuilder();
             tip.AppendLine("意图:  " + ColorManager.Colorize(intentionName, ColorManager.Yellow));
-            tip.AppendLine("执行倒计时:  " + ColorManager.Colorize(intention.ExecutionCountdown.ToString(), ColorManager.Cyan) + "min");
+            tip.AppendLine("执行倒计时:  " + ColorManager.Colorize(intention.ExecutionCountdown.ToString() + "分钟", ColorManager.Cyan));
             tip.Append(intention.GetDescription());
             tipController.SetTip(tip.ToString().TrimEnd('\n'));
         };

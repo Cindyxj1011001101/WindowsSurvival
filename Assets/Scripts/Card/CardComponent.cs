@@ -1180,12 +1180,6 @@ public class WeaponComponent : CardComponent
         TimeManager.Instance.AddTime(attackTime);
     }
 
-    public bool WithinAttackRange(IEntity target)
-    {
-        var dist = target.DistanceTo(Player.Instance);
-        return dist <= maxAtkDist && dist >= minAtkDist;
-    }
-
     public bool CanAttack(IEntity target, out string reason)
     {
         reason = string.Empty;

@@ -15,7 +15,7 @@ public class SpaceshipSeat : ConstructionCard
         AddCardEvent(
             "靠着休息",
             $"靠在驾驶座上休息\n" +
-            $"麦麦在休息时每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟" +
+            $"麦麦在休息时每{ColorManager.Colorize(15 + "分钟", ColorManager.Cyan)}" +
             $"回复{ColorManager.ColorizeNumber(SOBRIETY_CHANGE_RATE_REST, ColorManager.Green)}清醒度与" +
             $"{ColorManager.ColorizeNumber(SANITY_CHANGE_RATE_REST, ColorManager.Green)}精神值\n" +
             $"{ColorManager.Warning("休息行为1天内多次进行数值恢复减半，最多叠加2次")}",
@@ -25,7 +25,7 @@ public class SpaceshipSeat : ConstructionCard
         AddCardEvent(
             "靠着睡觉",
             $"靠在驾驶座上睡觉\n" +
-            $"麦麦在睡觉时每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟" +
+            $"麦麦在睡觉时每{ColorManager.Colorize(15 + "分钟", ColorManager.Cyan)}" +
             $"回复{ColorManager.ColorizeNumber(SOBRIETY_CHANGE_RATE_SLEEP, ColorManager.Green)}清醒度",
             Event_Sleep,
             Judge_Rest

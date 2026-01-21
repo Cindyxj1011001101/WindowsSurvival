@@ -14,7 +14,7 @@ public class PlankBed : ConstructionCard
         AddCardEvent(
             "睡觉",
             $"躺在板床上睡觉\n" +
-            $"麦麦在睡觉时每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟回复{ColorManager.ColorizeNumber(SOBRIETY_CHANGE_RATE, ColorManager.Green)}清醒度与" +
+            $"麦麦在睡觉时每{ColorManager.Colorize(15 + "分钟", ColorManager.Cyan)}回复{ColorManager.ColorizeNumber(SOBRIETY_CHANGE_RATE, ColorManager.Green)}清醒度与" +
             $"{ColorManager.ColorizeNumber(SANITY_CHANGE_RATE, ColorManager.Green)}精神值",
             Event_Rest,
             Judge_Rest

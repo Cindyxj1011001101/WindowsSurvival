@@ -9,7 +9,7 @@ public class FuelGenerator : ConstructionCard
 	protected override void RegisterCardEvents()
 	{
 		var powerProductionRateText = ColorManager.ColorizeNumber(POWER_PRODUCTION_RATE, ColorManager.Green);
-		AddCardEvent("点燃", $"点燃{CardName}\n点燃后每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟" +
+		AddCardEvent("点燃", $"点燃{CardName}\n点燃后每{ColorManager.Colorize(15 + "分钟", ColorManager.Cyan)}" +
 			$"可产生{powerProductionRateText}电力\n{ColorManager.Warning("会导致室内氧气加速消耗与一氧化碳增加")}",
 			fuelStorage.Ignite, CanIgnite, sound: "点火_02");
 		AddCardEvent("熄灭", "", fuelStorage.Extinguish, CanExtinguish, sound: "熄灭");

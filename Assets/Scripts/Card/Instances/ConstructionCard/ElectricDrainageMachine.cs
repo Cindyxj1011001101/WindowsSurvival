@@ -14,7 +14,7 @@ public class ElectricDrainageMachine : ConstructionCard
     {
         var waterLevelReductionRateText = ColorManager.ColorizeNumber(WATER_LEVEL_REDUCTION_RATE, ColorManager.Green);
         var powerConsumptionRateText = ColorManager.ColorizeNumber(POWER_CONSUMPTION_RATE, ColorManager.Red);
-        AddCardEvent("开启", $"开启{CardName}\n开启后每{ColorManager.ColorizeNumber(15, ColorManager.Cyan, "0")}分钟使水平面降低{waterLevelReductionRateText}，" +
+        AddCardEvent("开启", $"开启{CardName}\n开启后每{ColorManager.Colorize(15 + "分钟", ColorManager.Cyan)}使水平面降低{waterLevelReductionRateText}，" +
             $"并消耗{powerConsumptionRateText}电力", powerConsumption.ConnectPower, CanConnectPower);
         AddCardEvent("关闭", "", powerConsumption.DisconnectPower, powerConsumption.CanDisconnectPower);
         base.RegisterCardEvents(); // 拆毁

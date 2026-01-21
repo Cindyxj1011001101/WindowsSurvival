@@ -126,40 +126,27 @@ public abstract class EntityCard : Card, IEntity
     public override bool CanQuickInteract(Card card, out string tip)
     {
         tip = string.Empty;
-        if (card.TryGetComponent<WeaponComponent>(out var weapon))
+        if (!card.TryGetComponent<WeaponComponent>(out var weapon))
+            return false;
+
+        // 计算当前距离
+        var dist = DistanceTo(Player.Instance);
+        // 构建提示信息，始终显示攻击距离
+        var distanceInfo = $"攻击距离:  {ColorManager.ColorizeRange(weapon.minAtkDist, weapon.maxAtkDist, ColorManager.Cyan)}\n" +
+                           $"当前距离:  {ColorManager.ColorizeNumber(dist, ColorManager.Cyan)}";
+
+        if (weapon.CanAttack(this, out string reason))
         {
-            // 计算当前距离
-            var dist = DistanceTo(Player.Instance);
-            // 构建提示信息，始终显示攻击距离
-            var distanceInfo = $"攻击距离: {ColorManager.ColorizeNumber(weapon.minAtkDist, ColorManager.Cyan)} - {ColorManager.ColorizeNumber(weapon.maxAtkDist, ColorManager.Cyan)}\n" +
-                               $"当前距离: {ColorManager.ColorizeNumber(dist, ColorManager.Cyan)}";
-            
-            if (weapon.WithinAttackRange(this))
-            {
-                tip = $"攻击该单位\n" +
-                      $"耗时:  {ColorManager.Colorize(weapon.attackTime.ToString(), ColorManager.Yellow)}分钟\n" +
-                      $"造成伤害:  {ColorManager.ColorizeNumber(weapon.atk, ColorManager.Red)}\n" +
-                      $"{distanceInfo}";
-                return true;
-            }
-            else
-            {
-                // 不在攻击范围内，显示原因和攻击距离
-                if (weapon.CanAttack(this, out string reason))
-                {
-                    tip = $"攻击该单位\n" +
-                          $"耗时:  {ColorManager.Colorize(weapon.attackTime.ToString(), ColorManager.Yellow)}分钟\n" +
-                          $"造成伤害:  {ColorManager.ColorizeNumber(weapon.atk, ColorManager.Red)}\n" +
-                          $"{distanceInfo}";
-                    return true;
-                }
-                else
-                {
-                    tip = $"无法攻击：{reason}\n{distanceInfo}";
-                    return false;
-                }
-            }
+            tip = $"攻击{CardName}\n" +
+                  $"耗时:  {ColorManager.Colorize(weapon.attackTime.ToString() + "分钟", ColorManager.Yellow)}\n" +
+                  $"造成伤害:  {ColorManager.ColorizeNumber(weapon.atk, ColorManager.Red)}\n" +
+                  $"{distanceInfo}";
+            return true;
         }
+
+        // 不在攻击范围内，显示原因和攻击距离
+        tip = $"{ColorManager.Warning(reason)}\n" +
+              $"{distanceInfo}";
         return false;
     }
 
