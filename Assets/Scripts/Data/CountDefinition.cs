@@ -19,6 +19,7 @@ public static class CountDefinition
         // "探索次数",
         "麦麦自己研究修理",
         "骗麦麦自己在研究修理",
+        "俺是文盲",
     };
 
     /// <summary>
