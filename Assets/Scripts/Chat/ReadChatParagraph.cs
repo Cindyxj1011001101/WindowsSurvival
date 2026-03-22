@@ -84,6 +84,18 @@ public class ReadChatParagraph:MonoBehaviour
 
     public GraphData.SerializedNode FindNextNode(string portName="")
     {
+        if (CurGraphData == null)
+        {
+            Debug.LogError("[ReadChatParagraph] CurGraphData 为空，无法查找下一节点。");
+            return null;
+        }
+
+        if (CurNode == null)
+        {
+            Debug.LogError("[ReadChatParagraph] CurNode 为空，无法查找下一节点。");
+            return null;
+        }
+
         GraphData.SerializedEdge edge;
         if (portName == "")
         {

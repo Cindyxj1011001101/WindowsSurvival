@@ -309,8 +309,26 @@ public class ChatManager : MonoBehaviour
     public void Submit()
     {
         if (ChoosedChatData == null) return;
+
+        // 防御：剧情图状态异常时，不执行跳转，避免空引用
+        if (ReadChatParagraph.Instance == null || ReadChatParagraph.Instance.CurGraphData == null || ReadChatParagraph.Instance.CurNode == null)
+        {
+            Debug.LogWarning("[ChatManager] 当前不在有效剧情节点，忽略本次选项提交。");
+            Choosing = false;
+            ChoosedChatData = null;
+            return;
+        }
+
         Choosing = false;
-        TriggerMessage(ReadChatParagraph.Instance.FindNextNode(ChoosedChatData));
+        var nextNode = ReadChatParagraph.Instance.FindNextNode(ChoosedChatData);
+        if (nextNode == null)
+        {
+            Debug.LogWarning($"[ChatManager] 选项 \"{ChoosedChatData}\" 未找到下一节点，忽略本次提交。");
+            ChoosedChatData = null;
+            return;
+        }
+
+        TriggerMessage(nextNode);
         ChoosedChatData = null;
     }
 

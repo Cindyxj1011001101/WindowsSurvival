@@ -16,9 +16,14 @@ public class ChatWindow : WindowBase, IPointerDownHandler
     [SerializeField] private RectTransform typeArea;
 
     [SerializeField] private Button inputFieldButton;
+    [SerializeField] private InputField inputField;
     [SerializeField] private Text inputFieldText;
 
     [SerializeField] private HoverableButton submitButton;
+    [Header("LLM Idle Chat")]
+    [SerializeField] private bool enableLLMInIdle = true;
+    [SerializeField] private OpenAICompatibleLLMClient llmClient;
+    [SerializeField] private string llmSystemPrompt = "You are a helpful assistant in this game world.";
 
     [SerializeField] private RectTransform optionLayout;
     [SerializeField] private CanvasGroup optionLayoutCanvasGroup;
@@ -29,6 +34,7 @@ public class ChatWindow : WindowBase, IPointerDownHandler
     private Sequence seq;
 
     private bool optionSubmitted = true;
+    private bool llmRequesting = false;
 
     protected override void Awake()
     {
@@ -38,10 +44,15 @@ public class ChatWindow : WindowBase, IPointerDownHandler
 
     protected override void Init()
     {
-        inputFieldText.text = "";
+        SetDisplayedInputText(string.Empty);
 
-        //点击输入区域
-        inputFieldButton.onClick.AddListener(ShowDialogueOptions);
+        // 点击输入区域（旧方案：Button）
+        if (inputFieldButton != null)
+            inputFieldButton.onClick.AddListener(TryShowDialogueOptions);
+
+        // 选中输入框（新方案：InputField，不需要同物体再挂 Button）
+        if (inputField != null)
+            BindInputFieldSelectTrigger(inputField);
 
         // 点击发送消息
         submitButton.onClick.AddListener(Submit);
@@ -130,7 +141,7 @@ public class ChatWindow : WindowBase, IPointerDownHandler
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
             {
-                inputFieldText.text = outputport.name;
+                SetDisplayedInputText(outputport.name);
                 ChatManager.Instance.ChoosedChatData = outputport.name;
             });
 
@@ -152,6 +163,8 @@ public class ChatWindow : WindowBase, IPointerDownHandler
     /// </summary>
     public void ShowDialogueOptions()
     {
+        if (!CanShowDialogueOptions()) return;
+
         if (optionLayoutCanvasGroup.interactable) return;
 
         if (seq != null && seq.IsActive()) return;
@@ -162,7 +175,8 @@ public class ChatWindow : WindowBase, IPointerDownHandler
 
         seq = DOTween.Sequence();
 
-        seq.Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, (inputFieldButton.transform as RectTransform).sizeDelta.y + optionLayout.sizeDelta.y - 2), optionAnimDuration))
+        float inputAreaHeight = GetInputAreaHeight();
+        seq.Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, inputAreaHeight + optionLayout.sizeDelta.y - 2), optionAnimDuration))
            .OnComplete(() =>
            {
                optionLayoutCanvasGroup.alpha = 1f;
@@ -189,7 +203,7 @@ public class ChatWindow : WindowBase, IPointerDownHandler
                 optionLayoutCanvasGroup.blocksRaycasts = optionLayoutCanvasGroup.interactable = false;
             })
            .Join(chatScrollViewRect.DOSizeDelta(new Vector2(chatScrollViewRect.sizeDelta.x, chatScrollViewRect.sizeDelta.y + optionLayout.sizeDelta.y - 2), optionAnimDuration))
-           .Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, (inputFieldButton.transform as RectTransform).sizeDelta.y), optionAnimDuration));
+           .Join(typeArea.DOSizeDelta(new Vector2(typeArea.sizeDelta.x, GetInputAreaHeight()), optionAnimDuration));
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -205,14 +219,31 @@ public class ChatWindow : WindowBase, IPointerDownHandler
 
     private void Submit()
     {
-        if (string.IsNullOrEmpty(inputFieldText.text)) return;
-        InterruptChoose();
-        ChatManager.Instance.Submit();
+        string text = GetDisplayedInputText();
+        if (string.IsNullOrWhiteSpace(text)) return;
+
+        if (ChatManager.Instance != null && ChatManager.Instance.Choosing)
+        {
+            // 剧情节点推进：只有在选项与节点状态都有效时才提交
+            if (CanSubmitStoryOption())
+            {
+                InterruptChoose();
+                ChatManager.Instance.Submit();
+                return;
+            }
+
+            // 进入了选择态但没有有效选项，直接退出选择态，避免空引用链路
+            ChatManager.Instance.Choosing = false;
+            ChatManager.Instance.ChoosedChatData = null;
+        }
+
+        // 空闲状态下接入大模型
+        SubmitToLLM(text);
     }
 
     public void InterruptChoose()
     {
-        inputFieldText.text = "";
+        SetDisplayedInputText(string.Empty);
         ObjectBufferPool.Instance.RestoreAllChildren(optionLayout);
         optionSubmitted = true;
         HideDialogueOptions();
@@ -249,5 +280,114 @@ public class ChatWindow : WindowBase, IPointerDownHandler
                 if (!focused) CreateChatTip(MessageSenderEnum.Alert, "您有一条待发送消息", int.MaxValue);
             }
         }
+    }
+
+    private void TryShowDialogueOptions()
+    {
+        if (!CanShowDialogueOptions()) return;
+        ShowDialogueOptions();
+    }
+
+    private bool CanShowDialogueOptions()
+    {
+        return !optionSubmitted && ChatManager.Instance != null && ChatManager.Instance.Choosing;
+    }
+
+    private float GetInputAreaHeight()
+    {
+        if (inputFieldButton != null)
+            return (inputFieldButton.transform as RectTransform).sizeDelta.y;
+
+        if (inputField != null)
+            return (inputField.transform as RectTransform).sizeDelta.y;
+
+        if (inputFieldText != null)
+            return (inputFieldText.transform as RectTransform).sizeDelta.y;
+
+        return 0f;
+    }
+
+    private string GetDisplayedInputText()
+    {
+        if (inputField != null) return inputField.text;
+        if (inputFieldText != null) return inputFieldText.text;
+        return string.Empty;
+    }
+
+    private void SetDisplayedInputText(string value)
+    {
+        if (inputField != null) inputField.text = value;
+        if (inputFieldText != null) inputFieldText.text = value;
+    }
+
+    private void SubmitToLLM(string userText)
+    {
+        if (!enableLLMInIdle) return;
+        if (llmRequesting) return;
+
+        if (llmClient == null)
+        {
+            CreateMessage(MessageSenderEnum.Alert, "LLM 未配置：请在 ChatWindow 上绑定 OpenAICompatibleLLMClient。");
+            return;
+        }
+
+        llmRequesting = true;
+        SetSubmitInteractable(false);
+
+        // 先显示玩家输入
+        CreateMessage(MessageSenderEnum.Player, userText);
+        SetDisplayedInputText(string.Empty);
+
+        llmClient.SendUserMessage(
+            llmSystemPrompt,
+            userText,
+            onSuccess: reply =>
+            {
+                CreateMessage(MessageSenderEnum.NPC, reply);
+                llmRequesting = false;
+                SetSubmitInteractable(true);
+            },
+            onError: error =>
+            {
+                CreateMessage(MessageSenderEnum.Alert, "LLM 请求失败: " + error);
+                llmRequesting = false;
+                SetSubmitInteractable(true);
+            }
+        );
+    }
+
+    private void SetSubmitInteractable(bool interactable)
+    {
+        if (submitButton != null)
+            submitButton.Interactable = interactable;
+    }
+
+    private bool CanSubmitStoryOption()
+    {
+        if (ChatManager.Instance == null) return false;
+        if (string.IsNullOrEmpty(ChatManager.Instance.ChoosedChatData)) return false;
+
+        var reader = ReadChatParagraph.Instance;
+        if (reader == null) return false;
+        if (reader.CurGraphData == null || reader.CurNode == null) return false;
+
+        return true;
+    }
+
+    private void BindInputFieldSelectTrigger(InputField targetInputField)
+    {
+        var trigger = targetInputField.GetComponent<EventTrigger>();
+        if (trigger == null)
+            trigger = targetInputField.gameObject.AddComponent<EventTrigger>();
+
+        AddEventTriggerListener(trigger, EventTriggerType.Select, _ => TryShowDialogueOptions());
+        AddEventTriggerListener(trigger, EventTriggerType.PointerClick, _ => TryShowDialogueOptions());
+    }
+
+    private void AddEventTriggerListener(EventTrigger trigger, EventTriggerType eventType, UnityEngine.Events.UnityAction<BaseEventData> action)
+    {
+        var entry = new EventTrigger.Entry { eventID = eventType };
+        entry.callback.AddListener(action);
+        trigger.triggers.Add(entry);
     }
 }
