@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Text;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -23,7 +24,10 @@ public class ChatWindow : WindowBase, IPointerDownHandler
     [Header("LLM Idle Chat")]
     [SerializeField] private bool enableLLMInIdle = true;
     [SerializeField] private OpenAICompatibleLLMClient llmClient;
-    [SerializeField] private string llmSystemPrompt = "You are a helpful assistant in this game world.";
+    [TextArea(3, 10)]
+    [SerializeField] private string llmBackgroundAndIdentity = "你是游戏内对话助手，请基于系统信息回答。";
+    [TextArea(2, 6)]
+    [SerializeField] private string llmAutoUserPrompt = "请基于当前系统信息，主动给玩家一句简短提醒或建议，强调当前时间推进带来的变化。";
 
     [SerializeField] private RectTransform optionLayout;
     [SerializeField] private CanvasGroup optionLayoutCanvasGroup;
@@ -241,7 +245,7 @@ public class ChatWindow : WindowBase, IPointerDownHandler
         }
 
         // Chat状态：允许发给LLM
-        SubmitToLLM(text);
+        SubmitToLLM(text, showPlayerMessage: true);
     }
 
     public void InterruptChoose()
@@ -275,6 +279,8 @@ public class ChatWindow : WindowBase, IPointerDownHandler
     private float alertTimeInterval = 10f;
     private void Update()
     {
+        HandleEnterSubmit();
+
         if (timer < alertTimeInterval)
         {
             timer += Time.deltaTime;
@@ -283,6 +289,24 @@ public class ChatWindow : WindowBase, IPointerDownHandler
                 if (!focused) CreateChatTip(MessageSenderEnum.Alert, "您有一条待发送消息", int.MaxValue);
             }
         }
+    }
+
+    private void HandleEnterSubmit()
+    {
+        bool enterPressed = Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter);
+        if (!enterPressed) return;
+
+        if (inputField != null)
+        {
+            if (!inputField.isFocused) return;
+        }
+        else
+        {
+            // 没有InputField时，仍允许通过回车触发（兼容旧UI结构）
+            if (!focused) return;
+        }
+
+        Submit();
     }
 
     private void TryShowDialogueOptions()
@@ -323,7 +347,7 @@ public class ChatWindow : WindowBase, IPointerDownHandler
         if (inputFieldText != null) inputFieldText.text = value;
     }
 
-    private void SubmitToLLM(string userText)
+    private void SubmitToLLM(string userText, bool showPlayerMessage)
     {
         if (!enableLLMInIdle) return;
         if (llmRequesting) return;
@@ -337,16 +361,31 @@ public class ChatWindow : WindowBase, IPointerDownHandler
         llmRequesting = true;
         SetSubmitInteractable(false);
 
-        // 先显示玩家输入
-        CreateMessage(MessageSenderEnum.Player, userText);
-        SetDisplayedInputText(string.Empty);
+        if (showPlayerMessage)
+        {
+            // 先显示玩家输入
+            CreateMessage(MessageSenderEnum.Player, userText);
+            SetDisplayedInputText(string.Empty);
+        }
 
-        llmClient.SendUserMessage(
-            llmSystemPrompt,
+        string summary = ChatManager.Instance != null ? ChatManager.Instance.LLMPreviousSummary : "无";
+
+        llmClient.SendStructuredUserMessage(
+            llmBackgroundAndIdentity,
+            summary,
+            BuildSystemInfo(),
             userText,
-            onSuccess: reply =>
+            onSuccess: result =>
             {
+                string reply = (result == null || string.IsNullOrWhiteSpace(result.reply)) ? "..." : result.reply;
                 CreateMessage(MessageSenderEnum.NPC, reply);
+
+                if (result != null && !string.IsNullOrWhiteSpace(result.summary))
+                {
+                    if (ChatManager.Instance != null)
+                        ChatManager.Instance.LLMPreviousSummary = result.summary;
+                }
+
                 llmRequesting = false;
                 SetSubmitInteractable(true);
             },
@@ -359,6 +398,65 @@ public class ChatWindow : WindowBase, IPointerDownHandler
         );
     }
 
+    public bool TryAutoInvokeLLM()
+    {
+        if (!enableLLMInIdle) return false;
+        if (llmRequesting) return false;
+        if (ChatManager.Instance != null && ChatManager.Instance.IsInStoryState) return false;
+        if (llmClient == null) return false;
+
+        string autoPrompt = string.IsNullOrWhiteSpace(llmAutoUserPrompt)
+            ? "请基于当前系统信息，主动给玩家一句简短提醒。"
+            : llmAutoUserPrompt;
+
+        SubmitToLLM(autoPrompt, showPlayerMessage: false);
+        return true;
+    }
+
+    private string BuildSystemInfo()
+    {
+        var sb = new StringBuilder();
+
+        // 剧情进度（只传段落名，不传具体对话文本）
+        if (ChatManager.Instance != null)
+            sb.AppendLine($"剧情进度: {ChatManager.Instance.GetStoryProgressForPrompt()}");
+
+        string placeName = "未知";
+        if (GameManager.Instance != null && GameManager.Instance.CurEnvironmentBag != null)
+            placeName = GameManager.Instance.CurEnvironmentBag.PlaceName;
+        sb.AppendLine($"位置: {placeName}");
+
+        if (TimeManager.Instance != null)
+            sb.AppendLine($"时间: Day {TimeManager.Instance.Days}, {TimeManager.Instance.CurTime:yyyy-MM-dd HH:mm}");
+
+        if (StateManager.Instance != null && StateManager.Instance.PlayerStateDict != null)
+        {
+            sb.AppendLine("玩家属性:");
+            foreach (var kv in StateManager.Instance.PlayerStateDict)
+            {
+                var state = kv.Value;
+                if (state == null) continue;
+                sb.AppendLine($"- {kv.Key}: {state.CurValue:0.##}/{state.MaxValue:0.##}");
+            }
+
+            if (StateManager.Instance.WaterLevel != null)
+                sb.AppendLine($"- 水平面: {StateManager.Instance.WaterLevel.CurValue:0.##}/{StateManager.Instance.WaterLevel.MaxValue:0.##}");
+        }
+
+        if (GameManager.Instance != null && GameManager.Instance.CurEnvironmentBag != null &&
+            GameManager.Instance.CurEnvironmentBag.StateDict != null)
+        {
+            sb.AppendLine("环境属性:");
+            foreach (var kv in GameManager.Instance.CurEnvironmentBag.StateDict)
+            {
+                var state = kv.Value;
+                if (state == null) continue;
+                sb.AppendLine($"- {kv.Key}: {state.CurValue:0.##}/{state.MaxValue:0.##}");
+            }
+        }
+
+        return sb.ToString().Trim();
+    }
     private void SetSubmitInteractable(bool interactable)
     {
         if (submitButton != null)
@@ -394,3 +492,6 @@ public class ChatWindow : WindowBase, IPointerDownHandler
         trigger.triggers.Add(entry);
     }
 }
+
+
+

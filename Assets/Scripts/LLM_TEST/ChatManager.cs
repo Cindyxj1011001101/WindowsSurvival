@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine.UI;
+using System.Linq;
+using Random = UnityEngine.Random;
 
 public class ChatManager : MonoBehaviour
 {
@@ -57,15 +59,30 @@ public class ChatManager : MonoBehaviour
     //当前是否在选择中
     public bool Choosing = false;
 
+    // 已进行过的剧情段落（只记录段落名，不记录具体对话文本）
+    public List<string> StoryProgressParagraphs = new List<string>();
+
+    // LLM每轮返回的概括（会持久化到存档）
+    public string LLMPreviousSummary = "无";
+
+    // 自动唤起LLM（游戏内分钟）
+    public int AutoLLMElapsedMinutes = 0;
+    public int AutoLLMTargetMinutes = -1;
+    public bool EnableAutoLLMWakeup = true;
+
+    private const int AUTO_LLM_MIN_MINUTES = 3;
+    private const int AUTO_LLM_MAX_MINUTES = 10;
+
+    // 是否正在自动输出剧情文本（消息协程进行中）
+    public bool IsStoryOutputting { get; private set; } = false;
+
     /// <summary>
     /// 是否处于剧情状态
     /// 剧情状态下只允许节点推进，不允许自由聊天
     /// </summary>
     public bool IsInStoryState =>
         Choosing ||
-        inParagraph ||
-        InterruptParagraphData != null ||
-        (ParagraphToTriggeer != null && ParagraphToTriggeer.Count > 0);
+        IsStoryOutputting;
 
     #endregion
 
@@ -96,6 +113,12 @@ public class ChatManager : MonoBehaviour
             inParagraph = GameDataManager.Instance.GeneratedChatData.inParagraph;
             InterruptParagraphData = GameDataManager.Instance.GeneratedChatData.InterruptParagraphData;
             Choosing = GameDataManager.Instance.GeneratedChatData.Choosing;
+            StoryProgressParagraphs = GameDataManager.Instance.GeneratedChatData.StoryProgressParagraphs ?? new List<string>();
+            LLMPreviousSummary = string.IsNullOrWhiteSpace(GameDataManager.Instance.GeneratedChatData.LLMPreviousSummary)
+                ? "无"
+                : GameDataManager.Instance.GeneratedChatData.LLMPreviousSummary;
+            AutoLLMElapsedMinutes = GameDataManager.Instance.GeneratedChatData.AutoLLMElapsedMinutes;
+            AutoLLMTargetMinutes = GameDataManager.Instance.GeneratedChatData.AutoLLMTargetMinutes;
         }
     }
 
@@ -117,12 +140,16 @@ public class ChatManager : MonoBehaviour
                 ChangeChatSpeed(1);
             }
         });
+
+        EnsureAutoLLMTarget();
+        EventManager.Instance.AddListener(EventType.FineUpdate, OnFineUpdate);
     }
 
     public void OnDestroy()
     {
         //移除对话段落监听
         EventManager.Instance.RemoveListener<ParagraphData>(EventType.TriggerParagraph, TriggerParagraph);
+        EventManager.Instance.RemoveListener(EventType.FineUpdate, OnFineUpdate);
     }
 
     public void InitChat()
@@ -170,8 +197,45 @@ public class ChatManager : MonoBehaviour
     public void TriggerParagraph(ParagraphData paragraphData)
     {
         inParagraph = true;
+        if (paragraphData != null && !string.IsNullOrEmpty(paragraphData.ParagraphName))
+        {
+            if (!StoryProgressParagraphs.Contains(paragraphData.ParagraphName))
+                StoryProgressParagraphs.Add(paragraphData.ParagraphName);
+        }
         ReadChatParagraph.Instance.FindStartNodeOfParagraph(paragraphData.ParagraphName);
         TriggerMessage(ReadChatParagraph.Instance.CurNode);
+    }
+
+    public string GetStoryProgressForPrompt()
+    {
+        if (StoryProgressParagraphs == null || StoryProgressParagraphs.Count == 0)
+            return "无";
+
+        return string.Join(" | ", StoryProgressParagraphs.Where(p => !string.IsNullOrEmpty(p)));
+    }
+
+    private void EnsureAutoLLMTarget()
+    {
+        if (AutoLLMTargetMinutes < AUTO_LLM_MIN_MINUTES || AutoLLMTargetMinutes > AUTO_LLM_MAX_MINUTES)
+            AutoLLMTargetMinutes = Random.Range(AUTO_LLM_MIN_MINUTES, AUTO_LLM_MAX_MINUTES + 1);
+    }
+
+    private void OnFineUpdate()
+    {
+        if (!EnableAutoLLMWakeup) return;
+
+        EnsureAutoLLMTarget();
+        AutoLLMElapsedMinutes++;
+
+        if (AutoLLMElapsedMinutes < AutoLLMTargetMinutes) return;
+        if (IsInStoryState) return;
+        if (chatWindow == null) return;
+
+        bool started = chatWindow.TryAutoInvokeLLM();
+        if (!started) return;
+
+        AutoLLMElapsedMinutes = 0;
+        AutoLLMTargetMinutes = Random.Range(AUTO_LLM_MIN_MINUTES, AUTO_LLM_MAX_MINUTES + 1);
     }
 
     //生成所有被记录的数据
@@ -274,6 +338,7 @@ public class ChatManager : MonoBehaviour
     //创建消息（不包括选项）
     private IEnumerator CreateMessageCoroutine(ChatData chatData, float waitTime)
     {
+        IsStoryOutputting = true;
 
         float finalWaitTime;
 
@@ -298,6 +363,7 @@ public class ChatManager : MonoBehaviour
         finalWaitTime /= curSpeed;
         yield return new WaitForSeconds(finalWaitTime);
 
+        IsStoryOutputting = false;
         TriggerMessage(ReadChatParagraph.Instance.FindNextNode());
 
     }

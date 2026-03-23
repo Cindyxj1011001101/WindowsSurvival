@@ -344,6 +344,10 @@ public class GameDataManager
         generatedChatData.Choosing = ChatManager.Instance.Choosing;
         generatedChatData.CurrentNodeData = ReadChatParagraph.Instance.CurNode;
         generatedChatData.CurrentGraphData = ReadChatParagraph.Instance.CurGraphData;
+        generatedChatData.StoryProgressParagraphs = new List<string>(ChatManager.Instance.StoryProgressParagraphs);
+        generatedChatData.LLMPreviousSummary = ChatManager.Instance.LLMPreviousSummary;
+        generatedChatData.AutoLLMElapsedMinutes = ChatManager.Instance.AutoLLMElapsedMinutes;
+        generatedChatData.AutoLLMTargetMinutes = ChatManager.Instance.AutoLLMTargetMinutes;
         if (!generatedChatData.init) generatedChatData.init = true;
         JsonManager.SaveData(generatedChatData, CurLoadName, "GeneratedChatData");
     }

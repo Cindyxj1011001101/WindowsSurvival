@@ -19,4 +19,14 @@ public class GeneratedChatData
     public GraphData.SerializedNode CurrentNodeData;
     //当前段落图数据
     public  GraphData CurrentGraphData;
+
+    // 已进行过的剧情段落（仅段落名，不含对话文本）
+    public List<string> StoryProgressParagraphs = new List<string>();
+
+    // LLM 每轮返回的前文概括（用于下轮请求）
+    public string LLMPreviousSummary = "无";
+
+    // 自动唤起LLM的计时器状态（游戏内分钟）
+    public int AutoLLMElapsedMinutes = 0;
+    public int AutoLLMTargetMinutes = -1;
 }
