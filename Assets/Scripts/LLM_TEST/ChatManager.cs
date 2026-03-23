@@ -57,6 +57,16 @@ public class ChatManager : MonoBehaviour
     //当前是否在选择中
     public bool Choosing = false;
 
+    /// <summary>
+    /// 是否处于剧情状态
+    /// 剧情状态下只允许节点推进，不允许自由聊天
+    /// </summary>
+    public bool IsInStoryState =>
+        Choosing ||
+        inParagraph ||
+        InterruptParagraphData != null ||
+        (ParagraphToTriggeer != null && ParagraphToTriggeer.Count > 0);
+
     #endregion
 
     private void Awake()

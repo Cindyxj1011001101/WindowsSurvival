@@ -222,22 +222,25 @@ public class ChatWindow : WindowBase, IPointerDownHandler
         string text = GetDisplayedInputText();
         if (string.IsNullOrWhiteSpace(text)) return;
 
-        if (ChatManager.Instance != null && ChatManager.Instance.Choosing)
+        var chatManager = ChatManager.Instance;
+        bool isStoryState = chatManager != null && chatManager.IsInStoryState;
+
+        // 剧情状态：只允许剧情节点推进
+        if (isStoryState)
         {
-            // 剧情节点推进：只有在选项与节点状态都有效时才提交
-            if (CanSubmitStoryOption())
+            if (chatManager.Choosing && CanSubmitStoryOption())
             {
                 InterruptChoose();
-                ChatManager.Instance.Submit();
+                chatManager.Submit();
                 return;
             }
 
-            // 进入了选择态但没有有效选项，直接退出选择态，避免空引用链路
-            ChatManager.Instance.Choosing = false;
-            ChatManager.Instance.ChoosedChatData = null;
+            // 剧情进行中但当前不可提交选项：禁止发给LLM
+            CreateMessage(MessageSenderEnum.Alert, "线路繁忙");
+            return;
         }
 
-        // 空闲状态下接入大模型
+        // Chat状态：允许发给LLM
         SubmitToLLM(text);
     }
 
